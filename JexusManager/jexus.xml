@@ -1,0 +1,20 @@
+<?xml version='1.0'?>
+<Obfuscator>
+  <Var name="InPath" value="." />
+  <Var name="OutPath" value="." />
+  <Var name="UseUnicodeNames" value="false" />
+  <Var name="UseKoreanNames" value="false" />
+  <Var name="KeepPublicApi" value="false" />
+  <Var name="HidePrivateApi" value="true" />
+  <Var name="ReuseNames" value="false" />
+  <Var name="HideStrings" value="true" />
+  <Var name="RenameEvents" value="true" />
+  <Var name="RenameProperties" value="true" />
+  <Var name="RegenerateDebugInfo" value="true" />
+  <Var name="KeyFile" value="..\JexusManager\JexusManager.snk" />
+
+  <Module file="$(InPath)\JexusManager.exe">
+    <SkipNamespace name="Microsoft.ApplicationInsights*" />
+    <SkipNamespace name="Org.BouncyCastle.*" />
+  </Module>
+</Obfuscator>

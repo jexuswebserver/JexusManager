@@ -1,0 +1,8 @@
+JexusManager.exe 
+JexusManager.exe.config
+System.Reactive.Core.dll
+System.Reactive.Interfaces.dll
+System.Reactive.Linq.dll
+System.Reactive.PlatformServices.dll
+CertificateInstaller.exe
+CertificateInstaller.exe.config

@@ -1,0 +1,6 @@
+[submodule "lib/ExpandCollapsePanel"]
+	path = lib/ExpandCollapsePanel
+	url = git@github.com:lextm/ExpandCollapsePanel.git
+[submodule "mwa"]
+	path = mwa
+	url = git@github.com:jexuswebserver/Microsoft.Web.Administration.git

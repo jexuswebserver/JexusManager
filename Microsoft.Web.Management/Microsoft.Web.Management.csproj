@@ -1,0 +1,276 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{17E994B0-5A31-4F79-9796-83A45E87853D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.Web.Management</RootNamespace>
+    <AssemblyName>Microsoft.Web.Management</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;DESIGN</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>JexusManager.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Client\AssemblyDownloadInfo.cs" />
+    <Compile Include="Client\Connection.cs" />
+    <Compile Include="Client\ConnectionActiveState.cs" />
+    <Compile Include="Client\ConnectionCredential.cs" />
+    <Compile Include="Client\ConnectionEventArgs.cs" />
+    <Compile Include="Client\ConnectionEventHandler.cs" />
+    <Compile Include="Client\ConnectionInfo.cs" />
+    <Compile Include="Client\ConnectionInfoCollection.cs" />
+    <Compile Include="Client\ControlPanelCategorization.cs" />
+    <Compile Include="Client\ControlPanelCategoryInfo.cs" />
+    <Compile Include="Client\CredentialInfo.cs" />
+    <Compile Include="Client\CredentialInfoEventArgs.cs" />
+    <Compile Include="Client\Extensions\AuthenticationSettingsSavedEventHandler.cs" />
+    <Compile Include="Client\Extensions\AuthenticationType.cs" />
+    <Compile Include="Client\Extensions\AuthenticationFeature.cs" />
+    <Compile Include="Client\Extensions\HomepageExtension.cs" />
+    <Compile Include="Client\Extensions\IHomepageTaskListProvider.cs" />
+    <Compile Include="Client\Extensions\ProtocolProvider.cs" />
+    <Compile Include="Client\Extensions\ProviderFeature.cs" />
+    <Compile Include="Client\Extensions\SiteAction.cs" />
+    <Compile Include="Client\Extensions\SiteUpdatedEventArgs.cs" />
+    <Compile Include="Client\GroupTaskItem.cs" />
+    <Compile Include="Client\HierarchyCollectionEventArgs.cs" />
+    <Compile Include="Client\HierarchyCollectionEventHandler.cs" />
+    <Compile Include="Client\HierarchyInfo.cs" />
+    <Compile Include="Client\HierarchyInfoEventArgs.cs" />
+    <Compile Include="Client\HierarchyInfoEventHandler.cs" />
+    <Compile Include="Client\HierarchyInfoSyncSelectionEventArgs.cs" />
+    <Compile Include="Client\HierarchyPriority.cs" />
+    <Compile Include="Client\HierarchyProvider.cs" />
+    <Compile Include="Client\HierarchyRenameEventArgs.cs" />
+    <Compile Include="Client\HierarchyService.cs" />
+    <Compile Include="Client\HierarchyVisibility.cs" />
+    <Compile Include="Client\ICertificateVerificationBuilder.cs" />
+    <Compile Include="Client\IConnectionBuilder.cs" />
+    <Compile Include="Client\IConnectionManager.cs" />
+    <Compile Include="Client\IControlPanel.cs" />
+    <Compile Include="Client\ICredentialBuilder.cs" />
+    <Compile Include="Client\IExtensibilityManager.cs" />
+    <Compile Include="Client\IModuleChildPage.cs" />
+    <Compile Include="Client\IModulePage.cs" />
+    <Compile Include="Client\INavigationService.cs" />
+    <Compile Include="Client\IPreferencesService.cs" />
+    <Compile Include="Client\IPropertyEditingService.cs" />
+    <Compile Include="Client\IPropertyEditingUser.cs" />
+    <Compile Include="Client\IProviderConfigurationService.cs" />
+    <Compile Include="Client\ManagementChannel.cs" />
+    <Compile Include="Client\ManagementScopePath.cs" />
+    <Compile Include="Client\MessageTaskItem.cs" />
+    <Compile Include="Client\MessageTaskItemType.cs" />
+    <Compile Include="Client\MethodTaskItemUsages.cs" />
+    <Compile Include="Client\Module.cs" />
+    <Compile Include="Client\ModuleHomepageAttribute.cs" />
+    <Compile Include="Client\ModuleListPageFilter.cs" />
+    <Compile Include="Client\ModuleListPageGrouping.cs" />
+    <Compile Include="Client\ModuleListPageSearchField.cs" />
+    <Compile Include="Client\ModuleListPageSearchOptions.cs" />
+    <Compile Include="Client\ModuleListPageViewModes.cs" />
+    <Compile Include="Client\ModulePageIdentifierAttribute.cs" />
+    <Compile Include="Client\ModulePageInfo.cs" />
+    <Compile Include="Client\ModuleServiceProxy.cs" />
+    <Compile Include="Client\NavigationEventArgs.cs" />
+    <Compile Include="Client\NavigationEventHandler.cs" />
+    <Compile Include="Client\NavigationItem.cs" />
+    <Compile Include="Client\PreferencesStore.cs" />
+    <Compile Include="Client\PropertyGridObject.cs" />
+    <Compile Include="Client\ProviderConfigurationSettings.cs" />
+    <Compile Include="Client\TaskItem.cs" />
+    <Compile Include="Client\TaskList.cs" />
+    <Compile Include="Client\TaskListCollection.cs" />
+    <Compile Include="Client\Win32\BaseForm.cs">
+      <SubType>form</SubType>
+    </Compile>
+    <Compile Include="Client\Win32\BaseTaskForm.cs">
+      <SubType>form</SubType>
+    </Compile>
+    <Compile Include="Client\Win32\DialogForm.cs">
+      <SubType>form</SubType>
+    </Compile>
+    <Compile Include="Client\Win32\IManagementUIService.cs" />
+    <Compile Include="Client\Win32\ListPageListView.cs">
+      <SubType>component</SubType>
+    </Compile>
+    <Compile Include="Client\Win32\ManagementGroupBox.cs">
+      <SubType>component</SubType>
+    </Compile>
+    <Compile Include="Client\Win32\ManagementPanel.cs">
+      <SubType>component</SubType>
+    </Compile>
+    <Compile Include="Client\Win32\ManagementTabPage.cs">
+      <SubType>component</SubType>
+    </Compile>
+    <Compile Include="Client\Win32\ManagementUIColorTable.cs" />
+    <Compile Include="Client\Win32\MethodTaskItem.cs" />
+    <Compile Include="Client\Win32\ModuleDialogPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Client\Win32\ModuleListPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Client\Win32\ModulePage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Client\Win32\ModulePropertiesPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Client\Win32\SortableListView.cs">
+      <SubType>usercontrol</SubType>
+    </Compile>
+    <Compile Include="Client\Win32\TaskForm.cs">
+      <SubType>form</SubType>
+    </Compile>
+    <Compile Include="Client\Win32\TextTaskItem.cs" />
+    <Compile Include="Client\Win32\WaitCursor.cs" />
+    <Compile Include="Client\Win32\WizardForm.cs">
+      <SubType>form</SubType>
+    </Compile>
+    <Compile Include="Client\Win32\WizardPage.cs">
+      <SubType>usercontrol</SubType>
+    </Compile>
+    <Compile Include="Features\Administrators\AdministratorsModuleProvider.cs" />
+    <Compile Include="Features\Delegation\DelegationModuleProvider.cs" />
+    <Compile Include="Features\Services\ServiceModuleProvider.cs" />
+    <Compile Include="Host\ConnectionManager.cs" />
+    <Compile Include="Host\IManagementHost.cs" />
+    <Compile Include="Host\Shell\ShellApplication.cs" />
+    <Compile Include="Host\Shell\ShellComponents.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Server\AdministrationModule.cs" />
+    <Compile Include="Server\AdministrationModuleCollection.cs" />
+    <Compile Include="Server\AdministrationModuleProvider.cs" />
+    <Compile Include="Server\ApplicationManagementUnit.cs" />
+    <Compile Include="Server\BindingInfo.cs" />
+    <Compile Include="Server\ConfigurationAuthenticationModuleService.cs" />
+    <Compile Include="Server\ConfigurationModuleProvider.cs" />
+    <Compile Include="Server\ConfigurationPathType.cs" />
+    <Compile Include="Server\DelegationState.cs" />
+    <Compile Include="Server\IAuthenticationModuleService.cs" />
+    <Compile Include="Server\IGlobalConfigurationProvider.cs" />
+    <Compile Include="Server\IManagementContext.cs" />
+    <Compile Include="Server\InvalidPasswordReason.cs" />
+    <Compile Include="Server\ISiteStatusProvider.cs" />
+    <Compile Include="Server\ManagementAdministrationConfiguration.cs" />
+    <Compile Include="Server\ManagementAuthentication.cs" />
+    <Compile Include="Server\ManagementAuthenticationProvider.cs" />
+    <Compile Include="Server\ManagementAuthorization.cs" />
+    <Compile Include="Server\ManagementAuthorizationInfo.cs" />
+    <Compile Include="Server\ManagementAuthorizationInfoCollection.cs" />
+    <Compile Include="Server\ManagementAuthorizationProvider.cs" />
+    <Compile Include="Server\ManagementConfiguration.cs" />
+    <Compile Include="Server\ManagementConfigurationPath.cs" />
+    <Compile Include="Server\ManagementContentNavigator.cs" />
+    <Compile Include="Server\ManagementFrameworkVersion.cs" />
+    <Compile Include="Server\ManagementScope.cs" />
+    <Compile Include="Server\ManagementUnit.cs" />
+    <Compile Include="Server\ManagementUserInfo.cs" />
+    <Compile Include="Server\ManagementUserInfoCollection.cs" />
+    <Compile Include="Server\ModuleDefinition.cs" />
+    <Compile Include="Server\ModuleInfo.cs" />
+    <Compile Include="Server\ModuleProvider.cs" />
+    <Compile Include="Server\ModuleService.cs" />
+    <Compile Include="Server\ModuleServiceMethodAttribute.cs" />
+    <Compile Include="Server\PropertyBag.cs" />
+    <Compile Include="Server\ServerManagementUnit.cs" />
+    <Compile Include="Server\SimpleDelegatedModuleProvider.cs" />
+    <Compile Include="Server\SiteInfo.cs" />
+    <Compile Include="Server\SiteManagementUnit.cs" />
+    <Compile Include="Server\TypeInformationGenerator.cs" />
+    <Compile Include="Server\WebManagementEventLog.cs" />
+    <Compile Include="Server\WebManagementServiceException.cs" />
+    <Compile Include="Server\WebManagementServiceHandler.cs" />
+    <Compile Include="Utility\ServiceUtility.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft.Web.Configuration.AppHostFileProvider\Microsoft.Web.Configuration.AppHostFileProvider.csproj">
+      <Project>{E4DAB2F5-AF63-413C-886A-09BC4353ADB6}</Project>
+      <Name>Microsoft.Web.Configuration.AppHostFileProvider</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\mwa\Microsoft.Web.Administration\Microsoft.Web.Administration.csproj">
+      <Project>{bd24afda-292f-4f41-ba80-c48f21d4d9f2}</Project>
+      <Name>Microsoft.Web.Administration</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="JexusManager.snk" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Client\Win32\ModuleDialogPage.resx">
+      <DependentUpon>ModuleDialogPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Client\Win32\ModulePropertiesPage.resx">
+      <DependentUpon>ModulePropertiesPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Client\Win32\WizardForm.resx">
+      <DependentUpon>WizardForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Client\Win32\WizardPage.resx">
+      <DependentUpon>WizardPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\apply_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cancel_16.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,397 @@
+﻿// Copyright (c) Lex Li. All rights reserved.
+// 
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
+/*
+ * Created by SharpDevelop.
+ * User: lextm
+ * Time: 11:06 AM
+ * 
+ * To change this template use Tools | Options | Coding | Edit Standard Headers.
+ */
+
+namespace JexusManager.Features.Certificates
+{
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Reflection;
+    using System.Resources;
+    using System.Security.Cryptography;
+    using System.Security.Cryptography.X509Certificates;
+    using System.Windows.Forms;
+
+    using JexusManager.Services;
+    using JexusManager.Features.Certificates.Wizards.CertificateRenewWizard;
+    using JexusManager.Features.Certificates.Wizards.CertificateRequestWizard;
+
+    using Microsoft.Web.Administration;
+    using Microsoft.Web.Management.Client;
+    using Microsoft.Web.Management.Client.Win32;
+
+    using Module = Microsoft.Web.Management.Client.Module;
+
+    /// <summary>
+    /// Description of DefaultDocumentFeature.
+    /// </summary>
+    internal class CertificatesFeature
+    {
+        private sealed class FeatureTaskList : DefaultTaskList
+        {
+            private readonly CertificatesFeature _owner;
+
+            public FeatureTaskList(CertificatesFeature owner)
+            {
+                _owner = owner;
+            }
+
+            private const string LocalhostIssuer = "CN=localhost";
+            private readonly string _localMachineIssuer = string.Format("CN={0}", Environment.MachineName);
+
+            public override ICollection GetTaskItems()
+            {
+                var result = new ArrayList();
+                result.Add(new MethodTaskItem("Import", "Import...", string.Empty).SetUsage());
+                result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                result.Add(new MethodTaskItem("CreateRequest", "Create Certificate Request...", string.Empty).SetUsage());
+                result.Add(new MethodTaskItem("Complete", "Complete Certificate Request...", string.Empty).SetUsage());
+                result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                result.Add(new MethodTaskItem("CreateDomain", "Create Domain Certificate...", string.Empty).SetUsage());
+                result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                result.Add(new MethodTaskItem("CreateSelf", "Create Self-Signed Certificate...", string.Empty).SetUsage());
+                if (_owner.SelectedItem != null)
+                {
+                    result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    result.Add(new MethodTaskItem("View", "View...", string.Empty).SetUsage());
+                    if (_owner.SelectedItem.Certificate.HasPrivateKey)
+                    {
+                        try
+                        {
+                            var keyInfo = (RSACryptoServiceProvider)_owner.SelectedItem.Certificate.PrivateKey;
+                            if (keyInfo.CspKeyContainerInfo.Exportable)
+                            {
+                                result.Add(new MethodTaskItem("Export", "Export...", string.Empty).SetUsage());
+                                if (_owner.SelectedItem.Certificate.Issuer != LocalhostIssuer && _owner.SelectedItem.Certificate.Issuer != _localMachineIssuer)
+                                {
+                                    result.Add(new MethodTaskItem("Renew", "Renew...", string.Empty).SetUsage());
+                                }
+                            }
+                        }
+                        catch (CryptographicException ex)
+                        {
+                            if (ex.HResult != -2146893802)
+                            {
+                                throw;
+                            }
+                        }
+                    }
+
+                    result.Add(RemoveTaskItem);
+                }
+
+                result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                if (!_owner.AutomicRebindEnabled)
+                {
+                    result.Add(new MethodTaskItem("Enable", "Enable Automatic Rebind of Renewed Certificate", string.Empty).SetUsage());
+                }
+
+                if (_owner.AutomicRebindEnabled)
+                {
+                    result.Add(new MethodTaskItem("Disable", "Disable Automatic Rebind of Renewed Certificate", string.Empty).SetUsage());
+                }
+
+                return result.ToArray(typeof(TaskItem)) as TaskItem[];
+            }
+
+            [Obfuscation(Exclude = true)]
+            public void Import()
+            {
+                _owner.Import();
+            }
+
+            [Obfuscation(Exclude = true)]
+            public void View()
+            {
+                _owner.View();
+            }
+
+            [Obfuscation(Exclude = true)]
+            public void Export()
+            {
+                _owner.Export();
+            }
+
+            [Obfuscation(Exclude = true)]
+            public void Renew()
+            {
+                _owner.Renew();
+            }
+
+            [Obfuscation(Exclude = true)]
+            public override void Remove()
+            {
+                _owner.Remove();
+            }
+
+            [Obfuscation(Exclude = true)]
+            public void CreateRequest()
+            {
+                _owner.CreateRequest();
+            }
+
+            [Obfuscation(Exclude = true)]
+            public void Complete()
+            {
+                _owner.Complete();
+            }
+
+            [Obfuscation(Exclude = true)]
+            public void CreateDomain()
+            {
+                _owner.CreateDomain();
+            }
+
+            [Obfuscation(Exclude = true)]
+            public void CreateSelf()
+            {
+                _owner.CreateSelf();
+            }
+
+            [Obfuscation(Exclude = true)]
+            public void Enable()
+            {
+                _owner.Enable();
+            }
+
+            [Obfuscation(Exclude = true)]
+            public void Disable()
+            {
+                _owner.Disable();
+            }
+        }
+
+        public CertificatesFeature(Module module)
+        {
+            Module = module;
+        }
+
+        protected static readonly Version FxVersion10 = new Version("1.0");
+        protected static readonly Version FxVersion11 = new Version("1.1");
+        protected static readonly Version FxVersion20 = new Version("2.0");
+        protected static readonly Version FxVersionNotRequired = new Version();
+        private FeatureTaskList _taskList;
+
+        protected void DisplayErrorMessage(Exception ex, ResourceManager resourceManager)
+        {
+            var service = (IManagementUIService)GetService(typeof(IManagementUIService));
+            service.ShowError(ex, resourceManager.GetString("General"), "", false);
+        }
+
+        protected object GetService(Type type)
+        {
+            return (Module as IServiceProvider).GetService(type);
+        }
+
+        public TaskList GetTaskList()
+        {
+            return _taskList ?? (_taskList = new FeatureTaskList(this));
+        }
+
+        public void Load()
+        {
+            Items = new List<CertificatesItem>();
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+            if (service.ServerManager.Mode == WorkingMode.Jexus)
+            {
+                var certificate = AsyncHelper.RunSync(() => service.ServerManager.GetCertificateAsync());
+                if (certificate != null)
+                {
+                    Items.Add(new CertificatesItem(certificate, "Jexus", this));
+                }
+            }
+            else
+            {
+                X509Store personal = new X509Store("MY", StoreLocation.LocalMachine);
+                personal.Open(OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
+                foreach (var certificate in personal.Certificates)
+                {
+                    Items.Add(new CertificatesItem(certificate, "Personal", this));
+                }
+
+                personal.Close();
+
+                if (Environment.OSVersion.Version.Major >= 8)
+                {
+                    // IMPORTANT: WebHosting store is available since Windows 8.
+                    X509Store hosting = new X509Store("WebHosting", StoreLocation.LocalMachine);
+                    hosting.Open(OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
+                    foreach (var certificate in hosting.Certificates)
+                    {
+                        Items.Add(new CertificatesItem(certificate, "WebHosting", this));
+                    }
+
+                    hosting.Close();
+                }
+            }
+
+            OnCertificatesSettingsSaved();
+        }
+
+        public List<CertificatesItem> Items { get; set; }
+
+        public void Import()
+        {
+            var dialog = new ImportCertificateDialog(Module);
+            if (dialog.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
+
+            Items.Add(new CertificatesItem(dialog.Item, dialog.Store, this));
+            OnCertificatesSettingsSaved();
+        }
+
+        public void Remove()
+        {
+            var dialog = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+            if (
+                dialog.ShowMessage("Are you sure that you want to remove this certificate, and permanently remove it from the certificate store?", "Confirm Remove",
+                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) !=
+                DialogResult.Yes)
+            {
+                return;
+            }
+
+            try
+            {
+                // remove certificate and mapping
+                using (var process = new Process())
+                {
+                    var start = process.StartInfo;
+                    start.Verb = "runas";
+                    start.FileName = "cmd";
+                    start.Arguments = string.Format(
+                        "/c \"\"{2}\" /h:\"{0}\" /s:{1}\"",
+                        SelectedItem.Certificate.Thumbprint,
+                        SelectedItem.Store == "Personal" ? "MY" : "WebHosting",
+                        Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe"));
+                    start.CreateNoWindow = true;
+                    start.WindowStyle = ProcessWindowStyle.Hidden;
+                    process.Start();
+                    process.WaitForExit();
+
+                    if (process.ExitCode == 0)
+                    {
+                        Items.Remove(SelectedItem);
+                        SelectedItem = null;
+                        OnCertificatesSettingsSaved();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                // elevation is cancelled.
+            }
+        }
+
+        protected void OnCertificatesSettingsSaved()
+        {
+            CertificatesSettingsUpdated?.Invoke();
+        }
+
+        public virtual bool ShowHelp()
+        {
+            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210528");
+            return false;
+        }
+
+        private void Disable()
+        {
+        }
+
+        private void Enable()
+        {
+        }
+
+        private void CreateSelf()
+        {
+            var dialog = new SelfCertificateDialog(Module);
+            if (dialog.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
+
+            Items.Add(new CertificatesItem(dialog.Item, dialog.Store, this));
+            OnCertificatesSettingsSaved();
+        }
+
+        private void CreateDomain()
+        {
+        }
+
+        private void Complete()
+        {
+            var dialog = new CompleteRequestDialog(Module);
+            if (dialog.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
+
+            Items.Add(new CertificatesItem(dialog.Item, dialog.Store, this));
+            OnCertificatesSettingsSaved();
+        }
+
+        private void CreateRequest()
+        {
+            var wizard = new CertificateRequestWizard(Module);
+            wizard.ShowDialog();
+        }
+
+        private void Export()
+        {
+            var dialog = new ExportCertificateDialog(SelectedItem.Certificate, Module);
+            dialog.ShowDialog();
+        }
+
+        private void Renew()
+        {
+            var wizard = new CertificateRenewWizard(SelectedItem.Certificate, Module);
+            wizard.ShowDialog();
+        }
+
+        private void View()
+        {
+            var cert = SelectedItem.Certificate;
+            DialogHelper.DisplayCertificate(cert, IntPtr.Zero);
+        }
+
+        public bool AutomicRebindEnabled { get; set; }
+
+        public CertificatesItem SelectedItem { get; internal set; }
+
+        public CertificatesSettingsSavedEventHandler CertificatesSettingsUpdated { get; set; }
+        public string Description { get; }
+
+        public virtual bool IsFeatureEnabled
+        {
+            get { return true; }
+        }
+
+        public virtual Version MinimumFrameworkVersion
+        {
+            get { return FxVersionNotRequired; }
+        }
+
+        public Module Module { get; }
+
+        public string Name
+        {
+            get
+            {
+                return "Server Certificates";
+            }
+        }
+    }
+}

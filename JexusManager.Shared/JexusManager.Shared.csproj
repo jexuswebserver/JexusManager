@@ -1,0 +1,148 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E4040A45-B156-4048-B1A4-BD262BA18047}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>JexusManager</RootNamespace>
+    <AssemblyName>JexusManager.Shared</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>JexusManager.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BouncyCastle.Crypto, Version=1.8.1.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
+      <HintPath>..\packages\BouncyCastle.1.8.1\lib\BouncyCastle.Crypto.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Ookii.Dialogs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0c15020868fd6249, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ookii.Dialogs.WindowsForms.1.0\lib\net35\Ookii.Dialogs.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\mwa\JexusManager\BindingExtensions.cs">
+      <Link>BindingExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\mwa\JexusManager\CertificateInfo.cs">
+      <Link>CertificateInfo.cs</Link>
+    </Compile>
+    <Compile Include="ApplicationExtensions.cs" />
+    <Compile Include="ConfigurationElementExtensions.cs" />
+    <Compile Include="ConfigurationSectionExtensions.cs" />
+    <Compile Include="DefaultWizardForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DefaultWizardPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DescriptionConverter.cs" />
+    <Compile Include="DialogHelper.cs" />
+    <Compile Include="Features\DefaultTaskList.cs" />
+    <Compile Include="Features\ShowHelpTaskList.cs" />
+    <Compile Include="Features\FeatureBase.cs" />
+    <Compile Include="Features\IDuoItem.cs" />
+    <Compile Include="Features\IItem.cs" />
+    <Compile Include="Features\ScopeExtensions.cs" />
+    <Compile Include="Features\TaskItemExtensions.cs" />
+    <Compile Include="Features\TimeSpanExtensions.cs" />
+    <Compile Include="NativeMethods.cs" />
+    <Compile Include="PhysicalDirectory.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ServerManagerExtensions.cs" />
+    <Compile Include="Services\ConfigurationService.cs" />
+    <Compile Include="Services\ControlPanel.cs" />
+    <Compile Include="Services\IConfigurationService.cs" />
+    <Compile Include="Services\ManagementUIService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft.Web.Management\Microsoft.Web.Management.csproj">
+      <Project>{17e994b0-5a31-4f79-9796-83a45e87853d}</Project>
+      <Name>Microsoft.Web.Management</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\mwa\Microsoft.Web.Administration\Microsoft.Web.Administration.csproj">
+      <Project>{bd24afda-292f-4f41-ba80-c48f21d4d9f2}</Project>
+      <Name>Microsoft.Web.Administration</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="JexusManager.snk" />
+    <None Include="packages.config" />
+    <None Include="Resources\application_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\title_32.png" />
+    <None Include="Resources\site_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\transparent_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\view_16.png" />
+    <None Include="Resources\move_up_16.png" />
+    <None Include="Resources\move_down_16.png" />
+    <None Include="Resources\show_all_16.png" />
+    <None Include="Resources\go_16.png" />
+    <None Include="Resources\back_16.png" />
+    <None Include="Resources\basic_settings_16.png" />
+    <Content Include="Resources\help_16.png" />
+    <None Include="Resources\remove_16.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

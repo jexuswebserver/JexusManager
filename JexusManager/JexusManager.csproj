@@ -1,0 +1,713 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{5203A38D-6A1D-4785-8E83-54081AD2ADAA}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>JexusManager.Main</RootNamespace>
+    <AssemblyName>JexusManager</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <NoStdLib>False</NoStdLib>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>Full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>JexusManager.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>iis.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+    <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
+    <BaseAddress>4194304</BaseAddress>
+    <RegisterForComInterop>False</RegisterForComInterop>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BouncyCastle.Crypto, Version=1.8.1.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
+      <HintPath>..\packages\BouncyCastle.1.8.1\lib\BouncyCastle.Crypto.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Crad.Windows.Forms.Actions">
+      <HintPath>..\packages\ActionListWinForms.1.3.0.0\lib\net40\Crad.Windows.Forms.Actions.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Security">
+      <HintPath>..\lib\Mono.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Ookii.Dialogs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0c15020868fd6249, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ookii.Dialogs.WindowsForms.1.0\lib\net35\Ookii.Dialogs.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\lib\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Features\Main\ApplicationFeature.cs" />
+    <Compile Include="Features\Main\ApplicationPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Features\Main\ApplicationPage.Designer.cs">
+      <DependentUpon>ApplicationPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Features\Main\ApplicationPoolAdvancedSettings.cs" />
+    <Compile Include="Features\Main\ApplicationPoolAdvancedSettingsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Features\Main\ApplicationPoolAdvancedSettingsDialog.Designer.cs">
+      <DependentUpon>ApplicationPoolAdvancedSettingsDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Features\Main\ApplicationPoolBasicSettingsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Features\Main\ApplicationPoolBasicSettingsDialog.Designer.cs">
+      <DependentUpon>ApplicationPoolBasicSettingsDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Features\Main\ApplicationPoolDefaultsSettings.cs" />
+    <Compile Include="Features\Main\ApplicationPoolDefaultsSettingsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Features\Main\ApplicationPoolDefaultsSettingsDialog.Designer.cs">
+      <DependentUpon>ApplicationPoolDefaultsSettingsDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Features\Main\ApplicationPoolsFeature.cs" />
+    <Compile Include="Features\Main\ApplicationPoolsPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Features\Main\ApplicationPoolsPage.Designer.cs">
+      <DependentUpon>ApplicationPoolsPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Features\Main\ApplicationPoolsSettingsSavedEventHandler.cs" />
+    <Compile Include="Features\Main\BindingDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Features\Main\BindingDialog.Designer.cs">
+      <DependentUpon>BindingDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Features\Main\BindingsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Features\Main\BindingsDialog.Designer.cs">
+      <DependentUpon>BindingsDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Features\Main\CLRVersion.cs" />
+    <Compile Include="Features\Main\CredentialsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Features\Main\CredentialsDialog.Designer.cs">
+      <DependentUpon>CredentialsDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Features\Main\HomePage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Features\Main\HomePage.Designer.cs">
+      <DependentUpon>HomePage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Features\Main\IdentityDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Features\Main\IdentityDialog.Designer.cs">
+      <DependentUpon>IdentityDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Features\Main\IdentityEditor.cs" />
+    <Compile Include="Features\Main\MainModule.cs" />
+    <Compile Include="Features\Main\ModulePageInfoListViewItem.cs" />
+    <Compile Include="Features\Main\PhysicalDirectoryFeature.cs" />
+    <Compile Include="Features\Main\PhysicalDirectoryPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Features\Main\PhysicalDirectoryPage.Designer.cs">
+      <DependentUpon>PhysicalDirectoryPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Features\Main\ServerFeature.cs" />
+    <Compile Include="Features\Main\ServerPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Features\Main\ServerPage.Designer.cs">
+      <DependentUpon>ServerPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Features\Main\ServerSettingsSavedEventHandler.cs" />
+    <Compile Include="Features\Main\SiteFeature.cs" />
+    <Compile Include="Features\Main\SitePage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Features\Main\SitePage.Designer.cs">
+      <DependentUpon>SitePage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Features\Main\SitesFeature.cs" />
+    <Compile Include="Features\Main\SitesPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Features\Main\SitesPage.Designer.cs">
+      <DependentUpon>SitesPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Features\Main\SslDiagDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Features\Main\SslDiagDialog.Designer.cs">
+      <DependentUpon>SslDiagDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Features\Main\VirtualDirectoryFeature.cs" />
+    <Compile Include="Features\Main\VirtualDirectoryPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Features\Main\VirtualDirectoryPage.Designer.cs">
+      <DependentUpon>VirtualDirectoryPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Services\NavigationService.cs" />
+    <Compile Include="Tree\ApplicationPoolsTreeNode.cs" />
+    <Compile Include="Tree\ApplicationTreeNode.cs" />
+    <Compile Include="Tree\HomePageTreeNode.cs" />
+    <Compile Include="Tree\ManagerTreeNode.cs" />
+    <Compile Include="Tree\PhysicalDirectoryTreeNode.cs" />
+    <Compile Include="Tree\ServerTreeNode.cs" />
+    <Compile Include="Tree\SitesTreeNode.cs" />
+    <Compile Include="Tree\SiteTreeNode.cs" />
+    <Compile Include="Tree\VirtualDirectoryTreeNode.cs" />
+    <Compile Include="Wizards\ConnectionWizard\ConnectionWizardData.cs" />
+    <Compile Include="Dialogs\NewVirtualDirectoryDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\NewVirtualDirectoryDialog.Designer.cs">
+      <DependentUpon>NewVirtualDirectoryDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\SelectPoolDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\SelectPoolDialog.Designer.cs">
+      <DependentUpon>SelectPoolDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\UpdateDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\UpdateDialog.Designer.cs">
+      <DependentUpon>UpdateDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FarmServerAdvancedSettings.cs" />
+    <Compile Include="Wizards\ConnectionWizard\ConnectionWizard.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Wizards\ConnectionWizard\ConnectionWizard.Designer.cs">
+      <DependentUpon>ConnectionWizard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\CertificateErrorsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\CertificateErrorsDialog.Designer.cs">
+      <DependentUpon>CertificateErrorsDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\EditSiteDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\EditSiteDialog.Designer.cs">
+      <DependentUpon>EditSiteDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\NewApplicationDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\NewApplicationDialog.Designer.cs">
+      <DependentUpon>NewApplicationDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\NewSiteDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\NewSiteDialog.Designer.cs">
+      <DependentUpon>NewSiteDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StringFormatter.cs" />
+    <Compile Include="Wizards\ConnectionWizard\CredentialsPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Wizards\ConnectionWizard\CredentialsPage.Designer.cs">
+      <DependentUpon>CredentialsPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Wizards\ConnectionWizard\BrowsePage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Wizards\ConnectionWizard\BrowsePage.Designer.cs">
+      <DependentUpon>BrowsePage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Wizards\ConnectionWizard\FinishPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Wizards\ConnectionWizard\FinishPage.Designer.cs">
+      <DependentUpon>FinishPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Wizards\ConnectionWizard\TypePage.cs">
+      <SubType>usercontrol</SubType>
+    </Compile>
+    <Compile Include="Wizards\ConnectionWizard\TypePage.Designer.cs">
+      <DependentUpon>TypePage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Wizards\ConnectionWizard\ServerPage.cs">
+      <SubType>usercontrol</SubType>
+    </Compile>
+    <Compile Include="Wizards\ConnectionWizard\ServerPage.Designer.cs">
+      <DependentUpon>ServerPage.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Dialogs\NewVirtualDirectoryDialog.resx">
+      <DependentUpon>NewVirtualDirectoryDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\SelectPoolDialog.resx">
+      <DependentUpon>SelectPoolDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\UpdateDialog.resx">
+      <DependentUpon>UpdateDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Features\Main\ApplicationPage.resx">
+      <DependentUpon>ApplicationPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Features\Main\ApplicationPoolAdvancedSettingsDialog.resx">
+      <DependentUpon>ApplicationPoolAdvancedSettingsDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Features\Main\ApplicationPoolBasicSettingsDialog.resx">
+      <DependentUpon>ApplicationPoolBasicSettingsDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Features\Main\ApplicationPoolDefaultsSettingsDialog.resx">
+      <DependentUpon>ApplicationPoolDefaultsSettingsDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Features\Main\ApplicationPoolsPage.resx">
+      <DependentUpon>ApplicationPoolsPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Features\Main\BindingDialog.resx">
+      <DependentUpon>BindingDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Features\Main\BindingsDialog.resx">
+      <DependentUpon>BindingsDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Features\Main\CredentialsDialog.resx">
+      <DependentUpon>CredentialsDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Features\Main\HomePage.resx">
+      <DependentUpon>HomePage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Features\Main\IdentityDialog.resx">
+      <DependentUpon>IdentityDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Features\Main\PhysicalDirectoryPage.resx">
+      <DependentUpon>PhysicalDirectoryPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Features\Main\ServerPage.resx">
+      <DependentUpon>ServerPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Features\Main\SitePage.resx">
+      <DependentUpon>SitePage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Features\Main\SitesPage.resx">
+      <DependentUpon>SitesPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Features\Main\SslDiagDialog.resx">
+      <DependentUpon>SslDiagDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Features\Main\VirtualDirectoryPage.resx">
+      <DependentUpon>VirtualDirectoryPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wizards\ConnectionWizard\ConnectionWizard.resx">
+      <DependentUpon>ConnectionWizard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\CertificateErrorsDialog.resx">
+      <DependentUpon>CertificateErrorsDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\EditSiteDialog.resx">
+      <DependentUpon>EditSiteDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\NewApplicationDialog.resx">
+      <DependentUpon>NewApplicationDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\NewSiteDialog.resx">
+      <DependentUpon>NewSiteDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wizards\ConnectionWizard\CredentialsPage.resx">
+      <DependentUpon>CredentialsPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wizards\ConnectionWizard\BrowsePage.resx">
+      <DependentUpon>BrowsePage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wizards\ConnectionWizard\FinishPage.resx">
+      <DependentUpon>FinishPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wizards\ConnectionWizard\TypePage.resx">
+      <DependentUpon>TypePage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wizards\ConnectionWizard\ServerPage.resx">
+      <DependentUpon>ServerPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="app.manifest" />
+    <None Include="JexusManager.snk" />
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\JexusManager.Features.Access\JexusManager.Features.Access.csproj">
+      <Project>{b756b3a0-cfc8-4e71-a95a-0e9dc2a8d0c9}</Project>
+      <Name>JexusManager.Features.Access</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JexusManager.Features.Authentication\JexusManager.Features.Authentication.csproj">
+      <Project>{aa7ccfc5-b695-4773-ba79-77cf6c36908f}</Project>
+      <Name>JexusManager.Features.Authentication</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JexusManager.Features.Authorization\JexusManager.Features.Authorization.csproj">
+      <Project>{fefd62be-aa83-42b9-a79d-2df0150f4f81}</Project>
+      <Name>JexusManager.Features.Authorization</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JexusManager.Features.Caching\JexusManager.Features.Caching.csproj">
+      <Project>{30a30352-ca83-446e-8af8-598ea7397988}</Project>
+      <Name>JexusManager.Features.Caching</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JexusManager.Features.Certificates\JexusManager.Features.Certificates.csproj">
+      <Project>{d37cf28b-10f1-4f28-b933-c5e18d7f09aa}</Project>
+      <Name>JexusManager.Features.Certificates</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JexusManager.Features.Cgi\JexusManager.Features.Cgi.csproj">
+      <Project>{0adf28c5-377f-4aa3-b732-aa8c8aeebb16}</Project>
+      <Name>JexusManager.Features.Cgi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JexusManager.Features.Compression\JexusManager.Features.Compression.csproj">
+      <Project>{cd9a8535-a6b1-46bb-8acb-73d5e393147e}</Project>
+      <Name>JexusManager.Features.Compression</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JexusManager.Features.DefaultDocument\JexusManager.Features.DefaultDocument.csproj">
+      <Project>{1e54f67a-3538-4f8d-b2ee-5da6a821a528}</Project>
+      <Name>JexusManager.Features.DefaultDocument</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JexusManager.Features.DirectoryBrowse\JexusManager.Features.DirectoryBrowse.csproj">
+      <Project>{5fb94cd1-af29-4396-a27f-891243f12e8c}</Project>
+      <Name>JexusManager.Features.DirectoryBrowse</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JexusManager.Features.FastCgi\JexusManager.Features.FastCgi.csproj">
+      <Project>{aa816b3f-8b23-4440-a276-898958204a6d}</Project>
+      <Name>JexusManager.Features.FastCgi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JexusManager.Features.Handlers\JexusManager.Features.Handlers.csproj">
+      <Project>{bd450763-248d-4117-9af0-51a625667b61}</Project>
+      <Name>JexusManager.Features.Handlers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JexusManager.Features.HttpApi\JexusManager.Features.HttpApi.csproj">
+      <Project>{2b03e7fe-3dbd-4914-ad8c-4cb7007a9eed}</Project>
+      <Name>JexusManager.Features.HttpApi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JexusManager.Features.HttpErrors\JexusManager.Features.HttpErrors.csproj">
+      <Project>{76f1fa9f-3e56-4d5c-9324-d69db260efa9}</Project>
+      <Name>JexusManager.Features.HttpErrors</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JexusManager.Features.HttpRedirect\JexusManager.Features.HttpRedirect.csproj">
+      <Project>{c0c1dde1-6447-4d3e-bc1a-f62cabbdbb53}</Project>
+      <Name>JexusManager.Features.HttpRedirect</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JexusManager.Features.IpSecurity\JexusManager.Features.IpSecurity.csproj">
+      <Project>{361e2f47-289f-480f-b976-a6e3f7d96edc}</Project>
+      <Name>JexusManager.Features.IpSecurity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JexusManager.Features.IsapiCgiRestriction\JexusManager.Features.IsapiCgiRestriction.csproj">
+      <Project>{1571b862-8cd9-4314-9ccf-b1339d50298b}</Project>
+      <Name>JexusManager.Features.IsapiCgiRestriction</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JexusManager.Features.IsapiFilters\JexusManager.Features.IsapiFilters.csproj">
+      <Project>{dba682a8-0579-4f41-a852-18235a9a4a93}</Project>
+      <Name>JexusManager.Features.IsapiFilters</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JexusManager.Features.Jexus\JexusManager.Features.Jexus.csproj">
+      <Project>{ea333ee8-6551-4b5b-a733-119c5560608d}</Project>
+      <Name>JexusManager.Features.Jexus</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JexusManager.Features.Logging\JexusManager.Features.Logging.csproj">
+      <Project>{5c2ae18d-d829-481b-8fca-8ad0f69e68c8}</Project>
+      <Name>JexusManager.Features.Logging</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JexusManager.Features.MimeMap\JexusManager.Features.MimeMap.csproj">
+      <Project>{fd1a63c6-458f-496b-9923-80eca082c7ec}</Project>
+      <Name>JexusManager.Features.MimeMap</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JexusManager.Features.Modules\JexusManager.Features.Modules.csproj">
+      <Project>{8bfab6bc-57c1-44fc-88e2-b3ce5b75be9f}</Project>
+      <Name>JexusManager.Features.Modules</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JexusManager.Features.RequestFiltering\JexusManager.Features.RequestFiltering.csproj">
+      <Project>{56d44318-5979-4fc5-9f01-4d7f78709a0e}</Project>
+      <Name>JexusManager.Features.RequestFiltering</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JexusManager.Features.ResponseHeaders\JexusManager.Features.ResponseHeaders.csproj">
+      <Project>{7184ae3d-12d2-444d-b75a-2589f66e6b54}</Project>
+      <Name>JexusManager.Features.ResponseHeaders</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JexusManager.Features.Rewrite\JexusManager.Features.Rewrite.csproj">
+      <Project>{425cee66-72b3-42c0-989c-685b28b05230}</Project>
+      <Name>JexusManager.Features.Rewrite</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JexusManager.Shared\JexusManager.Shared.csproj">
+      <Project>{e4040a45-b156-4048-b1a4-bd262ba18047}</Project>
+      <Name>JexusManager.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\lib\CheckBoxComboBox\CheckBoxComboBox.csproj">
+      <Project>{70A25201-8EA4-48F8-A4A6-ED13ADF8823C}</Project>
+      <Name>CheckBoxComboBox</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\lib\ExpandCollapsePanel\MakarovDev.ExpandCollapsePanel\MakarovDev.ExpandCollapsePanel.csproj">
+      <Project>{BE76A6FE-225F-4287-9CA0-231F5AF4CDC1}</Project>
+      <Name>MakarovDev.ExpandCollapsePanel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\lib\Vista.Controls.BreadcrumbBar\Vista.Controls.BreadcrumbBar.csproj">
+      <Project>{95BC6698-E149-4388-B077-BEDB7453046B}</Project>
+      <Name>Vista.Controls.BreadcrumbBar</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Microsoft.Web.Management\Microsoft.Web.Management.csproj">
+      <Project>{17E994B0-5A31-4F79-9796-83A45E87853D}</Project>
+      <Name>Microsoft.Web.Management</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\mwa\Microsoft.Web.Administration\Microsoft.Web.Administration.csproj">
+      <Project>{bd24afda-292f-4f41-ba80-c48f21d4d9f2}</Project>
+      <Name>Microsoft.Web.Administration</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\application_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\application_pools_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\physical_directory_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\server_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\site_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\sites_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\virtual_directory_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="jexus.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="iis.ico" />
+    <None Include="Resources\title_48.png" />
+    <None Include="Resources\servers_16.png" />
+    <None Include="Resources\update_16.png" />
+    <None Include="Resources\application_pools_stopped_16.png" />
+    <None Include="Resources\site_stopped_16.png" />
+    <None Include="Resources\iis_16.png" />
+    <None Include="Resources\farm_16.png" />
+    <None Include="Resources\farm_server_16.png" />
+    <None Include="Resources\certificates_16.png" />
+    <None Include="Resources\warning_32.png" />
+    <None Include="Resources\switch_16.png" />
+    <None Include="Resources\refresh_16.png" />
+    <None Include="Resources\virtual_directory_new_16.png" />
+    <None Include="Resources\application_new_16.png" />
+    <None Include="Resources\info_16.png" />
+    <None Include="Resources\save_16.png" />
+    <None Include="Resources\connect_16.png" />
+    <None Include="Resources\disconnected_16.png" />
+    <None Include="Resources\basic_settings_16.png" />
+    <None Include="Resources\explore_16.png" />
+    <None Include="Resources\browse_16.png" />
+    <None Include="Resources\up_16.png" />
+    <None Include="Resources\site_new_16.png" />
+    <None Include="Resources\application_pool_new_16.png" />
+    <None Include="Resources\stop_16.png" />
+    <None Include="Resources\start_16.png" />
+    <None Include="Resources\restart_16.png" />
+    <None Include="Resources\back_16.png" />
+    <None Include="Resources\help_16.png" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  -->
+  <!-- All the stuff normally found in the project, then in the AfterBuild event... -->
+  <Target Name="AfterBuild">
+    <!-- Here's the call to the custom task to get the list of dependencies -->
+    <ScanIndirectDependencies StartFolder="$(MSBuildProjectDirectory)" StartProjectReferences="@(ProjectReference)" Configuration="$(Configuration)">
+      <Output TaskParameter="IndirectDependencies" ItemName="IndirectDependenciesToCopy" />
+    </ScanIndirectDependencies>
+    <!-- Only copy the file in if we won't stomp something already there -->
+    <Copy SourceFiles="%(IndirectDependenciesToCopy.FullPath)" DestinationFolder="$(OutputPath)" Condition="!Exists('$(OutputPath)\%(IndirectDependenciesToCopy.Filename)%(IndirectDependenciesToCopy.Extension)')" />
+  </Target>
+  <!-- THE CUSTOM TASK! -->
+  <UsingTask TaskName="ScanIndirectDependencies" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <StartFolder Required="true" />
+      <StartProjectReferences ParameterType="Microsoft.Build.Framework.ITaskItem[]" Required="true" />
+      <Configuration Required="true" />
+      <IndirectDependencies ParameterType="Microsoft.Build.Framework.ITaskItem[]" Output="true" />
+    </ParameterGroup>
+    <Task>
+      <Reference Include="System.Xml" />
+      <Using Namespace="Microsoft.Build.Framework" />
+      <Using Namespace="Microsoft.Build.Utilities" />
+      <Using Namespace="System" />
+      <Using Namespace="System.Collections.Generic" />
+      <Using Namespace="System.IO" />
+      <Using Namespace="System.Linq" />
+      <Using Namespace="System.Xml" />
+      <Code Type="Fragment" Language="cs"><![CDATA[
+var projectReferences = new List<string>();
+var toScan = new List<string>(StartProjectReferences.Select(p => Path.GetFullPath(Path.Combine(StartFolder, p.ItemSpec))));
+var indirectDependencies = new List<string>();
+
+bool rescan;
+do{
+  rescan = false;
+  foreach(var projectReference in toScan.ToArray())
+  {
+    if(projectReferences.Contains(projectReference))
+    {
+      toScan.Remove(projectReference);
+      continue;
+    }
+
+    Log.LogMessage(MessageImportance.Low, "Scanning project reference for other project references: {0}", projectReference);
+
+    var doc = new XmlDocument();
+    doc.Load(projectReference);
+    var nsmgr = new XmlNamespaceManager(doc.NameTable);
+    nsmgr.AddNamespace("msb", "http://schemas.microsoft.com/developer/msbuild/2003");
+    var projectDirectory = Path.GetDirectoryName(projectReference);
+
+    // Find all project references we haven't already seen
+    var newReferences = doc
+          .SelectNodes("/msb:Project/msb:ItemGroup/msb:ProjectReference/@Include", nsmgr)
+          .Cast<XmlAttribute>()
+          .Select(a => Path.GetFullPath(Path.Combine(projectDirectory, a.Value)));
+
+    if(newReferences.Count() > 0)
+    {
+      Log.LogMessage(MessageImportance.Low, "Found new referenced projects: {0}", String.Join(", ", newReferences));
+    }
+
+    toScan.Remove(projectReference);
+    projectReferences.Add(projectReference);
+
+    // Add any new references to the list to scan and mark the flag
+    // so we run through the scanning loop again.
+    toScan.AddRange(newReferences);
+    rescan = true;
+
+    // Include the assembly that the project reference generates.
+    var outputLocation = Path.Combine(Path.Combine(projectDirectory, "bin"), Configuration);
+    var localAsm = Path.GetFullPath(Path.Combine(outputLocation, doc.SelectSingleNode("/msb:Project/msb:PropertyGroup/msb:AssemblyName", nsmgr).InnerText + ".dll"));
+    if(!indirectDependencies.Contains(localAsm) && File.Exists(localAsm))
+    {
+      Log.LogMessage(MessageImportance.Low, "Added project assembly: {0}", localAsm);
+      indirectDependencies.Add(localAsm);
+    }
+
+    // Include third-party assemblies referenced by file location.
+    var externalReferences = doc
+          .SelectNodes("/msb:Project/msb:ItemGroup/msb:Reference/msb:HintPath", nsmgr)
+          .Cast<XmlElement>()
+          .Select(a => Path.GetFullPath(Path.Combine(projectDirectory, a.InnerText.Trim())))
+          .Where(e => !indirectDependencies.Contains(e));
+
+    Log.LogMessage(MessageImportance.Low, "Found new indirect references: {0}", String.Join(", ", externalReferences));
+    indirectDependencies.AddRange(externalReferences);
+  }
+} while(rescan);
+
+// Expand to include pdb and xml.
+var xml = indirectDependencies.Select(f => Path.Combine(Path.GetDirectoryName(f), Path.GetFileNameWithoutExtension(f) + ".xml")).Where(f => File.Exists(f)).ToArray();
+var pdb = indirectDependencies.Select(f => Path.Combine(Path.GetDirectoryName(f), Path.GetFileNameWithoutExtension(f) + ".pdb")).Where(f => File.Exists(f)).ToArray();
+indirectDependencies.AddRange(xml);
+indirectDependencies.AddRange(pdb);
+Log.LogMessage("Located indirect references:\n{0}", String.Join(Environment.NewLine, indirectDependencies));
+
+// Finally, assign the output parameter.
+IndirectDependencies = indirectDependencies.Select(i => new TaskItem(i)).ToArray();
+      ]]></Code>
+    </Task>
+  </UsingTask>
+</Project>
