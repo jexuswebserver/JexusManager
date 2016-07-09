@@ -1,5 +1,7 @@
 Jexus Manager from LeXtudio
 ===========================
+
+[![Join the chat at https://gitter.im/jexuswebserver/JexusManager](https://badges.gitter.im/jexuswebserver/JexusManager.svg)](https://gitter.im/jexuswebserver/JexusManager?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 Jexus Manager was designed to be the cross platform manager for Jexus web server.
 
 ![Jexus Manager](http://i.stack.imgur.com/IeWe3.png)
