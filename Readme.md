@@ -1,5 +1,8 @@
 Jexus Manager from LeXtudio
 ===========================
+
+[![Gitter](https://badges.gitter.im/jexuswebserver/JexusManager.svg)](https://gitter.im/jexuswebserver/JexusManager?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+
 Jexus Manager was designed to be the cross platform manager for Jexus web server.
 
 ![Jexus Manager](http://i.stack.imgur.com/IeWe3.png)
@@ -13,10 +16,11 @@ Documentation is at http://jexusmanager.com
 
 About The Icons
 ===============
-http://8666.deviantart.com/art/Tango-MIME-Icons-114829865
-Use Bbook.ico and book-catelog-security.ico
-Creative Commons Attribution-Share Alike 3.0 License.
 
-http://commons.wikimedia.org/wiki/Tango_icons
-Tango Icons
-Public Domain
+Source 1: http://8666.deviantart.com/art/Tango-MIME-Icons-114829865
+> Use Bbook.ico and book-catelog-security.ico
+> Creative Commons Attribution-Share Alike 3.0 License.
+
+Source 2: http://commons.wikimedia.org/wiki/Tango_icons
+> Tango Icons
+> Public Domain
