@@ -89,6 +89,10 @@ namespace JexusManager.Features.Certificates
                     }
 
                     result.Add(RemoveTaskItem);
+                    if (_owner.SelectedItem.Certificate.Issuer == LocalhostIssuer || _owner.SelectedItem.Certificate.Issuer == _localMachineIssuer)
+                    {
+                        result.Add(new MethodTaskItem("Trust", "Trust Self-Signed Certificate", string.Empty).SetUsage());
+                    }
                 }
 
                 result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
@@ -169,6 +173,12 @@ namespace JexusManager.Features.Certificates
             public void Disable()
             {
                 _owner.Disable();
+            }
+
+            [Obfuscation(Exclude = true)]
+            public void Trust()
+            {
+                _owner.Trust();
             }
         }
 
@@ -365,6 +375,31 @@ namespace JexusManager.Features.Certificates
         {
             var cert = SelectedItem.Certificate;
             DialogHelper.DisplayCertificate(cert, IntPtr.Zero);
+        }
+
+        private void Trust()
+        {
+            var cert = SelectedItem.Certificate;
+            var store = new X509Store(StoreName.Root, StoreLocation.CurrentUser);
+            store.Open(OpenFlags.ReadWrite);
+            if (store.Certificates.Find(X509FindType.FindByThumbprint, cert.Thumbprint, false).Count == 0)
+            {
+                try
+                {
+                    store.Add(cert);
+                }
+                catch (CryptographicException ex)
+                {
+                    if (ex.HResult != -2147023673)
+                    {
+                        throw;
+                    }
+
+                    // add operation cancelled.
+                }
+            }
+
+            store.Close();
         }
 
         public bool AutomicRebindEnabled { get; set; }

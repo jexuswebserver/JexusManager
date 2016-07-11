@@ -33,7 +33,7 @@ namespace JexusManager.Services
 
         public void ShowMessage(string text, string caption)
         {
-            MessageBox.Show(DialogOwner, text, caption);
+            MessageBox.Show(DialogOwner, text, caption, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         public DialogResult ShowMessage(string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon)
