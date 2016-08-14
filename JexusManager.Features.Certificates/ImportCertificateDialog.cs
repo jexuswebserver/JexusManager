@@ -39,7 +39,7 @@ namespace JexusManager.Features.Certificates
 
             if (!Helper.IsRunningOnMono())
             {
-                NativeMethods.TryAddShieldToButton(btnOK);
+                JexusManager.NativeMethods.TryAddShieldToButton(btnOK);
             }
 
             var container = new CompositeDisposable();

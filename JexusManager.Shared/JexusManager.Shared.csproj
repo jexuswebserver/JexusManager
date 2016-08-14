@@ -40,6 +40,14 @@
       <HintPath>..\packages\BouncyCastle.1.8.1\lib\BouncyCastle.Crypto.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.Web.Administration, Version=11.0.814.6, Culture=neutral, PublicKeyToken=c99ddc8becdc1d64, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Administration.Jexus.11.0.0-beta3\lib\net45\Microsoft.Web.Administration.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Ookii.Dialogs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0c15020868fd6249, processorArchitecture=MSIL">
       <HintPath>..\packages\Ookii.Dialogs.WindowsForms.1.0\lib\net35\Ookii.Dialogs.dll</HintPath>
       <Private>True</Private>
@@ -47,6 +55,10 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Security" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
@@ -57,13 +69,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\mwa\JexusManager\BindingExtensions.cs">
-      <Link>BindingExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\mwa\JexusManager\CertificateInfo.cs">
-      <Link>CertificateInfo.cs</Link>
-    </Compile>
     <Compile Include="ApplicationExtensions.cs" />
+    <Compile Include="BindingExtensions.cs" />
+    <Compile Include="CertificateInfo.cs" />
     <Compile Include="ConfigurationElementExtensions.cs" />
     <Compile Include="ConfigurationSectionExtensions.cs" />
     <Compile Include="DefaultWizardForm.cs">
@@ -100,10 +108,6 @@
     <ProjectReference Include="..\Microsoft.Web.Management\Microsoft.Web.Management.csproj">
       <Project>{17e994b0-5a31-4f79-9796-83a45e87853d}</Project>
       <Name>Microsoft.Web.Management</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\mwa\Microsoft.Web.Administration\Microsoft.Web.Administration.csproj">
-      <Project>{bd24afda-292f-4f41-ba80-c48f21d4d9f2}</Project>
-      <Name>Microsoft.Web.Administration</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

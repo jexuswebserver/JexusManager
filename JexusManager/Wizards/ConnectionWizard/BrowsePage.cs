@@ -55,7 +55,7 @@ namespace JexusManager.Wizards.ConnectionWizard
                 else
                 {
                     var service = (IManagementUIService)GetService(typeof(IManagementUIService));
-                    service.ShowMessage("This solution does not contain IIS Express configuration file.", Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    service.ShowMessage("This solution does not contain IIS Express configuration file. Make sure you run the web project in Visual Studio 2015 once for the configuration file to be generated. If you are using other versions of Visual Studio, you might check the sites under IIS Express server node.", Caption, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
             }
