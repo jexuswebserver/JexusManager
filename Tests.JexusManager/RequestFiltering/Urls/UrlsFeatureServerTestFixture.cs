@@ -52,7 +52,7 @@ namespace Tests.RequestFiltering.Urls
                 "JEXUS_TEST_HOME",
                 Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
 
-            _server = new ServerManager(Current) { Mode = WorkingMode.IisExpress };
+            _server = new IisExpressServerManager(Current);
 
             _serviceContainer = new ServiceContainer();
             _serviceContainer.RemoveService(typeof(IConfigurationService));

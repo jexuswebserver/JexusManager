@@ -370,7 +370,7 @@ namespace JexusManager
                 try
                 {
                     await serverNode.ServerManager.CommitChangesAsync();
-                    var conflict = await serverNode.ServerManager.ByeAsync();
+                    var conflict = await ((JexusServerManager)serverNode.ServerManager).ByeAsync();
                     if (Environment.MachineName != conflict)
                     {
                         MessageBox.Show(string.Format("The server is also connected to {0}. Making changes on multiple clients might corrupt server configuration.", conflict), Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -627,7 +627,7 @@ namespace JexusManager
                 var path = Path.GetTempFileName();
                 var random = Guid.NewGuid().ToString();
                 File.WriteAllText(path, random);
-                node.IsLocalhost = await node.ServerManager.LocalhostTestAsync(path, random);
+                node.IsLocalhost = await ((JexusServerManager)node.ServerManager).LocalhostTestAsync(path, random);
                 data.Server.IsLocalhost = node.IsLocalhost;
             }
             else

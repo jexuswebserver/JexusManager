@@ -133,7 +133,8 @@ namespace JexusManager.Features.Main
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             if (service.ServerManager.Mode == WorkingMode.Jexus)
             {
-                this.IsStarted = AsyncHelper.RunSync(() => service.ServerManager.GetStatusAsync());
+                var server = (JexusServerManager)service.ServerManager;
+                this.IsStarted = AsyncHelper.RunSync(() => server.GetStatusAsync());
             }
 
             SupportSslDiag = service.ServerManager.Mode != WorkingMode.Jexus;
@@ -170,8 +171,9 @@ namespace JexusManager.Features.Main
             OnServerSettingsSaved();
             if (service.ServerManager.Mode == WorkingMode.Jexus)
             {
-                AsyncHelper.RunSync(() => service.ServerManager.StopAsync());
-                this.IsStarted = AsyncHelper.RunSync(() => service.ServerManager.GetStatusAsync());
+                var server = (JexusServerManager)service.ServerManager;
+                AsyncHelper.RunSync(() => server.StopAsync());
+                this.IsStarted = AsyncHelper.RunSync(() => server.GetStatusAsync());
             }
             else
             {
@@ -189,8 +191,9 @@ namespace JexusManager.Features.Main
             OnServerSettingsSaved();
             if (service.ServerManager.Mode == WorkingMode.Jexus)
             {
-                AsyncHelper.RunSync(() => service.ServerManager.StartAsync());
-                this.IsStarted = AsyncHelper.RunSync(() => service.ServerManager.GetStatusAsync());
+                var server = (JexusServerManager)service.ServerManager;
+                AsyncHelper.RunSync(() => server.StartAsync());
+                this.IsStarted = AsyncHelper.RunSync(() => server.GetStatusAsync());
             }
             else
             {
@@ -208,9 +211,10 @@ namespace JexusManager.Features.Main
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             if (service.ServerManager.Mode == WorkingMode.Jexus)
             {
-                AsyncHelper.RunSync(() => service.ServerManager.StopAsync());
-                AsyncHelper.RunSync(() => service.ServerManager.StartAsync());
-                this.IsStarted = AsyncHelper.RunSync(() => service.ServerManager.GetStatusAsync());
+                var server = (JexusServerManager)service.ServerManager;
+                AsyncHelper.RunSync(() => server.StopAsync());
+                AsyncHelper.RunSync(() => server.StartAsync());
+                this.IsStarted = AsyncHelper.RunSync(() => server.GetStatusAsync());
             }
             else
             {

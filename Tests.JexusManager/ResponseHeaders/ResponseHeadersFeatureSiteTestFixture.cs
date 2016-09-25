@@ -50,7 +50,7 @@ namespace Tests.ResponseHeaders
                 "JEXUS_TEST_HOME",
                 Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
 
-            _server = new ServerManager(Current) { Mode = WorkingMode.IisExpress };
+            _server = new IisExpressServerManager(Current);
 
             var serviceContainer = new ServiceContainer();
             serviceContainer.RemoveService(typeof(IConfigurationService));

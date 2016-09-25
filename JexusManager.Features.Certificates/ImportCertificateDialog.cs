@@ -78,13 +78,14 @@ namespace JexusManager.Features.Certificates
                         var service = (IConfigurationService)GetService(typeof(IConfigurationService));
                         if (service.ServerManager.Mode == WorkingMode.Jexus)
                         {
+                            var server = (JexusServerManager)service.Server;
                             // Public Key;
                             StringBuilder publicBuilder = new StringBuilder();
                             publicBuilder.AppendLine("-----BEGIN CERTIFICATE-----");
                             publicBuilder.AppendLine(Convert.ToBase64String(Item.Export(X509ContentType.Cert), Base64FormattingOptions.InsertLineBreaks));
                             publicBuilder.AppendLine("-----END CERTIFICATE-----");
-                            var file = await service.ServerManager.SaveCertificateAsync(publicBuilder.ToString());
-                            service.ServerManager.SetCertificate(file);
+                            var file = await server.SaveCertificateAsync(publicBuilder.ToString());
+                            server.SetCertificate(file);
                             // Private Key
                             RSACryptoServiceProvider rsa = (RSACryptoServiceProvider)Item.PrivateKey;
                             MemoryStream memoryStream = new MemoryStream();
@@ -98,8 +99,8 @@ namespace JexusManager.Features.Certificates
                             memoryStream.Close();
                             streamWriter.Close();
                             string key = output.Substring(0, indexOfFooter + 29);
-                            var keyFile = await service.ServerManager.SaveKeyAsync(key);
-                            service.ServerManager.SetKeyFile(keyFile);
+                            var keyFile = await server.SaveKeyAsync(key);
+                            server.SetKeyFile(keyFile);
                             await service.ServerManager.CommitChangesAsync();
                         }
                         else

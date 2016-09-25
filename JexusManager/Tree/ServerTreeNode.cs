@@ -117,24 +117,24 @@ namespace JexusManager.Tree
             {
                 if (Mode == WorkingMode.IisExpress)
                 {
-                    ServerManager = new ServerManager(HostName);
+                    ServerManager = new IisServerManager(HostName);
                 }
                 else if (Mode == WorkingMode.Iis)
                 {
-                    ServerManager = new ServerManager(true, this.HostName);
+                    ServerManager = new IisServerManager(true, this.HostName);
                 }
                 else
                 {
-                    ServerManager = new ServerManager(HostName, Credentials);
+                    ServerManager = new JexusServerManager(HostName, Credentials);
                 }
 
-                ServerManager.Mode = Mode;
                 ServerManager.Name = this.DisplayName;
 
                 if (this.Mode == WorkingMode.Jexus)
                 {
                     this.SetHandler();
-                    var version = await this.ServerManager.GetVersionAsync();
+                    var server = (JexusServerManager)ServerManager;
+                    var version = await server.GetVersionAsync();
                     if (version == null)
                     {
                         MessageBox.Show("Authentication failed.", Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -144,14 +144,14 @@ namespace JexusManager.Tree
                         return;
                     }
 
-                    if (version < JexusHelper.MinimumServerVersion)
+                    if (version < JexusServerManager.MinimumServerVersion)
                     {
                         var toContinue =
                             MessageBox.Show(
                                 string.Format(
                                     "The server version is {0}, while minimum compatible version is {1}. Making changes might corrupt server configuration. Do you want to continue?",
                                     version,
-                                    JexusHelper.MinimumServerVersion),
+                                    JexusServerManager.MinimumServerVersion),
                                 Text,
                                 MessageBoxButtons.YesNoCancel,
                                 MessageBoxIcon.Question);
@@ -164,7 +164,7 @@ namespace JexusManager.Tree
                         }
                     }
 
-                    var conflict = await this.ServerManager.HelloAsync();
+                    var conflict = await server.HelloAsync();
                     if (Environment.MachineName != conflict)
                     {
                         MessageBox.Show(

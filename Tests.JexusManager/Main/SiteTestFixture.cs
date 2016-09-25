@@ -35,7 +35,7 @@ namespace Tests.Main
                 "JEXUS_TEST_HOME",
                 Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
 
-            var serverManager = new ServerManager(Current) { Mode = WorkingMode.IisExpress };
+            var serverManager = new IisExpressServerManager(Current);
 
             Configuration config = serverManager.GetApplicationHostConfiguration();
             ConfigurationSection sitesSection = config.GetSection("system.applicationHost/sites");
@@ -96,7 +96,7 @@ namespace Tests.Main
                 "JEXUS_TEST_HOME",
                 Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
 
-            var serverManager = new ServerManager(Current) { Mode = WorkingMode.IisExpress };
+            var serverManager = new IisExpressServerManager(Current);
 
             var sites = serverManager.Sites;
             var site = new Site(sites);

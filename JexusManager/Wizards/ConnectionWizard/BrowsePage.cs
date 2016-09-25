@@ -49,7 +49,7 @@ namespace JexusManager.Wizards.ConnectionWizard
                 var config = Path.Combine(folder, ".vs", "config", "applicationHost.config");
                 if (File.Exists(config))
                 {
-                    data.Server = new ServerManager(config);
+                    data.Server = new IisExpressServerManager(config);
                     data.FileName = config;
                 }
                 else
@@ -61,10 +61,9 @@ namespace JexusManager.Wizards.ConnectionWizard
             }
             else
             {
-                data.Server = new ServerManager(data.FileName);
+                data.Server = new IisExpressServerManager(data.FileName);
             }
 
-            data.Server.Mode = WorkingMode.IisExpress;
             return true;
         }
 

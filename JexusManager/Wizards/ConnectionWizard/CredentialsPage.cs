@@ -104,22 +104,23 @@ namespace JexusManager.Wizards.ConnectionWizard
             try
             {
                 var data = (ConnectionWizardData)WizardData;
-                data.Server = new ServerManager(data.HostName, data.UserName + "|" + data.Password);
-                var version = await data.Server.GetVersionAsync();
+                var server = new JexusServerManager(data.HostName, data.UserName + "|" + data.Password);
+                data.Server = server;
+                var version = await server.GetVersionAsync();
                 if (version == null)
                 {
                     service.ShowMessage("Authentication failed.", Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
 
-                if (version < JexusHelper.MinimumServerVersion)
+                if (version < JexusServerManager.MinimumServerVersion)
                 {
                     var toContinue =
                         service.ShowMessage(
                             string.Format(
                                 "The server version is {0}, while minimum compatible version is {1}. Making changes might corrupt server configuration. Do you want to continue?",
                                 version,
-                                JexusHelper.MinimumServerVersion),
+                                JexusServerManager.MinimumServerVersion),
                             Text,
                             MessageBoxButtons.YesNoCancel,
                             MessageBoxIcon.Question);
@@ -129,13 +130,12 @@ namespace JexusManager.Wizards.ConnectionWizard
                     }
                 }
 
-                var conflict = await data.Server.HelloAsync();
+                var conflict = await server.HelloAsync();
                 if (Environment.MachineName != conflict)
                 {
                     service.ShowMessage(string.Format("The server is also connected to {0}. Making changes on multiple clients might corrupt server configuration.", conflict), Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
 
-                data.Server.Mode = WorkingMode.Jexus;
                 data.CertificateHash = accepted;
                 return true;
             }

@@ -215,7 +215,8 @@ namespace JexusManager.Features.Certificates
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             if (service.ServerManager.Mode == WorkingMode.Jexus)
             {
-                var certificate = AsyncHelper.RunSync(() => service.ServerManager.GetCertificateAsync());
+                var server = (JexusServerManager)service.Server;
+                var certificate = AsyncHelper.RunSync(() => server.GetCertificateAsync());
                 if (certificate != null)
                 {
                     Items.Add(new CertificatesItem(certificate, "Jexus", this));

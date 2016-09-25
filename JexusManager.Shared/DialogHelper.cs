@@ -52,7 +52,7 @@ namespace JexusManager
             comboBox.SelectedIndex = 0;
             if (service.ServerManager.Mode == WorkingMode.Jexus)
             {
-                var certificate = AsyncHelper.RunSync(() => service.ServerManager.GetCertificateAsync());
+                var certificate = AsyncHelper.RunSync(() => ((JexusServerManager)service.ServerManager).GetCertificateAsync());
                 if (certificate == null)
                 {
                     return;
