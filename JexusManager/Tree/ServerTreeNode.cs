@@ -117,7 +117,7 @@ namespace JexusManager.Tree
             {
                 if (Mode == WorkingMode.IisExpress)
                 {
-                    ServerManager = new IisServerManager(HostName);
+                    ServerManager = new IisExpressServerManager(HostName);
                 }
                 else if (Mode == WorkingMode.Iis)
                 {
