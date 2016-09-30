@@ -9,7 +9,6 @@ _ReSharper*
 *.cache
 *.trx
 *.pidb
-*.nugetreferenceswitcher
 Thumbs.db
 [Bb]in
 [Dd]ebug
@@ -34,4 +33,4 @@ T4MVC.cs
 /SharpSnmpLib.Mib/Help
 
 /NDependOut
-/.vs/Supercharger
+/.vs
