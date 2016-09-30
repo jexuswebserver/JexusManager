@@ -44,10 +44,6 @@
       <HintPath>..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.Web.Administration, Version=11.0.925.24, Culture=neutral, PublicKeyToken=c99ddc8becdc1d64, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Web.Administration.Jexus.11.0.0-beta4\lib\net45\Microsoft.Web.Administration.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Moq, Version=4.5.22.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\packages\Moq.4.5.22\lib\net45\Moq.dll</HintPath>
       <Private>True</Private>
@@ -748,6 +744,10 @@
     <ProjectReference Include="..\lib\CheckBoxComboBox\CheckBoxComboBox.csproj">
       <Project>{70a25201-8ea4-48f8-a4a6-ed13adf8823c}</Project>
       <Name>CheckBoxComboBox</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\lib\Microsoft.Web.Administration\Microsoft.Web.Administration\Microsoft.Web.Administration.csproj">
+      <Project>{BD24AFDA-292F-4F41-BA80-C48F21D4D9F2}</Project>
+      <Name>Microsoft.Web.Administration</Name>
     </ProjectReference>
     <ProjectReference Include="..\Microsoft.Web.Management\Microsoft.Web.Management.csproj">
       <Project>{17E994B0-5A31-4F79-9796-83A45E87853D}</Project>
