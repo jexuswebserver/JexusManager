@@ -21,6 +21,8 @@ namespace JexusManager.Features.Main
     using Microsoft.Web.Management.Client.Win32;
 
     using Binding = Microsoft.Web.Administration.Binding;
+    using System.IO;
+    using System.Collections.Generic;
 
     internal partial class SitesPage : ModuleListPage
     {
@@ -62,6 +64,7 @@ namespace JexusManager.Features.Main
                 SubItems.Add(new ListViewSubItem(this, CommonHelper.ToString(Item.State)));
                 SubItems.Add(new ListViewSubItem(this, ToString(Item.Bindings)));
                 SubItems.Add(new ListViewSubItem(this, Item.Applications[0].VirtualDirectories[0].PhysicalPath));
+                SubItems.Add(new ListViewSubItem(this, Directory.Exists(Item.Applications[0].VirtualDirectories[0].PhysicalPath).ToString()));
                 ImageIndex = item.State == ObjectState.Started ? 0 : 1;
             }
 
@@ -95,6 +98,7 @@ namespace JexusManager.Features.Main
             imageList1.Images.Add(Resources.site_16);
             imageList1.Images.Add(Resources.site_stopped_16);
             _form = form;
+            listView1.ListViewItemSorter = new ListViewItemSorter(listView1);
         }
 
         protected override void Initialize(object navigationData)
@@ -238,6 +242,54 @@ namespace JexusManager.Features.Main
             if (e.KeyCode == Keys.Delete)
             {
                 _feature.Remove();
+            }
+        }
+
+        private void listView1_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            // todo : 需要实现正序倒序排列方法，
+            ((ListViewItemSorter)listView1.ListViewItemSorter).PushSort(e.Column);
+            listView1.Sort();
+        }
+
+        private class ListViewItemSorter : IComparer
+        {
+            // todo : 需要实现正序倒序排列方法，
+            private ListView _parent;
+            private int maxNum;
+            private int _effectiveCount;
+            public ListViewItemSorter(ListView parent)
+            {
+                _parent = parent;
+                maxNum = _parent.Columns.Count;
+            }
+            public void PushSort(int colum)
+            {
+                PushSort(colum, maxNum);
+            }
+            public void PushSort(int colum , int effectiveCount)
+            {
+                sortList.AddFirst(colum);
+                if (sortList.Count > maxNum)
+                    sortList.RemoveLast();
+                _effectiveCount = effectiveCount;
+            }
+            private LinkedList<int> sortList = new LinkedList<int>();
+            public int Compare(object x, object y)
+            {
+                var xObj = x as SitesListViewItem;
+                var yObj = y as SitesListViewItem;
+
+                foreach(var c in sortList)
+                {
+                    if(c <maxNum && c < _effectiveCount)
+                    {
+                        var temp = string.Compare(xObj.SubItems[c].Text, yObj.SubItems[c].Text);
+                        if (temp != 0)
+                            return temp;
+                    }
+                }
+                return 0;
             }
         }
     }

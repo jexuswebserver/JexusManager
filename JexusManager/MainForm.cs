@@ -450,9 +450,10 @@ namespace JexusManager
             var data = GetCurrentData();
             foreach (TreeNode node in data.SitesNode.Nodes)
             {
-                if (node.Tag == site)
+                if (node?.Tag == site)
                 {
                     node.Remove();
+                    break;
                 }
             }
         }
@@ -515,6 +516,7 @@ namespace JexusManager
                 if (node.Tag == site)
                 {
                     node.Text = site.Name;
+                    break;
                 }
             }
         }

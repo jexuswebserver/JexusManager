@@ -42,6 +42,7 @@
             this.chStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chBinding = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chIsExistPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.cbFilter = new System.Windows.Forms.ToolStripComboBox();
@@ -126,7 +127,8 @@
             this.chId,
             this.chStatus,
             this.chBinding,
-            this.chPath});
+            this.chPath,
+            this.chIsExistPath});
             this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listView1.FullRowSelect = true;
             this.listView1.LabelEdit = true;
@@ -139,6 +141,7 @@
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
             this.listView1.AfterLabelEdit += new System.Windows.Forms.LabelEditEventHandler(this.listView1_AfterLabelEdit);
+            this.listView1.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listView1_ColumnClick);
             this.listView1.SelectedIndexChanged += new System.EventHandler(this.listView1_SelectedIndexChanged);
             this.listView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listView1_KeyDown);
             this.listView1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listView1_MouseDoubleClick);
@@ -168,6 +171,10 @@
             this.chPath.Text = "Path";
             this.chPath.Width = 225;
             // 
+            // chIsExistPath
+            // 
+            this.chIsExistPath.Text = "Valid";
+            // 
             // toolStrip2
             // 
             this.toolStrip2.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
@@ -188,7 +195,7 @@
             // toolStripLabel1
             // 
             this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(36, 22);
+            this.toolStripLabel1.Size = new System.Drawing.Size(39, 22);
             this.toolStripLabel1.Text = "Filter:";
             // 
             // cbFilter
@@ -208,51 +215,51 @@
             this.protocolToolStripMenuItem});
             this.btnGo.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnGo.Name = "btnGo";
-            this.btnGo.Size = new System.Drawing.Size(54, 22);
+            this.btnGo.Size = new System.Drawing.Size(41, 22);
             this.btnGo.Text = "Go";
             this.btnGo.ToolTipText = "Go";
             // 
             // siteNameToolStripMenuItem
             // 
             this.siteNameToolStripMenuItem.Name = "siteNameToolStripMenuItem";
-            this.siteNameToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.siteNameToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.siteNameToolStripMenuItem.Text = "Site Name";
             // 
             // hostNameToolStripMenuItem
             // 
             this.hostNameToolStripMenuItem.Name = "hostNameToolStripMenuItem";
-            this.hostNameToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.hostNameToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.hostNameToolStripMenuItem.Text = "Host Name";
             // 
             // iPAddressToolStripMenuItem
             // 
             this.iPAddressToolStripMenuItem.Name = "iPAddressToolStripMenuItem";
-            this.iPAddressToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.iPAddressToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.iPAddressToolStripMenuItem.Text = "IP Address";
             // 
             // portToolStripMenuItem
             // 
             this.portToolStripMenuItem.Name = "portToolStripMenuItem";
-            this.portToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.portToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.portToolStripMenuItem.Text = "Port";
             // 
             // physicalAddressToolStripMenuItem
             // 
             this.physicalAddressToolStripMenuItem.Name = "physicalAddressToolStripMenuItem";
-            this.physicalAddressToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.physicalAddressToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.physicalAddressToolStripMenuItem.Text = "Physical Path";
             // 
             // protocolToolStripMenuItem
             // 
             this.protocolToolStripMenuItem.Name = "protocolToolStripMenuItem";
-            this.protocolToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.protocolToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.protocolToolStripMenuItem.Text = "Protocol";
             // 
             // btnShowAll
             // 
             this.btnShowAll.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnShowAll.Name = "btnShowAll";
-            this.btnShowAll.Size = new System.Drawing.Size(73, 22);
+            this.btnShowAll.Size = new System.Drawing.Size(61, 22);
             this.btnShowAll.Text = "Show All";
             this.btnShowAll.Click += new System.EventHandler(this.btnShowAll_Click);
             // 
@@ -264,7 +271,7 @@
             // toolStripLabel2
             // 
             this.toolStripLabel2.Name = "toolStripLabel2";
-            this.toolStripLabel2.Size = new System.Drawing.Size(59, 22);
+            this.toolStripLabel2.Size = new System.Drawing.Size(66, 22);
             this.toolStripLabel2.Text = "Group by:";
             // 
             // cbGroup
@@ -402,5 +409,6 @@
         private ToolStripLabel toolStripLabel2;
         private ToolStripComboBox cbGroup;
         private ContextMenuStrip cmsActionPanel;
+        private ColumnHeader chIsExistPath;
     }
 }
