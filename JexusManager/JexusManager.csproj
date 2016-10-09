@@ -101,14 +101,13 @@
     <Compile Include="..\lib\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Features\AestheticObject.cs" />
-    <Compile Include="Features\Class1.cs" />
-    <Compile Include="Features\ListViewColumnSorter1.cs" />
-    <Compile Include="Features\SortModifiers.cs" />
-    <Compile Include="Features\TextComparer.cs" />
+    <Compile Include="Features\ListViewColumnCustomSorter.cs" />
+    <Compile Include="Features\ListViewColumnDateSorter.cs" />
+    <Compile Include="Features\ListViewColumnNumericSorter.cs" />
+    <Compile Include="Features\ListViewColumnTextSorter.cs" />
+    <Compile Include="Features\ListViewItemSorter.cs" />
+    <Compile Include="Features\ListViewColumnSorter.cs" />
     <Compile Include="Features\ComparerResult.cs" />
-    <Compile Include="Features\NumericComparer.cs" />
-    <Compile Include="Features\DateComparer.cs" />
     <Compile Include="Features\Main\ApplicationFeature.cs" />
     <Compile Include="Features\Main\ApplicationPage.cs">
       <SubType>UserControl</SubType>
@@ -156,7 +155,6 @@
     <Compile Include="Features\Main\BindingsDialog.Designer.cs">
       <DependentUpon>BindingsDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Features\ListViewColumnSorter.cs" />
     <Compile Include="Features\Main\CLRVersion.cs" />
     <Compile Include="Features\Main\CredentialsDialog.cs">
       <SubType>Form</SubType>

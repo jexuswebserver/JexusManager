@@ -1,15 +1,6 @@
-﻿// ***********************************************************************
-// Author   : Elektro
-// Modified : 06-January-2016
-// ***********************************************************************
+﻿#region " Comparer Result "
 
-#region " Option Statements "
-
-#endregion
-
-#region " Comparer Result "
-
-namespace Enums
+namespace JexusManager.Main.Features
 {
     /// ----------------------------------------------------------------------------------------------------
     /// <summary>
