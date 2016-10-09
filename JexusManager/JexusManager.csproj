@@ -101,6 +101,14 @@
     <Compile Include="..\lib\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Features\AestheticObject.cs" />
+    <Compile Include="Features\Class1.cs" />
+    <Compile Include="Features\ListViewColumnSorter1.cs" />
+    <Compile Include="Features\SortModifiers.cs" />
+    <Compile Include="Features\TextComparer.cs" />
+    <Compile Include="Features\ComparerResult.cs" />
+    <Compile Include="Features\NumericComparer.cs" />
+    <Compile Include="Features\DateComparer.cs" />
     <Compile Include="Features\Main\ApplicationFeature.cs" />
     <Compile Include="Features\Main\ApplicationPage.cs">
       <SubType>UserControl</SubType>
@@ -148,6 +156,7 @@
     <Compile Include="Features\Main\BindingsDialog.Designer.cs">
       <DependentUpon>BindingsDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Features\ListViewColumnSorter.cs" />
     <Compile Include="Features\Main\CLRVersion.cs" />
     <Compile Include="Features\Main\CredentialsDialog.cs">
       <SubType>Form</SubType>
@@ -579,6 +588,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="iis.ico" />
+    <None Include="Resources\None.png" />
+    <None Include="Resources\Descending.png" />
+    <None Include="Resources\Ascending.png" />
     <None Include="Resources\title_48.png" />
     <None Include="Resources\servers_16.png" />
     <None Include="Resources\update_16.png" />

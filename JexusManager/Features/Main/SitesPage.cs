@@ -23,6 +23,7 @@ namespace JexusManager.Features.Main
     using Binding = Microsoft.Web.Administration.Binding;
     using System.IO;
     using System.Collections.Generic;
+    using JexusManager.Main.Features;
 
     internal partial class SitesPage : ModuleListPage
     {
@@ -88,7 +89,7 @@ namespace JexusManager.Features.Main
         private readonly MainForm _form;
         private SitesFeature _feature;
         private PageTaskList _taskList;
-
+        private ListViewItemSorter sorter;
         public SitesPage(MainForm form)
         {
             InitializeComponent();
@@ -97,8 +98,16 @@ namespace JexusManager.Features.Main
 
             imageList1.Images.Add(Resources.site_16);
             imageList1.Images.Add(Resources.site_stopped_16);
+            imageList1.Images.Add("Ascending", Resources.Ascending);
+            imageList1.Images.Add("Descending", Resources.Descending);
+            imageList1.Images.Add("None", Resources.None);
+            foreach (ColumnHeader listView1Column in listView1.Columns)
+            {
+                listView1Column.ImageKey= "None";
+            }
             _form = form;
-            listView1.ListViewItemSorter = new ListViewItemSorter(listView1);
+            sorter = new ListViewItemSorter();
+            listView1.ListViewItemSorter = sorter;
         }
 
         protected override void Initialize(object navigationData)
@@ -248,49 +257,26 @@ namespace JexusManager.Features.Main
         private void listView1_ColumnClick(object sender, ColumnClickEventArgs e)
         {
             // todo : 需要实现正序倒序排列方法，
-            ((ListViewItemSorter)listView1.ListViewItemSorter).PushSort(e.Column);
+            var sorting = sorter.PushSort(e.Column, listView1.Columns.Count);
+            var header = listView1.Columns[e.Column];
+
+            header.ImageKey = sorting.ToString();
+            switch (sorting)
+            {
+                case SortOrder.None:
+                    //header.Text = header.Text.Replace("", "");
+                    break;
+                case SortOrder.Ascending:
+
+                    break;
+
+                case SortOrder.Descending:
+
+                    break;
+            }
+
+
             listView1.Sort();
-        }
-
-        private class ListViewItemSorter : IComparer
-        {
-            // todo : 需要实现正序倒序排列方法，
-            private ListView _parent;
-            private int maxNum;
-            private int _effectiveCount;
-            public ListViewItemSorter(ListView parent)
-            {
-                _parent = parent;
-                maxNum = _parent.Columns.Count;
-            }
-            public void PushSort(int colum)
-            {
-                PushSort(colum, maxNum);
-            }
-            public void PushSort(int colum , int effectiveCount)
-            {
-                sortList.AddFirst(colum);
-                if (sortList.Count > maxNum)
-                    sortList.RemoveLast();
-                _effectiveCount = effectiveCount;
-            }
-            private LinkedList<int> sortList = new LinkedList<int>();
-            public int Compare(object x, object y)
-            {
-                var xObj = x as SitesListViewItem;
-                var yObj = y as SitesListViewItem;
-
-                foreach(var c in sortList)
-                {
-                    if(c <maxNum && c < _effectiveCount)
-                    {
-                        var temp = string.Compare(xObj.SubItems[c].Text, yObj.SubItems[c].Text);
-                        if (temp != 0)
-                            return temp;
-                    }
-                }
-                return 0;
-            }
         }
     }
 }
