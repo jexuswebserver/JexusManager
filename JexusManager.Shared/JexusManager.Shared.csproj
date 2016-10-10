@@ -40,10 +40,6 @@
       <HintPath>..\packages\BouncyCastle.1.8.1\lib\BouncyCastle.Crypto.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.Web.Administration, Version=11.0.925.24, Culture=neutral, PublicKeyToken=c99ddc8becdc1d64, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Web.Administration.Jexus.11.0.0-beta4\lib\net45\Microsoft.Web.Administration.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -105,6 +101,10 @@
     <Compile Include="Services\ManagementUIService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\lib\Microsoft.Web.Administration\Microsoft.Web.Administration\Microsoft.Web.Administration.csproj">
+      <Project>{BD24AFDA-292F-4F41-BA80-C48F21D4D9F2}</Project>
+      <Name>Microsoft.Web.Administration</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Microsoft.Web.Management\Microsoft.Web.Management.csproj">
       <Project>{17e994b0-5a31-4f79-9796-83a45e87853d}</Project>
       <Name>Microsoft.Web.Management</Name>

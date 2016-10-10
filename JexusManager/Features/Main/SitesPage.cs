@@ -21,6 +21,9 @@ namespace JexusManager.Features.Main
     using Microsoft.Web.Management.Client.Win32;
 
     using Binding = Microsoft.Web.Administration.Binding;
+    using System.IO;
+    using System.Collections.Generic;
+    using JexusManager.Main.Features;
 
     internal partial class SitesPage : ModuleListPage
     {
@@ -62,6 +65,7 @@ namespace JexusManager.Features.Main
                 SubItems.Add(new ListViewSubItem(this, CommonHelper.ToString(Item.State)));
                 SubItems.Add(new ListViewSubItem(this, ToString(Item.Bindings)));
                 SubItems.Add(new ListViewSubItem(this, Item.Applications[0].VirtualDirectories[0].PhysicalPath));
+                SubItems.Add(new ListViewSubItem(this, Directory.Exists(Item.Applications[0].VirtualDirectories[0].PhysicalPath).ToString()));
                 ImageIndex = item.State == ObjectState.Started ? 0 : 1;
             }
 
@@ -85,7 +89,7 @@ namespace JexusManager.Features.Main
         private readonly MainForm _form;
         private SitesFeature _feature;
         private PageTaskList _taskList;
-
+        private ListViewItemSorter sorter;
         public SitesPage(MainForm form)
         {
             InitializeComponent();
@@ -94,7 +98,16 @@ namespace JexusManager.Features.Main
 
             imageList1.Images.Add(Resources.site_16);
             imageList1.Images.Add(Resources.site_stopped_16);
+            imageList1.Images.Add("Ascending", Resources.Ascending);
+            imageList1.Images.Add("Descending", Resources.Descending);
+            imageList1.Images.Add("None", Resources.None);
+            foreach (ColumnHeader listView1Column in listView1.Columns)
+            {
+                listView1Column.ImageKey= "None";
+            }
             _form = form;
+            sorter = new ListViewItemSorter();
+            listView1.ListViewItemSorter = sorter;
         }
 
         protected override void Initialize(object navigationData)
@@ -219,10 +232,20 @@ namespace JexusManager.Features.Main
 
         private void listView1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            _feature.SelectedItems = listView1.SelectedItems.OfType<SitesListViewItem>().Select(i=>i.Item).ToList();
+
             _feature.SelectedItem = listView1.SelectedItems.Count > 0
                 ? ((SitesListViewItem)listView1.SelectedItems[0]).Item
                 : null;
-            Refresh();
+
+            //Refresh();
+            Tasks.Fill(tsActionPanel, cmsActionPanel);
+        }
+
+
+        private void listView1_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+            //e.i
         }
 
         private void listView1_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -240,5 +263,31 @@ namespace JexusManager.Features.Main
                 _feature.Remove();
             }
         }
+
+        private void listView1_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            // todo : 需要实现正序倒序排列方法，
+            var sorting = sorter.PushSort(e.Column, listView1.Columns.Count);
+            var header = listView1.Columns[e.Column];
+
+            header.ImageKey = sorting.ToString();
+            switch (sorting)
+            {
+                case SortOrder.None:
+                    //header.Text = header.Text.Replace("", "");
+                    break;
+                case SortOrder.Ascending:
+
+                    break;
+
+                case SortOrder.Descending:
+
+                    break;
+            }
+
+
+            listView1.Sort();
+        }
+
     }
 }

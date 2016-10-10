@@ -40,10 +40,6 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Web.Administration, Version=11.0.925.24, Culture=neutral, PublicKeyToken=c99ddc8becdc1d64, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Web.Administration.Jexus.11.0.0-beta4\lib\net45\Microsoft.Web.Administration.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Mono.Options, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Mono.Options.4.4.0.0\lib\net4-client\Mono.Options.dll</HintPath>
       <Private>True</Private>
@@ -76,6 +72,12 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\lib\Microsoft.Web.Administration\Microsoft.Web.Administration\Microsoft.Web.Administration.csproj">
+      <Project>{BD24AFDA-292F-4F41-BA80-C48F21D4D9F2}</Project>
+      <Name>Microsoft.Web.Administration</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

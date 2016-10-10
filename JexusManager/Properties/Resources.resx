@@ -229,4 +229,13 @@
   <data name="certificates_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\certificates_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Ascending" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Ascending.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Descending" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Descending.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="None" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\None.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>
