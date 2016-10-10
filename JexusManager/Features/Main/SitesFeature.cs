@@ -14,7 +14,9 @@ namespace JexusManager.Features.Main
 {
     using System;
     using System.Collections;
+    using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Linq;
     using System.Reflection;
     using System.Resources;
     using System.Windows.Forms;
@@ -244,7 +246,13 @@ namespace JexusManager.Features.Main
         }
 
         public SiteCollection Items { get; set; }
-        public Site SelectedItem { get; set; }
+        public Site SelectedItem
+        {
+            get;
+            set;
+        }
+
+        public List<Site> SelectedItems { get; set; }
 
         protected void OnSitesSettingsSaved()
         {
@@ -279,7 +287,8 @@ namespace JexusManager.Features.Main
 
         internal void Remove()
         {
-            if (SelectedItem == null)
+            // Change : modify remove single site to remove multiple all selected sites
+            if (SelectedItems == null)
             {
                 return;
             }
@@ -293,7 +302,10 @@ namespace JexusManager.Features.Main
             }
 
             var index = Items.IndexOf(SelectedItem);
-            Items.Remove(SelectedItem);
+            foreach (var selectedItem in SelectedItems)
+            {
+                Items.Remove(selectedItem);
+            }
             SelectedItem.Server.CommitChanges();
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             ((MainForm)service.Form).RemoveSiteNode(SelectedItem);
