@@ -30,7 +30,9 @@ Source 2: http://commons.wikimedia.org/wiki/Tango_icons
 Change Log
 ================
 2016.10.12
->fix bug error on UAC enable on windows 10
->exception occur when double-click default tree node of IIS Express Sites or Application Pool
->Browser IIS Default Website Exception once showing Bindings
->Null Reference Exception when Remove a Site of iis Express 
+>Fix bug error on UAC enable on windows 10
+>Enhance remove single site to remove multiple all selected sites
+>Add sorting function to the sites manage page
+>Fixed Browser IIS Default Website Exception once showing Bindings(MWA)
+>Fixed exception occur when double-click default tree node of IIS Express Sites or Application Pool
+>Fixed Null Reference Exception when Remove a Site of iis Express
