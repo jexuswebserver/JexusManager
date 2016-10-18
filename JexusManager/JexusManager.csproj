@@ -98,9 +98,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\lib\SharedAssemblyInfo.cs">
-      <Link>Properties\SharedAssemblyInfo.cs</Link>
-    </Compile>
     <Compile Include="Features\ListViewColumnCustomSorter.cs" />
     <Compile Include="Features\ListViewColumnDateSorter.cs" />
     <Compile Include="Features\ListViewColumnNumericSorter.cs" />
