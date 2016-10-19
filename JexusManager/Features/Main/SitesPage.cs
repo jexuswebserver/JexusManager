@@ -232,7 +232,7 @@ namespace JexusManager.Features.Main
 
         private void listView1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _feature.SelectedItems = listView1.SelectedItems.OfType<SitesListViewItem>().Select(i=>i.Item).ToList();
+          
 
             _feature.SelectedItem = listView1.SelectedItems.Count > 0
                 ? ((SitesListViewItem)listView1.SelectedItems[0]).Item
@@ -245,7 +245,7 @@ namespace JexusManager.Features.Main
 
         private void listView1_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
-            //e.i
+            _feature.SelectedItems = listView1.SelectedItems.OfType<SitesListViewItem>().Select(i => i.Item).ToList();
         }
 
         private void listView1_MouseDoubleClick(object sender, MouseEventArgs e)

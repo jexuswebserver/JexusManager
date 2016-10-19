@@ -25,3 +25,14 @@ Source 1: http://8666.deviantart.com/art/Tango-MIME-Icons-114829865
 Source 2: http://commons.wikimedia.org/wiki/Tango_icons
 > Tango Icons
 > Public Domain
+
+
+Change Log
+================
+2016.10.12
+>Fix bug error on UAC enable on windows 10
+>Enhance remove single site to remove multiple all selected sites
+>Add sorting function to the sites manage page
+>Fixed Browser IIS Default Website Exception once showing Bindings(MWA)
+>Fixed exception occur when double-click default tree node of IIS Express Sites or Application Pool
+>Fixed Null Reference Exception when Remove a Site of iis Express
