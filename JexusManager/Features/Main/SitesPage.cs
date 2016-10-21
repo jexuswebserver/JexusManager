@@ -61,11 +61,13 @@ namespace JexusManager.Features.Main
             {
                 Item = item;
                 _page = page;
+                var path = Item.Applications[0].VirtualDirectories[0].PhysicalPath;
+                var exists = Directory.Exists(path.ExpandIisExpressEnvironmentVariables());
                 SubItems.Add(new ListViewSubItem(this, Item.Id.ToString(CultureInfo.InvariantCulture)));
                 SubItems.Add(new ListViewSubItem(this, CommonHelper.ToString(Item.State)));
                 SubItems.Add(new ListViewSubItem(this, ToString(Item.Bindings)));
-                SubItems.Add(new ListViewSubItem(this, Item.Applications[0].VirtualDirectories[0].PhysicalPath));
-                SubItems.Add(new ListViewSubItem(this, Directory.Exists(Item.Applications[0].VirtualDirectories[0].PhysicalPath).ToString()));
+                SubItems.Add(new ListViewSubItem(this, path));
+                SubItems.Add(new ListViewSubItem(this, exists.ToString()));
                 ImageIndex = item.State == ObjectState.Started ? 0 : 1;
             }
 
