@@ -15,6 +15,10 @@ More information about the code will be published in the coming weeks.
 
 Documentation is at http://jexusmanager.com
 
+Build from Source
+=================
+Make sure all Git submodules are initialized, and then run dist.deploy.bat to compile the source. It restores NuGet packages and kicks off MSBuild.
+
 About The Icons
 ===============
 
