@@ -1,6 +1,3 @@
 [submodule "lib/ExpandCollapsePanel"]
 	path = lib/ExpandCollapsePanel
 	url = git@github.com:lextm/ExpandCollapsePanel.git
-[submodule "lib/Microsoft.Web.Administration"]
-	path = lib/Microsoft.Web.Administration
-	url = git@github.com:68681395/Microsoft.Web.Administration.git
