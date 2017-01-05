@@ -30,18 +30,24 @@ namespace JexusManager
             else
             {
                 //创建启动对象
+                //如果不是管理员，则启动UAC
                 var startInfo = new ProcessStartInfo
-                {
+                {  //设置运行文件
                     FileName = executablePath,
+                    //设置启动参数
                     Arguments = string.Join(" ", args) + " " + key,
+                    //设置启动动作,确保以管理员身份运行
                     Verb = "runas"
                 };
-                //设置运行文件
+                try
+                {
+                    Process.Start(startInfo);
+                }
+                catch (System.ComponentModel.Win32Exception)
+                {
+                    return -1;
+                }
 
-                //设置启动参数
-                //设置启动动作,确保以管理员身份运行
-                //如果不是管理员，则启动UAC
-                Process.Start(startInfo);
                 //退出
                 return 0;
             }
