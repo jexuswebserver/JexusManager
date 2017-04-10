@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26403.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JexusManager", "JexusManager\JexusManager.csproj", "{5203A38D-6A1D-4785-8E83-54081AD2ADAA}"
 EndProject
@@ -74,6 +74,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JexusManager.Features.Rewrite", "JexusManager.Features.Rewrite\JexusManager.Features.Rewrite.csproj", "{425CEE66-72B3-42C0-989C-685B28B05230}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JexusManager.Features.ResponseHeaders", "JexusManager.Features.ResponseHeaders\JexusManager.Features.ResponseHeaders.csproj", "{7184AE3D-12D2-444D-B75A-2589F66E6B54}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Web.Administration", "Microsoft.Web.Administration\Microsoft.Web.Administration.csproj", "{BD24AFDA-292F-4F41-BA80-C48F21D4D9F2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.IIS", "Tests.IIS\Tests.IIS.csproj", "{4BB387EE-FE05-4215-AEA4-F7BECABBB9A9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{763C6B9C-29E4-4638-965B-7E49041A6B41}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -213,6 +219,18 @@ Global
 		{7184AE3D-12D2-444D-B75A-2589F66E6B54}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7184AE3D-12D2-444D-B75A-2589F66E6B54}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7184AE3D-12D2-444D-B75A-2589F66E6B54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD24AFDA-292F-4F41-BA80-C48F21D4D9F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD24AFDA-292F-4F41-BA80-C48F21D4D9F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD24AFDA-292F-4F41-BA80-C48F21D4D9F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD24AFDA-292F-4F41-BA80-C48F21D4D9F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BB387EE-FE05-4215-AEA4-F7BECABBB9A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BB387EE-FE05-4215-AEA4-F7BECABBB9A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BB387EE-FE05-4215-AEA4-F7BECABBB9A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BB387EE-FE05-4215-AEA4-F7BECABBB9A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{763C6B9C-29E4-4638-965B-7E49041A6B41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{763C6B9C-29E4-4638-965B-7E49041A6B41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{763C6B9C-29E4-4638-965B-7E49041A6B41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{763C6B9C-29E4-4638-965B-7E49041A6B41}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

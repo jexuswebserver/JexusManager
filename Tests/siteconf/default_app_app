@@ -1,0 +1,17 @@
+denydirs=bin,App_code
+allowfrom=111.222.111.*
+allowfrom=1.1.1.1
+rewrite=^/.+?\.(asp|php|cgi)$ /404.html
+denyfrom=111.222.111.*
+denyfrom=1.1.1.1
+denyfrom=192.168.1.0/255.255.255.0
+port=8080
+indexes=index.aspx,index.htm
+nofile=/mvc/controller.aspx
+keep_alive=True
+nolog=True
+addr=127.0.0.1
+root=/app/app/ /var/www/default
+hosts=*.mysite.com
+extra=test
+usegzip=True

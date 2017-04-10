@@ -68,10 +68,6 @@
     <Reference Include="Crad.Windows.Forms.Actions">
       <HintPath>..\packages\ActionListWinForms.1.3.0.0\lib\net40\Crad.Windows.Forms.Actions.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Web.Administration, Version=11.0.925.24, Culture=neutral, PublicKeyToken=c99ddc8becdc1d64, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Web.Administration.Jexus.11.0.0-beta4\lib\net45\Microsoft.Web.Administration.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Mono.Security">
       <HintPath>..\lib\Mono.Security.dll</HintPath>
     </Reference>
@@ -541,6 +537,10 @@
     <ProjectReference Include="..\lib\ExpandCollapsePanel\MakarovDev.ExpandCollapsePanel\MakarovDev.ExpandCollapsePanel.csproj">
       <Project>{BE76A6FE-225F-4287-9CA0-231F5AF4CDC1}</Project>
       <Name>MakarovDev.ExpandCollapsePanel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Microsoft.Web.Administration\Microsoft.Web.Administration.csproj">
+      <Project>{BD24AFDA-292F-4F41-BA80-C48F21D4D9F2}</Project>
+      <Name>Microsoft.Web.Administration</Name>
     </ProjectReference>
     <ProjectReference Include="..\lib\Vista.Controls.BreadcrumbBar\Vista.Controls.BreadcrumbBar.csproj">
       <Project>{95BC6698-E149-4388-B077-BEDB7453046B}</Project>

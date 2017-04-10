@@ -11,7 +11,7 @@ using System.Reflection;
 // You can specify all the values or you can use the default the Revision and
 // Build Numbers by using the '*' as shown below:
 
-[assembly: AssemblyVersion("10.0.000206.01")]
+[assembly: AssemblyVersion("11.0.000410.01")]
 #if (!CF)
-[assembly: AssemblyFileVersion("10.0.000206.01")]
+[assembly: AssemblyFileVersion("11.0.000410.01")]
 #endif

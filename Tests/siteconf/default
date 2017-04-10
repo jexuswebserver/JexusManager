@@ -1,0 +1,14 @@
+﻿addr=127.0.0.1
+port=8080
+hosts=*.mysite.com
+indexes=index.aspx,index.htm
+nolog=true
+denyfrom=111.222.111.*,1.1.1.1
+denyfrom=192.168.1.0/255.255.255.0
+allowfrom=111.222.111.*,1.1.1.1
+denydirs=bin,App_code
+nofile=/mvc/controller.aspx
+usegzip=true
+keep_alive=true
+rewrite=^/.+?\.(asp|php|cgi)$ /404.html
+extra=test
