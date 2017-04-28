@@ -15,7 +15,7 @@ namespace Microsoft.Web.Administration
             {
                 foreach (var @object in searcher.Get())
                 {
-                    return @object["CommandLine"].ToString();
+                    return @object["CommandLine"] as string;
                 }
             }
 
