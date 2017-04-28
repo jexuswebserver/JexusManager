@@ -4,7 +4,7 @@
 
 using System;
 
-namespace Tests
+namespace Tests.Exceptions
 {
     using System.IO;
     using System.Reflection;
@@ -12,8 +12,10 @@ namespace Tests
 
     using Microsoft.Web.Administration;
     using Xunit;
+    using System.Xml.Linq;
+    using System.Xml.XPath;
 
-    public class ExceptionTestCases
+    public class ServerTestCases
     {
         [Fact]
         public void TestProviders()
@@ -118,10 +120,24 @@ namespace Tests
             }
 
             string Current = Path.Combine(directoryName, @"applicationHost.config");
-            string Original = Path.Combine(directoryName, @"original2_missing_required.config");
+            string Original = Path.Combine(directoryName, @"original2.config");
             TestHelper.CopySiteConfig(directoryName, "original.config");
             File.Copy(Original, Current, true);
             TestHelper.FixPhysicalPathMono(Current);
+
+            {
+                // Remove the attribute.
+                var file = XDocument.Load(Current);
+                var root = file.Root;
+                if (root == null)
+                {
+                    return;
+                }
+
+                var pool = root.XPathSelectElement("/configuration/system.applicationHost/applicationPools/add[@name='UnmanagedClassicAppPool']");
+                pool.SetAttributeValue("name", null);
+                file.Save(Current);
+            }
 
 #if IIS
             var server = new ServerManager(Current);
@@ -135,7 +151,7 @@ namespace Tests
                     });
             Assert.Equal(
                 string.Format(
-                    "Filename: \\\\?\\{0}\r\nLine number: 149\r\nError: Missing required attribute 'name'\r\n\r\n",
+                    "Filename: \\\\?\\{0}\r\nLine number: 142\r\nError: Missing required attribute 'name'\r\n\r\n",
                     Current),
                 exception.Message);
         }
@@ -152,10 +168,24 @@ namespace Tests
             }
 
             string Current = Path.Combine(directoryName, @"applicationHost.config");
-            string Original = Path.Combine(directoryName, @"original2_validator_fails.config");
+            string Original = Path.Combine(directoryName, @"original2.config");
             TestHelper.CopySiteConfig(directoryName, "original.config");
             File.Copy(Original, Current, true);
             TestHelper.FixPhysicalPathMono(Current);
+
+            {
+                // Remove the attribute.
+                var file = XDocument.Load(Current);
+                var root = file.Root;
+                if (root == null)
+                {
+                    return;
+                }
+
+                var pool = root.XPathSelectElement("/configuration/system.applicationHost/applicationPools/add[@name='UnmanagedClassicAppPool']");
+                pool.SetAttributeValue("name", string.Empty);
+                file.Save(Current);
+            }
 
 #if IIS
             var server = new ServerManager(Current);
@@ -169,7 +199,7 @@ namespace Tests
                     });
             Assert.Equal(
                 string.Format(
-                    "Filename: \\\\?\\{0}\r\nLine number: 149\r\nError: The 'name' attribute is invalid.  Invalid application pool name\r\n\r\n\r\n",
+                    "Filename: \\\\?\\{0}\r\nLine number: 142\r\nError: The 'name' attribute is invalid.  Invalid application pool name\r\n\r\n\r\n",
                     Current),
                 exception.Message);
         }
@@ -186,10 +216,24 @@ namespace Tests
             }
 
             string Current = Path.Combine(directoryName, @"applicationHost.config");
-            string Original = Path.Combine(directoryName, @"original2_invalid_attribute.config");
+            string Original = Path.Combine(directoryName, @"original2.config");
             TestHelper.CopySiteConfig(directoryName, "original.config");
             File.Copy(Original, Current, true);
             TestHelper.FixPhysicalPathMono(Current);
+
+            {
+                // Remove the attribute.
+                var file = XDocument.Load(Current);
+                var root = file.Root;
+                if (root == null)
+                {
+                    return;
+                }
+
+                var pool = root.XPathSelectElement("/configuration/system.applicationHost/applicationPools/add[@name='UnmanagedClassicAppPool']");
+                pool.SetAttributeValue("testAuto", true);
+                file.Save(Current);
+            }
 
 #if IIS
             var server = new ServerManager(Current);
@@ -203,7 +247,7 @@ namespace Tests
                     });
             Assert.Equal(
                 string.Format(
-                    "Filename: \\\\?\\{0}\r\nLine number: 143\r\nError: Unrecognized attribute 'testAuto'\r\n\r\n",
+                    "Filename: \\\\?\\{0}\r\nLine number: 142\r\nError: Unrecognized attribute 'testAuto'\r\n\r\n",
                     Current),
                 exception.Message);
         }
@@ -314,123 +358,6 @@ namespace Tests
         }
 
         [Fact]
-        public void TestIisExpressInvalidSection()
-        {
-            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
-
-            if (directoryName == null)
-            {
-                return;
-            }
-
-            string Current = Path.Combine(directoryName, @"applicationHost.config");
-            string Original = Path.Combine(directoryName, @"original2.config");
-            TestHelper.CopySiteConfig(directoryName, "original_invalid_section.config");
-            File.Copy(Original, Current, true);
-            TestHelper.FixPhysicalPathMono(Current);
-
-#if IIS
-            var server = new ServerManager(Current);
-#else
-            var server = new IisExpressServerManager(Current);
-#endif
-            var config = server.Sites[0].Applications[0].GetWebConfiguration();
-            var exception = Assert.Throws<FileLoadException>(
-                () =>
-                    {
-                        // enable Windows authentication
-                        var windowsSection =
-                            config.GetSection("system.webServer/security/authentication/windowsAuthentication");
-                    });
-            var siteConfig = Path.Combine(directoryName, "WebSite1", "web.config");
-            Assert.Equal(
-                string.Format(
-                    "Filename: \\\\?\\{0}\r\nLine number: 11\r\nError: This configuration section cannot be used at this path. This happens when the section is locked at a parent level. Locking is either by default (overrideModeDefault=\"Deny\"), or set explicitly by a location tag with overrideMode=\"Deny\" or the legacy allowOverride=\"false\".\r\n\r\n",
-                    siteConfig),
-                exception.Message);
-        }
-
-        [Fact]
-        public void TestIisExpressUnknownSection()
-        {
-            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
-
-            if (directoryName == null)
-            {
-                return;
-            }
-
-            string Current = Path.Combine(directoryName, @"applicationHost.config");
-            string Original = Path.Combine(directoryName, @"original2.config");
-            TestHelper.CopySiteConfig(directoryName, "original_unknown_section.config");
-            File.Copy(Original, Current, true);
-            TestHelper.FixPhysicalPathMono(Current);
-
-#if IIS
-            var server = new ServerManager(Current);
-#else
-            var server = new IisExpressServerManager(Current);
-#endif
-            var config = server.Sites[0].Applications[0].GetWebConfiguration();
-            var exception = Assert.Throws<COMException>(
-                () =>
-                    {
-                        // enable Windows authentication
-                        var windowsSection =
-                            config.GetSection("system.webServer/security/authentication/windowsAuthentication");
-                    });
-            var siteConfig = Path.Combine(directoryName, "WebSite1", "web.config");
-#if IIS
-            Assert.Equal(string.Format("Filename: \\\\?\\{0}\r\nError: \r\n", siteConfig), exception.Message);
-#else
-            Assert.Equal(string.Format("Filename: \\\\?\\{0}\r\nLine number: 10\r\nError: Unrecognized element 'test'\r\n\r\n", siteConfig), exception.Message);
-#endif
-        }
-
-        [Fact]
-        public void TestIisExpressDuplicateSection()
-        {
-            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
-
-            if (directoryName == null)
-            {
-                return;
-            }
-
-            string Current = Path.Combine(directoryName, @"applicationHost.config");
-            string Original = Path.Combine(directoryName, @"original3.config");
-            TestHelper.CopySiteConfig(directoryName, "original_duplicate_section.config");
-            File.Copy(Original, Current, true);
-            TestHelper.FixPhysicalPathMono(Current);
-#if IIS
-            var server = new ServerManager(Current);
-#else
-            var server = new IisExpressServerManager(Current);
-#endif
-            var config = server.Sites[0].Applications[0].GetWebConfiguration();
-            var section =
-                config.GetSection("system.webServer/defaultDocument");
-            Assert.Equal(true, section["enabled"]);
-            var files = section.GetCollection("files");
-            Assert.Equal(8, files.Count);
-            Assert.Equal("home2.html", files[0]["value"]);
-            Assert.True(files[0].IsLocallyStored);
-            Assert.Equal("home1.html", files[1]["value"]);
-            Assert.False(files[1].IsLocallyStored);
-
-            files.RemoveAt(1);
-            server.CommitChanges();
-
-            const string Expected = @"expected3.config";
-            TestHelper.FixPhysicalPathMono(Expected);
-            XmlAssert.Equal(Expected, Current);
-            TestHelper.AssertSiteConfig(directoryName, Expected);
-        }
-
-        [Fact]
         public void TestIisExpressNoRootApplication()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -442,11 +369,24 @@ namespace Tests
             }
 
             string Current = Path.Combine(directoryName, @"applicationHost.config");
-            string Original = Path.Combine(directoryName, @"original2_no_root_app.config");
+            string Original = Path.Combine(directoryName, @"original2.config");
             TestHelper.CopySiteConfig(directoryName, "original.config");
             File.Copy(Original, Current, true);
             TestHelper.FixPhysicalPathMono(Current);
 
+            {
+                // change the path.
+                var file = XDocument.Load(Current);
+                var root = file.Root;
+                if (root == null)
+                {
+                    return;
+                }
+
+                var app = root.XPathSelectElement("/configuration/system.applicationHost/sites/site[@id='1']/application");
+                app.SetAttributeValue("path", "/xxx");
+                file.Save(Current);
+            }
 #if IIS
             var server = new ServerManager(Current);
 #else
@@ -462,7 +402,7 @@ namespace Tests
 #if IIS
             Assert.Equal(string.Format("Filename: \\\\?\\{0}\r\nError: Unrecognized configuration path 'MACHINE/WEBROOT/APPHOST/WebSite1'\r\n\r\n", Current), exception.Message);
 #else
-            Assert.Equal(string.Format("Filename: \\\\?\\{0}\r\nLine number: 164\r\nError: Unrecognized configuration path 'MACHINE/WEBROOT/APPHOST/WebSite1'\r\n\r\n", Current), exception.Message);
+            Assert.Equal(string.Format("Filename: \\\\?\\{0}\r\nLine number: 155\r\nError: Unrecognized configuration path 'MACHINE/WEBROOT/APPHOST/WebSite1'\r\n\r\n", Current), exception.Message);
 #endif
         }
 
@@ -478,10 +418,30 @@ namespace Tests
             }
 
             string Current = Path.Combine(directoryName, @"applicationHost.config");
-            string Original = Path.Combine(directoryName, @"original2_root_app_out.config");
+            string Original = Path.Combine(directoryName, @"original2.config");
             TestHelper.CopySiteConfig(directoryName, "original.config");
             File.Copy(Original, Current, true);
             TestHelper.FixPhysicalPathMono(Current);
+
+            {
+                // add the tags
+                var file = XDocument.Load(Current);
+                var root = file.Root;
+                if (root == null)
+                {
+                    return;
+                }
+
+                var app = root.XPathSelectElement("/configuration/system.applicationHost/sites/site[@id='1']/application");
+                var newApp = new XElement("application");
+                app.AddBeforeSelf(newApp);
+                newApp.SetAttributeValue("path", "/xxx");
+                var vDir = new XElement("virtualDirectory");
+                newApp.Add(vDir);
+                vDir.SetAttributeValue("path", "/");
+                vDir.SetAttributeValue("physicalPath", @"%JEXUS_TEST_HOME%\WebSite1");
+                file.Save(Current);
+            }
 
 #if IIS
             var server = new ServerManager(Current);
@@ -490,8 +450,10 @@ namespace Tests
 #endif
             var site = server.Sites[0];
             var config = site.GetWebConfiguration();
-            var root = config.RootSectionGroup;
-            Assert.NotNull(root);
+            {
+                var root = config.RootSectionGroup;
+                Assert.NotNull(root);
+            }
 
             // enable Windows authentication
             var windowsSection = config.GetSection("system.webServer/security/authentication/windowsAuthentication");
@@ -513,10 +475,24 @@ namespace Tests
             }
 
             string Current = Path.Combine(directoryName, @"applicationHost.config");
-            string Original = Path.Combine(directoryName, @"original2_no_root_vdir.config");
+            string Original = Path.Combine(directoryName, @"original2.config");
             TestHelper.CopySiteConfig(directoryName, "original.config");
             File.Copy(Original, Current, true);
             TestHelper.FixPhysicalPathMono(Current);
+
+            {
+                // modify the path
+                var file = XDocument.Load(Current);
+                var root = file.Root;
+                if (root == null)
+                {
+                    return;
+                }
+
+                var vDir = root.XPathSelectElement("/configuration/system.applicationHost/sites/site[@id='1']/application/virtualDirectory");
+                vDir.SetAttributeValue("path", "/xxx");
+                file.Save(Current);
+            }
 
 #if IIS
             var server = new ServerManager(Current);
@@ -537,7 +513,7 @@ namespace Tests
                 {
                     var root = config.RootSectionGroup;
                 });
-            Assert.Equal(string.Format("Filename: \\\\?\\{0}\r\nLine number: 165\r\nError: Unrecognized configuration path 'MACHINE/WEBROOT/APPHOST/WebSite1'\r\n\r\n", Current), exception.Message);
+            Assert.Equal(string.Format("Filename: \\\\?\\{0}\r\nLine number: 156\r\nError: Unrecognized configuration path 'MACHINE/WEBROOT/APPHOST/WebSite1'\r\n\r\n", Current), exception.Message);
 #endif
         }
 
@@ -553,10 +529,28 @@ namespace Tests
             }
 
             string Current = Path.Combine(directoryName, @"applicationHost.config");
-            string Original = Path.Combine(directoryName, @"original2_root_vdir_out.config");
+            string Original = Path.Combine(directoryName, @"original2.config");
             TestHelper.CopySiteConfig(directoryName, "original.config");
             File.Copy(Original, Current, true);
             TestHelper.FixPhysicalPathMono(Current);
+
+            {
+                // modify the path
+                var file = XDocument.Load(Current);
+                var root = file.Root;
+                if (root == null)
+                {
+                    return;
+                }
+
+                var vDir = root.XPathSelectElement("/configuration/system.applicationHost/sites/site[@id='1']/application/virtualDirectory");
+                var newDir = new XElement("virtualDirectory");
+                vDir.AddBeforeSelf(newDir);
+                newDir.SetAttributeValue("path", "/xxx");
+                newDir.SetAttributeValue("physicalPath", @"%JEXUS_TEST_HOME%\WebSite1");
+
+                file.Save(Current);
+            }
 
 #if IIS
             var server = new ServerManager(Current);
@@ -565,8 +559,10 @@ namespace Tests
 #endif
             var site = server.Sites[0];
             var config = site.GetWebConfiguration();
-            var root = config.RootSectionGroup;
-            Assert.NotNull(root);
+            {
+                var root = config.RootSectionGroup;
+                Assert.NotNull(root);
+            }
 
             // enable Windows authentication
             var windowsSection = config.GetSection("system.webServer/security/authentication/windowsAuthentication");
@@ -588,11 +584,32 @@ namespace Tests
             }
 
             string Current = Path.Combine(directoryName, @"applicationHost.config");
-            string Original = Path.Combine(directoryName, @"original2_logfile.config");
+            string Original = Path.Combine(directoryName, @"original2.config");
             TestHelper.CopySiteConfig(directoryName, "original.config");
             File.Copy(Original, Current, true);
             TestHelper.FixPhysicalPathMono(Current);
 
+            {
+                // add the tags
+                var file = XDocument.Load(Current);
+                var root = file.Root;
+                if (root == null)
+                {
+                    return;
+                }
+
+                var site1 = root.XPathSelectElement("/configuration/system.applicationHost/sites/site[@id='2']");
+                var log = new XElement("logFile");
+                site1.Add(log);
+                log.SetAttributeValue("logFormat", "IIS");
+
+                var site2 = root.XPathSelectElement("/configuration/system.applicationHost/sites/site[@id='3']");
+                var log2 = new XElement("logFile");
+                site2.Add(log2);
+                log2.SetAttributeValue("directory", @"%IIS_USER_HOME%\Logs\1");
+
+                file.Save(Current);
+            }
 #if IIS
             var server = new ServerManager(Current);
 #else

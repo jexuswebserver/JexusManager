@@ -88,8 +88,11 @@
     <Compile Include="..\Microsoft.Web.Administration\StringExtensions.cs">
       <Link>StringExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\Tests\ExceptionTestCases.cs">
-      <Link>ExceptionTestCases.cs</Link>
+    <Compile Include="..\Tests\Exceptions\ServerTestCases.cs">
+      <Link>Exceptions\ServerTestCases.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\Exceptions\SiteTestCases.cs">
+      <Link>Exceptions\SiteTestCases.cs</Link>
     </Compile>
     <Compile Include="..\Tests\TestCases.cs">
       <Link>TestCases.cs</Link>
@@ -105,14 +108,6 @@
     <Compile Include="ServerManagerTestFixture.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Tests\original2_logfile.config">
-      <Link>original2_logfile.config</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="..\Tests\original2_no_root_app.config">
-      <Link>original2_no_root_app.config</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="..\Tests\expected.config">
       <Link>expected.config</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -125,38 +120,9 @@
       <Link>original2.config</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\Tests\original2_invalid_attribute.config">
-      <Link>original2_invalid_attribute.config</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="..\Tests\original2_missing_closing.config">
       <Link>original2_missing_closing.config</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\Tests\original2_missing_required.config">
-      <Link>original2_missing_required.config</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\Tests\original2_no_root_vdir.config">
-      <Link>original2_no_root_vdir.config</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\Tests\original2_root_app_out.config">
-      <Link>original2_root_app_out.config</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\Tests\original2_root_vdir_out.config">
-      <Link>original2_root_vdir_out.config</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\Tests\original2_validator_fails.config">
-      <Link>original2_validator_fails.config</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\Tests\original3.config">
-      <Link>original3.config</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
     </None>
     <None Include="..\Tests\Website1\expected.config">
       <Link>Website1\expected.config</Link>
@@ -172,18 +138,6 @@
     </None>
     <None Include="..\Tests\Website1\original.config">
       <Link>Website1\original.config</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\Tests\Website1\original_duplicate_section.config">
-      <Link>Website1\original_duplicate_section.config</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\Tests\Website1\original_invalid_section.config">
-      <Link>Website1\original_invalid_section.config</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\Tests\Website1\original_unknown_section.config">
-      <Link>Website1\original_unknown_section.config</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="..\Tests\xunit.runner.json">

@@ -33,19 +33,21 @@ namespace Tests
             file.Save(fileName, SaveOptions.DisableFormatting);
         }
 
-        public static void CopySiteConfig(string folder, string originalConfig)
+        public static string CopySiteConfig(string folder, string originalConfig)
         {
-            File.Copy(Path.Combine(folder, "Website1", originalConfig), Path.Combine(folder, "Website1", "web.config"), true);
+            var filePath = Path.Combine(folder, "WebSite1", "web.config");
+            File.Copy(Path.Combine(folder, "WebSite1", originalConfig), filePath, true);
+            return filePath;
         }
 
         public static void AssertSiteConfig(string folder, string expectedConfig)
         {
-            XmlAssert.Equal(Path.Combine(folder, "Website1", expectedConfig), Path.Combine(folder, "Website1", "web.config"));
+            XmlAssert.Equal(Path.Combine(folder, "WebSite1", expectedConfig), Path.Combine(folder, "WebSite1", "web.config"));
         }
 
         public static string GetSiteConfig(string folder)
         {
-            return Path.Combine(folder, "Website1", "web.config");
+            return Path.Combine(folder, "WebSite1", "web.config");
         }
     }
 }
