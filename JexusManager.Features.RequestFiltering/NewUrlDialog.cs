@@ -28,6 +28,7 @@ namespace JexusManager.Features.RequestFiltering
             container.Add(
                 Observable.FromEventPattern<EventArgs>(txtName, "TextChanged")
                 .Sample(TimeSpan.FromSeconds(1))
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnOK.Enabled = !string.IsNullOrWhiteSpace(txtName.Text);
@@ -35,6 +36,7 @@ namespace JexusManager.Features.RequestFiltering
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     Item = new UrlsItem(null, allowed) { Url = txtName.Text };

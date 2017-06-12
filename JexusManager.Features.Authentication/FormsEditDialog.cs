@@ -35,6 +35,7 @@ namespace JexusManager.Features.Authentication
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     if (string.IsNullOrWhiteSpace(txtURL.Text))
@@ -84,6 +85,7 @@ namespace JexusManager.Features.Authentication
                 .Merge(Observable.FromEventPattern<EventArgs>(txtURL, "TextChanged"))
                 .Merge(Observable.FromEventPattern<EventArgs>(cbMode, "SelectedIndexChanged"))
                 .Sample(TimeSpan.FromSeconds(1))
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnOK.Enabled = true;

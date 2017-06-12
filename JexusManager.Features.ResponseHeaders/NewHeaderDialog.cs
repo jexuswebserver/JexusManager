@@ -33,6 +33,7 @@ namespace JexusManager.Features.ResponseHeaders
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     if (feature.Items.Any(item => item != Item && txtName.Text == item.Name))

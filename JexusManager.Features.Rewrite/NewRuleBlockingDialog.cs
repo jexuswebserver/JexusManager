@@ -38,6 +38,7 @@ namespace JexusManager.Features.Rewrite
             container.Add(
                 Observable.FromEventPattern<EventArgs>(cbInput, "SelectedIndexChanged")
                 .Merge(Observable.FromEventPattern<EventArgs>(cbMode, "SelectedIndexChanged"))
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     switch (cbInput.SelectedIndex)
@@ -72,6 +73,7 @@ namespace JexusManager.Features.Rewrite
             container.Add(
                 Observable.FromEventPattern<EventArgs>(txtPattern, "TextChanged")
                 .Sample(TimeSpan.FromSeconds(1))
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnOK.Enabled = !string.IsNullOrWhiteSpace(txtPattern.Text);
@@ -79,6 +81,7 @@ namespace JexusManager.Features.Rewrite
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     var inputType = cbInput.SelectedIndex;

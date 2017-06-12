@@ -37,6 +37,7 @@ namespace JexusManager.Features.Rewrite.Inbound
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     item.Name = txtName.Text;

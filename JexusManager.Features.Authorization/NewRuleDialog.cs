@@ -54,6 +54,7 @@ namespace JexusManager.Features.Authorization
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     Item.AccessType = _allowed ? 0L : 1L;
@@ -102,6 +103,7 @@ namespace JexusManager.Features.Authorization
                 .Merge(Observable.FromEventPattern<EventArgs>(rbUsers, "CheckedChanged"))
                 .Merge(Observable.FromEventPattern<EventArgs>(cbVerbs, "CheckedChanged"))
                 .Sample(TimeSpan.FromSeconds(1))
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     txtVerbs.Enabled = cbVerbs.Checked;
@@ -118,6 +120,7 @@ namespace JexusManager.Features.Authorization
                 .Merge(Observable.FromEventPattern<EventArgs>(txtUsers, "TextChanged"))
                 .Merge(Observable.FromEventPattern<EventArgs>(txtVerbs, "TextChanged"))
                 .Sample(TimeSpan.FromSeconds(1))
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnOK.Enabled = true;

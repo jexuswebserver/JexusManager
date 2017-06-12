@@ -47,6 +47,7 @@ namespace JexusManager.Features.Certificates
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnBrowse, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     var dialog = new OpenFileDialog { Filter = ".pfx|*.pfx|*.*|*.*", FilterIndex = 0, Multiselect = false };
@@ -61,6 +62,7 @@ namespace JexusManager.Features.Certificates
             container.Add(
                 Observable.FromEventPattern<EventArgs>(txtFile, "TextChanged")
                 .Sample(TimeSpan.FromSeconds(1))
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnOK.Enabled = !string.IsNullOrWhiteSpace(txtFile.Text);
@@ -68,6 +70,7 @@ namespace JexusManager.Features.Certificates
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(async evt =>
                 {
                     try

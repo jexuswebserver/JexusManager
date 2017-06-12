@@ -27,6 +27,7 @@ namespace JexusManager.Features.Authentication
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(cbExtended, "SelectedIndexChanged")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnOK.Enabled = true;
@@ -34,6 +35,7 @@ namespace JexusManager.Features.Authentication
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(cbKernelMode, "CheckedChanged")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnOK.Enabled = true;
@@ -41,6 +43,7 @@ namespace JexusManager.Features.Authentication
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     item.TokenChecking = cbExtended.SelectedIndex;

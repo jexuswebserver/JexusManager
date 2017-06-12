@@ -42,6 +42,7 @@ namespace JexusManager.Features.Handlers
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     if (!cbInvoke.Checked)
@@ -96,6 +97,7 @@ namespace JexusManager.Features.Handlers
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(cbInvoke, "CheckedChanged")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     rbFile.Enabled = rbFolder.Enabled = rbEither.Enabled = cbInvoke.Checked;
@@ -105,6 +107,7 @@ namespace JexusManager.Features.Handlers
                 Observable.FromEventPattern<EventArgs>(rbSelectedVerbs, "CheckedChanged")
                 .Merge(Observable.FromEventPattern<EventArgs>(rbAllVerbs, "CheckedChanged"))
                 .Sample(TimeSpan.FromSeconds(1))
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     txtVerbs.Enabled = rbSelectedVerbs.Checked;

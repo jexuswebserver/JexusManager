@@ -34,6 +34,7 @@ namespace JexusManager.Features.IpSecurity
                 Observable.FromEventPattern<EventArgs>(rbAddress, "CheckedChanged")
                 .Merge(Observable.FromEventPattern<EventArgs>(rbRange, "CheckedChanged"))
                 .Sample(TimeSpan.FromSeconds(1))
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     txtAddress.Enabled = rbAddress.Checked;
@@ -43,6 +44,7 @@ namespace JexusManager.Features.IpSecurity
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     if (rbAddress.Checked)

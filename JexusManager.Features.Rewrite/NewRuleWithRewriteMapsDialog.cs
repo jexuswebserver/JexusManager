@@ -44,6 +44,7 @@ namespace JexusManager.Features.Rewrite
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(cbMap, "SelectedIndexChanged")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnOK.Enabled = cbMap.SelectedIndex > -1;
@@ -51,6 +52,7 @@ namespace JexusManager.Features.Rewrite
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     var action = cbAction.Text;
@@ -87,6 +89,7 @@ namespace JexusManager.Features.Rewrite
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(cbAction, "SelectedIndexChanged")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     lblDescription.Text = cbAction.SelectedIndex == 0 ? s_rewriteText : s_redirectText;

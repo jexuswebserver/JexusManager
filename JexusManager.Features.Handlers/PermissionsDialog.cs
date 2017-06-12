@@ -28,6 +28,7 @@ namespace JexusManager.Features.Handlers
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     if (cbRead.Checked)

@@ -33,6 +33,7 @@ namespace JexusManager.Features.HttpErrors
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnSelect, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     DialogHelper.ShowBrowseDialog(txtPath);
@@ -40,6 +41,7 @@ namespace JexusManager.Features.HttpErrors
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     if (rbCustom.Checked)

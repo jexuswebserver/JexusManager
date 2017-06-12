@@ -35,6 +35,7 @@ namespace JexusManager.Features.Rewrite.Inbound
             container.Add(
                 Observable.FromEventPattern<EventArgs>(txtOriginal, "TextChanged")
                 .Sample(TimeSpan.FromSeconds(1))
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnOK.Enabled = !string.IsNullOrWhiteSpace(txtOriginal.Text);
@@ -42,6 +43,7 @@ namespace JexusManager.Features.Rewrite.Inbound
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     if (Item == null)

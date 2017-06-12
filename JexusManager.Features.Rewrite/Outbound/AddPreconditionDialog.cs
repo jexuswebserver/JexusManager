@@ -43,6 +43,7 @@ namespace JexusManager.Features.Rewrite.Outbound
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnAdd, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     var dialog = new AddConditionDialog(ServiceProvider, null);
@@ -60,6 +61,7 @@ namespace JexusManager.Features.Rewrite.Outbound
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnRemove, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
@@ -79,6 +81,7 @@ namespace JexusManager.Features.Rewrite.Outbound
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnEdit, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     var listViewItem = ((ConditionListViewItem)lvConditions.SelectedItems[0]);
@@ -93,6 +96,7 @@ namespace JexusManager.Features.Rewrite.Outbound
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnMoveDown, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     var listViewItem = ((ConditionListViewItem)lvConditions.SelectedItems[0]);
@@ -109,6 +113,7 @@ namespace JexusManager.Features.Rewrite.Outbound
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnMoveUp, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     var listViewItem = ((ConditionListViewItem)lvConditions.SelectedItems[0]);
@@ -125,6 +130,7 @@ namespace JexusManager.Features.Rewrite.Outbound
 
             container.Add(
                 Observable.FromEventPattern<ListViewItemSelectionChangedEventArgs>(lvConditions, "ItemSelectionChanged")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     var hasSelection = lvConditions.SelectedItems.Count > 0;
@@ -136,6 +142,7 @@ namespace JexusManager.Features.Rewrite.Outbound
             container.Add(
                 Observable.FromEventPattern<EventArgs>(txtName, "TextChanged")
                 .Sample(TimeSpan.FromSeconds(1))
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnOK.Enabled = !string.IsNullOrWhiteSpace(txtName.Text);
@@ -143,6 +150,7 @@ namespace JexusManager.Features.Rewrite.Outbound
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     Item.Name = txtName.Text;

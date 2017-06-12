@@ -36,6 +36,7 @@ namespace JexusManager.Features.RequestFiltering
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     Item = new FilteringRulesItem(null) { Name = txtName.Text };
@@ -86,6 +87,7 @@ namespace JexusManager.Features.RequestFiltering
                 .Merge(Observable.FromEventPattern<EventArgs>(dgvExtensions, "RowsAdded"))
                 .Merge(Observable.FromEventPattern<EventArgs>(dgvStrings, "RowsAdded"))
                 .Sample(TimeSpan.FromSeconds(1))
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnOK.Enabled = !string.IsNullOrWhiteSpace(txtName.Text)

@@ -33,6 +33,7 @@ namespace JexusManager.Features.Certificates
                 .Merge(Observable.FromEventPattern<EventArgs>(txtPassword, "TextChanged"))
                 .Merge(Observable.FromEventPattern<EventArgs>(txtConfirm, "TextChange"))
                 .Sample(TimeSpan.FromSeconds(1))
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnOK.Enabled = !string.IsNullOrWhiteSpace(txtPath.Text)
@@ -43,6 +44,7 @@ namespace JexusManager.Features.Certificates
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnBrowse, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     var dialog = new SaveFileDialog
@@ -59,6 +61,7 @@ namespace JexusManager.Features.Certificates
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     var raw = _certificate2.Export(X509ContentType.Pfx, txtPassword.Text);

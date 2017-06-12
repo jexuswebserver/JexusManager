@@ -43,6 +43,7 @@ namespace JexusManager.Features.Modules
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     Items = new List<ModulesItem>();
@@ -63,6 +64,7 @@ namespace JexusManager.Features.Modules
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(lvModules, "SelectedIndexChanged")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnEdit.Enabled = btnRemove.Enabled = lvModules.SelectedItems.Count > 0;
@@ -70,6 +72,7 @@ namespace JexusManager.Features.Modules
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnRegister, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     var dialog = new NewNativeDialog(ServiceProvider, null);
@@ -85,6 +88,7 @@ namespace JexusManager.Features.Modules
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnEdit, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     GlobalModule item = (GlobalModule)lvModules.SelectedItems[0].Tag;
@@ -100,6 +104,7 @@ namespace JexusManager.Features.Modules
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnRemove, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));

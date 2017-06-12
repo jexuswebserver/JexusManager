@@ -55,6 +55,7 @@ namespace JexusManager.Features.IpSecurity
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     section["enableReverseDns"] = cbDomain.Checked;

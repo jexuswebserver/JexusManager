@@ -28,6 +28,7 @@ namespace JexusManager.Features.IsapiCgiRestriction
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     element["notListedIsapisAllowed"] = cbIsapi.Checked;

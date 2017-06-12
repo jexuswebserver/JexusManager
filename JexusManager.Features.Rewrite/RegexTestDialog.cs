@@ -49,6 +49,7 @@ namespace JexusManager.Features.Rewrite
             container.Add(
                 Observable.FromEventPattern<EventArgs>(txtPattern, "TextChanged")
                 .Sample(TimeSpan.FromSeconds(1))
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnTest.Enabled = !string.IsNullOrWhiteSpace(txtPattern.Text);
@@ -56,6 +57,7 @@ namespace JexusManager.Features.Rewrite
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnTest, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     Regex expression = null;
@@ -93,6 +95,7 @@ namespace JexusManager.Features.Rewrite
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnClose, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     if (txtPattern.Text == _pattern && cbIgnoreCase.Checked == _ignore)

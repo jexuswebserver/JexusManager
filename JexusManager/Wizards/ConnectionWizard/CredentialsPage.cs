@@ -48,7 +48,7 @@ namespace JexusManager.Wizards.ConnectionWizard
         {
             base.Activate();
             var wizardData = (ConnectionWizardData)WizardData;
-            txtConnect.Text = string.Format("Connecting to {0}.", wizardData.HostName.ExtractName());
+            txtConnect.Text = $"Connecting to {wizardData.HostName.ExtractName()}.";
             cbUserName.Focus();
         }
 
@@ -133,7 +133,7 @@ namespace JexusManager.Wizards.ConnectionWizard
                 var conflict = await server.HelloAsync();
                 if (Environment.MachineName != conflict)
                 {
-                    service.ShowMessage(string.Format("The server is also connected to {0}. Making changes on multiple clients might corrupt server configuration.", conflict), Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    service.ShowMessage($"The server is also connected to {conflict}. Making changes on multiple clients might corrupt server configuration.", Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
 
                 data.CertificateHash = accepted;

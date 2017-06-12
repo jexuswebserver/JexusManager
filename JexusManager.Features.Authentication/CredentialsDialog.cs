@@ -29,6 +29,7 @@ namespace JexusManager.Features.Authentication
                 .Merge(Observable.FromEventPattern<EventArgs>(txtPassword, "TextChanged"))
                 .Merge(Observable.FromEventPattern<EventArgs>(txtConfirm, "TextChanged"))
                 .Sample(TimeSpan.FromSeconds(1))
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnOK.Enabled = !string.IsNullOrWhiteSpace(txtName.Text)
@@ -38,6 +39,7 @@ namespace JexusManager.Features.Authentication
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     UserName = txtName.Text;

@@ -56,6 +56,7 @@ namespace JexusManager.Features.Certificates
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(txtName, "TextChanged")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnOK.Enabled = !string.IsNullOrWhiteSpace(txtName.Text);
@@ -63,6 +64,7 @@ namespace JexusManager.Features.Certificates
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     var name = txtCommonName.Text;

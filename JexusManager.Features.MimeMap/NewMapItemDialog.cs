@@ -33,6 +33,7 @@ namespace JexusManager.Features.MimeMap
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     Item.FileExtension = txtExtension.Text;
@@ -54,6 +55,7 @@ namespace JexusManager.Features.MimeMap
                 Observable.FromEventPattern<EventArgs>(txtExtension, "TextChanged")
                 .Merge(Observable.FromEventPattern<EventArgs>(txtType, "TextChanged"))
                 .Sample(TimeSpan.FromSeconds(1))
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnOK.Enabled = !string.IsNullOrWhiteSpace(txtExtension.Text)

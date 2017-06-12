@@ -26,6 +26,7 @@ namespace JexusManager.Features.Authentication
             container.Add(
                 Observable.FromEventPattern<EventArgs>(txtName, "TextChanged")
                 .Sample(TimeSpan.FromSeconds(1))
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     rbPool.Checked = txtName.Text.Length == 0;
@@ -33,6 +34,7 @@ namespace JexusManager.Features.Authentication
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnSet, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     var dialog = new CredentialsDialog(ServiceProvider, existing.Name);
@@ -49,6 +51,7 @@ namespace JexusManager.Features.Authentication
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     DialogResult = DialogResult.OK;
@@ -66,6 +69,7 @@ namespace JexusManager.Features.Authentication
                 Observable.FromEventPattern<EventArgs>(rbPool, "CheckedChanged")
                 .Merge(Observable.FromEventPattern<EventArgs>(rbSpecific, "CheckedChanged"))
                 .Sample(TimeSpan.FromSeconds(1))
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnSet.Enabled = !rbPool.Checked;

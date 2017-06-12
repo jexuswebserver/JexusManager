@@ -42,6 +42,7 @@ namespace JexusManager.Features.HttpErrors
                 .Merge(Observable.FromEventPattern<EventArgs>(txtExecute, "TextChanged"))
                 .Merge(Observable.FromEventPattern<EventArgs>(txtStatic, "TextChanged"))
                 .Sample(TimeSpan.FromSeconds(1))
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnOK.Enabled = !string.IsNullOrWhiteSpace(txtStatusCode.Text) &&
@@ -50,6 +51,7 @@ namespace JexusManager.Features.HttpErrors
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     var index = txtStatusCode.Text.IndexOf('.');
@@ -128,6 +130,7 @@ namespace JexusManager.Features.HttpErrors
                 .Merge(Observable.FromEventPattern<EventArgs>(rbExecute, "CheckedChanged"))
                 .Merge(Observable.FromEventPattern<EventArgs>(rbStatic, "CheckedChanged"))
                 .Sample(TimeSpan.FromSeconds(1))
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     if (rbStatic.Checked)
@@ -148,6 +151,7 @@ namespace JexusManager.Features.HttpErrors
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnSet, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     if (cbLocalize.Checked)
@@ -168,6 +172,7 @@ namespace JexusManager.Features.HttpErrors
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(cbLocalize, "CheckedChanged")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnSet.Text = cbLocalize.Checked ? "Set..." : "Browse...";

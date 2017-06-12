@@ -92,6 +92,7 @@ namespace JexusManager.Features.Rewrite
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(listView1, "SelectedIndexChanged")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     txtDescription.Text = listView1.SelectedItems.Count == 0
@@ -102,7 +103,8 @@ namespace JexusManager.Features.Rewrite
 
             var doubleClick = Observable.FromEventPattern<EventArgs>(listView1, "DoubleClick");
             container.Add(
-                doubleClick.Subscribe(evt =>
+                doubleClick.ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(evt =>
                 {
                     if (listView1.SelectedItems.Count == 0)
                     {
@@ -113,6 +115,7 @@ namespace JexusManager.Features.Rewrite
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
                 .Merge(doubleClick)
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     SelectedIndex = listView1.SelectedIndices[0];
@@ -121,20 +124,24 @@ namespace JexusManager.Features.Rewrite
 
             var big = Observable.FromEventPattern<EventArgs>(btnBig, "Click");
             container.Add(
-                big.Subscribe(evt =>
+                big.ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(evt =>
                 {
                     btnSmall.Checked = !btnBig.Checked;
                 }));
 
             var small = Observable.FromEventPattern<EventArgs>(btnSmall, "Click");
             container.Add(
-                small.Subscribe(evt =>
+                small.ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(evt =>
                 {
                     btnBig.Checked = !btnSmall.Checked;
                 }));
 
             container.Add(
-                big.Merge(small).Subscribe(evt =>
+                big.Merge(small)
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(evt =>
                 {
                     listView1.View = btnBig.Checked ? View.LargeIcon : View.SmallIcon;
                 }));

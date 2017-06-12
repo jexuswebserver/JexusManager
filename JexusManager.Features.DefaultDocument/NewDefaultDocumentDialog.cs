@@ -26,6 +26,7 @@ namespace JexusManager.Features.DefaultDocument
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     var invalid = "*".ToCharArray();
@@ -46,6 +47,7 @@ namespace JexusManager.Features.DefaultDocument
             container.Add(
                 Observable.FromEventPattern<EventArgs>(txtName, "TextChanged")
                 .Sample(TimeSpan.FromSeconds(1))
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnOK.Enabled = !string.IsNullOrWhiteSpace(txtName.Text);
