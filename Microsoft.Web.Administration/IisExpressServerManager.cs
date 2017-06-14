@@ -9,6 +9,8 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using System.Xml.Linq;
+using System.Xml.XPath;
 
 namespace Microsoft.Web.Administration
 {
@@ -58,17 +60,19 @@ namespace Microsoft.Web.Administration
                     "iisexpress.exe");
             }
 
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = fileName,
+                Arguments = site.CommandLine,
+                WindowStyle = ProcessWindowStyle.Hidden,
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                RedirectStandardOutput = true
+            };
+            InjectEnvironmentVariables(site, startInfo);
             var process = new Process
             {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = fileName,
-                    Arguments = site.CommandLine,
-                    WindowStyle = ProcessWindowStyle.Hidden,
-                    UseShellExecute = false,
-                    CreateNoWindow = true,
-                    RedirectStandardOutput = true
-                }
+                StartInfo = startInfo
             };
             try
             {
@@ -89,6 +93,63 @@ namespace Microsoft.Web.Administration
             finally
             {
                 site.State = process.HasExited ? ObjectState.Stopped : ObjectState.Started;
+            }
+        }
+
+        private static void InjectEnvironmentVariables(Site site, ProcessStartInfo startInfo)
+        {
+            var root = site.Applications[0].VirtualDirectories[0].PhysicalPath;
+            var projects = Directory.GetFiles(root, "*.csproj");
+            if (projects.Length != 1)
+            {
+                return;
+            }
+
+            var project = projects[0];
+            var xml = XDocument.Load(project);
+            if (xml.Root.Attribute("Sdk")?.Value != "Microsoft.NET.Sdk.Web")
+            {
+                // Not web project
+                return;
+            }
+
+            var file = Environment.ExpandEnvironmentVariables(@"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe");
+            var args = "-latest -products * -requires Microsoft.Component.MSBuild -property installationPath";
+            if (!File.Exists(file))
+            {
+                // Not VS 15.2 and above
+                return;
+            }
+
+            var vswhere = Process.Start(new ProcessStartInfo
+            {
+                FileName = file,
+                Arguments = args,
+                RedirectStandardOutput = true,
+                UseShellExecute = false
+            });
+            var folder = vswhere.StandardOutput.ReadToEnd().TrimEnd();
+            var dotnet = Environment.ExpandEnvironmentVariables(@"%ProgramFiles%\dotnet\dotnet.exe");
+            var restore = Process.Start(new ProcessStartInfo
+            {
+                FileName = dotnet,
+                Arguments = "restore",
+                WorkingDirectory = root
+            });
+            restore.WaitForExit();
+            var build = Process.Start(new ProcessStartInfo
+            {
+                FileName = dotnet,
+                Arguments = "build",
+                WorkingDirectory = root
+            });
+            build.WaitForExit();
+            var files = Directory.GetFiles(Path.Combine(root, "bin", "Debug", xml.Root.XPathSelectElement("/Project/PropertyGroup/TargetFramework").Value), "*.dll");
+            if (files.Length == 1)
+            {
+                var rootAssembly = files[0].Replace(@"\", @"\\");
+                startInfo.EnvironmentVariables.Add("LAUNCHER_PATH", $@"{folder}\Common7\IDE\Extensions\Microsoft\Web Tools\ProjectSystem\VSIISExeLauncher.exe");
+                startInfo.EnvironmentVariables.Add("LAUNCHER_ARGS", $"-p \"{dotnet.Replace(@"\", @"\\")}\" -a \"exec \\\"{rootAssembly}\\\"\" -pidFile \"{Path.GetTempFileName().Replace(@"\", @"\\")}\" -wd \"{root.Replace(@"\", @"\\")}\"");
             }
         }
 
