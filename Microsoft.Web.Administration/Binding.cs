@@ -171,6 +171,11 @@ namespace Microsoft.Web.Administration
                 : string.Format("{0}://{1}:{2}", Protocol, address, EndPoint.Port);
         }
 
+        internal string ToIisUrl()
+        {
+            return ToUri() + "/";
+        }
+
         private bool IsDefaultPort
         {
             get

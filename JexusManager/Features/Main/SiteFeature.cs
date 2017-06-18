@@ -30,6 +30,11 @@ namespace JexusManager.Features.Main
 
     using Binding = Microsoft.Web.Administration.Binding;
     using Module = Microsoft.Web.Management.Client.Module;
+    using System.IO;
+    using System.Xml.Linq;
+    using System.Xml.XPath;
+    using System.Linq;
+    using System.Xml;
 
     /// <summary>
     /// Description of DefaultDocumentFeature.
@@ -85,6 +90,14 @@ namespace JexusManager.Features.Main
                 manageGroup.Items.Add(new TextTaskItem("Configure", string.Empty, true));
                 manageGroup.Items.Add(new MethodTaskItem("Tracing", "Failed Request Tracing...", string.Empty).SetUsage());
                 manageGroup.Items.Add(new MethodTaskItem("Limits", "Limits...", string.Empty).SetUsage());
+
+                if (_owner.HasProject)
+                {
+                    manageGroup.Items.Add (new MethodTaskItem (string.Empty, "-", string.Empty).SetUsage ());
+                    manageGroup.Items.Add (new TextTaskItem ("Troubleshooting", string.Empty, true));
+                    manageGroup.Items.Add (new MethodTaskItem ("FixProject", "Project Diagnostics", string.Empty).SetUsage ());
+                }
+
                 return result.ToArray(typeof(TaskItem)) as TaskItem[];
             }
 
@@ -165,6 +178,12 @@ namespace JexusManager.Features.Main
             {
                 _owner.Limits();
             }
+
+            [Obfuscation (Exclude = true)]
+            public void FixProject()
+            {
+                _owner.FixProject();
+            }
         }
 
         public SiteFeature(Module module)
@@ -199,6 +218,7 @@ namespace JexusManager.Features.Main
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var site = service.Site;
             IsStarted = await site.GetStateAsync();
+            HasProject = SiteHasProject(site);
             OnSiteSettingsSaved();
         }
 
@@ -370,6 +390,184 @@ namespace JexusManager.Features.Main
             OnSiteSettingsSaved();
         }
 
+        private void FixProject()
+        {
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+            var site = service.Site;
+            var root = site.Applications[0].VirtualDirectories[0].PhysicalPath;
+            var projects = Directory.GetFiles(root, "*.csproj");
+
+            var project = projects[0];
+            // TODO: free the resources.
+            var xmlReader = XmlReader.Create(new StringReader(File.ReadAllText(project))); // Or whatever your source is, of course.
+            var xml = XDocument.Load(xmlReader);
+            var namespaceManager = new XmlNamespaceManager(xmlReader.NameTable); // We now have a namespace manager that knows of the namespaces used in your document.
+            var name = xml.Root.GetDefaultNamespace();
+            namespaceManager.AddNamespace("x", name.NamespaceName); // We add an explicit prefix mapping for our query.
+
+            var webSettings = xml.Root.XPathSelectElement("/x:Project/x:ProjectExtensions/x:VisualStudio/x:FlavorProperties/x:WebProjectProperties", namespaceManager);
+            var useIIS = webSettings.Element(name + "UseIIS")?.Value;
+            var autoAssignPort = webSettings.Element(name + "AutoAssignPort")?.Value;
+            var developmentServerPort = webSettings.Element(name + "DevelopmentServerPort")?.Value;
+            var developmentServerVPath = webSettings.Element(name + "DevelopmentServerVPath")?.Value;
+            var iisUrl = webSettings.Element(name + "IISUrl")?.Value;
+            var ntlmAuthentication = webSettings.Element(name + "NTLMAuthentication")?.Value;
+            var useCustomServer = webSettings.Element(name + "UseCustomServer")?.Value;
+            var customServerUrl = webSettings.Element(name + "CustomServerUrl")?.Value;
+            var saveServerSettingsInUserFile = webSettings.Element(name + "SaveServerSettingsInUserFile")?.Value;
+
+            var useIISExpress = xml.Root.XPathSelectElement("/x:Project/x:PropertyGroup/x:UseIISExpress", namespaceManager)?.Value;
+            var iisExpressSSLPort = xml.Root.XPathSelectElement("/x:Project/x:PropertyGroup/x:IISExpressSSLPort", namespaceManager)?.Value;
+            var iisExpressAnonymousAuthentication = xml.Root.XPathSelectElement("/x:Project/x:PropertyGroup/x:IISExpressAnonymousAuthentication", namespaceManager)?.Value;
+            var iisExpressWindowsAuthentication = xml.Root.XPathSelectElement("/x:Project/x:PropertyGroup/x:IISExpressWindowsAuthentication", namespaceManager)?.Value;
+            var iisExpressUseClassicPipelineMode = xml.Root.XPathSelectElement("/x:Project/x:PropertyGroup/x:IISExpressUseClassicPipelineMode", namespaceManager)?.Value;
+            var useGlobalApplicationHostFile = xml.Root.XPathSelectElement("/x:Project/x:PropertyGroup/x:UseGlobalApplicationHostFile", namespaceManager)?.Value;
+
+            string url = null;
+            foreach (Binding binding in site.Bindings)
+            {
+                if (string.IsNullOrEmpty(iisExpressSSLPort))
+                {
+                    // http
+                    if (binding.Protocol == "http")
+                    {
+                        url = binding.ToIisUrl();
+                        break;
+                    }
+                }
+                else
+                {
+                    // https
+                    if (binding.Protocol == "https")
+                    {
+                        url = binding.ToIisUrl();
+                        break;
+                    }
+                }
+            }
+
+            if (url != null)
+            {
+                webSettings.Element(name + "IISUrl").SetValue(url);
+                MessageBox.Show("Changed IISUrl to " + url);
+                xml.Save(project);
+                return;
+            }
+
+            MessageBox.Show("No binding is valid to generate IISUrl");
+        }
+
+        private static bool SiteHasProject(Site site)
+        {
+            var root = site.Applications[0].VirtualDirectories[0].PhysicalPath;
+            var projects = Directory.GetFiles(root, "*.csproj");
+            if (projects.Length != 1)
+            {
+                return false;
+            }
+
+            var project = projects[0];
+            // TODO: free the resources.
+            var xmlReader = XmlReader.Create(new StringReader(File.ReadAllText(project))); // Or whatever your source is, of course.
+            var xml = XDocument.Load(xmlReader);
+            var namespaceManager = new XmlNamespaceManager(xmlReader.NameTable); // We now have a namespace manager that knows of the namespaces used in your document.
+            var name = xml.Root.GetDefaultNamespace();
+            namespaceManager.AddNamespace("x", name.NamespaceName); // We add an explicit prefix mapping for our query.
+
+            if (!IsWebProject(xml.Root.XPathSelectElement("/x:Project/x:PropertyGroup/x:ProjectTypeGuids", namespaceManager)?.Value))
+            {
+                // Not web project
+                return false;
+            }
+
+            var webSettings = xml.Root.XPathSelectElement("/x:Project/x:ProjectExtensions/x:VisualStudio/x:FlavorProperties/x:WebProjectProperties", namespaceManager);
+            if (webSettings == null)
+            {
+                return false;
+            }
+
+            var useIIS = webSettings.Element(name + "UseIIS")?.Value;
+            var autoAssignPort = webSettings.Element(name + "AutoAssignPort")?.Value;
+            var developmentServerPort = webSettings.Element(name + "DevelopmentServerPort")?.Value;
+            var developmentServerVPath = webSettings.Element(name + "DevelopmentServerVPath")?.Value;
+            var iisUrl = webSettings.Element(name + "IISUrl")?.Value;
+            var ntlmAuthentication = webSettings.Element(name + "NTLMAuthentication")?.Value;
+            var useCustomServer = webSettings.Element(name + "UseCustomServer")?.Value;
+            var customServerUrl = webSettings.Element(name + "CustomServerUrl")?.Value;
+            var saveServerSettingsInUserFile = webSettings.Element(name + "SaveServerSettingsInUserFile")?.Value;
+
+            var useIISExpress = xml.Root.XPathSelectElement("/x:Project/x:PropertyGroup/x:UseIISExpress", namespaceManager)?.Value;
+            var iisExpressSSLPort = xml.Root.XPathSelectElement("/x:Project/x:PropertyGroup/x:IISExpressSSLPort", namespaceManager)?.Value;
+            var iisExpressAnonymousAuthentication = xml.Root.XPathSelectElement("/x:Project/x:PropertyGroup/x:IISExpressAnonymousAuthentication", namespaceManager)?.Value;
+            var iisExpressWindowsAuthentication = xml.Root.XPathSelectElement("/x:Project/x:PropertyGroup/x:IISExpressWindowsAuthentication", namespaceManager)?.Value;
+            var iisExpressUseClassicPipelineMode = xml.Root.XPathSelectElement("/x:Project/x:PropertyGroup/x:IISExpressUseClassicPipelineMode", namespaceManager)?.Value;
+            var useGlobalApplicationHostFile = xml.Root.XPathSelectElement("/x:Project/x:PropertyGroup/x:UseGlobalApplicationHostFile", namespaceManager)?.Value;
+
+            if (string.Equals(useIIS, "true", StringComparison.OrdinalIgnoreCase))
+            {
+                if (string.Equals(useIISExpress, "true", StringComparison.OrdinalIgnoreCase))
+                {
+                    // IIS Express
+                    foreach (Binding binding in site.Bindings)
+                    {
+                        var url = binding.ToIisUrl();
+                        if (string.Equals(url, iisUrl, StringComparison.OrdinalIgnoreCase))
+                        {
+                            return false;
+                        }
+                    }
+                }
+                else if (string.Equals(useIISExpress, "false", StringComparison.OrdinalIgnoreCase))
+                {
+                    // IIS
+                    foreach (Binding binding in site.Bindings)
+                    {
+                        if (string.Equals(binding.ToIisUrl(), iisUrl, StringComparison.OrdinalIgnoreCase))
+                        {
+                            return false;
+                        }
+                    }
+                }
+                else
+                {
+                    //TODO:  What?
+                    return false;
+                }
+            }
+            else
+            {
+                // External server
+                return false;
+            }
+
+            return true;
+        }
+
+        //*
+        private static readonly string[] mvc = {"{603C0E0B-DB56-11DC-BE95-000D561079B0}", // ASP.NET MVC 1	
+        "{F85E285D-A4E0-4152-9332-AB1D724D3325}", // ASP.NET MVC 2	
+        "{E53F8FEA-EAE0-44A6-8774-FFD645390401}", // ASP.NET MVC 3	
+        "{E3E379DF-F4C6-4180-9B81-6769533ABE47}", // ASP.NET MVC 4	
+        "{349C5851-65DF-11DA-9384-00065B846F21}" // ASP.NET MVC 5
+        };
+        // */
+
+        private static bool IsWebProject(string value)
+        {
+            if (value == null)
+                return false;
+
+            foreach (var name in mvc)
+            {
+                if (value.IndexOf(name, StringComparison.OrdinalIgnoreCase) > -1)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public IEnumerable<Binding> SiteBindings
         {
             get
@@ -380,11 +578,14 @@ namespace JexusManager.Features.Main
             }
         }
 
+        public bool HasProject { get; set; }
+
         public bool IsStarted { get; set; }
 
         public bool IsBusy { get; set; }
 
         public SiteSettingsSavedEventHandler SiteSettingsUpdated { get; set; }
+
         public string Description { get; }
 
         public virtual bool IsFeatureEnabled
