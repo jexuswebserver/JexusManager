@@ -23,6 +23,8 @@ namespace Tests.MimeMap
     using Moq;
 
     using Xunit;
+    using System.Xml.Linq;
+    using System.Xml.XPath;
 
     public class MimeMapFeatureServerTestFixture
     {
@@ -95,17 +97,16 @@ namespace Tests.MimeMap
         {
             await this.SetUp();
             const string Expected = @"expected_remove.config";
-            const string ExpectedMono = @"expected_remove.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer/staticContent");
+            node?.FirstNode?.Remove();
+            document.Save(Expected);
 
             _feature.SelectedItem = _feature.Items[0];
             _feature.Remove();
             Assert.Null(_feature.SelectedItem);
             Assert.Equal(373, _feature.Items.Count);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("MimeMap", ExpectedMono)
-                    : Path.Combine("MimeMap", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
 
         [Fact]
@@ -113,7 +114,11 @@ namespace Tests.MimeMap
         {
             await this.SetUp();
             const string Expected = @"expected_edit.config";
-            const string ExpectedMono = @"expected_edit.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer/staticContent");
+            var element = node?.FirstNode as XElement;
+            element?.SetAttributeValue("mimeType", "text/test");
+            document.Save(Expected);
 
             _feature.SelectedItem = _feature.Items[0];
             var item = _feature.SelectedItem;
@@ -122,11 +127,7 @@ namespace Tests.MimeMap
             Assert.NotNull(_feature.SelectedItem);
             Assert.Equal("text/test", _feature.SelectedItem.MimeType);
             Assert.Equal(374, _feature.Items.Count);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("MimeMap", ExpectedMono)
-                    : Path.Combine("MimeMap", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
 
         [Fact]
@@ -134,7 +135,13 @@ namespace Tests.MimeMap
         {
             await this.SetUp();
             const string Expected = @"expected_add.config";
-            const string ExpectedMono = @"expected_add.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer/staticContent");
+            var element = new XElement("mimeMap");
+            element.SetAttributeValue("fileExtension", ".tx1");
+            element.SetAttributeValue("mimeType", "text/test");
+            node?.Add(element);
+            document.Save(Expected);
 
             var item = new MimeMapItem(null);
             item.FileExtension = ".tx1";
@@ -143,11 +150,7 @@ namespace Tests.MimeMap
             Assert.NotNull(_feature.SelectedItem);
             Assert.Equal(".tx1", _feature.SelectedItem.FileExtension);
             Assert.Equal(375, _feature.Items.Count);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("MimeMap", ExpectedMono)
-                    : Path.Combine("MimeMap", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
     }
 }
