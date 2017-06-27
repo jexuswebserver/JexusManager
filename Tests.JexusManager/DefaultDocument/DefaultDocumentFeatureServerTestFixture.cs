@@ -22,6 +22,8 @@ namespace Tests.DefaultDocument
     using Moq;
 
     using Xunit;
+    using System.Xml.Linq;
+    using System.Xml.XPath;
 
     public class DefaultDocumentFeatureServerTestFixture
     {
@@ -93,16 +95,15 @@ namespace Tests.DefaultDocument
         {
             SetUp();
             const string Expected = @"expected_disabled.config";
-            const string ExpectedMono = @"expected_disabled.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer/defaultDocument");
+            node?.SetAttributeValue("enabled", "false");
+            document.Save(Expected);
 
             Assert.True(_feature.IsEnabled);
             _feature.Disable();
             Assert.False(_feature.IsEnabled);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("DefaultDocument", ExpectedMono)
-                    : Path.Combine("DefaultDocument", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
 
             _feature.Enable();
             Assert.True(_feature.IsEnabled);
@@ -122,18 +123,17 @@ namespace Tests.DefaultDocument
         {
             SetUp();
             const string Expected = @"expected_remove.config";
-            const string ExpectedMono = @"expected_remove.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer/defaultDocument/files/add[@value='Default.asp']");
+            node?.Remove();
+            document.Save(Expected);
 
             _feature.SelectedItem = _feature.Items[1];
             Assert.Equal("Default.asp", _feature.Items[1].Name);
             _feature.Remove();
             Assert.Null(_feature.SelectedItem);
             Assert.Equal("index.htm", _feature.Items[1].Name);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("DefaultDocument", ExpectedMono)
-                    : Path.Combine("DefaultDocument", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
 
         [Fact]
@@ -141,18 +141,19 @@ namespace Tests.DefaultDocument
         {
             SetUp();
             const string Expected = @"expected_add.config";
-            const string ExpectedMono = @"expected_add.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer/defaultDocument/files");
+            var add = new XElement("add");
+            add.SetAttributeValue("value", "default.my");
+            node?.AddFirst(add);
+            document.Save(Expected);
 
             var item = new DocumentItem(null);
             item.Name = "default.my";
             _feature.InsertItem(_feature.Items.FindIndex(i => i.Flag == "Local"), item);
             Assert.NotNull(_feature.SelectedItem);
             Assert.Equal("default.my", _feature.SelectedItem.Name);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("DefaultDocument", ExpectedMono)
-                    : Path.Combine("DefaultDocument", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
 
         [Fact]
@@ -168,7 +169,15 @@ namespace Tests.DefaultDocument
         {
             SetUp();
             const string Expected = @"expected_up.config";
-            const string ExpectedMono = @"expected_up.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer/defaultDocument/files");
+            var asp = document.Root.XPathSelectElement("/configuration/system.webServer/defaultDocument/files/add[@value='Default.asp']");
+            asp?.Remove();
+            var htm = document.Root.XPathSelectElement("/configuration/system.webServer/defaultDocument/files/add[@value='Default.htm']");
+            htm?.Remove();
+            node?.AddFirst(htm);
+            node?.AddFirst(asp);
+            document.Save(Expected);
 
             _feature.SelectedItem = _feature.Items[1];
             Assert.Equal("Default.asp", _feature.Items[1].Name);
@@ -178,11 +187,7 @@ namespace Tests.DefaultDocument
             Assert.Equal("Default.asp", _feature.SelectedItem.Name);
             Assert.Equal("Default.asp", _feature.Items[0].Name);
             Assert.Equal("Default.htm", _feature.Items[1].Name);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("DefaultDocument", ExpectedMono)
-                    : Path.Combine("DefaultDocument", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
 
         [Fact]
@@ -190,7 +195,15 @@ namespace Tests.DefaultDocument
         {
             SetUp();
             const string Expected = @"expected_up.config";
-            const string ExpectedMono = @"expected_up.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer/defaultDocument/files");
+            var asp = document.Root.XPathSelectElement("/configuration/system.webServer/defaultDocument/files/add[@value='Default.asp']");
+            asp?.Remove();
+            var htm = document.Root.XPathSelectElement("/configuration/system.webServer/defaultDocument/files/add[@value='Default.htm']");
+            htm?.Remove();
+            node?.AddFirst(htm);
+            node?.AddFirst(asp);
+            document.Save(Expected);
 
             _feature.SelectedItem = _feature.Items[0];
             Assert.Equal("Default.asp", _feature.Items[1].Name);
@@ -200,11 +213,7 @@ namespace Tests.DefaultDocument
             Assert.Equal("Default.htm", _feature.SelectedItem.Name);
             Assert.Equal("Default.asp", _feature.Items[0].Name);
             Assert.Equal("Default.htm", _feature.Items[1].Name);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("DefaultDocument", ExpectedMono)
-                    : Path.Combine("DefaultDocument", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
     }
 }
