@@ -22,6 +22,8 @@ namespace Tests.Caching
     using Moq;
 
     using Xunit;
+    using System.Xml.Linq;
+    using System.Xml.XPath;
 
     public class CachingFeatureSiteTestFixture
     {
@@ -99,7 +101,20 @@ namespace Tests.Caching
         [Fact]
         public void TestRemoveInherited()
         {
-            SetUp();
+            this.SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = Path.Combine("Caching", "expected_remove.site.config");
+            var document = XDocument.Load(site);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer");
+            var security = new XElement("caching");
+            var authorization = new XElement("profiles");
+            var remove = new XElement("remove");
+            remove.SetAttributeValue("extension", ".cs");
+            node?.Add(security);
+            security.Add(authorization);
+            authorization.Add(remove);
+            document.Save(expected);
 
             _feature.SelectedItem = _feature.Items[0];
             Assert.Equal(".cs", _feature.SelectedItem.Extension);
@@ -111,13 +126,18 @@ namespace Tests.Caching
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("Caching", "expected_remove.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
 
         [Fact]
         public void TestRemove()
         {
-            SetUp();
+            this.SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = Path.Combine("Caching", "expected_remove1.site.config");
+            var document = XDocument.Load(site);
+            document.Save(expected);
 
             var item = new CachingItem(null);
             item.Extension = ".xls";
@@ -133,13 +153,30 @@ namespace Tests.Caching
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("Caching", "expected_remove1.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
 
         [Fact]
         public void TestEditInherited()
         {
-            SetUp();
+            this.SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = Path.Combine("Caching", "expected_edit.site.config");
+            var document = XDocument.Load(site);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer");
+            var security = new XElement("caching");
+            var authorization = new XElement("profiles");
+            var remove = new XElement("remove");
+            remove.SetAttributeValue("extension", ".cs");
+            var add = new XElement("add");
+            add.SetAttributeValue("duration", "00:00:00");
+            add.SetAttributeValue("extension", ".vb");
+            node?.Add(security);
+            security.Add(authorization);
+            authorization.Add(remove);
+            authorization.Add(add);
+            document.Save(expected);
 
             _feature.SelectedItem = _feature.Items[0];
             Assert.Equal(".cs", _feature.SelectedItem.Extension);
@@ -153,7 +190,7 @@ namespace Tests.Caching
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("Caching", "expected_edit.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
 
         [Fact]
@@ -161,6 +198,20 @@ namespace Tests.Caching
         {
             SetUp();
 
+            var site = Path.Combine("Website1", "web.config");
+            var expected = Path.Combine("Caching", "expected_edit1.site.config");
+            var document = XDocument.Load(site);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer");
+            var security = new XElement("caching");
+            var authorization = new XElement("profiles");
+            var add = new XElement("add");
+            add.SetAttributeValue("duration", "00:00:00");
+            add.SetAttributeValue("extension", ".xslt");
+            node?.Add(security);
+            security.Add(authorization);
+            authorization.Add(add);
+            document.Save(expected);
+            
             var item = new CachingItem(null);
             item.Extension = ".xls";
             _feature.AddItem(item);
@@ -177,13 +228,28 @@ namespace Tests.Caching
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("Caching", "expected_edit1.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
 
         [Fact]
         public void TestAdd()
         {
             SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = Path.Combine("Caching", "expected_add.site.config");
+            var document = XDocument.Load(site);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer");
+            var security = new XElement("caching");
+            var authorization = new XElement("profiles");
+            var add = new XElement("add");
+            add.SetAttributeValue("extension", ".ppt");
+            add.SetAttributeValue("duration", "00:00:00");
+            node?.Add(security);
+            security.Add(authorization);
+            authorization.Add(add);
+            document.Save(expected);
+
             var item = new CachingItem(null);
             item.Extension = ".ppt";
             _feature.AddItem(item);
@@ -194,7 +260,7 @@ namespace Tests.Caching
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("Caching", "expected_add.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
     }
 }
