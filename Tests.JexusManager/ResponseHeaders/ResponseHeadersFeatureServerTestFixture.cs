@@ -22,6 +22,8 @@ namespace Tests.ResponseHeaders
     using Moq;
 
     using Xunit;
+    using System.Xml.Linq;
+    using System.Xml.XPath;
 
     public class ResponseHeadersFeatureServerTestFixture
     {
@@ -95,17 +97,16 @@ namespace Tests.ResponseHeaders
         {
             await this.SetUp();
             const string Expected = @"expected_remove.config";
-            const string ExpectedMono = @"expected_remove.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer/httpProtocol/customHeaders/add");
+            node?.Remove();
+            document.Save(Expected);
 
             _feature.SelectedItem = _feature.Items[0];
             _feature.Remove();
             Assert.Null(_feature.SelectedItem);
             Assert.Equal(0, _feature.Items.Count);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("ResponseHeaders", ExpectedMono)
-                    : Path.Combine("ResponseHeaders", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
 
         [Fact]
@@ -113,7 +114,10 @@ namespace Tests.ResponseHeaders
         {
             await this.SetUp();
             const string Expected = @"expected_edit.config";
-            const string ExpectedMono = @"expected_edit.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer/httpProtocol/customHeaders/add");
+            node?.SetAttributeValue("value", "XSP");
+            document.Save(Expected);
 
             _feature.SelectedItem = _feature.Items[0];
             var item = _feature.SelectedItem;
@@ -122,11 +126,7 @@ namespace Tests.ResponseHeaders
             Assert.NotNull(_feature.SelectedItem);
             Assert.Equal("XSP", _feature.SelectedItem.Value);
             Assert.Equal(1, _feature.Items.Count);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("ResponseHeaders", ExpectedMono)
-                    : Path.Combine("ResponseHeaders", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
 
         [Fact]
@@ -134,7 +134,13 @@ namespace Tests.ResponseHeaders
         {
             await this.SetUp();
             const string Expected = @"expected_add.config";
-            const string ExpectedMono = @"expected_add.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer/httpProtocol/customHeaders/add");
+            var add = new XElement("add");
+            add.SetAttributeValue("name", "Server");
+            add.SetAttributeValue("value", "Jexus");
+            node?.AddAfterSelf(add);
+            document.Save(Expected);
 
             var item = new ResponseHeadersItem(null);
             item.Name = "Server";
@@ -143,11 +149,7 @@ namespace Tests.ResponseHeaders
             Assert.NotNull(_feature.SelectedItem);
             Assert.Equal("Server", _feature.SelectedItem.Name);
             Assert.Equal(2, _feature.Items.Count);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("ResponseHeaders", ExpectedMono)
-                    : Path.Combine("ResponseHeaders", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
     }
 }

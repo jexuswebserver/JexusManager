@@ -22,6 +22,8 @@ namespace Tests.DirectoryBrowse
     using Moq;
 
     using Xunit;
+    using System.Xml.Linq;
+    using System.Xml.XPath;
 
     public class DirectoryBrowseFeatureServerTestFixture
     {
@@ -98,16 +100,18 @@ namespace Tests.DirectoryBrowse
         {
             await this.SetUp();
             const string Expected = @"expected_edit.config";
-            const string ExpectedMono = @"expected_edit.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer");
+            var directory = new XElement("directoryBrowse");
+            directory.SetAttributeValue("enabled", "true");
+            directory.SetAttributeValue("showFlags", "None");
+            node?.Add(directory);
+            document.Save(Expected);
 
             _feature.IsEnabled = true;
             _feature.DateEnabled = _feature.ExtensionEnabled = _feature.SizeEnabled = _feature.TimeEnabled = false;
             _feature.ApplyChanges();
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("DirectoryBrowse", ExpectedMono)
-                    : Path.Combine("DirectoryBrowse", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
     }
 }
