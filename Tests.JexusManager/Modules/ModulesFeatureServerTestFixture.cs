@@ -2,6 +2,9 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Xml.Linq;
+using System.Xml.XPath;
+
 namespace Tests.Modules
 {
     using System;
@@ -94,7 +97,11 @@ namespace Tests.Modules
         {
             await this.SetUp();
             const string Expected = @"expected_remove.config";
-            const string ExpectedMono = @"expected_remove.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/modules");
+            node?.FirstNode?.Remove(); // remove comment
+            node?.FirstNode?.Remove();
+            document.Save(Expected);
 
             Assert.Equal("DynamicCompressionModule", _feature.Items[0].Name);
             _feature.SelectedItem = _feature.Items[0];
@@ -103,19 +110,20 @@ namespace Tests.Modules
             Assert.Equal(43, _feature.Items.Count);
             Assert.Equal("StaticCompressionModule", _feature.Items[0].Name);
 
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("Modules", ExpectedMono)
-                    : Path.Combine("Modules", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
 
         [Fact]
         public async void TestEdit()
         {
             await this.SetUp();
-            const string Expected = @"expected_edit.config";
-            const string ExpectedMono = @"expected_edit.mono.config";
+            const string Expected = @"expected_remove.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/modules");
+            node?.FirstNode?.Remove(); // remove comment
+            var element = node?.LastNode as XElement;
+            element?.SetAttributeValue("type", "test");
+            document.Save(Expected);
 
             _feature.SelectedItem = _feature.Items[43];
             var item = _feature.SelectedItem;
@@ -124,11 +132,7 @@ namespace Tests.Modules
             Assert.NotNull(_feature.SelectedItem);
             Assert.Equal("test", _feature.SelectedItem.Type);
             Assert.Equal(44, _feature.Items.Count);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("Modules", ExpectedMono)
-                    : Path.Combine("Modules", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
 
         [Fact]
@@ -136,7 +140,14 @@ namespace Tests.Modules
         {
             await this.SetUp();
             const string Expected = @"expected_add.config";
-            const string ExpectedMono = @"expected_add.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/modules");
+            node?.FirstNode?.Remove(); // remove comment
+            var element = new XElement("add");
+            element.SetAttributeValue("name", "test");
+            element.SetAttributeValue("type", "test");
+            node?.Add(element);
+            document.Save(Expected);
 
             var item = new ModulesItem(null);
             item.Name = "test";
@@ -146,11 +157,7 @@ namespace Tests.Modules
             Assert.NotNull(_feature.SelectedItem);
             Assert.Equal("test", _feature.SelectedItem.Name);
             Assert.Equal(45, _feature.Items.Count);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("Modules", ExpectedMono)
-                    : Path.Combine("Modules", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
 
         [Fact]
@@ -158,6 +165,13 @@ namespace Tests.Modules
         {
             await this.SetUp();
             const string Expected = @"expected_addglobal.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root?.XPathSelectElement("/configuration/system.webServer/globalModules");
+            var element = new XElement("add");
+            element.SetAttributeValue("name", "test");
+            element.SetAttributeValue("image", "test");
+            node?.Add(element);
+            document.Save(Expected);
 
             Assert.Equal(37, _feature.GlobalModules.Count);
 
@@ -166,14 +180,17 @@ namespace Tests.Modules
             item.Image = "test";
             _feature.AddGlobal(item);
             Assert.Equal(38, _feature.GlobalModules.Count);
-            XmlAssert.Equal(Path.Combine("Modules", Expected), Current);
+            XmlAssert.Equal(Expected, Current);
         }
 
         [Fact]
         public async void TestRemoveGlobal()
         {
             await this.SetUp();
-            const string Expected = @"..\original.config";
+            const string Expected = @"expected_removeglobal.config";
+            
+            var document = XDocument.Load(Current);
+            document.Save(Expected);
 
             Assert.Equal(37, _feature.GlobalModules.Count);
 
@@ -185,7 +202,7 @@ namespace Tests.Modules
 
             _feature.RemoveGlobal(item);
             Assert.Equal(37, _feature.GlobalModules.Count);
-            XmlAssert.Equal(Path.Combine("Modules", Expected), Current);
+            XmlAssert.Equal(Expected, Current);
         }
 
         [Fact]
@@ -201,7 +218,16 @@ namespace Tests.Modules
         {
             await SetUp();
             const string Expected = @"expected_up.config";
-            const string ExpectedMono = @"expected_up.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/modules");
+            node?.FirstNode?.Remove(); // remove comment
+            var node1 = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/modules/add[@name='StaticCompressionModule']");
+            var node2 = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/modules/add[@name='DynamicCompressionModule']");
+            node1?.Remove();
+            node2?.Remove();
+            node?.AddFirst(node2);
+            node?.AddFirst(node1);
+            document.Save(Expected);
 
             _feature.SelectedItem = _feature.Items[1];
             var selected = "StaticCompressionModule";
@@ -213,11 +239,7 @@ namespace Tests.Modules
             Assert.Equal(selected, _feature.SelectedItem.Name);
             Assert.Equal(selected, _feature.Items[0].Name);
             Assert.Equal(other, _feature.Items[1].Name);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("Modules", ExpectedMono)
-                    : Path.Combine("Modules", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
 
         [Fact]
@@ -225,7 +247,16 @@ namespace Tests.Modules
         {
             await SetUp();
             const string Expected = @"expected_up.config";
-            const string ExpectedMono = @"expected_up.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/modules");
+            node?.FirstNode?.Remove(); // remove comment
+            var node1 = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/modules/add[@name='StaticCompressionModule']");
+            var node2 = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/modules/add[@name='DynamicCompressionModule']");
+            node1?.Remove();
+            node2?.Remove();
+            node?.AddFirst(node2);
+            node?.AddFirst(node1);
+            document.Save(Expected);
 
             _feature.SelectedItem = _feature.Items[0];
             var other = "StaticCompressionModule";
@@ -237,11 +268,7 @@ namespace Tests.Modules
             Assert.Equal(selected, _feature.SelectedItem.Name);
             Assert.Equal(other, _feature.Items[0].Name);
             Assert.Equal(selected, _feature.Items[1].Name);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("Modules", ExpectedMono)
-                    : Path.Combine("Modules", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
     }
 }

@@ -2,6 +2,9 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Xml.Linq;
+using System.Xml.XPath;
+
 namespace Tests.RequestFiltering.FileExtensions
 {
     using System;
@@ -100,6 +103,21 @@ namespace Tests.RequestFiltering.FileExtensions
         {
             await this.SetUp();
 
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_remove.site.config";
+            var document = XDocument.Load(site);
+            var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
+            var security = new XElement("security");
+            var request = new XElement("requestFiltering");
+            var file = new XElement("fileExtensions");
+            var remove = new XElement("remove");
+            remove.SetAttributeValue("fileExtension", ".asa");
+            node?.Add(security);
+            security.Add(request);
+            request.Add(file);
+            file.Add(remove);
+            document.Save(expected);
+            
             _feature.SelectedItem = _feature.Items[0];
             Assert.Equal(".asa", _feature.SelectedItem.Extension);
             _feature.Remove();
@@ -110,13 +128,18 @@ namespace Tests.RequestFiltering.FileExtensions
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("RequestFiltering", "FileExtensions", "expected_remove.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
 
         [Fact]
         public async void TestRemove()
         {
             await this.SetUp();
+            
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_remove.site.config";
+            var document = XDocument.Load(site);
+            document.Save(expected);
 
             var item = new FileExtensionsItem(null);
             item.Extension = ".csv";
@@ -132,13 +155,30 @@ namespace Tests.RequestFiltering.FileExtensions
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("RequestFiltering", "FileExtensions", "expected_remove1.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
 
         [Fact]
         public async void TestAdd()
         {
             await this.SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_remove.site.config";
+            var document = XDocument.Load(site);
+            var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
+            var security = new XElement("security");
+            var request = new XElement("requestFiltering");
+            var file = new XElement("fileExtensions");
+            var add = new XElement("add");
+            add.SetAttributeValue("allowed", "false");
+            add.SetAttributeValue("fileExtension", ".csv");
+            node?.Add(security);
+            security.Add(request);
+            request.Add(file);
+            file.Add(add);
+            document.Save(expected);
+
             var item = new FileExtensionsItem(null);
             item.Extension = ".csv";
             _feature.AddItem(item);
@@ -149,7 +189,7 @@ namespace Tests.RequestFiltering.FileExtensions
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("RequestFiltering", "FileExtensions", "expected_add.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
     }
 }

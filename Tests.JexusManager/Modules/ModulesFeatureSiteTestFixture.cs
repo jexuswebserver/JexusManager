@@ -22,6 +22,8 @@ namespace Tests.Modules
     using Moq;
 
     using Xunit;
+    using System.Xml.Linq;
+    using System.Xml.XPath;
 
     public class ModulesFeatureSiteTestFixture
     {
@@ -101,16 +103,27 @@ namespace Tests.Modules
         {
             await this.SetUp();
 
+            const string Expected = @"expected_add.site.config";
+            var document = XDocument.Load(Current);
+            var node = new XElement("location");
+            node.SetAttributeValue("path", "WebSite1");
+            document.Root?.Add(node);
+            var web = new XElement("system.webServer");
+            node.Add(web);
+            var content = new XElement("modules");
+            web.Add(content);
+            var remove = new XElement("remove");
+            remove.SetAttributeValue("name", "DynamicCompressionModule");
+            content.Add(remove);
+            document.Save(Expected);
+
             _feature.SelectedItem = _feature.Items[0];
             Assert.Equal("DynamicCompressionModule", _feature.SelectedItem.Name);
             _feature.Remove();
             Assert.Null(_feature.SelectedItem);
             Assert.Equal(43, _feature.Items.Count);
 
-            const string Expected = @"expected_remove.site.config";
-            const string ExpectedMono = @"expected_remove.site.mono.config";
-
-            XmlAssert.Equal(Path.Combine("Modules", Helper.IsRunningOnMono() ? ExpectedMono : Expected), Current);
+            XmlAssert.Equal(Expected, Current);
             XmlAssert.Equal(Path.Combine("Website1", "original.config"), Path.Combine("Website1", "web.config"));
         }
 
@@ -118,6 +131,13 @@ namespace Tests.Modules
         public async void TestRemove()
         {
             await this.SetUp();
+
+            const string Expected = @"expected_add.site.config";
+            var document = XDocument.Load(Current);
+            var node = new XElement("location");
+            node.SetAttributeValue("path", "WebSite1");
+            document.Root?.Add(node);
+            document.Save(Expected);
 
             var item = new ModulesItem(null);
             item.Name = "test";
@@ -129,10 +149,7 @@ namespace Tests.Modules
             Assert.Null(_feature.SelectedItem);
             Assert.Equal(44, _feature.Items.Count);
 
-            const string Expected = @"expected_remove1.site.config";
-            const string ExpectedMono = @"expected_remove1.site.mono.config";
-
-            XmlAssert.Equal(Path.Combine("Modules", Helper.IsRunningOnMono() ? ExpectedMono : Expected), Current);
+            XmlAssert.Equal(Expected, Current);
             XmlAssert.Equal(Path.Combine("Website1", "original.config"), Path.Combine("Website1", "web.config"));
         }
 
@@ -140,6 +157,25 @@ namespace Tests.Modules
         public async void TestEditInherited()
         {
             await this.SetUp();
+
+            const string Expected = @"expected_add.site.config";
+            var document = XDocument.Load(Current);
+            var node = new XElement("location");
+            node.SetAttributeValue("path", "WebSite1");
+            document.Root?.Add(node);
+            var web = new XElement("system.webServer");
+            node.Add(web);
+            var content = new XElement("modules");
+            web.Add(content);
+            var remove = new XElement("remove");
+            remove.SetAttributeValue("name", "ScriptModule-4.0");
+            content.Add(remove);
+            var add = new XElement("add");
+            add.SetAttributeValue("preCondition", "managedHandler,runtimeVersionv4.0");
+            add.SetAttributeValue("name", "ScriptModule-4.0");
+            add.SetAttributeValue("type", "test");
+            content.Add(add);
+            document.Save(Expected);
 
             _feature.SelectedItem = _feature.Items[43];
             Assert.Equal("System.Web.Handlers.ScriptModule, System.Web.Extensions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35", _feature.SelectedItem.Type);
@@ -149,10 +185,7 @@ namespace Tests.Modules
             Assert.NotNull(_feature.SelectedItem);
             Assert.Equal("test", _feature.SelectedItem.Type);
 
-            const string Expected = @"expected_edit.site.config";
-            const string ExpectedMono = @"expected_edit.site.mono.config";
-
-            XmlAssert.Equal(Path.Combine("Modules", Helper.IsRunningOnMono() ? ExpectedMono : Expected), Current);
+            XmlAssert.Equal(Expected, Current);
             XmlAssert.Equal(Path.Combine("Website1", "original.config"), Path.Combine("Website1", "web.config"));
         }
 
@@ -160,6 +193,21 @@ namespace Tests.Modules
         public async void TestEdit()
         {
             await this.SetUp();
+
+            const string Expected = @"expected_add.site.config";
+            var document = XDocument.Load(Current);
+            var node = new XElement("location");
+            node.SetAttributeValue("path", "WebSite1");
+            document.Root?.Add(node);
+            var web = new XElement("system.webServer");
+            node.Add(web);
+            var content = new XElement("modules");
+            web.Add(content);
+            var add = new XElement("add");
+            add.SetAttributeValue("name", "test");
+            add.SetAttributeValue("type", "test");
+            content.Add(add);
+            document.Save(Expected);
 
             var item = new ModulesItem(null);
             item.Name = "test";
@@ -175,10 +223,7 @@ namespace Tests.Modules
             Assert.Equal("test", _feature.SelectedItem.Type);
             Assert.Equal(45, _feature.Items.Count);
 
-            const string Expected = @"expected_edit1.site.config";
-            const string ExpectedMono = @"expected_edit1.site.mono.config";
-
-            XmlAssert.Equal(Path.Combine("Modules", Helper.IsRunningOnMono() ? ExpectedMono : Expected), Current);
+            XmlAssert.Equal(Expected, Current);
             XmlAssert.Equal(Path.Combine("Website1", "original.config"), Path.Combine("Website1", "web.config"));
         }
 
@@ -186,6 +231,22 @@ namespace Tests.Modules
         public async void TestAdd()
         {
             await this.SetUp();
+
+            const string Expected = @"expected_add.site.config";
+            var document = XDocument.Load(Current);
+            var node = new XElement("location");
+            node.SetAttributeValue("path", "WebSite1");
+            document.Root?.Add(node);
+            var web = new XElement("system.webServer");
+            node.Add(web);
+            var content = new XElement("modules");
+            web.Add(content);
+            var add = new XElement("add");
+            add.SetAttributeValue("name", "test");
+            add.SetAttributeValue("type", "test1");
+            content.Add(add);
+            document.Save(Expected);
+
             var item = new ModulesItem(null);
             item.Name = "test";
             item.Type = "test1";
@@ -194,10 +255,7 @@ namespace Tests.Modules
             Assert.NotNull(_feature.SelectedItem);
             Assert.Equal("test", _feature.SelectedItem.Name);
 
-            const string Expected = @"expected_add.site.config";
-            const string ExpectedMono = @"expected_add.site.mono.config";
-
-            XmlAssert.Equal(Path.Combine("Modules", Helper.IsRunningOnMono() ? ExpectedMono : Expected), Current);
+            XmlAssert.Equal(Expected, Current);
             XmlAssert.Equal(Path.Combine("Website1", "original.config"), Path.Combine("Website1", "web.config"));
         }
 
@@ -205,6 +263,16 @@ namespace Tests.Modules
         public async void TestRevert()
         {
             await SetUp();
+
+            const string Expected = @"expected_add.site.config";
+            var document = XDocument.Load(Current);
+            var node = new XElement("location");
+            node.SetAttributeValue("path", "WebSite1");
+            document.Root?.Add(node);
+            var web = new XElement("system.webServer");
+            node.Add(web);
+            document.Save(Expected);
+
             var item = new ModulesItem(null);
             item.Name = "test";
             item.Type = "test1";
@@ -215,10 +283,7 @@ namespace Tests.Modules
             Assert.Null(_feature.SelectedItem);
             Assert.Equal(44, _feature.Items.Count);
 
-            const string Expected = @"expected_revert.site.config";
-            const string ExpectedMono = @"expected_revert.site.mono.config";
-
-            XmlAssert.Equal(Path.Combine("Modules", Helper.IsRunningOnMono() ? ExpectedMono : Expected), Current);
+            XmlAssert.Equal(Expected, Current);
             XmlAssert.Equal(Path.Combine("Website1", "original.config"), Path.Combine("Website1", "web.config"));
         }
 
@@ -226,6 +291,36 @@ namespace Tests.Modules
         public async void TestMoveUp()
         {
             await SetUp();
+
+            const string Expected = @"expected_add.site.config";
+            var document = XDocument.Load(Current);
+            var node = new XElement("location");
+            node.SetAttributeValue("path", "WebSite1");
+            document.Root.Add(node);
+            var web = new XElement("system.webServer");
+            node.Add(web);
+            var content = new XElement("modules");
+            web.Add(content);
+            var clear = new XElement("clear");
+            content.Add(clear);
+            var all = document.Root.XPathSelectElement("/configuration/location[@path='']/system.webServer/modules");
+            foreach (var element in all.Elements())
+            {
+                content.Add(element);
+            }
+
+            content.LastNode.Remove();
+
+            var add = new XElement("add");
+            add.SetAttributeValue("name", "test");
+            add.SetAttributeValue("type", "test1");
+            content.Add(add);
+            var one = new XElement("add");
+            one.SetAttributeValue("preCondition", "managedHandler,runtimeVersionv4.0");
+            one.SetAttributeValue("name", "ScriptModule-4.0");
+            one.SetAttributeValue("type", "System.Web.Handlers.ScriptModule, System.Web.Extensions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35");
+            content.Add(one);
+            document.Save(Expected);
 
             var item = new ModulesItem(null);
             item.Name = "test";
@@ -246,10 +341,7 @@ namespace Tests.Modules
             Assert.Equal(expected, _feature.Items[previous].Name);
             Assert.Equal(original, _feature.Items[last].Name);
 
-            const string Expected = @"expected_up.site.config";
-            const string ExpectedMono = @"expected_up.site.mono.config";
-
-            XmlAssert.Equal(Path.Combine("Modules", Helper.IsRunningOnMono() ? ExpectedMono : Expected), Current);
+            XmlAssert.Equal(Expected, Current);
             XmlAssert.Equal(Path.Combine("Website1", "original.config"), Path.Combine("Website1", "web.config"));
         }
 
@@ -257,6 +349,29 @@ namespace Tests.Modules
         public async void TestMoveDown()
         {
             await SetUp();
+
+            const string Expected = @"expected_add.site.config";
+            var document = XDocument.Load(Current);
+            var node = new XElement("location");
+            node.SetAttributeValue("path", "WebSite1");
+            document.Root.Add(node);
+            var web = new XElement("system.webServer");
+            node.Add(web);
+            var content = new XElement("modules");
+            web.Add(content);
+            var clear = new XElement("remove");
+            clear.SetAttributeValue("name", "ScriptModule-4.0");
+            content.Add(clear);
+            var add = new XElement("add");
+            add.SetAttributeValue("name", "test");
+            add.SetAttributeValue("type", "test1");
+            content.Add(add);
+            var one = new XElement("add");
+            one.SetAttributeValue("preCondition", "managedHandler,runtimeVersionv4.0");
+            one.SetAttributeValue("name", "ScriptModule-4.0");
+            one.SetAttributeValue("type", "System.Web.Handlers.ScriptModule, System.Web.Extensions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35");
+            content.Add(one);
+            document.Save(Expected);
 
             var item = new ModulesItem(null);
             item.Name = "test";
@@ -277,10 +392,7 @@ namespace Tests.Modules
             Assert.Equal(expected, _feature.Items[previous].Name);
             Assert.Equal(original, _feature.Items[last].Name);
 
-            const string Expected = @"expected_up1.site.config";
-            const string ExpectedMono = @"expected_up.site.mono.config";
-
-            XmlAssert.Equal(Path.Combine("Modules", Helper.IsRunningOnMono() ? ExpectedMono : Expected), Current);
+            XmlAssert.Equal(Expected, Current);
             XmlAssert.Equal(Path.Combine("Website1", "original.config"), Path.Combine("Website1", "web.config"));
         }
     }

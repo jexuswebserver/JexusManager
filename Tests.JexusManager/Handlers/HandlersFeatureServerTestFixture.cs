@@ -97,8 +97,8 @@ namespace Tests.Handlers
             await this.SetUp();
             const string Expected = @"expected_remove.config";
             var document = XDocument.Load(Current);
-            var node = document.Root.XPathSelectElement("/configuration/location[@path='']/system.webServer/handlers");
-            node?.FirstNode?.Remove();
+            var node = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/handlers");
+            node?.FirstNode?.Remove(); // remove comment
             node?.FirstNode?.Remove();
             document.Save(Expected);
 
@@ -118,10 +118,10 @@ namespace Tests.Handlers
             await this.SetUp();
             const string Expected = @"expected_edit.config";
             var document = XDocument.Load(Current);
-            var node = document.Root.XPathSelectElement("/configuration/location[@path='']/system.webServer/handlers");
+            var node = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/handlers");
             node?.FirstNode?.Remove();
             var element = node?.FirstNode as XElement;
-            element.SetAttributeValue("name", "test edit");
+            element?.SetAttributeValue("name", "test edit");
             document.Save(Expected);
 
             _feature.SelectedItem = _feature.Items[0];
@@ -140,14 +140,14 @@ namespace Tests.Handlers
             await this.SetUp();
             const string Expected = @"expected_add.config";
             var document = XDocument.Load(Current);
-            var node = document.Root.XPathSelectElement("/configuration/location[@path='']/system.webServer/handlers");
+            var node = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/handlers");
             var element = new XElement("add");
             element.SetAttributeValue("modules", "");
             element.SetAttributeValue("resourceType", "File");
             element.SetAttributeValue("verb", "*");
             element.SetAttributeValue("name", "test");
             element.SetAttributeValue("path", "*");
-            node.Add(element);
+            node?.Add(element);
             document.Save(Expected);
 
             var item = new HandlersItem(null);
@@ -174,13 +174,13 @@ namespace Tests.Handlers
             await SetUp();
             const string Expected = @"expected_up.config";
             var document = XDocument.Load(Current);
-            var node = document.Root.XPathSelectElement("/configuration/location[@path='']/system.webServer/handlers");
-            var node1 = document.Root.XPathSelectElement("/configuration/location[@path='']/system.webServer/handlers/add[@name='PageHandlerFactory-ISAPI-4.0_64bit']");
-            var node2 = document.Root.XPathSelectElement("/configuration/location[@path='']/system.webServer/handlers/add[@name='AXD-ISAPI-4.0_64bit']");
+            var node = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/handlers");
+            var node1 = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/handlers/add[@name='PageHandlerFactory-ISAPI-4.0_64bit']");
+            var node2 = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/handlers/add[@name='AXD-ISAPI-4.0_64bit']");
             node1?.Remove();
             node2?.Remove();
-            node.AddFirst(node2);
-            node.AddFirst(node1);
+            node?.AddFirst(node2);
+            node?.AddFirst(node1);
             document.Save(Expected);
 
             _feature.SelectedItem = _feature.Items[1];
@@ -202,13 +202,13 @@ namespace Tests.Handlers
             await SetUp();
             const string Expected = @"expected_up.config";
             var document = XDocument.Load(Current);
-            var node = document.Root.XPathSelectElement("/configuration/location[@path='']/system.webServer/handlers");
-            var node1 = document.Root.XPathSelectElement("/configuration/location[@path='']/system.webServer/handlers/add[@name='PageHandlerFactory-ISAPI-4.0_64bit']");
-            var node2 = document.Root.XPathSelectElement("/configuration/location[@path='']/system.webServer/handlers/add[@name='AXD-ISAPI-4.0_64bit']");
+            var node = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/handlers");
+            var node1 = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/handlers/add[@name='PageHandlerFactory-ISAPI-4.0_64bit']");
+            var node2 = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/handlers/add[@name='AXD-ISAPI-4.0_64bit']");
             node1?.Remove();
             node2?.Remove();
-            node.AddFirst(node2);
-            node.AddFirst(node1);
+            node?.AddFirst(node2);
+            node?.AddFirst(node1);
             document.Save(Expected);
 
             _feature.SelectedItem = _feature.Items[0];

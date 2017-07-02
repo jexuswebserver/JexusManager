@@ -103,7 +103,7 @@ namespace Tests.ResponseHeaders
             await this.SetUp();
 
             var site = Path.Combine("Website1", "web.config");
-            var expected = Path.Combine("ResponseHeaders", "expected_remove.site.config");
+            var expected = "expected_remove.site.config";
             var document = XDocument.Load(site);
             var node = document.Root.XPathSelectElement("/configuration/system.webServer");
             var http = new XElement("httpProtocol");
@@ -134,7 +134,7 @@ namespace Tests.ResponseHeaders
             await this.SetUp();
 
             var site = Path.Combine("Website1", "web.config");
-            var expected = Path.Combine("ResponseHeaders", "expected_remove1.site.config");
+            var expected = "expected_remove1.site.config";
             var document = XDocument.Load(site);
             var node = document.Root.XPathSelectElement("/configuration/system.webServer");
             document.Save(expected);
@@ -163,7 +163,7 @@ namespace Tests.ResponseHeaders
             await this.SetUp();
 
             var site = Path.Combine("Website1", "web.config");
-            var expected = Path.Combine("ResponseHeaders", "expected_edit.site.config");
+            var expected = "expected_edit.site.config";
             var document = XDocument.Load(site);
             var node = document.Root.XPathSelectElement("/configuration/system.webServer");
             var http = new XElement("httpProtocol");
@@ -200,7 +200,7 @@ namespace Tests.ResponseHeaders
             await this.SetUp();
 
             var site = Path.Combine("Website1", "web.config");
-            var expected = Path.Combine("ResponseHeaders", "expected_edit1.site.config");
+            var expected = "expected_edit1.site.config";
             var document = XDocument.Load(site);
             var node = document.Root.XPathSelectElement("/configuration/system.webServer");
             var http = new XElement("httpProtocol");
@@ -239,7 +239,7 @@ namespace Tests.ResponseHeaders
             await this.SetUp();
 
             var site = Path.Combine("Website1", "web.config");
-            var expected = Path.Combine("ResponseHeaders", "expected_edit.site.config");
+            var expected = "expected_edit.site.config";
             var document = XDocument.Load(site);
             var node = document.Root.XPathSelectElement("/configuration/system.webServer");
             var http = new XElement("httpProtocol");

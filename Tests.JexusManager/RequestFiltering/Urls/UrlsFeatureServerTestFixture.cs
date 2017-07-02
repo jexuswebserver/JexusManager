@@ -2,6 +2,9 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Xml.Linq;
+using System.Xml.XPath;
+
 namespace Tests.RequestFiltering.Urls
 {
     using System;
@@ -94,17 +97,33 @@ namespace Tests.RequestFiltering.Urls
         {
             await this.SetUp();
             const string Expected = @"expected_remove.config";
-            const string ExpectedMono = @"expected_remove.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root?.XPathSelectElement("/configuration/system.webServer/security/requestFiltering/alwaysAllowedUrls");
+            node?.Remove();
+            document.Save(Expected);
 
             _feature.SelectedItem = _feature.Items[0];
             _feature.Remove();
             Assert.Null(_feature.SelectedItem);
             Assert.Equal(1, _feature.Items.Count);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("RequestFiltering", "Urls", ExpectedMono)
-                    : Path.Combine("RequestFiltering", "Urls", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
+        }
+        
+        [Fact]
+        public async void TestRemoveDeny()
+        {
+            await this.SetUp();
+            const string Expected = @"expected_remove.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root?.XPathSelectElement("/configuration/system.webServer/security/requestFiltering/denyUrlSequences");
+            node?.Remove();
+            document.Save(Expected);
+
+            _feature.SelectedItem = _feature.Items[1];
+            _feature.Remove();
+            Assert.Null(_feature.SelectedItem);
+            Assert.Equal(1, _feature.Items.Count);
+            XmlAssert.Equal(Expected, Current);
         }
 
         [Fact]
@@ -112,7 +131,12 @@ namespace Tests.RequestFiltering.Urls
         {
             await this.SetUp();
             const string Expected = @"expected_add.config";
-            const string ExpectedMono = @"expected_add.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root?.XPathSelectElement("/configuration/system.webServer/security/requestFiltering/alwaysAllowedUrls");
+            var element = new XElement("add");
+            element.SetAttributeValue("url", "test1");
+            node?.Add(element);
+            document.Save(Expected);
 
             var item = new UrlsItem(null, true);
             item.Url = "test1";
@@ -120,11 +144,7 @@ namespace Tests.RequestFiltering.Urls
             Assert.NotNull(_feature.SelectedItem);
             Assert.Equal("test1", _feature.SelectedItem.Url);
             Assert.Equal(3, _feature.Items.Count);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("RequestFiltering", "Urls", ExpectedMono)
-                    : Path.Combine("RequestFiltering", "Urls", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
 
         [Fact]
@@ -132,7 +152,12 @@ namespace Tests.RequestFiltering.Urls
         {
             await this.SetUp();
             const string Expected = @"expected_add_deny.config";
-            const string ExpectedMono = @"expected_add_deny.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root?.XPathSelectElement("/configuration/system.webServer/security/requestFiltering/denyUrlSequences");
+            var element = new XElement("add");
+            element.SetAttributeValue("sequence", "test1");
+            node?.Add(element);
+            document.Save(Expected);
 
             var item = new UrlsItem(null, false);
             item.Url = "test1";
@@ -140,11 +165,7 @@ namespace Tests.RequestFiltering.Urls
             Assert.NotNull(_feature.SelectedItem);
             Assert.Equal("test1", _feature.SelectedItem.Url);
             Assert.Equal(3, _feature.Items.Count);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("RequestFiltering", "Urls", ExpectedMono)
-                    : Path.Combine("RequestFiltering", "Urls", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
     }
 }

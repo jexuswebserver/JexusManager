@@ -22,6 +22,8 @@ namespace Tests.RequestFiltering.FilteringRules
     using Moq;
 
     using Xunit;
+    using System.Xml.Linq;
+    using System.Xml.XPath;
 
     public class FilteringRulesFeatureSiteTestFixture
     {
@@ -100,6 +102,21 @@ namespace Tests.RequestFiltering.FilteringRules
         {
             await this.SetUp();
 
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_remove.site.config";
+            var document = XDocument.Load(site);
+            var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
+            var security = new XElement("security");
+            var request = new XElement("requestFiltering");
+            var file = new XElement("filteringRules");
+            var remove = new XElement("remove");
+            remove.SetAttributeValue("name", "test");
+            node?.Add(security);
+            security.Add(request);
+            request.Add(file);
+            file.Add(remove);
+            document.Save(expected);
+
             _feature.SelectedItem = _feature.Items[0];
             Assert.Equal("test", _feature.SelectedItem.Name);
             _feature.Remove();
@@ -110,13 +127,18 @@ namespace Tests.RequestFiltering.FilteringRules
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("RequestFiltering", "FilteringRules", "expected_remove.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
 
         [Fact]
         public async void TestRemove()
         {
             await this.SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_remove.site.config";
+            var document = XDocument.Load(site);
+            document.Save(expected);
 
             var item = new FilteringRulesItem(null);
             item.Name = "test1";
@@ -132,13 +154,32 @@ namespace Tests.RequestFiltering.FilteringRules
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("RequestFiltering", "FilteringRules", "expected_remove1.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
 
         [Fact]
         public async void TestEditInherited()
         {
             await this.SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_remove.site.config";
+            var document = XDocument.Load(site);
+            var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
+            var security = new XElement("security");
+            var request = new XElement("requestFiltering");
+            var file = new XElement("filteringRules");
+            var remove = new XElement("remove");
+            remove.SetAttributeValue("name", "test");
+            file?.Add(remove);
+            var add = new XElement("filteringRule");
+            add.SetAttributeValue("name", "test");
+            add.SetAttributeValue("scanQueryString", "true");
+            node?.Add(security);
+            security.Add(request);
+            request.Add(file);
+            file.Add(add);
+            document.Save(expected);
 
             _feature.SelectedItem = _feature.Items[0];
             Assert.Equal(false, _feature.SelectedItem.ScanQueryString);
@@ -152,13 +193,29 @@ namespace Tests.RequestFiltering.FilteringRules
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("RequestFiltering", "FilteringRules", "expected_edit.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
 
         [Fact]
         public async void TestEdit()
         {
             await this.SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_remove.site.config";
+            var document = XDocument.Load(site);
+            var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
+            var security = new XElement("security");
+            var request = new XElement("requestFiltering");
+            var file = new XElement("filteringRules");
+            var add = new XElement("filteringRule");
+            add.SetAttributeValue("name", "test1");
+            add.SetAttributeValue("scanQueryString", "true");
+            node?.Add(security);
+            security.Add(request);
+            request.Add(file);
+            file.Add(add);
+            document.Save(expected);
 
             var item = new FilteringRulesItem(null);
             item.Name = "test1";
@@ -176,13 +233,29 @@ namespace Tests.RequestFiltering.FilteringRules
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("RequestFiltering", "FilteringRules", "expected_edit1.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
 
         [Fact]
         public async void TestAdd()
         {
             await this.SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_remove.site.config";
+            var document = XDocument.Load(site);
+            var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
+            var security = new XElement("security");
+            var request = new XElement("requestFiltering");
+            var file = new XElement("filteringRules");
+            var add = new XElement("filteringRule");
+            add.SetAttributeValue("name", "test1");
+            node?.Add(security);
+            security.Add(request);
+            request.Add(file);
+            file.Add(add);
+            document.Save(expected);
+
             var item = new FilteringRulesItem(null);
             item.Name = "test1";
             _feature.AddItem(item);
@@ -193,7 +266,7 @@ namespace Tests.RequestFiltering.FilteringRules
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("RequestFiltering", "FilteringRules", "expected_add.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
     }
 }

@@ -104,7 +104,7 @@ namespace Tests.DirectoryBrowse
             await this.SetUp();
 
             var site = Path.Combine("Website1", "web.config");
-            var expected = Path.Combine("DirectoryBrowse", "expected_edit1.site.config");
+            var expected = "expected_edit1.site.config";
             var document = XDocument.Load(site);
             var node = document.Root.XPathSelectElement("/configuration/system.webServer");
             var directory = new XElement("directoryBrowse");

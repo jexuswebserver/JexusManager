@@ -2,6 +2,9 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Xml.Linq;
+using System.Xml.XPath;
+
 namespace Tests.RequestFiltering.Headers
 {
     using System;
@@ -99,6 +102,23 @@ namespace Tests.RequestFiltering.Headers
         public async void TestRemoveInherited()
         {
             await this.SetUp();
+            
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_remove.site.config";
+            var document = XDocument.Load(site);
+            var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
+            var security = new XElement("security");
+            var request = new XElement("requestFiltering");
+            var limits= new XElement("requestLimits");
+            var header = new XElement("headerLimits");
+            var add = new XElement("remove");
+            add.SetAttributeValue("header", "test");
+            node?.Add(security);
+            security.Add(request);
+            request.Add(limits);
+            limits.Add(header);
+            header.Add(add);
+            document.Save(expected);
 
             _feature.SelectedItem = _feature.Items[0];
             Assert.Equal("test", _feature.SelectedItem.Header);
@@ -110,13 +130,18 @@ namespace Tests.RequestFiltering.Headers
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("RequestFiltering", "Headers", "expected_remove.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
 
         [Fact]
         public async void TestRemove()
         {
             await this.SetUp();
+            
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_remove.site.config";
+            var document = XDocument.Load(site);
+            document.Save(expected);
 
             var item = new HeadersItem(null);
             item.Header = "test1";
@@ -132,13 +157,32 @@ namespace Tests.RequestFiltering.Headers
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("RequestFiltering", "Headers", "expected_remove1.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
 
         [Fact]
         public async void TestAdd()
         {
             await this.SetUp();
+            
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_remove.site.config";
+            var document = XDocument.Load(site);
+            var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
+            var security = new XElement("security");
+            var request = new XElement("requestFiltering");
+            var limits= new XElement("requestLimits");
+            var header = new XElement("headerLimits");
+            var add = new XElement("add");
+            add.SetAttributeValue("header", "test1");
+            add.SetAttributeValue("sizeLimit", "200");
+            node?.Add(security);
+            security.Add(request);
+            request.Add(limits);
+            limits.Add(header);
+            header.Add(add);
+            document.Save(expected);
+            
             var item = new HeadersItem(null);
             item.Header = "test1";
             item.SizeLimit = 200;
@@ -150,7 +194,7 @@ namespace Tests.RequestFiltering.Headers
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("RequestFiltering", "Headers", "expected_add.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
     }
 }

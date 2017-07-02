@@ -107,7 +107,7 @@ namespace Tests.Handlers
             var document = XDocument.Load(Current);
             var node = new XElement("location");
             node.SetAttributeValue("path", "WebSite1");
-            document.Root.Add(node);
+            document.Root?.Add(node);
             var web = new XElement("system.webServer");
             node.Add(web);
             var content = new XElement("handlers");
@@ -136,7 +136,7 @@ namespace Tests.Handlers
             var document = XDocument.Load(Current);
             var node = new XElement("location");
             node.SetAttributeValue("path", "WebSite1");
-            document.Root.Add(node);
+            document.Root?.Add(node);
             document.Save(Expected);
 
             var item = new HandlersItem(null);
@@ -163,7 +163,7 @@ namespace Tests.Handlers
             var document = XDocument.Load(Current);
             var node = new XElement("location");
             node.SetAttributeValue("path", "WebSite1");
-            document.Root.Add(node);
+            document.Root?.Add(node);
             var web = new XElement("system.webServer");
             node.Add(web);
             var content = new XElement("handlers");
@@ -204,7 +204,7 @@ namespace Tests.Handlers
             var document = XDocument.Load(Current);
             var node = new XElement("location");
             node.SetAttributeValue("path", "WebSite1");
-            document.Root.Add(node);
+            document.Root?.Add(node);
             var web = new XElement("system.webServer");
             node.Add(web);
             var content = new XElement("handlers");
@@ -246,7 +246,7 @@ namespace Tests.Handlers
             var document = XDocument.Load(Current);
             var node = new XElement("location");
             node.SetAttributeValue("path", "WebSite1");
-            document.Root.Add(node);
+            document.Root?.Add(node);
             var web = new XElement("system.webServer");
             node.Add(web);
             var content = new XElement("handlers");
@@ -280,7 +280,7 @@ namespace Tests.Handlers
             var document = XDocument.Load(Current);
             var node = new XElement("location");
             node.SetAttributeValue("path", "WebSite1");
-            document.Root.Add(node);
+            document.Root?.Add(node);
             var web = new XElement("system.webServer");
             node.Add(web);
             document.Save(Expected);

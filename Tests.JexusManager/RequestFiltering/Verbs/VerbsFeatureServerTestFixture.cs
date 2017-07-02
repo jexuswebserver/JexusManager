@@ -2,6 +2,9 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Xml.Linq;
+using System.Xml.XPath;
+
 namespace Tests.RequestFiltering.Verbs
 {
     using System;
@@ -94,17 +97,16 @@ namespace Tests.RequestFiltering.Verbs
         {
             await this.SetUp();
             const string Expected = @"expected_remove.config";
-            const string ExpectedMono = @"expected_remove.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root?.XPathSelectElement("/configuration/system.webServer/security/requestFiltering/verbs");
+            node?.Remove();
+            document.Save(Expected);
 
             _feature.SelectedItem = _feature.Items[0];
             _feature.Remove();
             Assert.Null(_feature.SelectedItem);
             Assert.Equal(0, _feature.Items.Count);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("RequestFiltering", "Verbs", ExpectedMono)
-                    : Path.Combine("RequestFiltering", "Verbs", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
 
         [Fact]
@@ -112,7 +114,13 @@ namespace Tests.RequestFiltering.Verbs
         {
             await this.SetUp();
             const string Expected = @"expected_add.config";
-            const string ExpectedMono = @"expected_add.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root?.XPathSelectElement("/configuration/system.webServer/security/requestFiltering/verbs");
+            var element = new XElement("add");
+            element.SetAttributeValue("verb", "GET");
+            element.SetAttributeValue("allowed", "false");
+            node?.Add(element);
+            document.Save(Expected);
 
             var item = new VerbsItem(null);
             item.Verb = "GET";
@@ -120,11 +128,7 @@ namespace Tests.RequestFiltering.Verbs
             Assert.NotNull(_feature.SelectedItem);
             Assert.Equal("GET", _feature.SelectedItem.Verb);
             Assert.Equal(2, _feature.Items.Count);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("RequestFiltering", "Verbs", ExpectedMono)
-                    : Path.Combine("RequestFiltering", "Verbs", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
     }
 }

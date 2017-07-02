@@ -98,7 +98,7 @@ namespace Tests.DefaultDocument
             const string OriginalMono = @"original.mono.config";
 
             var site = Path.Combine("Website1", "web.config");
-            var expected = Path.Combine("DefaultDocument", "expected_disabled.site.config");
+            var expected = "expected_disabled.site.config";
             var document = XDocument.Load(site);
             var node = document.Root.XPathSelectElement("/configuration/system.webServer/defaultDocument");
             node?.SetAttributeValue("enabled", "false");
@@ -124,7 +124,7 @@ namespace Tests.DefaultDocument
             await this.SetUp();
 
             var site = Path.Combine("Website1", "web.config");
-            var expected = Path.Combine("DefaultDocument", "expected_remove.site.config");
+            var expected = "expected_remove.site.config";
             var document = XDocument.Load(site);
             var node = document.Root.XPathSelectElement("/configuration/system.webServer/defaultDocument/files");
             var remove = new XElement("remove");
@@ -150,7 +150,7 @@ namespace Tests.DefaultDocument
         {
             await SetUp();
             var site = Path.Combine("Website1", "web.config");
-            var expected = Path.Combine("DefaultDocument", "expected_remove1.site.config");
+            var expected = "expected_remove1.site.config";
             var document = XDocument.Load(site);
             var node = document.Root.XPathSelectElement("/configuration/system.webServer");
             node?.Remove();
@@ -175,7 +175,7 @@ namespace Tests.DefaultDocument
             await SetUp();
 
             var site = Path.Combine("Website1", "web.config");
-            var expected = Path.Combine("DefaultDocument", "expected_add.site.config");
+            var expected = "expected_add.site.config";
             var document = XDocument.Load(site);
             var node = document.Root.XPathSelectElement("/configuration/system.webServer/defaultDocument/files");
             var add = new XElement("add");
@@ -202,7 +202,7 @@ namespace Tests.DefaultDocument
             await SetUp();
 
             var site = Path.Combine("Website1", "web.config");
-            var expected = Path.Combine("DefaultDocument", "expected_revert.site.config");
+            var expected = "expected_revert.site.config";
             var document = XDocument.Load(site);
             var node = document.Root.XPathSelectElement("/configuration/system.webServer/defaultDocument/files");
             node?.Remove();
@@ -225,7 +225,7 @@ namespace Tests.DefaultDocument
             await SetUp();
 
             var site = Path.Combine("Website1", "web.config");
-            var expected = Path.Combine("DefaultDocument", "expected_up.site.config");
+            var expected = "expected_up.site.config";
             var document = XDocument.Load(site);
             var node = document.Root.XPathSelectElement("/configuration/system.webServer/defaultDocument/files");
             var add = new XElement("add");
@@ -257,7 +257,7 @@ namespace Tests.DefaultDocument
             await SetUp();
 
             var site = Path.Combine("Website1", "web.config");
-            var expected = Path.Combine("DefaultDocument", "expected_up.site.config");
+            var expected = "expected_up.site.config";
             var document = XDocument.Load(site);
             var node = document.Root.XPathSelectElement("/configuration/system.webServer/defaultDocument/files");
             var htm = new XElement("add");

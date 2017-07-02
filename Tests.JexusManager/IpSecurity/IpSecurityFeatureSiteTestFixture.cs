@@ -2,6 +2,8 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Xml.Linq;
+
 namespace Tests.IpSecurity
 {
     using System;
@@ -100,16 +102,29 @@ namespace Tests.IpSecurity
         {
             await this.SetUp();
 
+            const string Expected = @"expected_add.site.config";
+            var document = XDocument.Load(Current);
+            var node = new XElement("location");
+            node.SetAttributeValue("path", "WebSite1");
+            document.Root?.Add(node);
+            var web = new XElement("system.webServer");
+            node.Add(web);
+            var security = new XElement("security");
+            web.Add(security);
+            var ip = new XElement("ipSecurity");
+            security.Add(ip);
+            var remove = new XElement("remove");
+            remove.SetAttributeValue("ipAddress", "10.0.0.0");
+            ip.Add(remove);
+            document.Save(Expected);
+            
             _feature.SelectedItem = _feature.Items[0];
             Assert.Equal("10.0.0.0", _feature.SelectedItem.Address);
             _feature.Remove();
             Assert.Null(_feature.SelectedItem);
             Assert.Equal(0, _feature.Items.Count);
 
-            const string Expected = @"expected_remove.site.config";
-            const string ExpectedMono = @"expected_remove.site.mono.config";
-
-            XmlAssert.Equal(Path.Combine("IpSecurity", Helper.IsRunningOnMono() ? ExpectedMono : Expected), Current);
+            XmlAssert.Equal(Expected, Current);
             XmlAssert.Equal(Path.Combine("Website1", "original.config"), Path.Combine("Website1", "web.config"));
         }
 
@@ -118,6 +133,13 @@ namespace Tests.IpSecurity
         {
             await this.SetUp();
 
+            const string Expected = @"expected_add.site.config";
+            var document = XDocument.Load(Current);
+            var node = new XElement("location");
+            node.SetAttributeValue("path", "WebSite1");
+            document.Root?.Add(node);
+            document.Save(Expected);
+            
             var item = new IpSecurityItem(null);
             item.Address = "12.0.0.0";
             _feature.AddItem(item);
@@ -128,10 +150,7 @@ namespace Tests.IpSecurity
             Assert.Null(_feature.SelectedItem);
             Assert.Equal(1, _feature.Items.Count);
 
-            const string Expected = @"expected_remove1.site.config";
-            const string ExpectedMono = @"expected_remove1.site.mono.config";
-
-            XmlAssert.Equal(Path.Combine("IpSecurity", Helper.IsRunningOnMono() ? ExpectedMono : Expected), Current);
+            XmlAssert.Equal(Expected, Current);
             XmlAssert.Equal(Path.Combine("Website1", "original.config"), Path.Combine("Website1", "web.config"));
         }
 
@@ -139,16 +158,30 @@ namespace Tests.IpSecurity
         public async void TestAdd()
         {
             await this.SetUp();
+            
+            const string Expected = @"expected_add.site.config";
+            var document = XDocument.Load(Current);
+            var node = new XElement("location");
+            node.SetAttributeValue("path", "WebSite1");
+            document.Root?.Add(node);
+            var web = new XElement("system.webServer");
+            node.Add(web);
+            var security = new XElement("security");
+            web.Add(security);
+            var ip = new XElement("ipSecurity");
+            security.Add(ip);
+            var add = new XElement("add");
+            add.SetAttributeValue("ipAddress", "12.0.0.0");
+            ip.Add(add);
+            document.Save(Expected);
+            
             var item = new IpSecurityItem(null);
             item.Address = "12.0.0.0";
             _feature.AddItem(item);
             Assert.NotNull(_feature.SelectedItem);
             Assert.Equal("12.0.0.0", _feature.SelectedItem.Address);
 
-            const string Expected = @"expected_add.site.config";
-            const string ExpectedMono = @"expected_add.site.mono.config";
-
-            XmlAssert.Equal(Path.Combine("IpSecurity", Helper.IsRunningOnMono() ? ExpectedMono : Expected), Current);
+            XmlAssert.Equal(Expected, Current);
             XmlAssert.Equal(Path.Combine("Website1", "original.config"), Path.Combine("Website1", "web.config"));
         }
 
@@ -156,6 +189,18 @@ namespace Tests.IpSecurity
         public async void TestRevert()
         {
             await SetUp();
+            
+            const string Expected = @"expected_add.site.config";
+            var document = XDocument.Load(Current);
+            var node = new XElement("location");
+            node.SetAttributeValue("path", "WebSite1");
+            document.Root?.Add(node);
+            var web = new XElement("system.webServer");
+            node.Add(web);
+            var security = new XElement("security");
+            web.Add(security);
+            document.Save(Expected);
+            
             var item = new IpSecurityItem(null);
             item.Address = "12.0.0.0";
             _feature.AddItem(item);
@@ -166,10 +211,7 @@ namespace Tests.IpSecurity
             Assert.Null(_feature.SelectedItem);
             Assert.Equal(1, _feature.Items.Count);
 
-            const string Expected = @"expected_revert.site.config";
-            const string ExpectedMono = @"expected_revert.site.mono.config";
-
-            XmlAssert.Equal(Path.Combine("IpSecurity", Helper.IsRunningOnMono() ? ExpectedMono : Expected), Current);
+            XmlAssert.Equal(Expected, Current);
             XmlAssert.Equal(Path.Combine("Website1", "original.config"), Path.Combine("Website1", "web.config"));
         }
     }

@@ -2,6 +2,10 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Runtime.InteropServices;
+using System.Xml.Linq;
+using System.Xml.XPath;
+
 namespace Tests.RequestFiltering.HiddenSegments
 {
     using System;
@@ -94,17 +98,16 @@ namespace Tests.RequestFiltering.HiddenSegments
         {
             await this.SetUp();
             const string Expected = @"expected_remove.config";
-            const string ExpectedMono = @"expected_remove.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root?.XPathSelectElement("/configuration/system.webServer/security/requestFiltering/hiddenSegments");
+            node?.FirstNode.Remove();
+            document.Save(Expected);
 
             _feature.SelectedItem = _feature.Items[0];
             _feature.Remove();
             Assert.Null(_feature.SelectedItem);
             Assert.Equal(7, _feature.Items.Count);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("RequestFiltering", "HiddenSegments", ExpectedMono)
-                    : Path.Combine("RequestFiltering", "HiddenSegments", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
 
         [Fact]
@@ -112,7 +115,12 @@ namespace Tests.RequestFiltering.HiddenSegments
         {
             await this.SetUp();
             const string Expected = @"expected_add.config";
-            const string ExpectedMono = @"expected_add.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root?.XPathSelectElement("/configuration/system.webServer/security/requestFiltering/hiddenSegments");
+            var element = new XElement("add");
+            element.SetAttributeValue("segment", "test");
+            node?.Add(element);
+            document.Save(Expected);
 
             var item = new HiddenSegmentsItem(null);
             item.Segment = "test";
@@ -120,11 +128,7 @@ namespace Tests.RequestFiltering.HiddenSegments
             Assert.NotNull(_feature.SelectedItem);
             Assert.Equal("test", _feature.SelectedItem.Segment);
             Assert.Equal(9, _feature.Items.Count);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("RequestFiltering", "HiddenSegments", ExpectedMono)
-                    : Path.Combine("RequestFiltering", "HiddenSegments", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
     }
 }

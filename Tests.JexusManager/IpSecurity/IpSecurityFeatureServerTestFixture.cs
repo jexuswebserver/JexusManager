@@ -2,6 +2,9 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Xml.Linq;
+using System.Xml.XPath;
+
 namespace Tests.IpSecurity
 {
     using System;
@@ -94,17 +97,16 @@ namespace Tests.IpSecurity
         {
             await this.SetUp();
             const string Expected = @"expected_remove.config";
-            const string ExpectedMono = @"expected_remove.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root?.XPathSelectElement("/configuration/system.webServer/security/ipSecurity");
+            node?.Remove();
+            document.Save(Expected);
 
             _feature.SelectedItem = _feature.Items[0];
             _feature.Remove();
             Assert.Null(_feature.SelectedItem);
             Assert.Equal(0, _feature.Items.Count);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("IpSecurity", ExpectedMono)
-                    : Path.Combine("IpSecurity", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
 
         [Fact]
@@ -112,7 +114,13 @@ namespace Tests.IpSecurity
         {
             await this.SetUp();
             const string Expected = @"expected_add.config";
-            const string ExpectedMono = @"expected_add.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root?.XPathSelectElement("/configuration/system.webServer/security/ipSecurity");
+            var element = new XElement("add");
+            element.SetAttributeValue("ipAddress", "12.0.0.0");
+            element.SetAttributeValue("allowed", "true");
+            node?.Add(element);
+            document.Save(Expected);
 
             var item = new IpSecurityItem(null);
             item.Address = "12.0.0.0";
@@ -122,11 +130,7 @@ namespace Tests.IpSecurity
             Assert.Equal("12.0.0.0", _feature.SelectedItem.Address);
             Assert.Equal(true, _feature.SelectedItem.Allowed);
             Assert.Equal(2, _feature.Items.Count);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("IpSecurity", ExpectedMono)
-                    : Path.Combine("IpSecurity", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
 
         [Fact]

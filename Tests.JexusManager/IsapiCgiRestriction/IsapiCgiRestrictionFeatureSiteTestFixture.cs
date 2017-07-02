@@ -2,6 +2,8 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Xml.Linq;
+
 namespace Tests.IsapiCgiRestriction
 {
     using System;
@@ -100,16 +102,29 @@ namespace Tests.IsapiCgiRestriction
         {
             await this.SetUp();
 
+            const string Expected = @"expected_add.site.config";
+            var document = XDocument.Load(Current);
+            var node = new XElement("location");
+            node.SetAttributeValue("path", "WebSite1");
+            document.Root?.Add(node);
+            var web = new XElement("system.webServer");
+            node.Add(web);
+            var security = new XElement("security");
+            web.Add(security);
+            var ip = new XElement("isapiCgiRestriction");
+            security.Add(ip);
+            var remove = new XElement("remove");
+            remove.SetAttributeValue("path", @"%windir%\Microsoft.NET\Framework64\v4.0.30319\webengine4.dll");
+            ip.Add(remove);
+            document.Save(Expected);
+            
             _feature.SelectedItem = _feature.Items[0];
             Assert.Equal("ASP.NET_v4.0", _feature.SelectedItem.Description);
             _feature.Remove();
             Assert.Null(_feature.SelectedItem);
             Assert.Equal(3, _feature.Items.Count);
-
-            const string Expected = @"expected_remove.site.config";
-            const string ExpectedMono = @"expected_remove.site.mono.config";
-
-            XmlAssert.Equal(Path.Combine("IsapiCgiRestriction", Helper.IsRunningOnMono() ? ExpectedMono : Expected), Current);
+            
+            XmlAssert.Equal(Expected, Current);
             XmlAssert.Equal(Path.Combine("Website1", "original.config"), Path.Combine("Website1", "web.config"));
         }
 
@@ -117,6 +132,13 @@ namespace Tests.IsapiCgiRestriction
         public async void TestRemove()
         {
             await this.SetUp();
+            
+            const string Expected = @"expected_add.site.config";
+            var document = XDocument.Load(Current);
+            var node = new XElement("location");
+            node.SetAttributeValue("path", "WebSite1");
+            document.Root?.Add(node);
+            document.Save(Expected);
 
             var item = new IsapiCgiRestrictionItem(null);
             item.Description = "test";
@@ -129,10 +151,7 @@ namespace Tests.IsapiCgiRestriction
             Assert.Null(_feature.SelectedItem);
             Assert.Equal(4, _feature.Items.Count);
 
-            const string Expected = @"expected_remove1.site.config";
-            const string ExpectedMono = @"expected_remove1.site.mono.config";
-
-            XmlAssert.Equal(Path.Combine("IsapiCgiRestriction", Helper.IsRunningOnMono() ? ExpectedMono : Expected), Current);
+            XmlAssert.Equal(Expected, Current);
             XmlAssert.Equal(Path.Combine("Website1", "original.config"), Path.Combine("Website1", "web.config"));
         }
 
@@ -140,7 +159,28 @@ namespace Tests.IsapiCgiRestriction
         public async void TestEditInherited()
         {
             await this.SetUp();
-
+            
+            const string Expected = @"expected_add.site.config";
+            var document = XDocument.Load(Current);
+            var node = new XElement("location");
+            node.SetAttributeValue("path", "WebSite1");
+            document.Root?.Add(node);
+            var web = new XElement("system.webServer");
+            node.Add(web);
+            var security = new XElement("security");
+            web.Add(security);
+            var ip = new XElement("isapiCgiRestriction");
+            security.Add(ip);
+            var remove = new XElement("remove");
+            remove.SetAttributeValue("path", @"%windir%\Microsoft.NET\Framework64\v4.0.30319\webengine4.dll");
+            ip.Add(remove);
+            var add = new XElement("add");
+            add.SetAttributeValue("allowed", "true");
+            add.SetAttributeValue("path", "c:\\test.dll");
+            add.SetAttributeValue("description", "ASP.NET_v4.0");
+            ip.Add(add);
+            document.Save(Expected);
+            
             _feature.SelectedItem = _feature.Items[0];
             Assert.Equal("ASP.NET_v4.0", _feature.SelectedItem.Description);
             var item = _feature.SelectedItem;
@@ -149,10 +189,7 @@ namespace Tests.IsapiCgiRestriction
             Assert.NotNull(_feature.SelectedItem);
             Assert.Equal("c:\\test.dll", _feature.SelectedItem.Path);
 
-            const string Expected = @"expected_edit.site.config";
-            const string ExpectedMono = @"expected_edit.site.mono.config";
-
-            XmlAssert.Equal(Path.Combine("IsapiCgiRestriction", Helper.IsRunningOnMono() ? ExpectedMono : Expected), Current);
+            XmlAssert.Equal(Expected, Current);
             XmlAssert.Equal(Path.Combine("Website1", "original.config"), Path.Combine("Website1", "web.config"));
         }
 
@@ -161,6 +198,24 @@ namespace Tests.IsapiCgiRestriction
         {
             await this.SetUp();
 
+            const string Expected = @"expected_add.site.config";
+            var document = XDocument.Load(Current);
+            var node = new XElement("location");
+            node.SetAttributeValue("path", "WebSite1");
+            document.Root?.Add(node);
+            var web = new XElement("system.webServer");
+            node.Add(web);
+            var security = new XElement("security");
+            web.Add(security);
+            var ip = new XElement("isapiCgiRestriction");
+            security.Add(ip);
+            var add = new XElement("add");
+            add.SetAttributeValue("allowed", "false");
+            add.SetAttributeValue("path", "c:\\test.exe");
+            add.SetAttributeValue("description", "test");
+            ip.Add(add);
+            document.Save(Expected);
+            
             var item = new IsapiCgiRestrictionItem(null);
             item.Description = "test";
             item.Path = "c:\\test.dll";
@@ -174,10 +229,7 @@ namespace Tests.IsapiCgiRestriction
             Assert.Equal("c:\\test.exe", _feature.SelectedItem.Path);
             Assert.Equal(5, _feature.Items.Count);
 
-            const string Expected = @"expected_edit1.site.config";
-            const string ExpectedMono = @"expected_edit1.site.mono.config";
-
-            XmlAssert.Equal(Path.Combine("IsapiCgiRestriction", Helper.IsRunningOnMono() ? ExpectedMono : Expected), Current);
+            XmlAssert.Equal(Expected, Current);
             XmlAssert.Equal(Path.Combine("Website1", "original.config"), Path.Combine("Website1", "web.config"));
         }
 
@@ -185,6 +237,25 @@ namespace Tests.IsapiCgiRestriction
         public async void TestAdd()
         {
             await this.SetUp();
+            
+            const string Expected = @"expected_add.site.config";
+            var document = XDocument.Load(Current);
+            var node = new XElement("location");
+            node.SetAttributeValue("path", "WebSite1");
+            document.Root?.Add(node);
+            var web = new XElement("system.webServer");
+            node.Add(web);
+            var security = new XElement("security");
+            web.Add(security);
+            var ip = new XElement("isapiCgiRestriction");
+            security.Add(ip);
+            var add = new XElement("add");
+            add.SetAttributeValue("allowed", "false");
+            add.SetAttributeValue("path", "c:\\test.dll");
+            add.SetAttributeValue("description", "test");
+            ip.Add(add);
+            document.Save(Expected);
+            
             var item = new IsapiCgiRestrictionItem(null);
             item.Description = "test";
             item.Path = "c:\\test.dll";
@@ -192,10 +263,7 @@ namespace Tests.IsapiCgiRestriction
             Assert.NotNull(_feature.SelectedItem);
             Assert.Equal("test", _feature.SelectedItem.Description);
 
-            const string Expected = @"expected_add.site.config";
-            const string ExpectedMono = @"expected_add.site.mono.config";
-
-            XmlAssert.Equal(Path.Combine("IsapiCgiRestriction", Helper.IsRunningOnMono() ? ExpectedMono : Expected), Current);
+            XmlAssert.Equal(Expected, Current);
             XmlAssert.Equal(Path.Combine("Website1", "original.config"), Path.Combine("Website1", "web.config"));
         }
     }

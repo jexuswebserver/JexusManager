@@ -104,9 +104,9 @@ namespace Tests.Caching
             this.SetUp();
 
             var site = Path.Combine("Website1", "web.config");
-            var expected = Path.Combine("Caching", "expected_remove.site.config");
+            var expected = "expected_remove.site.config";
             var document = XDocument.Load(site);
-            var node = document.Root.XPathSelectElement("/configuration/system.webServer");
+            var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
             var security = new XElement("caching");
             var authorization = new XElement("profiles");
             var remove = new XElement("remove");
@@ -135,7 +135,7 @@ namespace Tests.Caching
             this.SetUp();
 
             var site = Path.Combine("Website1", "web.config");
-            var expected = Path.Combine("Caching", "expected_remove1.site.config");
+            var expected = "expected_remove1.site.config";
             var document = XDocument.Load(site);
             document.Save(expected);
 
@@ -162,9 +162,9 @@ namespace Tests.Caching
             this.SetUp();
 
             var site = Path.Combine("Website1", "web.config");
-            var expected = Path.Combine("Caching", "expected_edit.site.config");
+            var expected = "expected_edit.site.config";
             var document = XDocument.Load(site);
-            var node = document.Root.XPathSelectElement("/configuration/system.webServer");
+            var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
             var security = new XElement("caching");
             var authorization = new XElement("profiles");
             var remove = new XElement("remove");
@@ -199,9 +199,9 @@ namespace Tests.Caching
             SetUp();
 
             var site = Path.Combine("Website1", "web.config");
-            var expected = Path.Combine("Caching", "expected_edit1.site.config");
+            var expected = "expected_edit1.site.config";
             var document = XDocument.Load(site);
-            var node = document.Root.XPathSelectElement("/configuration/system.webServer");
+            var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
             var security = new XElement("caching");
             var authorization = new XElement("profiles");
             var add = new XElement("add");
@@ -237,9 +237,9 @@ namespace Tests.Caching
             SetUp();
 
             var site = Path.Combine("Website1", "web.config");
-            var expected = Path.Combine("Caching", "expected_add.site.config");
+            var expected = "expected_add.site.config";
             var document = XDocument.Load(site);
-            var node = document.Root.XPathSelectElement("/configuration/system.webServer");
+            var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
             var security = new XElement("caching");
             var authorization = new XElement("profiles");
             var add = new XElement("add");
