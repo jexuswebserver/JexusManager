@@ -1,3 +1,6 @@
 [submodule "lib/ExpandCollapsePanel"]
 	path = lib/ExpandCollapsePanel
 	url = https://github.com/lextm/ExpandCollapsePanel.git
+[submodule "lib/Rollbar.NET"]
+	path = lib/Rollbar.NET
+	url = https://github.com/lextm/Rollbar.NET.git
