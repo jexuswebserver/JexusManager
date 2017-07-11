@@ -31,7 +31,10 @@ namespace Microsoft.Web.Administration
         {
             var items = Process.GetProcessesByName("iisexpress");
             var found = items.Where(item =>
-                item.GetCommandLine().EndsWith(site.CommandLine, StringComparison.Ordinal));
+            {
+                var command = item.GetCommandLine();
+                return command != null && command.EndsWith(site.CommandLine, StringComparison.Ordinal);
+            });
             return found.Any();
         }
 
