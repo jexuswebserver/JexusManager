@@ -8,7 +8,6 @@ namespace JexusManager.Dialogs
 {
     using System;
     using System.Diagnostics;
-    using System.Net;
     using System.Reflection;
     using System.Windows.Forms;
 
@@ -22,13 +21,20 @@ namespace JexusManager.Dialogs
         private async void UpdateDialog_Load(object sender, EventArgs e)
         {
             txtStep.Text = "Checking update...";
-            string version;
+            string version = null;
             try
             {
                 var client = new GitHubClient(new ProductHeaderValue("JexusManager"));
                 var releases = await client.Repository.Release.GetAll("jexuswebserver", "JexusManager");
+                if (releases.Count == 0)
+                {
+                    MessageBox.Show("No update is found", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    Close();
+                    return;
+                }
+
                 var recent = releases[0];
-                version = recent.Name;
+                version = recent.TagName.Substring(1);
             }
             catch (Exception)
             {
@@ -53,14 +59,14 @@ namespace JexusManager.Dialogs
                 return;
             }
 
-            var result = MessageBox.Show(string.Format("An update ({0}) is available. Do you want to download it now?", latest), Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            var result = MessageBox.Show($"An update ({latest}) is available. Do you want to download it now?", Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result != DialogResult.Yes)
             {
                 Close();
                 return;
             }
 
-            Process.Start("https://jexus.codeplex.com/releases");
+            Process.Start("https://github.com/jexuswebserver/JexusManager/releases");
             Close();
         }
     }
