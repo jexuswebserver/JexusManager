@@ -54,12 +54,12 @@ namespace JexusManager.Dialogs
             var current = Assembly.GetExecutingAssembly().GetName().Version;
             if (current >= latest)
             {
-                MessageBox.Show("No update is found", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"{current} is in use. No update is found, and {latest} is latest release", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Close();
                 return;
             }
 
-            var result = MessageBox.Show($"An update ({latest}) is available. Do you want to download it now?", Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            var result = MessageBox.Show($"{current} is in use. An update ({latest}) is available. Do you want to download it now?", Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result != DialogResult.Yes)
             {
                 Close();
