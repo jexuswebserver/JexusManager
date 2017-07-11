@@ -2,6 +2,8 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using Octokit;
+
 namespace JexusManager.Dialogs
 {
     using System;
@@ -23,7 +25,10 @@ namespace JexusManager.Dialogs
             string version;
             try
             {
-                version = await new WebClient().DownloadStringTaskAsync(new Uri("http://www.lextudio.com/jexus.txt"));
+                var client = new GitHubClient(new ProductHeaderValue("JexusManager"));
+                var releases = await client.Repository.Release.GetAll("jexuswebserver", "JexusManager");
+                var recent = releases[0];
+                version = recent.Name;
             }
             catch (Exception)
             {

@@ -14,7 +14,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("LeXtudio")]
 [assembly: AssemblyProduct("JexusManager")]
-[assembly: AssemblyCopyright("Copyright (C) Lex Li 2014. All rights reserved.")]
+[assembly: AssemblyCopyright("Copyright (C) Lex Li 2014-2017. All rights reserved.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
