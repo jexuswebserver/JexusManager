@@ -112,7 +112,7 @@ namespace JexusManager.Features.Logging
                 }
                 else
                 {
-                    this.LogTargetW3C = -1;
+                    LogTargetW3C = -1;
                 }
 
                 LocalTimeRollover = (bool)element.Attributes["localTimeRollover"].Value;
@@ -130,7 +130,7 @@ namespace JexusManager.Features.Logging
                 }
                 else
                 {
-                    this.LogTargetW3C = -1;
+                    LogTargetW3C = -1;
                 }
 
                 LocalTimeRollover = logFile.LocalTimeRollover;
@@ -226,22 +226,13 @@ namespace JexusManager.Features.Logging
         public string Description { get; }
         public bool IsEnabled { get; private set; }
 
-        public virtual bool IsFeatureEnabled
-        {
-            get { return true; }
-        }
+        public virtual bool IsFeatureEnabled => true;
 
-        public virtual Version MinimumFrameworkVersion
-        {
-            get { return FxVersionNotRequired; }
-        }
+        public virtual Version MinimumFrameworkVersion => FxVersionNotRequired;
 
         public Module Module { get; }
 
-        public string Name
-        {
-            get { return "Logging"; }
-        }
+        public string Name => "Logging";
 
         public bool CanEncoding { get; set; }
 
