@@ -39,7 +39,7 @@ namespace Microsoft.Web.Administration
         }
 
         internal IisServerManager(string hostName, bool readOnly, string fileName)
-            :base(hostName, readOnly, fileName)
+            : base(hostName, readOnly, fileName)
         {
             Mode = WorkingMode.Iis;
         }
@@ -47,28 +47,36 @@ namespace Microsoft.Web.Administration
         internal override async Task<bool> GetSiteStateAsync(Site site)
         {
 #if !__MonoCS__
-                using (PowerShell PowerShellInstance = PowerShell.Create())
-                {
+            using (PowerShell PowerShellInstance = PowerShell.Create())
+            {
+                var path = Environment.ExpandEnvironmentVariables(
+                    "%windir%\\system32\\inetsrv\\Microsoft.Web.Administration.dll");
                     // use "AddScript" to add the contents of a script file to the end of the execution pipeline.
                     // use "AddCommand" to add individual commands/cmdlets to the end of the execution pipeline.
-                    PowerShellInstance.AddScript("param($param1) [Reflection.Assembly]::LoadFrom('C:\\Windows\\system32\\inetsrv\\Microsoft.Web.Administration.dll'); Get-IISsite -Name \"$param1\"");
+                PowerShellInstance.AddScript($"param($param1) [Reflection.Assembly]::LoadFrom('{path}'); Get-IISsite -Name \"$param1\"");
 
-                    // use "AddParameter" to add a single parameter to the last command/script on the pipeline.
-                    PowerShellInstance.AddParameter("param1", site.Name);
+                // use "AddParameter" to add a single parameter to the last command/script on the pipeline.
+                PowerShellInstance.AddParameter("param1", site.Name);
 
-                    Collection<PSObject> PSOutput = PowerShellInstance.Invoke();
+                Collection<PSObject> PSOutput = PowerShellInstance.Invoke();
 
-                    // check the other output streams (for example, the error stream)
-                    if (PowerShellInstance.Streams.Error.Count > 0)
-                    {
-                        // error records were written to the error stream.
-                        // do something with the items found.
-                        return false;
-                    }
-
-                    dynamic site1 = PSOutput[1];
-                    return site1.State?.ToString() == "Started";
+                // check the other output streams (for example, the error stream)
+                if (PowerShellInstance.Streams.Error.Count > 0)
+                {
+                    // error records were written to the error stream.
+                    // do something with the items found.
+                    return false;
                 }
+
+                if (PSOutput.Count < 2)
+                {
+                    // TODO: newly created sites go here. Why?
+                    return false;
+                }
+
+                dynamic site1 = PSOutput[1];
+                return site1.State?.ToString() == "Started";
+            }
 #else
                 return false;
 #endif
