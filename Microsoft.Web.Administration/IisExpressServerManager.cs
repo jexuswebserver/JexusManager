@@ -102,7 +102,7 @@ namespace Microsoft.Web.Administration
         private static void InjectEnvironmentVariables(Site site, ProcessStartInfo startInfo)
         {
             // TODO: make this site extension method.
-            var root = site.Applications[0].VirtualDirectories[0].PhysicalPath;
+            var root = site.Applications[0].VirtualDirectories[0].PhysicalPath.ExpandIisExpressEnvironmentVariables();
             var projects = Directory.GetFiles(root, "*.csproj");
             if (projects.Length != 1)
             {

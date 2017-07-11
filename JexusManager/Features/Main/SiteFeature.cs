@@ -394,7 +394,7 @@ namespace JexusManager.Features.Main
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var site = service.Site;
-            var root = site.Applications[0].VirtualDirectories[0].PhysicalPath;
+            var root = site.Applications[0].VirtualDirectories[0].PhysicalPath.ExpandIisExpressEnvironmentVariables();
             var projects = Directory.GetFiles(root, "*.csproj");
 
             var project = projects[0];
@@ -459,7 +459,7 @@ namespace JexusManager.Features.Main
 
         private static bool SiteHasProject(Site site)
         {
-            var root = site.Applications[0].VirtualDirectories[0].PhysicalPath;
+            var root = site.Applications[0].VirtualDirectories[0].PhysicalPath.ExpandIisExpressEnvironmentVariables();
             var projects = Directory.GetFiles(root, "*.csproj");
             if (projects.Length != 1)
             {

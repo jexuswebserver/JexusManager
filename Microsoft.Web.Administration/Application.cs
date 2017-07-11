@@ -80,7 +80,7 @@ namespace Microsoft.Web.Administration
             {
                 if (child.Path == VirtualDirectory.RootPath)
                 {
-                    root = child.PhysicalPath;
+                    root = child.PhysicalPath.ExpandIisExpressEnvironmentVariables();
                     break;
                 }
             }
@@ -90,8 +90,8 @@ namespace Microsoft.Web.Administration
                 var server = Server.GetConfigurationCache().FileContext;
                 if (root == null)
                 {
-                    var site = new Configuration(new FileContext(Server, null, server, Site.Name, false, false, this.Server.ReadOnly, (Entity as IXmlLineInfo).LineNumber));
-                    return (_configuration = site);
+                    var site = new Configuration(new FileContext(Server, null, server, Site.Name, false, false, Server.ReadOnly, (Entity as IXmlLineInfo).LineNumber));
+                    return _configuration = site;
                 }
                 else
                 {
@@ -101,8 +101,8 @@ namespace Microsoft.Web.Administration
                     Server.CleanSiteFile(siteFile);
 
                     // TODO: test ACL to set ReadOnly.
-                    var site = new Configuration(new FileContext(Server, siteFile, server, Site.Name, false, false, this.Server.ReadOnly));
-                    return (_configuration = site);
+                    var site = new Configuration(new FileContext(Server, siteFile, server, Site.Name, false, false, Server.ReadOnly));
+                    return _configuration = site;
                 }
             }
 
@@ -132,14 +132,14 @@ namespace Microsoft.Web.Administration
 
             if (root == null)
             {
-                var app = new Configuration(new FileContext(Server, null, parent?.FileContext, Site.Name, false, false, this.Server.ReadOnly, (Entity as IXmlLineInfo).LineNumber));
-                return (_configuration = app);
+                var app = new Configuration(new FileContext(Server, null, parent?.FileContext, Site.Name, false, false, Server.ReadOnly, (Entity as IXmlLineInfo).LineNumber));
+                return _configuration = app;
             }
 
             var fullPath = Site.Name + Path;
             var appFile = System.IO.Path.Combine(root, "web.config");
             // TODO: test ACL to set ReadOnly.
-            return (_configuration = new Configuration(new FileContext(Server, appFile, parent?.FileContext, fullPath, false, false, this.Server.ReadOnly)));
+            return _configuration = new Configuration(new FileContext(Server, appFile, parent?.FileContext, fullPath, false, false, Server.ReadOnly));
         }
 
         public override string ToString()
