@@ -103,8 +103,16 @@ namespace Microsoft.Web.Administration
         {
             // TODO: make this site extension method.
             var root = site.Applications[0].VirtualDirectories[0].PhysicalPath.ExpandIisExpressEnvironmentVariables();
-            var projects = Directory.GetFiles(root, "*.csproj");
-            if (projects.Length != 1)
+            string[] projects;
+            try
+            {
+                projects = Directory.GetFiles(root, "*.csproj");
+                if (projects.Length != 1)
+                {
+                    return;
+                }
+            }
+            catch (DirectoryNotFoundException)
             {
                 return;
             }
