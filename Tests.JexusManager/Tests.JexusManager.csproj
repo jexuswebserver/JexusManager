@@ -73,6 +73,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Authentication\AnonymousAuthenticationFeatureServerTestFixture.cs" />
+    <Compile Include="Authentication\FormsAuthenticationFeatureServerTestFixture.cs" />
+    <Compile Include="Authentication\FormsAuthenticationFeatureSiteTestFixture.cs" />
+    <Compile Include="Authentication\ClientCertificateAuthenticationFeatureServerTestFixture.cs" />
+    <Compile Include="Authentication\ClientCertificateAuthenticationFeatureSiteTestFixture.cs" />
+    <Compile Include="Authentication\DigestAuthenticationFeatureServerTestFixture.cs" />
+    <Compile Include="Authentication\BasicAuthenticationFeatureServerTestFixture.cs" />
+    <Compile Include="Authentication\DigestAuthenticationFeatureSiteTestFixture.cs" />
+    <Compile Include="Authentication\WindowsAuthenticationFeatureServerTestFixture.cs" />
+    <Compile Include="Authentication\AnonymousAuthenticationFeatureSiteTestFixture.cs" />
+    <Compile Include="Authentication\BasicAuthenticationFeatureSiteTestFixture.cs" />
+    <Compile Include="Authentication\WindowsAuthenticationFeatureSiteTestFixture.cs" />
     <Compile Include="Authorization\AuthorizationFeatureServerTestFixture.cs" />
     <Compile Include="Authorization\AuthorizationFeatureSiteTestFixture.cs" />
     <Compile Include="Caching\CachingFeatureServerTestFixture.cs" />
@@ -130,6 +142,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\JexusManager.Features.Authentication\JexusManager.Features.Authentication.csproj">
+      <Project>{aa7ccfc5-b695-4773-ba79-77cf6c36908f}</Project>
+      <Name>JexusManager.Features.Authentication</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JexusManager.Features.Authorization\JexusManager.Features.Authorization.csproj">
       <Project>{fefd62be-aa83-42b9-a79d-2df0150f4f81}</Project>
       <Name>JexusManager.Features.Authorization</Name>
