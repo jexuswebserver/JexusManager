@@ -79,7 +79,7 @@ namespace JexusManager.Features.Authentication
         public override void Load()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.webServer/security/authentication/basicAuthentication");
+            var section = service.GetSection("system.webServer/security/authentication/basicAuthentication", null, false);
             var basicEnabled = (bool)section["enabled"];
             SetEnabled(basicEnabled);
         }
@@ -87,7 +87,7 @@ namespace JexusManager.Features.Authentication
         private void Enable()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var basicSection = service.GetSection("system.webServer/security/authentication/basicAuthentication");
+            var basicSection = service.GetSection("system.webServer/security/authentication/basicAuthentication", null, false);
             basicSection["enabled"] = true;
             service.ServerManager.CommitChanges();
             SetEnabled(true);
@@ -96,7 +96,7 @@ namespace JexusManager.Features.Authentication
         private void Disable()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var basicSection = service.GetSection("system.webServer/security/authentication/basicAuthentication");
+            var basicSection = service.GetSection("system.webServer/security/authentication/basicAuthentication", null, false);
             basicSection["enabled"] = false;
             service.ServerManager.CommitChanges();
             SetEnabled(false);
@@ -105,7 +105,7 @@ namespace JexusManager.Features.Authentication
         private void Edit()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var basicSection = service.GetSection("system.webServer/security/authentication/basicAuthentication");
+            var basicSection = service.GetSection("system.webServer/security/authentication/basicAuthentication", null, false);
             var dialog = new BasicEditDialog(this.Module, new BasicItem(basicSection));
             if (dialog.ShowDialog() != DialogResult.OK)
             {

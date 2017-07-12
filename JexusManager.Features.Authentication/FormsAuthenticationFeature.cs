@@ -80,7 +80,7 @@ namespace JexusManager.Features.Authentication
         public override void Load()
         {
             var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.web/authentication");
+            var section = service.GetSection("system.web/Authentication", null, false);
             var enabled = 3L == (long)section["mode"];
             this.SetEnabled(enabled);
         }
@@ -88,7 +88,7 @@ namespace JexusManager.Features.Authentication
         private void Enable()
         {
             var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.web/authentication");
+            var section = service.GetSection("system.web/Authentication", null, false);
             section["mode"] = "Forms";
             service.ServerManager.CommitChanges();
             this.SetEnabled(true);
@@ -97,7 +97,7 @@ namespace JexusManager.Features.Authentication
         private void Disable()
         {
             var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.web/authentication");
+            var section = service.GetSection("system.web/Authentication", null, false);
             section["mode"] = "Windows";
             service.ServerManager.CommitChanges();
             this.SetEnabled(false);
@@ -106,7 +106,7 @@ namespace JexusManager.Features.Authentication
         private void Edit()
         {
             var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.web/authentication");
+            var section = service.GetSection("system.web/Authentication", null, false);
             var dialog = new FormsEditDialog(this.Module, new FormsItem(section.GetChildElement("forms")));
             if (dialog.ShowDialog() != DialogResult.OK)
             {

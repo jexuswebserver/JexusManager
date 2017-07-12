@@ -87,7 +87,7 @@ namespace JexusManager.Features.Authentication
         public override void Load()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var windowsSection = service.GetSection("system.webServer/security/authentication/windowsAuthentication");
+            var windowsSection = service.GetSection("system.webServer/security/authentication/windowsAuthentication", null, false);
             var windowsEnabled = (bool)windowsSection["enabled"];
             SetEnabled(windowsEnabled);
         }
@@ -95,7 +95,7 @@ namespace JexusManager.Features.Authentication
         private void Enable()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var windowsSection = service.GetSection("system.webServer/security/authentication/windowsAuthentication");
+            var windowsSection = service.GetSection("system.webServer/security/authentication/windowsAuthentication", null, false);
             windowsSection["enabled"] = true;
             service.ServerManager.CommitChanges();
             SetEnabled(true);
@@ -104,7 +104,7 @@ namespace JexusManager.Features.Authentication
         private void Disable()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var windowsSection = service.GetSection("system.webServer/security/authentication/windowsAuthentication");
+            var windowsSection = service.GetSection("system.webServer/security/authentication/windowsAuthentication", null, false);
             windowsSection["enabled"] = false;
             service.ServerManager.CommitChanges();
             SetEnabled(false);
@@ -113,7 +113,7 @@ namespace JexusManager.Features.Authentication
         private void Edit()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var windowsSection = service.GetSection("system.webServer/security/authentication/windowsAuthentication");
+            var windowsSection = service.GetSection("system.webServer/security/authentication/windowsAuthentication", null, false);
             var dialog = new WindowsAdvancedDialog(Module, new WindowsItem(windowsSection));
             if (dialog.ShowDialog() != DialogResult.OK)
             {
@@ -127,7 +127,7 @@ namespace JexusManager.Features.Authentication
         private void Providers()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var windowsSection = service.GetSection("system.webServer/security/authentication/windowsAuthentication");
+            var windowsSection = service.GetSection("system.webServer/security/authentication/windowsAuthentication", null, false);
             var dialog = new ProvidersDialog(Module, new WindowsItem(windowsSection));
             if (dialog.ShowDialog() != DialogResult.OK)
             {

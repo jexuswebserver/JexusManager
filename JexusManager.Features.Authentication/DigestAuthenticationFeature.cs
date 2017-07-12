@@ -79,7 +79,7 @@ namespace JexusManager.Features.Authentication
         public override void Load()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var digestSection = service.GetSection("system.webServer/security/authentication/digestAuthentication");
+            var digestSection = service.GetSection("system.webServer/security/authentication/digestAuthentication", null, false);
             var digestEnabled = (bool)digestSection["enabled"];
             SetEnabled(digestEnabled);
         }
@@ -87,7 +87,7 @@ namespace JexusManager.Features.Authentication
         private void Enable()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var digestSection = service.GetSection("system.webServer/security/authentication/digestAuthentication");
+            var digestSection = service.GetSection("system.webServer/security/authentication/digestAuthentication", null, false);
             digestSection["enabled"] = true;
             service.ServerManager.CommitChanges();
             SetEnabled(true);
@@ -96,7 +96,7 @@ namespace JexusManager.Features.Authentication
         private void Disable()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var digestSection = service.GetSection("system.webServer/security/authentication/digestAuthentication");
+            var digestSection = service.GetSection("system.webServer/security/authentication/digestAuthentication", null, false);
             digestSection["enabled"] = false;
             service.ServerManager.CommitChanges();
             SetEnabled(false);
@@ -105,7 +105,7 @@ namespace JexusManager.Features.Authentication
         private void Edit()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var digestSection = service.GetSection("system.webServer/security/authentication/digestAuthentication");
+            var digestSection = service.GetSection("system.webServer/security/authentication/digestAuthentication", null, false);
             var dialog = new DigestEditDialog(this.Module, new DigestItem(digestSection));
             if (dialog.ShowDialog() != DialogResult.OK)
             {

@@ -71,7 +71,7 @@ namespace JexusManager.Features.Authentication
         public override void Load()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var anonymousSection = service.GetSection("system.webServer/security/authentication/clientCertificateMappingAuthentication");
+            var anonymousSection = service.GetSection("system.webServer/security/authentication/clientCertificateMappingAuthentication", null, false);
             var anonymousEnabled = (bool)anonymousSection["enabled"];
             SetEnabled(anonymousEnabled);
         }
@@ -79,7 +79,7 @@ namespace JexusManager.Features.Authentication
         private void Enable()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var anonymousSection = service.GetSection("system.webServer/security/authentication/clientCertificateMappingAuthentication");
+            var anonymousSection = service.GetSection("system.webServer/security/authentication/clientCertificateMappingAuthentication", null, false);
             anonymousSection["enabled"] = true;
             service.ServerManager.CommitChanges();
             SetEnabled(true);
@@ -88,7 +88,7 @@ namespace JexusManager.Features.Authentication
         private void Disable()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var anonymousSection = service.GetSection("system.webServer/security/authentication/clientCertificateMappingAuthentication");
+            var anonymousSection = service.GetSection("system.webServer/security/authentication/clientCertificateMappingAuthentication", null, false);
             anonymousSection["enabled"] = false;
             service.ServerManager.CommitChanges();
             SetEnabled(false);
