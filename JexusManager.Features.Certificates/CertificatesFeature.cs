@@ -48,7 +48,8 @@ namespace JexusManager.Features.Certificates
             }
 
             private const string LocalhostIssuer = "CN=localhost";
-            private readonly string _localMachineIssuer = string.Format("CN={0}", Environment.MachineName);
+            private const int BadKeySet = -2146893802;
+            private readonly string _localMachineIssuer = $"CN={Environment.MachineName}";
 
             public override ICollection GetTaskItems()
             {
@@ -81,9 +82,10 @@ namespace JexusManager.Features.Certificates
                         }
                         catch (CryptographicException ex)
                         {
-                            if (ex.HResult != -2146893802)
+                            if (ex.HResult != BadKeySet)
                             {
-                                throw;
+                                // TODO: add CNG support.
+                                // throw;
                             }
                         }
                     }
