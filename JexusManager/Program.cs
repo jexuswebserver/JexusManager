@@ -2,9 +2,7 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Microsoft.Web.Administration;
 using Microsoft.Win32;
 using RollbarDotNet;
 
@@ -70,7 +68,7 @@ namespace JexusManager
                                 AccessToken = "5525758f15504199b7125d35d2058cfe",
                                 Environment = "production"
                             });
-            
+
             Application.ThreadException += (sender, args) =>
             {
                 Rollbar.Report(args.Exception);
