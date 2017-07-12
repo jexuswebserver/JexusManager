@@ -92,7 +92,7 @@ namespace JexusManager.Features.Authentication
             SetEnabled(windowsEnabled);
         }
 
-        private void Enable()
+        public void Enable()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var windowsSection = service.GetSection("system.webServer/security/authentication/windowsAuthentication", null, false);
@@ -101,7 +101,7 @@ namespace JexusManager.Features.Authentication
             SetEnabled(true);
         }
 
-        private void Disable()
+        public void Disable()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var windowsSection = service.GetSection("system.webServer/security/authentication/windowsAuthentication", null, false);

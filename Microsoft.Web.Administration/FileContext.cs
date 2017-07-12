@@ -116,6 +116,7 @@ namespace Microsoft.Web.Administration
 
         public void Save()
         {
+            Parent?.Save();
             if (!_initialized || !_dirty)
             {
                 return;

@@ -84,7 +84,7 @@ namespace JexusManager.Features.Authentication
             SetEnabled(digestEnabled);
         }
 
-        private void Enable()
+        public void Enable()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var digestSection = service.GetSection("system.webServer/security/authentication/digestAuthentication", null, false);
@@ -93,7 +93,7 @@ namespace JexusManager.Features.Authentication
             SetEnabled(true);
         }
 
-        private void Disable()
+        public void Disable()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var digestSection = service.GetSection("system.webServer/security/authentication/digestAuthentication", null, false);

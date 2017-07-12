@@ -76,7 +76,7 @@ namespace JexusManager.Features.Authentication
             SetEnabled(anonymousEnabled);
         }
 
-        private void Enable()
+        public void Enable()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var anonymousSection = service.GetSection("system.webServer/security/authentication/clientCertificateMappingAuthentication", null, false);
@@ -85,7 +85,7 @@ namespace JexusManager.Features.Authentication
             SetEnabled(true);
         }
 
-        private void Disable()
+        public void Disable()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var anonymousSection = service.GetSection("system.webServer/security/authentication/clientCertificateMappingAuthentication", null, false);

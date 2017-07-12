@@ -22,12 +22,7 @@ namespace Microsoft.Web.Administration
             this.InnerEntity = entity ?? element?.InnerEntity;
             if (element == null)
             {
-                if (name == null)
-                {
-                    throw new ArgumentException("empty name");
-                }
-
-                ElementTagName = name;
+                ElementTagName = name ?? throw new ArgumentException("empty name");
                 Attributes = new ConfigurationAttributeCollection(this);
                 ChildElements = new ConfigurationChildElementCollection(this);
                 Collections = new List<ConfigurationElementCollection>();
@@ -35,12 +30,7 @@ namespace Microsoft.Web.Administration
                 ParentElement = parent;
                 if (parent == null)
                 {
-                    if (schema == null)
-                    {
-                        throw new ArgumentException();
-                    }
-
-                    Schema = schema;
+                    Schema = schema ?? throw new ArgumentException();
                     IsLocallyStored = true;
                 }
                 else
