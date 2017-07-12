@@ -2,6 +2,8 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using Microsoft.Web.Management.Server;
+
 namespace JexusManager.Features.Authentication
 {
     using System;
@@ -98,8 +100,13 @@ namespace JexusManager.Features.Authentication
             var anonymousFeature = new AnonymousAuthenticationFeature(Module);
             listView1.Items.Add(new AuthenticationListViewItem(anonymousFeature, this));
 
-            var impersonationFeature = new ImpersonationFeature(Module);
-            listView1.Items.Add(new AuthenticationListViewItem(impersonationFeature, this));
+            if (service.Scope == ManagementScope.Server && NativeMethods.IsProcessElevated)
+            {
+                // TODO: Elevation is needed to modify root web.config.
+                var impersonationFeature = new ImpersonationFeature(Module);
+                listView1.Items.Add(new AuthenticationListViewItem(impersonationFeature, this));
+                impersonationFeature.Load();
+            }
 
             var basicFeature = new BasicAuthenticationFeature(Module);
             listView1.Items.Add(new AuthenticationListViewItem(basicFeature, this));
@@ -107,18 +114,21 @@ namespace JexusManager.Features.Authentication
             var digestFeature = new DigestAuthenticationFeature(Module);
             listView1.Items.Add(new AuthenticationListViewItem(digestFeature, this));
 
-            var formsFeature = new FormsAuthenticationFeature(Module);
-            listView1.Items.Add(new AuthenticationListViewItem(formsFeature, this));
+            if (service.Scope == ManagementScope.Server && NativeMethods.IsProcessElevated)
+            {
+                // TODO: Elevation is needed to modify root web.config.
+                var formsFeature = new FormsAuthenticationFeature(Module);
+                listView1.Items.Add(new AuthenticationListViewItem(formsFeature, this));
+                formsFeature.Load();
+            }
 
             var windowsFeature = new WindowsAuthenticationFeature(Module);
             listView1.Items.Add(new AuthenticationListViewItem(windowsFeature, this));
 
             certificateFeature.Load();
             anonymousFeature.Load();
-            impersonationFeature.Load();
             basicFeature.Load();
             digestFeature.Load();
-            formsFeature.Load();
             windowsFeature.Load();
 
             InitializeListPage();
