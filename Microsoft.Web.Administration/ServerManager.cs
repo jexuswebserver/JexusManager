@@ -126,7 +126,7 @@ namespace Microsoft.Web.Administration
                         null,
                         false,
                         true,
-                        true));
+                        false));
 
             _applicationHost =
                 new Configuration(

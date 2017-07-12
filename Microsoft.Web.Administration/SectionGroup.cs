@@ -98,7 +98,9 @@ namespace Microsoft.Web.Administration
                 return temp;
             }
 
-            return CreateSection(sectionPath, locationPath, core, core);
+            // IMPORTANT: force system.web to go to root web.config.
+            var top = locationPath == null && sectionPath.StartsWith("system.web/") && core.AppHost ? core.Parent : core;
+            return CreateSection(sectionPath, locationPath, top, top);
         }
 
         private ConfigurationSection CreateSection(string sectionPath, string locationPath, FileContext core, FileContext top)

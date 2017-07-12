@@ -80,24 +80,24 @@ namespace JexusManager.Features.Authentication
         public override void Load()
         {
             var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.web/Authentication", null, false);
+            var section = service.GetSection("system.web/authentication");
             var enabled = 3L == (long)section["mode"];
             this.SetEnabled(enabled);
         }
 
-        private void Enable()
+        public void Enable()
         {
             var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.web/Authentication", null, false);
+            var section = service.GetSection("system.web/authentication");
             section["mode"] = "Forms";
             service.ServerManager.CommitChanges();
             this.SetEnabled(true);
         }
 
-        private void Disable()
+        public void Disable()
         {
             var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.web/Authentication", null, false);
+            var section = service.GetSection("system.web/authentication");
             section["mode"] = "Windows";
             service.ServerManager.CommitChanges();
             this.SetEnabled(false);
@@ -106,7 +106,7 @@ namespace JexusManager.Features.Authentication
         private void Edit()
         {
             var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.web/Authentication", null, false);
+            var section = service.GetSection("system.web/authentication");
             var dialog = new FormsEditDialog(this.Module, new FormsItem(section.GetChildElement("forms")));
             if (dialog.ShowDialog() != DialogResult.OK)
             {
@@ -117,10 +117,7 @@ namespace JexusManager.Features.Authentication
             this.OnAuthenticationSettingsSaved();
         }
 
-        public override Version MinimumFrameworkVersion
-        {
-            get { return FxVersion20; }
-        }
+        public override Version MinimumFrameworkVersion => FxVersion20;
 
         public override bool ShowHelp()
         {
@@ -128,19 +125,10 @@ namespace JexusManager.Features.Authentication
             return true;
         }
 
-        public override bool IsFeatureEnabled
-        {
-            get { return true; }
-        }
+        public override bool IsFeatureEnabled => true;
 
-        public override AuthenticationType AuthenticationType
-        {
-            get { return AuthenticationType.LoginRedirectBased; }
-        }
+        public override AuthenticationType AuthenticationType => AuthenticationType.LoginRedirectBased;
 
-        public override string Name
-        {
-            get { return "Forms Authentication"; }
-        }
+        public override string Name => "Forms Authentication";
     }
 }
