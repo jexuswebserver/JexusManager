@@ -130,8 +130,8 @@ namespace JexusManager
             _serviceContainer.AddService(typeof(IManagementUIService), this.UIService);
 
             LoadIisExpress();
-            this.LoadIis();
-            this.LoadJexus();
+            LoadIis();
+            LoadJexus();
 
             Text = NativeMethods.IsProcessElevated ? string.Format("{0} (Administrator)", this.Text) : Text;
         }
@@ -223,6 +223,12 @@ namespace JexusManager
 
         private void LoadIis()
         {
+            if (!NativeMethods.IsProcessElevated)
+            {
+                // IMPORTANT: only elevated can manipulate IIS.
+                return;
+            }
+
             // TODO: load if only on Windows.
             var config = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.System),
@@ -648,9 +654,9 @@ namespace JexusManager
 
             try
             {
+                RegisterServer(node);
                 // TODO: trigger the load in connection wizard to throw exception earlier.
                 await node.LoadServerAsync(cmsApplicationPools, cmsSites, cmsSite);
-                RegisterServer(node);
                 actSave.Enabled = true;
             }
             catch (Exception ex)
