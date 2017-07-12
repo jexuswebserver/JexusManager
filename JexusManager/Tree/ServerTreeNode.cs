@@ -182,7 +182,7 @@ namespace JexusManager.Tree
                 var message = new StringBuilder();
                 message.AppendLine("Could not connect to the specified computer.")
                     .AppendLine()
-                    .AppendFormat("Details: {0}", last.Message);
+                    .AppendFormat("Details: {0}", last?.Message);
                 MessageBox.Show(message.ToString(), mainForm.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 ServerManager = null;
                 _status = NodeStatus.Default;

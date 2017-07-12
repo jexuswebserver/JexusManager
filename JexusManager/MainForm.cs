@@ -646,9 +646,28 @@ namespace JexusManager
                     false);
             }
 
-            RegisterServer(node);
-            await node.LoadServerAsync(cmsApplicationPools, cmsSites, cmsSite);
-            actSave.Enabled = true;
+            try
+            {
+                // TODO: trigger the load in connection wizard to throw exception earlier.
+                await node.LoadServerAsync(cmsApplicationPools, cmsSites, cmsSite);
+                RegisterServer(node);
+                actSave.Enabled = true;
+            }
+            catch (Exception ex)
+            {
+                File.WriteAllText(DialogHelper.DebugLog, ex.ToString());
+                var last = ex;
+                while (last is AggregateException)
+                {
+                    last = last.InnerException;
+                }
+
+                var message = new StringBuilder();
+                message.AppendLine("Could not connect to the specified computer.")
+                    .AppendLine()
+                    .AppendFormat("Details: {0}", last?.Message);
+                MessageBox.Show(message.ToString(), Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void actSave_Execute(object sender, EventArgs e)
