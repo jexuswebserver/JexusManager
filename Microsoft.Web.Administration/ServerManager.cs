@@ -14,6 +14,8 @@ namespace Microsoft.Web.Administration
     {
         private Configuration _applicationHost;
 
+        private Configuration _web;
+
         private Configuration _cleanHost;
 
         internal bool Initialized;
@@ -117,7 +119,7 @@ namespace Microsoft.Web.Administration
                                 "v4.0.30319",
                                 "config",
                                 "web.config");
-            var web =
+            _web =
                 new Configuration(
                     new FileContext(
                         this,
@@ -130,7 +132,7 @@ namespace Microsoft.Web.Administration
 
             _applicationHost =
                 new Configuration(
-                new FileContext(this, this.FileName, web.FileContext, null, true, false, this.ReadOnly));
+                new FileContext(this, this.FileName, _web.FileContext, null, true, false, this.ReadOnly));
 
             this.LoadCache();
 
@@ -213,6 +215,7 @@ namespace Microsoft.Web.Administration
 
         public void Save()
         {
+            _web.FileContext.Save();
             _applicationHost.FileContext.Save();
             _applicationHost.OnCacheInvalidated();
 
