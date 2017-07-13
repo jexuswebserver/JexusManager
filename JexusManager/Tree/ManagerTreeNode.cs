@@ -143,7 +143,7 @@ namespace JexusManager.Tree
 
         public void Explore()
         {
-            Process.Start(Folder);
+            DialogHelper.Explore(Folder);
         }
 
         public void EditPermissions()

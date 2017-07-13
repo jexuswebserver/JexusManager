@@ -12,7 +12,6 @@ namespace JexusManager
     using System.IO;
     using System.Linq;
     using System.Net;
-    using System.Security.Cryptography;
     using System.Security.Cryptography.X509Certificates;
     using System.Windows.Forms;
 
@@ -44,6 +43,19 @@ namespace JexusManager
             var bytes = x509Certificate2.Export(X509ContentType.Cert);
             File.WriteAllBytes(file, bytes);
             Process.Start(file);
+        }
+
+        public static void Explore(string folder)
+        {
+            try
+            {
+                Process.Start(folder);
+            }
+            catch (Exception ex)
+            {
+                // TODO: use dialog service.
+                MessageBox.Show(ex.Message, "Jexus Manager", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         public static void LoadCertificates(ComboBox comboBox, byte[] hash, IConfigurationService service)
@@ -154,28 +166,10 @@ namespace JexusManager
             return GetSpecialFolder("PrivateKey", file);
         }
 
-        public static string ListIisExpress
-        {
-            get
-            {
-                return GetSpecialFolder("lists", "iisExpressList");
-            }
-        }
+        public static string ListIisExpress => GetSpecialFolder("lists", "iisExpressList");
 
-        public static string ListJexus
-        {
-            get
-            {
-                return GetSpecialFolder("lists", "list");
-            }
-        }
+        public static string ListJexus => GetSpecialFolder("lists", "list");
 
-        public static string DebugLog
-        {
-            get
-            {
-                return GetSpecialFolder("temp", "debug");
-            }
-        }
+        public static string DebugLog => GetSpecialFolder("temp", "debug");
     }
 }

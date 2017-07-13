@@ -377,17 +377,8 @@ namespace JexusManager.Features.Main
         private void Explore()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
             var site = service.Site;
-            var path = site.Applications[0].VirtualDirectories[0].PhysicalPath.ExpandIisExpressEnvironmentVariables();
-            try
-            {
-                Process.Start(path);
-            }
-            catch (Exception ex)
-            {
-                dialog.ShowMessage(ex.Message, "Jexus Manager", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            DialogHelper.Explore(site.Applications[0].VirtualDirectories[0].PhysicalPath.ExpandIisExpressEnvironmentVariables());
         }
 
         private void Bindings()

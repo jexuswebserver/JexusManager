@@ -461,7 +461,7 @@ namespace JexusManager.Features.Main
 
         private void Explore()
         {
-            Process.Start(SelectedItem.Applications[0].VirtualDirectories[0].PhysicalPath.ExpandIisExpressEnvironmentVariables());
+            DialogHelper.Explore(SelectedItem.Applications[0].VirtualDirectories[0].PhysicalPath.ExpandIisExpressEnvironmentVariables());
         }
 
         private void Bindings()

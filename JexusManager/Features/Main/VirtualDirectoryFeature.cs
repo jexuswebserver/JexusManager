@@ -208,7 +208,7 @@ namespace JexusManager.Features.Main
         private void Explore()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            Process.Start(service.VirtualDirectory.PhysicalPath.ExpandIisExpressEnvironmentVariables());
+            DialogHelper.Explore(service.VirtualDirectory.PhysicalPath.ExpandIisExpressEnvironmentVariables());
         }
 
         public IEnumerable<Binding> SiteBindings
