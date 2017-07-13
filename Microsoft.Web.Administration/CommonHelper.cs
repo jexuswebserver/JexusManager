@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
@@ -76,10 +75,10 @@ namespace Microsoft.Web.Administration
         {
             var result = new StringBuilder(element.Name.LocalName);
             var parent = element.Parent;
-            while (parent.Name.LocalName != "configuration" && parent.Name.LocalName != "location")
+            while (parent?.Name.LocalName != "configuration" && parent?.Name.LocalName != "location")
             {
-                result.Insert(0, parent.Name.LocalName + "/");
-                parent = parent.Parent;
+                result.Insert(0, parent?.Name.LocalName + "/");
+                parent = parent?.Parent;
             }
 
             return result.ToString();

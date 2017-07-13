@@ -5,6 +5,8 @@
 using Microsoft.Web.Administration;
 using Microsoft.Web.Management.Client.Win32;
 using System;
+using System.Linq;
+using System.Security.Cryptography;
 
 namespace JexusManager.Features.Main
 {
@@ -35,45 +37,45 @@ namespace JexusManager.Features.Main
         private void BtnGenerateClick(object sender, System.EventArgs e)
         {
             txtResult.Clear();
-            Debug(string.Format("System Time: {0}", DateTime.Now));
-            Debug(string.Format("Processor Architecture: {0}", Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE")));
-            Debug(string.Format("OS: {0}", Environment.OSVersion));
-            Debug(string.Format("{0}", _server.Type));
+            Debug($"System Time: {DateTime.Now}");
+            Debug($"Processor Architecture: {Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE")}");
+            Debug($"OS: {Environment.OSVersion}");
+            Debug($"{_server.Type}");
             Debug(Environment.NewLine);
-            Debug(string.Format("SERVER SSL PROTOCOLS{0}", Environment.NewLine));
-            Debug(string.Format("PCT 1.0: {0}", GetProtocol("PCT 1.0")));
-            Debug(string.Format("SSL 2.0: {0}", GetProtocol("SSL 2.0")));
-            Debug(string.Format("SSL 3.0: {0}", GetProtocol("SSL 3.0")));
-            Debug(string.Format("TLS 1.0: {0}", GetProtocol("TLS 1.0")));
-            Debug(string.Format("TLS 1.1: {0}", GetProtocol("TLS 1.1")));
-            Debug(string.Format("TLS 1.2: {0}", GetProtocol("TLS 1.2")));
+            Debug($"SERVER SSL PROTOCOLS{Environment.NewLine}");
+            Debug($"PCT 1.0: {GetProtocol("PCT 1.0")}");
+            Debug($"SSL 2.0: {GetProtocol("SSL 2.0")}");
+            Debug($"SSL 3.0: {GetProtocol("SSL 3.0")}");
+            Debug($"TLS 1.0: {GetProtocol("TLS 1.0")}");
+            Debug($"TLS 1.1: {GetProtocol("TLS 1.1")}");
+            Debug($"TLS 1.2: {GetProtocol("TLS 1.2")}");
 
-            Debug(string.Format("SChannel EventLogging: {0} (hex)", GetEventLogging()));
+            Debug($"SChannel EventLogging: {GetEventLogging()} (hex)");
             Debug("-----");
 
             foreach (Site site in _server.Sites)
             {
-                Debug(string.Format("[W3SVC/{0}]", site.Id));
-                Debug(string.Format("ServerComment  : {0}", site.Name));
-                Debug(string.Format("ServerAutoStart: {0}", site.ServerAutoStart));
-                Debug(string.Format("ServerState    : {0}", site.State));
+                Debug($"[W3SVC/{site.Id}]");
+                Debug($"ServerComment  : {site.Name}");
+                Debug($"ServerAutoStart: {site.ServerAutoStart}");
+                Debug($"ServerState    : {site.State}");
                 Debug(string.Empty);
                 foreach (Binding binding in site.Bindings)
                 {
-                    Info(string.Format("BINDING: {0} {1}", binding.Protocol, binding));
+                    Info($"BINDING: {binding.Protocol} {binding}");
                     if (binding.Protocol == "https")
                     {
                         var hashString = Hex.ToHexString(binding.CertificateHash);
-                        Debug(string.Format("SSLCertHash: {0}", hashString));
-                        Debug(string.Format("SSL Flags: {0}", binding.SslFlags));
+                        Debug($"SSLCertHash: {hashString}");
+                        Debug($"SSL Flags: {binding.SslFlags}");
                         Debug("Testing EndPoint: 127.0.0.1");
 
                         var personal = new X509Store(binding.CertificateStoreName, StoreLocation.LocalMachine);
                         personal.Open(OpenFlags.MaxAllowed);
                         var selectedItem = personal.Certificates.Find(X509FindType.FindByThumbprint, hashString, false);
                         var cert = selectedItem[0];
-                        Debug(string.Format("#CertName: {0}", cert.FriendlyName));
-                        Debug(string.Format("#Version: {0}", cert.Version));
+                        Debug($"#CertName: {cert.FriendlyName}");
+                        Debug($"#Version: {cert.Version}");
                         if (cert.HasPrivateKey)
                         {
                             Debug("#You have a private key that corresponds to this certificate.");
@@ -84,38 +86,30 @@ namespace JexusManager.Features.Main
                         }
 
                         var key = cert.PublicKey.Key;
-                        Debug(string.Format("#Signature Algorithm: {0}", cert.SignatureAlgorithm.FriendlyName));
-                        Debug(string.Format("#Key Exchange Algorithm: {0} Key Size: {1}", key.KeyExchangeAlgorithm, key.KeySize));
-                        Debug(string.Format("#Subject: {0}", cert.Subject));
-                        Debug(string.Format("#Issuer: {0}", cert.Issuer));
-                        Debug(string.Format("#Validity: From {0} To {1}", cert.NotBefore.ToString("U"), cert.NotAfter.ToString("U")));
-                        Debug(string.Format("#Serial Number: {0}", cert.SerialNumber));
-                        Debug(string.Format("DS Mapper Usage: {0}", binding.UseDsMapper ? "Enabled" : "Disabled"));
-                        Debug(string.Format("Archived: {0}", cert.Archived));
+                        Debug($"#Signature Algorithm: {cert.SignatureAlgorithm.FriendlyName}");
+                        Debug($"#Key Exchange Algorithm: {key.KeyExchangeAlgorithm} Key Size: {key.KeySize}");
+                        Debug($"#Subject: {cert.Subject}");
+                        Debug($"#Issuer: {cert.Issuer}");
+                        Debug($"#Validity: From {cert.NotBefore:U} To {cert.NotAfter:U}");
+                        Debug($"#Serial Number: {cert.SerialNumber}");
+                        Debug($"DS Mapper Usage: {(binding.UseDsMapper ? "Enabled" : "Disabled")}");
+                        Debug($"Archived: {cert.Archived}");
 
                         foreach (var extension in cert.Extensions)
                         {
                             if (extension.Oid.FriendlyName == "Key Usage")
                             {
-                                Debug(string.Format("#Key Usage: {0}", ((X509KeyUsageExtension)extension).KeyUsages));
+                                Debug($"#Key Usage: {((X509KeyUsageExtension) extension).KeyUsages}");
                                 continue;
                             }
 
                             if (extension.Oid.FriendlyName == "Enhanced Key Usage")
                             {
-                                var enhancedKeyUsage = new StringBuilder();
                                 var usages = ((X509EnhancedKeyUsageExtension)extension).EnhancedKeyUsages;
-                                foreach (var usage in usages)
-                                {
-                                    enhancedKeyUsage.AppendFormat("{0} ({1}), ", usage.FriendlyName, usage.Value);
-                                }
+                                var enhancedKeyUsage = usages.Cast<Oid>().Select(usage => $"{usage.FriendlyName} ({usage.Value})")
+                                    .Combine(",");
 
-                                if (enhancedKeyUsage.Length > 0)
-                                {
-                                    enhancedKeyUsage.Length -= 2;
-                                }
-
-                                Debug(string.Format("#Enhanced Key Usage: {0}", enhancedKeyUsage));
+                                Debug($"#Enhanced Key Usage: {enhancedKeyUsage}");
                                 continue;
                             }
 
@@ -123,11 +117,7 @@ namespace JexusManager.Features.Main
                             {
                                 var ext = (X509BasicConstraintsExtension)extension;
                                 Debug(
-                                    string.Format(
-                                        "#Basic Constraints: Subject Type={0}, Path Length Constraint={1}",
-                                        ext.CertificateAuthority ? "CA" : "End Entity",
-                                        ext.HasPathLengthConstraint ? ext.PathLengthConstraint.ToString() : "None"));
-                                continue;
+                                    $"#Basic Constraints: Subject Type={(ext.CertificateAuthority ? "CA" : "End Entity")}, Path Length Constraint={(ext.HasPathLengthConstraint ? ext.PathLengthConstraint.ToString() : "None")}");
                             }
                         }
 
@@ -219,9 +209,7 @@ namespace JexusManager.Features.Main
             // https://support.microsoft.com/en-us/kb/187498
             var key =
                 Registry.LocalMachine.OpenSubKey(
-                    string.Format(
-                        @"SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\{0}\Server",
-                        protocol));
+                    $@"SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\{protocol}\Server");
             if (key == null)
             {
                 return true;

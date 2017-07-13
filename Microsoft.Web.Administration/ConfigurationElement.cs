@@ -17,9 +17,9 @@ namespace Microsoft.Web.Administration
         internal ConfigurationElement(ConfigurationElement element, string name, ConfigurationElementSchema schema, ConfigurationElement parent, XElement entity, FileContext core)
         {
             Methods = new ConfigurationMethodCollection();
-            this.FileContext = parent?.FileContext ?? element?.FileContext ?? core;
+            FileContext = parent?.FileContext ?? element?.FileContext ?? core;
             Section = parent?.Section;
-            this.InnerEntity = entity ?? element?.InnerEntity;
+            InnerEntity = entity ?? element?.InnerEntity;
             if (element == null)
             {
                 ElementTagName = name ?? throw new ArgumentException("empty name");

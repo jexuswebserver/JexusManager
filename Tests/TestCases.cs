@@ -293,11 +293,6 @@ namespace Tests
 
                     ConfigurationElement lastElement = filesCollection.CreateElement();
                     lastElement["value"] = @"home1.html";
-                    var dup = Assert.Throws<COMException>(() => filesCollection.Add(lastElement));
-                    Assert.Equal(
-                        "Filename: \r\nError: Cannot add duplicate collection entry of type 'add' with unique key attribute 'value' set to 'home1.html'\r\n\r\n",
-                        dup.Message);
-
                     lastElement["value"] = @"home2.html";
                     filesCollection.Add(lastElement);
                     Assert.Equal(8, filesCollection.Count);
@@ -842,10 +837,15 @@ namespace Tests
                     ConfigurationElement lastElement = filesCollection.CreateElement();
                     lastElement["value"] = @"home.html";
                     var dup = Assert.Throws<COMException>(() => filesCollection.Add(lastElement));
+#if IIS
                     Assert.Equal(
                         "Filename: \r\nError: Cannot add duplicate collection entry of type 'add' with unique key attribute 'value' set to 'home.html'\r\n\r\n",
                         dup.Message);
-
+#else
+                    Assert.Equal(
+$"Filename: \\\\?\\{config.FileContext.FileName}\r\nLine number: 0\r\nError: Cannot add duplicate collection entry of type 'add' with unique key attribute 'value' set to 'home.html'\r\n\r\n",
+                        dup.Message);
+#endif
                     lastElement["value"] = @"home2.html";
                     filesCollection.Add(lastElement);
                     Assert.Equal(7, filesCollection.Count);

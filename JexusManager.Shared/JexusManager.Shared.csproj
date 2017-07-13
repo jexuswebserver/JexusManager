@@ -94,6 +94,7 @@
     <Compile Include="Services\ControlPanel.cs" />
     <Compile Include="Services\IConfigurationService.cs" />
     <Compile Include="Services\ManagementUIService.cs" />
+    <Compile Include="StringUtility.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.Web.Administration\Microsoft.Web.Administration.csproj">

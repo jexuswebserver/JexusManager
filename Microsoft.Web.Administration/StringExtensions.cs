@@ -2,8 +2,11 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 
 namespace Microsoft.Web.Administration
 {
@@ -29,7 +32,7 @@ namespace Microsoft.Web.Administration
                 ? AnyHostName
                 : address.AddressFamily == AddressFamily.InterNetwork
                     ? address.ToString()
-                    : string.Format("[{0}]", address);
+                    : $"[{address}]";
         }
 
         public static IPAddress DisplayToAddress(this string text)
@@ -50,6 +53,23 @@ namespace Microsoft.Web.Administration
         public static string ElementTagNameToName(this string tag)
         {
             return tag.Contains("/") ? tag.Substring(tag.LastIndexOf('/') + 1) : tag;
+        }
+
+        public static string Combine(IEnumerable<string> items, string connector)
+        {
+            var preConditions = items.ToList();
+            if (preConditions.Count == 0)
+            {
+                return string.Empty;
+            }
+
+            var result = new StringBuilder(preConditions[0]);
+            for (int index = 1; index < preConditions.Count; index++)
+            {
+                result.Append(connector).Append(preConditions[index]);
+            }
+
+            return result.ToString();
         }
     }
 }

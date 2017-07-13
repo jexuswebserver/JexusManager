@@ -2,26 +2,17 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace Microsoft.Web.Administration
 {
-    using System.Collections.ObjectModel;
-#if !__MonoCS__
-    using System.Management.Automation;
-#endif
-    using System.Runtime.InteropServices;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Threading.Tasks;
     using System.Xml;
+
     public sealed class Site : ConfigurationElement
     {
-        private const string command = "/config:\"{0}\" /siteid:{1} /systray:false /trace:error";
+        private const string Command = "/config:\"{0}\" /siteid:{1} /systray:false /trace:error";
         private ApplicationCollection _collection;
-        private BindingCollection _bindings;
         private SiteLogFile _logFile;
         private SiteLimits _limits;
         private SiteTraceFailedRequestsLogging _trace;
@@ -39,6 +30,7 @@ namespace Microsoft.Web.Administration
                 ? new ApplicationDefaults(parent.ChildElements["applicationDefaults"], this)
                 : new ApplicationDefaults(ChildElements["applicationDefaults"], this);
             Parent = parent;
+            Bindings = new BindingCollection(ChildElements["bindings"], this);
             if (element == null)
             {
                 return;
@@ -51,46 +43,36 @@ namespace Microsoft.Web.Administration
             }
         }
 
-        public ApplicationDefaults ApplicationDefaults { get; private set; }
+        public ApplicationDefaults ApplicationDefaults { get; }
 
         public ApplicationCollection Applications
         {
-            get { return _collection ?? (_collection = new ApplicationCollection(this)); }
-            internal set { _collection = value; }
+            get => _collection ?? (_collection = new ApplicationCollection(this));
+            internal set => _collection = value;
         }
 
-        public BindingCollection Bindings
-        {
-            get { return _bindings ?? (_bindings = new BindingCollection(ChildElements["bindings"], this)); }
-            internal set { _bindings = value; }
-        }
+        public BindingCollection Bindings { get; internal set; }
 
         public long Id
         {
-            get { return (uint)this["id"]; }
-            set { this["id"] = value; }
+            get => (uint)this["id"];
+            set => this["id"] = value;
         }
 
-        public SiteLimits Limits
-        {
-            get { return _limits ?? (_limits = new SiteLimits(ChildElements["limits"], this)); }
-        }
+        public SiteLimits Limits => _limits ?? (_limits = new SiteLimits(ChildElements["limits"], this));
 
-        public SiteLogFile LogFile
-        {
-            get { return _logFile ?? (_logFile = new SiteLogFile(ChildElements["logFile"], this)); }
-        }
+        public SiteLogFile LogFile => _logFile ?? (_logFile = new SiteLogFile(ChildElements["logFile"], this));
 
         public string Name
         {
-            get { return (string)this["name"]; }
-            set { this["name"] = value; }
+            get => (string)this["name"];
+            set => this["name"] = value;
         }
 
         public bool ServerAutoStart
         {
-            get { return (bool)this["serverAutoStart"]; }
-            set { this["serverAutoStart"] = value; }
+            get => (bool)this["serverAutoStart"];
+            set => this["serverAutoStart"] = value;
         }
 
         public ObjectState State
@@ -106,28 +88,16 @@ namespace Microsoft.Web.Administration
                 return _state.Value;
             }
 
-            internal set
-            {
-                _state = value;
-            }
+            internal set => _state = value;
         }
 
-        internal string CommandLine
-        {
-            get { return string.Format(command, FileContext.FileName, Id); }
-        }
+        internal string CommandLine => string.Format(Command, FileContext.FileName, Id);
 
-        public SiteTraceFailedRequestsLogging TraceFailedRequestsLogging
-        {
-            get { return _trace ?? (_trace = new SiteTraceFailedRequestsLogging(ChildElements["traceFailedRequestsLogging"], this)); }
-        }
+        public SiteTraceFailedRequestsLogging TraceFailedRequestsLogging => _trace ?? (_trace = new SiteTraceFailedRequestsLogging(ChildElements["traceFailedRequestsLogging"], this));
 
-        public VirtualDirectoryDefaults VirtualDirectoryDefaults
-        {
-            get { return _virtualDefaults ?? (_virtualDefaults = new VirtualDirectoryDefaults(ChildElements["virtualDirectoryDefaults"], this)); }
-        }
+        public VirtualDirectoryDefaults VirtualDirectoryDefaults => _virtualDefaults ?? (_virtualDefaults = new VirtualDirectoryDefaults(ChildElements["virtualDirectoryDefaults"], this));
 
-        internal SiteCollection Parent { get; private set; }
+        internal SiteCollection Parent { get; }
 
         public Configuration GetWebConfiguration()
         {
@@ -183,10 +153,7 @@ namespace Microsoft.Web.Administration
             Applications = new ApplicationCollection(this);
         }
 
-        internal ServerManager Server
-        {
-            get { return Parent.Parent; }
-        }
+        internal ServerManager Server => Parent.Parent;
 
         internal async Task<IEnumerable<DirectoryInfo>> GetPhysicalDirectoriesAsync()
         {

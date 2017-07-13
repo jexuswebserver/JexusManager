@@ -116,7 +116,7 @@ namespace JexusManager.Wizards.ConnectionWizard
                 if (version < JexusServerManager.MinimumServerVersion)
                 {
                     var toContinue =
-                        service.ShowMessage(
+                        service?.ShowMessage(
                             string.Format(
                                 "The server version is {0}, while minimum compatible version is {1}. Making changes might corrupt server configuration. Do you want to continue?",
                                 version,
@@ -133,7 +133,7 @@ namespace JexusManager.Wizards.ConnectionWizard
                 var conflict = await server.HelloAsync();
                 if (Environment.MachineName != conflict)
                 {
-                    service.ShowMessage($"The server is also connected to {conflict}. Making changes on multiple clients might corrupt server configuration.", Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    service?.ShowMessage($"The server is also connected to {conflict}. Making changes on multiple clients might corrupt server configuration.", Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
 
                 data.CertificateHash = accepted;
@@ -151,8 +151,8 @@ namespace JexusManager.Wizards.ConnectionWizard
                 var message = new StringBuilder();
                 message.AppendLine("Could not connect to the specified computer.")
                                     .AppendLine()
-                                    .AppendFormat("Details: {0}", last.Message);
-                service.ShowMessage(message.ToString(), Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    .AppendFormat("Details: {0}", last?.Message);
+                service?.ShowMessage(message.ToString(), Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
             finally

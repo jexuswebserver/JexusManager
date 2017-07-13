@@ -633,5 +633,49 @@ namespace Tests.Exceptions
                 Assert.Equal(LogFormat.W3c, site.LogFile.LogFormat);
             }
         }
+
+        [Fact]
+        public void TestIisExpressDuplicateBindings()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string Current = Path.Combine(directoryName, @"applicationHost.config");
+            string Original = Path.Combine(directoryName, @"original2.config");
+            TestHelper.CopySiteConfig(directoryName, "original.config");
+            File.Copy(Original, Current, true);
+            TestHelper.FixPhysicalPathMono(Current);
+
+            {
+                // add the tags
+                var file = XDocument.Load(Current);
+                var root = file.Root;
+                if (root == null)
+                {
+                    return;
+                }
+
+                var site1 = root.XPathSelectElement("/configuration/system.applicationHost/sites/site[@id='2']/bindings");
+                var binding = new XElement("binding",
+                    new XAttribute("protocol", "http"),
+                    new XAttribute("bindingInformation", "*:61902:localhost"));
+                site1.Add(binding);
+                file.Save(Current);
+            }
+#if IIS
+            var server = new ServerManager(Current);
+#else
+            var server = new IisExpressServerManager(Current);
+#endif
+            {
+                var exception = Assert.Throws<COMException>(() => server.Sites[1]);
+                Assert.Equal($"Filename: \\\\?\\{Current}\r\nLine number: 183\r\nError: Cannot add duplicate collection entry of type 'binding' with combined key attributes 'protocol, bindingInformation' respectively set to 'http, *:61902:localhost'\r\n\r\n", exception.Message);
+            }
+        }
     }
 }

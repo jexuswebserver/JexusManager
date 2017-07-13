@@ -96,13 +96,21 @@ namespace Tests.Authentication
             var document = XDocument.Load(Current);
             document.Save(Expected);
 
-            _feature.Enable();
-            Assert.True(_feature.IsEnabled);
-            XmlAssert.Equal(Expected, Current);
+            try
+            {
+                _feature.Enable();
+                Assert.True(_feature.IsEnabled);
+                XmlAssert.Equal(Expected, Current);
 
-            _feature.Disable();
-            Assert.False(_feature.IsEnabled);
-            XmlAssert.Equal(Expected, Current);
+                _feature.Disable();
+                Assert.False(_feature.IsEnabled);
+                XmlAssert.Equal(Expected, Current);
+            }
+            catch (Exception ex)
+            {
+                // If not admin, this exception is expected.
+                Assert.IsType<UnauthorizedAccessException>(ex);
+            }
         }
     }
 }

@@ -67,18 +67,7 @@ namespace JexusManager.Features.Main
 
             private static string ToString(BindingCollection bindings)
             {
-                var result = new StringBuilder();
-                foreach (Binding binding in bindings)
-                {
-                    result.Append(binding.ToShortString()).Append(',');
-                }
-
-                if (result.Length > 0)
-                {
-                    result.Length--;
-                }
-
-                return result.ToString();
+                return bindings.Select(binding => binding.ToShortString()).Combine(",");
             }
         }
 

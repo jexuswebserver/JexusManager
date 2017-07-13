@@ -11,6 +11,7 @@ using System.Threading;
 using System.Xml.Linq;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Xml;
 
 namespace Microsoft.Web.Administration
 {
@@ -179,10 +180,9 @@ namespace Microsoft.Web.Administration
             }
         }
 
-        private static void CheckItem(T element, T item)
+        private void CheckItem(T element, T item)
         {
-            string required = null;
-            object value = null;
+            List<Tuple<string, object>> keys = new List<Tuple<string, object>>();
             foreach (ConfigurationAttributeSchema attribute in element.Schema.AttributeSchemas)
             {
                 if (!attribute.IsCombinedKey && !attribute.IsUniqueKey)
@@ -195,21 +195,32 @@ namespace Microsoft.Web.Administration
                     return;
                 }
 
-                required = attribute.Name;
-                value = item[attribute.Name];
+                keys.Add(new Tuple<string, object>(attribute.Name, item[attribute.Name]));
             }
 
-            if (required == null)
+            if (keys.Count == 0)
             {
                 return;
             }
 
+            var line = (element.Entity as IXmlLineInfo).LineNumber;
+            if (keys.Count == 1)
+            {
+                throw new COMException(
+                    $"Filename: \\\\?\\{FileContext.FileName}\r\nLine number: {line}\r\nError: Cannot add duplicate collection entry of type '{element.ElementTagName}' with unique key attribute '{keys[0].Item1}' set to '{keys[0].Item2}'\r\n\r\n");
+            }
+
+            var keyNames = new string[keys.Count];
+            var values = new object[keys.Count];
+            for (var index = 0; index < keys.Count; index++)
+            {
+                var key = keys[index];
+                keyNames[index] = key.Item1;
+                values[index] = key.Item2;
+            }
+
             throw new COMException(
-                string.Format(
-                    "Filename: \r\nError: Cannot add duplicate collection entry of type '{0}' with unique key attribute '{1}' set to '{2}'\r\n\r\n",
-                    element.ElementTagName,
-                    required,
-                    value));
+                $"Filename: \\\\?\\{FileContext.FileName}\r\nLine number: {line}\r\nError: Cannot add duplicate collection entry of type '{element.ElementTagName}' with combined key attributes '{StringExtensions.Combine(keyNames, ", ")}' respectively set to '{StringExtensions.Combine(values.Select(value => value.ToString()), ", ")}'\r\n\r\n");
         }
 
         public void Clear()

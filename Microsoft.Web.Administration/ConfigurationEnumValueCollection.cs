@@ -6,7 +6,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Microsoft.Web.Administration
 {
@@ -79,14 +78,7 @@ namespace Microsoft.Web.Administration
                     return _result;
                 }
 
-                var result = new StringBuilder(_list[0].Name);
-                for (int index = 1; index < _list.Count; index++)
-                {
-                    var item = _list[index];
-                    result.AppendFormat(", {0}", item.Name);
-                }
-
-                return _result = result.ToString();
+                return _result = StringExtensions.Combine(_list.Select(item => item.Name), ", ");
             }
         }
     }

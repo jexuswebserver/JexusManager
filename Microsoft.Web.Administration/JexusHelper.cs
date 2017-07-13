@@ -12,7 +12,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
 using System.Security.Cryptography.X509Certificates;
 
 namespace Microsoft.Web.Administration
@@ -679,18 +678,8 @@ namespace Microsoft.Web.Administration
             variables.Add("nolog", new List<string> { httpLoggingSection["dontLog"].ToString() });
             variables.Add("keep_alive", new List<string> { httpProtocolSection["allowKeepAlive"].ToString() });
 
-            var indexes = new StringBuilder();
-            foreach (ConfigurationElement item in filesCollection)
-            {
-                indexes.AppendFormat("{0},", item.RawAttributes["value"]);
-            }
-
-            if (indexes.Length > 0)
-            {
-                indexes.Length--;
-            }
-
-            variables.Add("indexes", new List<string> { indexes.ToString() });
+            var indexes = StringExtensions.Combine(filesCollection.Select(item => item.RawAttributes["value"]), ",");
+            variables.Add("indexes", new List<string> { indexes });
 
             var allows = new List<string>();
             var denys = new List<string>();
@@ -712,18 +701,8 @@ namespace Microsoft.Web.Administration
             variables.Add("allowfrom", allows);
             variables.Add("denyfrom", denys);
 
-            var segments = new StringBuilder();
-            foreach (ConfigurationElement item in hiddenSegmentsCollection)
-            {
-                segments.AppendFormat("{0},", item["segment"]);
-            }
-
-            if (segments.Length > 0)
-            {
-                segments.Length--;
-            }
-
-            variables.Add("denydirs", new List<string> { segments.ToString() });
+            var segments = StringExtensions.Combine(hiddenSegmentsCollection.Select(item => item["segment"].ToString()), ",");
+            variables.Add("denydirs", new List<string> { segments });
 
             foreach (ConfigurationElement item in httpErrorsCollection)
             {

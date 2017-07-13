@@ -129,7 +129,7 @@ namespace JexusManager.Features.Certificates
                                     process.WaitForExit();
                                     if (process.ExitCode == 0)
                                     {
-                                        this.DialogResult = DialogResult.OK;
+                                        DialogResult = DialogResult.OK;
                                     }
                                     else
                                     {
