@@ -64,7 +64,7 @@ namespace Microsoft.Web.Administration
             }
 
             _initialized = true;
-            if (Protocol != "http" && Protocol != "https")
+            if (!CanBrowse)
             {
                 _host = string.Empty;
                 _endPoint = null;
@@ -207,5 +207,7 @@ namespace Microsoft.Web.Administration
                 return false;
             }
         }
+
+        internal bool CanBrowse => Protocol == "http" || Protocol == "https";
     }
 }

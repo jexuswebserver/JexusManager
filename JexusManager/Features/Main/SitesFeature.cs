@@ -87,10 +87,14 @@ namespace JexusManager.Features.Main
                     manageGroup.Items.Add(new TextTaskItem("Browse Website", string.Empty, true));
                     foreach (Binding binding in _owner.SelectedItem.Bindings)
                     {
-                        var uri = binding.ToUri();
-                        manageGroup.Items.Add(
-                            new MethodTaskItem("Browse", string.Format("Browse {0}", uri), string.Empty, string.Empty,
-                                Resources.browse_16, uri).SetUsage());
+                        if (binding.CanBrowse)
+                        {
+                            var uri = binding.ToUri();
+                            manageGroup.Items.Add(
+                                new MethodTaskItem("Browse", $"Browse {uri}", string.Empty,
+                                    string.Empty,
+                                    Resources.browse_16, uri).SetUsage());
+                        }
                     }
 
                     manageGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());

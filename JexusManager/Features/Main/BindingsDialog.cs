@@ -74,13 +74,7 @@ namespace JexusManager.Features.Main
 
         private static bool ProtocolMatched(ListView.SelectedListViewItemCollection collection)
         {
-            if (collection.Count == 0)
-            {
-                return false;
-            }
-
-            var protocol = ((Binding)collection[0].Tag).Protocol;
-            return protocol == "http" || protocol == "https";
+            return collection.Count != 0 && ((Binding)collection[0].Tag).CanBrowse;
         }
 
         private async void BtnRemoveClick(object sender, EventArgs e)

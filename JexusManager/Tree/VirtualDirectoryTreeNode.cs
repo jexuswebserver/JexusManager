@@ -44,7 +44,15 @@ namespace JexusManager.Tree
         {
             get
             {
-                return VirtualDirectory.Application.Site.Bindings[0].ToUri() + PathToSite;
+                foreach (Microsoft.Web.Administration.Binding binding in VirtualDirectory.Application.Site.Bindings)
+                {
+                    if (binding.CanBrowse)
+                    {
+                        return binding.ToUri() + PathToSite;
+                    }
+                }
+
+                return string.Empty;
             }
         }
 

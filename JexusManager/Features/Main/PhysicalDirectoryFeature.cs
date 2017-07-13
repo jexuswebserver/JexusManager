@@ -55,9 +55,14 @@ namespace JexusManager.Features.Main
                 manageGroup.Items.Add(new TextTaskItem("Browse Folder", string.Empty, true));
                 foreach (Binding binding in _owner.SiteBindings)
                 {
-                    manageGroup.Items.Add(
-                        new MethodTaskItem("Browse", string.Format("Browse {0}", binding.ToShortString()), string.Empty, string.Empty,
-                            Resources.browse_16, binding).SetUsage());
+                    if (binding.CanBrowse)
+                    {
+                        var uri = binding.ToUri();
+                        manageGroup.Items.Add(
+                            new MethodTaskItem("Browse", $"Browse {binding.ToShortString()}",
+                                string.Empty, string.Empty,
+                                Resources.browse_16, uri).SetUsage());
+                    }
                 }
 
                 return result.ToArray(typeof(TaskItem)) as TaskItem[];
@@ -130,8 +135,6 @@ namespace JexusManager.Features.Main
 
         private void Browse(object uri)
         {
-            var binding = (Binding)uri;
-            var target = binding.ToUri();
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
 
             // IMPORTANT: help users launch IIS Express instance.
@@ -160,7 +163,7 @@ namespace JexusManager.Features.Main
                 }
             }
 
-            Process.Start(target + service.PhysicalDirectory.PathToSite);
+            Process.Start(uri + service.PhysicalDirectory.PathToSite);
         }
 
         private void Permissions()

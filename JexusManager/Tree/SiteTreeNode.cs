@@ -42,7 +42,18 @@ namespace JexusManager.Tree
 
         public override string Uri
         {
-            get { return Site.Bindings[0].ToUri(); }
+            get
+            {
+                foreach (Microsoft.Web.Administration.Binding binding in Site.Bindings)
+                {
+                    if (binding.CanBrowse)
+                    {
+                        return binding.ToUri();
+                    }
+                }
+
+                return string.Empty;
+            }
         }
 
         public override ServerManager ServerManager { get; set; }
