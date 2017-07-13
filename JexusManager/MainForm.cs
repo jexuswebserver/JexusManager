@@ -2,6 +2,9 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Globalization;
+using Microsoft.Win32;
+
 namespace JexusManager
 {
     using System;
@@ -288,7 +291,7 @@ namespace JexusManager
         {
             var data = GetCurrentData();
             var dialog = new NewSiteDialog(_serviceContainer, data.ServerManager.Sites);
-            if (dialog.ShowDialog() != DialogResult.OK)
+            if (dialog.ShowDialog(this) != DialogResult.OK)
             {
                 return;
             }
@@ -332,7 +335,7 @@ namespace JexusManager
         {
             var node = (Site)treeView1.SelectedNode.Tag;
             var dialog = new BindingsDialog(_serviceContainer, node);
-            dialog.ShowDialog();
+            dialog.ShowDialog(this);
         }
 
         private async void btnRemoveSite_Click(object sender, EventArgs e)
@@ -612,7 +615,7 @@ namespace JexusManager
             }
 
             var dialog = new ConnectionWizard(_serviceContainer, names.ToArray());
-            if (dialog.ShowDialog() != DialogResult.OK)
+            if (dialog.ShowDialog(this) != DialogResult.OK)
             {
                 return;
             }
@@ -786,7 +789,7 @@ namespace JexusManager
         private void btnUpdate_Click(object sender, EventArgs e)
         {
             var dialog = new UpdateDialog();
-            dialog.ShowDialog();
+            dialog.ShowDialog(this);
         }
 
         private void btnRemoveFarmServer_Click(object sender, EventArgs e)
@@ -880,6 +883,32 @@ namespace JexusManager
             treeNode.VirtualDirectory.Application.VirtualDirectories.Remove(treeNode.VirtualDirectory);
             treeNode.ServerManager.CommitChanges();
             treeNode.Parent.Nodes.Remove(treeNode);
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            var key = Registry.CurrentUser.CreateSubKey(@"Software\LeXtudio\JexusManager");
+            if (key == null)
+            {
+                return;
+            }
+
+            var last = (string)key.GetValue("LastUpdateCheck", string.Empty);
+            DateTime lastDate;
+            var valid = DateTime.TryParseExact(last, "D", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out lastDate);
+            if (!valid)
+            {
+                lastDate = DateTime.UtcNow.Date.Subtract(TimeSpan.FromDays(1));
+            }
+
+            var span = DateTime.UtcNow.Date.Subtract(lastDate);
+            if (span.TotalHours < 24)
+            {
+                return;
+            }
+
+            key.SetValue("LastUpdateCheck", DateTime.UtcNow.Date.ToString("D", CultureInfo.InvariantCulture));
+            btnUpdate.PerformClick();
         }
     }
 }
