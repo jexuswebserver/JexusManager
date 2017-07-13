@@ -64,13 +64,27 @@ namespace Microsoft.Web.Administration
             }
 
             _initialized = true;
+            if (Protocol != "http" && Protocol != "https")
+            {
+                _host = string.Empty;
+                _endPoint = null;
+                return;
+            }
+
             var value = (string)this["bindingInformation"];
             var last = value.LastIndexOf(':');
-            _host = value.Substring(last + 1);
-            var next = value.LastIndexOf(':', last - 1);
-            var port = value.Substring(next + 1, last - next - 1);
-            var address = value.Substring(0, next);
-            _endPoint = new IPEndPoint(address.DisplayToAddress(), Int32.Parse(port));
+            if (last > -1)
+            {
+                _host = value.Substring(last + 1);
+                var next = value.LastIndexOf(':', last - 1);
+                var port = value.Substring(next + 1, last - next - 1);
+                if (next > -1)
+                {
+                    var address = value.Substring(0, next);
+                    _endPoint = new IPEndPoint(address.DisplayToAddress(), Int32.Parse(port));
+                }
+            }
+
             if (Protocol != "https" || CertificateHash != null)
             {
                 return;

@@ -80,7 +80,7 @@ namespace Tests
 
             var site = server.Sites[0];
             Assert.Equal("WebSite1", site.Name);
-            Assert.Equal(1, site.Bindings.Count);
+            Assert.Equal(14, site.Bindings.Count);
             var binding = site.Bindings[0];
             Assert.Equal(IPAddress.Any, binding.EndPoint.Address);
             Assert.Equal(8080, binding.EndPoint.Port);
@@ -541,12 +541,112 @@ namespace Tests
 
             var site = server.Sites[0];
             Assert.Equal("WebSite1", site.Name);
-            Assert.Equal(1, site.Bindings.Count);
-            var binding = site.Bindings[0];
-            Assert.Equal(IPAddress.Any, binding.EndPoint.Address);
-            Assert.Equal(8080, binding.EndPoint.Port);
-            Assert.Equal("localhost", binding.Host);
-            Assert.Equal("*:8080:localhost", binding.ToString());
+            Assert.Equal(14, site.Bindings.Count);
+            Assert.Equal("localhost on *:8080 (http)", site.Bindings[0].ToShortString());
+            Assert.Equal("0.0.0.0:8080", site.Bindings[0].EndPoint.ToString());
+            Assert.Equal("localhost", site.Bindings[0].Host);
+
+            Assert.Null(site.Bindings[1].EndPoint);
+            Assert.Equal(string.Empty, site.Bindings[1].Host);
+            Assert.False(site.Bindings[1].IsIPPortHostBinding);
+            Assert.False(site.Bindings[1].UseDsMapper);
+            Assert.Null(site.Bindings[1].CertificateHash);
+            Assert.Null(site.Bindings[1].CertificateStoreName);
+            Assert.Equal("808:* (net.tcp)", site.Bindings[1].ToShortString());
+
+            Assert.Null(site.Bindings[2].EndPoint);
+            Assert.Equal(string.Empty, site.Bindings[2].Host);
+            Assert.False(site.Bindings[2].IsIPPortHostBinding);
+            Assert.False(site.Bindings[2].UseDsMapper);
+            Assert.Null(site.Bindings[2].CertificateHash);
+            Assert.Null(site.Bindings[2].CertificateStoreName);
+            Assert.Equal("localhost (net.msmq)", site.Bindings[2].ToShortString());
+
+            Assert.Null(site.Bindings[3].EndPoint);
+            Assert.Equal(string.Empty, site.Bindings[3].Host);
+            Assert.False(site.Bindings[3].IsIPPortHostBinding);
+            Assert.False(site.Bindings[3].UseDsMapper);
+            Assert.Null(site.Bindings[3].CertificateHash);
+            Assert.Null(site.Bindings[3].CertificateStoreName);
+            Assert.Equal("localhost (msmq.formatname)", site.Bindings[3].ToShortString());
+
+            Assert.Null(site.Bindings[4].EndPoint);
+            Assert.Equal(string.Empty, site.Bindings[4].Host);
+            Assert.False(site.Bindings[4].IsIPPortHostBinding);
+            Assert.False(site.Bindings[4].UseDsMapper);
+            Assert.Null(site.Bindings[4].CertificateHash);
+            Assert.Null(site.Bindings[4].CertificateStoreName);
+            Assert.Equal("* (net.pipe)", site.Bindings[4].ToShortString());
+
+            Assert.Null(site.Bindings[5].EndPoint);
+            Assert.Equal(string.Empty, site.Bindings[5].Host);
+            Assert.False(site.Bindings[5].IsIPPortHostBinding);
+            Assert.False(site.Bindings[5].UseDsMapper);
+            Assert.Null(site.Bindings[5].CertificateHash);
+            Assert.Null(site.Bindings[5].CertificateStoreName);
+            Assert.Equal("*:21: (ftp)", site.Bindings[5].ToShortString());
+
+            Assert.Equal("* on *:8080 (http)", site.Bindings[6].ToShortString());
+            Assert.Equal("0.0.0.0:8080", site.Bindings[6].EndPoint.ToString());
+            Assert.Equal("*", site.Bindings[6].Host);
+
+            Assert.Equal("localhost on *:443 (https)", site.Bindings[7].ToShortString());
+            Assert.Equal("0.0.0.0:443", site.Bindings[7].EndPoint.ToString());
+            Assert.Equal("localhost", site.Bindings[7].Host);
+
+            Assert.Equal("* on *:44300 (https)", site.Bindings[8].ToShortString());
+            Assert.Equal("0.0.0.0:44300", site.Bindings[8].EndPoint.ToString());
+            Assert.Equal("*", site.Bindings[8].Host);
+
+            Assert.Null(site.Bindings[9].EndPoint);
+            Assert.Equal(string.Empty, site.Bindings[9].Host);
+            Assert.False(site.Bindings[9].IsIPPortHostBinding);
+            Assert.False(site.Bindings[9].UseDsMapper);
+            Assert.Null(site.Bindings[9].CertificateHash);
+            Assert.Null(site.Bindings[9].CertificateStoreName);
+            Assert.Equal("*:210:localhost (ftp)", site.Bindings[9].ToShortString());
+
+            {
+                var binding = site.Bindings[10];
+                Assert.Null(binding.EndPoint);
+                Assert.Equal(string.Empty, binding.Host);
+                Assert.False(binding.IsIPPortHostBinding);
+                Assert.False(binding.UseDsMapper);
+                Assert.Null(binding.CertificateHash);
+                Assert.Null(binding.CertificateStoreName);
+                Assert.Equal("* (net.tcp)", binding.ToShortString());
+            }
+            {
+                var binding = site.Bindings[11];
+                Assert.Null(binding.EndPoint);
+                Assert.Equal(string.Empty, binding.Host);
+                Assert.False(binding.IsIPPortHostBinding);
+                Assert.False(binding.UseDsMapper);
+                Assert.Null(binding.CertificateHash);
+                Assert.Null(binding.CertificateStoreName);
+                Assert.Equal("* (net.msmq)", binding.ToShortString());
+            }
+            {
+                var siteBinding = site.Bindings[12];
+                Assert.Null(siteBinding.EndPoint);
+                Assert.Equal(string.Empty, siteBinding.Host);
+                Assert.False(siteBinding.IsIPPortHostBinding);
+                Assert.False(siteBinding.UseDsMapper);
+                Assert.Null(siteBinding.CertificateHash);
+                Assert.Null(siteBinding.CertificateStoreName);
+                Assert.Equal("* (msmq.formatname)", siteBinding.ToShortString());
+            }
+            {
+                var binding = site.Bindings[13];
+                Assert.Null(binding.EndPoint);
+                Assert.Equal(string.Empty, binding.Host);
+                Assert.False(binding.IsIPPortHostBinding);
+                Assert.False(binding.UseDsMapper);
+                Assert.Null(binding.CertificateHash);
+                Assert.Null(binding.CertificateStoreName);
+                Assert.Equal("localhost (net.pipe)", binding.ToShortString());
+            }
+
             Assert.True(site.Bindings.AllowsAdd);
             Assert.True(site.Bindings.AllowsClear);
             Assert.False(site.Bindings.AllowsRemove);

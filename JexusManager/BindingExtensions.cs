@@ -8,16 +8,14 @@ namespace Microsoft.Web.Administration
     {
         public static string ToShortString(this Binding binding)
         {
+            if (binding.Protocol != "http" && binding.Protocol != "https")
+            {
+                return $"{binding.BindingInformation} ({binding.Protocol})";
+            }
+
             return string.IsNullOrEmpty(binding.Host)
-                ? string.Format("{0}:{1} ({2})",
-                    binding.EndPoint.Address.AddressToDisplay(),
-                    binding.EndPoint.Port,
-                    binding.Protocol)
-                : string.Format("{3} on {0}:{1} ({2})",
-                    binding.EndPoint.Address.AddressToDisplay(),
-                    binding.EndPoint.Port,
-                    binding.Protocol,
-                    binding.Host);
+                ? $"{binding.EndPoint.Address.AddressToDisplay()}:{binding.EndPoint.Port} ({binding.Protocol})"
+                : $"{binding.Host} on {binding.EndPoint.Address.AddressToDisplay()}:{binding.EndPoint.Port} ({binding.Protocol})";
         }
     }
 }
