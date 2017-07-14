@@ -473,7 +473,7 @@ namespace JexusManager.Features.Main
                     return false;
                 }
             }
-            catch (DirectoryNotFoundException)
+            catch (IOException)
             {
                 return false;
             }

@@ -241,7 +241,7 @@ namespace Microsoft.Web.Administration
                 (section.Entity as IXmlLineInfo).LineNumber));
         }
 
-        static internal ConfigurationAllowDefinition AllowDefinitionToEnum(string allowDefinition)
+        internal static ConfigurationAllowDefinition AllowDefinitionToEnum(string allowDefinition)
         {
             switch (allowDefinition)
             {

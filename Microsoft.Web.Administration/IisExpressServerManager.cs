@@ -112,7 +112,7 @@ namespace Microsoft.Web.Administration
                     return;
                 }
             }
-            catch (DirectoryNotFoundException)
+            catch (IOException)
             {
                 return;
             }

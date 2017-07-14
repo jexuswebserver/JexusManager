@@ -307,17 +307,20 @@ namespace Tests.Handlers
             var document = XDocument.Load(Current);
             var node = new XElement("location");
             node.SetAttributeValue("path", "WebSite1");
-            document.Root.Add(node);
+            document.Root?.Add(node);
             var web = new XElement("system.webServer");
             node.Add(web);
             var content = new XElement("handlers");
             web.Add(content);
             var clear = new XElement("clear");
             content.Add(clear);
-            var all = document.Root.XPathSelectElement("/configuration/location[@path='']/system.webServer/handlers");
-            foreach (var element in all.Elements())
+            var all = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/handlers");
+            if (all != null)
             {
-                content.Add(element);
+                foreach (var element in all.Elements())
+                {
+                    content.Add(element);
+                }
             }
 
             content.LastNode.Remove();
