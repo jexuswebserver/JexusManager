@@ -30,9 +30,9 @@ namespace JexusManager.Features.Main
                 {
                     binding.Protocol,
                     binding.Host.HostToDisplay(),
-                    binding.EndPoint.Port.ToString(CultureInfo.InvariantCulture),
-                    binding.EndPoint.Address.AddressToDisplay(),
-                    string.Empty
+                    binding.EndPoint?.Port.ToString(CultureInfo.InvariantCulture),
+                    binding.EndPoint?.Address.AddressToDisplay(),
+                    binding.CanBrowse ? string.Empty : binding.BindingInformation
                 })
                 { Tag = binding };
                 listView1.Items.Add(node);
@@ -47,7 +47,7 @@ namespace JexusManager.Features.Main
         private void ListView1SelectedIndexChanged(object sender, EventArgs e)
         {
             var selected = listView1.SelectedItems.Count > 0;
-            btnEdit.Enabled = selected;
+            btnEdit.Enabled = selected && ProtocolMatched(listView1.SelectedItems);
             btnRemove.Enabled = selected && listView1.Items.Count > 1;
             btnBrowse.Enabled = selected && ProtocolMatched(listView1.SelectedItems);
 

@@ -302,7 +302,7 @@ namespace Microsoft.Web.Administration
         {
             foreach (Binding binding in collection)
             {
-                if (binding.EndPoint.Port <= 1024)
+                if (binding.EndPoint?.Port <= 1024)
                 {
                     return true;
                 }

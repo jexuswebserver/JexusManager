@@ -34,11 +34,7 @@ namespace Microsoft.Web.Administration
 
         public override string ToString()
         {
-            return string.Format(
-                "{0}:{1}:{2}",
-                this.EndPoint.Address.AddressToDisplay(),
-                EndPoint.Port,
-                Host.HostToDisplay());
+            return $"{EndPoint.Address.AddressToDisplay()}:{EndPoint.Port}:{Host.HostToDisplay()}";
         }
 
         public string BindingInformation
@@ -101,8 +97,8 @@ namespace Microsoft.Web.Administration
                 var sni = NativeMethods.QuerySslSniInfo(new Tuple<string, int>(_host, _endPoint.Port));
                 if (sni != null)
                 {
-                    this.CertificateHash = sni.Hash;
-                    this.CertificateStoreName = sni.StoreName;
+                    CertificateHash = sni.Hash;
+                    CertificateStoreName = sni.StoreName;
                     return;
                 }
             }
@@ -171,7 +167,7 @@ namespace Microsoft.Web.Administration
 
         public bool UseDsMapper { get; set; }
 
-        internal BindingCollection Parent { get; private set; }
+        internal BindingCollection Parent { get; }
 
         internal string ToUri()
         {
@@ -179,10 +175,10 @@ namespace Microsoft.Web.Administration
                 ? Parent.Parent.Parent.Parent.HostName.ExtractName()
                 : EndPoint.AddressFamily == AddressFamily.InterNetwork
                     ? EndPoint.Address.ToString()
-                    : string.Format("[{0}]", EndPoint.Address);
+                    : $"[{EndPoint.Address}]";
             return IsDefaultPort
-                ? string.Format("{0}://{1}", Protocol, address)
-                : string.Format("{0}://{1}:{2}", Protocol, address, EndPoint.Port);
+                ? $"{Protocol}://{address}"
+                : $"{Protocol}://{address}:{EndPoint.Port}";
         }
 
         internal string ToIisUrl()
