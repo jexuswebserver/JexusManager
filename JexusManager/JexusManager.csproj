@@ -420,6 +420,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CertificateInstaller\CertificateInstaller.csproj">
+      <Project>{54bec09a-b32f-4a66-a871-749e0621d822}</Project>
+      <Name>CertificateInstaller</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JexusManager.Features.Access\JexusManager.Features.Access.csproj">
       <Project>{b756b3a0-cfc8-4e71-a95a-0e9dc2a8d0c9}</Project>
       <Name>JexusManager.Features.Access</Name>

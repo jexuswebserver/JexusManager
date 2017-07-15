@@ -237,7 +237,7 @@ namespace JexusManager.Features.HttpApi
 
         protected void OnHttpApiSettingsSaved()
         {
-            this.HttpApiSettingsUpdated?.Invoke();
+            this.HttpApiSettingsUpdate?.Invoke();
         }
 
         public override bool ShowHelp()
@@ -304,9 +304,6 @@ namespace JexusManager.Features.HttpApi
         }
 
         public bool AutomicRebindEnabled { get; set; }
-
-
-        public HttpApiSettingsSavedEventHandler HttpApiSettingsUpdated { get; set; }
 
         public override string Name
         {

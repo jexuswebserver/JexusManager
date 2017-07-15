@@ -10,9 +10,7 @@ namespace CertificateInstaller
     using System.Linq;
     using System.Net;
     using System.Security.Cryptography.X509Certificates;
-
     using Microsoft.Web.Administration;
-
     using Mono.Options;
 
     internal class Program
@@ -28,6 +26,8 @@ namespace CertificateInstaller
             string port = null;
             string id = null;
             string host = null;
+            string url = null;
+            string descriptor = null;
 
             OptionSet p =
                 new OptionSet().Add("f:", "File name", delegate (string v) { if (v != null) p12File = v; })
@@ -38,7 +38,9 @@ namespace CertificateInstaller
                     .Add("a:", "IP address", delegate (string v) { if (v != null) address = v; })
                     .Add("o:", "Port number", delegate (string v) { if (v != null) port = v; })
                     .Add("i:", "Application ID", delegate (string v) { if (v != null) id = v; })
-                    .Add("x:", "SNI host name (not required when managing IP based bindings)", delegate (string v) { if (v != null) host = v; });
+                    .Add("x:", "SNI host name (not required when managing IP based bindings)", delegate (string v) { if (v != null) host = v; })
+                    .Add("u:", "Reserved URL", delegate (string v) { if (v != null) url = v; })
+                    .Add("d:", "Security descriptor", delegate (string v) { if (v != null) descriptor = v; });
 
             if (args.Length == 0)
             {
@@ -65,6 +67,20 @@ namespace CertificateInstaller
 
             try
             {
+                if (url != null)
+                {
+                    if (descriptor != null)
+                    {
+                        NativeMethods.DeleteHttpNamespaceAcl(url, descriptor);
+                    }
+                    else
+                    {
+                        NativeMethods.BindHttpNamespaceAcl(url, "D:(A;;GX;;;WD)");
+                    }
+
+                    return 0;
+                }
+
                 X509Store personal = new X509Store(store, StoreLocation.LocalMachine);
                 personal.Open(OpenFlags.ReadWrite);
                 if (hash == null)
@@ -137,7 +153,7 @@ namespace CertificateInstaller
 
         private static void ShowHelp(OptionSet optionSet)
         {
-            Console.WriteLine("Jexus Manager is available at https://jexus.codeplex.com");
+            Console.WriteLine("Jexus Manager is available at https://www.jexusmanager.com");
             Console.WriteLine("CertificateInstaller.exe [Options]");
             Console.WriteLine("Options:");
             optionSet.WriteOptionDescriptions(Console.Out);
