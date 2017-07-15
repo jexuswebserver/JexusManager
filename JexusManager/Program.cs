@@ -82,7 +82,7 @@ namespace JexusManager
 
             AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
             {
-                Rollbar.Report(args.ExceptionObject as System.Exception);
+                Rollbar.Report(args.ExceptionObject as Exception);
             };
 
             TaskScheduler.UnobservedTaskException += (sender, args) =>

@@ -200,6 +200,7 @@
             // 
             // gbMatch
             // 
+            this.gbMatch.ButtonSize = MakarovDev.ExpandCollapsePanel.ExpandCollapseButton.ExpandButtonSize.Small;
             this.gbMatch.ButtonStyle = MakarovDev.ExpandCollapsePanel.ExpandCollapseButton.ExpandButtonStyle.Circle;
             this.gbMatch.Controls.Add(this.cbIgnoreCase);
             this.gbMatch.Controls.Add(this.btnTest);
@@ -210,11 +211,13 @@
             this.gbMatch.Controls.Add(this.cbMatch);
             this.gbMatch.Controls.Add(this.label4);
             this.gbMatch.ExpandedHeight = 182;
+            this.gbMatch.IsExpanded = true;
             this.gbMatch.Location = new System.Drawing.Point(3, 3);
             this.gbMatch.Name = "gbMatch";
             this.gbMatch.Size = new System.Drawing.Size(545, 182);
             this.gbMatch.TabIndex = 5;
             this.gbMatch.Text = "Match URL";
+            this.gbMatch.UseAnimation = true;
             // 
             // cbIgnoreCase
             // 
@@ -301,6 +304,7 @@
             // 
             // gbConditions
             // 
+            this.gbConditions.ButtonSize = MakarovDev.ExpandCollapsePanel.ExpandCollapseButton.ExpandButtonSize.Small;
             this.gbConditions.ButtonStyle = MakarovDev.ExpandCollapsePanel.ExpandCollapseButton.ExpandButtonStyle.Circle;
             this.gbConditions.Controls.Add(this.btnDown);
             this.gbConditions.Controls.Add(this.btnUp);
@@ -319,6 +323,7 @@
             this.gbConditions.Size = new System.Drawing.Size(545, 35);
             this.gbConditions.TabIndex = 9;
             this.gbConditions.Text = "Conditions";
+            this.gbConditions.UseAnimation = true;
             // 
             // btnDown
             // 
@@ -463,6 +468,7 @@
             // 
             // gbVariables
             // 
+            this.gbVariables.ButtonSize = MakarovDev.ExpandCollapsePanel.ExpandCollapseButton.ExpandButtonSize.Small;
             this.gbVariables.ButtonStyle = MakarovDev.ExpandCollapsePanel.ExpandCollapseButton.ExpandButtonStyle.Circle;
             this.gbVariables.Controls.Add(this.btnVarRemove);
             this.gbVariables.Controls.Add(this.btnVarEdit);
@@ -477,6 +483,7 @@
             this.gbVariables.Size = new System.Drawing.Size(545, 35);
             this.gbVariables.TabIndex = 8;
             this.gbVariables.Text = "Server Variables";
+            this.gbVariables.UseAnimation = true;
             // 
             // btnVarRemove
             // 
@@ -573,6 +580,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.ButtonSize = MakarovDev.ExpandCollapsePanel.ExpandCollapseButton.ExpandButtonSize.Small;
             this.groupBox2.ButtonStyle = MakarovDev.ExpandCollapsePanel.ExpandCollapseButton.ExpandButtonStyle.Circle;
             this.groupBox2.Controls.Add(this.gbRedirect);
             this.groupBox2.Controls.Add(this.gbCustom);
@@ -581,11 +589,13 @@
             this.groupBox2.Controls.Add(this.cbAction);
             this.groupBox2.Controls.Add(this.label7);
             this.groupBox2.ExpandedHeight = 261;
+            this.groupBox2.IsExpanded = true;
             this.groupBox2.Location = new System.Drawing.Point(3, 273);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(545, 261);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.Text = "Action";
+            this.groupBox2.UseAnimation = true;
             // 
             // gbRedirect
             // 

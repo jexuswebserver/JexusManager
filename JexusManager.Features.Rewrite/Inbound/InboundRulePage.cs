@@ -223,6 +223,7 @@ namespace JexusManager.Features.Rewrite.Inbound
             Rule.StatusReason = txtReason.Text;
             Rule.StatusDescription = txtError.Text;
 
+            _feature.AddItem(this.Rule);
             if (!this.Rule.ApplyChanges())
             {
                 return false;
@@ -230,7 +231,6 @@ namespace JexusManager.Features.Rewrite.Inbound
 
             this.ClearChanges();
             txtName.ReadOnly = true;
-            _feature.AddItem(this.Rule);
             return true;
         }
 
