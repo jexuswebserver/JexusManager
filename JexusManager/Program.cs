@@ -2,6 +2,7 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Win32;
 using RollbarDotNet;
@@ -67,6 +68,11 @@ namespace JexusManager
                             {
                                 AccessToken = "5525758f15504199b7125d35d2058cfe",
                                 Environment = "production"
+                            });
+                            Rollbar.PersonData(() => new Person("0")
+                            {
+                                UserName = "anonymous",
+                                Email = Assembly.GetExecutingAssembly().GetName().Version.ToString()
                             });
 
             Application.ThreadException += (sender, args) =>
