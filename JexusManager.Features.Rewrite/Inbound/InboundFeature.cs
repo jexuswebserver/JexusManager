@@ -29,7 +29,7 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         protected override void OnSettingsSaved()
         {
-            this.RewriteSettingsUpdated?.Invoke();
+            RewriteSettingsUpdated?.Invoke();
         }
 
         public void Refresh()
@@ -46,9 +46,10 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         public void Load()
         {
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var section = service.GetSection("system.webServer/rewrite/rules");
-            this.CanRevert = section.CanRevert();
+            CanRevert = section.CanRevert();
+            LoadItems();
         }
 
         public bool CanRevert { get; set; }
@@ -62,7 +63,7 @@ namespace JexusManager.Features.Rewrite.Inbound
                 index++;
                 name = string.Format("LowerCaseRule{0}", index);
             }
-            while (this.Items.All(item => item.Name != name));
+            while (Items.All(item => item.Name != name));
             var newRule = new InboundRule(null);
             newRule.Name = name;
             newRule.Input = "URL Path";
@@ -73,12 +74,12 @@ namespace JexusManager.Features.Rewrite.Inbound
             newRule.IgnoreCase = false;
             newRule.RedirectType = 301;
 
-            this.AddItem(newRule);
+            AddItem(newRule);
         }
 
         public void Remove()
         {
-            var dialog = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+            var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
             if (
                 dialog.ShowMessage("Are you sure that you want to remove the selected rule?", "Confirm Remove",
                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) !=
@@ -87,30 +88,30 @@ namespace JexusManager.Features.Rewrite.Inbound
                 return;
             }
 
-            this.RemoveItem();
+            RemoveItem();
         }
 
         public void AddConditions()
         {
-            var dialog = new AddConditionDialog(this.Module, null);
+            var dialog = new AddConditionDialog(Module, null);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
             var newItem = dialog.Item;
-            this.SelectedItem.Conditions.Add(newItem);
+            SelectedItem.Conditions.Add(newItem);
         }
 
         public void MoveUp()
         {
-            if (this.Items.Any(item => item.Flag != "Local"))
+            if (Items.Any(item => item.Flag != "Local"))
             {
-                var dialog = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+                var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
                 var result =
                     dialog.ShowMessage(
                         "The list order will be changed for this feature. If you continue, changes made to this feature at a parent level will no longer be inherited at this level. Do you want to continue?",
-                        this.Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question,
+                        Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question,
                         MessageBoxDefaultButton.Button1);
                 if (result != DialogResult.Yes)
                 {
@@ -118,18 +119,18 @@ namespace JexusManager.Features.Rewrite.Inbound
                 }
             }
 
-            this.MoveUpItem();
+            MoveUpItem();
         }
 
         public void MoveDown()
         {
-            if (this.Items.Any(item => item.Flag != "Local"))
+            if (Items.Any(item => item.Flag != "Local"))
             {
-                var dialog = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+                var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
                 var result =
                     dialog.ShowMessage(
                         "The list order will be changed for this feature. If you continue, changes made to this feature at a parent level will no longer be inherited at this level. Do you want to continue?",
-                        this.Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question,
+                        Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question,
                         MessageBoxDefaultButton.Button1);
                 if (result != DialogResult.Yes)
                 {
@@ -137,48 +138,48 @@ namespace JexusManager.Features.Rewrite.Inbound
                 }
             }
 
-            this.MoveDownItem();
+            MoveDownItem();
         }
 
         public void Disable()
         {
-            this.SelectedItem.Enabled = false;
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
-            this.SelectedItem.Element["enabled"] = false;
+            SelectedItem.Enabled = false;
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+            SelectedItem.Element["enabled"] = false;
             service.ServerManager.CommitChanges();
-            this.OnSettingsSaved();
+            OnSettingsSaved();
         }
 
         public void Enable()
         {
-            this.SelectedItem.Enabled = true;
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
-            this.SelectedItem.Element["enabled"] = true;
+            SelectedItem.Enabled = true;
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+            SelectedItem.Element["enabled"] = true;
             service.ServerManager.CommitChanges();
-            this.OnSettingsSaved();
+            OnSettingsSaved();
         }
 
         public void Revert()
         {
-            var dialog = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+            var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
             var result =
                 dialog.ShowMessage(
                     "Reverting to the parent configuration will result in the loss of all settings in the local configuration file for this feature. Are you sure you want to continue?",
-                    this.Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning,
+                    Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning,
                     MessageBoxDefaultButton.Button1);
             if (result != DialogResult.Yes)
             {
                 return;
             }
 
-            this.RevertItems();
+            RevertItems();
         }
 
         public void Edit()
         {
-            var service = (INavigationService)this.GetService(typeof(INavigationService));
-            service.Navigate(null, null, typeof(InboundRulePage), new Tuple<InboundFeature, InboundRule>(this, this.SelectedItem));
-            this.OnSettingsSaved();
+            var service = (INavigationService)GetService(typeof(INavigationService));
+            service.Navigate(null, null, typeof(InboundRulePage), new Tuple<InboundFeature, InboundRule>(this, SelectedItem));
+            OnSettingsSaved();
         }
     }
 }

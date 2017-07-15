@@ -15,8 +15,6 @@ namespace JexusManager.Features.Rewrite.Inbound
     using System.Reflection;
     using System.Windows.Forms;
 
-    using JexusManager.Properties;
-
     using Microsoft.Web.Management.Client;
     using Microsoft.Web.Management.Client.Win32;
 
