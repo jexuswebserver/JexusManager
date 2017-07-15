@@ -81,7 +81,22 @@ namespace CertificateInstaller
                     return 0;
                 }
 
-                X509Store personal = new X509Store(store, StoreLocation.LocalMachine);
+                if (store == null)
+                {
+                    if (host == null)
+                    {
+                        NativeMethods.DeleteCertificateBinding(
+                            new IPEndPoint(IPAddress.Parse(address), int.Parse(port)));
+                    }
+                    else
+                    {
+                        NativeMethods.DeleteSniBinding(new Tuple<string, int>(host, int.Parse(port)));
+                    }
+                    
+                    return 0;
+                }
+
+                var personal = new X509Store(store, StoreLocation.LocalMachine);
                 personal.Open(OpenFlags.ReadWrite);
                 if (hash == null)
                 {
@@ -91,8 +106,7 @@ namespace CertificateInstaller
                         p12File,
                         p12Pwd,
                         X509KeyStorageFlags.Exportable | X509KeyStorageFlags.PersistKeySet
-                        | X509KeyStorageFlags.MachineKeySet);
-                    x509.FriendlyName = friendlyName;
+                        | X509KeyStorageFlags.MachineKeySet) {FriendlyName = friendlyName};
                     personal.Add(x509);
                     personal.Close();
                     return 0;

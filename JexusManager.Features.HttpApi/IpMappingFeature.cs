@@ -31,86 +31,18 @@ namespace JexusManager.Features.HttpApi
             public override ICollection GetTaskItems()
             {
                 var result = new ArrayList();
-                //result.Add(new MethodTaskItem("Import", "Import...", string.Empty).SetUsage());
-                //result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
-                //result.Add(new MethodTaskItem("CreateRequest", "Create Certificate Request...", string.Empty).SetUsage());
-                //result.Add(new MethodTaskItem("Complete", "Complete Certificate Request...", string.Empty).SetUsage());
-                //result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
-                //result.Add(new MethodTaskItem("CreateDomain", "Create Domain Certificate...", string.Empty).SetUsage());
-                //result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
-                //result.Add(new MethodTaskItem("CreateSelf", "Create Self-Signed Certificate...", string.Empty).SetUsage());
                 if (_owner.SelectedItem != null)
                 {
-                    //result.Add(RemoveTaskItem);
+                    result.Add(RemoveTaskItem);
                 }
 
                 return result.ToArray(typeof(TaskItem)) as TaskItem[];
             }
 
             [Obfuscation(Exclude = true)]
-            public void Import()
-            {
-                _owner.Import();
-            }
-
-            [Obfuscation(Exclude = true)]
-            public void View()
-            {
-                _owner.View();
-            }
-
-            [Obfuscation(Exclude = true)]
-            public void Export()
-            {
-                _owner.Export();
-            }
-
-            [Obfuscation(Exclude = true)]
-            public void Renew()
-            {
-                _owner.Renew();
-            }
-
-            [Obfuscation(Exclude = true)]
             public override void Remove()
             {
                 _owner.Remove();
-            }
-
-            [Obfuscation(Exclude = true)]
-            public void CreateRequest()
-            {
-                _owner.CreateRequest();
-            }
-
-            [Obfuscation(Exclude = true)]
-            public void Complete()
-            {
-                _owner.Complete();
-            }
-
-            [Obfuscation(Exclude = true)]
-            public void CreateDomain()
-            {
-                _owner.CreateDomain();
-            }
-
-            [Obfuscation(Exclude = true)]
-            public void CreateSelf()
-            {
-                _owner.CreateSelf();
-            }
-
-            [Obfuscation(Exclude = true)]
-            public void Enable()
-            {
-                _owner.Enable();
-            }
-
-            [Obfuscation(Exclude = true)]
-            public void Disable()
-            {
-                _owner.Disable();
             }
         }
 
@@ -128,23 +60,14 @@ namespace JexusManager.Features.HttpApi
 
         public override void Load()
         {
-            this.Items = new List<IpMappingItem>();
+            Items = new List<IpMappingItem>();
             var ipMappings = Microsoft.Web.Administration.NativeMethods.QuerySslCertificateInfo();
             foreach (var mapping in ipMappings)
             {
-                this.Items.Add(new IpMappingItem(mapping.IpPort.Address.ToString(), mapping.IpPort.Port.ToString(), mapping.AppId.ToString(), Hex.ToHexString(mapping.Hash), mapping.StoreName, this));
+                Items.Add(new IpMappingItem(mapping.IpPort.Address.ToString(), mapping.IpPort.Port.ToString(), mapping.AppId.ToString(), Hex.ToHexString(mapping.Hash), mapping.StoreName, this));
             }
 
-            this.OnHttpApiSettingsSaved();
-        }
-
-        public void Import()
-        {
-            //var dialog = new ImportCertificateDialog(Module);
-            //dialog.ShowDialog();
-
-            //Items.Add(new CertificatesItem(dialog.Item, dialog.Store, this));
-            this.OnHttpApiSettingsSaved();
+            OnHttpApiSettingsSaved();
         }
 
         public void Remove()
@@ -161,89 +84,34 @@ namespace JexusManager.Features.HttpApi
             // remove IP mapping
             using (var process = new Process())
             {
-                //var start = process.StartInfo;
-                //start.Verb = "runas";
-                //start.FileName = "cmd";
-                //start.Arguments = string.Format(
-                //    "/c \"\"{2}\" /h:\"{0}\" /s:{1}\"",
-                //    SelectedItem.Address,
-                //    SelectedItem.Port,
-                //    Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe"));
-                //start.CreateNoWindow = true;
-                //start.WindowStyle = ProcessWindowStyle.Hidden;
-                //process.Start();
-                //process.WaitForExit();
+                var start = process.StartInfo;
+                start.Verb = "runas";
+                start.FileName = "cmd";
+                start.Arguments =
+                    $"/c \"\"{Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe")}\" /a:\"{SelectedItem.Address}\" /o:{SelectedItem.Port}\"";
+                start.CreateNoWindow = true;
+                start.WindowStyle = ProcessWindowStyle.Hidden;
+                process.Start();
+                process.WaitForExit();
 
-                //if (process.ExitCode == 0)
-                //{
-                //    Items.Remove(SelectedItem);
-                //    SelectedItem = null;
-                //    this.OnHttpApiSettingsSaved();
-                //}
+                if (process.ExitCode == 0)
+                {
+                    Items.Remove(SelectedItem);
+                    SelectedItem = null;
+                    OnHttpApiSettingsSaved();
+                }
             }
         }
 
         protected void OnHttpApiSettingsSaved()
         {
-            this.HttpApiSettingsUpdate?.Invoke();
+            HttpApiSettingsUpdate?.Invoke();
         }
 
         public override bool ShowHelp()
         {
             Process.Start("https://msdn.microsoft.com/en-us/library/windows/desktop/cc307243(v=vs.85).aspx");
             return false;
-        }
-
-        private void Disable()
-        {
-        }
-
-        private void Enable()
-        {
-        }
-
-        private void CreateSelf()
-        {
-            //var dialog = new SelfCertificateDialog(Module);
-            //dialog.ShowDialog();
-
-            //Items.Add(new CertificatesItem(dialog.Item, dialog.Store, this));
-            this.OnHttpApiSettingsSaved();
-        }
-
-        private void CreateDomain()
-        {
-        }
-
-        private void Complete()
-        {
-            //var dialog = new CompleteRequestDialog(Module);
-            //dialog.ShowDialog();
-
-            //Items.Add(new CertificatesItem(dialog.Item, dialog.Store, this));
-            this.OnHttpApiSettingsSaved();
-        }
-
-        private void CreateRequest()
-        {
-            //var wizard = new CertificateRequestWizard(this.Module);
-            //wizard.ShowDialog();
-        }
-
-        private void Export()
-        {
-            //var dialog = new ExportCertificateDialog(SelectedItem.Certificate, Module);
-            //dialog.ShowDialog();
-        }
-
-        private void Renew()
-        {
-            //var wizard = new CertificateRenewWizard(SelectedItem.Certificate, Module);
-            //wizard.ShowDialog();
-        }
-
-        private void View()
-        {
         }
 
         public bool AutomicRebindEnabled { get; set; }
@@ -253,12 +121,6 @@ namespace JexusManager.Features.HttpApi
             return null;
         }
 
-        public override string Name
-        {
-            get
-            {
-                return "IP Mappings";
-            }
-        }
+        public override string Name => "IP Mappings";
     }
 }
