@@ -191,7 +191,7 @@ namespace JexusManager.Features.IpSecurity
         public void Set()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.webServer/security/ipSecurity");
+            var section = service.GetSection("system.webServer/security/ipSecurity", null, false);
             var dialog = new SetRestrictionsDialog(Module, section);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
@@ -208,7 +208,7 @@ namespace JexusManager.Features.IpSecurity
         public void Dynamic()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.webServer/security/dynamicIpSecurity");
+            var section = service.GetSection("system.webServer/security/dynamicIpSecurity", null, false);
             if (section == null)
             {
                 // TODO: display a friendly error message.
@@ -246,14 +246,8 @@ namespace JexusManager.Features.IpSecurity
         public IpSecuritySettingsSavedEventHandler IpSecuritySettingsUpdated { get; set; }
         public string Description { get; }
 
-        public virtual Version MinimumFrameworkVersion
-        {
-            get { return FxVersionNotRequired; }
-        }
+        public virtual Version MinimumFrameworkVersion => FxVersionNotRequired;
 
-        public string Name
-        {
-            get { return "IP Address and Domain Restrictions"; }
-        }
+        public string Name => "IP Address and Domain Restrictions";
     }
 }
