@@ -74,7 +74,7 @@ namespace JexusManager
                 UserName = "anonymous",
                 Email = Assembly.GetExecutingAssembly().GetName().Version.ToString()
             });
-            Rollbar.Report($"Jexus Manager started");
+            Rollbar.Report($"Jexus Manager started", ErrorLevel.Info);
             
             Application.ThreadException += (sender, args) =>
             {
