@@ -17,12 +17,9 @@ namespace JexusManager.Features.Certificates
 
     public partial class ExportCertificateDialog : DialogForm
     {
-        private readonly X509Certificate2 _certificate2;
-
-        public ExportCertificateDialog(X509Certificate2 certificate2, IServiceProvider serviceProvider)
+        public ExportCertificateDialog(X509Certificate certificate2, IServiceProvider serviceProvider)
             : base(serviceProvider)
         {
-            _certificate2 = certificate2;
             InitializeComponent();
 
             var container = new CompositeDisposable();
@@ -31,7 +28,7 @@ namespace JexusManager.Features.Certificates
             container.Add(
                 Observable.FromEventPattern<EventArgs>(txtPath, "TextChanged")
                 .Merge(Observable.FromEventPattern<EventArgs>(txtPassword, "TextChanged"))
-                .Merge(Observable.FromEventPattern<EventArgs>(txtConfirm, "TextChange"))
+                .Merge(Observable.FromEventPattern<EventArgs>(txtConfirm, "TextChanged"))
                 .Sample(TimeSpan.FromSeconds(1))
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
@@ -64,8 +61,7 @@ namespace JexusManager.Features.Certificates
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    var raw = _certificate2.Export(X509ContentType.Pfx, txtPassword.Text);
-                    File.WriteAllBytes(txtPath.Text, raw);
+                    File.WriteAllBytes(txtPath.Text, certificate2.Export(X509ContentType.Pfx, txtPassword.Text));
                     DialogResult = DialogResult.OK;
                 }));
         }
