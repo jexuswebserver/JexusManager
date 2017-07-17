@@ -19,7 +19,7 @@ namespace Microsoft.Web.Administration
     internal sealed class FileContext : IEquatable<FileContext>
     {
         private readonly ServerManager _server;
-
+        private readonly object locker = new object();
         private readonly bool _dontThrow;
 
         internal bool AppHost { get; }
@@ -31,18 +31,18 @@ namespace Microsoft.Web.Administration
         {
             _server = server;
             _dontThrow = dontThrow;
-            this.AppHost = appHost;
-            this.ReadOnly = readOnly;
-            this.Locations = new List<Location>();
+            AppHost = appHost;
+            ReadOnly = readOnly;
+            Locations = new List<Location>();
             FileName = fileName;
-            this.Location = location;
+            Location = location;
             Parent = parent;
             _lineNumber = lineNumber;
         }
 
         private void Initialize()
         {
-            this.Parent?.Initialize();
+            Parent?.Initialize();
             if (_initialized)
             {
                 return;
@@ -51,7 +51,7 @@ namespace Microsoft.Web.Administration
             _initialized = true;
             LoadSchemas();
             _rootSectionGroup = new SectionGroup(this);
-            this.CloneParentSectionGroups(this.Parent);
+            CloneParentSectionGroups(Parent);
             if (FileName == null)
             {
                 // TODO: merge with the other exception later.
@@ -63,16 +63,16 @@ namespace Microsoft.Web.Administration
                         Location));
             }
 
-            var file = this.FileName.ExpandIisExpressEnvironmentVariables();
+            var file = FileName.ExpandIisExpressEnvironmentVariables();
 
             if (!File.Exists(file))
             {
-                if (this.AppHost)
+                if (AppHost)
                 {
                     _initialized = false;
                     throw new FileNotFoundException(
-                        string.Format("Filename: \\\\?\\{0}\r\nError: Cannot read configuration file\r\n\r\n", this.FileName),
-                        this.FileName);
+                        string.Format("Filename: \\\\?\\{0}\r\nError: Cannot read configuration file\r\n\r\n", FileName),
+                        FileName);
                 }
 
                 return;
@@ -80,7 +80,7 @@ namespace Microsoft.Web.Administration
 
             try
             {
-                this.LoadDocument(file, Location);
+                LoadDocument(file, Location);
             }
             catch (XmlException ex)
             {
@@ -101,13 +101,13 @@ namespace Microsoft.Web.Administration
         private void LoadSchemas()
         {
             _sectionSchemas.Clear();
-            if (this.Parent == null)
+            if (Parent == null)
             {
-                this.LoadSchemasFromMode();
+                LoadSchemasFromMode();
             }
             else
             {
-                foreach (var item in this.Parent._sectionSchemas)
+                foreach (var item in Parent._sectionSchemas)
                 {
                     _sectionSchemas.Add(item.Key, item.Value);
                 }
@@ -121,37 +121,40 @@ namespace Microsoft.Web.Administration
                 return;
             }
 
-            if (this.AppHost)
+            lock (locker)
             {
-                // TODO: load settings from applicationHost.config.
-                var historyFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Jexus Manager",
-                    "history");
-                int last = 0;
-                if (!Directory.Exists(historyFolder))
+                if (AppHost)
                 {
-                    Directory.CreateDirectory(historyFolder);
-                }
-                else
-                {
-                    var existing = new DirectoryInfo(historyFolder).GetDirectories();
-                    last =
-                        existing.Select(found => found.Name.Substring("CFGHISTORY_".Length))
-                            .Select(int.Parse)
-                            .Concat(new[] { last })
-                            .Max();
+                    // TODO: load settings from applicationHost.config.
+                    var historyFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Jexus Manager",
+                        "history");
+                    int last = 0;
+                    if (!Directory.Exists(historyFolder))
+                    {
+                        Directory.CreateDirectory(historyFolder);
+                    }
+                    else
+                    {
+                        var existing = new DirectoryInfo(historyFolder).GetDirectories();
+                        last =
+                            existing.Select(found => found.Name.Substring("CFGHISTORY_".Length))
+                                .Select(int.Parse)
+                                .Concat(new[] { last })
+                                .Max();
+                    }
+
+                    last++;
+                    var revisionFolder = Path.Combine(historyFolder, "CFGHISTORY_" + last.ToString("D10"));
+                    Directory.CreateDirectory(revisionFolder);
+                    var fileName = Path.GetFileName(FileName);
+                    if (fileName != null)
+                    {
+                        File.Copy(FileName, Path.Combine(revisionFolder, fileName));
+                    }
                 }
 
-                last++;
-                var revisionFolder = Path.Combine(historyFolder, "CFGHISTORY_" + last.ToString("D10"));
-                Directory.CreateDirectory(revisionFolder);
-                var fileName = Path.GetFileName(this.FileName);
-                if (fileName != null)
-                {
-                    File.Copy(this.FileName, Path.Combine(revisionFolder, fileName));
-                }
+                _document?.Save(FileName);
             }
-
-            _document?.Save(this.FileName);
         }
 
         public string FileName { get; set; }
@@ -170,8 +173,6 @@ namespace Microsoft.Web.Administration
                 {
                     destination.Sections.Add(define);
                 }
-#if DEBUG
-#endif
             }
         }
 
@@ -185,7 +186,7 @@ namespace Microsoft.Web.Administration
 
         public string[] GetLocationPaths()
         {
-            this.Initialize();
+            Initialize();
             return Locations.Select(item => item.Path).ToArray();
         }
 
@@ -201,7 +202,7 @@ namespace Microsoft.Web.Administration
 
         public ConfigurationSection GetSection(string sectionPath, string locationPath)
         {
-            this.Initialize();
+            Initialize();
             if (!_dontThrow)
             {
                 _server.VerifyLocation(locationPath);
@@ -222,7 +223,7 @@ namespace Microsoft.Web.Administration
 
         public void RemoveLocationPath(string locationPath)
         {
-            this.Initialize();
+            Initialize();
             var location = Locations.FirstOrDefault(item => item.Path == locationPath);
             if (location != null)
             {
@@ -232,7 +233,7 @@ namespace Microsoft.Web.Administration
 
         public void RenameLocationPath(string locationPath, string newLocationPath)
         {
-            this.Initialize();
+            Initialize();
             var location = Locations.FirstOrDefault(item => item.Path == locationPath);
             if (location != null)
             {
@@ -249,7 +250,7 @@ namespace Microsoft.Web.Administration
         {
             get
             {
-                this.Initialize();
+                Initialize();
                 return _rootSectionGroup;
             }
             set
@@ -279,10 +280,10 @@ namespace Microsoft.Web.Administration
         {
             get
             {
-                this.Initialize();
+                Initialize();
                 return _protectedConfiguration
                        ?? (_protectedConfiguration =
-                           new ProtectedConfiguration(this.GetSection("configProtectedData")));
+                           new ProtectedConfiguration(GetSection("configProtectedData")));
             }
         }
 
@@ -334,7 +335,7 @@ namespace Microsoft.Web.Administration
                 }
 
                 var name = element.Attribute("name").Value;
-                var found = this.FindSectionSchema(name);
+                var found = FindSectionSchema(name);
                 if (found == null)
                 {
                     found = new SectionSchema(name, element);
@@ -358,7 +359,7 @@ namespace Microsoft.Web.Administration
                 if (sec != null)
                 {
                     var section = new ConfigurationSection(path, sec.Root, location?.Path, this, element);
-                    this.RootSectionGroup.Add(section);
+                    RootSectionGroup.Add(section);
                     node = section;
                 }
                 else
@@ -423,7 +424,7 @@ namespace Microsoft.Web.Administration
                     var tag = element.Name.LocalName;
                     if (tag == "configSections")
                     {
-                        this.RootSectionGroup.ParseSectionDefinitions(element, _sectionSchemas);
+                        RootSectionGroup.ParseSectionDefinitions(element, _sectionSchemas);
                         continue;
                     }
 
@@ -432,31 +433,31 @@ namespace Microsoft.Web.Administration
                         // IMPORTANT: allow null path due to root web.config.
                         var path = element.Attribute("path")?.Value;
                         var mode = element.Attribute("overrideMode").LoadString("Inherit");
-                        var found = this.Locations.FirstOrDefault(item => item.Path == path);
+                        var found = Locations.FirstOrDefault(item => item.Path == path);
                         if (found == null)
                         {
                             found = new Location(path, mode, element);
-                            this.Locations.Add(found);
+                            Locations.Add(found);
                         }
 
-                        this.ParseSections(element, null, found);
+                        ParseSections(element, null, found);
                         continue;
                     }
 
                     if (location == null)
                     {
-                        this.ParseSections(element, null, null);
+                        ParseSections(element, null, null);
                     }
                     else
                     {
-                        var found = this.Locations.FirstOrDefault(item => item.Path == location);
+                        var found = Locations.FirstOrDefault(item => item.Path == location);
                         if (found == null)
                         {
                             found = new Location(location, "Inherit", element);
-                            this.Locations.Add(found);
+                            Locations.Add(found);
                         }
 
-                        this.ParseSections(element, null, found);
+                        ParseSections(element, null, found);
                     }
                 }
             }
@@ -535,7 +536,7 @@ namespace Microsoft.Web.Administration
 
         public bool Equals(FileContext other)
         {
-            return other != null && other.FileName == this.FileName;
+            return other != null && other.FileName == FileName;
         }
 
         internal void SetDirty()
@@ -550,7 +551,7 @@ namespace Microsoft.Web.Administration
                 return;
             }
 
-            if (this.ReadOnly)
+            if (ReadOnly)
             {
                 throw new InvalidOperationException("The configuration object is read only, because it has been committed by a call to ServerManager.CommitChanges(). If write access is required, use ServerManager to get a new reference.");
             }
