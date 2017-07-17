@@ -8,7 +8,7 @@ namespace JexusManager.Features.Access
     using System.Diagnostics;
     using System.Resources;
 
-    using JexusManager.Services;
+    using Services;
 
     using Microsoft.Web.Administration;
     using Microsoft.Web.Management.Client;
@@ -18,9 +18,9 @@ namespace JexusManager.Features.Access
     {
         public AccessFeature(Module module, ServerManager server, Application application)
         {
-            this.Module = module;
-            this.Server = server;
-            this.Application = application;
+            Module = module;
+            Server = server;
+            Application = application;
         }
 
         protected static readonly Version FxVersion10 = new Version("1.0");
@@ -30,29 +30,29 @@ namespace JexusManager.Features.Access
 
         protected void DisplayErrorMessage(Exception ex, ResourceManager resourceManager)
         {
-            var service = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+            var service = (IManagementUIService)GetService(typeof(IManagementUIService));
             service.ShowError(ex, resourceManager.GetString("General"), "", false);
         }
 
         protected object GetService(Type type)
         {
-            return (this.Module as IServiceProvider).GetService(type);
+            return (Module as IServiceProvider).GetService(type);
         }
 
         public void Load()
         {
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.webServer/security/access");
-            this.SslFlags = (long)section["sslFlags"];
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+            var section = service.GetSection("system.webServer/security/access", null, false);
+            SslFlags = (long)section["sslFlags"];
 
-            this.OnAccessSettingsSaved();
+            OnAccessSettingsSaved();
         }
 
         public string Directory { get; set; }
 
         protected void OnAccessSettingsSaved()
         {
-            this.AccessSettingsUpdated?.Invoke();
+            AccessSettingsUpdated?.Invoke();
         }
 
         public virtual bool ShowHelp()
@@ -64,38 +64,29 @@ namespace JexusManager.Features.Access
         public AccessSettingsSavedEventHandler AccessSettingsUpdated { get; set; }
         public string Description { get; }
 
-        public virtual bool IsFeatureEnabled
-        {
-            get { return true; }
-        }
+        public virtual bool IsFeatureEnabled => true;
 
-        public virtual Version MinimumFrameworkVersion
-        {
-            get { return FxVersionNotRequired; }
-        }
+        public virtual Version MinimumFrameworkVersion => FxVersionNotRequired;
 
         public Module Module { get; }
         public ServerManager Server { get; set; }
         public Application Application { get; set; }
 
-        public string Name
-        {
-            get { return "SSL Settings"; }
-        }
+        public string Name => "SSL Settings";
 
 
         public long SslFlags { get; set; }
 
         public void CancelChanges()
         {
-            this.Load();
+            Load();
         }
 
         public bool ApplyChanges()
         {
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.webServer/security/access");
-            section["sslFlags"] = this.SslFlags;
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+            var section = service.GetSection("system.webServer/security/access", null, false);
+            section["sslFlags"] = SslFlags;
             service.ServerManager.CommitChanges();
             return true;
         }
