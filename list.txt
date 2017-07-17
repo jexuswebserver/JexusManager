@@ -37,6 +37,8 @@ JexusManager.Features.HttpRedirect.dll
 JexusManager.Features.HttpRedirect.pdb
 JexusManager.Features.IpSecurity.dll
 JexusManager.Features.IpSecurity.pdb
+JexusManager.Features.IsapiCgiRestriction.dll
+JexusManager.Features.IsapiCgiRestriction.pdb
 JexusManager.Features.IsapiFilters.dll
 JexusManager.Features.IsapiFilters.pdb
 JexusManager.Features.Jexus.dll
