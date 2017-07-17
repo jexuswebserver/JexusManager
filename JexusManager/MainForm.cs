@@ -453,6 +453,7 @@ namespace JexusManager
                 if (node.Tag == site)
                 {
                     node.Remove();
+                    break;
                 }
             }
         }
@@ -515,6 +516,7 @@ namespace JexusManager
                 if (node.Tag == site)
                 {
                     node.Text = site.Name;
+                    break;
                 }
             }
         }
