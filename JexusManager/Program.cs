@@ -65,16 +65,17 @@ namespace JexusManager
         private static void SetupRollbar()
         {
             Rollbar.Init(new RollbarConfig
-                            {
-                                AccessToken = "5525758f15504199b7125d35d2058cfe",
-                                Environment = "production"
-                            });
-                            Rollbar.PersonData(() => new Person("0")
-                            {
-                                UserName = "anonymous",
-                                Email = Assembly.GetExecutingAssembly().GetName().Version.ToString()
-                            });
-
+            {
+                AccessToken = "5525758f15504199b7125d35d2058cfe",
+                Environment = "production"
+            });
+            Rollbar.PersonData(() => new Person("0")
+            {
+                UserName = "anonymous",
+                Email = Assembly.GetExecutingAssembly().GetName().Version.ToString()
+            });
+            Rollbar.Report($"Jexus Manager started");
+            
             Application.ThreadException += (sender, args) =>
             {
                 Rollbar.Report(args.Exception);

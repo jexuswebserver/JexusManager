@@ -571,11 +571,6 @@
     <None Include="Resources\virtual_directory_16.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="jexus.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="iis.ico" />
     <None Include="Resources\title_48.png" />
     <None Include="Resources\servers_16.png" />
