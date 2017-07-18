@@ -49,8 +49,9 @@ namespace JexusManager
                         key.SetValue("RollbarAsked", "true");
                     }
                 }
-
+#if !DEBUG
                 SetupRollbar();
+#endif
             }
 
             Application.EnableVisualStyles();
@@ -61,7 +62,7 @@ namespace JexusManager
 
             Application.Run(new MainForm());
         }
-
+        
         private static void SetupRollbar()
         {
             Rollbar.Init(new RollbarConfig
@@ -71,8 +72,7 @@ namespace JexusManager
             });
             Rollbar.PersonData(() => new Person("0")
             {
-                UserName = "anonymous",
-                Email = Assembly.GetExecutingAssembly().GetName().Version.ToString()
+                UserName = Assembly.GetExecutingAssembly().GetName().Version.ToString()
             });
             Rollbar.Report($"Jexus Manager started", ErrorLevel.Info);
             
