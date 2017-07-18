@@ -1,8 +1,9 @@
 Jexus Manager from LeXtudio
 ===========================
 
-[![Gitter](https://badges.gitter.im/jexuswebserver/JexusManager.svg)](https://gitter.im/jexuswebserver/JexusManager?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-[![Stories in Ready](https://badge.waffle.io/jexuswebserver/JexusManager.svg?label=ready&title=Ready)](http://waffle.io/jexuswebserver/JexusManager) 
+[![Gitter](https://img.shields.io/gitter/room/jexuswebserver/JexusManager.svg?style=flat-square)](https://gitter.im/jexuswebserver/JexusManager?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+[![Build status](https://img.shields.io/appveyor/ci/jexuswebserver/JexusManager/master.svg?label=appvejor&style=flat-square)](https://ci.appveyor.com/project/jexuswebserver/JexusManager)
+[![Stories in Progress](https://img.shields.io/waffle/label/jexuswebserver/JexusManager/in%20progress.svg?style=flat-square)](http://waffle.io/jexuswebserver/JexusManager)
 
 Jexus Manager was designed to be the cross platform manager for Jexus web server.
 
