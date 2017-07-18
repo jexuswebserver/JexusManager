@@ -438,9 +438,10 @@ namespace JexusManager
                 }
             }
 
-            await site.RemoveApplicationsAsync();
+            // TODO: is this required by Jexus?
+            // await site.RemoveApplicationsAsync();
             site.Name = e.Label;
-            site.Save();
+            site.Server.CommitChanges();
             // TODO: how to handle rename.
             treeView1.SelectedNode = null;
             treeView1.SelectedNode = e.Node;
