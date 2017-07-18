@@ -287,7 +287,7 @@ namespace JexusManager
             return (top as ServerTreeNode);
         }
 
-        private async void actCreateSite_Execute(object sender, EventArgs e)
+        private void actCreateSite_Execute(object sender, EventArgs e)
         {
             var data = GetCurrentData();
             var dialog = new NewSiteDialog(_serviceContainer, data.ServerManager.Sites);
@@ -338,7 +338,7 @@ namespace JexusManager
             dialog.ShowDialog(this);
         }
 
-        private async void btnRemoveSite_Click(object sender, EventArgs e)
+        private void btnRemoveSite_Click(object sender, EventArgs e)
         {
             var result = UIService.ShowMessage(
                 "Are you sure that you want to remove the selected site?",
@@ -409,7 +409,7 @@ namespace JexusManager
             treeView1.SelectedNode.BeginEdit();
         }
 
-        private async void treeView1_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
+        private void treeView1_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
         {
             var site = (Site)e.Node.Tag;
             if (string.IsNullOrEmpty(e.Label))
@@ -442,7 +442,7 @@ namespace JexusManager
             // await site.RemoveApplicationsAsync();
             site.Name = e.Label;
             site.Server.CommitChanges();
-            // TODO: how to handle rename.
+
             treeView1.SelectedNode = null;
             treeView1.SelectedNode = e.Node;
         }
