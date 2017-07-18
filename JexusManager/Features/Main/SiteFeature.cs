@@ -283,13 +283,6 @@ namespace JexusManager.Features.Main
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var site = service.Site;
-            if (site.Bindings.RequireElevation() && !JexusManager.NativeMethods.IsProcessElevated)
-            {
-                var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
-                dialog.ShowMessage("This site cannot be stopped. Please run Jexus Manager as administrator.", Name);
-                return;
-            }
-
             IsBusy = true;
             OnSiteSettingsSaved();
             await site.StopAsync();
@@ -303,12 +296,6 @@ namespace JexusManager.Features.Main
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
             var site = service.Site;
-            if (site.Bindings.RequireElevation() && !JexusManager.NativeMethods.IsProcessElevated)
-            {
-                dialog.ShowMessage("This site cannot be started. Please run Jexus Manager as administrator.", Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
             IsBusy = true;
             OnSiteSettingsSaved();
             try
@@ -330,12 +317,6 @@ namespace JexusManager.Features.Main
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
             var site = service.Site;
-            if (site.Bindings.RequireElevation() && !JexusManager.NativeMethods.IsProcessElevated)
-            {
-                dialog.ShowMessage("This site cannot be restarted. Please run Jexus Manager as administrator.", Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
             IsBusy = true;
             OnSiteSettingsSaved();
             try

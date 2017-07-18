@@ -2,18 +2,16 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using Microsoft.Web.Administration;
 using Microsoft.Web.Management.Server;
 
 namespace JexusManager.Features.Authentication
 {
     using System;
-    using System.Collections;
     using System.Diagnostics;
     using System.Reflection;
     using System.Windows.Forms;
-
-    using JexusManager.Properties;
-    using JexusManager.Services;
+    using Services;
 
     using Microsoft.Web.Management.Client;
     using Microsoft.Web.Management.Client.Extensions;
@@ -100,7 +98,7 @@ namespace JexusManager.Features.Authentication
             var anonymousFeature = new AnonymousAuthenticationFeature(Module);
             listView1.Items.Add(new AuthenticationListViewItem(anonymousFeature, this));
 
-            if (service.Scope == ManagementScope.Server && NativeMethods.IsProcessElevated)
+            if (service.Scope == ManagementScope.Server && PublicNativeMethods.IsProcessElevated)
             {
                 // TODO: Elevation is needed to modify root web.config.
                 var impersonationFeature = new ImpersonationFeature(Module);
@@ -114,7 +112,7 @@ namespace JexusManager.Features.Authentication
             var digestFeature = new DigestAuthenticationFeature(Module);
             listView1.Items.Add(new AuthenticationListViewItem(digestFeature, this));
 
-            if (service.Scope == ManagementScope.Server && NativeMethods.IsProcessElevated)
+            if (service.Scope == ManagementScope.Server && PublicNativeMethods.IsProcessElevated)
             {
                 // TODO: Elevation is needed to modify root web.config.
                 var formsFeature = new FormsAuthenticationFeature(Module);

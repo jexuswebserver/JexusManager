@@ -5,14 +5,18 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
+using System.Security.Principal;
+using Microsoft.Win32;
 
 namespace Microsoft.Web.Administration
 {
     internal static class NativeMethods
     {
+#region HTTP API
         private static readonly HTTPAPI_VERSION s_httpApiVersion = new HTTPAPI_VERSION(2, 0);
 
         #region DllImport
@@ -1195,6 +1199,9 @@ namespace Microsoft.Web.Administration
                     throw new ArgumentOutOfRangeException(nameof(sockAddrStorageStructure), "Unknown address family");
             }
         }
+#endregion
+        
+#region View Folder Information
 
         [DllImport("shell32.dll", CharSet = CharSet.Auto)]
         private static extern bool ShellExecuteEx(ref SHELLEXECUTEINFO lpExecInfo);
@@ -1237,5 +1244,6 @@ namespace Microsoft.Web.Administration
             info.fMask = SEE_MASK_INVOKEIDLIST;
             return ShellExecuteEx(ref info);
         }
+#endregion
     }
 }

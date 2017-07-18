@@ -280,8 +280,7 @@ namespace Microsoft.Web.Administration
                 return null;
             }
 
-            var found =
-                Microsoft.Web.Administration.NativeMethods.QuerySslCertificateInfo(new IPEndPoint(ip, portNumber));
+            var found = NativeMethods.QuerySslCertificateInfo(new IPEndPoint(ip, portNumber));
             if (found == null)
             {
                 // need to create mapping
@@ -296,19 +295,6 @@ namespace Microsoft.Web.Administration
 
             // replace mapping
             return true;
-        }
-
-        public static bool RequireElevation(this BindingCollection collection)
-        {
-            foreach (Binding binding in collection)
-            {
-                if (binding.EndPoint?.Port <= 1024)
-                {
-                    return true;
-                }
-            }
-
-            return false;
         }
 
         public static string ToShortString(this Binding binding)

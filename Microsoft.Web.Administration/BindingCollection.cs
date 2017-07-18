@@ -52,5 +52,21 @@ namespace Microsoft.Web.Administration
         }
 
         internal Site Parent { get; set; }
+
+        internal bool ElevationRequired
+        {
+            get
+            {
+                foreach (Binding binding in this)
+                {
+                    if (binding.EndPoint?.Port <= 1024)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        }
     }
 }

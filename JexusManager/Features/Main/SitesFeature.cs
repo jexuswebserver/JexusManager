@@ -366,7 +366,7 @@ namespace JexusManager.Features.Main
                 return;
             }
 
-            if (SelectedItem.Bindings.RequireElevation() && !JexusManager.NativeMethods.IsProcessElevated)
+            if (SelectedItem.Bindings.ElevationRequired && !PublicNativeMethods.IsProcessElevated)
             {
                 var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
                 dialog.ShowMessage("This site cannot be stopped. Please run Jexus Manager as administrator.", Name);
@@ -388,7 +388,7 @@ namespace JexusManager.Features.Main
             }
 
             var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
-            if (SelectedItem.Bindings.RequireElevation() && !JexusManager.NativeMethods.IsProcessElevated)
+            if (SelectedItem.Bindings.ElevationRequired && !PublicNativeMethods.IsProcessElevated)
             {
                 dialog.ShowMessage("This site cannot be started. Please run Jexus Manager as administrator.", Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -417,7 +417,7 @@ namespace JexusManager.Features.Main
             }
 
             var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
-            if (SelectedItem.Bindings.RequireElevation() && !JexusManager.NativeMethods.IsProcessElevated)
+            if (SelectedItem.Bindings.ElevationRequired && !PublicNativeMethods.IsProcessElevated)
             {
                 dialog.ShowMessage("This site cannot be restarted. Please run Jexus Manager as administrator.", Name);
                 return;

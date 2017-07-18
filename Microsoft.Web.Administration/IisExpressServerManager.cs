@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -29,13 +30,20 @@ namespace Microsoft.Web.Administration
 
         internal override async Task<bool> GetSiteStateAsync(Site site)
         {
-            var items = Process.GetProcessesByName("iisexpress");
-            var found = items.Where(item =>
+            using (var process = new Process())
             {
-                var command = item.GetCommandLine();
-                return command != null && command.EndsWith(site.CommandLine, StringComparison.Ordinal);
-            });
-            return found.Any();
+                var start = process.StartInfo;
+                start.Verb = site.Bindings.ElevationRequired && !PublicNativeMethods.IsProcessElevated ? "runas" : null;
+                start.FileName = "cmd";
+                start.Arguments =
+                    $"/c \"\"{Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe")}\" /q:\"{site.CommandLine.Replace("\"", null)}\"\"";
+                start.CreateNoWindow = true;
+                start.WindowStyle = ProcessWindowStyle.Hidden;
+                process.Start();
+                process.WaitForExit();
+
+                return process.ExitCode == 1;
+            }
         }
 
         internal override async Task<bool> GetPoolStateAsync(ApplicationPool pool)
@@ -63,14 +71,14 @@ namespace Microsoft.Web.Administration
                     "iisexpress.exe");
             }
 
+            var temp = Path.GetTempFileName();
             var startInfo = new ProcessStartInfo
             {
-                FileName = fileName,
-                Arguments = site.CommandLine,
+                FileName = "cmd",
+                Arguments = $"/c \"\"{fileName}\" {site.CommandLine} > {temp}\"",
                 WindowStyle = ProcessWindowStyle.Hidden,
-                UseShellExecute = false,
                 CreateNoWindow = true,
-                RedirectStandardOutput = true
+                Verb = site.Bindings.ElevationRequired && !PublicNativeMethods.IsProcessElevated ? "runas" : null
             };
             InjectEnvironmentVariables(site, startInfo);
             var process = new Process
@@ -91,7 +99,7 @@ namespace Microsoft.Web.Administration
             catch (Exception ex)
             {
                 throw new COMException(
-                    string.Format("cannot start site: {0}, {1}", ex.Message, process.StandardOutput.ReadToEnd()));
+                    $"cannot start site: {ex.Message}, {File.ReadAllText(temp)}");
             }
             finally
             {
@@ -167,16 +175,30 @@ namespace Microsoft.Web.Administration
 
         internal override async Task StopAsync(Site site)
         {
-            var items = Process.GetProcessesByName("iisexpress");
-            var found = items.Where(item =>
-                item.GetCommandLine().EndsWith(site.CommandLine, StringComparison.Ordinal));
-            foreach (var item in found)
+            try
             {
-                item.Kill();
-                item.WaitForExit();
-            }
+                using (var process = new Process())
+                {
+                    var start = process.StartInfo;
+                    start.Verb = site.Bindings.ElevationRequired && !PublicNativeMethods.IsProcessElevated
+                        ? "runas"
+                        : null;
+                    start.FileName = "cmd";
+                    start.Arguments =
+                        $"/c \"\"{Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe")}\" /k:\"{site.CommandLine.Replace("\"", null)}\"\"";
+                    start.CreateNoWindow = true;
+                    start.WindowStyle = ProcessWindowStyle.Hidden;
+                    process.Start();
+                    process.WaitForExit();
 
-            site.State = ObjectState.Stopped;
+                    if (process.ExitCode == 0)
+                    {
+                        site.State = ObjectState.Stopped;
+                    }
+                }
+            }
+            catch (Win32Exception)
+            {}
         }
 
         internal override IEnumerable<string> GetSchemaFiles()

@@ -92,7 +92,7 @@ namespace JexusManager.Features.Authentication
         private void SetButton()
         {
             // TODO: disable if not elevated. Need to find an in-place elevation approach.
-            btnOK.Enabled = rbPool.Checked || (txtName.Text.Length != 0 && NativeMethods.IsProcessElevated);
+            btnOK.Enabled = rbPool.Checked || (txtName.Text.Length != 0 && Microsoft.Web.Administration.PublicNativeMethods.IsProcessElevated);
         }
 
         private void AnonymousEditDialogHelpButtonClicked(object sender, CancelEventArgs e)

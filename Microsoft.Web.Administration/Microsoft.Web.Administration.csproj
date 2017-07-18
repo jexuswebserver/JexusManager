@@ -127,7 +127,6 @@
     <Compile Include="ObjectState.cs" />
     <Compile Include="OverrideMode.cs" />
     <Compile Include="PipelineState.cs" />
-    <Compile Include="ProcessExtensions.cs" />
     <Compile Include="ProcessModelIdentityType.cs" />
     <Compile Include="ProcessModelLogEventOnProcessModel.cs" />
     <Compile Include="ProcessorAction.cs" />
@@ -143,6 +142,7 @@
     <Compile Include="ProtectedProviderSettings.cs" />
     <Compile Include="ProviderSettings.cs" />
     <Compile Include="ProviderSettingsCollection.cs" />
+    <Compile Include="PublicNativeMethods.cs" />
     <Compile Include="RecyclingLogEventOnRecycle.cs" />
     <Compile Include="Request.cs" />
     <Compile Include="RequestCollection.cs" />

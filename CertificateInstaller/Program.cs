@@ -3,6 +3,8 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.ComponentModel;
+using System.Diagnostics;
 
 namespace CertificateInstaller
 {
@@ -28,6 +30,8 @@ namespace CertificateInstaller
             string host = null;
             string url = null;
             string descriptor = null;
+            string kill = null;
+            string query = null;
 
             OptionSet p =
                 new OptionSet().Add("f:", "File name", delegate (string v) { if (v != null) p12File = v; })
@@ -40,7 +44,15 @@ namespace CertificateInstaller
                     .Add("i:", "Application ID", delegate (string v) { if (v != null) id = v; })
                     .Add("x:", "SNI host name (not required when managing IP based bindings)", delegate (string v) { if (v != null) host = v; })
                     .Add("u:", "Reserved URL", delegate (string v) { if (v != null) url = v; })
-                    .Add("d:", "Security descriptor", delegate (string v) { if (v != null) descriptor = v; });
+                    .Add("d:", "Security descriptor", delegate (string v) { if (v != null) descriptor = v; })
+                    .Add("k:", "Kill Process Arguments", delegate(string v)
+                    {
+                        if (v != null) kill = v;
+                    })
+                    .Add("q:", "Query Process Arguments", delegate(string v)
+                    {
+                        if (v != null) query = v;
+                    });
 
             if (args.Length == 0)
             {
@@ -61,12 +73,45 @@ namespace CertificateInstaller
 
             if (extra.Count > 0)
             {
+                Console.WriteLine(extra[0]);
                 ShowHelp(p);
                 return -1;
             }
 
             try
             {
+                if (kill != null)
+                {
+                    var items = Process.GetProcessesByName("iisexpress");
+                    var found = items.Where(item =>
+                    {
+                        var command = item.GetCommandLine();
+                        return command != null && 
+                               (command.Replace("\"", null).TrimEnd().EndsWith(kill, StringComparison.Ordinal) ||
+                                command.TrimEnd().EndsWith(kill, StringComparison.Ordinal));
+                    });
+                    foreach (var item in found)
+                    {
+                        item.Kill();
+                        item.WaitForExit();
+                    }
+                    
+                    return 0;
+                }
+
+                if (query != null)
+                {
+                    var items = Process.GetProcessesByName("iisexpress");
+                    var found = items.Any(item =>
+                    {
+                        var command = item.GetCommandLine();
+                        return command != null && 
+                               (command.Replace("\"", null).TrimEnd().EndsWith(kill, StringComparison.Ordinal) ||
+                                command.TrimEnd().EndsWith(kill, StringComparison.Ordinal));
+                    });
+                    return found ? 1 : 0;
+                }
+                
                 if (url != null)
                 {
                     if (descriptor != null)

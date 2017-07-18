@@ -136,7 +136,7 @@ namespace JexusManager
             LoadIis();
             LoadJexus();
 
-            Text = NativeMethods.IsProcessElevated ? string.Format("{0} (Administrator)", this.Text) : Text;
+            Text = PublicNativeMethods.IsProcessElevated ? string.Format("{0} (Administrator)", this.Text) : Text;
         }
 
         internal ToolStripButton DisconnectButton
@@ -226,7 +226,7 @@ namespace JexusManager
 
         private void LoadIis()
         {
-            if (!NativeMethods.IsProcessElevated)
+            if (!PublicNativeMethods.IsProcessElevated)
             {
                 // IMPORTANT: only elevated can manipulate IIS.
                 return;
