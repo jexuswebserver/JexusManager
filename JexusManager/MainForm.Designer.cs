@@ -203,7 +203,7 @@
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.convertToApplicationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItem40 = new System.Windows.Forms.ToolStripMenuItem();
+            this.manageVirtualDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem42 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
@@ -215,7 +215,7 @@
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem48 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItem51 = new System.Windows.Forms.ToolStripMenuItem();
+            this.manageFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem54 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
@@ -1201,6 +1201,7 @@
             // addApplicationToolStripMenuItem
             // 
             this.actionList1.SetAction(this.addApplicationToolStripMenuItem, this.actCreateApplication);
+            this.addApplicationToolStripMenuItem.AutoToolTip = true;
             this.addApplicationToolStripMenuItem.Image = global::JexusManager.Main.Properties.Resources.application_new_16;
             this.addApplicationToolStripMenuItem.Name = "addApplicationToolStripMenuItem";
             this.addApplicationToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
@@ -1209,7 +1210,6 @@
             // toolStripMenuItem38
             // 
             this.actionList1.SetAction(this.toolStripMenuItem38, this.actCreateApplication);
-            this.toolStripMenuItem38.AutoToolTip = true;
             this.toolStripMenuItem38.Image = global::JexusManager.Main.Properties.Resources.application_new_16;
             this.toolStripMenuItem38.Name = "toolStripMenuItem38";
             this.toolStripMenuItem38.Size = new System.Drawing.Size(205, 22);
@@ -1218,6 +1218,7 @@
             // toolStripMenuItem49
             // 
             this.actionList1.SetAction(this.toolStripMenuItem49, this.actCreateApplication);
+            this.toolStripMenuItem49.AutoToolTip = true;
             this.toolStripMenuItem49.Image = global::JexusManager.Main.Properties.Resources.application_new_16;
             this.toolStripMenuItem49.Name = "toolStripMenuItem49";
             this.toolStripMenuItem49.Size = new System.Drawing.Size(197, 22);
@@ -1226,6 +1227,7 @@
             // exploreToolStripMenuItem1
             // 
             this.actionList1.SetAction(this.exploreToolStripMenuItem1, this.actExplore);
+            this.exploreToolStripMenuItem1.AutoToolTip = true;
             this.exploreToolStripMenuItem1.Image = global::JexusManager.Main.Properties.Resources.explore_16;
             this.exploreToolStripMenuItem1.Name = "exploreToolStripMenuItem1";
             this.exploreToolStripMenuItem1.Size = new System.Drawing.Size(197, 22);
@@ -1234,6 +1236,7 @@
             // editPermissionsToolStripMenuItem1
             // 
             this.actionList1.SetAction(this.editPermissionsToolStripMenuItem1, this.actEditPermissions);
+            this.editPermissionsToolStripMenuItem1.AutoToolTip = true;
             this.editPermissionsToolStripMenuItem1.Name = "editPermissionsToolStripMenuItem1";
             this.editPermissionsToolStripMenuItem1.Size = new System.Drawing.Size(197, 22);
             this.editPermissionsToolStripMenuItem1.Text = "Edit Permissions...";
@@ -1241,6 +1244,7 @@
             // addVirtualDirectoryToolStripMenuItem1
             // 
             this.actionList1.SetAction(this.addVirtualDirectoryToolStripMenuItem1, this.actCreateVirtualDirectory);
+            this.addVirtualDirectoryToolStripMenuItem1.AutoToolTip = true;
             this.addVirtualDirectoryToolStripMenuItem1.Image = global::JexusManager.Main.Properties.Resources.virtual_directory_new_16;
             this.addVirtualDirectoryToolStripMenuItem1.Name = "addVirtualDirectoryToolStripMenuItem1";
             this.addVirtualDirectoryToolStripMenuItem1.Size = new System.Drawing.Size(197, 22);
@@ -1249,6 +1253,7 @@
             // btnBrowseApplication
             // 
             this.actionList1.SetAction(this.btnBrowseApplication, this.actBrowse);
+            this.btnBrowseApplication.AutoToolTip = true;
             this.btnBrowseApplication.Image = global::JexusManager.Main.Properties.Resources.browse_16;
             this.btnBrowseApplication.Name = "btnBrowseApplication";
             this.btnBrowseApplication.Size = new System.Drawing.Size(181, 22);
@@ -1257,6 +1262,7 @@
             // toolStripMenuItem36
             // 
             this.actionList1.SetAction(this.toolStripMenuItem36, this.actExplore);
+            this.toolStripMenuItem36.AutoToolTip = true;
             this.toolStripMenuItem36.Image = global::JexusManager.Main.Properties.Resources.explore_16;
             this.toolStripMenuItem36.Name = "toolStripMenuItem36";
             this.toolStripMenuItem36.Size = new System.Drawing.Size(205, 22);
@@ -1265,6 +1271,7 @@
             // toolStripMenuItem37
             // 
             this.actionList1.SetAction(this.toolStripMenuItem37, this.actEditPermissions);
+            this.toolStripMenuItem37.AutoToolTip = true;
             this.toolStripMenuItem37.Name = "toolStripMenuItem37";
             this.toolStripMenuItem37.Size = new System.Drawing.Size(205, 22);
             this.toolStripMenuItem37.Text = "Edit Permissions...";
@@ -1272,6 +1279,7 @@
             // toolStripMenuItem39
             // 
             this.actionList1.SetAction(this.toolStripMenuItem39, this.actCreateVirtualDirectory);
+            this.toolStripMenuItem39.AutoToolTip = true;
             this.toolStripMenuItem39.Image = global::JexusManager.Main.Properties.Resources.virtual_directory_new_16;
             this.toolStripMenuItem39.Name = "toolStripMenuItem39";
             this.toolStripMenuItem39.Size = new System.Drawing.Size(205, 22);
@@ -1280,6 +1288,7 @@
             // toolStripMenuItem41
             // 
             this.actionList1.SetAction(this.toolStripMenuItem41, this.actBrowse);
+            this.toolStripMenuItem41.AutoToolTip = true;
             this.toolStripMenuItem41.Image = global::JexusManager.Main.Properties.Resources.browse_16;
             this.toolStripMenuItem41.Name = "toolStripMenuItem41";
             this.toolStripMenuItem41.Size = new System.Drawing.Size(181, 22);
@@ -1288,6 +1297,7 @@
             // toolStripMenuItem46
             // 
             this.actionList1.SetAction(this.toolStripMenuItem46, this.actExplore);
+            this.toolStripMenuItem46.AutoToolTip = true;
             this.toolStripMenuItem46.Image = global::JexusManager.Main.Properties.Resources.explore_16;
             this.toolStripMenuItem46.Name = "toolStripMenuItem46";
             this.toolStripMenuItem46.Size = new System.Drawing.Size(197, 22);
@@ -1296,6 +1306,7 @@
             // toolStripMenuItem47
             // 
             this.actionList1.SetAction(this.toolStripMenuItem47, this.actEditPermissions);
+            this.toolStripMenuItem47.AutoToolTip = true;
             this.toolStripMenuItem47.Name = "toolStripMenuItem47";
             this.toolStripMenuItem47.Size = new System.Drawing.Size(197, 22);
             this.toolStripMenuItem47.Text = "Edit Permissions...";
@@ -1303,6 +1314,7 @@
             // toolStripMenuItem50
             // 
             this.actionList1.SetAction(this.toolStripMenuItem50, this.actCreateVirtualDirectory);
+            this.toolStripMenuItem50.AutoToolTip = true;
             this.toolStripMenuItem50.Image = global::JexusManager.Main.Properties.Resources.virtual_directory_new_16;
             this.toolStripMenuItem50.Name = "toolStripMenuItem50";
             this.toolStripMenuItem50.Size = new System.Drawing.Size(197, 22);
@@ -1311,9 +1323,10 @@
             // toolStripMenuItem52
             // 
             this.actionList1.SetAction(this.toolStripMenuItem52, this.actBrowse);
+            this.toolStripMenuItem52.AutoToolTip = true;
             this.toolStripMenuItem52.Image = global::JexusManager.Main.Properties.Resources.browse_16;
             this.toolStripMenuItem52.Name = "toolStripMenuItem52";
-            this.toolStripMenuItem52.Size = new System.Drawing.Size(112, 22);
+            this.toolStripMenuItem52.Size = new System.Drawing.Size(152, 22);
             this.toolStripMenuItem52.Text = "Browse";
             // 
             // cmsIis
@@ -1584,7 +1597,7 @@
             this.toolStripMenuItem38,
             this.toolStripMenuItem39,
             this.toolStripSeparator4,
-            this.toolStripMenuItem40,
+            this.manageVirtualDirectoryToolStripMenuItem,
             this.toolStripSeparator6,
             this.toolStripMenuItem43,
             this.toolStripMenuItem44,
@@ -1610,15 +1623,15 @@
             this.toolStripSeparator4.Name = "toolStripSeparator4";
             this.toolStripSeparator4.Size = new System.Drawing.Size(202, 6);
             // 
-            // toolStripMenuItem40
+            // manageVirtualDirectoryToolStripMenuItem
             // 
-            this.toolStripMenuItem40.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.manageVirtualDirectoryToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem41,
             this.toolStripSeparator5,
             this.toolStripMenuItem42});
-            this.toolStripMenuItem40.Name = "toolStripMenuItem40";
-            this.toolStripMenuItem40.Size = new System.Drawing.Size(205, 22);
-            this.toolStripMenuItem40.Text = "Manage Virtual Directory";
+            this.manageVirtualDirectoryToolStripMenuItem.Name = "manageVirtualDirectoryToolStripMenuItem";
+            this.manageVirtualDirectoryToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.manageVirtualDirectoryToolStripMenuItem.Text = "Manage Virtual Directory";
             // 
             // toolStripSeparator5
             // 
@@ -1675,13 +1688,13 @@
             this.toolStripMenuItem49,
             this.toolStripMenuItem50,
             this.toolStripSeparator9,
-            this.toolStripMenuItem51,
+            this.manageFolderToolStripMenuItem,
             this.toolStripSeparator11,
             this.toolStripMenuItem54,
             this.toolStripSeparator12,
             this.toolStripMenuItem56});
             this.cmsPhysicalDirectory.Name = "cmsPhysicalDirectory";
-            this.cmsPhysicalDirectory.Size = new System.Drawing.Size(198, 204);
+            this.cmsPhysicalDirectory.Size = new System.Drawing.Size(198, 226);
             // 
             // toolStripSeparator8
             // 
@@ -1700,13 +1713,13 @@
             this.toolStripSeparator9.Name = "toolStripSeparator9";
             this.toolStripSeparator9.Size = new System.Drawing.Size(194, 6);
             // 
-            // toolStripMenuItem51
+            // manageFolderToolStripMenuItem
             // 
-            this.toolStripMenuItem51.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.manageFolderToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem52});
-            this.toolStripMenuItem51.Name = "toolStripMenuItem51";
-            this.toolStripMenuItem51.Size = new System.Drawing.Size(197, 22);
-            this.toolStripMenuItem51.Text = "Manage Folder";
+            this.manageFolderToolStripMenuItem.Name = "manageFolderToolStripMenuItem";
+            this.manageFolderToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.manageFolderToolStripMenuItem.Text = "Manage Folder";
             // 
             // toolStripSeparator11
             // 
@@ -1952,7 +1965,7 @@
         private ToolStripMenuItem toolStripMenuItem38;
         private ToolStripMenuItem toolStripMenuItem39;
         private ToolStripSeparator toolStripSeparator4;
-        private ToolStripMenuItem toolStripMenuItem40;
+        private ToolStripMenuItem manageVirtualDirectoryToolStripMenuItem;
         private ToolStripMenuItem toolStripMenuItem41;
         private ToolStripSeparator toolStripSeparator5;
         private ToolStripMenuItem toolStripMenuItem42;
@@ -1969,7 +1982,7 @@
         private ToolStripMenuItem toolStripMenuItem49;
         private ToolStripMenuItem toolStripMenuItem50;
         private ToolStripSeparator toolStripSeparator9;
-        private ToolStripMenuItem toolStripMenuItem51;
+        private ToolStripMenuItem manageFolderToolStripMenuItem;
         private ToolStripMenuItem toolStripMenuItem52;
         private ToolStripSeparator toolStripSeparator11;
         private ToolStripMenuItem toolStripMenuItem54;

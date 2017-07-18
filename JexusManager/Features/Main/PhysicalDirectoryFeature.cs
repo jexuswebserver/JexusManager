@@ -29,6 +29,7 @@ namespace JexusManager.Features.Main
 
     using Binding = Microsoft.Web.Administration.Binding;
     using Module = Microsoft.Web.Management.Client.Module;
+    using System.Linq;
 
     /// <summary>
     /// Description of DefaultDocumentFeature.
@@ -49,19 +50,23 @@ namespace JexusManager.Features.Main
                 var result = new ArrayList();
                 result.Add(new MethodTaskItem("Explore", "Explore", string.Empty, string.Empty, Resources.explore_16).SetUsage());
                 result.Add(new MethodTaskItem("Permissions", "Edit Permissions...", string.Empty).SetUsage());
-                result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
-                var manageGroup = new GroupTaskItem(string.Empty, "Manage Folder", string.Empty, true);
-                result.Add(manageGroup);
-                manageGroup.Items.Add(new TextTaskItem("Browse Folder", string.Empty, true));
-                foreach (Binding binding in _owner.SiteBindings)
+
+                if (_owner.SiteBindings.Any(item => item.CanBrowse))
                 {
-                    if (binding.CanBrowse)
+                    result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    var manageGroup = new GroupTaskItem(string.Empty, "Manage Folder", string.Empty, true);
+                    result.Add(manageGroup);
+                    manageGroup.Items.Add(new TextTaskItem("Browse Folder", string.Empty, true));
+                    foreach (Binding binding in _owner.SiteBindings)
                     {
-                        var uri = binding.ToUri();
-                        manageGroup.Items.Add(
-                            new MethodTaskItem("Browse", $"Browse {binding.ToShortString()}",
-                                string.Empty, string.Empty,
-                                Resources.browse_16, uri).SetUsage());
+                        if (binding.CanBrowse)
+                        {
+                            var uri = binding.ToUri();
+                            manageGroup.Items.Add(
+                                new MethodTaskItem("Browse", $"Browse {binding.ToShortString()}",
+                                    string.Empty, string.Empty,
+                                    Resources.browse_16, uri).SetUsage());
+                        }
                     }
                 }
 

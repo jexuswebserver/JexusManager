@@ -29,6 +29,7 @@ namespace JexusManager.Features.Main
 
     using Binding = Microsoft.Web.Administration.Binding;
     using Module = Microsoft.Web.Management.Client.Module;
+    using System.Linq;
 
     /// <summary>
     /// Description of DefaultDocumentFeature.
@@ -70,41 +71,45 @@ namespace JexusManager.Features.Main
                     result.Add(new MethodTaskItem("Applications", "View Applications", string.Empty).SetUsage());
                     result.Add(
                         new MethodTaskItem("VirtualDirectories", "View Virtual Directories", string.Empty).SetUsage());
-                    result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
-                    var manageGroup = new GroupTaskItem(string.Empty, "Manage Website", string.Empty, true);
-                    result.Add(manageGroup);
-                    manageGroup.Items.Add(
-                        new MethodTaskItem("Restart", "Restart", string.Empty, string.Empty, Resources.restart_16)
-                            .SetUsage(!_owner.IsBusy));
-                    manageGroup.Items.Add(
-                        new MethodTaskItem("Start", "Start", string.Empty, string.Empty, Resources.start_16).SetUsage(
-                            !_owner.IsBusy && _owner.SelectedItem.State != ObjectState.Started));
-                    manageGroup.Items.Add(new MethodTaskItem("Stop", "Stop", string.Empty, string.Empty,
-                        Resources.stop_16)
-                        .SetUsage(
-                            !_owner.IsBusy && _owner.SelectedItem.State == ObjectState.Started));
-                    manageGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
-                    manageGroup.Items.Add(new TextTaskItem("Browse Website", string.Empty, true));
-                    foreach (Binding binding in _owner.SelectedItem.Bindings)
-                    {
-                        if (binding.CanBrowse)
-                        {
-                            var uri = binding.ToUri();
-                            manageGroup.Items.Add(
-                                new MethodTaskItem("Browse", $"Browse {uri}", string.Empty,
-                                    string.Empty,
-                                    Resources.browse_16, uri).SetUsage());
-                        }
-                    }
 
-                    manageGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
-                    manageGroup.Items.Add(
-                        new MethodTaskItem("Advanced", "Advanced Settings...", string.Empty).SetUsage());
-                    manageGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
-                    manageGroup.Items.Add(new TextTaskItem("Configure", string.Empty, true));
-                    manageGroup.Items.Add(
-                        new MethodTaskItem("Tracing", "Failed Request Tracing...", string.Empty).SetUsage());
-                    manageGroup.Items.Add(new MethodTaskItem("Limits", "Limits...", string.Empty).SetUsage());
+                    if (_owner.SelectedItem.Bindings.Any(item => item.CanBrowse))
+                    {
+                        result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                        var manageGroup = new GroupTaskItem(string.Empty, "Manage Website", string.Empty, true);
+                        result.Add(manageGroup);
+                        manageGroup.Items.Add(
+                            new MethodTaskItem("Restart", "Restart", string.Empty, string.Empty, Resources.restart_16)
+                                .SetUsage(!_owner.IsBusy));
+                        manageGroup.Items.Add(
+                            new MethodTaskItem("Start", "Start", string.Empty, string.Empty, Resources.start_16).SetUsage(
+                                !_owner.IsBusy && _owner.SelectedItem.State != ObjectState.Started));
+                        manageGroup.Items.Add(new MethodTaskItem("Stop", "Stop", string.Empty, string.Empty,
+                            Resources.stop_16)
+                            .SetUsage(
+                                !_owner.IsBusy && _owner.SelectedItem.State == ObjectState.Started));
+                        manageGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                        manageGroup.Items.Add(new TextTaskItem("Browse Website", string.Empty, true));
+                        foreach (Binding binding in _owner.SelectedItem.Bindings)
+                        {
+                            if (binding.CanBrowse)
+                            {
+                                var uri = binding.ToUri();
+                                manageGroup.Items.Add(
+                                    new MethodTaskItem("Browse", $"Browse {uri}", string.Empty,
+                                        string.Empty,
+                                        Resources.browse_16, uri).SetUsage());
+                            }
+                        }
+
+                        manageGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                        manageGroup.Items.Add(
+                            new MethodTaskItem("Advanced", "Advanced Settings...", string.Empty).SetUsage());
+                        manageGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                        manageGroup.Items.Add(new TextTaskItem("Configure", string.Empty, true));
+                        manageGroup.Items.Add(
+                            new MethodTaskItem("Tracing", "Failed Request Tracing...", string.Empty).SetUsage());
+                        manageGroup.Items.Add(new MethodTaskItem("Limits", "Limits...", string.Empty).SetUsage());
+                    }
                 }
 
                 return result.ToArray(typeof(TaskItem)) as TaskItem[];

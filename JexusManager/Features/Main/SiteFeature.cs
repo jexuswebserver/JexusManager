@@ -64,42 +64,46 @@ namespace JexusManager.Features.Main
                 result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
                 result.Add(new MethodTaskItem("Applications", "View Applications", string.Empty).SetUsage());
                 result.Add(new MethodTaskItem("VirtualDirectories", "View Virtual Directories", string.Empty).SetUsage());
-                result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
-                var manageGroup = new GroupTaskItem(string.Empty, "Manage Website", string.Empty, true);
-                result.Add(manageGroup);
-                manageGroup.Items.Add(
-                    new MethodTaskItem("Restart", "Restart", string.Empty, string.Empty, Resources.restart_16).SetUsage(!_owner.IsBusy));
-                manageGroup.Items.Add(
-                    new MethodTaskItem("Start", "Start", string.Empty, string.Empty, Resources.start_16).SetUsage(
-                        !_owner.IsBusy && !_owner.IsStarted));
-                manageGroup.Items.Add(new MethodTaskItem("Stop", "Stop", string.Empty, string.Empty, Resources.stop_16)
-                    .SetUsage(
-                        !_owner.IsBusy && _owner.IsStarted));
-                manageGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
-                manageGroup.Items.Add(new TextTaskItem("Browse Website", string.Empty, true));
-                foreach (Binding binding in _owner.SiteBindings)
+
+                if (_owner.SiteBindings.Any(item => item.CanBrowse))
                 {
-                    if (binding.CanBrowse)
+                    result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    var manageGroup = new GroupTaskItem(string.Empty, "Manage Website", string.Empty, true);
+                    result.Add(manageGroup);
+                    manageGroup.Items.Add(
+                        new MethodTaskItem("Restart", "Restart", string.Empty, string.Empty, Resources.restart_16).SetUsage(!_owner.IsBusy));
+                    manageGroup.Items.Add(
+                        new MethodTaskItem("Start", "Start", string.Empty, string.Empty, Resources.start_16).SetUsage(
+                            !_owner.IsBusy && !_owner.IsStarted));
+                    manageGroup.Items.Add(new MethodTaskItem("Stop", "Stop", string.Empty, string.Empty, Resources.stop_16)
+                        .SetUsage(
+                            !_owner.IsBusy && _owner.IsStarted));
+                    manageGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    manageGroup.Items.Add(new TextTaskItem("Browse Website", string.Empty, true));
+                    foreach (Binding binding in _owner.SiteBindings)
                     {
-                        manageGroup.Items.Add(
-                            new MethodTaskItem("Browse", string.Format("Browse {0}", binding.ToShortString()),
-                                string.Empty, string.Empty,
-                                Resources.browse_16, binding.ToUri()).SetUsage());
+                        if (binding.CanBrowse)
+                        {
+                            manageGroup.Items.Add(
+                                new MethodTaskItem("Browse", string.Format("Browse {0}", binding.ToShortString()),
+                                    string.Empty, string.Empty,
+                                    Resources.browse_16, binding.ToUri()).SetUsage());
+                        }
                     }
-                }
 
-                manageGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
-                manageGroup.Items.Add(new MethodTaskItem("Advanced", "Advanced Settings...", string.Empty).SetUsage());
-                manageGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
-                manageGroup.Items.Add(new TextTaskItem("Configure", string.Empty, true));
-                manageGroup.Items.Add(new MethodTaskItem("Tracing", "Failed Request Tracing...", string.Empty).SetUsage());
-                manageGroup.Items.Add(new MethodTaskItem("Limits", "Limits...", string.Empty).SetUsage());
+                    manageGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    manageGroup.Items.Add(new MethodTaskItem("Advanced", "Advanced Settings...", string.Empty).SetUsage());
+                    manageGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    manageGroup.Items.Add(new TextTaskItem("Configure", string.Empty, true));
+                    manageGroup.Items.Add(new MethodTaskItem("Tracing", "Failed Request Tracing...", string.Empty).SetUsage());
+                    manageGroup.Items.Add(new MethodTaskItem("Limits", "Limits...", string.Empty).SetUsage());
 
-                if (_owner.HasProject)
-                {
-                    manageGroup.Items.Add (new MethodTaskItem (string.Empty, "-", string.Empty).SetUsage ());
-                    manageGroup.Items.Add (new TextTaskItem ("Troubleshooting", string.Empty, true));
-                    manageGroup.Items.Add (new MethodTaskItem ("FixProject", "Project Diagnostics", string.Empty).SetUsage ());
+                    if (_owner.HasProject)
+                    {
+                        manageGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                        manageGroup.Items.Add(new TextTaskItem("Troubleshooting", string.Empty, true));
+                        manageGroup.Items.Add(new MethodTaskItem("FixProject", "Project Diagnostics", string.Empty).SetUsage());
+                    }
                 }
 
                 return result.ToArray(typeof(TaskItem)) as TaskItem[];

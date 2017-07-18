@@ -30,6 +30,7 @@ namespace JexusManager.Features.Main
 
     using Binding = Microsoft.Web.Administration.Binding;
     using Module = Microsoft.Web.Management.Client.Module;
+    using System.Linq;
 
     /// <summary>
     /// Description of DefaultDocumentFeature.
@@ -54,25 +55,30 @@ namespace JexusManager.Features.Main
                 result.Add(
                     new MethodTaskItem("Basic", "Basic Settings...", string.Empty, string.Empty,
                         Resources.basic_settings_16).SetUsage());
-                result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
-                var manageGroup = new GroupTaskItem(string.Empty, "Manage Virtual Directory", string.Empty, true);
-                result.Add(manageGroup);
-                manageGroup.Items.Add(new TextTaskItem("Browse Virtual Directory", string.Empty, true));
-                foreach (Binding binding in _owner.SiteBindings)
+
+                if (_owner.SiteBindings.Any(item => item.CanBrowse))
                 {
-                    if (binding.CanBrowse)
+                    result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    var manageGroup = new GroupTaskItem(string.Empty, "Manage Virtual Directory", string.Empty, true);
+                    result.Add(manageGroup);
+                    manageGroup.Items.Add(new TextTaskItem("Browse Virtual Directory", string.Empty, true));
+                    foreach (Binding binding in _owner.SiteBindings)
                     {
-                        var uri = binding.ToUri();
-                        manageGroup.Items.Add(
-                            new MethodTaskItem("Browse", $"Browse {binding.ToShortString()}", string.Empty,
-                                string.Empty,
-                                Resources.browse_16, uri).SetUsage());
+                        if (binding.CanBrowse)
+                        {
+                            var uri = binding.ToUri();
+                            manageGroup.Items.Add(
+                                new MethodTaskItem("Browse", $"Browse {binding.ToShortString()}", string.Empty,
+                                    string.Empty,
+                                    Resources.browse_16, uri).SetUsage());
+                        }
                     }
+
+                    manageGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    manageGroup.Items.Add(new TextTaskItem("Edit Virtual Directory", string.Empty, true));
+                    manageGroup.Items.Add(new MethodTaskItem("Advanced", "Advanced Settings...", string.Empty).SetUsage());
                 }
 
-                manageGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
-                manageGroup.Items.Add(new TextTaskItem("Edit Virtual Directory", string.Empty, true));
-                manageGroup.Items.Add(new MethodTaskItem("Advanced", "Advanced Settings...", string.Empty).SetUsage());
                 return result.ToArray(typeof(TaskItem)) as TaskItem[];
             }
 

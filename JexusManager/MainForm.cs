@@ -484,16 +484,64 @@ namespace JexusManager
         {
             var node = ((ManagerTreeNode)e.Node);
             var serverNode = node as ServerTreeNode;
-            if (serverNode != null && serverNode.IsBusy)
+            actUp.Enabled = !(serverNode != null || node is HomePageTreeNode);
+            if (serverNode != null)
             {
+                if (serverNode.IsBusy)
+                {
+                    return;
+                }
+
+                actDisconnect.Enabled = serverNode != null && !serverNode.IsBusy && !serverNode.Ignore;
+                EnableServerMenuItems(serverNode?.ServerManager != null);
+                node.LoadPanels(this, _serviceContainer, _providers);
+                ShowInfo("Ready");
                 return;
             }
 
-            actDisconnect.Enabled = serverNode != null && !serverNode.IsBusy && !serverNode.Ignore;
-            EnableServerMenuItems(serverNode?.ServerManager != null);
-            actUp.Enabled = !(serverNode != null || node is HomePageTreeNode);
-            node.LoadPanels(this, _serviceContainer, _providers);
-            ShowInfo("Ready");
+            var siteNode = node as SiteTreeNode;
+            if (siteNode != null)
+            {
+                var canBrowse = siteNode.Site.Bindings.Any(binding => binding.CanBrowse);
+                toolStripMenuItem12.Visible = canBrowse;
+                manageWebsiteToolStripMenuItem.Visible = canBrowse;
+                node.LoadPanels(this, _serviceContainer, _providers);
+                ShowInfo("Ready");
+                return;
+            }
+
+            var appNode = node as ApplicationTreeNode;
+            if (appNode != null)
+            {
+                var canBrowse = appNode.Application.Site.Bindings.Any(binding => binding.CanBrowse);
+                toolStripMenuItem15.Visible = canBrowse;
+                manageApplicationToolStripMenuItem.Visible = canBrowse;
+                node.LoadPanels(this, _serviceContainer, _providers);
+                ShowInfo("Ready");
+                return;
+            }
+
+            var vdirNode = node as VirtualDirectoryTreeNode;
+            if (vdirNode != null)
+            {
+                var canBrowse = vdirNode.VirtualDirectory.Application.Site.Bindings.Any(binding => binding.CanBrowse);
+                toolStripSeparator4.Visible = canBrowse;
+                manageVirtualDirectoryToolStripMenuItem.Visible = canBrowse;
+                node.LoadPanels(this, _serviceContainer, _providers);
+                ShowInfo("Ready");
+                return;
+            }
+
+            var physNode = node as PhysicalDirectoryTreeNode;
+            if (physNode != null)
+            {
+                var canBrowse = physNode.PhysicalDirectory.Application.Site.Bindings.Any(binding => binding.CanBrowse);
+                toolStripSeparator9.Visible = canBrowse;
+                manageFolderToolStripMenuItem.Visible = canBrowse;
+                node.LoadPanels(this, _serviceContainer, _providers);
+                ShowInfo("Ready");
+                return;
+            }
         }
 
         internal void EnableServerMenuItems(bool enabled)
