@@ -542,6 +542,9 @@ namespace JexusManager
                 ShowInfo("Ready");
                 return;
             }
+
+            node.LoadPanels(this, _serviceContainer, _providers);
+            ShowInfo("Ready");
         }
 
         internal void EnableServerMenuItems(bool enabled)
