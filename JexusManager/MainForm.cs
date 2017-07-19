@@ -798,8 +798,16 @@ namespace JexusManager
 
         private void treeView1_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            treeView1.SelectedNode = null;
-            treeView1.SelectedNode = e.Node;
+            if (treeView1.SelectedNode != e.Node)
+            {
+                treeView1.SelectedNode = null;
+                treeView1.SelectedNode = e.Node;
+            }
+
+            if (GetCurrentData().ServerManager == null && e.Button == MouseButtons.Right)
+            {
+                treeView1_NodeMouseDoubleClick(sender, e);
+            }
         }
 
         private async void btnRemoveApplication_Click(object sender, EventArgs e)
