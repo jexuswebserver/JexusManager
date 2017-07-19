@@ -807,7 +807,7 @@ namespace JexusManager
                 treeView1.SelectedNode = e.Node;
             }
 
-            if (GetCurrentData().ServerManager == null && e.Button == MouseButtons.Right)
+            if (GetCurrentData()?.ServerManager == null && e.Button == MouseButtons.Right)
             {
                 treeView1_NodeMouseDoubleClick(sender, e);
             }
