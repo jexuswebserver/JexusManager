@@ -85,6 +85,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BindingExtensions.cs" />
     <Compile Include="Features\Main\ApplicationFeature.cs" />
     <Compile Include="Features\Main\ApplicationPage.cs">
       <SubType>UserControl</SubType>

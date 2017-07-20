@@ -50,7 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationExtensions.cs" />
-    <Compile Include="BindingExtensions.cs" />
+    <Compile Include="BindingUtility.cs" />
     <Compile Include="CertificateInfo.cs" />
     <Compile Include="ConfigurationElementExtensions.cs" />
     <Compile Include="ConfigurationSectionExtensions.cs" />

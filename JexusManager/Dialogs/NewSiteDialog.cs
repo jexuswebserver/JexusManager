@@ -191,7 +191,7 @@ namespace JexusManager.Dialogs
                 return;
             }
 
-            var toElevate = BindingExtensions.Verify(cbType.Text, cbAddress.Text, txtPort.Text, cbCertificates.SelectedItem as CertificateInfo);
+            var toElevate = BindingUtility.Verify(cbType.Text, cbAddress.Text, txtPort.Text, cbCertificates.SelectedItem as CertificateInfo);
             btnOK.Enabled = toElevate != null && !string.IsNullOrWhiteSpace(txtName.Text)
                             && !string.IsNullOrWhiteSpace(txtPath.Text);
             if (!toElevate.HasValue || !toElevate.Value)

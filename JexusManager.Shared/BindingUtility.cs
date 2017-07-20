@@ -17,7 +17,7 @@ namespace Microsoft.Web.Administration
 
     using Org.BouncyCastle.Utilities.Encoders;
 
-    public static class BindingExtensions
+    public static class BindingUtility
     {
         private const string AppIdIisExpress = "214124cd-d05b-4309-9af9-9caa44b2b74a";
 
@@ -295,20 +295,6 @@ namespace Microsoft.Web.Administration
 
             // replace mapping
             return true;
-        }
-
-        public static string ToShortString(this Binding binding)
-        {
-            return string.IsNullOrEmpty(binding.Host)
-                ? string.Format("{0}:{1} ({2})",
-                    binding.EndPoint.Address.AddressToDisplay(),
-                    binding.EndPoint.Port,
-                    binding.Protocol)
-                : string.Format("{3} on {0}:{1} ({2})",
-                    binding.EndPoint.Address.AddressToDisplay(),
-                    binding.EndPoint.Port,
-                    binding.Protocol,
-                    binding.Host);
         }
 
         public static string GetAppName(string appId)

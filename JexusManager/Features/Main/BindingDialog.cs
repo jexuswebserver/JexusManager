@@ -183,7 +183,7 @@ namespace JexusManager.Features.Main
                 return;
             }
 
-            var toElevate = BindingExtensions.Verify(cbType.Text, cbAddress.Text, txtPort.Text, cbCertificates.SelectedItem as CertificateInfo);
+            var toElevate = BindingUtility.Verify(cbType.Text, cbAddress.Text, txtPort.Text, cbCertificates.SelectedItem as CertificateInfo);
             btnOK.Enabled = toElevate != null;
             if (!toElevate.HasValue || !toElevate.Value)
             {
