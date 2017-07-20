@@ -164,6 +164,12 @@ namespace Microsoft.Web.Administration
         internal abstract Task StopAsync(Site site);
         internal abstract Task StartAsync(Site site);
 
+        internal async virtual Task RestartAsync(Site site)
+        {
+            await StopAsync(site);
+            await StartAsync(site);
+        }
+
         protected virtual void PreInitialize()
         {
         }

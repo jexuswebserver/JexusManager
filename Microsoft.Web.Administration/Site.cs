@@ -174,8 +174,7 @@ namespace Microsoft.Web.Administration
 
         internal async Task RestartAsync()
         {
-            await StopAsync();
-            await StartAsync();
+            await Server.RestartAsync(this);
         }
 
         internal async Task<bool> GetStateAsync()

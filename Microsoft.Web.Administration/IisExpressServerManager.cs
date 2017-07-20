@@ -53,6 +53,11 @@ namespace Microsoft.Web.Administration
 
         internal override async Task StartAsync(Site site)
         {
+            StartInner(site, false);
+        }
+
+        private void StartInner(Site site, bool restart)
+        {
             var name = site.Applications[0].ApplicationPoolName;
             var pool = ApplicationPools.FirstOrDefault(item => item.Name == name);
             var fileName =
@@ -79,8 +84,9 @@ namespace Microsoft.Web.Administration
                     ? "runas"
                     : null;
                 start.FileName = "cmd";
+                var extra = restart ? "/r" : string.Empty;
                 start.Arguments =
-                    $"/c \"\"{Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe")}\" /launcher:\"{fileName}\" /config:\"{site.FileContext.FileName}\" /siteId:{site.Id} /resultFile:\"{temp}\"\"";
+                    $"/c \"\"{Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe")}\" /launcher:\"{fileName}\" /config:\"{site.FileContext.FileName}\" /siteId:{site.Id} /resultFile:\"{temp}\"\" {extra}";
                 start.CreateNoWindow = true;
                 start.WindowStyle = ProcessWindowStyle.Hidden;
                 InjectEnvironmentVariables(site, start);
@@ -202,6 +208,11 @@ namespace Microsoft.Web.Administration
             }
             catch (Win32Exception)
             {}
+        }
+
+        internal override async Task RestartAsync(Site site)
+        {
+            StartInner(site, true);
         }
 
         internal override IEnumerable<string> GetSchemaFiles()

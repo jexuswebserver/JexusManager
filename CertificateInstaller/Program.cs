@@ -36,6 +36,7 @@ namespace CertificateInstaller
             string launcher = null;
             string resultFile = null;
             bool kill = false;
+            bool restart = false;
 
             OptionSet p =
                 new OptionSet().Add("f:", "File name", delegate (string v) { if (v != null) p12File = v; })
@@ -69,6 +70,10 @@ namespace CertificateInstaller
                     .Add("k", "Kill Process", delegate(string v)
                     {
                         if (v != null) kill = true;
+                    })
+                    .Add("r", "Restart Site", delegate (string v)
+                    {
+                        if (v != null) restart = true;
                     });
 
             if (args.Length == 0)
@@ -82,7 +87,7 @@ namespace CertificateInstaller
             {
                 extra = p.Parse(args);
             }
-            catch (OptionException ex)
+            catch (OptionException)
             {
                 return -1;
             }
@@ -99,6 +104,22 @@ namespace CertificateInstaller
                 {
                     if (resultFile != null)
                     {
+                        if (restart)
+                        {
+                            var toKill = $"/config:\"{config}\" /siteid:{siteId} /systray:false /trace:error";
+                            var items = Process.GetProcessesByName("iisexpress");
+                            var found = items.Where(item =>
+                            {
+                                var command = item.GetCommandLine();
+                                return command != null && command.TrimEnd().EndsWith(toKill, StringComparison.Ordinal);
+                            });
+                            foreach (var item in found)
+                            {
+                                item.Kill();
+                                item.WaitForExit();
+                            }
+                        }
+
                         // start a site.
                         var process = new Process();
                         process.StartInfo.FileName = launcher;
