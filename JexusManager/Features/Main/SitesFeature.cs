@@ -359,7 +359,7 @@ namespace JexusManager.Features.Main
             Process.Start(uri.ToString());
         }
 
-        private async void Stop()
+        private void Stop()
         {
             if (SelectedItem == null)
             {
@@ -375,12 +375,12 @@ namespace JexusManager.Features.Main
 
             IsBusy = true;
             OnSitesSettingsSaved();
-            await SelectedItem.StopAsync();
+            AsyncHelper.RunSync(() => SelectedItem.StopAsync());
             IsBusy = false;
             OnSitesSettingsSaved();
         }
 
-        private async void Start()
+        private void Start()
         {
             if (SelectedItem == null)
             {
@@ -398,7 +398,7 @@ namespace JexusManager.Features.Main
             OnSitesSettingsSaved();
             try
             {
-                await SelectedItem.StartAsync();
+                AsyncHelper.RunSync(() => SelectedItem.StartAsync());
             }
             catch (Exception ex)
             {
@@ -409,7 +409,7 @@ namespace JexusManager.Features.Main
             OnSitesSettingsSaved();
         }
 
-        private async void Restart()
+        private void Restart()
         {
             if (SelectedItem == null)
             {
@@ -427,7 +427,7 @@ namespace JexusManager.Features.Main
             OnSitesSettingsSaved();
             try
             {
-                await SelectedItem.RestartAsync();
+                AsyncHelper.RunSync(() => SelectedItem.RestartAsync());
             }
             catch (Exception ex)
             {

@@ -187,24 +187,24 @@ namespace JexusManager.Features.Main
             return false;
         }
 
-        private async void Add()
+        private void Add()
         {
             var dialog = new ApplicationPoolBasicSettingsDialog(Module, null, Items.Parent.ApplicationPoolDefaults, Items);
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                await Items.Parent.CommitChangesAsync();
+                Items.Parent.CommitChanges();
             }
 
             SelectedItem = dialog.Pool;
             OnApplicationPoolsSettingsSaved();
         }
 
-        private async void Set()
+        private void Set()
         {
             var dialog = new ApplicationPoolDefaultsSettingsDialog(Module, Items.Parent.ApplicationPoolDefaults);
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                await Items.Parent.CommitChangesAsync();
+                Items.Parent.CommitChanges();
             }
         }
 
@@ -245,12 +245,12 @@ namespace JexusManager.Features.Main
         {
         }
 
-        private async void Advanced()
+        private void Advanced()
         {
             var dialog = new ApplicationPoolAdvancedSettingsDialog(Module, SelectedItem);
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                await SelectedItem.Parent.Parent.CommitChangesAsync();
+                SelectedItem.Parent.Parent.CommitChanges();
             }
         }
 
@@ -300,7 +300,7 @@ namespace JexusManager.Features.Main
         {
         }
 
-        internal async void Basic()
+        internal void Basic()
         {
             if (SelectedItem == null)
             {
@@ -310,7 +310,7 @@ namespace JexusManager.Features.Main
             var dialog = new ApplicationPoolBasicSettingsDialog(Module, SelectedItem, null, Items);
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                await SelectedItem.Parent.Parent.CommitChangesAsync();
+                SelectedItem.Parent.Parent.CommitChanges();
             }
 
             OnApplicationPoolsSettingsSaved();

@@ -10,6 +10,8 @@
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 
+using System.Threading.Tasks;
+
 namespace JexusManager.Features.Main
 {
     using System;
@@ -221,11 +223,11 @@ namespace JexusManager.Features.Main
             return _taskList ?? (_taskList = new FeatureTaskList(this));
         }
 
-        public async void Load()
+        public void Load()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var site = service.Site;
-            IsStarted = await site.GetStateAsync();
+            IsStarted = AsyncHelper.RunSync(() => site.GetStateAsync());
             HasProject = SiteHasProject(site);
             OnSiteSettingsSaved();
         }
@@ -279,19 +281,19 @@ namespace JexusManager.Features.Main
             Process.Start(uri.ToString());
         }
 
-        private async void Stop()
+        private void Stop()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var site = service.Site;
             IsBusy = true;
             OnSiteSettingsSaved();
-            await site.StopAsync();
+            site.Stop();
             IsStarted = false;
             IsBusy = false;
             OnSiteSettingsSaved();
         }
 
-        private async void Start()
+        private void Start()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
@@ -300,7 +302,7 @@ namespace JexusManager.Features.Main
             OnSiteSettingsSaved();
             try
             {
-                await site.StartAsync();
+                site.Start();
             }
             catch (Exception ex)
             {
@@ -312,7 +314,7 @@ namespace JexusManager.Features.Main
             OnSiteSettingsSaved();
         }
 
-        private async void Restart()
+        private void Restart()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
@@ -321,7 +323,7 @@ namespace JexusManager.Features.Main
             OnSiteSettingsSaved();
             try
             {
-                await site.RestartAsync();
+                AsyncHelper.RunSync(() => site.RestartAsync());
             }
             catch (Exception ex)
             {

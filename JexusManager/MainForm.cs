@@ -492,8 +492,8 @@ namespace JexusManager
                     return;
                 }
 
-                actDisconnect.Enabled = serverNode != null && !serverNode.IsBusy && !serverNode.Ignore;
-                EnableServerMenuItems(serverNode?.ServerManager != null);
+                actDisconnect.Enabled = !serverNode.IsBusy && !serverNode.Ignore;
+                EnableServerMenuItems(serverNode.ServerManager != null);
                 node.LoadPanels(this, _serviceContainer, _providers);
                 ShowInfo("Ready");
                 return;
