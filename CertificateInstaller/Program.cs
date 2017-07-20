@@ -14,6 +14,7 @@ namespace CertificateInstaller
     using System.Security.Cryptography.X509Certificates;
     using Microsoft.Web.Administration;
     using Mono.Options;
+    using System.IO;
 
     internal class Program
     {
@@ -30,8 +31,11 @@ namespace CertificateInstaller
             string host = null;
             string url = null;
             string descriptor = null;
-            string kill = null;
-            string query = null;
+            string config = null;
+            string siteId = null;
+            string launcher = null;
+            string resultFile = null;
+            bool kill = false;
 
             OptionSet p =
                 new OptionSet().Add("f:", "File name", delegate (string v) { if (v != null) p12File = v; })
@@ -45,13 +49,26 @@ namespace CertificateInstaller
                     .Add("x:", "SNI host name (not required when managing IP based bindings)", delegate (string v) { if (v != null) host = v; })
                     .Add("u:", "Reserved URL", delegate (string v) { if (v != null) url = v; })
                     .Add("d:", "Security descriptor", delegate (string v) { if (v != null) descriptor = v; })
-                    .Add("k:", "Kill Process Arguments", delegate(string v)
+                    .Add("config:", "Config file path", delegate(string v)
                     {
-                        if (v != null) kill = v;
+                        if (v != null) config = v;
                     })
-                    .Add("q:", "Query Process Arguments", delegate(string v)
+                    .Add("siteId:", "Site ID", delegate(string v)
                     {
-                        if (v != null) query = v;
+                        if (v != null) siteId = v;
+                    })
+                    .Add("resultFile:", "Result File", delegate(string v)
+                    {
+                        if (v != null) resultFile = v;
+                    })
+                    .Add("launcher:", "IIS Express path", delegate (string v)
+                    {
+                        if (v != null)
+                            launcher = v;
+                    })
+                    .Add("k", "Kill Process", delegate(string v)
+                    {
+                        if (v != null) kill = true;
                     });
 
             if (args.Length == 0)
@@ -67,51 +84,70 @@ namespace CertificateInstaller
             }
             catch (OptionException ex)
             {
-                Console.WriteLine(ex.Message);
                 return -1;
             }
 
             if (extra.Count > 0)
             {
-                Console.WriteLine(extra[0]);
                 ShowHelp(p);
                 return -1;
             }
 
             try
             {
-                if (kill != null)
+                if (config != null)
                 {
-                    var items = Process.GetProcessesByName("iisexpress");
-                    var found = items.Where(item =>
+                    if (resultFile != null)
                     {
-                        var command = item.GetCommandLine();
-                        return command != null && 
-                               (command.Replace("\"", null).TrimEnd().EndsWith(kill, StringComparison.Ordinal) ||
-                                command.TrimEnd().EndsWith(kill, StringComparison.Ordinal));
-                    });
-                    foreach (var item in found)
-                    {
-                        item.Kill();
-                        item.WaitForExit();
+                        // start a site.
+                        var process = new Process();
+                        process.StartInfo.FileName = launcher;
+                        process.StartInfo.Arguments = $"/config:\"{config}\" /siteid:{siteId} /systray:false /trace:error";
+                        process.StartInfo.CreateNoWindow = true;
+                        process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                        process.StartInfo.RedirectStandardOutput = true;
+                        process.StartInfo.UseShellExecute = false;
+                        process.Start();
+                        process.WaitForExit(5000);
+                        if (process.HasExited)
+                        {
+                            File.WriteAllText(resultFile, process.StandardOutput.ReadToEnd());
+                            return 1;
+                        }
+
+                        return 0;
                     }
-                    
-                    return 0;
+
+                    if (kill)
+                    {
+                        var toKill = $"/config:\"{config}\" /siteid:{siteId} /systray:false /trace:error";
+                        var items = Process.GetProcessesByName("iisexpress");
+                        var found = items.Where(item =>
+                        {
+                            var command = item.GetCommandLine();
+                            return command != null && command.TrimEnd().EndsWith(toKill, StringComparison.Ordinal);
+                        });
+                        foreach (var item in found)
+                        {
+                            item.Kill();
+                            item.WaitForExit();
+                        }
+
+                        return 0;
+                    }
+                    else
+                    {
+                        var toQuery = $"/config:\"{config}\" /siteid:{siteId} /systray:false /trace:error";
+                        var items = Process.GetProcessesByName("iisexpress");
+                        var found = items.Any(item =>
+                        {
+                            var command = item.GetCommandLine();
+                            return command != null && command.TrimEnd().EndsWith(toQuery, StringComparison.Ordinal);
+                        });
+                        return found ? 1 : 0;
+                    }
                 }
 
-                if (query != null)
-                {
-                    var items = Process.GetProcessesByName("iisexpress");
-                    var found = items.Any(item =>
-                    {
-                        var command = item.GetCommandLine();
-                        return command != null && 
-                               (command.Replace("\"", null).TrimEnd().EndsWith(kill, StringComparison.Ordinal) ||
-                                command.TrimEnd().EndsWith(kill, StringComparison.Ordinal));
-                    });
-                    return found ? 1 : 0;
-                }
-                
                 if (url != null)
                 {
                     if (descriptor != null)

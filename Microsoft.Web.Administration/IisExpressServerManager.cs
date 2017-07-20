@@ -36,7 +36,7 @@ namespace Microsoft.Web.Administration
                 start.Verb = site.Bindings.ElevationRequired && !PublicNativeMethods.IsProcessElevated ? "runas" : null;
                 start.FileName = "cmd";
                 start.Arguments =
-                    $"/c \"\"{Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe")}\" /q:\"{site.CommandLine.Replace("\"", null)}\"\"";
+                    $"/c \"\"{Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe")}\" /config:\"{site.FileContext.FileName}\" /siteId:{site.Id}\"";
                 start.CreateNoWindow = true;
                 start.WindowStyle = ProcessWindowStyle.Hidden;
                 process.Start();
@@ -72,38 +72,41 @@ namespace Microsoft.Web.Administration
             }
 
             var temp = Path.GetTempFileName();
-            var startInfo = new ProcessStartInfo
+            using (var process = new Process())
             {
-                FileName = "cmd",
-                Arguments = $"/c \"\"{fileName}\" {site.CommandLine} > {temp}\"",
-                WindowStyle = ProcessWindowStyle.Hidden,
-                CreateNoWindow = true,
-                Verb = site.Bindings.ElevationRequired && !PublicNativeMethods.IsProcessElevated ? "runas" : null
-            };
-            InjectEnvironmentVariables(site, startInfo);
-            var process = new Process
-            {
-                StartInfo = startInfo
-            };
-            try
-            {
-                process.Start();
-                process.WaitForExit(5000);
-                if (process.HasExited)
-                {
-                    throw new InvalidOperationException("process terminated");
-                }
+                var start = process.StartInfo;
+                start.Verb = site.Bindings.ElevationRequired && !PublicNativeMethods.IsProcessElevated
+                    ? "runas"
+                    : null;
+                start.FileName = "cmd";
+                start.Arguments =
+                    $"/c \"\"{Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe")}\" /launcher:\"{fileName}\" /config:\"{site.FileContext.FileName}\" /siteId:{site.Id} /resultFile:\"{temp}\"\"";
+                start.CreateNoWindow = true;
+                start.WindowStyle = ProcessWindowStyle.Hidden;
+                InjectEnvironmentVariables(site, start);
 
-                site.State = ObjectState.Started;
-            }
-            catch (Exception ex)
-            {
-                throw new COMException(
-                    $"cannot start site: {ex.Message}, {File.ReadAllText(temp)}");
-            }
-            finally
-            {
-                site.State = process.HasExited ? ObjectState.Stopped : ObjectState.Started;
+                try
+                {
+                    process.Start();
+                    process.WaitForExit();
+                    if (process.ExitCode == 0)
+                    {
+                        site.State = ObjectState.Started;
+                    }
+                    else if (process.ExitCode == 1)
+                    {
+                        throw new InvalidOperationException("The process has terminated");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new COMException(
+                        $"cannot start site: {ex.Message}, {File.ReadAllText(temp)}");
+                }
+                finally
+                {
+                    site.State = process.ExitCode == 0 ? ObjectState.Started : ObjectState.Stopped;
+                }
             }
         }
 
@@ -185,7 +188,7 @@ namespace Microsoft.Web.Administration
                         : null;
                     start.FileName = "cmd";
                     start.Arguments =
-                        $"/c \"\"{Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe")}\" /k:\"{site.CommandLine.Replace("\"", null)}\"\"";
+                        $"/c \"\"{Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe")}\" /k /config:\"{site.FileContext.FileName}\" /siteId:{site.Id}\"";
                     start.CreateNoWindow = true;
                     start.WindowStyle = ProcessWindowStyle.Hidden;
                     process.Start();

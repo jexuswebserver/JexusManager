@@ -58,9 +58,6 @@
     <Reference Include="XmlDiffPatch.View">
       <HintPath>..\lib\XmlDiffPatch.View.dll</HintPath>
     </Reference>
-    <Reference Include="xunit.execution.desktop">
-      <HintPath>..\packages\xunit.extensibility.execution.2.2.0\lib\net452\xunit.execution.desktop.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\JexusManager\BindingExtensions.cs">
