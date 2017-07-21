@@ -809,6 +809,11 @@ namespace JexusManager
                 treeView1.SelectedNode = e.Node;
             }
 
+            if (treeView1.SelectedNode is HomePageTreeNode)
+            {
+                return;
+            }
+
             if (GetCurrentData()?.ServerManager == null && e.Button == MouseButtons.Right)
             {
                 treeView1_NodeMouseDoubleClick(sender, e);
