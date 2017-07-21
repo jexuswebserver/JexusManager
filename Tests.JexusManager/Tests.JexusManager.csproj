@@ -111,7 +111,7 @@
     <Compile Include="RequestFiltering\Verbs\VerbsFeatureSiteTestFixture.cs" />
     <Compile Include="ResponseHeaders\ResponseHeadersFeatureServerTestFixture.cs" />
     <Compile Include="ResponseHeaders\ResponseHeadersFeatureSiteTestFixture.cs" />
-    <Compile Include="TestFixture.cs" />
+    <Compile Include="Rewrite\TestFixture.cs" />
     <Compile Include="XmlAssert.cs" />
   </ItemGroup>
   <ItemGroup>

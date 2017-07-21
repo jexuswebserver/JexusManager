@@ -2,7 +2,7 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace Tests.JexusManager
+namespace Tests.Rewrite
 {
     using global::JexusManager.Features.Rewrite.Outbound;
 
@@ -10,7 +10,7 @@ namespace Tests.JexusManager
 
     using PresentationControls;
 
-    internal class TestFixture
+    public class TestFixture
     {
         [Fact]
         public void TestFlags()
