@@ -70,9 +70,10 @@ namespace JexusManager
                 AccessToken = "5525758f15504199b7125d35d2058cfe",
                 Environment = "production"
             });
-            Rollbar.PersonData(() => new Person("0")
+            var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            Rollbar.PersonData(() => new Person(version)
             {
-                UserName = Assembly.GetExecutingAssembly().GetName().Version.ToString()
+                UserName = version
             });
             Rollbar.Report($"Jexus Manager started", ErrorLevel.Info);
             
