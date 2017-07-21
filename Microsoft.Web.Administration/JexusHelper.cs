@@ -154,7 +154,12 @@ namespace Microsoft.Web.Administration
             }
         }
 
-        internal override async Task<bool> VerifyAsync(string path)
+        internal override bool Verify(string path)
+        {
+            return AsyncHelper.RunSync(() => VerifyAsync(path));
+        }
+
+        private async Task<bool> VerifyAsync(string path)
         {
             using (var client = GetClient())
             {

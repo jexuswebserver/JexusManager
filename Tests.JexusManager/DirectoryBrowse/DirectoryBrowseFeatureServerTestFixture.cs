@@ -35,7 +35,7 @@ namespace Tests.DirectoryBrowse
 
         private const string Current = @"applicationHost.config";
 
-        public async Task SetUp()
+        public void SetUp()
         {
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -84,9 +84,9 @@ namespace Tests.DirectoryBrowse
         }
 
         [Fact]
-        public async void TestBasic()
+        public void TestBasic()
         {
-            await this.SetUp();
+            SetUp();
             Assert.Equal(false, _feature.IsEnabled);
             Assert.Equal(true, _feature.DateEnabled);
             Assert.Equal(true, _feature.ExtensionEnabled);
@@ -96,9 +96,9 @@ namespace Tests.DirectoryBrowse
         }
 
         [Fact]
-        public async void TestEdit()
+        public void TestEdit()
         {
-            await this.SetUp();
+            SetUp();
             const string Expected = @"expected_edit.config";
             var document = XDocument.Load(Current);
             var node = document.Root.XPathSelectElement("/configuration/system.webServer");

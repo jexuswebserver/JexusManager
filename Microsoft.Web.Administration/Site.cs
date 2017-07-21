@@ -81,7 +81,7 @@ namespace Microsoft.Web.Administration
             {
                 if (_state == null)
                 {
-                    var result = AsyncHelper.RunSync(GetStateAsync);
+                    var result = GetState();
                     _state = result ? ObjectState.Started : ObjectState.Stopped;
                 }
 
@@ -115,26 +115,16 @@ namespace Microsoft.Web.Administration
         public ObjectState Start()
         {
             // TODO: add timeout.
-            return AsyncHelper.RunSync(StartAsync);
-        }
-
-        public async Task<ObjectState> StartAsync()
-        {
             State = ObjectState.Starting;
-            await Server.StartAsync(this);
+            Server.Start(this);
             return State;
         }
 
         public ObjectState Stop()
         {
             // TODO: add timeout.
-            return AsyncHelper.RunSync(StopAsync);
-        }
-
-        public async Task<ObjectState> StopAsync()
-        {
             State = ObjectState.Stopping;
-            await Server.StopAsync(this);
+            Server.Stop(this);
             return State;
         }
 
@@ -143,11 +133,11 @@ namespace Microsoft.Web.Administration
             return Name;
         }
 
-        internal async Task RemoveApplicationsAsync()
+        internal void RemoveApplications()
         {
             foreach (Application application in Applications)
             {
-                await application.RemoveAsync();
+                application.Remove();
             }
 
             Applications = new ApplicationCollection(this);
@@ -155,7 +145,7 @@ namespace Microsoft.Web.Administration
 
         internal ServerManager Server => Parent.Parent;
 
-        internal async Task<IEnumerable<DirectoryInfo>> GetPhysicalDirectoriesAsync()
+        internal IEnumerable<DirectoryInfo> GetPhysicalDirectories()
         {
             if (Server.Mode != WorkingMode.Jexus)
             {
@@ -172,19 +162,19 @@ namespace Microsoft.Web.Administration
             return null;
         }
 
-        internal async Task RestartAsync()
+        internal void Restart()
         {
-            await Server.RestartAsync(this);
+            Server.Restart(this);
         }
 
-        internal async Task<bool> GetStateAsync()
+        internal bool GetState()
         {
-            return await Server.GetSiteStateAsync(this);
+            return Server.GetSiteState(this);
         }
 
-        internal async Task RemoveApplicationAsync(Application application)
+        internal void RemoveApplication(Application application)
         {
-            Applications = await application.RemoveAsync();
+            Applications = application.Remove();
         }
 
         internal void Save()

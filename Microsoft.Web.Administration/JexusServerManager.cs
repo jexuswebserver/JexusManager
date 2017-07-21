@@ -5,7 +5,6 @@
 using Microsoft.Web.Administration.Properties;
 using System;
 using System.IO;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 
 namespace Microsoft.Web.Administration
@@ -26,7 +25,7 @@ namespace Microsoft.Web.Administration
 
         private void CreateCache()
         {
-            var name = this.HostName.Replace(':', '_');
+            var name = HostName.Replace(':', '_');
             CacheFolder = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
                 "Jexus Manager",
@@ -38,7 +37,7 @@ namespace Microsoft.Web.Administration
                 Directory.CreateDirectory(CacheFolder);
             }
 
-            File.WriteAllText(this.FileName, Resources.original);
+            File.WriteAllText(FileName, Resources.original);
         }
 
         internal string CacheFolder { get; set; }
@@ -49,35 +48,35 @@ namespace Microsoft.Web.Administration
             AsyncHelper.RunSync(LoadAsync);
         }
 
-        protected override async Task PostCommitChangesAsync()
+        protected override void PostCommitChanges()
         {
-            await base.PostCommitChangesAsync();
+            base.PostCommitChanges();
             foreach (Site site in Sites)
             {
                 foreach (Application application in site.Applications)
                 {
-                    await SaveAsync(application);
+                    AsyncHelper.RunSync(() => SaveAsync(application));
                 }
             }
 
-            await SaveAsync();
+            Save();
         }
 
-        internal override async Task<bool> GetSiteStateAsync(Site site)
+        internal override bool GetSiteState(Site site)
         {
             return false;
         }
 
-        internal override async Task<bool> GetPoolStateAsync(ApplicationPool pool)
+        internal override bool GetPoolState(ApplicationPool pool)
         {
             return true;
         }
 
-        internal override async Task StartAsync(Site site)
+        internal override void Start(Site site)
         {
         }
 
-        internal override async Task StopAsync(Site site)
+        internal override void Stop(Site site)
         {
         }
 

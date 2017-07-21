@@ -56,7 +56,7 @@ namespace JexusManager.Dialogs
             DialogHelper.ShowBrowseDialog(txtPath);
         }
 
-        private async void BtnOkClick(object sender, EventArgs e)
+        private void BtnOkClick(object sender, EventArgs e)
         {
             foreach (var ch in SiteCollection.InvalidSiteNameCharacters())
             {
@@ -76,7 +76,7 @@ namespace JexusManager.Dialogs
                 }
             }
 
-            if (!await _collection.Parent.VerifyAsync(txtPath.Text))
+            if (!_collection.Parent.Verify(txtPath.Text))
             {
                 MessageBox.Show("The specified directory does not exist on the server.", Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;

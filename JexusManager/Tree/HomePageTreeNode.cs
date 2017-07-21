@@ -47,14 +47,15 @@ namespace JexusManager.Tree
             mainForm.LoadInner(new HomePage());
         }
 
-        public async override Task HandleDoubleClick(MainForm mainForm)
+        public override void HandleDoubleClick(MainForm mainForm)
         {
         }
 
-        public async override Task Expand(MainForm mainForm)
-        { }
+        public override void Expand(MainForm mainForm)
+        {
+        }
 
-        public async override Task AddApplication(ContextMenuStrip appMenu)
+        public override void AddApplication(ContextMenuStrip appMenu)
         {
         }
 

@@ -9,7 +9,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.XPath;
 
@@ -28,7 +27,7 @@ namespace Microsoft.Web.Administration
         {
         }
 
-        internal override async Task<bool> GetSiteStateAsync(Site site)
+        internal override bool GetSiteState(Site site)
         {
             using (var process = new Process())
             {
@@ -46,12 +45,12 @@ namespace Microsoft.Web.Administration
             }
         }
 
-        internal override async Task<bool> GetPoolStateAsync(ApplicationPool pool)
+        internal override bool GetPoolState(ApplicationPool pool)
         {
             return true;
         }
 
-        internal override async Task StartAsync(Site site)
+        internal override void Start(Site site)
         {
             StartInner(site, false);
         }
@@ -182,7 +181,7 @@ namespace Microsoft.Web.Administration
             }
         }
 
-        internal override async Task StopAsync(Site site)
+        internal override void Stop(Site site)
         {
             try
             {
@@ -210,7 +209,7 @@ namespace Microsoft.Web.Administration
             {}
         }
 
-        internal override async Task RestartAsync(Site site)
+        internal override void Restart(Site site)
         {
             StartInner(site, true);
         }

@@ -34,7 +34,7 @@ namespace Tests.RequestFiltering.QueryStrings
 
         private const string Current = @"applicationHost.config";
 
-        public async Task SetUp()
+        public void SetUp()
         {
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -92,17 +92,17 @@ namespace Tests.RequestFiltering.QueryStrings
         }
 
         [Fact]
-        public async void TestBasic()
+        public void TestBasic()
         {
-            await this.SetUp();
+            SetUp();
             Assert.Equal(2, _feature.Items.Count);
         }
 
         [Fact]
-        public async void TestRemoveInherited()
+        public void TestRemoveInherited()
         {
-            await this.SetUp();
-            
+            SetUp();
+
             var site = Path.Combine("Website1", "web.config");
             var expected = "expected_remove.site.config";
             var document = XDocument.Load(site);
@@ -130,12 +130,12 @@ namespace Tests.RequestFiltering.QueryStrings
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
             XmlAssert.Equal(expected, site);
         }
-        
+
         [Fact]
-        public async void TestRemoveDenyInherited()
+        public void TestRemoveDenyInherited()
         {
-            await this.SetUp();
-            
+            SetUp();
+
             var site = Path.Combine("Website1", "web.config");
             var expected = "expected_remove.site.config";
             var document = XDocument.Load(site);
@@ -163,12 +163,12 @@ namespace Tests.RequestFiltering.QueryStrings
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
             XmlAssert.Equal(expected, site);
         }
-        
+
         [Fact]
-        public async void TestRemove()
+        public void TestRemove()
         {
-            await this.SetUp();
-            
+            SetUp();
+
             var site = Path.Combine("Website1", "web.config");
             var expected = "expected_remove.site.config";
             var document = XDocument.Load(site);
@@ -192,10 +192,10 @@ namespace Tests.RequestFiltering.QueryStrings
         }
 
         [Fact]
-        public async void TestRemoveDeny()
+        public void TestRemoveDeny()
         {
-            await this.SetUp();
-            
+            SetUp();
+
             var site = Path.Combine("Website1", "web.config");
             var expected = "expected_remove.site.config";
             var document = XDocument.Load(site);
@@ -219,10 +219,10 @@ namespace Tests.RequestFiltering.QueryStrings
         }
 
         [Fact]
-        public async void TestAdd()
+        public void TestAdd()
         {
-            await this.SetUp();
-            
+            SetUp();
+
             var site = Path.Combine("Website1", "web.config");
             var expected = "expected_remove.site.config";
             var document = XDocument.Load(site);
@@ -237,7 +237,7 @@ namespace Tests.RequestFiltering.QueryStrings
             request.Add(file);
             file.Add(remove);
             document.Save(expected);
-            
+
             var item = new QueryStringsItem(null, true);
             item.QueryString = "test1";
             _feature.AddItem(item);
@@ -252,10 +252,10 @@ namespace Tests.RequestFiltering.QueryStrings
         }
 
         [Fact]
-        public async void TestAddDeny()
+        public void TestAddDeny()
         {
-            await this.SetUp();
-            
+            SetUp();
+
             var site = Path.Combine("Website1", "web.config");
             var expected = "expected_remove.site.config";
             var document = XDocument.Load(site);
@@ -270,7 +270,7 @@ namespace Tests.RequestFiltering.QueryStrings
             request.Add(file);
             file.Add(remove);
             document.Save(expected);
-            
+
             var item = new QueryStringsItem(null, false);
             item.QueryString = "test1";
             _feature.AddItem(item);

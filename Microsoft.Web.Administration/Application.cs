@@ -210,7 +210,7 @@ namespace Microsoft.Web.Administration
             get { return Parent.Parent; }
         }
 
-        internal async Task<ApplicationCollection> RemoveAsync()
+        internal ApplicationCollection Remove()
         {
             if (Path == RootPath)
             {

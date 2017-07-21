@@ -115,7 +115,7 @@ namespace Microsoft.Web.Administration
             {
                 if (_state == null)
                 {
-                    var result = AsyncHelper.RunSync(GetStateAsync);
+                    var result = GetState();
                     _state = result ? ObjectState.Started : ObjectState.Stopped;
                 }
 
@@ -128,9 +128,9 @@ namespace Microsoft.Web.Administration
             }
         }
 
-        private async Task<bool> GetStateAsync()
+        private bool GetState()
         {
-            return await Parent.Parent.GetPoolStateAsync(this);
+            return Parent.Parent.GetPoolState(this);
         }
 
         public WorkerProcessCollection WorkerProcesses

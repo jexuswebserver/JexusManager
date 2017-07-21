@@ -35,7 +35,7 @@ namespace Tests.DefaultDocument
 
         private const string Current = @"applicationHost.config";
 
-        public async Task SetUp()
+        public void SetUp()
         {
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -84,16 +84,16 @@ namespace Tests.DefaultDocument
         }
 
         [Fact]
-        public async void TestBasic()
+        public void TestBasic()
         {
-            await SetUp();
+            SetUp();
             Assert.Equal(7, _feature.Items.Count);
         }
 
         [Fact]
-        public async void TestEnable()
+        public void TestEnable()
         {
-            await this.SetUp();
+            SetUp();
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
 
@@ -119,9 +119,9 @@ namespace Tests.DefaultDocument
         }
 
         [Fact]
-        public async void TestRemoveInherited()
+        public void TestRemoveInherited()
         {
-            await this.SetUp();
+            SetUp();
 
             var site = Path.Combine("Website1", "web.config");
             var expected = "expected_remove.site.config";
@@ -146,9 +146,9 @@ namespace Tests.DefaultDocument
         }
 
         [Fact]
-        public async void TestRemove()
+        public void TestRemove()
         {
-            await SetUp();
+            SetUp();
             var site = Path.Combine("Website1", "web.config");
             var expected = "expected_remove1.site.config";
             var document = XDocument.Load(site);
@@ -170,9 +170,9 @@ namespace Tests.DefaultDocument
         }
 
         [Fact]
-        public async void TestAdd()
+        public void TestAdd()
         {
-            await SetUp();
+            SetUp();
 
             var site = Path.Combine("Website1", "web.config");
             var expected = "expected_add.site.config";
@@ -197,9 +197,9 @@ namespace Tests.DefaultDocument
         }
 
         [Fact]
-        public async void TestRevert()
+        public void TestRevert()
         {
-            await SetUp();
+            SetUp();
 
             var site = Path.Combine("Website1", "web.config");
             var expected = "expected_revert.site.config";
@@ -220,9 +220,9 @@ namespace Tests.DefaultDocument
         }
 
         [Fact]
-        public async void TestMoveUp()
+        public void TestMoveUp()
         {
-            await SetUp();
+            SetUp();
 
             var site = Path.Combine("Website1", "web.config");
             var expected = "expected_up.site.config";
@@ -252,9 +252,9 @@ namespace Tests.DefaultDocument
         }
 
         [Fact]
-        public async void TestMoveDown()
+        public void TestMoveDown()
         {
-            await SetUp();
+            SetUp();
 
             var site = Path.Combine("Website1", "web.config");
             var expected = "expected_up.site.config";

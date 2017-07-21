@@ -227,7 +227,7 @@ namespace JexusManager.Features.Main
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var site = service.Site;
-            IsStarted = AsyncHelper.RunSync(() => site.GetStateAsync());
+            IsStarted = site.GetState();
             HasProject = SiteHasProject(site);
             OnSiteSettingsSaved();
         }
@@ -323,7 +323,7 @@ namespace JexusManager.Features.Main
             OnSiteSettingsSaved();
             try
             {
-                AsyncHelper.RunSync(() => site.RestartAsync());
+                site.Restart();
             }
             catch (Exception ex)
             {

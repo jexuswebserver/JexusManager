@@ -33,7 +33,7 @@ namespace Tests.DirectoryBrowse
 
         private const string Current = @"applicationHost.config";
 
-        public async Task SetUp()
+        public void SetUp()
         {
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -92,16 +92,16 @@ namespace Tests.DirectoryBrowse
         }
 
         [Fact]
-        public async void TestBasic()
+        public void TestBasic()
         {
-            await this.SetUp();
+            SetUp();
             Assert.Equal(false, _feature.IsEnabled);
         }
 
         [Fact]
-        public async void TestEdit()
+        public void TestEdit()
         {
-            await this.SetUp();
+            SetUp();
 
             var site = Path.Combine("Website1", "web.config");
             var expected = "expected_edit1.site.config";

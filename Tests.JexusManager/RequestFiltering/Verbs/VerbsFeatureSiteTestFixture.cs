@@ -34,7 +34,7 @@ namespace Tests.RequestFiltering.Verbs
 
         private const string Current = @"applicationHost.config";
 
-        public async Task SetUp()
+        public void SetUp()
         {
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -92,17 +92,17 @@ namespace Tests.RequestFiltering.Verbs
         }
 
         [Fact]
-        public async void TestBasic()
+        public void TestBasic()
         {
-            await this.SetUp();
+            SetUp();
             Assert.Equal(1, _feature.Items.Count);
         }
 
         [Fact]
-        public async void TestRemoveInherited()
+        public void TestRemoveInherited()
         {
-            await this.SetUp();
-            
+            SetUp();
+
             var site = Path.Combine("Website1", "web.config");
             var expected = "expected_remove.site.config";
             var document = XDocument.Load(site);
@@ -132,10 +132,10 @@ namespace Tests.RequestFiltering.Verbs
         }
 
         [Fact]
-        public async void TestRemove()
+        public void TestRemove()
         {
-            await this.SetUp();
-            
+            SetUp();
+
             var site = Path.Combine("Website1", "web.config");
             var expected = "expected_remove.site.config";
             var document = XDocument.Load(site);
@@ -159,10 +159,10 @@ namespace Tests.RequestFiltering.Verbs
         }
 
         [Fact]
-        public async void TestAdd()
+        public void TestAdd()
         {
-            await this.SetUp();
-            
+            SetUp();
+
             var site = Path.Combine("Website1", "web.config");
             var expected = "expected_remove.site.config";
             var document = XDocument.Load(site);
@@ -178,7 +178,7 @@ namespace Tests.RequestFiltering.Verbs
             request.Add(file);
             file.Add(remove);
             document.Save(expected);
-            
+
             var item = new VerbsItem(null);
             item.Verb = "GET";
             _feature.AddItem(item);

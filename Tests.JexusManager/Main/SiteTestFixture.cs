@@ -17,7 +17,7 @@ namespace Tests.Main
     public class SiteTestFixture
     {
         [Fact]
-        public async void AddSite()
+        public void AddSite()
         {
             const string Current = @"applicationHost.config";
             const string Original = @"original.config";
@@ -96,7 +96,7 @@ namespace Tests.Main
         }
 
         [Fact]
-        public async void AddSiteManaged()
+        public void AddSiteManaged()
         {
             const string Current = @"applicationHost.config";
             const string Original = @"original.config";

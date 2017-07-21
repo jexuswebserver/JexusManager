@@ -33,7 +33,7 @@ namespace Tests.Handlers
 
         private const string Current = @"applicationHost.config";
 
-        public async Task SetUp()
+        public void SetUp()
         {
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -91,17 +91,17 @@ namespace Tests.Handlers
         }
 
         [Fact]
-        public async void TestBasic()
+        public void TestBasic()
         {
-            await this.SetUp();
+            SetUp();
             Assert.Equal(82, _feature.Items.Count);
             Assert.Equal("AXD-ISAPI-4.0_64bit", _feature.Items[0].Name);
         }
 
         [Fact]
-        public async void TestRemoveInherited()
+        public void TestRemoveInherited()
         {
-            await this.SetUp();
+            SetUp();
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
@@ -128,9 +128,9 @@ namespace Tests.Handlers
         }
 
         [Fact]
-        public async void TestRemove()
+        public void TestRemove()
         {
-            await this.SetUp();
+            SetUp();
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
@@ -155,9 +155,9 @@ namespace Tests.Handlers
         }
 
         [Fact]
-        public async void TestEditInherited()
+        public void TestEditInherited()
         {
-            await this.SetUp();
+            SetUp();
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
@@ -196,9 +196,9 @@ namespace Tests.Handlers
         }
 
         [Fact]
-        public async void TestEdit()
+        public void TestEdit()
         {
-            await this.SetUp();
+            SetUp();
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
@@ -238,9 +238,9 @@ namespace Tests.Handlers
         }
 
         [Fact]
-        public async void TestAdd()
+        public void TestAdd()
         {
-            await this.SetUp();
+            SetUp();
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
@@ -272,9 +272,9 @@ namespace Tests.Handlers
         }
 
         [Fact]
-        public async void TestRevert()
+        public void TestRevert()
         {
-            await SetUp();
+            SetUp();
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
@@ -299,9 +299,9 @@ namespace Tests.Handlers
         }
 
         [Fact]
-        public async void TestMoveUp()
+        public void TestMoveUp()
         {
-            await SetUp();
+            SetUp();
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
@@ -365,9 +365,9 @@ namespace Tests.Handlers
         }
 
         [Fact]
-        public async void TestMoveDown()
+        public void TestMoveDown()
         {
-            await SetUp();
+            SetUp();
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);

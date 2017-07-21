@@ -34,7 +34,7 @@ namespace Tests.Authentication
 
         private const string Current = @"applicationHost.config";
 
-        public async Task SetUp()
+        public void SetUp()
         {
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -83,16 +83,16 @@ namespace Tests.Authentication
         }
 
         [Fact]
-        public async void TestBasic()
+        public void TestBasic()
         {
-            await SetUp();
+            SetUp();
             Assert.False(_feature.IsEnabled);
         }
 
         [Fact]
-        public async void TestDisable()
+        public void TestDisable()
         {
-            await SetUp();
+            SetUp();
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current); var node = new XElement("location");
@@ -108,9 +108,9 @@ namespace Tests.Authentication
         }
 
         [Fact]
-        public async void TestEnable()
+        public void TestEnable()
         {
-            await SetUp();
+            SetUp();
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);

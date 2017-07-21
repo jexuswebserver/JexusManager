@@ -3,7 +3,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using System.Threading.Tasks;
 
 namespace Microsoft.Web.Administration
 {
@@ -44,7 +43,7 @@ namespace Microsoft.Web.Administration
             Mode = WorkingMode.Iis;
         }
 
-        internal override async Task<bool> GetSiteStateAsync(Site site)
+        internal override bool GetSiteState(Site site)
         {
 #if !__MonoCS__
             using (PowerShell PowerShellInstance = PowerShell.Create())
@@ -82,7 +81,7 @@ namespace Microsoft.Web.Administration
 #endif
         }
 
-        internal override async Task<bool> GetPoolStateAsync(ApplicationPool pool)
+        internal override bool GetPoolState(ApplicationPool pool)
         {
 #if !__MonoCS__
             using (PowerShell PowerShellInstance = PowerShell.Create())
@@ -112,11 +111,11 @@ namespace Microsoft.Web.Administration
 #endif
         }
 
-        internal override async Task StartAsync(Site site)
+        internal override void Start(Site site)
         {
         }
 
-        internal override async Task StopAsync(Site site)
+        internal override void Stop(Site site)
         {
         }
 

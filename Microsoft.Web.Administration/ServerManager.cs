@@ -65,7 +65,7 @@ namespace Microsoft.Web.Administration
         {
         }
 
-        internal virtual async Task<bool> VerifyAsync(string path)
+        internal virtual bool Verify(string path)
         {
             return Directory.Exists(path.ExpandIisExpressEnvironmentVariables());
         }
@@ -84,12 +84,12 @@ namespace Microsoft.Web.Administration
 
         private void Initialize()
         {
-            if (this.Initialized)
+            if (Initialized)
             {
                 return;
             }
 
-            this.Initialized = true;
+            Initialized = true;
             PreInitialize();
             var machineConfig = Helper.IsRunningOnMono()
                 ? "/Library/Frameworks/Mono.framework/Versions/Current/etc/mono/4.5/machine.config"
@@ -132,14 +132,14 @@ namespace Microsoft.Web.Administration
 
             _applicationHost =
                 new Configuration(
-                new FileContext(this, this.FileName, _web.FileContext, null, true, false, this.ReadOnly));
+                new FileContext(this, FileName, _web.FileContext, null, true, false, ReadOnly));
 
-            this.LoadCache();
+            LoadCache();
 
             var poolSection = _applicationHost.GetSection("system.applicationHost/applicationPools");
             _applicationPoolDefaults =
                 new ApplicationPoolDefaults(poolSection.GetChildElement("applicationPoolDefaults"), poolSection);
-            this.ApplicationPoolCollection = new ApplicationPoolCollection(poolSection, this);
+            ApplicationPoolCollection = new ApplicationPoolCollection(poolSection, this);
             var siteSection = _applicationHost.GetSection("system.applicationHost/sites");
             _siteDefaults = new SiteDefaults(siteSection.GetChildElement("siteDefaults"), siteSection);
             _applicationDefaults = new ApplicationDefaults(
@@ -147,7 +147,7 @@ namespace Microsoft.Web.Administration
                 siteSection);
             _virtualDirectoryDefaults =
                 new VirtualDirectoryDefaults(siteSection.GetChildElement("virtualDirectoryDefaults"), siteSection);
-            this.SiteCollection = new SiteCollection(siteSection, this);
+            SiteCollection = new SiteCollection(siteSection, this);
 
             PostInitialize();
         }
@@ -161,20 +161,20 @@ namespace Microsoft.Web.Administration
             return root;
         }
 
-        internal abstract Task StopAsync(Site site);
-        internal abstract Task StartAsync(Site site);
+        internal abstract void Stop(Site site);
+        internal abstract void Start(Site site);
 
-        internal async virtual Task RestartAsync(Site site)
+        internal virtual void Restart(Site site)
         {
-            await StopAsync(site);
-            await StartAsync(site);
+            Stop(site);
+            Start(site);
         }
 
         protected virtual void PreInitialize()
         {
         }
 
-        internal abstract Task<bool> GetPoolStateAsync(ApplicationPool pool);
+        internal abstract bool GetPoolState(ApplicationPool pool);
 
         protected virtual void PostInitialize()
         {
@@ -186,7 +186,7 @@ namespace Microsoft.Web.Administration
             _cleanHost = null;
             _cleanHost =
                 new Configuration(
-                new FileContext(this, this.FileName, _applicationHost.FileContext.Parent, null, true, false, false));
+                new FileContext(this, FileName, _applicationHost.FileContext.Parent, null, true, false, false));
         }
 
         public void Dispose()
@@ -194,11 +194,6 @@ namespace Microsoft.Web.Administration
         }
 
         public void CommitChanges()
-        {
-            AsyncHelper.RunSync(CommitChangesAsync);
-        }
-
-        public async Task CommitChangesAsync()
         {
             foreach (Site site in Sites)
             {
@@ -210,12 +205,10 @@ namespace Microsoft.Web.Administration
 
             Save();
 
-            await PostCommitChangesAsync();
+            PostCommitChanges();
         }
 
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-        protected virtual async Task PostCommitChangesAsync()
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
+        protected virtual void PostCommitChanges()
         {
         }
 
@@ -237,7 +230,7 @@ namespace Microsoft.Web.Administration
                     return _applicationDefaults;
                 }
 
-                this.Initialize();
+                Initialize();
                 return _applicationDefaults;
             }
         }
@@ -251,7 +244,7 @@ namespace Microsoft.Web.Administration
                     return _applicationPoolDefaults;
                 }
 
-                this.Initialize();
+                Initialize();
                 return _applicationPoolDefaults;
             }
         }
@@ -260,13 +253,13 @@ namespace Microsoft.Web.Administration
         {
             get
             {
-                if (this.ApplicationPoolCollection != null)
+                if (ApplicationPoolCollection != null)
                 {
-                    return this.ApplicationPoolCollection;
+                    return ApplicationPoolCollection;
                 }
 
-                this.Initialize();
-                return this.ApplicationPoolCollection;
+                Initialize();
+                return ApplicationPoolCollection;
             }
         }
 
@@ -279,7 +272,7 @@ namespace Microsoft.Web.Administration
                     return _siteDefaults;
                 }
 
-                this.Initialize();
+                Initialize();
                 return _siteDefaults;
             }
         }
@@ -288,13 +281,13 @@ namespace Microsoft.Web.Administration
         {
             get
             {
-                if (this.SiteCollection != null)
+                if (SiteCollection != null)
                 {
-                    return this.SiteCollection;
+                    return SiteCollection;
                 }
 
-                this.Initialize();
-                return this.SiteCollection;
+                Initialize();
+                return SiteCollection;
             }
         }
 
@@ -307,7 +300,7 @@ namespace Microsoft.Web.Administration
                     return _virtualDirectoryDefaults;
                 }
 
-                this.Initialize();
+                Initialize();
                 return _virtualDirectoryDefaults;
             }
         }
@@ -316,7 +309,7 @@ namespace Microsoft.Web.Administration
         {
             get
             {
-                this.Initialize();
+                Initialize();
                 return _workerProcessCollection;
             }
         }
@@ -338,7 +331,7 @@ namespace Microsoft.Web.Administration
             return null;
         }
 
-        internal abstract Task<bool> GetSiteStateAsync(Site site);
+        internal abstract bool GetSiteState(Site site);
 
         public Configuration GetAdministrationConfiguration(WebConfigurationMap configMap, string configurationPath)
         {
@@ -355,13 +348,13 @@ namespace Microsoft.Web.Administration
 
         public Configuration GetApplicationHostConfiguration()
         {
-            this.Initialize();
+            Initialize();
             return _applicationHost;
         }
 
         internal Configuration GetConfigurationCache()
         {
-            this.Initialize();
+            Initialize();
             return _cleanHost;
         }
 

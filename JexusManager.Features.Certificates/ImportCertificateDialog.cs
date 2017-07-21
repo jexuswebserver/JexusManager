@@ -71,7 +71,7 @@ namespace JexusManager.Features.Certificates
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
-                .Subscribe(async evt =>
+                .Subscribe(evt =>
                 {
                     try
                     {
@@ -87,7 +87,7 @@ namespace JexusManager.Features.Certificates
                             publicBuilder.AppendLine("-----BEGIN CERTIFICATE-----");
                             publicBuilder.AppendLine(Convert.ToBase64String(Item.Export(X509ContentType.Cert), Base64FormattingOptions.InsertLineBreaks));
                             publicBuilder.AppendLine("-----END CERTIFICATE-----");
-                            var file = await server.SaveCertificateAsync(publicBuilder.ToString());
+                            var file = AsyncHelper.RunSync(() => server.SaveCertificateAsync(publicBuilder.ToString()));
                             server.SetCertificate(file);
                             // Private Key
                             RSACryptoServiceProvider rsa = (RSACryptoServiceProvider)Item.PrivateKey;
@@ -102,9 +102,9 @@ namespace JexusManager.Features.Certificates
                             memoryStream.Close();
                             streamWriter.Close();
                             string key = output.Substring(0, indexOfFooter + 29);
-                            var keyFile = await server.SaveKeyAsync(key);
+                            var keyFile = AsyncHelper.RunSync(() => server.SaveKeyAsync(key));
                             server.SetKeyFile(keyFile);
-                            await service.ServerManager.CommitChangesAsync();
+                            service.ServerManager.CommitChanges();
                         }
                         else
                         {

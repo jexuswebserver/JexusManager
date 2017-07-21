@@ -35,7 +35,7 @@ namespace Tests.IsapiFilters
 
         private const string Current = @"applicationHost.config";
 
-        public async Task SetUp()
+        public void SetUp()
         {
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -84,17 +84,17 @@ namespace Tests.IsapiFilters
         }
 
         [Fact]
-        public async void TestBasic()
+        public void TestBasic()
         {
-            await this.SetUp();
+            SetUp();
             Assert.Equal(5, _feature.Items.Count);
             Assert.Equal("ASP.Net_2.0.50727-64", _feature.Items[0].Name);
         }
 
         [Fact]
-        public async void TestRemove()
+        public void TestRemove()
         {
-            await this.SetUp();
+            SetUp();
             const string Expected = @"expected_remove.config";
             var document = XDocument.Load(Current);
             var node = document.Root.XPathSelectElement("/configuration/system.webServer/isapiFilters");
@@ -109,9 +109,9 @@ namespace Tests.IsapiFilters
         }
 
         [Fact]
-        public async void TestEdit()
+        public void TestEdit()
         {
-            await this.SetUp();
+            SetUp();
             const string Expected = @"expected_edit.config";
             var document = XDocument.Load(Current);
             var node = document.Root.XPathSelectElement("/configuration/system.webServer/isapiFilters");
@@ -131,9 +131,9 @@ namespace Tests.IsapiFilters
         }
 
         [Fact]
-        public async void TestAdd()
+        public void TestAdd()
         {
-            await this.SetUp();
+            SetUp();
             const string Expected = @"expected_add.config";
             var document = XDocument.Load(Current);
             var node = document.Root.XPathSelectElement("/configuration/system.webServer/isapiFilters");
@@ -155,17 +155,17 @@ namespace Tests.IsapiFilters
         }
 
         [Fact]
-        public async void TestRevert()
+        public void TestRevert()
         {
-            await SetUp();
+            SetUp();
             var exception = Assert.Throws<InvalidOperationException>(() => _feature.Revert());
             Assert.Equal("Revert operation cannot be done at server level", exception.Message);
         }
 
         [Fact]
-        public async void TestMoveUp()
+        public void TestMoveUp()
         {
-            await SetUp();
+            SetUp();
             const string Expected = @"expected_up.config";
             var document = XDocument.Load(Current);
             var node = document.Root.XPathSelectElement("/configuration/system.webServer/isapiFilters");
@@ -191,9 +191,9 @@ namespace Tests.IsapiFilters
         }
 
         [Fact]
-        public async void TestMoveDown()
+        public void TestMoveDown()
         {
-            await SetUp();
+            SetUp();
             const string Expected = @"expected_up.config";
             var document = XDocument.Load(Current);
             var node = document.Root.XPathSelectElement("/configuration/system.webServer/isapiFilters");

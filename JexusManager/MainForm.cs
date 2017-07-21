@@ -127,16 +127,16 @@ namespace JexusManager
                     item.Tag = args.NewItem;
                     eanLocation.Navigation.AddHistory(item);
                 };
-            this.UIService = new ManagementUIService(this);
+            UIService = new ManagementUIService(this);
             _serviceContainer = new ServiceContainer();
             _serviceContainer.AddService(typeof(INavigationService), _navigationService);
-            _serviceContainer.AddService(typeof(IManagementUIService), this.UIService);
+            _serviceContainer.AddService(typeof(IManagementUIService), UIService);
 
             LoadIisExpress();
             LoadIis();
             LoadJexus();
 
-            Text = PublicNativeMethods.IsProcessElevated ? string.Format("{0} (Administrator)", this.Text) : Text;
+            Text = PublicNativeMethods.IsProcessElevated ? string.Format("{0} (Administrator)", Text) : Text;
         }
 
         internal ToolStripButton DisconnectButton
@@ -358,11 +358,11 @@ namespace JexusManager
             treeView1.SelectedNode.Remove();
         }
 
-        private async void Form1FormClosing(object sender, FormClosingEventArgs e)
+        private void Form1FormClosing(object sender, FormClosingEventArgs e)
         {
             if (actSave.Enabled)
             {
-                var result = this.UIService.ShowMessage("The connection list has changed. Do you want to save changes?", Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                var result = UIService.ShowMessage("The connection list has changed. Do you want to save changes?", Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                 if (result == DialogResult.Yes)
                 {
                     actSave.DoExecute();
@@ -379,8 +379,8 @@ namespace JexusManager
 
                 try
                 {
-                    await serverNode.ServerManager.CommitChangesAsync();
-                    var conflict = await ((JexusServerManager)serverNode.ServerManager).ByeAsync();
+                    serverNode.ServerManager.CommitChanges();
+                    var conflict = AsyncHelper.RunSync(() => ((JexusServerManager)serverNode.ServerManager).ByeAsync());
                     if (Environment.MachineName != conflict)
                     {
                         MessageBox.Show(string.Format("The server is also connected to {0}. Making changes on multiple clients might corrupt server configuration.", conflict), Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -423,7 +423,7 @@ namespace JexusManager
             {
                 if (e.Label.Contains(ch))
                 {
-                    this.UIService.ShowMessage("The site name cannot contain the following characters: '\\, /, ?, ;, :, @, &, =, +, $, ,, |, \", <, >'.", "Sites", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    UIService.ShowMessage("The site name cannot contain the following characters: '\\, /, ?, ;, :, @, &, =, +, $, ,, |, \", <, >'.", "Sites", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     e.CancelEdit = true;
                     return;
                 }
@@ -433,7 +433,7 @@ namespace JexusManager
             {
                 if (e.Label.Contains(ch) || e.Label.StartsWith("~"))
                 {
-                    this.UIService.ShowMessage("The site name cannot contain the following characters: '~,  '.", "Sites", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    UIService.ShowMessage("The site name cannot contain the following characters: '~,  '.", "Sites", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     e.CancelEdit = true;
                     return;
                 }
@@ -655,7 +655,7 @@ namespace JexusManager
             Process.Start("http://go.microsoft.com/fwlink/?LinkId=210477");
         }
 
-        private async void actConnectServer_Execute(object sender, EventArgs e)
+        private void actConnectServer_Execute(object sender, EventArgs e)
         {
             var names = new List<string>();
             names.Add("Start Page");
@@ -692,7 +692,7 @@ namespace JexusManager
                 var path = Path.GetTempFileName();
                 var random = Guid.NewGuid().ToString();
                 File.WriteAllText(path, random);
-                node.IsLocalhost = await ((JexusServerManager)node.ServerManager).LocalhostTestAsync(path, random);
+                node.IsLocalhost = AsyncHelper.RunSync(() => ((JexusServerManager)node.ServerManager).LocalhostTestAsync(path, random));
                 data.Server.IsLocalhost = node.IsLocalhost;
             }
             else
@@ -713,7 +713,7 @@ namespace JexusManager
             {
                 RegisterServer(node);
                 // TODO: trigger the load in connection wizard to throw exception earlier.
-                await node.LoadServerAsync(cmsApplicationPools, cmsSites, cmsSite);
+                node.LoadServer(cmsApplicationPools, cmsSites, cmsSite);
                 actSave.Enabled = true;
             }
             catch (Exception ex)
@@ -778,7 +778,7 @@ namespace JexusManager
 
         private void actDisconnect_Execute(object sender, EventArgs e)
         {
-            var result = this.UIService.ShowMessage("Are you sure that you want to remove this connection?", "Confirm Remove", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+            var result = UIService.ShowMessage("Are you sure that you want to remove this connection?", "Confirm Remove", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
             if (result != DialogResult.Yes)
             {
                 return;
@@ -789,10 +789,10 @@ namespace JexusManager
             actSave.Enabled = true;
         }
 
-        private async void actCreateApplication_Execute(object sender, EventArgs e)
+        private void actCreateApplication_Execute(object sender, EventArgs e)
         {
             var treeNode = ((ManagerTreeNode)treeView1.SelectedNode);
-            await treeNode.AddApplication(cmsApplication);
+            treeNode.AddApplication(cmsApplication);
             treeNode.ServerManager.CommitChanges();
         }
 
@@ -815,10 +815,10 @@ namespace JexusManager
             }
         }
 
-        private async void btnRemoveApplication_Click(object sender, EventArgs e)
+        private void btnRemoveApplication_Click(object sender, EventArgs e)
         {
             var node = (Application)treeView1.SelectedNode.Tag;
-            node.Site.Applications = await node.RemoveAsync();
+            node.Site.Applications = node.Remove();
             node.Server.CommitChanges();
             treeView1.SelectedNode.Remove();
         }
@@ -827,13 +827,13 @@ namespace JexusManager
         {
         }
 
-        private async void btnRestartSite_Click(object sender, EventArgs e)
+        private void btnRestartSite_Click(object sender, EventArgs e)
         {
             btnRestartSite.Enabled = false;
             var node = (Site)treeView1.SelectedNode.Tag;
             try
             {
-                await node.RestartAsync();
+                node.Restart();
             }
             catch (Exception ex)
             {
@@ -843,9 +843,9 @@ namespace JexusManager
             btnRestartSite.Enabled = true;
         }
 
-        private async void treeView1_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        private void treeView1_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            await ((ManagerTreeNode)e.Node).HandleDoubleClick(this);
+            ((ManagerTreeNode)e.Node).HandleDoubleClick(this);
         }
 
         private void btnUpdate_Click(object sender, EventArgs e)

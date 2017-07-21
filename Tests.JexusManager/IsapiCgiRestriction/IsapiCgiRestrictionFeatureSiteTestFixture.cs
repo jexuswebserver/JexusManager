@@ -33,7 +33,7 @@ namespace Tests.IsapiCgiRestriction
 
         private const string Current = @"applicationHost.config";
 
-        public async Task SetUp()
+        public void SetUp()
         {
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -91,16 +91,16 @@ namespace Tests.IsapiCgiRestriction
         }
 
         [Fact]
-        public async void TestBasic()
+        public void TestBasic()
         {
-            await this.SetUp();
+            SetUp();
             Assert.Equal(4, _feature.Items.Count);
         }
 
         [Fact]
-        public async void TestRemoveInherited()
+        public void TestRemoveInherited()
         {
-            await this.SetUp();
+            SetUp();
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
@@ -117,22 +117,22 @@ namespace Tests.IsapiCgiRestriction
             remove.SetAttributeValue("path", @"%windir%\Microsoft.NET\Framework64\v4.0.30319\webengine4.dll");
             ip.Add(remove);
             document.Save(Expected);
-            
+
             _feature.SelectedItem = _feature.Items[0];
             Assert.Equal("ASP.NET_v4.0", _feature.SelectedItem.Description);
             _feature.Remove();
             Assert.Null(_feature.SelectedItem);
             Assert.Equal(3, _feature.Items.Count);
-            
+
             XmlAssert.Equal(Expected, Current);
             XmlAssert.Equal(Path.Combine("Website1", "original.config"), Path.Combine("Website1", "web.config"));
         }
 
         [Fact]
-        public async void TestRemove()
+        public void TestRemove()
         {
-            await this.SetUp();
-            
+            SetUp();
+
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
             var node = new XElement("location");
@@ -156,10 +156,10 @@ namespace Tests.IsapiCgiRestriction
         }
 
         [Fact]
-        public async void TestEditInherited()
+        public void TestEditInherited()
         {
-            await this.SetUp();
-            
+            SetUp();
+
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
             var node = new XElement("location");
@@ -180,7 +180,7 @@ namespace Tests.IsapiCgiRestriction
             add.SetAttributeValue("description", "ASP.NET_v4.0");
             ip.Add(add);
             document.Save(Expected);
-            
+
             _feature.SelectedItem = _feature.Items[0];
             Assert.Equal("ASP.NET_v4.0", _feature.SelectedItem.Description);
             var item = _feature.SelectedItem;
@@ -194,9 +194,9 @@ namespace Tests.IsapiCgiRestriction
         }
 
         [Fact]
-        public async void TestEdit()
+        public void TestEdit()
         {
-            await this.SetUp();
+            SetUp();
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
@@ -215,7 +215,7 @@ namespace Tests.IsapiCgiRestriction
             add.SetAttributeValue("description", "test");
             ip.Add(add);
             document.Save(Expected);
-            
+
             var item = new IsapiCgiRestrictionItem(null);
             item.Description = "test";
             item.Path = "c:\\test.dll";
@@ -234,10 +234,10 @@ namespace Tests.IsapiCgiRestriction
         }
 
         [Fact]
-        public async void TestAdd()
+        public void TestAdd()
         {
-            await this.SetUp();
-            
+            SetUp();
+
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
             var node = new XElement("location");
@@ -255,7 +255,7 @@ namespace Tests.IsapiCgiRestriction
             add.SetAttributeValue("description", "test");
             ip.Add(add);
             document.Save(Expected);
-            
+
             var item = new IsapiCgiRestrictionItem(null);
             item.Description = "test";
             item.Path = "c:\\test.dll";

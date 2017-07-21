@@ -34,7 +34,7 @@ namespace Tests.HttpErrors
 
         private const string Current = @"applicationHost.config";
 
-        public async Task SetUp()
+        public void SetUp()
         {
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -92,16 +92,16 @@ namespace Tests.HttpErrors
         }
 
         [Fact]
-        public async void TestBasic()
+        public void TestBasic()
         {
-            await this.SetUp();
+            SetUp();
             Assert.Equal(9, _feature.Items.Count);
         }
 
         [Fact]
-        public async void TestRemoveInherited()
+        public void TestRemoveInherited()
         {
-            await this.SetUp();
+            SetUp();
 
             var site = Path.Combine("Website1", "web.config");
             var expected = "expected_remove.site.config";
@@ -113,7 +113,7 @@ namespace Tests.HttpErrors
             node?.Add(errors);
             errors.Add(remove);
             document.Save(expected);
-            
+
             _feature.SelectedItem = _feature.Items[0];
             Assert.Equal(401U, _feature.SelectedItem.Status);
             _feature.Remove();
@@ -128,15 +128,15 @@ namespace Tests.HttpErrors
         }
 
         [Fact]
-        public async void TestRemove()
+        public void TestRemove()
         {
-            await this.SetUp();
+            SetUp();
 
             var site = Path.Combine("Website1", "web.config");
             var expected = "expected_remove1.site.config";
             var document = XDocument.Load(site);
             document.Save(expected);
-            
+
             var item = new HttpErrorsItem(null);
             item.Status = 455;
             item.Path = "c:\\test.htm";
@@ -156,9 +156,9 @@ namespace Tests.HttpErrors
         }
 
         [Fact]
-        public async void TestEditInherited()
+        public void TestEditInherited()
         {
-            await this.SetUp();
+            SetUp();
 
             var site = Path.Combine("Website1", "web.config");
             var expected = "expected_edit.site.config";
@@ -175,7 +175,7 @@ namespace Tests.HttpErrors
             errors.Add(remove);
             errors.Add(add);
             document.Save(expected);
-            
+
             _feature.SelectedItem = _feature.Items[0];
             Assert.Equal("401.htm", _feature.SelectedItem.Path);
             var item = _feature.SelectedItem;
@@ -193,10 +193,10 @@ namespace Tests.HttpErrors
         }
 
         [Fact]
-        public async void TestEdit()
+        public void TestEdit()
         {
-            await this.SetUp();
-            
+            SetUp();
+
             var site = Path.Combine("Website1", "web.config");
             var expected = "expected_edit.site.config";
             var document = XDocument.Load(site);
@@ -232,10 +232,10 @@ namespace Tests.HttpErrors
         }
 
         [Fact]
-        public async void TestAdd()
+        public void TestAdd()
         {
-            await this.SetUp();
-            
+            SetUp();
+
             var site = Path.Combine("Website1", "web.config");
             var expected = "expected_edit.site.config";
             var document = XDocument.Load(site);
@@ -247,7 +247,7 @@ namespace Tests.HttpErrors
             node?.Add(errors);
             errors.Add(add);
             document.Save(expected);
-            
+
             var item = new HttpErrorsItem(null);
             item.Status = 455;
             item.Path = "c:\\test.htm";

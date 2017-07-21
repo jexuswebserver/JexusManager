@@ -34,7 +34,7 @@ namespace Tests.RequestFiltering.Headers
 
         private const string Current = @"applicationHost.config";
 
-        public async Task SetUp()
+        public void SetUp()
         {
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -92,24 +92,24 @@ namespace Tests.RequestFiltering.Headers
         }
 
         [Fact]
-        public async void TestBasic()
+        public void TestBasic()
         {
-            await this.SetUp();
+            SetUp();
             Assert.Equal(1, _feature.Items.Count);
         }
 
         [Fact]
-        public async void TestRemoveInherited()
+        public void TestRemoveInherited()
         {
-            await this.SetUp();
-            
+            SetUp();
+
             var site = Path.Combine("Website1", "web.config");
             var expected = "expected_remove.site.config";
             var document = XDocument.Load(site);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
             var security = new XElement("security");
             var request = new XElement("requestFiltering");
-            var limits= new XElement("requestLimits");
+            var limits = new XElement("requestLimits");
             var header = new XElement("headerLimits");
             var add = new XElement("remove");
             add.SetAttributeValue("header", "test");
@@ -134,10 +134,10 @@ namespace Tests.RequestFiltering.Headers
         }
 
         [Fact]
-        public async void TestRemove()
+        public void TestRemove()
         {
-            await this.SetUp();
-            
+            SetUp();
+
             var site = Path.Combine("Website1", "web.config");
             var expected = "expected_remove.site.config";
             var document = XDocument.Load(site);
@@ -161,17 +161,17 @@ namespace Tests.RequestFiltering.Headers
         }
 
         [Fact]
-        public async void TestAdd()
+        public void TestAdd()
         {
-            await this.SetUp();
-            
+            SetUp();
+
             var site = Path.Combine("Website1", "web.config");
             var expected = "expected_remove.site.config";
             var document = XDocument.Load(site);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
             var security = new XElement("security");
             var request = new XElement("requestFiltering");
-            var limits= new XElement("requestLimits");
+            var limits = new XElement("requestLimits");
             var header = new XElement("headerLimits");
             var add = new XElement("add");
             add.SetAttributeValue("header", "test1");
@@ -182,7 +182,7 @@ namespace Tests.RequestFiltering.Headers
             limits.Add(header);
             header.Add(add);
             document.Save(expected);
-            
+
             var item = new HeadersItem(null);
             item.Header = "test1";
             item.SizeLimit = 200;

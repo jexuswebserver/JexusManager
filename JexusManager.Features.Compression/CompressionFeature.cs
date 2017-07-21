@@ -125,7 +125,7 @@ namespace JexusManager.Features.Compression
                 httpCompressionSection["minFileSizeForComp"] = MinFileSizeForComp;
             }
 
-            AsyncHelper.RunSync(() => service.ServerManager.CommitChangesAsync());
+            service.ServerManager.CommitChanges();
             return true;
         }
     }

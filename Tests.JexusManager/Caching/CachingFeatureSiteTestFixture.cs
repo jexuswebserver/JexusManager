@@ -101,7 +101,7 @@ namespace Tests.Caching
         [Fact]
         public void TestRemoveInherited()
         {
-            this.SetUp();
+            SetUp();
 
             var site = Path.Combine("Website1", "web.config");
             var expected = "expected_remove.site.config";
@@ -132,7 +132,7 @@ namespace Tests.Caching
         [Fact]
         public void TestRemove()
         {
-            this.SetUp();
+            SetUp();
 
             var site = Path.Combine("Website1", "web.config");
             var expected = "expected_remove1.site.config";
@@ -159,7 +159,7 @@ namespace Tests.Caching
         [Fact]
         public void TestEditInherited()
         {
-            this.SetUp();
+            SetUp();
 
             var site = Path.Combine("Website1", "web.config");
             var expected = "expected_edit.site.config";

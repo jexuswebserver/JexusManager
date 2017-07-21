@@ -65,7 +65,7 @@ namespace JexusManager.Tree
             Handler = (sender1, certificate, chain, sslPolicyErrors) =>
                 {
                     var remoteHash = certificate.GetCertHashString();
-                    if (remoteHash == this.CertificateHash)
+                    if (remoteHash == CertificateHash)
                     {
                         return true;
                     }
@@ -74,7 +74,7 @@ namespace JexusManager.Tree
                     var result = dialog.ShowDialog();
                     if (result == DialogResult.OK)
                     {
-                        this.MainForm.SaveMenuItem.Enabled = true;
+                        MainForm.SaveMenuItem.Enabled = true;
                     }
 
                     if (result != DialogResult.OK)
@@ -82,14 +82,14 @@ namespace JexusManager.Tree
                         return false;
                     }
 
-                    this.CertificateHash = remoteHash;
+                    CertificateHash = remoteHash;
                     return true;
                 };
         }
 
         public bool IsBusy => _status == NodeStatus.Loading;
 
-        public override async Task HandleDoubleClick(MainForm mainForm)
+        public override void HandleDoubleClick(MainForm mainForm)
         {
             if (ServerManager != null)
             {
@@ -113,20 +113,20 @@ namespace JexusManager.Tree
                 }
                 else if (Mode == WorkingMode.Iis)
                 {
-                    ServerManager = new IisServerManager(false, this.HostName);
+                    ServerManager = new IisServerManager(false, HostName);
                 }
                 else
                 {
                     ServerManager = new JexusServerManager(HostName, Credentials);
                 }
 
-                ServerManager.Name = this.DisplayName;
+                ServerManager.Name = DisplayName;
 
-                if (this.Mode == WorkingMode.Jexus)
+                if (Mode == WorkingMode.Jexus)
                 {
-                    this.SetHandler();
+                    SetHandler();
                     var server = (JexusServerManager)ServerManager;
-                    var version = await server.GetVersionAsync();
+                    var version = AsyncHelper.RunSync(() => server.GetVersionAsync());
                     if (version == null)
                     {
                         MessageBox.Show("Authentication failed.", Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -153,7 +153,7 @@ namespace JexusManager.Tree
                         }
                     }
 
-                    var conflict = await server.HelloAsync();
+                    var conflict = AsyncHelper.RunSync(() => server.HelloAsync());
                     if (Environment.MachineName != conflict)
                     {
                         MessageBox.Show(
@@ -165,7 +165,7 @@ namespace JexusManager.Tree
                 }
 
                 ServerManager.IsLocalhost = IsLocalhost;
-                await LoadServerAsync(mainForm.ApplicationPoolsMenu, mainForm.SitesMenu, mainForm.SiteMenu);
+                LoadServer(mainForm.ApplicationPoolsMenu, mainForm.SitesMenu, mainForm.SiteMenu);
                 Tag = ServerManager;
                 mainForm.EnableServerMenuItems(true);
                 _status = NodeStatus.Loaded;
@@ -265,10 +265,10 @@ namespace JexusManager.Tree
                 : $"{name} ({credentials.ExtractUser()})";
         }
 
-        public async override Task Expand(MainForm mainForm)
+        public override void Expand(MainForm mainForm)
         { }
 
-        public async override Task AddApplication(ContextMenuStrip appMenu)
+        public override void AddApplication(ContextMenuStrip appMenu)
         {
         }
 
@@ -276,7 +276,7 @@ namespace JexusManager.Tree
         {
         }
 
-        public async Task<bool> LoadServerAsync(ContextMenuStrip poolsMenu, ContextMenuStrip sitesMenu, ContextMenuStrip siteMenu)
+        public bool LoadServer(ContextMenuStrip poolsMenu, ContextMenuStrip sitesMenu, ContextMenuStrip siteMenu)
         {
             Nodes.Add(new ApplicationPoolsTreeNode(ServiceProvider, ServerManager.ApplicationPools, this)
             {

@@ -77,7 +77,7 @@ namespace JexusManager.Features.Main
             return collection.Count != 0 && ((Binding)collection[0].Tag).CanBrowse;
         }
 
-        private async void BtnRemoveClick(object sender, EventArgs e)
+        private void BtnRemoveClick(object sender, EventArgs e)
         {
             var result = MessageBox.Show("Are you sure you want to remove the selected binding?", Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
             if (result != DialogResult.Yes)
@@ -89,10 +89,10 @@ namespace JexusManager.Features.Main
             binding.CleanUpSni();
             listView1.SelectedItems[0].Remove();
             _site.Bindings.Remove(binding);
-            await _site.Server.CommitChangesAsync();
+            _site.Server.CommitChanges();
         }
 
-        private async void BtnEditClick(object sender, EventArgs e)
+        private void BtnEditClick(object sender, EventArgs e)
         {
             if (listView1.SelectedItems.Count == 0)
             {
@@ -110,10 +110,10 @@ namespace JexusManager.Features.Main
             item.SubItems[1].Text = binding.Host.HostToDisplay();
             item.SubItems[2].Text = binding.EndPoint.Port.ToString(CultureInfo.InvariantCulture);
             item.SubItems[3].Text = binding.EndPoint.Address.AddressToDisplay();
-            await _site.Server.CommitChangesAsync();
+            _site.Server.CommitChanges();
         }
 
-        private async void BtnAddClick(object sender, EventArgs e)
+        private void BtnAddClick(object sender, EventArgs e)
         {
             var dialog = new BindingDialog(ServiceProvider, null, _site);
             if (dialog.ShowDialog() != DialogResult.OK)
@@ -138,7 +138,7 @@ namespace JexusManager.Features.Main
             { Tag = binding };
             listView1.Items.Add(node);
             _site.Bindings.Add(binding);
-            await _site.Server.CommitChangesAsync();
+            _site.Server.CommitChanges();
         }
 
         private void BtnBrowseClick(object sender, EventArgs e)

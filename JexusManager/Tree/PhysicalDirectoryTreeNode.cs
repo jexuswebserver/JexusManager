@@ -105,7 +105,7 @@ namespace JexusManager.Tree
             mainForm.LoadPage(page);
         }
 
-        public async override Task Expand(MainForm mainForm)
+        public override void Expand(MainForm mainForm)
         {
             if (_loaded)
             {
@@ -119,7 +119,7 @@ namespace JexusManager.Tree
             _loaded = true;
         }
 
-        public override async Task AddApplication(ContextMenuStrip appMenu)
+        public override void AddApplication(ContextMenuStrip appMenu)
         {
             var dialog = new NewApplicationDialog(ServiceProvider, PhysicalDirectory.Application.Site, PathToSite, PhysicalDirectory.Application.ApplicationPoolName, null);
             if (dialog.ShowDialog() != DialogResult.OK)
@@ -143,7 +143,7 @@ namespace JexusManager.Tree
             AddToParent(this, new VirtualDirectoryTreeNode(ServiceProvider, dialog.VirtualDirectory, this.ServerNode) { ContextMenuStrip = vDirMenu });
         }
 
-        public async override Task HandleDoubleClick(MainForm mainForm)
+        public override void HandleDoubleClick(MainForm mainForm)
         { }
     }
 }

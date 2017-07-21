@@ -35,7 +35,7 @@ namespace Tests.Authorization
 
         private const string Current = @"applicationHost.config";
 
-        public async Task SetUp()
+        public void SetUp()
         {
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -84,16 +84,16 @@ namespace Tests.Authorization
         }
 
         [Fact]
-        public async void TestBasic()
+        public void TestBasic()
         {
-            await this.SetUp();
+            SetUp();
             Assert.Equal(1, _feature.Items.Count);
         }
 
         [Fact]
-        public async void TestRemoveInherited()
+        public void TestRemoveInherited()
         {
-            await this.SetUp();
+            SetUp();
 
             var site = Path.Combine("Website1", "web.config");
             var expected = "expected_remove.site.config";
@@ -122,9 +122,9 @@ namespace Tests.Authorization
         }
 
         [Fact]
-        public async void TestRemove()
+        public void TestRemove()
         {
-            await this.SetUp();
+            SetUp();
 
             var site = Path.Combine("Website1", "web.config");
             var expected = "expected_remove1.site.config";
@@ -150,9 +150,9 @@ namespace Tests.Authorization
 
 
         [Fact]
-        public async void TestEditInherited()
+        public void TestEditInherited()
         {
-            await this.SetUp();
+            SetUp();
 
             var site = Path.Combine("Website1", "web.config");
             var expected = "expected_edit.site.config";
@@ -189,9 +189,9 @@ namespace Tests.Authorization
         }
 
         [Fact]
-        public async void TestEdit()
+        public void TestEdit()
         {
-            await this.SetUp();
+            SetUp();
 
             var site = Path.Combine("Website1", "web.config");
             var expected = "expected_edit1.site.config";
@@ -230,9 +230,9 @@ namespace Tests.Authorization
 
 
         [Fact]
-        public async void TestAdd()
+        public void TestAdd()
         {
-            await this.SetUp();
+            SetUp();
 
             var site = Path.Combine("Website1", "web.config");
             var expected = "expected_add.site.config";

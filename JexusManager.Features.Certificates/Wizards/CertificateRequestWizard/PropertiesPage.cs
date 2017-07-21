@@ -83,29 +83,25 @@ namespace JexusManager.Features.Certificates.Wizards.CertificateRequestWizard
             UpdateWizard();
         }
 
-        private async void PropertiesPage_Load(object sender, EventArgs e)
+        private void PropertiesPage_Load(object sender, EventArgs e)
         {
-            var codes = await Task.Factory.StartNew(() =>
+            var result = new HashSet<string>();
+            CultureInfo[] cinfo = CultureInfo.GetCultures(CultureTypes.AllCultures & ~CultureTypes.NeutralCultures);
+            foreach (CultureInfo cul in cinfo)
             {
-                var result = new HashSet<string>();
-                CultureInfo[] cinfo = CultureInfo.GetCultures(CultureTypes.AllCultures & ~CultureTypes.NeutralCultures);
-                foreach (CultureInfo cul in cinfo)
+                RegionInfo ri;
+                try
                 {
-                    RegionInfo ri;
-                    try
-                    {
-                        ri = new RegionInfo(cul.Name);
-                        result.Add(ri.TwoLetterISORegionName);
-                    }
-                    catch
-                    {
-                    }
+                    ri = new RegionInfo(cul.Name);
+                    result.Add(ri.TwoLetterISORegionName);
                 }
+                catch
+                {
+                }
+            }
 
-                var list = result.ToList();
-                list.Sort();
-                return list;
-            });
+            var codes = result.ToList();
+            codes.Sort();
 
             foreach (var code in codes)
             {

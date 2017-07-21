@@ -21,7 +21,7 @@ namespace JexusManager.Features.Jexus
     {
         public JexusFeature(Module module)
         {
-            this.Module = module;
+            Module = module;
         }
 
         protected static readonly Version FxVersion10 = new Version("1.0");
@@ -31,25 +31,25 @@ namespace JexusManager.Features.Jexus
 
         protected void DisplayErrorMessage(Exception ex, ResourceManager resourceManager)
         {
-            var service = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+            var service = (IManagementUIService)GetService(typeof(IManagementUIService));
             service.ShowError(ex, resourceManager.GetString("General"), "", false);
         }
 
         protected object GetService(Type type)
         {
-            return (this.Module as IServiceProvider).GetService(type);
+            return (Module as IServiceProvider).GetService(type);
         }
 
         public void Load()
         {
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             if (service.ServerManager.Mode != WorkingMode.Jexus)
             {
-                this.IsFeatureEnabled = false;
+                IsFeatureEnabled = false;
                 return;
             }
 
-            this.IsFeatureEnabled = true;
+            IsFeatureEnabled = true;
             var settings = service.Server == null ? service.Application.GetExtra() : service.Server.GetExtra();
             var text = new StringBuilder();
             foreach (var key in settings.Keys)
@@ -61,14 +61,14 @@ namespace JexusManager.Features.Jexus
             }
 
             Contents = text.ToString();
-            this.OnJexusSettingsSaved();
+            OnJexusSettingsSaved();
         }
 
         public string Contents { get; set; }
 
         protected void OnJexusSettingsSaved()
         {
-            this.JexusSettingsUpdated?.Invoke();
+            JexusSettingsUpdated?.Invoke();
         }
 
         public virtual bool ShowHelp()
@@ -99,12 +99,12 @@ namespace JexusManager.Features.Jexus
 
         public void CancelChanges()
         {
-            this.Load();
+            Load();
         }
 
         public bool ApplyChanges()
         {
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             if (service.Server == null)
             {
                 service.Application.GetExtra().Clear();
@@ -157,7 +157,7 @@ namespace JexusManager.Features.Jexus
                 }
             }
 
-            AsyncHelper.RunSync(() => service.ServerManager.CommitChangesAsync());
+            service.ServerManager.CommitChanges();
             return true;
         }
     }

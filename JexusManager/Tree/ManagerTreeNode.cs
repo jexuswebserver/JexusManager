@@ -9,7 +9,6 @@ namespace JexusManager.Tree
     using System.ComponentModel.Design;
     using System.Diagnostics;
     using System.IO;
-    using System.Threading.Tasks;
     using System.Windows.Forms;
 
     using Microsoft.Web.Administration;
@@ -36,7 +35,7 @@ namespace JexusManager.Tree
 
         public abstract void LoadPanels(MainForm mainForm, ServiceContainer serviceContainer, List<ModuleProvider> moduleProviders);
 
-        public abstract Task HandleDoubleClick(MainForm mainForm);
+        public abstract void HandleDoubleClick(MainForm mainForm);
 
         protected void LoadChildren(Application rootApp, int rootLevel, string rootFolder, string pathToSite, ContextMenuStrip phyMenu, ContextMenuStrip vDirMenu, ContextMenuStrip appMenu)
         {
@@ -139,8 +138,8 @@ namespace JexusManager.Tree
             }
         }
 
-        public abstract Task Expand(MainForm mainForm);
-        public abstract Task AddApplication(ContextMenuStrip appMenu);
+        public abstract void Expand(MainForm mainForm);
+        public abstract void AddApplication(ContextMenuStrip appMenu);
         public abstract void AddVirtualDirectory(ContextMenuStrip vDirMenu);
 
         public void Explore()

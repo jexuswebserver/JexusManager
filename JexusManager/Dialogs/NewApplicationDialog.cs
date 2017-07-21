@@ -63,7 +63,7 @@ namespace JexusManager.Dialogs
 
         public Application Application { get; private set; }
 
-        private async void btnOK_Click(object sender, EventArgs e)
+        private void btnOK_Click(object sender, EventArgs e)
         {
             foreach (var ch in ApplicationCollection.InvalidApplicationPathCharacters())
             {
@@ -83,7 +83,7 @@ namespace JexusManager.Dialogs
                 }
             }
 
-            if (!await _site.Server.VerifyAsync(txtPhysicalPath.Text))
+            if (!_site.Server.Verify(txtPhysicalPath.Text))
             {
                 MessageBox.Show("The specified directory does not exist on the server.", Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;

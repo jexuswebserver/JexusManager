@@ -33,7 +33,7 @@ namespace Tests.IpSecurity
 
         private const string Current = @"applicationHost.config";
 
-        public async Task SetUp()
+        public void SetUp()
         {
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -91,16 +91,16 @@ namespace Tests.IpSecurity
         }
 
         [Fact]
-        public async void TestBasic()
+        public void TestBasic()
         {
-            await this.SetUp();
+            SetUp();
             Assert.Equal(1, _feature.Items.Count);
         }
 
         [Fact]
-        public async void TestRemoveInherited()
+        public void TestRemoveInherited()
         {
-            await this.SetUp();
+            SetUp();
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
@@ -117,7 +117,7 @@ namespace Tests.IpSecurity
             remove.SetAttributeValue("ipAddress", "10.0.0.0");
             ip.Add(remove);
             document.Save(Expected);
-            
+
             _feature.SelectedItem = _feature.Items[0];
             Assert.Equal("10.0.0.0", _feature.SelectedItem.Address);
             _feature.Remove();
@@ -129,9 +129,9 @@ namespace Tests.IpSecurity
         }
 
         [Fact]
-        public async void TestRemove()
+        public void TestRemove()
         {
-            await this.SetUp();
+            SetUp();
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
@@ -139,7 +139,7 @@ namespace Tests.IpSecurity
             node.SetAttributeValue("path", "WebSite1");
             document.Root?.Add(node);
             document.Save(Expected);
-            
+
             var item = new IpSecurityItem(null);
             item.Address = "12.0.0.0";
             _feature.AddItem(item);
@@ -155,10 +155,10 @@ namespace Tests.IpSecurity
         }
 
         [Fact]
-        public async void TestAdd()
+        public void TestAdd()
         {
-            await this.SetUp();
-            
+            SetUp();
+
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
             var node = new XElement("location");
@@ -174,7 +174,7 @@ namespace Tests.IpSecurity
             add.SetAttributeValue("ipAddress", "12.0.0.0");
             ip.Add(add);
             document.Save(Expected);
-            
+
             var item = new IpSecurityItem(null);
             item.Address = "12.0.0.0";
             _feature.AddItem(item);
@@ -186,10 +186,10 @@ namespace Tests.IpSecurity
         }
 
         [Fact]
-        public async void TestRevert()
+        public void TestRevert()
         {
-            await SetUp();
-            
+            SetUp();
+
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
             var node = new XElement("location");
@@ -200,7 +200,7 @@ namespace Tests.IpSecurity
             var security = new XElement("security");
             web.Add(security);
             document.Save(Expected);
-            
+
             var item = new IpSecurityItem(null);
             item.Address = "12.0.0.0";
             _feature.AddItem(item);

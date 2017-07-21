@@ -375,7 +375,7 @@ namespace JexusManager.Features.Main
 
             IsBusy = true;
             OnSitesSettingsSaved();
-            AsyncHelper.RunSync(() => SelectedItem.StopAsync());
+            SelectedItem.Stop();
             IsBusy = false;
             OnSitesSettingsSaved();
         }
@@ -398,7 +398,7 @@ namespace JexusManager.Features.Main
             OnSitesSettingsSaved();
             try
             {
-                AsyncHelper.RunSync(() => SelectedItem.StartAsync());
+                SelectedItem.Start();
             }
             catch (Exception ex)
             {
@@ -427,7 +427,7 @@ namespace JexusManager.Features.Main
             OnSitesSettingsSaved();
             try
             {
-                AsyncHelper.RunSync(() => SelectedItem.RestartAsync());
+                SelectedItem.Restart();
             }
             catch (Exception ex)
             {

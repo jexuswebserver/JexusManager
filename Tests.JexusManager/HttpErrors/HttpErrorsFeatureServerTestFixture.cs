@@ -36,7 +36,7 @@ namespace Tests.HttpErrors
 
         private const string Current = @"applicationHost.config";
 
-        public async Task SetUp()
+        public void SetUp()
         {
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -85,19 +85,19 @@ namespace Tests.HttpErrors
         }
 
         [Fact]
-        public async void TestBasic()
+        public void TestBasic()
         {
-            await this.SetUp();
+            SetUp();
             Assert.Equal(9, _feature.Items.Count);
             Assert.Equal(401U, _feature.Items[0].Status);
             Assert.Equal(-1, _feature.Items[0].Substatus);
         }
 
         [Fact]
-        public async void TestRemove()
+        public void TestRemove()
         {
-            await this.SetUp();
-            const string Expected = @"expected_remove.config";        
+            SetUp();
+            const string Expected = @"expected_remove.config";
             var document = XDocument.Load(Current);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer/httpErrors");
             node?.FirstNode.Remove();
@@ -111,9 +111,9 @@ namespace Tests.HttpErrors
         }
 
         [Fact]
-        public async void TestEdit()
+        public void TestEdit()
         {
-            await this.SetUp();
+            SetUp();
             const string Expected = @"expected_edit.config";
             var document = XDocument.Load(Current);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer/httpErrors");
@@ -132,9 +132,9 @@ namespace Tests.HttpErrors
         }
 
         [Fact]
-        public async void TestAdd()
+        public void TestAdd()
         {
-            await this.SetUp();
+            SetUp();
             const string Expected = @"expected_add.config";
             var document = XDocument.Load(Current);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer/httpErrors");

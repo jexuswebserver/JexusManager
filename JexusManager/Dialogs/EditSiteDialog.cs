@@ -35,9 +35,9 @@ namespace JexusManager.Dialogs
             Process.Start("http://go.microsoft.com/fwlink/?LinkId=210531#Edit_Site");
         }
 
-        private async void btnOK_Click(object sender, EventArgs e)
+        private void btnOK_Click(object sender, EventArgs e)
         {
-            if (!await _application.Server.VerifyAsync(txtPhysicalPath.Text))
+            if (!_application.Server.Verify(txtPhysicalPath.Text))
             {
                 MessageBox.Show("The specified directory does not exist on the server.", Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
