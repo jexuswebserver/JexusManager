@@ -19,13 +19,14 @@ namespace JexusManager.Tree
 
     internal sealed class ApplicationPoolsTreeNode : ManagerTreeNode
     {
-        public ApplicationPoolsTreeNode(IServiceProvider serviceProvider, ApplicationPoolCollection pools)
+        public ApplicationPoolsTreeNode(IServiceProvider serviceProvider, ApplicationPoolCollection pools, ServerTreeNode server)
             : base("Application Pools", serviceProvider)
         {
             ImageIndex = 2;
             SelectedImageIndex = 2;
             Tag = pools;
             ServerManager = pools.Parent;
+            ServerNode = server;
         }
 
         public override string PathToSite
@@ -44,6 +45,8 @@ namespace JexusManager.Tree
         }
 
         public override ServerManager ServerManager { get; set; }
+
+        public override ServerTreeNode ServerNode { get; }
 
         public override void LoadPanels(MainForm mainForm, ServiceContainer serviceContainer, List<ModuleProvider> moduleProviders)
         {

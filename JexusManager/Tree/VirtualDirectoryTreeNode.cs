@@ -22,7 +22,7 @@ namespace JexusManager.Tree
     {
         private bool _loaded;
 
-        public VirtualDirectoryTreeNode(IServiceProvider serviceProvider, VirtualDirectory virtualDirectory)
+        public VirtualDirectoryTreeNode(IServiceProvider serviceProvider, VirtualDirectory virtualDirectory, ServerTreeNode server)
             : base(virtualDirectory.Path.PathToName(), serviceProvider)
         {
             ImageIndex = 7;
@@ -31,6 +31,7 @@ namespace JexusManager.Tree
             VirtualDirectory = virtualDirectory;
             Nodes.Add("temp");
             ServerManager = virtualDirectory.Application.Server;
+            ServerNode = server;
         }
 
         public VirtualDirectory VirtualDirectory { get; }
@@ -57,6 +58,8 @@ namespace JexusManager.Tree
         }
 
         public override ServerManager ServerManager { get; set; }
+
+        public override ServerTreeNode ServerNode { get; }
 
         public override string Folder
         {
@@ -129,7 +132,7 @@ namespace JexusManager.Tree
             }
 
             dialog.Application.Save();
-            AddToParent(this, new ApplicationTreeNode(ServiceProvider, dialog.Application) { ContextMenuStrip = appMenu });
+            AddToParent(this, new ApplicationTreeNode(ServiceProvider, dialog.Application, this.ServerNode) { ContextMenuStrip = appMenu });
         }
 
         public override void AddVirtualDirectory(ContextMenuStrip vDirMenu)
@@ -141,7 +144,7 @@ namespace JexusManager.Tree
             }
 
             //await dialog.VirtualDirectory.SaveAsync();
-            AddToParent(this, new VirtualDirectoryTreeNode(ServiceProvider, dialog.VirtualDirectory) { ContextMenuStrip = vDirMenu });
+            AddToParent(this, new VirtualDirectoryTreeNode(ServiceProvider, dialog.VirtualDirectory, this.ServerNode) { ContextMenuStrip = vDirMenu });
         }
 
         public async override Task HandleDoubleClick(MainForm mainForm)

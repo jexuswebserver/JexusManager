@@ -278,13 +278,14 @@ namespace JexusManager
 
         private ServerTreeNode GetCurrentData()
         {
-            var top = treeView1.SelectedNode;
-            while (top.Parent != null)
-            {
-                top = top.Parent;
-            }
+            if (treeView1.SelectedNode == null)
+                throw new InvalidOperationException("no selected node");
 
-            return (top as ServerTreeNode);
+            var managerNode = treeView1.SelectedNode as ManagerTreeNode;
+            if (managerNode.ServerNode == null)
+                throw new InvalidOperationException("no server node");
+
+            return managerNode.ServerNode;
         }
 
         private void actCreateSite_Execute(object sender, EventArgs e)
@@ -597,7 +598,8 @@ namespace JexusManager
 
         internal void AddSiteNode(Site site)
         {
-            ManagerTreeNode.AddToParent(GetCurrentData().SitesNode, new SiteTreeNode(_serviceContainer, site) { ContextMenuStrip = cmsSite });
+            var server = GetCurrentData();
+            ManagerTreeNode.AddToParent(server.SitesNode, new SiteTreeNode(_serviceContainer, site, server) { ContextMenuStrip = cmsSite });
         }
 
         internal void AddFarmNode(string farmName, List<FarmServerAdvancedSettings> servers)

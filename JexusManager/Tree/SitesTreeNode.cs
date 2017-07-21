@@ -19,13 +19,14 @@ namespace JexusManager.Tree
 
     internal sealed class SitesTreeNode : ManagerTreeNode
     {
-        public SitesTreeNode(IServiceProvider serviceProvider, SiteCollection sites)
+        public SitesTreeNode(IServiceProvider serviceProvider, SiteCollection sites, ServerTreeNode server)
             : base("Sites", serviceProvider)
         {
             ImageIndex = 3;
             SelectedImageIndex = 3;
             Tag = sites;
             ServerManager = sites.Parent;
+            ServerNode = server;
         }
 
         public override string PathToSite
@@ -44,6 +45,8 @@ namespace JexusManager.Tree
         }
 
         public override ServerManager ServerManager { get; set; }
+
+        public override ServerTreeNode ServerNode { get; }
 
         public override void LoadPanels(MainForm mainForm, ServiceContainer serviceContainer, List<ModuleProvider> moduleProviders)
         {

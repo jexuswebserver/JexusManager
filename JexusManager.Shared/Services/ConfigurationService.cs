@@ -6,6 +6,7 @@ namespace JexusManager.Services
 {
     using Microsoft.Web.Administration;
     using Microsoft.Web.Management.Server;
+    using System;
     using System.Windows.Forms;
 
     public class ConfigurationService : IConfigurationService
@@ -43,11 +44,15 @@ namespace JexusManager.Services
         {
             get
             {
-                return Server ??
+                var result = Server ??
                        Site?.Server ??
                        Application?.Server ??
                        VirtualDirectory?.Application.Server ??
                        PhysicalDirectory?.Application.Server;
+                if (result == null)
+                    throw new InvalidOperationException("server manager cannot be null");
+
+                return result;
             }
         }
 

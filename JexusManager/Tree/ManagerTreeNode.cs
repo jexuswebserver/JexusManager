@@ -32,6 +32,8 @@ namespace JexusManager.Tree
         public abstract string Uri { get; }
         public abstract ServerManager ServerManager { get; set; }
 
+        public abstract ServerTreeNode ServerNode { get; }
+
         public abstract void LoadPanels(MainForm mainForm, ServiceContainer serviceContainer, List<ModuleProvider> moduleProviders);
 
         public abstract Task HandleDoubleClick(MainForm mainForm);
@@ -53,7 +55,7 @@ namespace JexusManager.Tree
                 }
 
                 // IMPORTANT: only create level+1 vDir nodes.
-                var virtualDirectoryNode = new VirtualDirectoryTreeNode(ServiceProvider, virtualDirectory) { ContextMenuStrip = vDirMenu };
+                var virtualDirectoryNode = new VirtualDirectoryTreeNode(ServiceProvider, virtualDirectory, ServerNode) { ContextMenuStrip = vDirMenu };
                 treeNodes.Add(virtualDirectoryNode);
             }
 
@@ -78,7 +80,7 @@ namespace JexusManager.Tree
                         }
 
                         loaded.Add(app.Path);
-                        var appNode = new ApplicationTreeNode(ServiceProvider, app) { ContextMenuStrip = appMenu };
+                        var appNode = new ApplicationTreeNode(ServiceProvider, app, ServerNode) { ContextMenuStrip = appMenu };
                         treeNodes.Add(appNode);
                         isApp = true;
                     }
@@ -88,7 +90,7 @@ namespace JexusManager.Tree
                         continue;
                     }
 
-                    var directory = new PhysicalDirectoryTreeNode(ServiceProvider, new PhysicalDirectory(folder, path, rootApp))
+                    var directory = new PhysicalDirectoryTreeNode(ServiceProvider, new PhysicalDirectory(folder, path, rootApp), ServerNode)
                     {
                         ContextMenuStrip = phyMenu
                     };
@@ -119,7 +121,7 @@ namespace JexusManager.Tree
                 }
 
                 // IMPORTANT: only create level+1 physical nodes.
-                var appNode = new ApplicationTreeNode(ServiceProvider, application) { ContextMenuStrip = appMenu };
+                var appNode = new ApplicationTreeNode(ServiceProvider, application, ServerNode) { ContextMenuStrip = appMenu };
                 treeNodes.Add(appNode);
             }
 

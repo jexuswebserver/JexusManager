@@ -24,7 +24,7 @@ namespace JexusManager.Tree
     {
         private bool _loaded;
 
-        public ApplicationTreeNode(IServiceProvider serviceProvider, Application application)
+        public ApplicationTreeNode(IServiceProvider serviceProvider, Application application, ServerTreeNode server)
             : base(application.Path.Substring(application.Path.LastIndexOf('/') + 1), serviceProvider)
         {
             ImageIndex = 5;
@@ -33,6 +33,7 @@ namespace JexusManager.Tree
             Application = application;
             Nodes.Add("temp");
             ServerManager = application.Server;
+            ServerNode = server;
         }
 
         public Application Application { get; }
@@ -67,6 +68,8 @@ namespace JexusManager.Tree
         }
 
         public override ServerManager ServerManager { get; set; }
+
+        public override ServerTreeNode ServerNode { get; }
 
         public override void LoadPanels(MainForm mainForm, ServiceContainer serviceContainer, List<ModuleProvider> moduleProviders)
         {
@@ -132,7 +135,7 @@ namespace JexusManager.Tree
             }
 
             dialog.Application.Save();
-            AddToParent(this, new ApplicationTreeNode(ServiceProvider, dialog.Application) { ContextMenuStrip = appMenu });
+            AddToParent(this, new ApplicationTreeNode(ServiceProvider, dialog.Application, ServerNode) { ContextMenuStrip = appMenu });
         }
 
         public override void AddVirtualDirectory(ContextMenuStrip vDirMenu)
@@ -144,7 +147,7 @@ namespace JexusManager.Tree
             }
 
             //await dialog.VirtualDirectory.SaveAsync();
-            AddToParent(this, new VirtualDirectoryTreeNode(ServiceProvider, dialog.VirtualDirectory) { ContextMenuStrip = vDirMenu });
+            AddToParent(this, new VirtualDirectoryTreeNode(ServiceProvider, dialog.VirtualDirectory, ServerNode) { ContextMenuStrip = vDirMenu });
         }
 
         public async override Task HandleDoubleClick(MainForm mainForm)

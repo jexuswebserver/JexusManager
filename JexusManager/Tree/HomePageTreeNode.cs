@@ -40,6 +40,7 @@ namespace JexusManager.Tree
 
         public override ServerManager ServerManager { get; set; }
 
+        public override ServerTreeNode ServerNode { get; }
 
         public override void LoadPanels(MainForm mainForm, ServiceContainer serviceContainer, List<ModuleProvider> moduleProviders)
         {

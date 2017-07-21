@@ -22,7 +22,7 @@ namespace JexusManager.Tree
     {
         private bool _loaded;
 
-        public SiteTreeNode(IServiceProvider serviceProvider, Site site)
+        public SiteTreeNode(IServiceProvider serviceProvider, Site site, ServerTreeNode server)
             : base(site.Name, serviceProvider)
         {
             ImageIndex = 4;
@@ -31,6 +31,7 @@ namespace JexusManager.Tree
             Site = site;
             Nodes.Add("temp");
             ServerManager = site.Server;
+            ServerNode = server;
         }
 
         public Site Site { get; }
@@ -57,6 +58,8 @@ namespace JexusManager.Tree
         }
 
         public override ServerManager ServerManager { get; set; }
+
+        public override ServerTreeNode ServerNode { get; }
 
         public override void LoadPanels(MainForm mainForm, ServiceContainer serviceContainer, List<ModuleProvider> moduleProviders)
         {
@@ -123,7 +126,7 @@ namespace JexusManager.Tree
             }
 
             dialog.Application.Save();
-            AddToParent(this, new ApplicationTreeNode(ServiceProvider, dialog.Application) { ContextMenuStrip = appMenu });
+            AddToParent(this, new ApplicationTreeNode(ServiceProvider, dialog.Application, this.ServerNode) { ContextMenuStrip = appMenu });
         }
 
         public override void AddVirtualDirectory(ContextMenuStrip vDirMenu)
@@ -135,7 +138,7 @@ namespace JexusManager.Tree
             }
 
             //await dialog.VirtualDirectory.SaveAsync();
-            AddToParent(this, new VirtualDirectoryTreeNode(ServiceProvider, dialog.VirtualDirectory) { ContextMenuStrip = vDirMenu });
+            AddToParent(this, new VirtualDirectoryTreeNode(ServiceProvider, dialog.VirtualDirectory, this.ServerNode) { ContextMenuStrip = vDirMenu });
         }
 
         public override string Folder

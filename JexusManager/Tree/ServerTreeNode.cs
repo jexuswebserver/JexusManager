@@ -41,6 +41,8 @@ namespace JexusManager.Tree
 
         public TreeNode SitesNode => Nodes[1];
 
+        public override ServerTreeNode ServerNode => this;
+
         public bool IsLocalhost;
         public WorkingMode Mode;
         private NodeStatus _status;
@@ -276,11 +278,11 @@ namespace JexusManager.Tree
 
         public async Task<bool> LoadServerAsync(ContextMenuStrip poolsMenu, ContextMenuStrip sitesMenu, ContextMenuStrip siteMenu)
         {
-            Nodes.Add(new ApplicationPoolsTreeNode(ServiceProvider, ServerManager.ApplicationPools)
+            Nodes.Add(new ApplicationPoolsTreeNode(ServiceProvider, ServerManager.ApplicationPools, this)
             {
                 ContextMenuStrip = poolsMenu
             });
-            Nodes.Add(new SitesTreeNode(ServiceProvider, ServerManager.Sites)
+            Nodes.Add(new SitesTreeNode(ServiceProvider, ServerManager.Sites, this)
             {
                 ContextMenuStrip = sitesMenu
             });
@@ -288,7 +290,7 @@ namespace JexusManager.Tree
 
             foreach (Site site in ServerManager.Sites)
             {
-                var siteNode = new SiteTreeNode(ServiceProvider, site) { ContextMenuStrip = siteMenu };
+                var siteNode = new SiteTreeNode(ServiceProvider, site, this) { ContextMenuStrip = siteMenu };
                 SitesNode.Nodes.Add(siteNode);
             }
 
