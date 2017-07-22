@@ -77,7 +77,7 @@ namespace Microsoft.Web.Administration
                     sectionDefinition.OverrideModeDefault = element.Attribute(KEYWORD_SECTION_OVERRIDEMODEDEFAULT).LoadString(KEYWORD_OVERRIDEMODE_ALLOW);
                     sectionDefinition.AllowLocation = element.Attribute(KEYWORD_SECTION_ALLOWLOCATION).LoadString(KEYWORD_TRUE);
                     sectionDefinition.AllowDefinition = element.Attribute(KEYWORD_SECTION_ALLOWDEFINITION).LoadString(KEYWORD_SECTION_ALLOWDEFINITION_EVERYWHERE);
-                    sectionDefinition.Path = Name == string.Empty ? sectionDefinition.Name : string.Format("{0}/{1}", Path, sectionDefinition.Name);
+                    sectionDefinition.Path = Name == string.Empty ? sectionDefinition.Name : $"{Path}/{sectionDefinition.Name}";
 
                     SectionSchema schema;
                     sectionSchemas.TryGetValue(sectionDefinition.Path, out schema);
@@ -111,9 +111,9 @@ namespace Microsoft.Web.Administration
                 return null;
             }
 
-            if (this.Path.Length != 0)
+            if (Path.Length != 0)
             {
-                if (sectionPath.Length != this.Path.Length && sectionPath[this.Path.Length] != '/')
+                if (sectionPath.Length != Path.Length && sectionPath[Path.Length] != '/')
                 {
                     return null;
                 }
@@ -154,9 +154,9 @@ namespace Microsoft.Web.Administration
                 return null;
             }
 
-            if (this.Path.Length != 0)
+            if (Path.Length != 0)
             {
-                if (sectionPath.Length != this.Path.Length && sectionPath[this.Path.Length] != '/')
+                if (sectionPath.Length != Path.Length && sectionPath[Path.Length] != '/')
                 {
                     return null;
                 }
@@ -189,7 +189,7 @@ namespace Microsoft.Web.Administration
             return null;
         }
 
-        internal bool Add(ConfigurationSection section)
+        internal bool Add(ConfigurationSection section, Location location)
         {
             var index = section.ElementTagName.IndexOf(Path, StringComparison.Ordinal);
             if (index != 0)
@@ -197,9 +197,9 @@ namespace Microsoft.Web.Administration
                 return false;
             }
 
-            if (this.Path.Length != 0)
+            if (Path.Length != 0)
             {
-                if (section.ElementTagName.Length != this.Path.Length && section.ElementTagName[this.Path.Length] != '/')
+                if (section.ElementTagName.Length != Path.Length && section.ElementTagName[Path.Length] != '/')
                 {
                     return false;
                 }
@@ -208,7 +208,7 @@ namespace Microsoft.Web.Administration
             var definition = Sections.FirstOrDefault(item => item.Path == section.ElementTagName);
             if (definition != null)
             {
-                if (definition.AllowLocation == KEYWORD_FALSE && section.Location != null)
+                if (definition.AllowLocation == KEYWORD_FALSE && location != null && location.FromTag)
                 {
                     throw new ServerManagerException("Section is not allowed in location tag");
                 }
@@ -224,7 +224,7 @@ namespace Microsoft.Web.Administration
                 return true;
             }
 
-            if (SectionGroups.Select(@group => @group.Add(section)).Any(result => result))
+            if (SectionGroups.Select(@group => @group.Add(section, location)).Any(result => result))
             {
                 return true;
             }

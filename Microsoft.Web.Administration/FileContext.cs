@@ -359,7 +359,7 @@ namespace Microsoft.Web.Administration
                 if (sec != null)
                 {
                     var section = new ConfigurationSection(path, sec.Root, location?.Path, this, element);
-                    RootSectionGroup.Add(section);
+                    RootSectionGroup.Add(section, location);
                     node = section;
                 }
                 else
@@ -436,7 +436,7 @@ namespace Microsoft.Web.Administration
                         var found = Locations.FirstOrDefault(item => item.Path == path);
                         if (found == null)
                         {
-                            found = new Location(path, mode, element);
+                            found = new Location(path, mode, element, true);
                             Locations.Add(found);
                         }
 

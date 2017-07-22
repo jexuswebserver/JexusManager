@@ -11,12 +11,14 @@ namespace Microsoft.Web.Administration
         public string OverrideMode { get; private set; }
         public XElement Entity { get; set; }
         public string Path { get; internal set; }
+        public bool FromTag { get; private set; }
 
-        public Location(string path, string overrideMode, XElement entity)
+        public Location(string path, string overrideMode, XElement entity, bool fromTag = false)
         {
             Path = path;
             OverrideMode = overrideMode;
             Entity = entity;
+            FromTag = fromTag;
         }
     }
 }
