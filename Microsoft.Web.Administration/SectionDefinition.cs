@@ -22,5 +22,12 @@ namespace Microsoft.Web.Administration
         public string Type { get; set; }
         internal string Path { get; set; }
         internal FileContext FileContext { get; set; }
+        internal bool Ignore
+        {
+            get
+            {
+                return Type.StartsWith("System.Configuration.IgnoreSection, System.Configuration, Version=");
+            }
+        }
     }
 }

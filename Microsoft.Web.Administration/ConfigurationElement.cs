@@ -406,6 +406,11 @@ namespace Microsoft.Web.Administration
 
         private void ParseAttribute(XAttribute attribute)
         {
+            if (attribute.Name.NamespaceName == "http://www.w3.org/2000/xmlns/")
+            {
+                return;
+            }
+
             var name = attribute.Name.LocalName;
             switch (name)
             {

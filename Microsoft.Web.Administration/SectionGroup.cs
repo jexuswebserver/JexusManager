@@ -26,6 +26,7 @@ namespace Microsoft.Web.Administration
         internal const string KEYWORD_SECTION_ALLOWDEFINITION_MACHINEONLY = "MachineOnly";
         internal const string KEYWORD_SECTION_ALLOWDEFINITION_MACHINETOAPPLICATION = "MachineToApplication";
         internal const string KEYWORD_SECTION_ALLOWDEFINITION_MACHINETOWEBROOT = "MachineToWebRoot";
+        internal const string KEYWORD_SECTION_TYPE = "type";
         internal const string KEYWORD_SECTIONGROUP = "sectionGroup";
         internal const string KEYWORD_SECTIONGROUP_NAME = "name";
         internal const string KEYWORD_SECTION_OVERRIDEMODEDEFAULT = "overrideModeDefault";
@@ -78,6 +79,7 @@ namespace Microsoft.Web.Administration
                     sectionDefinition.AllowLocation = element.Attribute(KEYWORD_SECTION_ALLOWLOCATION).LoadString(KEYWORD_TRUE);
                     sectionDefinition.AllowDefinition = element.Attribute(KEYWORD_SECTION_ALLOWDEFINITION).LoadString(KEYWORD_SECTION_ALLOWDEFINITION_EVERYWHERE);
                     sectionDefinition.Path = Name == string.Empty ? sectionDefinition.Name : $"{Path}/{sectionDefinition.Name}";
+                    sectionDefinition.Type = element.Attribute(KEYWORD_SECTION_TYPE).LoadString(string.Empty);
 
                     SectionSchema schema;
                     sectionSchemas.TryGetValue(sectionDefinition.Path, out schema);
@@ -263,6 +265,34 @@ namespace Microsoft.Web.Administration
                 default:
                     throw new ServerManagerException("Invalid allow definition string");
             }
+        }
+
+        internal SectionDefinition GetSectionDefinition(string path)
+        {
+            var index = path.IndexOf(Path, StringComparison.Ordinal);
+            if (index != 0)
+            {
+                return null;
+            }
+
+            foreach (var definition in Sections)
+            {
+                if (definition.Path == path)
+                {
+                    return definition;
+                }
+            }
+
+            foreach (var child in SectionGroups)
+            {
+                var result = child.GetSectionDefinition(path);
+                if (result != null)
+                {
+                    return result;
+                }
+            }
+
+            return null;
         }
     }
 }

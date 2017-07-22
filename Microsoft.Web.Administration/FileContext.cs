@@ -377,6 +377,14 @@ namespace Microsoft.Web.Administration
                 parent?.AddChild(node);
                 result = true;
             }
+            else
+            {
+                var found = RootSectionGroup.GetSectionDefinition(path);
+                if (found != null && found.Ignore && path != "system.webServer")
+                {
+                    return true;
+                }
+            }
 
             foreach (var item in element.Nodes())
             {

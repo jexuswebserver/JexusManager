@@ -58,7 +58,7 @@ namespace JexusManager.Features.Authentication
                     {
                         existing.Name = string.Empty;
                         // TODO: reset password.
-                        existing.Password = null;
+                        existing.Password = string.Empty;
                     }
 
                     existing.Apply();
