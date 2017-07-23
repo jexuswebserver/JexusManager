@@ -282,8 +282,8 @@ namespace JexusManager
                 throw new InvalidOperationException("no selected node");
 
             var managerNode = treeView1.SelectedNode as ManagerTreeNode;
-            if (managerNode.ServerNode == null)
-                throw new InvalidOperationException("no server node");
+            if (managerNode?.ServerNode == null)
+                throw new InvalidOperationException($"no server node {treeView1.SelectedNode.GetType().FullName}");
 
             return managerNode.ServerNode;
         }
