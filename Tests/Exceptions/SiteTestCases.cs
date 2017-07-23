@@ -75,6 +75,155 @@ namespace Tests.Exceptions
         }
 
         [Fact]
+        public void TestIisExpressUnlockSection()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string Current = Path.Combine(directoryName, @"applicationHost.config");
+            string Original = Path.Combine(directoryName, @"original2.config");
+            var siteConfig = TestHelper.CopySiteConfig(directoryName, "original.config");
+            File.Copy(Original, Current, true);
+            TestHelper.FixPhysicalPathMono(Current);
+            
+            {
+                // add the section.
+                var file = XDocument.Load(Current);
+                var root = file.Root;
+                if (root == null)
+                {
+                    return;
+                }
+
+                var windows = root.XPathSelectElement("/configuration/configSections/sectionGroup[@name='system.webServer']/sectionGroup[@name='security']/sectionGroup[@name='authentication']/section[@name='windowsAuthentication']");
+                windows.SetAttributeValue("overrideModeDefault", "Allow");
+                file.Save(Current);
+            }
+
+            {
+                // add the section.
+                var file = XDocument.Load(siteConfig);
+                var root = file.Root;
+                if (root == null)
+                {
+                    return;
+                }
+
+                var pool = root.XPathSelectElement("/configuration/system.webServer");
+                var security = new XElement("security");
+                pool.Add(security);
+                var authentication = new XElement("authentication");
+                security.Add(authentication);
+                var windows = new XElement("windowsAuthentication");
+                authentication.Add(windows);
+                windows.SetAttributeValue("enabled", true);
+                file.Save(siteConfig);
+            }
+
+#if IIS
+            var server = new ServerManager(Current);
+#else
+            var server = new IisExpressServerManager(Current);
+#endif
+            var config = server.Sites[0].Applications[0].GetWebConfiguration();
+            
+            // enable Windows authentication
+            var windowsSection =
+                config.GetSection("system.webServer/security/authentication/windowsAuthentication");
+            Assert.True((bool)windowsSection["enabled"]);
+        }
+
+        [Fact]
+        public void TestIisExpressUnlockSectionWithRuntimeTag()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string Current = Path.Combine(directoryName, @"applicationHost.config");
+            string Original = Path.Combine(directoryName, @"original2.config");
+            var siteConfig = TestHelper.CopySiteConfig(directoryName, "original.config");
+            File.Copy(Original, Current, true);
+            TestHelper.FixPhysicalPathMono(Current);
+
+            {
+                // add the section.
+                var file = XDocument.Load(Current);
+                var root = file.Root;
+                if (root == null)
+                {
+                    return;
+                }
+
+                var windows = root.XPathSelectElement(
+                    "/configuration/configSections/sectionGroup[@name='system.webServer']/sectionGroup[@name='security']/sectionGroup[@name='authentication']/section[@name='windowsAuthentication']");
+                windows.SetAttributeValue("overrideModeDefault", "Allow");
+                file.Save(Current);
+            }
+
+            {
+                // add the section.
+                var file = XDocument.Load(siteConfig);
+                var root = file.Root;
+                if (root == null)
+                {
+                    return;
+                }
+
+                var pool = root.XPathSelectElement("/configuration/system.webServer");
+                var security = new XElement("security");
+                pool.Add(security);
+                var authentication = new XElement("authentication");
+                security.Add(authentication);
+                var windows = new XElement("windowsAuthentication");
+                authentication.Add(windows);
+                windows.SetAttributeValue("enabled", true);
+
+                var tag = "<runtime>" +
+                          "<asm:assemblyBinding xmlns:asm=\"urn:schemas-microsoft-com:asm.v1\">" +
+                          "<asm:dependentAssembly>" +
+                          "<asm:assemblyIdentity name=\"Newtonsoft.Json\" publicKeyToken=\"30ad4fe6b2a6aeed\" culture=\"neutral\" />" +
+                          "<asm:bindingRedirect oldVersion=\"4.5.0.0-9.0.0.0\" newVersion=\"9.0.0.0\" />" +
+                          "</asm:dependentAssembly>" +
+                          "</asm:assemblyBinding>" +
+                          "</runtime>";
+                var runtime = XElement.Parse(tag);
+                file.Root?.Add(runtime);
+                file.Save(siteConfig);
+            }
+
+#if IIS
+            var server = new ServerManager(Current);
+#else
+            var server = new IisExpressServerManager(Current);
+#endif
+            var config = server.Sites[0].Applications[0].GetWebConfiguration();
+
+            // enable Windows authentication
+            var windowsSection =
+                config.GetSection("system.webServer/security/authentication/windowsAuthentication");
+            Assert.True((bool) windowsSection["enabled"]);
+#if IIS
+            windowsSection.SetAttributeValue("enabled", false);
+            var exception = Assert.Throws<COMException>(() => server.CommitChanges());
+            Assert.Equal(0xc00cef03, (uint) exception.HResult);
+            Assert.Equal("Exception from HRESULT: 0xC00CEF03", exception.Message);
+#else
+            server.CommitChanges();
+#endif
+        }
+
+
+        [Fact]
         public void TestIisExpressUnknownSection()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
