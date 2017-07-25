@@ -158,6 +158,7 @@ namespace JexusManager.Dialogs
                 var result = MessageBox.Show(string.Format("The binding '{0}' is assigned to another site. If you assign the same binding to this site, you will only be able to start one of the sites. Are you sure that you want to add this duplicate binding?", binding), Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (result != DialogResult.Yes)
                 {
+                    _collection.Remove(NewSite);
                     return;
                 }
             }
