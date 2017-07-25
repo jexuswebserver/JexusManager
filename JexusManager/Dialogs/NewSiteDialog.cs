@@ -168,6 +168,7 @@ namespace JexusManager.Dialogs
                 var result = binding.FixCertificateMapping(info?.Certificate);
                 if (!string.IsNullOrEmpty(result))
                 {
+                    _collection.Remove(NewSite);
                     MessageBox.Show(string.Format("The binding '{0}' is invalid: {1}", binding, result), Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }

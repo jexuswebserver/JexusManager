@@ -356,6 +356,50 @@ namespace Tests.Exceptions
                 Assert.Equal(message, delete.Message);
             }
         }
+        
+        [Fact]
+        public void TestIisExpressNoBinding()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string Current = Path.Combine(directoryName, @"applicationHost.config");
+            string Original = Path.Combine(directoryName, @"original2.config");
+            TestHelper.CopySiteConfig(directoryName, "original.config");
+            File.Copy(Original, Current, true);
+            TestHelper.FixPhysicalPathMono(Current);
+
+            {
+                // change the path.
+                var file = XDocument.Load(Current);
+                var root = file.Root;
+                if (root == null)
+                {
+                    return;
+                }
+
+                var app = root.XPathSelectElement("/configuration/system.applicationHost/sites/site[@id='1']/bindings");
+                app.Remove();
+                file.Save(Current);
+            }
+#if IIS
+            var server = new ServerManager(Current);
+#else
+            var server = new IisExpressServerManager(Current);
+#endif
+            var site = server.Sites[0];
+            var exception = Assert.Throws<ArgumentOutOfRangeException>(
+                () =>
+                {
+                    var binding = site.Bindings[0];
+                });
+        }
+
 
         [Fact]
         public void TestIisExpressNoRootApplication()
