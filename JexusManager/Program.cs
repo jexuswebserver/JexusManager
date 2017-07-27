@@ -73,7 +73,7 @@ namespace JexusManager
             var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             Rollbar.PersonData(() => new Person(version)
             {
-                UserName = $"{Environment.OSVersion.ToString()} + {Get45PlusFromRegistry()}"
+                UserName = $"{GetWindowsVersion()} + {Get45PlusFromRegistry()}"
             });
             Rollbar.Report($"Jexus Manager started", ErrorLevel.Info);
             
@@ -91,6 +91,16 @@ namespace JexusManager
             {
                 Rollbar.Report(args.Exception);
             };
+        }
+
+        private static string GetWindowsVersion()
+        {
+            const string subkey = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion";
+            
+            using (RegistryKey ndpKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Default).OpenSubKey(subkey))
+            {
+                return ndpKey != null ? $"{ndpKey.GetValue("ProductName")} {ndpKey.GetValue("ReleaseId")}." : "Unknown Windows release.";
+            }
         }
         
         // https://docs.microsoft.com/en-us/dotnet/framework/migration-guide/how-to-determine-which-versions-are-installed#net_d

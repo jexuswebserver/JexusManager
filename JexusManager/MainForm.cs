@@ -495,6 +495,11 @@ namespace JexusManager
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
+            if (IsDisposed)
+            {
+                return;
+            }
+            
             var node = ((ManagerTreeNode)e.Node);
             var serverNode = node as ServerTreeNode;
             actUp.Enabled = !(serverNode != null || node is HomePageTreeNode);
