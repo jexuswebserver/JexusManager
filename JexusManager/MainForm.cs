@@ -276,12 +276,12 @@ namespace JexusManager
             }
         }
 
-        private ServerTreeNode GetCurrentData()
+        private ServerTreeNode GetCurrentData(TreeNode node)
         {
-            if (treeView1.SelectedNode == null)
+            if (node == null)
                 throw new InvalidOperationException("no selected node");
 
-            var managerNode = treeView1.SelectedNode as ManagerTreeNode;
+            var managerNode = node as ManagerTreeNode;
             if (managerNode?.ServerNode == null)
                 throw new InvalidOperationException($"no server node {treeView1.SelectedNode.GetType().FullName}");
 
@@ -290,7 +290,13 @@ namespace JexusManager
 
         private void actCreateSite_Execute(object sender, EventArgs e)
         {
-            var data = GetCurrentData();
+            var selected = treeView1.SelectedNode;
+            if (selected == null)
+            {
+                return;
+            }
+            
+            var data = GetCurrentData(selected);
             var dialog = new NewSiteDialog(_serviceContainer, data.ServerManager.Sites);
             if (dialog.ShowDialog(this) != DialogResult.OK)
             {
@@ -458,7 +464,13 @@ namespace JexusManager
 
         internal void RemoveSiteNode(Site site)
         {
-            var data = GetCurrentData();
+            var selected = treeView1.SelectedNode;
+            if (selected == null)
+            {
+                return;
+            }
+                
+            var data = GetCurrentData(selected);
             foreach (TreeNode node in data.SitesNode.Nodes)
             {
                 if (node.Tag == site)
@@ -572,7 +584,13 @@ namespace JexusManager
 
         internal void UpdateSiteNode(Site site)
         {
-            var data = GetCurrentData();
+            var selected = treeView1.SelectedNode;
+            if (selected == null)
+            {
+                return;
+            }
+            
+            var data = GetCurrentData(selected);
             foreach (TreeNode node in data.SitesNode.Nodes)
             {
                 if (node.Tag == site)
@@ -585,7 +603,13 @@ namespace JexusManager
 
         internal void ShowSite(Site site)
         {
-            var data = GetCurrentData();
+            var selected = treeView1.SelectedNode;
+            if (selected == null)
+            {
+                return;
+            }
+            
+            var data = GetCurrentData(selected);
             foreach (TreeNode node in data.SitesNode.Nodes)
             {
                 if (node.Tag == site)
@@ -598,7 +622,13 @@ namespace JexusManager
 
         internal void AddSiteNode(Site site)
         {
-            var server = GetCurrentData();
+            var selected = treeView1.SelectedNode;
+            if (selected == null)
+            {
+                return;
+            }
+            
+            var server = GetCurrentData(selected);
             ManagerTreeNode.AddToParent(server.SitesNode, new SiteTreeNode(_serviceContainer, site, server) { ContextMenuStrip = cmsSite });
         }
 
@@ -622,12 +652,24 @@ namespace JexusManager
 
         internal void LoadSites()
         {
-            treeView1.SelectedNode = GetCurrentData().SitesNode;
+            var selected = treeView1.SelectedNode;
+            if (selected == null)
+            {
+                return;
+            }
+            
+            treeView1.SelectedNode = GetCurrentData(selected).SitesNode;
         }
 
         internal void LoadPools()
         {
-            treeView1.SelectedNode = GetCurrentData().PoolsNode;
+            var selected = treeView1.SelectedNode;
+            if (selected == null)
+            {
+                return;
+            }
+            
+            treeView1.SelectedNode = GetCurrentData(selected).PoolsNode;
         }
 
         private void actUp_Execute(object sender, EventArgs e)
@@ -809,12 +851,12 @@ namespace JexusManager
                 treeView1.SelectedNode = e.Node;
             }
 
-            if (treeView1.SelectedNode is HomePageTreeNode)
+            if (e.Node is HomePageTreeNode)
             {
                 return;
             }
 
-            if (GetCurrentData()?.ServerManager == null && e.Button == MouseButtons.Right)
+            if (GetCurrentData(e.Node)?.ServerManager == null && e.Button == MouseButtons.Right)
             {
                 treeView1_NodeMouseDoubleClick(sender, e);
             }
