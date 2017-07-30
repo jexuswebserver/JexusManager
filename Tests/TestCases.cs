@@ -95,6 +95,10 @@ namespace Tests
             var sslSite = server.Sites[1];
             var sslBinding = sslSite.Bindings[1];
             Assert.Equal(SslFlags.Sni, sslBinding.SslFlags);
+            sslSite.Bindings.RemoveAt(1);
+            sslSite.Bindings.Add(":443:localhost", "https");
+            sslBinding = sslSite.Bindings[1];
+            Assert.Equal(SslFlags.None, sslBinding.SslFlags);
 
             var app = site.Applications[0];
             Assert.True(site.Applications.AllowsAdd);

@@ -30,12 +30,17 @@ namespace JexusManager.Dialogs
             InitializeComponent();
             cbType.SelectedIndex = 0;
             _collection = collection;
+            if (collection.Parent == null)
+            {
+                throw new InvalidOperationException("null server for site collection");
+            }
+            
             btnBrowse.Visible = collection.Parent.IsLocalhost;
             txtPool.Text = collection.Parent.ApplicationDefaults.ApplicationPoolName;
             btnChoose.Enabled = collection.Parent.Mode != WorkingMode.Jexus;
             txtHost.Text = collection.Parent.Mode == WorkingMode.IisExpress ? "localhost" : string.Empty;
             DialogHelper.LoadAddresses(cbAddress);
-            if (Environment.OSVersion.Version < new Version(6, 2))
+            if (!collection.Parent.SupportsSni)
             {
                 cbSniRequired.Enabled = false;
             }

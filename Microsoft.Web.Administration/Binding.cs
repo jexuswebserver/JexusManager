@@ -28,7 +28,11 @@ namespace Microsoft.Web.Administration
             Protocol = protocol;
             CertificateHash = hash;
             CertificateStoreName = store;
-            SslFlags = flags;
+            if (parent.Parent.Server.SupportsSni)
+            {
+                SslFlags = flags;
+            }
+
             Parent = parent;
         }
 
@@ -92,14 +96,18 @@ namespace Microsoft.Web.Administration
                 return;
             }
 
-            if (this.GetIsSni())
+            if (Parent.Parent.Server.SupportsSni)
             {
-                var sni = NativeMethods.QuerySslSniInfo(new Tuple<string, int>(_host, _endPoint.Port));
-                if (sni != null)
+                if (this.GetIsSni())
                 {
-                    CertificateHash = sni.Hash;
-                    CertificateStoreName = sni.StoreName;
-                    return;
+                    var sni = NativeMethods.QuerySslSniInfo(new Tuple<string, int>(_host, _endPoint.Port));
+                    if (sni != null)
+                    {
+                        CertificateHash = sni.Hash;
+                        CertificateStoreName = sni.StoreName;
+                        SslFlags = SslFlags.Sni;
+                        return;
+                    }
                 }
             }
 

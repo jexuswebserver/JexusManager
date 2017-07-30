@@ -67,7 +67,11 @@ namespace JexusManager.Features.Main
                     {
                         var hashString = Hex.ToHexString(binding.CertificateHash);
                         Debug($"SSLCertHash: {hashString}");
-                        Debug($"SSL Flags: {binding.SslFlags}");
+                        if (site.Server.SupportsSni)
+                        {
+                            Debug($"SSL Flags: {binding.SslFlags}");
+                        }
+
                         Debug("Testing EndPoint: 127.0.0.1");
 
                         var personal = new X509Store(binding.CertificateStoreName, StoreLocation.LocalMachine);

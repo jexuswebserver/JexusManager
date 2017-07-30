@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Diagnostics;
 using System.IO;
 
 namespace Microsoft.Web.Administration
@@ -30,6 +31,29 @@ namespace Microsoft.Web.Administration
         public static bool IsRunningOnMono()
         {
             return Type.GetType("Mono.Runtime") != null;
+        }
+
+        public static Version GetIisExpressVersion()
+        {
+            var fileName =
+                Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
+                    "IIS Express",
+                    "iisexpress.exe");
+            if (!File.Exists(fileName))
+            {
+                fileName = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
+                    "IIS Express",
+                    "iisexpress.exe");
+            }
+
+            if (File.Exists(fileName))
+            {
+                return new Version(FileVersionInfo.GetVersionInfo(fileName).ProductVersion);
+            }
+            
+            throw new InvalidOperationException("Cannot detect IIS Express installation.");
         }
     }
 }

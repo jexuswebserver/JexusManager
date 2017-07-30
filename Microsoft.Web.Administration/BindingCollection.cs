@@ -28,7 +28,9 @@ namespace Microsoft.Web.Administration
 
         public Binding Add(string bindingInformation, string bindingProtocol)
         {
-            throw new NotImplementedException();
+            var item = new Binding(bindingProtocol, bindingInformation, null, null, SslFlags.None, this);
+            InternalAdd(item);
+            return item;
         }
 
         public Binding Add(string bindingInformation, byte[] certificateHash, string certificateStoreName)

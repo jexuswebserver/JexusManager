@@ -6,11 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Microsoft.Web.Administration
 {
-    public abstract class ServerManager
+    public abstract class ServerManager : IFeatureDetection
     {
         private Configuration _applicationHost;
 
@@ -47,6 +46,8 @@ namespace Microsoft.Web.Administration
                            : HostName.ExtractName();
             }
         }
+
+        public abstract bool SupportsSni { get; }
 
         public WorkingMode Mode { get; protected set; }
 

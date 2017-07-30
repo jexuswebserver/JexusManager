@@ -16,15 +16,20 @@ namespace Microsoft.Web.Administration
 {
     public sealed class IisExpressServerManager : ServerManager
     {
-        public IisExpressServerManager(bool readOnly, string applicationHostConfigurationPath)
-            : base(readOnly, applicationHostConfigurationPath)
-        {
-            Mode = WorkingMode.IisExpress;
-        }
+        public Version Version { get; }
+
+        public override bool SupportsSni => Version >= new Version(8, 0) && Environment.OSVersion.Version >= new Version(6, 2);
 
         public IisExpressServerManager(string applicationHostConfigurationPath)
             : this(false, applicationHostConfigurationPath)
         {
+        }
+
+        public IisExpressServerManager(bool readOnly, string applicationHostConfigurationPath)
+            : base(readOnly, applicationHostConfigurationPath)
+        {
+            Mode = WorkingMode.IisExpress;
+            Version = Helper.GetIisExpressVersion();
         }
 
         internal override bool GetSiteState(Site site)

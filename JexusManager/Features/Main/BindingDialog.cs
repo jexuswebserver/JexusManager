@@ -20,36 +20,38 @@ namespace JexusManager.Features.Main
 
     public sealed partial class BindingDialog : DialogForm
     {
-        private Binding _binding;
         private readonly Site _site;
 
         public BindingDialog(IServiceProvider serviceProvider, Binding binding, Site site)
             : base(serviceProvider)
         {
             InitializeComponent();
-            _binding = binding;
+            Binding = binding;
             _site = site;
-            Text = _binding == null ? "Create Site Binding" : "Edit Site Binding";
+            Text = Binding == null ? "Create Site Binding" : "Edit Site Binding";
             DialogHelper.LoadAddresses(cbAddress);
             txtPort.Text = "80";
             cbType.SelectedIndex = 0;
-            if (Environment.OSVersion.Version < new Version(6, 2))
+            if (!Binding.Parent.Parent.Server.SupportsSni)
             {
                 cbSniRequired.Enabled = false;
             }
 
-            if (_binding == null)
+            if (Binding == null)
             {
                 txtHost.Text = site.Server.Mode == WorkingMode.IisExpress ? "localhost" : string.Empty;
                 return;
             }
 
-            cbType.Text = _binding.Protocol;
-            cbType.Enabled = _binding == null;
-            cbAddress.Text = _binding.EndPoint.Address.AddressToCombo();
-            txtPort.Text = _binding.EndPoint.Port.ToString();
-            txtHost.Text = _binding.Host.HostToDisplay();
-            cbSniRequired.Checked = _binding.GetIsSni();
+            cbType.Text = Binding.Protocol;
+            cbType.Enabled = Binding == null;
+            cbAddress.Text = Binding.EndPoint.Address.AddressToCombo();
+            txtPort.Text = Binding.EndPoint.Port.ToString();
+            txtHost.Text = Binding.Host.HostToDisplay();
+            if (Binding.Parent.Parent.Server.SupportsSni)
+            {
+                cbSniRequired.Checked = Binding.GetIsSni();
+            }
         }
 
         private void CbTypeSelectedIndexChanged(object sender, EventArgs e)
@@ -118,18 +120,16 @@ namespace JexusManager.Features.Main
             var host = txtHost.Text.DisplayToHost();
             var binding = new Binding(
                 cbType.Text,
-                string.Format("{0}:{1}:{2}", address.AddressToDisplay(), port, host.HostToDisplay()),
+                $"{address.AddressToDisplay()}:{port}:{host.HostToDisplay()}",
                 cbType.Text == "https" ? certificate?.Certificate.GetCertHash() : new byte[0],
                 cbType.Text == "https" ? certificate?.Store : null,
                 cbSniRequired.Checked ? SslFlags.Sni : SslFlags.None,
                 _site.Bindings);
-            var matched = _site.Parent.FindDuplicate(binding, _site, _binding);
+            var matched = _site.Parent.FindDuplicate(binding, _site, Binding);
             if (matched == true)
             {
                 var result = ShowMessage(
-                        string.Format(
-                            "The binding '{0}' is assigned to another site. If you assign the same binding to this site, you will only be able to start one of the sites. Are you sure that you want to add this duplicate binding?",
-                            _binding),
+                    $"The binding '{Binding}' is assigned to another site. If you assign the same binding to this site, you will only be able to start one of the sites. Are you sure that you want to add this duplicate binding?",
                         MessageBoxButtons.YesNo,
                         MessageBoxIcon.Question,
                         MessageBoxDefaultButton.Button1);
@@ -149,21 +149,21 @@ namespace JexusManager.Features.Main
                 return;
             }
 
-            if (_binding == null)
+            if (Binding == null)
             {
-                _binding = binding;
+                Binding = binding;
             }
             else
             {
-                _binding.Reinitialize(binding);
+                Binding.Reinitialize(binding);
             }
 
             if (_site.Server.Mode == WorkingMode.IisExpress)
             {
-                var result = _binding.FixCertificateMapping(certificate?.Certificate);
+                var result = Binding.FixCertificateMapping(certificate?.Certificate);
                 if (!string.IsNullOrEmpty(result))
                 {
-                    MessageBox.Show(string.Format("The binding '{0}' is invalid: {1}", _binding, result), Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"The binding '{Binding}' is invalid: {result}", Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
             }
@@ -171,10 +171,7 @@ namespace JexusManager.Features.Main
             DialogResult = DialogResult.OK;
         }
 
-        internal Binding Binding
-        {
-            get { return _binding; }
-        }
+        internal Binding Binding { get; private set; }
 
         private void CbAddressTextChanged(object sender, EventArgs e)
         {
@@ -203,7 +200,7 @@ namespace JexusManager.Features.Main
         private void BindingDialogLoad(object sender, EventArgs e)
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            DialogHelper.LoadCertificates(cbCertificates, _binding?.CertificateHash, service);
+            DialogHelper.LoadCertificates(cbCertificates, Binding?.CertificateHash, service);
         }
 
         private void CbCertificatesSelectedIndexChanged(object sender, EventArgs e)

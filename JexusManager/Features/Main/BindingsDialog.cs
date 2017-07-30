@@ -61,7 +61,9 @@ namespace JexusManager.Features.Main
                 return;
             }
 
-            var toElevate = selected && ((Binding)listView1.SelectedItems[0].Tag).GetIsSni();
+            var binding = (Binding)listView1.SelectedItems[0].Tag;
+            var supportsSni = binding.Parent.Parent.Server.SupportsSni;
+            var toElevate = selected && (!supportsSni || (supportsSni && binding.GetIsSni()));
             if (toElevate)
             {
                 JexusManager.NativeMethods.TryAddShieldToButton(btnRemove);

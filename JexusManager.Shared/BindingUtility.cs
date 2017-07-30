@@ -25,16 +25,20 @@ namespace Microsoft.Web.Administration
 
         internal static void Reinitialize(this Binding original, Binding binding)
         {
-            if (original.GetIsSni() && (!binding.GetIsSni() || original.Host != binding.Host))
+            if (original.Parent.Parent.Server.SupportsSni)
             {
-                original.CleanUpSni();
+                if (original.GetIsSni() && (!binding.GetIsSni() || original.Host != binding.Host))
+                {
+                    original.CleanUpSni();
+                }
+
+                original.SslFlags = binding.SslFlags;
             }
 
             original.BindingInformation = binding.BindingInformation;
             original.Protocol = binding.Protocol;
             original.CertificateHash = binding.CertificateHash;
             original.CertificateStoreName = binding.CertificateStoreName;
-            original.SslFlags = binding.SslFlags;
             binding.Delete();
         }
 
@@ -45,114 +49,119 @@ namespace Microsoft.Web.Administration
                 return string.Empty;
             }
 
-            if (binding.GetIsSni())
+            if (binding.Parent.Parent.Server.SupportsSni)
             {
-                if (certificate2.GetNameInfo(X509NameType.DnsName, false) != binding.Host)
+                if (binding.GetIsSni())
                 {
-                    return "SNI mode requires host name matches common name of the certificate";
-                }
-
-                // handle SNI
-                var sni = NativeMethods.QuerySslSniInfo(new Tuple<string, int>(binding.Host, binding.EndPoint.Port));
-                if (sni == null)
-                {
-                    try
+                    if (certificate2.GetNameInfo(X509NameType.DnsName, false) != binding.Host)
                     {
-                        // register mapping
-                        using (var process = new Process())
+                        return "SNI mode requires host name matches common name of the certificate";
+                    }
+
+                    // handle SNI
+                    var sni = NativeMethods.QuerySslSniInfo(new Tuple<string, int>(binding.Host,
+                        binding.EndPoint.Port));
+                    if (sni == null)
+                    {
+                        try
                         {
-                            var start = process.StartInfo;
-                            start.Verb = "runas";
-                            start.FileName = "cmd";
-                            start.Arguments = string.Format(
-                                "/c \"\"{2}\" /h:\"{0}\" /s:{1}\" /i:{3} /a:{4} /o:{5} /x:{6}",
-                                Hex.ToHexString(binding.CertificateHash),
-                                binding.CertificateStoreName,
-                                Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe"),
-                                AppIdIisExpress,
-                                binding.EndPoint.Address,
-                                binding.EndPoint.Port,
-                                binding.Host);
-                            start.CreateNoWindow = true;
-                            start.WindowStyle = ProcessWindowStyle.Hidden;
-                            process.Start();
-                            process.WaitForExit();
-
-                            if (process.ExitCode != 0)
+                            // register mapping
+                            using (var process = new Process())
                             {
-                                return "Register new certificate failed: access is denied";
-                            }
+                                var start = process.StartInfo;
+                                start.Verb = "runas";
+                                start.FileName = "cmd";
+                                start.Arguments = string.Format(
+                                    "/c \"\"{2}\" /h:\"{0}\" /s:{1}\" /i:{3} /a:{4} /o:{5} /x:{6}",
+                                    Hex.ToHexString(binding.CertificateHash),
+                                    binding.CertificateStoreName,
+                                    Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe"),
+                                    AppIdIisExpress,
+                                    binding.EndPoint.Address,
+                                    binding.EndPoint.Port,
+                                    binding.Host);
+                                start.CreateNoWindow = true;
+                                start.WindowStyle = ProcessWindowStyle.Hidden;
+                                process.Start();
+                                process.WaitForExit();
 
-                            return string.Empty;
+                                if (process.ExitCode != 0)
+                                {
+                                    return "Register new certificate failed: access is denied";
+                                }
+
+                                return string.Empty;
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            // elevation is cancelled.
+                            return "Register new certificate failed: operation is cancelled";
                         }
                     }
-                    catch (Exception)
-                    {
-                        // elevation is cancelled.
-                        return "Register new certificate failed: operation is cancelled";
-                    }
-                }
 
-                if (!sni.Hash.SequenceEqual(binding.CertificateHash))
-                {
-                    // TODO: fix the error message.
-                    var result =
-                        MessageBox.Show(
-                            "At least one other site is using the same HTTPS binding and the binding is configured with a different certificate. Are you sure that you want to reuse this HTTPS binding and reassign the other site or sites to use the new certificate?",
-                            "TODO",
-                            MessageBoxButtons.YesNo,
-                            MessageBoxIcon.Question,
-                            MessageBoxDefaultButton.Button1);
-                    if (result != DialogResult.Yes)
+                    if (!sni.Hash.SequenceEqual(binding.CertificateHash))
                     {
-                        return "Certificate hash does not match. Please use the certificate that matches HTTPS binding";
-                    }
-
-                    try
-                    {
-                        // register mapping
-                        using (var process = new Process())
+                        // TODO: fix the error message.
+                        var result =
+                            MessageBox.Show(
+                                "At least one other site is using the same HTTPS binding and the binding is configured with a different certificate. Are you sure that you want to reuse this HTTPS binding and reassign the other site or sites to use the new certificate?",
+                                "TODO",
+                                MessageBoxButtons.YesNo,
+                                MessageBoxIcon.Question,
+                                MessageBoxDefaultButton.Button1);
+                        if (result != DialogResult.Yes)
                         {
-                            var start = process.StartInfo;
-                            start.Verb = "runas";
-                            start.FileName = "cmd";
-                            start.Arguments = string.Format(
-                                "/c \"\"{2}\" /h:\"{0}\" /s:{1}\" /i:{3} /a:{4} /o:{5} /x:{6}",
-                                Hex.ToHexString(binding.CertificateHash),
-                                binding.CertificateStoreName,
-                                Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe"),
-                                AppIdIisExpress,
-                                binding.EndPoint.Address,
-                                binding.EndPoint.Port,
-                                binding.Host);
-                            start.CreateNoWindow = true;
-                            start.WindowStyle = ProcessWindowStyle.Hidden;
-                            process.Start();
-                            process.WaitForExit();
+                            return
+                                "Certificate hash does not match. Please use the certificate that matches HTTPS binding";
+                        }
 
-                            if (process.ExitCode != 0)
+                        try
+                        {
+                            // register mapping
+                            using (var process = new Process())
                             {
-                                return "Register new certificate failed: access is denied";
-                            }
+                                var start = process.StartInfo;
+                                start.Verb = "runas";
+                                start.FileName = "cmd";
+                                start.Arguments = string.Format(
+                                    "/c \"\"{2}\" /h:\"{0}\" /s:{1}\" /i:{3} /a:{4} /o:{5} /x:{6}",
+                                    Hex.ToHexString(binding.CertificateHash),
+                                    binding.CertificateStoreName,
+                                    Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe"),
+                                    AppIdIisExpress,
+                                    binding.EndPoint.Address,
+                                    binding.EndPoint.Port,
+                                    binding.Host);
+                                start.CreateNoWindow = true;
+                                start.WindowStyle = ProcessWindowStyle.Hidden;
+                                process.Start();
+                                process.WaitForExit();
 
-                            return string.Empty;
+                                if (process.ExitCode != 0)
+                                {
+                                    return "Register new certificate failed: access is denied";
+                                }
+
+                                return string.Empty;
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            // elevation is cancelled.
+                            return "Register new certificate failed: operation is cancelled";
                         }
                     }
-                    catch (Exception)
+
+                    if (!string.Equals(sni.StoreName, binding.CertificateStoreName, StringComparison.OrdinalIgnoreCase))
                     {
-                        // elevation is cancelled.
-                        return "Register new certificate failed: operation is cancelled";
+                        // TODO: can this happen?
+                        return
+                            "Certificate store name does not match. Please use the certificate that matches HTTPS binding";
                     }
-                }
 
-                if (!string.Equals(sni.StoreName, binding.CertificateStoreName, StringComparison.OrdinalIgnoreCase))
-                {
-                    // TODO: can this happen?
-                    return
-                        "Certificate store name does not match. Please use the certificate that matches HTTPS binding";
+                    return string.Empty;
                 }
-
-                return string.Empty;
             }
 
             // handle IP based
