@@ -35,17 +35,19 @@ namespace Microsoft.Web.Administration
 
         public Binding Add(string bindingInformation, byte[] certificateHash, string certificateStoreName)
         {
-            throw new NotImplementedException();
+            return Add(bindingInformation, certificateHash, certificateStoreName, SslFlags.None);
         }
 
         public Binding Add(string bindingInformation, byte[] certificateHash, string certificateStoreName, SslFlags sslFlags)
         {
-            throw new NotImplementedException();
+            var item = new Binding("https", bindingInformation, certificateHash, certificateStoreName, sslFlags, this);
+            InternalAdd(item);
+            return item;
         }
 
         protected override Binding CreateNewElement(string elementTagName)
         {
-            throw new NotImplementedException();
+            return new Binding(null, this);
         }
 
         public void Remove(Binding element, bool removeConfigOnly)

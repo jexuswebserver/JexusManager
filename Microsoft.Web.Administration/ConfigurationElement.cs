@@ -90,6 +90,7 @@ namespace Microsoft.Web.Administration
 
         internal void Validate(bool loading)
         {
+            List<string> missing = null;
             foreach (ConfigurationAttributeSchema attribute in this.Schema.AttributeSchemas)
             {
                 if (!attribute.IsRequired)
@@ -99,19 +100,39 @@ namespace Microsoft.Web.Administration
 
                 if (!this.RawAttributes.ContainsKey(attribute.Name))
                 {
-                    if (loading)
+                    if (missing == null)
                     {
-                        var line = (this.Entity as IXmlLineInfo).LineNumber;
-                        var error = string.Format("Missing required attribute '{0}'", attribute.Name);
-                        throw new COMException(
-                            string.Format("Line number: {0}\r\nError: {1}\r\n", line, error));
+                        missing = new List<string>();
                     }
 
-                    throw new FileNotFoundException(
-                        string.Format(
-                            "Filename: \r\nError: Element is missing required attributes {0}\r\n\r\n",
-                            attribute.Name));
+                    missing.Add(attribute.Name);
                 }
+            }
+
+            if (missing != null)
+            {
+                string error;
+                if (!loading)
+                {
+                    error = $"required attributes {StringExtensions.Combine(missing, ",")}";
+                }
+                else if (missing.Count == 1)
+                {
+                    error = $"required attribute '{missing[0]}'";
+                }
+                else
+                {
+                    error = $"required attributes '{StringExtensions.Combine(missing, ",")}'";
+                }
+
+                if (loading)
+                {
+                    var line = (this.Entity as IXmlLineInfo).LineNumber;
+                    throw new COMException(
+                        string.Format("Line number: {0}\r\nError: Missing {1}\r\n", line, error));
+                }
+
+                throw new FileNotFoundException($"Filename: \r\nError: Element is missing {error}\r\n\r\n");
             }
         }
 

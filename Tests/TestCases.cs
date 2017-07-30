@@ -94,11 +94,30 @@ namespace Tests
 
             var sslSite = server.Sites[1];
             var sslBinding = sslSite.Bindings[1];
+            var certificateHash = sslBinding.CertificateHash;
+            var certificateStoreName = sslBinding.CertificateStoreName;
             Assert.Equal(SslFlags.Sni, sslBinding.SslFlags);
+
             sslSite.Bindings.RemoveAt(1);
             sslSite.Bindings.Add(":443:localhost", "https");
             sslBinding = sslSite.Bindings[1];
             Assert.Equal(SslFlags.None, sslBinding.SslFlags);
+
+            sslSite.Bindings.RemoveAt(1);
+            sslSite.Bindings.Add(":443:localhost", certificateHash, certificateStoreName, SslFlags.Sni);
+            sslBinding = sslSite.Bindings[1];
+            Assert.Equal(SslFlags.Sni, sslBinding.SslFlags);
+
+            sslSite.Bindings.RemoveAt(1);
+            sslSite.Bindings.Add(":443:localhost", certificateHash, certificateStoreName);
+            sslBinding = sslSite.Bindings[1];
+            Assert.Equal(SslFlags.None, sslBinding.SslFlags);
+
+            {
+                sslBinding = sslSite.Bindings.CreateElement();
+                var exception = Assert.Throws<FileNotFoundException>(() => sslSite.Bindings.Add(sslBinding));
+                Assert.Equal("Filename: \r\nError: Element is missing required attributes protocol,bindingInformation\r\n\r\n", exception.Message);
+            }
 
             var app = site.Applications[0];
             Assert.True(site.Applications.AllowsAdd);

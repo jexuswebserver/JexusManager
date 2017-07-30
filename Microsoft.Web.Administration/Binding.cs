@@ -16,7 +16,7 @@ namespace Microsoft.Web.Administration
         private bool _initialized;
 
         public Binding(ConfigurationElement element, BindingCollection parent)
-            : base(element, null, null, parent, null, null)
+            : base(element, "binding", null, parent, null, null)
         {
             Parent = parent;
         }
