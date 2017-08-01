@@ -14,6 +14,7 @@ namespace Microsoft.Web.Administration
 
         public static string ExpandIisExpressEnvironmentVariables(this string path)
         {
+            // TODO: IIS_BIN should check pool bitness.
             return Environment.ExpandEnvironmentVariables(path.Replace("%IIS_SITES_HOME%",
                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "My Web Sites"))
                 .Replace("%IIS_USER_HOME%",
@@ -52,8 +53,8 @@ namespace Microsoft.Web.Administration
             {
                 return new Version(FileVersionInfo.GetVersionInfo(fileName).ProductVersion);
             }
-            
-            throw new InvalidOperationException("Cannot detect IIS Express installation.");
+
+            return Version.Parse("0.0.0.0");
         }
     }
 }

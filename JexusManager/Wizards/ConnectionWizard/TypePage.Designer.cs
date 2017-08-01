@@ -31,6 +31,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.label2 = new System.Windows.Forms.Label();
             this.rbJexus = new System.Windows.Forms.RadioButton();
             this.rbIisExpress = new System.Windows.Forms.RadioButton();
@@ -38,6 +39,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.SuspendLayout();
             // 
             // label2
@@ -138,5 +140,6 @@
         private Label label1;
         private Label label3;
         private Label label4;
+        private ToolTip toolTip1;
     }
 }

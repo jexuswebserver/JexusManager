@@ -24,6 +24,13 @@ namespace JexusManager.Wizards.ConnectionWizard
             if (Helper.IsRunningOnMono())
             {
                 rbIisExpress.Enabled = false;
+                toolTip1.SetToolTip(rbIisExpress, "IIS Express is not supported when running on Mono.");
+            }
+
+            if (Helper.GetIisExpressVersion() == Version.Parse("0.0.0.0"))
+            {
+                rbIisExpress.Enabled = false;
+                toolTip1.SetToolTip(rbIisExpress, "IIS Express is not installed to the default location.");
             }
         }
 
