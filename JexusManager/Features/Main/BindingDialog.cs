@@ -32,7 +32,7 @@ namespace JexusManager.Features.Main
             DialogHelper.LoadAddresses(cbAddress);
             txtPort.Text = "80";
             cbType.SelectedIndex = 0;
-            if (!Binding.Parent.Parent.Server.SupportsSni)
+            if (!site.Server.SupportsSni)
             {
                 cbSniRequired.Enabled = false;
             }
@@ -48,7 +48,7 @@ namespace JexusManager.Features.Main
             cbAddress.Text = Binding.EndPoint.Address.AddressToCombo();
             txtPort.Text = Binding.EndPoint.Port.ToString();
             txtHost.Text = Binding.Host.HostToDisplay();
-            if (Binding.Parent.Parent.Server.SupportsSni)
+            if (site.Server.SupportsSni)
             {
                 cbSniRequired.Checked = Binding.GetIsSni();
             }
