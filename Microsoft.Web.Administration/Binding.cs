@@ -38,7 +38,7 @@ namespace Microsoft.Web.Administration
 
         public override string ToString()
         {
-            return $"{EndPoint.Address.AddressToDisplay()}:{EndPoint.Port}:{Host.HostToDisplay()}";
+            return EndPoint == null ? BindingInformation : $"{EndPoint.Address.AddressToDisplay()}:{EndPoint.Port}:{Host.HostToDisplay()}";
         }
 
         public string BindingInformation
