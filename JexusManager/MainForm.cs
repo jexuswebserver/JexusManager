@@ -499,7 +499,12 @@ namespace JexusManager
             {
                 return;
             }
-            
+
+            if (e.Node == null)
+            {
+                return;
+            }
+                       
             var node = ((ManagerTreeNode)e.Node);
             var serverNode = node as ServerTreeNode;
             actUp.Enabled = !(serverNode != null || node is HomePageTreeNode);
