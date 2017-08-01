@@ -73,7 +73,7 @@ namespace JexusManager
             var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             Rollbar.PersonData(() => new Person(version)
             {
-                UserName = $"{GetWindowsVersion()} + {Get45PlusFromRegistry()}"
+                UserName = $"{version} on {GetWindowsVersion()} with {Get45PlusFromRegistry()}"
             });
             Rollbar.Report($"Jexus Manager started", ErrorLevel.Info);
             
@@ -99,7 +99,7 @@ namespace JexusManager
             
             using (RegistryKey ndpKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Default).OpenSubKey(subkey))
             {
-                return ndpKey != null ? $"{ndpKey.GetValue("ProductName")} {ndpKey.GetValue("ReleaseId")}." : "Unknown Windows release.";
+                return ndpKey != null ? $"{ndpKey.GetValue("ProductName")} ({ndpKey.GetValue("ReleaseId", "unknown")})" : "Unknown Windows release";
             }
         }
         
