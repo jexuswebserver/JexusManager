@@ -49,7 +49,7 @@ namespace JexusManager.Wizards.ConnectionWizard
                 SetNextPage(_iisExpressPage);
             }
 
-            this.UpdateWizard();
+            UpdateWizard();
         }
     }
 }
