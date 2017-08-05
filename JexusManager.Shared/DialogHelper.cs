@@ -62,6 +62,11 @@ namespace JexusManager
         {
             comboBox.Items.Add("No selected");
             comboBox.SelectedIndex = 0;
+            if (service == null)
+            {
+                throw new InvalidOperationException("null service");
+            }
+
             if (service.ServerManager.Mode == WorkingMode.Jexus)
             {
                 var certificate = AsyncHelper.RunSync(() => ((JexusServerManager)service.ServerManager).GetCertificateAsync());
@@ -94,7 +99,7 @@ namespace JexusManager
 
             store1.Close();
 
-            if (Environment.OSVersion.Version.Major < 8)
+            if (Environment.OSVersion.Version < new Version(6, 2))
             {
                 // IMPORTANT: WebHosting store is available since Windows 8.
                 return;
