@@ -54,6 +54,7 @@ namespace JexusManager.Tree
             serviceContainer.RemoveService(typeof(IControlPanel));
             var sites = (SiteCollection)Tag;
             var scope = ManagementScope.Server;
+            serviceContainer.AddService(typeof(IControlPanel), new ControlPanel());
             serviceContainer.AddService(typeof(IConfigurationService),
                 new ConfigurationService(mainForm, null, scope, sites.Parent, null, null, null, null, null));
             IModulePage page = new SitesPage(mainForm);
