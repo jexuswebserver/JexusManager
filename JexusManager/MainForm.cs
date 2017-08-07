@@ -869,6 +869,7 @@ namespace JexusManager
             if (GetCurrentData(e.Node)?.ServerManager == null && e.Button == MouseButtons.Right)
             {
                 treeView1_NodeMouseDoubleClick(sender, e);
+                treeView1_AfterSelect(sender, new TreeViewEventArgs(e.Node));
             }
         }
 
