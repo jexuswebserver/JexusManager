@@ -153,7 +153,14 @@ namespace Microsoft.Web.Administration
                     }
                 }
 
-                _document?.Save(FileName);
+                if (_document != null)
+                {
+                    using (var stream = File.Open(FileName, FileMode.Open, FileAccess.Write, FileShare.None))
+                    using (var reader = XmlWriter.Create(stream))
+                    {
+                        _document.Save(reader);
+                    }
+                }
             }
         }
 
@@ -412,7 +419,12 @@ namespace Microsoft.Web.Administration
 
         private void LoadDocument(string file, string location)
         {
-            _document = XDocument.Load(file, LoadOptions.SetLineInfo);
+            using (var stream = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (var reader = XmlReader.Create(stream))
+            {
+                _document = XDocument.Load(reader, LoadOptions.SetLineInfo);
+            }
+
             if (Root == null)
             {
                 return;
@@ -538,7 +550,12 @@ namespace Microsoft.Web.Administration
             }
 
             File.WriteAllText(file, "<?xml version=\"1.0\" encoding=\"utf-8\"?><configuration></configuration>");
-            _document = XDocument.Load(file);
+            using (var stream = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (var reader = XmlReader.Create(stream))
+            {
+                _document = XDocument.Load(reader, LoadOptions.SetLineInfo);
+            }
+
             return Root;
         }
 

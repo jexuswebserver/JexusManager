@@ -9,16 +9,12 @@ namespace Microsoft.Web.Management.Features.Administrators
 {
     public sealed class AdministratorsModuleProvider : ModuleProvider
     {
-        public override ModuleDefinition GetModuleDefinition(
-            IManagementContext context
-            )
+        public override ModuleDefinition GetModuleDefinition(IManagementContext context)
         {
             return null;
         }
 
-        public override bool SupportsScope(
-            ManagementScope scope
-            )
+        public override bool SupportsScope(ManagementScope scope)
         {
             return false;
         }
