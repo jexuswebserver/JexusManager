@@ -904,6 +904,7 @@ namespace JexusManager
         private void treeView1_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             ((ManagerTreeNode)e.Node).HandleDoubleClick(this);
+            treeView1_AfterSelect(sender, new TreeViewEventArgs(e.Node));
         }
 
         private void btnUpdate_Click(object sender, EventArgs e)
