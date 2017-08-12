@@ -10,25 +10,24 @@ namespace JexusManager.Features.Main
 
     using Microsoft.Web.Administration;
     using Microsoft.Web.Management.Client.Win32;
+    using System.Reactive.Disposables;
+    using System.Reactive.Linq;
 
     public partial class IdentityDialog : DialogForm
     {
-        private readonly ApplicationPoolProcessModel _element;
-
         public IdentityDialog(IServiceProvider serviceProvider, ApplicationPoolProcessModel element)
             : base(serviceProvider)
         {
-            _element = element;
             InitializeComponent();
-            rbBuiltin.Checked = _element.IdentityType != ProcessModelIdentityType.SpecificUser;
+            rbBuiltin.Checked = element.IdentityType != ProcessModelIdentityType.SpecificUser;
             rbCustom.Checked = !rbBuiltin.Checked;
-            if (_element.IdentityType == ProcessModelIdentityType.SpecificUser)
+            if (element.IdentityType == ProcessModelIdentityType.SpecificUser)
             {
-                txtCustom.Text = _element.UserName;
+                txtCustom.Text = element.UserName;
             }
             else
             {
-                switch (_element.IdentityType)
+                switch (element.IdentityType)
                 {
                     case ProcessModelIdentityType.LocalSystem:
                         cbBuiltin.SelectedIndex = 1;
@@ -46,60 +45,73 @@ namespace JexusManager.Features.Main
                         throw new ArgumentOutOfRangeException();
                 }
             }
+
+            var container = new CompositeDisposable();
+            FormClosed += (sender, args) => container.Dispose();
+
+            container.Add(
+                Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(evt =>
+                {
+                    if (rbCustom.Checked)
+                    {
+                        element.UserName = txtCustom.Text;
+                        element.IdentityType = ProcessModelIdentityType.SpecificUser;
+                    }
+
+                    if (rbBuiltin.Checked)
+                    {
+                        element.UserName = string.Empty;
+                        switch (cbBuiltin.SelectedIndex)
+                        {
+                            case 0:
+                                element.IdentityType = ProcessModelIdentityType.LocalService;
+                                break;
+                            case 1:
+                                element.IdentityType = ProcessModelIdentityType.LocalSystem;
+                                break;
+                            case 2:
+                                element.IdentityType = ProcessModelIdentityType.NetworkService;
+                                break;
+                            case 3:
+                                element.IdentityType = ProcessModelIdentityType.ApplicationPoolIdentity;
+                                break;
+                        }
+                    }
+
+                    this.DialogResult = DialogResult.OK;
+                }));
+
+            container.Add(
+                Observable.FromEventPattern<EventArgs>(rbBuiltin, "CheckedChanged")
+                .Merge(Observable.FromEventPattern<EventArgs>(rbCustom, "CheckedChanged"))
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(evt =>
+                {
+                    txtCustom.Enabled = btnSet.Enabled = rbCustom.Checked;
+                    cbBuiltin.Enabled = rbBuiltin.Checked;
+                }));
+
+            container.Add(
+                Observable.FromEventPattern<EventArgs>(btnSet, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(evt =>
+                {
+                    var dialog = new CredentialsDialog(null, txtCustom.Text);
+                    if (dialog.ShowDialog() != DialogResult.OK)
+                    {
+                        return;
+                    }
+
+                    txtCustom.Text = dialog.UserName;
+                    element.Password = dialog.Password;
+                }));
         }
 
         private void IdentityDialogHelpButtonClicked(object sender, System.ComponentModel.CancelEventArgs e)
         {
             Process.Start("http://go.microsoft.com/fwlink/?LinkId=210456#ApplicationPoolIdentity");
-        }
-
-        private void BtnOkClick(object sender, EventArgs e)
-        {
-            if (rbCustom.Checked)
-            {
-                _element.UserName = txtCustom.Text;
-                _element.IdentityType = ProcessModelIdentityType.SpecificUser;
-            }
-
-            if (rbBuiltin.Checked)
-            {
-                _element.UserName = string.Empty;
-                switch (cbBuiltin.SelectedIndex)
-                {
-                    case 0:
-                        _element.IdentityType = ProcessModelIdentityType.LocalService;
-                        break;
-                    case 1:
-                        _element.IdentityType = ProcessModelIdentityType.LocalSystem;
-                        break;
-                    case 2:
-                        _element.IdentityType = ProcessModelIdentityType.NetworkService;
-                        break;
-                    case 3:
-                        _element.IdentityType = ProcessModelIdentityType.ApplicationPoolIdentity;
-                        break;
-                }
-            }
-
-            this.DialogResult = DialogResult.OK;
-        }
-
-        private void RbBuiltinCheckedChanged(object sender, EventArgs e)
-        {
-            txtCustom.Enabled = btnSet.Enabled = rbCustom.Checked;
-            cbBuiltin.Enabled = rbBuiltin.Checked;
-        }
-
-        private void BtnSetClick(object sender, EventArgs e)
-        {
-            var dialog = new CredentialsDialog(null, txtCustom.Text);
-            if (dialog.ShowDialog() != DialogResult.OK)
-            {
-                return;
-            }
-
-            txtCustom.Text = dialog.UserName;
-            _element.Password = dialog.Password;
         }
     }
 }

@@ -10,6 +10,8 @@ namespace JexusManager.Dialogs
     using System.Windows.Forms;
 
     using Microsoft.Web.Administration;
+    using System.Reactive.Disposables;
+    using System.Reactive.Linq;
 
     public partial class SelectPoolDialog : Form
     {
@@ -27,24 +29,30 @@ namespace JexusManager.Dialogs
             }
 
             cbPools.SelectedIndex = selected;
+
+            var container = new CompositeDisposable();
+            FormClosed += (sender, args) => container.Dispose();
+
+            container.Add(
+                Observable.FromEventPattern<EventArgs>(cbPools, "SelectedIndexChanged")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(evt =>
+                {
+                    var item = cbPools.SelectedItem as ApplicationPool;
+                    if (item == null)
+                    {
+                        return;
+                    }
+
+                    Selected = item;
+                    txtVersion.Text = string.Format(".Net CLR Version: {0}", item.ManagedRuntimeVersion.RuntimeVersionToDisplay());
+                    txtMode.Text = string.Format("Pipeline mode: {0}", item.ManagedPipelineMode);
+                }));
         }
 
         private void SelectPoolDialog_HelpButtonClicked(object sender, CancelEventArgs e)
         {
             Process.Start("http://go.microsoft.com/fwlink/?LinkId=210458");
-        }
-
-        private void cbPools_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            var item = cbPools.SelectedItem as ApplicationPool;
-            if (item == null)
-            {
-                return;
-            }
-
-            Selected = item;
-            txtVersion.Text = string.Format(".Net CLR Version: {0}", item.ManagedRuntimeVersion.RuntimeVersionToDisplay());
-            txtMode.Text = string.Format("Pipeline mode: {0}", item.ManagedPipelineMode);
         }
 
         internal ApplicationPool Selected { get; set; }

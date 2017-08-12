@@ -69,7 +69,6 @@
             this.btnView.TabIndex = 2;
             this.btnView.Text = "View Certificate";
             this.btnView.UseVisualStyleBackColor = true;
-            this.btnView.Click += new System.EventHandler(this.BtnViewClick);
             // 
             // label1
             // 

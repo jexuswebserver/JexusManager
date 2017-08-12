@@ -11,23 +11,29 @@ namespace JexusManager.Features.Main
 
     using Microsoft.Web.Administration;
     using Microsoft.Web.Management.Client.Win32;
+    using System.Reactive.Disposables;
+    using System.Reactive.Linq;
 
     public partial class ApplicationPoolAdvancedSettingsDialog : DialogForm
     {
-        private ApplicationPool _pool;
-        public ApplicationPoolAdvancedSettingsDialog(IServiceProvider serviceProvider, ApplicationPool pool)
+         public ApplicationPoolAdvancedSettingsDialog(IServiceProvider serviceProvider, ApplicationPool pool)
             : base(serviceProvider)
         {
             InitializeComponent();
-            _pool = pool;
             var settings = new ApplicationPoolAdvancedSettings(pool);
             propertyGrid1.SelectedObject = settings;
-        }
 
-        private void btnOK_Click(object sender, EventArgs e)
-        {
-            ((ApplicationPoolAdvancedSettings)propertyGrid1.SelectedObject).Apply(_pool);
-            DialogResult = DialogResult.OK;
+            var container = new CompositeDisposable();
+            FormClosed += (sender, args) => container.Dispose();
+
+            container.Add(
+                Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(evt =>
+                {
+                    ((ApplicationPoolAdvancedSettings)propertyGrid1.SelectedObject).Apply(pool);
+                    DialogResult = DialogResult.OK;
+                }));
         }
 
         private void ApplicationPoolAdvancedSettingsDialog_HelpButtonClicked(object sender, CancelEventArgs e)

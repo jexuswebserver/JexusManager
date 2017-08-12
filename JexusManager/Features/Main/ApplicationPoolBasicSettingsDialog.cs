@@ -11,36 +11,75 @@ namespace JexusManager.Features.Main
 
     using Microsoft.Web.Administration;
     using Microsoft.Web.Management.Client.Win32;
+    using System.Reactive.Disposables;
+    using System.Reactive.Linq;
 
     public sealed partial class ApplicationPoolBasicSettingsDialog : DialogForm
     {
         public ApplicationPool Pool { get; private set; }
-        private readonly ApplicationPoolCollection _collection;
-
-        private bool _add;
 
         public ApplicationPoolBasicSettingsDialog(IServiceProvider serviceProvider, ApplicationPool pool, ApplicationPoolDefaults defaults, ApplicationPoolCollection collection)
             : base(serviceProvider)
         {
             InitializeComponent();
             Pool = pool;
-            _collection = collection;
-            _add = pool == null;
+            var add = pool == null;
             if (pool == null)
             {
                 Text = "Add Application Pool";
                 cbStart.Checked = defaults.AutoStart;
                 cbMode.SelectedIndex = (int)defaults.ManagedPipelineMode;
                 SetRuntimeVersion(defaults.ManagedRuntimeVersion);
-                return;
+            }
+            else
+            {
+                Text = "Edit Application Pool";
+                txtName.Text = pool.Name;
+                txtName.Enabled = false;
+                cbStart.Checked = pool.AutoStart;
+                cbMode.SelectedIndex = (int)pool.ManagedPipelineMode;
+                SetRuntimeVersion(Pool.ManagedRuntimeVersion);
             }
 
-            Text = "Edit Application Pool";
-            txtName.Text = pool.Name;
-            txtName.Enabled = false;
-            cbStart.Checked = pool.AutoStart;
-            cbMode.SelectedIndex = (int)pool.ManagedPipelineMode;
-            SetRuntimeVersion(Pool.ManagedRuntimeVersion);
+            var container = new CompositeDisposable();
+            FormClosed += (sender, args) => container.Dispose();
+
+            container.Add(
+                Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(evt =>
+                {
+                    if (Pool == null)
+                    {
+                        Pool = collection.Add(txtName.Text);
+                    }
+                    else
+                    {
+                        Pool.Name = txtName.Text;
+                    }
+
+                    if (cbVersion.SelectedIndex == 0)
+                    {
+                        Pool.ManagedRuntimeVersion = "v4.0";
+                    }
+                    else if (cbVersion.SelectedIndex == 1)
+                    {
+                        Pool.ManagedRuntimeVersion = "v2.0";
+                    }
+                    else
+                    {
+                        Pool.ManagedRuntimeVersion = string.Empty;
+                    }
+
+                    if (add && collection.Parent.Mode == WorkingMode.IisExpress)
+                    {
+                        Pool["CLRConfigFile"] = @"%IIS_USER_HOME%\config\aspnet.config";
+                    }
+
+                    Pool.AutoStart = cbStart.Checked;
+                    Pool.ManagedPipelineMode = (ManagedPipelineMode)cbMode.SelectedIndex;
+                    DialogResult = DialogResult.OK;
+                }));
         }
 
         private void SetRuntimeVersion(string managedRuntimeVersion)
@@ -62,40 +101,6 @@ namespace JexusManager.Features.Main
         private void ApplicationPoolBasicSettingsDialog_HelpButtonClicked(object sender, CancelEventArgs e)
         {
             Process.Start("http://go.microsoft.com/fwlink/?LinkId=210456");
-        }
-
-        private void btnOK_Click(object sender, EventArgs e)
-        {
-            if (Pool == null)
-            {
-                Pool = _collection.Add(txtName.Text);
-            }
-            else
-            {
-                Pool.Name = txtName.Text;
-            }
-
-            if (cbVersion.SelectedIndex == 0)
-            {
-                Pool.ManagedRuntimeVersion = "v4.0";
-            }
-            else if (cbVersion.SelectedIndex == 1)
-            {
-                Pool.ManagedRuntimeVersion = "v2.0";
-            }
-            else
-            {
-                Pool.ManagedRuntimeVersion = string.Empty;
-            }
-
-            if (_add && _collection.Parent.Mode == WorkingMode.IisExpress)
-            {
-                Pool["CLRConfigFile"] = @"%IIS_USER_HOME%\config\aspnet.config";
-            }
-
-            Pool.AutoStart = cbStart.Checked;
-            Pool.ManagedPipelineMode = (ManagedPipelineMode)cbMode.SelectedIndex;
-            DialogResult = DialogResult.OK;
         }
     }
 }

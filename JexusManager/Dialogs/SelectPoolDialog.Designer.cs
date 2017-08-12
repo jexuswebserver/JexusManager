@@ -59,7 +59,6 @@
             this.cbPools.Name = "cbPools";
             this.cbPools.Size = new System.Drawing.Size(295, 21);
             this.cbPools.TabIndex = 1;
-            this.cbPools.SelectedIndexChanged += new System.EventHandler(this.cbPools_SelectedIndexChanged);
             // 
             // label2
             // 

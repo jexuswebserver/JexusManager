@@ -10,6 +10,8 @@ namespace JexusManager.Features.Main
     using System.Windows.Forms;
 
     using Microsoft.Web.Management.Client.Win32;
+    using System.Reactive.Disposables;
+    using System.Reactive.Linq;
 
     public partial class CredentialsDialog : DialogForm
     {
@@ -18,27 +20,39 @@ namespace JexusManager.Features.Main
         {
             InitializeComponent();
             txtName.Text = name;
+
+            var container = new CompositeDisposable();
+            FormClosed += (sender, args) => container.Dispose();
+
+            container.Add(
+                Observable.FromEventPattern<EventArgs>(txtName, "TextChanged")
+                .Merge(Observable.FromEventPattern<EventArgs>(txtPassword, "TextChanged"))
+                .Merge(Observable.FromEventPattern<EventArgs>(txtConfirm, "TextChanged"))
+                .Sample(TimeSpan.FromSeconds(1))
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(evt =>
+                {
+                    btnOK.Enabled = !string.IsNullOrWhiteSpace(txtName.Text)
+                            && !string.IsNullOrWhiteSpace(txtPassword.Text)
+                            && txtConfirm.Text == txtPassword.Text;
+                }));
+
+            container.Add(
+                Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(evt =>
+                {
+                    UserName = txtName.Text;
+                    Password = txtPassword.Text;
+                    // TODO: verify user
+                    // DialogResult = DialogResult.Cancel;
+                    DialogResult = DialogResult.OK;
+                }));
         }
 
         private void CredentialsDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
             Process.Start("http://go.microsoft.com/fwlink/?LinkId=210456#ApplicationPoolIdentity");
-        }
-
-        private void TextBox1TextChanged(object sender, EventArgs e)
-        {
-            btnOK.Enabled = !string.IsNullOrWhiteSpace(txtName.Text)
-                            && !string.IsNullOrWhiteSpace(txtPassword.Text)
-                            && txtConfirm.Text == txtPassword.Text;
-        }
-
-        private void BtnOkClick(object sender, EventArgs e)
-        {
-            UserName = txtName.Text;
-            Password = txtPassword.Text;
-            // TODO: verify user
-            // DialogResult = DialogResult.Cancel;
-            DialogResult = DialogResult.OK;
         }
 
         public string Password { get; set; }

@@ -67,7 +67,6 @@
             this.btnOK.TabIndex = 1;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
-            this.btnOK.Click += new System.EventHandler(this.BtnOkClick);
             // 
             // label1
             // 
@@ -107,7 +106,6 @@
             this.cbType.Name = "cbType";
             this.cbType.Size = new System.Drawing.Size(115, 21);
             this.cbType.TabIndex = 5;
-            this.cbType.SelectedIndexChanged += new System.EventHandler(this.CbTypeSelectedIndexChanged);
             // 
             // cbAddress
             // 
@@ -117,7 +115,6 @@
             this.cbAddress.Size = new System.Drawing.Size(210, 21);
             this.cbAddress.TabIndex = 6;
             this.cbAddress.Text = "All Unassigned";
-            this.cbAddress.TextChanged += new System.EventHandler(this.CbAddressTextChanged);
             // 
             // txtPort
             // 
@@ -126,7 +123,6 @@
             this.txtPort.Size = new System.Drawing.Size(48, 20);
             this.txtPort.TabIndex = 7;
             this.txtPort.Text = "80";
-            this.txtPort.TextChanged += new System.EventHandler(this.CbAddressTextChanged);
             // 
             // label4
             // 
@@ -180,7 +176,6 @@
             this.cbCertificates.Name = "cbCertificates";
             this.cbCertificates.Size = new System.Drawing.Size(303, 21);
             this.cbCertificates.TabIndex = 13;
-            this.cbCertificates.SelectedIndexChanged += new System.EventHandler(this.CbCertificatesSelectedIndexChanged);
             // 
             // btnSelect
             // 
@@ -191,7 +186,6 @@
             this.btnSelect.TabIndex = 14;
             this.btnSelect.Text = "Select...";
             this.btnSelect.UseVisualStyleBackColor = true;
-            this.btnSelect.Click += new System.EventHandler(this.BtnSelectClick);
             // 
             // btnView
             // 
@@ -201,7 +195,6 @@
             this.btnView.TabIndex = 15;
             this.btnView.Text = "View...";
             this.btnView.UseVisualStyleBackColor = true;
-            this.btnView.Click += new System.EventHandler(this.BtnViewClick);
             // 
             // BindingDialog
             // 

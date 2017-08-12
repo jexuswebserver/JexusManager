@@ -47,7 +47,6 @@
             this.rbBuiltin.TabStop = true;
             this.rbBuiltin.Text = "Built-in account:";
             this.rbBuiltin.UseVisualStyleBackColor = true;
-            this.rbBuiltin.CheckedChanged += new System.EventHandler(this.RbBuiltinCheckedChanged);
             // 
             // rbCustom
             // 
@@ -59,7 +58,6 @@
             this.rbCustom.TabStop = true;
             this.rbCustom.Text = "Custom account:";
             this.rbCustom.UseVisualStyleBackColor = true;
-            this.rbCustom.CheckedChanged += new System.EventHandler(this.RbBuiltinCheckedChanged);
             // 
             // txtCustom
             // 
@@ -92,7 +90,6 @@
             this.btnSet.TabIndex = 5;
             this.btnSet.Text = "Set...";
             this.btnSet.UseVisualStyleBackColor = true;
-            this.btnSet.Click += new System.EventHandler(this.BtnSetClick);
             // 
             // btnCancel
             // 
@@ -113,7 +110,6 @@
             this.btnOK.TabIndex = 7;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
-            this.btnOK.Click += new System.EventHandler(this.BtnOkClick);
             // 
             // IdentityDialog
             // 
