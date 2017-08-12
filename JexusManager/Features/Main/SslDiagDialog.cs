@@ -27,13 +27,10 @@ namespace JexusManager.Features.Main
 
     public partial class SslDiagDialog : DialogForm
     {
-        private readonly ServerManager _server;
-
         public SslDiagDialog(IServiceProvider provider, ServerManager server)
             : base(provider)
         {
             InitializeComponent();
-            _server = server;
 
             var container = new CompositeDisposable();
             FormClosed += (sender, args) => container.Dispose();
@@ -49,7 +46,7 @@ namespace JexusManager.Features.Main
                         Debug($"System Time: {DateTime.Now}");
                         Debug($"Processor Architecture: {Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE")}");
                         Debug($"OS: {Environment.OSVersion}");
-                        Debug($"{_server.Type}");
+                        Debug($"{server.Type}");
                         Debug(Environment.NewLine);
                         Debug($"SERVER SSL PROTOCOLS{Environment.NewLine}");
                         Debug($"PCT 1.0: {GetProtocol("PCT 1.0")}");
@@ -62,7 +59,7 @@ namespace JexusManager.Features.Main
                         Debug($"SChannel EventLogging: {GetEventLogging()} (hex)");
                         Debug("-----");
 
-                        foreach (Site site in _server.Sites)
+                        foreach (Site site in server.Sites)
                         {
                             Debug($"[W3SVC/{site.Id}]");
                             Debug($"ServerComment  : {site.Name}");
