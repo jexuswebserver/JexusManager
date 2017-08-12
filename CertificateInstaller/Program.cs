@@ -199,7 +199,16 @@ namespace CertificateInstaller
                 }
 
                 var personal = new X509Store(store, StoreLocation.LocalMachine);
-                personal.Open(OpenFlags.ReadWrite);
+                try
+                {
+                    personal.Open(OpenFlags.ReadWrite);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    return -1;
+                }
+
                 if (hash == null)
                 {
                     // add certificate
@@ -215,56 +224,63 @@ namespace CertificateInstaller
                 }
 
                 var selectedItem = personal.Certificates.Find(X509FindType.FindByThumbprint, hash, false);
-                if (address == null)
+                if (selectedItem.Count > 0)
                 {
-                    if (host == null)
+                    if (address == null)
                     {
-                        // remove certificate and mapping
-                        var mappings = NativeMethods.QuerySslCertificateInfo();
-                        foreach (var mapping in mappings)
+                        if (host == null)
                         {
-                            if (mapping.Hash.SequenceEqual(selectedItem[0].GetCertHash()))
+                            // remove certificate and mapping
+                            var mappings = NativeMethods.QuerySslCertificateInfo();
+                            foreach (var mapping in mappings)
                             {
-                                NativeMethods.DeleteCertificateBinding(mapping.IpPort);
+                                if (mapping.Hash.SequenceEqual(selectedItem[0].GetCertHash()))
+                                {
+                                    NativeMethods.DeleteCertificateBinding(mapping.IpPort);
+                                }
+                            }
+
+                            personal.Remove(selectedItem[0]);
+                        }
+                        else
+                        {
+                            var mappings = NativeMethods.QuerySslSniInfo();
+                            foreach (var mapping in mappings)
+                            {
+                                if (mapping.Hash.SequenceEqual(selectedItem[0].GetCertHash()))
+                                {
+                                    NativeMethods.DeleteSniBinding(new Tuple<string, int>(mapping.Host, mapping.Port));
+                                }
                             }
                         }
 
-                        personal.Remove(selectedItem[0]);
+                        personal.Close();
+                        return 0;
+                    }
+
+                    if (host == null)
+                    {
+                        // register mapping
+                        var endpoint = new IPEndPoint(IPAddress.Parse(address), int.Parse(port));
+                        NativeMethods.BindCertificate(endpoint, selectedItem[0].GetCertHash(), store, Guid.Parse(id));
                     }
                     else
                     {
-                        var mappings = NativeMethods.QuerySslSniInfo();
-                        foreach (var mapping in mappings)
-                        {
-                            if (mapping.Hash.SequenceEqual(selectedItem[0].GetCertHash()))
-                            {
-                                NativeMethods.DeleteSniBinding(new Tuple<string, int>(mapping.Host, mapping.Port));
-                            }
-                        }
+                        NativeMethods.BindSni(new Tuple<string, int>(host, int.Parse(port)), selectedItem[0].GetCertHash(), store, Guid.Parse(id));
                     }
 
                     personal.Close();
                     return 0;
                 }
-
-                if (host == null)
-                {
-                    // register mapping
-                    var endpoint = new IPEndPoint(IPAddress.Parse(address), int.Parse(port));
-                    NativeMethods.BindCertificate(endpoint, selectedItem[0].GetCertHash(), store, Guid.Parse(id));
-                }
-                else
-                {
-                    NativeMethods.BindSni(new Tuple<string, int>(host, int.Parse(port)), selectedItem[0].GetCertHash(), store, Guid.Parse(id));
-                }
-
-                return 0;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
                 return -1;
             }
+
+            Console.WriteLine("Not supported path");
+            return -1;
         }
 
         private static void ShowHelp(OptionSet optionSet)
