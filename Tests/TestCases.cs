@@ -915,6 +915,15 @@ $"Filename: \\\\?\\{config.FileContext.FileName}\r\nLine number: 0\r\nError: Can
                 error["statusCode"] = 500;
                 error["subStatusCode"] = 55;
                 error["prefixLanguageFilePath"] = string.Empty;
+
+                error["responseMode"] = 0;
+                error["responseMode"] = ResponseMode.Test;
+#if IIS
+                Assert.Equal(1, error["responseMode"]);
+#else
+                Assert.Equal(1L, error["responseMode"]);
+#endif
+
                 error["responseMode"] = "File";
                 var ex1 = Assert.Throws<FileNotFoundException>(() => errorsCollection.Add(error));
                 Assert.Equal("Filename: \r\nError: Element is missing required attributes path\r\n\r\n", ex1.Message);
@@ -1061,6 +1070,12 @@ $"Filename: \\\\?\\{config.FileContext.FileName}\r\nLine number: 0\r\nError: Can
             application.VirtualDirectories.RemoveAt(1);
 
             server.CommitChanges();
+        }
+
+        private enum ResponseMode
+        {
+            File = 0,
+            Test = 1
         }
     }
 }

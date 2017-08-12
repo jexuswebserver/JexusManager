@@ -266,6 +266,21 @@ namespace Microsoft.Web.Administration
                 return value;
             }
 
+            var valueType = value.GetType();
+            if (Type == "enum" && valueType.BaseType.FullName == "System.Enum")
+            {
+                var enumType = Enum.GetUnderlyingType(valueType);
+                if (enumType == typeof(long))
+                {
+                    return (long)value;
+                }
+
+                if (enumType == typeof(int))
+                {
+                    return (long)(int)value;
+                }
+            }
+
             if (this.Type == "enum" && value is long)
             {
                 return value;
