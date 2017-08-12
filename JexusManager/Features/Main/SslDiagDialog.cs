@@ -14,7 +14,6 @@ namespace JexusManager.Features.Main
     using System.Drawing;
     using System.IO;
     using System.Security.Cryptography.X509Certificates;
-    using System.Text;
     using System.Windows.Forms;
 
     using Microsoft.Win32;
@@ -85,76 +84,95 @@ namespace JexusManager.Features.Main
                                     Debug("Testing EndPoint: 127.0.0.1");
 
                                     var personal = new X509Store(binding.CertificateStoreName, StoreLocation.LocalMachine);
-                                    personal.Open(OpenFlags.MaxAllowed);
-                                    var selectedItem = personal.Certificates.Find(X509FindType.FindByThumbprint, hashString, false);
-                                    var cert = selectedItem[0];
-                                    Debug($"#CertName: {cert.FriendlyName}");
-                                    Debug($"#Version: {cert.Version}");
-                                    if (cert.HasPrivateKey)
+                                    try
                                     {
-                                        Debug("#You have a private key that corresponds to this certificate.");
-                                    }
-                                    else
-                                    {
-                                        Error("#You don't have a private key that corresponds to this certificate.");
-                                    }
-
-                                    var key = cert.PublicKey.Key;
-                                    Debug($"#Signature Algorithm: {cert.SignatureAlgorithm.FriendlyName}");
-                                    Debug($"#Key Exchange Algorithm: {key.KeyExchangeAlgorithm} Key Size: {key.KeySize}");
-                                    Debug($"#Subject: {cert.Subject}");
-                                    Debug($"#Issuer: {cert.Issuer}");
-                                    Debug($"#Validity: From {cert.NotBefore:U} To {cert.NotAfter:U}");
-                                    Debug($"#Serial Number: {cert.SerialNumber}");
-                                    Debug($"DS Mapper Usage: {(binding.UseDsMapper ? "Enabled" : "Disabled")}");
-                                    Debug($"Archived: {cert.Archived}");
-
-                                    foreach (var extension in cert.Extensions)
-                                    {
-                                        if (extension.Oid.FriendlyName == "Key Usage")
+                                        personal.Open(OpenFlags.MaxAllowed);
+                                        var selectedItem = personal.Certificates.Find(X509FindType.FindByThumbprint, hashString, false);
+                                        if (selectedItem.Count == 0)
                                         {
-                                            Debug($"#Key Usage: {((X509KeyUsageExtension)extension).KeyUsages}");
-                                            continue;
+                                            Error($"Cannot find certificate with thumbprint {hashString} in store {binding.CertificateStoreName}.");
+                                        }
+                                        else
+                                        {
+                                            var cert = selectedItem[0];
+                                            Debug($"#CertName: {cert.FriendlyName}");
+                                            Debug($"#Version: {cert.Version}");
+                                            if (cert.HasPrivateKey)
+                                            {
+                                                Debug("#You have a private key that corresponds to this certificate.");
+                                            }
+                                            else
+                                            {
+                                                Error("#You don't have a private key that corresponds to this certificate.");
+                                            }
+
+                                            var key = cert.PublicKey.Key;
+                                            Debug($"#Signature Algorithm: {cert.SignatureAlgorithm.FriendlyName}");
+                                            Debug($"#Key Exchange Algorithm: {key.KeyExchangeAlgorithm} Key Size: {key.KeySize}");
+                                            Debug($"#Subject: {cert.Subject}");
+                                            Debug($"#Issuer: {cert.Issuer}");
+                                            Debug($"#Validity: From {cert.NotBefore:U} To {cert.NotAfter:U}");
+                                            Debug($"#Serial Number: {cert.SerialNumber}");
+                                            Debug($"DS Mapper Usage: {(binding.UseDsMapper ? "Enabled" : "Disabled")}");
+                                            Debug($"Archived: {cert.Archived}");
+
+                                            foreach (var extension in cert.Extensions)
+                                            {
+                                                if (extension.Oid.FriendlyName == "Key Usage")
+                                                {
+                                                    Debug($"#Key Usage: {((X509KeyUsageExtension)extension).KeyUsages}");
+                                                    continue;
+                                                }
+
+                                                if (extension.Oid.FriendlyName == "Enhanced Key Usage")
+                                                {
+                                                    var usages = ((X509EnhancedKeyUsageExtension)extension).EnhancedKeyUsages;
+                                                    var enhancedKeyUsage = usages.Cast<Oid>().Select(usage => $"{usage.FriendlyName} ({usage.Value})")
+                                                        .Combine(",");
+
+                                                    Debug($"#Enhanced Key Usage: {enhancedKeyUsage}");
+                                                    continue;
+                                                }
+
+                                                if (extension.Oid.FriendlyName == "Basic Constraints")
+                                                {
+                                                    var ext = (X509BasicConstraintsExtension)extension;
+                                                    Debug(
+                                                        $"#Basic Constraints: Subject Type={(ext.CertificateAuthority ? "CA" : "End Entity")}, Path Length Constraint={(ext.HasPathLengthConstraint ? ext.PathLengthConstraint.ToString() : "None")}");
+                                                }
+                                            }
+
+                                            X509Chain chain = X509Chain.Create();
+                                            X509ChainPolicy policy = new X509ChainPolicy();
+                                            policy.RevocationMode = X509RevocationMode.NoCheck;
+                                            chain.ChainPolicy = policy;
+                                            bool valid = chain.Build(cert);
+                                            if (valid)
+                                            {
+                                                Debug("Certificate verified.");
+                                            }
+                                            else
+                                            {
+                                                Error("Certificate valication failed.");
+                                            }
+
+                                            foreach (var item in chain.ChainStatus)
+                                            {
+                                                Warn(item.StatusInformation);
+                                            }
                                         }
 
-                                        if (extension.Oid.FriendlyName == "Enhanced Key Usage")
+                                        personal.Close();
+                                    }
+                                    catch (CryptographicException ex)
+                                    {
+                                        if (ex.HResult != NativeMethods.NonExistingStore)
                                         {
-                                            var usages = ((X509EnhancedKeyUsageExtension)extension).EnhancedKeyUsages;
-                                            var enhancedKeyUsage = usages.Cast<Oid>().Select(usage => $"{usage.FriendlyName} ({usage.Value})")
-                                                .Combine(",");
-
-                                            Debug($"#Enhanced Key Usage: {enhancedKeyUsage}");
-                                            continue;
+                                            throw;
                                         }
 
-                                        if (extension.Oid.FriendlyName == "Basic Constraints")
-                                        {
-                                            var ext = (X509BasicConstraintsExtension)extension;
-                                            Debug(
-                                                $"#Basic Constraints: Subject Type={(ext.CertificateAuthority ? "CA" : "End Entity")}, Path Length Constraint={(ext.HasPathLengthConstraint ? ext.PathLengthConstraint.ToString() : "None")}");
-                                        }
+                                        Error($"Invalid certificate store {binding.CertificateStoreName}.");
                                     }
-
-                                    X509Chain chain = X509Chain.Create();
-                                    X509ChainPolicy policy = new X509ChainPolicy();
-                                    policy.RevocationMode = X509RevocationMode.NoCheck;
-                                    chain.ChainPolicy = policy;
-                                    bool valid = chain.Build(cert);
-                                    if (valid)
-                                    {
-                                        Debug("Certificate verified.");
-                                    }
-                                    else
-                                    {
-                                        Error("Certificate valication failed.");
-                                    }
-
-                                    foreach (var item in chain.ChainStatus)
-                                    {
-                                        Warn(item.StatusInformation);
-                                    }
-
-                                    personal.Close();
                                 }
 
                                 Debug(string.Empty);
