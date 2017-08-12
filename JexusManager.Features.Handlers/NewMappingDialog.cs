@@ -71,14 +71,30 @@ namespace JexusManager.Features.Handlers
                             return;
                         }
 
-                        if (!string.IsNullOrWhiteSpace(txtExecutable.Text) && !File.Exists(txtExecutable.Text))
+                        var path = txtExecutable.Text;
+                        if (!string.IsNullOrWhiteSpace(path))
                         {
-                            ShowMessage(
-                                "The specific executable does not exist on the server.",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error,
-                                MessageBoxDefaultButton.Button1);
-                            return;
+                            var ext = Path.GetExtension(path);
+                            if (!string.Equals(ext, ".dll", StringComparison.OrdinalIgnoreCase) &&
+                                !string.Equals(ext, ".exe", StringComparison.OrdinalIgnoreCase))
+                            {
+                                // TODO: test path with spaces case.
+                                ShowMessage("The specific executable for the handler must be a .dll or .exe file. If the path to the script processor (only in the case of a .exe file) has spaces, use double quotation marks to specify the executable.",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Warning,
+                                    MessageBoxDefaultButton.Button1);
+                                return;
+                            }
+
+                            if (!File.Exists(path))
+                            {
+                                ShowMessage(
+                                    "The specific executable does not exist on the server.",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Error,
+                                    MessageBoxDefaultButton.Button1);
+                                return;
+                            }
                         }
 
                         if (txtModule.Text == "FastCgiModule")
