@@ -855,11 +855,8 @@ namespace JexusManager
 
         private void treeView1_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            if (treeView1.SelectedNode != e.Node)
-            {
-                treeView1.SelectedNode = null;
-                treeView1.SelectedNode = e.Node;
-            }
+            treeView1.SelectedNode = null;
+            treeView1.SelectedNode = e.Node;
 
             if (e.Node is HomePageTreeNode)
             {
