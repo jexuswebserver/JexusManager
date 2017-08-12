@@ -199,6 +199,12 @@
       <Version>5.2.3</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\lib\Rollbar.NET\Rollbar\Rollbar.csproj">
+      <Project>{3a99c5e2-ae41-49ca-9cb3-2c3a70d2a8c1}</Project>
+      <Name>Rollbar</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

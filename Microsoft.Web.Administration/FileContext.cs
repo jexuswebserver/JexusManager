@@ -155,9 +155,16 @@ namespace Microsoft.Web.Administration
 
                 if (_document != null)
                 {
-                    using (var stream = File.Open(FileName, FileMode.Create, FileAccess.Write, FileShare.None))
+                    try
                     {
-                        _document.Save(stream);
+                        using (var stream = File.Open(FileName, FileMode.Create, FileAccess.Write, FileShare.None))
+                        {
+                            _document.Save(stream);
+                        }
+                    }
+                    catch (SystemException ex)
+                    {
+                        RollbarDotNet.Rollbar.Report(ex);
                     }
                 }
             }
