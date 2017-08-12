@@ -37,9 +37,9 @@ namespace JexusManager.Tree
         public string Credentials;
         public bool Ignore;
 
-        public TreeNode PoolsNode => Nodes[0];
+        public TreeNode PoolsNode { get; private set; }
 
-        public TreeNode SitesNode => Nodes[1];
+        public TreeNode SitesNode { get; private set; }
 
         public override ServerTreeNode ServerNode => this;
 
@@ -278,14 +278,16 @@ namespace JexusManager.Tree
 
         public bool LoadServer(ContextMenuStrip poolsMenu, ContextMenuStrip sitesMenu, ContextMenuStrip siteMenu)
         {
-            Nodes.Add(new ApplicationPoolsTreeNode(ServiceProvider, ServerManager.ApplicationPools, this)
+            PoolsNode = new ApplicationPoolsTreeNode(ServiceProvider, ServerManager.ApplicationPools, this)
             {
                 ContextMenuStrip = poolsMenu
-            });
-            Nodes.Add(new SitesTreeNode(ServiceProvider, ServerManager.Sites, this)
+            };
+            Nodes.Add(PoolsNode);
+            SitesNode = new SitesTreeNode(ServiceProvider, ServerManager.Sites, this)
             {
                 ContextMenuStrip = sitesMenu
-            });
+            };
+            Nodes.Add(SitesNode);
             TreeView.SelectedNode = this;
 
             foreach (Site site in ServerManager.Sites)
