@@ -71,6 +71,16 @@ namespace JexusManager.Features.Handlers
                             return;
                         }
 
+                        if (!string.IsNullOrWhiteSpace(txtExecutable.Text) && !File.Exists(txtExecutable.Text))
+                        {
+                            ShowMessage(
+                                "The specific executable does not exist on the server.",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error,
+                                MessageBoxDefaultButton.Button1);
+                            return;
+                        }
+
                         if (txtModule.Text == "FastCgiModule")
                         {
                             var result = ShowMessage(
@@ -86,16 +96,6 @@ namespace JexusManager.Features.Handlers
                                     fastCgi.AddItem(new FastCgiItem(null) { Path = txtExecutable.Text });
                                 }
                             }
-                        }
-
-                        if (!string.IsNullOrWhiteSpace(txtExecutable.Text) && !File.Exists(txtExecutable.Text))
-                        {
-                            ShowMessage(
-                                "The specific executable does not exist on the server.",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error,
-                                MessageBoxDefaultButton.Button1);
-                            return;
                         }
                     }
 
