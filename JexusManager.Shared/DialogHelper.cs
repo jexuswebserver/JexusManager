@@ -12,6 +12,7 @@ namespace JexusManager
     using System.IO;
     using System.Linq;
     using System.Net;
+    using System.Security.Cryptography;
     using System.Security.Cryptography.X509Certificates;
     using System.Windows.Forms;
 
@@ -106,18 +107,28 @@ namespace JexusManager
             }
 
             X509Store store2 = new X509Store("WebHosting", StoreLocation.LocalMachine);
-            store2.Open(OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
-            foreach (var certificate1 in store2.Certificates)
+            try
             {
-                var index1 = comboBox.Items.Add(new CertificateInfo(certificate1, store2.Name));
-                if (hash != null &&
-                    hash.SequenceEqual(certificate1.GetCertHash()))
+                store2.Open(OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
+                foreach (var certificate1 in store2.Certificates)
                 {
-                    comboBox.SelectedIndex = index1;
+                    var index1 = comboBox.Items.Add(new CertificateInfo(certificate1, store2.Name));
+                    if (hash != null &&
+                        hash.SequenceEqual(certificate1.GetCertHash()))
+                    {
+                        comboBox.SelectedIndex = index1;
+                    }
+                }
+
+                store2.Close();
+            }
+            catch (CryptographicException ex)
+            {
+                if (ex.HResult != NativeMethods.NonExistingStore)
+                {
+                    throw;
                 }
             }
-
-            store2.Close();
         }
 
         public static void LoadAddresses(ComboBox cbAddress)

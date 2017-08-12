@@ -9,12 +9,8 @@ using Microsoft.Web.Administration;
 
 namespace JexusManager
 {
-    using System.Diagnostics;
     using System.Runtime.InteropServices;
-    using System.Security.Principal;
     using System.Windows.Forms;
-
-    using Microsoft.Win32;
 
     public static class NativeMethods
     {
@@ -42,5 +38,9 @@ namespace JexusManager
             b.FlatStyle = FlatStyle.System;
             SendMessage(b.Handle, BCM_SETSHIELD, IntPtr.Zero, (IntPtr)0);
         }
+
+        public const int NonExistingStore = -2147024894; //0x80070002
+        public const int UserCancelled = -2147023673;
+        public const int BadKeySet = -2146893802;
     }
 }
