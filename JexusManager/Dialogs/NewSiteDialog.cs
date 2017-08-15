@@ -29,6 +29,11 @@ namespace JexusManager.Dialogs
         {
             InitializeComponent();
             cbType.SelectedIndex = 0;
+            if (collection == null)
+            {
+                throw new InvalidOperationException("null collection");
+            }
+
             if (collection.Parent == null)
             {
                 throw new InvalidOperationException("null server for site collection");
