@@ -38,7 +38,8 @@ namespace JexusManager.Dialogs
             }
             catch (Exception)
             {
-                MessageBox.Show("No update is found", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Cannot connect to GitHub. Will open https://github.com/jexuswebserver/JexusManager/releases.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Process.Start("https://github.com/jexuswebserver/JexusManager/releases");
                 Close();
                 return;
             }
