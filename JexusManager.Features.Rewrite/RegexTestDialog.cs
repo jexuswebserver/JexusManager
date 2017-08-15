@@ -73,12 +73,19 @@ namespace JexusManager.Features.Rewrite
                         ShowMessage(ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     }
 
-                    var result = expression.Match(txtData.Text);
-                    pbMessage.Image = result.Success ? Resources.tick_16 : Resources.error_16;
-                    txtMessage.Text = result.Success ? Succeeded : Failed;
-                    txtTitle.Visible = result.Success;
-                    lvResults.Visible = result.Success;
-                    if (result.Success)
+                    bool success = false;
+                    Match result = null;
+                    if (expression != null)
+                    {
+                        result = expression.Match(txtData.Text);
+                        success = result.Success;
+                    }
+
+                    pbMessage.Image = success ? Resources.tick_16 : Resources.error_16;
+                    txtMessage.Text = success ? Succeeded : Failed;
+                    txtTitle.Visible = success;
+                    lvResults.Visible = success;
+                    if (success)
                     {
                         lvResults.Items.Clear();
                         var count = 0;
@@ -86,9 +93,9 @@ namespace JexusManager.Features.Rewrite
                         {
                             lvResults.Items.Add(new ListViewItem(new[]
                             {
-                        string.Format(_condition ? "{{C:{0}}}" : "{{R:{0}}}", count++),
-                        group.Value
-                    }));
+                                string.Format(_condition ? "{{C:{0}}}" : "{{R:{0}}}", count++),
+                                group.Value
+                            }));
                         }
                     }
                 }));
