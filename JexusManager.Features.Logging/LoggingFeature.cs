@@ -196,7 +196,19 @@ namespace JexusManager.Features.Logging
         internal void SelectFields()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var dialog = new FieldsDialog(Module, service.Application.GetSite().LogFile);
+            SiteLogFile element;
+            if (service.Server != null)
+            {
+                var section2 = service.GetSection("system.applicationHost/sites");
+                var parent = section2.ChildElements["siteDefaults"];
+                element = new SiteLogFile(parent.ChildElements["logFile"], parent);
+            }
+            else
+            {
+                element = service.Application.GetSite().LogFile;
+            }
+
+            var dialog = new FieldsDialog(Module, element);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;

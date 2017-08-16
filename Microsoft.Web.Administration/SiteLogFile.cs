@@ -23,7 +23,7 @@ namespace Microsoft.Web.Administration
         }
 
         // TODO: how to read default custom fields?
-        public CustomLogFieldCollection CustomLogFields => _collection ?? (_collection = Schema.AttributeSchemas["customFields"] == null ? null : new CustomLogFieldCollection(ChildElements["customFields"], this));
+        public CustomLogFieldCollection CustomLogFields => _collection ?? (_collection = Schema.ChildElementSchemas["customFields"] == null ? null : new CustomLogFieldCollection(ChildElements["customFields"], this));
 
         private T Get<T>(string name, Func<T> defaultGetter, Func<ConfigurationAttribute, T> mainGetter)
         {
