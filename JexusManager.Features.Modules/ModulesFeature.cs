@@ -209,8 +209,7 @@ namespace JexusManager.Features.Modules
                 this.Items.Add(item);
                 this.SelectedItem = item;
                 // server level modules are in "" location.
-                ConfigurationSection section = service.Scope == ManagementScope.Server ? service.GetSection("system.webServer/modules", string.Empty) : service.GetSection("system.webServer/modules");
-                ConfigurationElementCollection collection = section.GetCollection();
+                ConfigurationElementCollection collection = GetCollection(service);
                 item.AppendTo(collection);
             }
 
