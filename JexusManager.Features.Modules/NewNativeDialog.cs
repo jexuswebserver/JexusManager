@@ -20,9 +20,9 @@ namespace JexusManager.Features.Modules
             {
                 txtName.Text = existing.Name;
                 txtPath.Text = existing.Image;
-                this.Text = "Edit Native Module Registration";
+                Text = "Edit Native Module Registration";
                 txtName.SelectAll();
-                this.Item = existing;
+                Item = existing;
             }
 
             var container = new CompositeDisposable();
@@ -57,8 +57,9 @@ namespace JexusManager.Features.Modules
                         Item = new GlobalModule(null);
                     }
 
-                    this.Item.Name = txtName.Text;
-                    this.Item.Image = txtPath.Text;
+                    Item.Name = txtName.Text;
+                    Item.Image = txtPath.Text;
+                    DialogResult = System.Windows.Forms.DialogResult.OK;
                 }));
         }
 
