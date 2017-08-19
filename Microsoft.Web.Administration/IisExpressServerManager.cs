@@ -18,7 +18,7 @@ namespace Microsoft.Web.Administration
     {
         public Version Version { get; }
 
-        public override bool SupportsSni => Version >= new Version(8, 0) && Environment.OSVersion.Version >= new Version(6, 2);
+        public override bool SupportsSni => Version >=  Version.Parse("8.0") && Environment.OSVersion.Version >= Version.Parse("6.2");
 
         public IisExpressServerManager(string applicationHostConfigurationPath)
             : this(false, applicationHostConfigurationPath)

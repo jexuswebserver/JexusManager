@@ -147,7 +147,15 @@ namespace JexusManager.Features.Certificates.Wizards.CertificateRequestWizard
             PrivateKey pvk = new PrivateKey();
             pvk.RSA = new RSACryptoServiceProvider();
             pvk.RSA.ImportParameters(key);
-            pvk.Save(DialogHelper.GetPrivateKeyFile(subjectName.ToString()));
+
+            var file = DialogHelper.GetPrivateKeyFile(subjectName.ToString());
+            var folder = Path.GetDirectoryName(file);
+            if (!Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
+
+            pvk.Save(file);
         }
 
         protected override bool CanComplete

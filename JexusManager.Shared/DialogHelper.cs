@@ -100,7 +100,7 @@ namespace JexusManager
 
             store1.Close();
 
-            if (Environment.OSVersion.Version < new Version(6, 2))
+            if (Environment.OSVersion.Version < Version.Parse("6.2"))
             {
                 // IMPORTANT: WebHosting store is available since Windows 8.
                 return;

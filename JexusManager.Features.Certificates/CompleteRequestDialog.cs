@@ -25,7 +25,7 @@ namespace JexusManager.Features.Certificates
         {
             InitializeComponent();
             cbStore.SelectedIndex = 0;
-            if (Environment.OSVersion.Version.Major < 8)
+            if (Environment.OSVersion.Version < Version.Parse("6.2"))
             {
                 // IMPORTANT: WebHosting store is available since Windows 8.
                 cbStore.Enabled = false;

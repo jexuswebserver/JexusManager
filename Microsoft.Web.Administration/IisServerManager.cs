@@ -17,7 +17,7 @@ namespace Microsoft.Web.Administration
     /// </summary>
     public sealed class IisServerManager : ServerManager
     {
-        public override bool SupportsSni => Environment.OSVersion.Version >= new Version(6, 2);
+        public override bool SupportsSni => Environment.OSVersion.Version >= Version.Parse("6.2");
 
         public IisServerManager()
             : this(null, true)

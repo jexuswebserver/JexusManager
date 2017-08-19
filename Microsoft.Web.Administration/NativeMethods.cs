@@ -546,7 +546,7 @@ namespace Microsoft.Web.Administration
                 return null;
             }
 
-            if (Environment.OSVersion.Version < new Version(6, 2))
+            if (Environment.OSVersion.Version < Version.Parse("6.2"))
             {
                 return null;
             }
@@ -644,7 +644,7 @@ namespace Microsoft.Web.Administration
             if (binding == null) throw new ArgumentNullException(nameof(binding));
             if (hash == null) throw new ArgumentNullException(nameof(hash));
 
-            if (Environment.OSVersion.Version < new Version(6, 2))
+            if (Environment.OSVersion.Version < Version.Parse("6.2"))
             {
                 return;
             }
@@ -721,7 +721,7 @@ namespace Microsoft.Web.Administration
             if (bindings == null || bindings.Length == 0)
                 return;
 
-            if (Environment.OSVersion.Version < new Version(6, 2))
+            if (Environment.OSVersion.Version < Version.Parse("6.2"))
             {
                 return;
             }
@@ -766,7 +766,7 @@ namespace Microsoft.Web.Administration
         {
             var result = new List<SslSniInfo>();
 
-            if (Environment.OSVersion.Version < new Version(6, 2))
+            if (Environment.OSVersion.Version < Version.Parse("6.2"))
             {
                 return result.ToArray();
             }
