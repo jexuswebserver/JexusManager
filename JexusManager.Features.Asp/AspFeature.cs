@@ -34,7 +34,7 @@ namespace JexusManager.Features.Asp
 
         public AspFeature(Module module)
         {
-            this.Module = module;
+            Module = module;
         }
 
         protected static readonly Version FxVersion10 = new Version("1.0");
@@ -46,13 +46,13 @@ namespace JexusManager.Features.Asp
 
         protected void DisplayErrorMessage(Exception ex, ResourceManager resourceManager)
         {
-            var service = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+            var service = (IManagementUIService)GetService(typeof(IManagementUIService));
             service.ShowError(ex, resourceManager.GetString("General"), "", false);
         }
 
         protected object GetService(Type type)
         {
-            return (this.Module as IServiceProvider).GetService(type);
+            return (Module as IServiceProvider).GetService(type);
         }
 
         public TaskList GetTaskList()
@@ -62,22 +62,22 @@ namespace JexusManager.Features.Asp
 
         public void Load()
         {
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.webServer/asp");
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+            var section = service.GetSection("system.webServer/asp", null, false);
             PropertyGridObject = new AspItem(section);
-            this.OnAspSettingsSaved();
+            OnAspSettingsSaved();
         }
 
         public AspItem PropertyGridObject { get; set; }
 
         protected void OnAspSettingsSaved()
         {
-            this.AspSettingsUpdated?.Invoke();
+            AspSettingsUpdated?.Invoke();
         }
 
         public virtual bool ShowHelp()
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210534");
+            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210460");
             return false;
         }
 
@@ -107,12 +107,12 @@ namespace JexusManager.Features.Asp
 
         public void CancelChanges()
         {
-            this.Load();
+            Load();
         }
 
         public bool ApplyChanges()
         {
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             PropertyGridObject.Apply();
             service.ServerManager.CommitChanges();
             return true;
