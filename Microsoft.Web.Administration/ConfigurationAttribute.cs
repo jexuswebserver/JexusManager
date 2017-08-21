@@ -5,7 +5,6 @@
 using System;
 using System.Diagnostics;
 using System.Security.Cryptography;
-using System.IO;
 using System.Runtime.InteropServices;
 
 namespace Microsoft.Web.Administration
@@ -102,6 +101,16 @@ namespace Microsoft.Web.Administration
 
         public void Delete()
         {
+            if (_element == null)
+            {
+                throw new InvalidOperationException("null element");
+            }
+
+            if (_element.InnerEntity == null)
+            {
+                throw new InvalidOperationException("null entity");
+            }
+
             _element.InnerEntity.SetAttributeValue(Name, null);
         }
 

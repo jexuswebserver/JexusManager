@@ -297,8 +297,13 @@ namespace JexusManager
             {
                 return;
             }
-            
+
             var data = GetCurrentData(selected);
+            if (data.ServerManager == null)
+            {
+                throw new InvalidOperationException("null server");
+            }
+
             var dialog = new NewSiteDialog(_serviceContainer, data.ServerManager.Sites);
             if (dialog.ShowDialog(this) != DialogResult.OK)
             {
