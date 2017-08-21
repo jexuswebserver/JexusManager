@@ -47,19 +47,19 @@ namespace JexusManager.Features.Main
             {
                 if (enumLog.GetEnumValues().Count > 1)
                 {
-                    this.LogEntry.IdleTimeout = pool.ProcessModel.LogEventOnProcessModel
+                    LogEntry.IdleTimeout = pool.ProcessModel.LogEventOnProcessModel
                                                 == ProcessModelLogEventOnProcessModel.IdleTimeout;
                 }
                 else
                 {
                     // IMPORTANT: workaround for IIS 8 Express.
-                    HideProperty(this.GetType(), nameof(this.LogEntry));
+                    HideProperty(GetType(), nameof(LogEntry));
                 }
             }
             else
             {
-                HideProperty(this.GetType(), nameof(LogEntry));
-                this.LogEntry.IdleTimeout = true;
+                HideProperty(GetType(), nameof(LogEntry));
+                LogEntry.IdleTimeout = true;
             }
 
             IdleTimeout = pool.ProcessModel.IdleTimeout.GetTotalMinutes();
@@ -69,11 +69,67 @@ namespace JexusManager.Features.Main
             }
             else
             {
-                HideProperty(this.GetType(), nameof(this.IdleAction));
+                HideProperty(GetType(), nameof(IdleAction));
             }
 
             MaxProcesses = pool.ProcessModel.MaxProcesses;
-            this.Identity = pool.ProcessModel;
+            Identity = pool.ProcessModel;
+        }
+
+        internal void Apply(ApplicationPool pool)
+        {
+            if (CLRVersion == CLRVersion.V40)
+            {
+                pool.ManagedRuntimeVersion = "v4.0";
+            }
+            else if (CLRVersion == CLRVersion.V20)
+            {
+                pool.ManagedRuntimeVersion = "v2.0";
+            }
+            else if (CLRVersion == CLRVersion.NoManagedCode)
+            {
+                pool.ManagedRuntimeVersion = string.Empty;
+            }
+
+            pool.Enable32BitAppOnWin64 = Enable32Bit;
+            pool.ManagedPipelineMode = Mode;
+            pool.QueueLength = QueueLength;
+            pool.StartMode = Start;
+
+            pool.ProcessModel.MaxProcesses = MaxProcesses;
+
+            pool.Cpu.Limit = Limit;
+            pool.Cpu.Action = pool.Cpu.Schema.AttributeSchemas["action"].GetEnumValues().GetName((long)Action)
+                              != null
+                                  ? Action
+                                  : ProcessorAction.NoAction;
+            pool.Cpu.ResetInterval = new TimeSpan(0, Interval, 0);
+            pool.Cpu.SmpAffinitized = Affinitized;
+            pool.Cpu.SmpProcessorAffinityMask = Mask;
+            pool.Cpu.SmpProcessorAffinityMask2 = Mask2;
+
+            var enumIdle = pool.ProcessModel.Schema.AttributeSchemas["logEventOnProcessModel"];
+            if (enumIdle != null)
+            {
+                if (enumIdle.GetEnumValues().Count > 1)
+                {
+                    pool.ProcessModel.LogEventOnProcessModel = LogEntry.IdleTimeout
+                                                                   ? ProcessModelLogEventOnProcessModel.IdleTimeout
+                                                                   : ProcessModelLogEventOnProcessModel.None;
+                }
+                else
+                {
+                    pool.ProcessModel.LogEventOnProcessModel = ProcessModelLogEventOnProcessModel.IdleTimeout;
+                }
+            }
+
+            pool.ProcessModel.IdleTimeout = new TimeSpan(0, IdleTimeout, 0);
+            if (pool.ProcessModel.Schema.AttributeSchemas["idleTimeoutAction"] != null)
+            {
+                pool.ProcessModel.IdleTimeoutAction = IdleAction;
+            }
+
+            pool.ProcessModel.MaxProcesses = MaxProcesses;
         }
 
         private static void HideProperty(Type type, string name)
@@ -201,66 +257,52 @@ namespace JexusManager.Features.Main
 
         [Browsable(true)]
         [Category("Process Model")]
+        [Description("[loadUserProfile] This setting specifies whether IIS loads the user profile for an application pool identity. When this value is true, IIS loads the user profile for the application poool identity. Set this value to false when you require the IIS 6.0 behavior of not loading the user profile for the application pool identity.")]
+        [DisplayName("Load User Profile")]
+        [DefaultValue(false)]
+        public bool LoadUserProfile { get; set; }
+
+        [Browsable(true)]
+        [Category("Process Model")]
         [Description("[maxProcesses] Maximum number of worker processes permitted to service requests for the application pool. If this number is greater than 1, the application pool is a \"Web Garden\". On a NUMA aware system, if this number is 0, IIS will start as many worker processes as there are NUMA nodes for optimal performance.")]
         [DisplayName("Maximum Worker Processes")]
         [DefaultValue(1L)]
         public long MaxProcesses { get; set; }
 
-        internal void Apply(ApplicationPool pool)
-        {
-            if (CLRVersion == CLRVersion.V40)
-            {
-                pool.ManagedRuntimeVersion = "v4.0";
-            }
-            else if (CLRVersion == CLRVersion.V20)
-            {
-                pool.ManagedRuntimeVersion = "v2.0";
-            }
-            else if (CLRVersion == CLRVersion.NoManagedCode)
-            {
-                pool.ManagedRuntimeVersion = string.Empty;
-            }
+        [Browsable(true)]
+        [Category("Process Model")]
+        [Description("[pingingEnabled] If true, the worker process(es) serving this application pool are pinged periodically to ensure that they are still responsive. This process is called health monitoring.")]
+        [DisplayName("Ping Enabled")]
+        [DefaultValue(true)]
+        public bool PingingEnabled { get; set; }
 
-            pool.Enable32BitAppOnWin64 = Enable32Bit;
-            pool.ManagedPipelineMode = Mode;
-            pool.QueueLength = QueueLength;
-            pool.StartMode = Start;
+        [Browsable(true)]
+        [Category("Process Model")]
+        [Description("[pingResponseTime] Maximum time (in seconds) that a worker process is given to respond to a health monitoring ping. If the worker process does not respond, it is terminated.")]
+        [DisplayName("Ping Maximum Response Time (seconds)")]
+        [DefaultValue(90)]
+        public uint PingResponseTime { get; set; }
 
-            pool.ProcessModel.MaxProcesses = MaxProcesses;
+        [Browsable(true)]
+        [Category("Process Model")]
+        [Description("[pingInterval] Period of time (in seconds) between health monitoring pings sent to the worker process(es) serving this application pool.")]
+        [DisplayName("Ping Period (seconds)")]
+        [DefaultValue(30)]
+        public uint PingInterval { get; set; }
 
-            pool.Cpu.Limit = Limit;
-            pool.Cpu.Action = pool.Cpu.Schema.AttributeSchemas["action"].GetEnumValues().GetName((long)this.Action)
-                              != null
-                                  ? this.Action
-                                  : ProcessorAction.NoAction;
-            pool.Cpu.ResetInterval = new TimeSpan(0, Interval, 0);
-            pool.Cpu.SmpAffinitized = Affinitized;
-            pool.Cpu.SmpProcessorAffinityMask = Mask;
-            pool.Cpu.SmpProcessorAffinityMask2 = Mask2;
+        [Browsable(true)]
+        [Category("Process Model")]
+        [Description("[shutdownTimeLimit] Period of time (in seconds) a worker process is given to finish processing requests and shut down. If the worker process exceeds the shutdown time limit, it is terminated.")]
+        [DisplayName("Shutdown Time Limit (seconds)")]
+        [DefaultValue(90)]
+        public uint ShutdownTimeLimit { get; set; }
 
-            var enumIdle = pool.ProcessModel.Schema.AttributeSchemas["logEventOnProcessModel"];
-            if (enumIdle != null)
-            {
-                if (enumIdle.GetEnumValues().Count > 1)
-                {
-                    pool.ProcessModel.LogEventOnProcessModel = this.LogEntry.IdleTimeout
-                                                                   ? ProcessModelLogEventOnProcessModel.IdleTimeout
-                                                                   : ProcessModelLogEventOnProcessModel.None;
-                }
-                else
-                {
-                    pool.ProcessModel.LogEventOnProcessModel = ProcessModelLogEventOnProcessModel.IdleTimeout;
-                }
-            }
-
-            pool.ProcessModel.IdleTimeout = new TimeSpan(0, this.IdleTimeout, 0);
-            if (pool.ProcessModel.Schema.AttributeSchemas["idleTimeoutAction"] != null)
-            {
-                pool.ProcessModel.IdleTimeoutAction = this.IdleAction;
-            }
-
-            pool.ProcessModel.MaxProcesses = this.MaxProcesses;
-        }
+        [Browsable(true)]
+        [Category("Process Model")]
+        [Description("[startupTimeLimit] Period of time (in seconds) a worker process is given to start up and initialize. If the worker process initialization exceeds the startup time limit,  it is terminated.")]
+        [DisplayName("Startup Time Limit (seconds)")]
+        [DefaultValue(30)]
+        public uint StartupTimeLimit { get; set; }
 
         [TypeConverter(typeof(ExpandableObjectConverter))]
         internal class LogEntrySettings
