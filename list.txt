@@ -9,6 +9,8 @@ JexusManager.exe.config
 JexusManager.pdb
 JexusManager.Features.Access.dll
 JexusManager.Features.Access.pdb
+JexusManager.Features.Asp.dll
+JexusManager.Features.Asp.pdb
 JexusManager.Features.Authentication.dll
 JexusManager.Features.Authentication.pdb
 JexusManager.Features.Authorization.dll
