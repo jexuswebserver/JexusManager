@@ -58,6 +58,7 @@ namespace JexusManager
     using Action = Crad.Windows.Forms.Actions.Action;
     using Application = Microsoft.Web.Administration.Application;
     using Features;
+    using JexusManager.Features.Asp;
 
     public sealed partial class MainForm : Form
     {
@@ -94,6 +95,7 @@ namespace JexusManager
 
             _providers = new List<ModuleProvider>
             {
+                new AspModuleProvider(),
                 new AuthenticationModuleProvider(),
                 new AuthorizationModuleProvider(),
                 new CgiModuleProvider(),

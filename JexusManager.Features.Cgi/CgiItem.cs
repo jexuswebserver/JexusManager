@@ -11,6 +11,7 @@ namespace JexusManager.Features.Cgi
 
     internal class CgiItem
     {
+        [Browsable(false)]
         public ConfigurationElement Element { get; set; }
 
         public CgiItem(ConfigurationElement element)

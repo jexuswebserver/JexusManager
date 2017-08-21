@@ -6,11 +6,8 @@ namespace JexusManager.Features.Main
 {
     using System;
     using System.ComponentModel;
-    using System.Drawing;
     using System.Drawing.Design;
-    using System.Net.Mime;
     using System.Reflection;
-    using System.Windows.Forms;
 
     using Microsoft.Web.Administration;
 
