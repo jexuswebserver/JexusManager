@@ -163,9 +163,10 @@ namespace JexusManager.Features.Main
         private void Browse(object uri)
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+            var application = service.VirtualDirectory.Application;
 
             // IMPORTANT: help users launch IIS Express instance.
-            var site = service.VirtualDirectory.Application.Site;
+            var site = application.Site;
             if (site.Server.Mode == WorkingMode.IisExpress && site.State != ObjectState.Started)
             {
                 var message = (IManagementUIService)GetService(typeof(IManagementUIService));
@@ -191,14 +192,15 @@ namespace JexusManager.Features.Main
             }
 
             // TODO: virtual directory path?
-            Process.Start(uri + service.Application.Path);
+            Process.Start(uri + application.Path);
         }
 
         private void Basic()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var dialog = new NewVirtualDirectoryDialog(Module, service.VirtualDirectory, service.VirtualDirectory.PathToSite().GetParentPath(),
-                service.VirtualDirectory.Application);
+            var virtualDirectory = service.VirtualDirectory;
+            var dialog = new NewVirtualDirectoryDialog(Module, virtualDirectory, virtualDirectory.PathToSite().GetParentPath(),
+                virtualDirectory.Application);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
@@ -225,7 +227,7 @@ namespace JexusManager.Features.Main
             get
             {
                 var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-                var site = service.VirtualDirectory.Parent.Parent.Site;
+                var site = service.VirtualDirectory.Application.Site;
                 return site.Bindings;
             }
         }
