@@ -8,6 +8,8 @@ namespace Microsoft.Web.Administration
 {
     public sealed class ApplicationPoolPeriodicRestart : ConfigurationElement
     {
+        private ScheduleCollection _collection;
+
         internal ApplicationPoolPeriodicRestart(ConfigurationElement parent)
             : this(null, parent)
         {
@@ -38,7 +40,7 @@ namespace Microsoft.Web.Administration
 
         public ScheduleCollection Schedule
         {
-            get { return (ScheduleCollection)ChildElements[0]; }
+            get { return _collection ?? (_collection = new ScheduleCollection(ChildElements["schedule"], this)); }
         }
 
         public TimeSpan Time

@@ -10,6 +10,7 @@ namespace JexusManager.Features.Main
     using System.Reflection;
 
     using Microsoft.Web.Administration;
+    using JexusManager.Main.Features.Main;
 
     internal class ApplicationPoolAdvancedSettings
     {
@@ -519,7 +520,7 @@ namespace JexusManager.Features.Main
         [Category("Recycling")]
         [Description("[schedule] A set of specific local times, in 24 hour format, when the application pool is recycled.")]
         [DisplayName("Specific Times")]
-        [Editor(typeof(ScheduleCollection),
+        [Editor(typeof(ScheduleCollectionEditor),
             typeof(UITypeEditor))]
         public ScheduleCollection Schedule { get; set; }
 

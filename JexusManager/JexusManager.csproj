@@ -162,6 +162,7 @@
     <Compile Include="Features\Main\PhysicalDirectoryPage.Designer.cs">
       <DependentUpon>PhysicalDirectoryPage.cs</DependentUpon>
     </Compile>
+    <Compile Include="Features\Main\ScheduleCollectionEditor.cs" />
     <Compile Include="Features\Main\ServerFeature.cs" />
     <Compile Include="Features\Main\ServerPage.cs">
       <SubType>UserControl</SubType>
