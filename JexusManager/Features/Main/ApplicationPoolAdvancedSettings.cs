@@ -62,6 +62,7 @@ namespace JexusManager.Features.Main
                 LogEntry.IdleTimeout = true;
             }
 
+            Identity = pool.ProcessModel;
             IdleTimeout = pool.ProcessModel.IdleTimeout.GetTotalMinutes();
             if (pool.ProcessModel.Schema.AttributeSchemas["idleTimeoutAction"] != null)
             {
@@ -72,8 +73,43 @@ namespace JexusManager.Features.Main
                 HideProperty(GetType(), nameof(IdleAction));
             }
 
+            LoadUserProfile = pool.ProcessModel.LoadUserProfile;
             MaxProcesses = pool.ProcessModel.MaxProcesses;
-            Identity = pool.ProcessModel;
+            PingingEnabled = pool.ProcessModel.PingingEnabled;
+            PingResponseTime = pool.ProcessModel.PingResponseTime.GetTotalSeconds();
+            PingInterval = pool.ProcessModel.PingInterval.GetTotalSeconds();
+            ShutdownTimeLimit = pool.ProcessModel.ShutdownTimeLimit.GetTotalSeconds();
+            StartupTimeLimit = pool.ProcessModel.StartupTimeLimit.GetTotalSeconds();
+
+            OrphanWorkerProcess = pool.Failure.OrphanWorkerProcess;
+            OrphanActionExe = pool.Failure.OrphanActionExe;
+            OrphanActionParams = pool.Failure.OrphanActionParams;
+
+            LoadBalancerCapabilities = pool.Failure.LoadBalancerCapabilities;
+            RapidFailProtection = pool.Failure.RapidFailProtection;
+            RapidFailProtectionInterval = pool.Failure.RapidFailProtectionInterval.GetTotalMinutes();
+            RapidFailProtectionMaxCrashes = pool.Failure.RapidFailProtectionMaxCrashes;
+            AutoShutdownExe = pool.Failure.AutoShutdownExe;
+            AutoShutdownParams = pool.Failure.AutoShutdownParams;
+
+            DisallowOverlappingRotation = pool.Recycling.DisallowOverlappingRotation;
+            DisallowRotationOnConfigChange = pool.Recycling.DisallowRotationOnConfigChange;
+            var flags = pool.Recycling.LogEventOnRecycle;
+            GenerateRecycleEventLogEntry = new GenerateRecycleEventLogEntry();
+            GenerateRecycleEventLogEntry.ConfigChange = (flags & RecyclingLogEventOnRecycle.ConfigChange) == RecyclingLogEventOnRecycle.ConfigChange;
+            GenerateRecycleEventLogEntry.IsapiUnhealthy = (flags & RecyclingLogEventOnRecycle.IsapiUnhealthy) == RecyclingLogEventOnRecycle.IsapiUnhealthy;
+            GenerateRecycleEventLogEntry.OnDemand = (flags & RecyclingLogEventOnRecycle.OnDemand) == RecyclingLogEventOnRecycle.OnDemand;
+            GenerateRecycleEventLogEntry.PrivateMemory = (flags & RecyclingLogEventOnRecycle.PrivateMemory) == RecyclingLogEventOnRecycle.PrivateMemory;
+            GenerateRecycleEventLogEntry.Time = (flags & RecyclingLogEventOnRecycle.Time) == RecyclingLogEventOnRecycle.Time;
+            GenerateRecycleEventLogEntry.Requests = (flags & RecyclingLogEventOnRecycle.Requests) == RecyclingLogEventOnRecycle.Requests;
+            GenerateRecycleEventLogEntry.Schedule = (flags & RecyclingLogEventOnRecycle.Schedule) == RecyclingLogEventOnRecycle.Schedule;
+            GenerateRecycleEventLogEntry.Memory = (flags & RecyclingLogEventOnRecycle.Memory) == RecyclingLogEventOnRecycle.Memory;
+
+            PrivateMemory = pool.Recycling.PeriodicRestart.PrivateMemory;
+            Time = pool.Recycling.PeriodicRestart.Time.GetTotalMinutes();
+            Requests = pool.Recycling.PeriodicRestart.Requests;
+            Schedule = pool.Recycling.PeriodicRestart.Schedule;
+            Memory = pool.Recycling.PeriodicRestart.Memory;
         }
 
         internal void Apply(ApplicationPool pool)
@@ -129,7 +165,78 @@ namespace JexusManager.Features.Main
                 pool.ProcessModel.IdleTimeoutAction = IdleAction;
             }
 
+            pool.ProcessModel.LoadUserProfile = LoadUserProfile;
             pool.ProcessModel.MaxProcesses = MaxProcesses;
+            pool.ProcessModel.PingingEnabled = PingingEnabled;
+            pool.ProcessModel.PingResponseTime = new TimeSpan(0, 0, PingResponseTime);
+            pool.ProcessModel.PingInterval = new TimeSpan(0, 0, PingInterval);
+            pool.ProcessModel.ShutdownTimeLimit = new TimeSpan(0, 0, ShutdownTimeLimit);
+            pool.ProcessModel.StartupTimeLimit = new TimeSpan(0, 0, StartupTimeLimit);
+
+            pool.Failure.OrphanWorkerProcess = OrphanWorkerProcess;
+            pool.Failure.OrphanActionExe = OrphanActionExe;
+            pool.Failure.OrphanActionParams = OrphanActionParams;
+
+            pool.Failure.LoadBalancerCapabilities = LoadBalancerCapabilities;
+            pool.Failure.RapidFailProtection = RapidFailProtection;
+            pool.Failure.RapidFailProtectionInterval = new TimeSpan(0, RapidFailProtectionInterval, 0);
+            pool.Failure.RapidFailProtectionMaxCrashes = RapidFailProtectionMaxCrashes;
+            pool.Failure.AutoShutdownExe = AutoShutdownExe;
+            pool.Failure.AutoShutdownParams = AutoShutdownParams;
+
+            pool.Recycling.DisallowOverlappingRotation = DisallowOverlappingRotation;
+            pool.Recycling.DisallowRotationOnConfigChange = DisallowRotationOnConfigChange;
+            var flags = RecyclingLogEventOnRecycle.None;
+            if (GenerateRecycleEventLogEntry.ConfigChange)
+            {
+                flags &= RecyclingLogEventOnRecycle.ConfigChange;
+            }
+
+            if (GenerateRecycleEventLogEntry.IsapiUnhealthy)
+            {
+                flags &= RecyclingLogEventOnRecycle.IsapiUnhealthy;
+            }
+
+            if (GenerateRecycleEventLogEntry.OnDemand)
+            {
+                flags &= RecyclingLogEventOnRecycle.OnDemand;
+            }
+
+            if (GenerateRecycleEventLogEntry.PrivateMemory)
+            {
+                flags &= RecyclingLogEventOnRecycle.PrivateMemory;
+            }
+
+            if (GenerateRecycleEventLogEntry.Time)
+            {
+                flags &= RecyclingLogEventOnRecycle.Time;
+            }
+
+            if (GenerateRecycleEventLogEntry.Requests)
+            {
+                flags &= RecyclingLogEventOnRecycle.Requests;
+            }
+
+            if (GenerateRecycleEventLogEntry.Schedule)
+            {
+                flags &= RecyclingLogEventOnRecycle.Schedule;
+            }
+
+            if (GenerateRecycleEventLogEntry.Memory)
+            {
+                flags &= RecyclingLogEventOnRecycle.Memory;
+            }
+
+            pool.Recycling.PeriodicRestart.PrivateMemory = PrivateMemory;
+            pool.Recycling.PeriodicRestart.Time = new TimeSpan(0, Time, 0);
+            pool.Recycling.PeriodicRestart.Requests = Requests;
+            pool.Recycling.PeriodicRestart.Schedule.Clear();
+            foreach (Schedule item in Schedule)
+            {
+                pool.Recycling.PeriodicRestart.Schedule.Add(item);
+            }
+
+            pool.Recycling.PeriodicRestart.Memory = Memory;
         }
 
         private static void HideProperty(Type type, string name)
@@ -281,42 +388,218 @@ namespace JexusManager.Features.Main
         [Description("[pingResponseTime] Maximum time (in seconds) that a worker process is given to respond to a health monitoring ping. If the worker process does not respond, it is terminated.")]
         [DisplayName("Ping Maximum Response Time (seconds)")]
         [DefaultValue(90)]
-        public uint PingResponseTime { get; set; }
+        public int PingResponseTime { get; set; }
 
         [Browsable(true)]
         [Category("Process Model")]
         [Description("[pingInterval] Period of time (in seconds) between health monitoring pings sent to the worker process(es) serving this application pool.")]
         [DisplayName("Ping Period (seconds)")]
         [DefaultValue(30)]
-        public uint PingInterval { get; set; }
+        public int PingInterval { get; set; }
 
         [Browsable(true)]
         [Category("Process Model")]
         [Description("[shutdownTimeLimit] Period of time (in seconds) a worker process is given to finish processing requests and shut down. If the worker process exceeds the shutdown time limit, it is terminated.")]
         [DisplayName("Shutdown Time Limit (seconds)")]
         [DefaultValue(90)]
-        public uint ShutdownTimeLimit { get; set; }
+        public int ShutdownTimeLimit { get; set; }
 
         [Browsable(true)]
         [Category("Process Model")]
         [Description("[startupTimeLimit] Period of time (in seconds) a worker process is given to start up and initialize. If the worker process initialization exceeds the startup time limit,  it is terminated.")]
         [DisplayName("Startup Time Limit (seconds)")]
         [DefaultValue(30)]
-        public uint StartupTimeLimit { get; set; }
+        public int StartupTimeLimit { get; set; }
 
-        [TypeConverter(typeof(ExpandableObjectConverter))]
-        internal class LogEntrySettings
+        [Browsable(true)]
+        [Category("Process Orphaning")]
+        [Description("[orphanWorkerProcess] if true, an unresponsive worker process will be abandoned (orphaned) instead of terminated. This feature can be used to debug a worker process failure.")]
+        [DisplayName("Enabled")]
+        [DefaultValue(false)]
+        public bool OrphanWorkerProcess { get; set; }
+
+        [Browsable(true)]
+        [Category("Process Orphaning")]
+        [Description("[orphanActionExe] Executable to run when a worker process is abandoned (orphaned). For example, \"C:\\dbgtools\\ntsd.exe\" would invoke NTSD to debug a worker process failure.")]
+        [DisplayName("Executable")]
+        [DefaultValue("")]
+        public string OrphanActionExe { get; set; }
+
+        [Browsable(true)]
+        [Category("Process Orphaning")]
+        [Description("[orphanActionParams] Parameters for the executable that is run when a worker process is abandoned (orphaned). For example, \"-g -p %1%\" is appropriate if NTSD is the executable invoked for debugging worker process failure.")]
+        [DisplayName("Executable Parameters")]
+        [DefaultValue("")]
+        public string OrphanActionParams { get; set; }
+
+        [Browsable(true)]
+        [Category("Rapid-Fail Protection")]
+        [Description("[loadBalancerCapabilities] If set to HttpLevel and the application pool is stopped, HTTP.sys will return an HTTP 503 error. If set to TcpLevel, HTTP.sys will reset the connection. This is useful if a load balancer recognizes one of the response types and subsequently redirects it.")]
+        [DisplayName("\"Service Unavailable\" Response Type")]
+        [DefaultValue(typeof(LoadBalancerCapabilities), "HttpLevel")]
+        public LoadBalancerCapabilities LoadBalancerCapabilities { get; set; }
+
+        [Browsable(true)]
+        [Category("Rapid-Fail Protection")]
+        [Description("[rapidFailProtection] If true, the application pool is shut down if there are a specified number of worker process crashes (Maximum Failures) within a specified time period (Failure Interval). By default, an application pool is shut down if there are 5 crashes within a 5 minute interval.")]
+        [DisplayName("Enabled")]
+        [DefaultValue(true)]
+        public bool RapidFailProtection { get; set; }
+
+        [Browsable(true)]
+        [Category("Rapid-Fail Protection")]
+        [Description("[rapidFailProtectionInterval] The time interval (in minutes) during which the specified number of worker process crashes (Maximum Failures) must occur before the application pool is shut down by Rapid Fail Protection.")]
+        [DisplayName("Failure Interval (minutes)")]
+        [DefaultValue(5)]
+        public int RapidFailProtectionInterval { get; set; }
+
+        [Browsable(true)]
+        [Category("Rapid-Fail Protection")]
+        [Description("[rapidFailProtectionMaxCrashes] Maximum number of worker process crashes permitted before the application pool is shut down by Rapid Fail Protection.")]
+        [DisplayName("Maximum Failures")]
+        [DefaultValue(5L)]
+        public long RapidFailProtectionMaxCrashes { get; set; }
+
+        [Browsable(true)]
+        [Category("Rapid-Fail Protection")]
+        [Description("[autoShutdownExe] Executable to run when a worker process is shut down by Rapid Fail Protection. This could be used to configure a load balancer to redirect traffic for this application pool to another server.")]
+        [DisplayName("Shutdown Executable")]
+        [DefaultValue("")]
+        public string AutoShutdownExe { get; set; }
+
+        [Browsable(true)]
+        [Category("Rapid-Fail Protection")]
+        [Description("[autoShutdownParams] Parameters for the executable that is run when a worker process is abandoned (orphaned). For example, \"-g -p %1%\" is appropriate if NTSD is the executable invoked for debugging worker process failure.")]
+        [DisplayName("Shutdown Executable Parameters")]
+        [DefaultValue("")]
+        public string AutoShutdownParams { get; set; }
+
+        [Browsable(true)]
+        [Category("Recycling")]
+        [Description("[disallowOverlappingRotation] If true, the application pool recycle will happen such that the existing worker process exits before another worker process is created. Set to true if the worker process loads an application that does not support multiple instances.")]
+        [DisplayName("Disable Overlapped Recycle")]
+        [DefaultValue(false)]
+        public bool DisallowOverlappingRotation { get; set; }
+
+        [Browsable(true)]
+        [Category("Recycling")]
+        [Description("[disallowRotationOnConfigChange] If true, the application pool will not recycle when its configuration is changed.")]
+        [DisplayName("Disable Recycling for Configuration Changes")]
+        [DefaultValue(false)]
+        public bool DisallowRotationOnConfigChange { get; set; }
+
+        [Browsable(true)]
+        [Category("Recycling")]
+        [Description("[logEventOnRecycle] Generates an event log entry for each occurrence of the specified recycling events.")]
+        [DisplayName("Generate Recycle Event Log Entry")]
+        public GenerateRecycleEventLogEntry GenerateRecycleEventLogEntry { get; set; }
+
+        [Browsable(true)]
+        [Category("Recycling")]
+        [Description("[privateMemory] Maximum amount of private memory (in KB) a worker process can consume before causing the application pool to recycle. A value of 0 means there is no limit.")]
+        [DisplayName("Private Memory Limit (KB)")]
+        [DefaultValue(0)]
+        public long PrivateMemory { get; set; }
+
+        [Browsable(true)]
+        [Category("Recycling")]
+        [Description("[time] Period of time (in minutes) after which an application pool will recycle. A value of 0 means the application pool does not recycle on a regular interval.")]
+        [DisplayName("Regular Time Interval (minutes)")]
+        [DefaultValue(1740)]
+        public int Time { get; set; }
+
+        [Browsable(true)]
+        [Category("Recycling")]
+        [Description("[requests] Maximum number of requests an application pool can process before it is recycled. A value of 0 means the application pool can process an unlimited number of requests.")]
+        [DisplayName("Request Limit")]
+        [DefaultValue(0)]
+        public long Requests { get; set; }
+
+        [Browsable(true)]
+        [Category("Recycling")]
+        [Description("[schedule] A set of specific local times, in 24 hour format, when the application pool is recycled.")]
+        [DisplayName("Specific Times")]
+        [Editor(typeof(ScheduleCollection),
+            typeof(UITypeEditor))]
+        public ScheduleCollection Schedule { get; set; }
+
+        [Browsable(true)]
+        [Category("Recycling")]
+        [Description("[memory] Maximum amount of virtual memory (in KB) a worker process can consume before causing the application pool to recycle. A value of 0 means there is no limit.")]
+        [DisplayName("Virtual Memory Limit (KB)")]
+        [DefaultValue(0)]
+        public long Memory { get; set; }
+    }
+
+    [TypeConverter(typeof(ExpandableObjectConverter))]
+    public class GenerateRecycleEventLogEntry
+    {
+        [Browsable(true)]
+        [Description("[ConfigChange] If true, an event log entry is generated when an application pool recycles due to a change in its configuration.")]
+        [DisplayName("Application Pool Configuration Changed")]
+        [DefaultValue(false)]
+        public bool ConfigChange { get; set; }
+
+        [Browsable(true)]
+        [Description("[IsapiUnhealthy] If true, an event log entry is generated when an application pool recycles because an ISAPI extension has reported itself as unhealthy.")]
+        [DisplayName("Isapi Reported Unhealthy")]
+        [DefaultValue(false)]
+        public bool IsapiUnhealthy { get; set; }
+
+        [Browsable(true)]
+        [Description("[OnDemand] If true, an event log entry is generated when the application pool has been manually recycled.")]
+        [DisplayName("Manual Recycle")]
+        [DefaultValue(false)]
+        public bool OnDemand { get; set; }
+
+        [Browsable(true)]
+        [Description("[PrivateMemory] If true, an event log entry is generated when the application pool recycles after exceeding its private memory limit.")]
+        [DisplayName("Private Memory Limit Exceeded")]
+        [DefaultValue(true)]
+        public bool PrivateMemory { get; set; }
+
+        [Browsable(true)]
+        [Description("[Time] If true, an event log entry is generated when the application pool recycles on its scheduled interval.")]
+        [DisplayName("Regular Time Interval")]
+        [DefaultValue(true)]
+        public bool Time { get; set; }
+
+        [Browsable(true)]
+        [Description("[Requests] If true, an event log entry is generated when the application pool recycles after exceeding its request limit.")]
+        [DisplayName("Request Limit Exceeded")]
+        [DefaultValue(false)]
+        public bool Requests { get; set; }
+
+        [Browsable(true)]
+        [Description("[Schedule] If true, an event log entry is generated when the application pool recycles at a scheduled time.")]
+        [DisplayName("Specific Time")]
+        [DefaultValue(false)]
+        public bool Schedule { get; set; }
+
+        [Browsable(true)]
+        [Description("[Memory] If true, an event log entry is generated when the application pool recycles after exceeding its virtual memory limit.")]
+        [DisplayName("Virtual Memory Limit Exceeded")]
+        [DefaultValue(true)]
+        public bool Memory { get; set; }
+
+        public override string ToString()
         {
-            [Browsable(true)]
-            [Description("[IdleTimeout] If true, an event log entry is generated when the application pool is shutdown after exceeding its idle time-out limit.")]
-            [DisplayName("Idle Time-out Reached")]
-            [DefaultValue(true)]
-            public bool IdleTimeout { get; set; }
+            return string.Empty;
+        }
+    }
 
-            public override string ToString()
-            {
-                return string.Empty;
-            }
+    [TypeConverter(typeof(ExpandableObjectConverter))]
+    public class LogEntrySettings
+    {
+        [Browsable(true)]
+        [Description("[IdleTimeout] If true, an event log entry is generated when the application pool is shutdown after exceeding its idle time-out limit.")]
+        [DisplayName("Idle Time-out Reached")]
+        [DefaultValue(true)]
+        public bool IdleTimeout { get; set; }
+
+        public override string ToString()
+        {
+            return string.Empty;
         }
     }
 }

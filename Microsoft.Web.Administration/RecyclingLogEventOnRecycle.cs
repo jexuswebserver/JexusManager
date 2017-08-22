@@ -2,8 +2,11 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
+
 namespace Microsoft.Web.Administration
 {
+    [Flags]
     public enum RecyclingLogEventOnRecycle
     {
         None = 0,
