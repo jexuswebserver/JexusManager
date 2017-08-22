@@ -78,6 +78,11 @@ namespace JexusManager.Tree
                             continue;
                         }
 
+                        if (app.VirtualDirectories.Count == 0)
+                        {
+                            continue;
+                        }
+
                         loaded.Add(app.Path);
                         var appNode = new ApplicationTreeNode(ServiceProvider, app, ServerNode) { ContextMenuStrip = appMenu };
                         treeNodes.Add(appNode);
@@ -115,6 +120,11 @@ namespace JexusManager.Tree
                 }
 
                 if (GetLevel(application.Path) != rootLevel + 1)
+                {
+                    continue;
+                }
+
+                if (application.VirtualDirectories.Count == 0)
                 {
                     continue;
                 }
