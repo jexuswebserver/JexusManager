@@ -361,15 +361,22 @@ namespace JexusManager.Features.Main
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var site = service.Site;
-            NativeMethods.ShowFileProperties(
-                site.Applications[0].VirtualDirectories[0].PhysicalPath.ExpandIisExpressEnvironmentVariables());
+            var path = site.PhysicalPath.ExpandIisExpressEnvironmentVariables();
+            if (!string.IsNullOrWhiteSpace(path))
+            {
+                NativeMethods.ShowFileProperties(path);
+            }
         }
 
         private void Explore()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var site = service.Site;
-            DialogHelper.Explore(site.Applications[0].VirtualDirectories[0].PhysicalPath.ExpandIisExpressEnvironmentVariables());
+            var path = site.PhysicalPath.ExpandIisExpressEnvironmentVariables();
+            if (!string.IsNullOrWhiteSpace(path))
+            {
+                DialogHelper.Explore(path);
+            }
         }
 
         private void Bindings()
@@ -385,7 +392,7 @@ namespace JexusManager.Features.Main
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var site = service.Site;
-            var root = site.Applications[0].VirtualDirectories[0].PhysicalPath.ExpandIisExpressEnvironmentVariables();
+            var root = site.PhysicalPath.ExpandIisExpressEnvironmentVariables();
             var projects = Directory.GetFiles(root, "*.csproj");
 
             var project = projects[0];
@@ -450,7 +457,12 @@ namespace JexusManager.Features.Main
 
         private static bool SiteHasProject(Site site)
         {
-            var root = site.Applications[0].VirtualDirectories[0].PhysicalPath.ExpandIisExpressEnvironmentVariables();
+            var root = site.PhysicalPath.ExpandIisExpressEnvironmentVariables();
+            if (string.IsNullOrWhiteSpace(root))
+            {
+                return false;
+            }
+
             string[] projects;
             try
             {

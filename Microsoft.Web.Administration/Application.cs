@@ -251,5 +251,28 @@ namespace Microsoft.Web.Administration
             VirtualDirectories.Add(
                 new VirtualDirectory(null, VirtualDirectories) { Path = path, PhysicalPath = physicalPath });
         }
+
+        internal string PhysicalPath
+        {
+            get
+            {
+                if (VirtualDirectories.Count == 0)
+                {
+                    return string.Empty;
+                }
+
+                return VirtualDirectories[0].PhysicalPath;
+            }
+
+            set
+            {
+                if (VirtualDirectories.Count == 0)
+                {
+                    return;
+                }
+
+                VirtualDirectories[0].PhysicalPath = value;
+            }
+        }
     }
 }

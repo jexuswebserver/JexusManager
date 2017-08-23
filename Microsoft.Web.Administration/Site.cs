@@ -149,7 +149,7 @@ namespace Microsoft.Web.Administration
         {
             if (Server.Mode != WorkingMode.Jexus)
             {
-                var root = Applications[0].VirtualDirectories[0].PhysicalPath.ExpandIisExpressEnvironmentVariables();
+                var root = PhysicalPath.ExpandIisExpressEnvironmentVariables();
                 if (Directory.Exists(root))
                 {
                     var result = new DirectoryInfo(root).GetDirectories();
@@ -182,6 +182,20 @@ namespace Microsoft.Web.Administration
             foreach (Application application in Applications)
             {
                 application.Save();
+            }
+        }
+
+        internal string PhysicalPath
+        {
+            get
+            {
+                if (Applications.Count == 0)
+                {
+                    return string.Empty;
+                }
+
+                var path = Applications[0].PhysicalPath;
+                return path;
             }
         }
     }

@@ -27,7 +27,7 @@ namespace JexusManager.Dialogs
             _application = application;
             txtPool.Text = application.ApplicationPoolName;
             txtAlias.Text = application.Site.Name;
-            txtPhysicalPath.Text = application.VirtualDirectories[0].PhysicalPath;
+            txtPhysicalPath.Text = application.PhysicalPath;
             btnBrowse.Visible = application.Server.IsLocalhost;
             btnSelect.Enabled = application.Server.Mode != WorkingMode.Jexus;
 
@@ -45,7 +45,7 @@ namespace JexusManager.Dialogs
                         return;
                     }
 
-                    _application.VirtualDirectories[0].PhysicalPath = txtPhysicalPath.Text;
+                    _application.PhysicalPath = txtPhysicalPath.Text;
                     _application.ApplicationPoolName = txtPool.Text;
                     _application.Server.CommitChanges();
                     DialogResult = DialogResult.OK;

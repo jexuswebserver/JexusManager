@@ -465,12 +465,20 @@ namespace JexusManager.Features.Main
 
         private void Permissions()
         {
-            NativeMethods.ShowFileProperties(SelectedItem.Applications[0].VirtualDirectories[0].PhysicalPath.ExpandIisExpressEnvironmentVariables());
+            var path = SelectedItem.PhysicalPath.ExpandIisExpressEnvironmentVariables();
+            if (!string.IsNullOrWhiteSpace(path))
+            {
+                NativeMethods.ShowFileProperties(path);
+            }
         }
 
         private void Explore()
         {
-            DialogHelper.Explore(SelectedItem.Applications[0].VirtualDirectories[0].PhysicalPath.ExpandIisExpressEnvironmentVariables());
+            var path = SelectedItem.PhysicalPath.ExpandIisExpressEnvironmentVariables();
+            if (!string.IsNullOrWhiteSpace(path))
+            {
+                DialogHelper.Explore(path);
+            }
         }
 
         private void Bindings()

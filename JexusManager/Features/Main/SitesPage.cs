@@ -61,7 +61,7 @@ namespace JexusManager.Features.Main
                 SubItems.Add(new ListViewSubItem(this, Item.Id.ToString(CultureInfo.InvariantCulture)));
                 SubItems.Add(new ListViewSubItem(this, CommonHelper.ToString(Item.State)));
                 SubItems.Add(new ListViewSubItem(this, ToString(Item.Bindings)));
-                SubItems.Add(new ListViewSubItem(this, Item.Applications[0].VirtualDirectories[0].PhysicalPath));
+                SubItems.Add(new ListViewSubItem(this, Item.PhysicalPath));
                 ImageIndex = item.State == ObjectState.Started ? 0 : 1;
             }
 
