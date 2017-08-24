@@ -91,6 +91,13 @@ namespace JexusManager.Features
                         }
                         catch (TargetInvocationException ex)
                         {
+                            if (ex.InnerException is UnauthorizedAccessException)
+                            {
+                                MessageBox.Show($"{ex.InnerException.Message}. Running Jexus Manager as administrator might resolve it.", "Jexus Manager", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                RollbarDotNet.Rollbar.Report(ex.InnerException, RollbarDotNet.ErrorLevel.Debug);
+                                return;
+                            }
+
                             throw new InvalidOperationException($"menu item {method.Text} function {method.MethodName}", ex);
                         }
                     })
@@ -113,6 +120,13 @@ namespace JexusManager.Features
                             }
                             catch (TargetInvocationException ex)
                             {
+                                if (ex.InnerException is UnauthorizedAccessException)
+                                {
+                                    MessageBox.Show($"{ex.InnerException.Message}. Running Jexus Manager as administrator might resolve it.", "Jexus Manager", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    RollbarDotNet.Rollbar.Report(ex.InnerException, RollbarDotNet.ErrorLevel.Debug);
+                                    return;
+                                }
+
                                 throw new InvalidOperationException($"menu item {method.Text} function {method.MethodName}", ex);
                             }
                         })
