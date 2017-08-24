@@ -185,7 +185,7 @@ namespace JexusManager.Features.Logging
             var path = Directory.ExpandIisExpressEnvironmentVariables();
             if (System.IO.Directory.Exists(path))
             {
-                Process.Start(path);
+                DialogHelper.ProcessStart(path);
                 return;
             }
 
@@ -230,7 +230,7 @@ namespace JexusManager.Features.Logging
 
         public virtual bool ShowHelp()
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210517");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210517");
             return false;
         }
 

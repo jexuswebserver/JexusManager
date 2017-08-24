@@ -701,17 +701,17 @@ namespace JexusManager
 
         private void iISOnMSDNOnlineToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=213860");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=213860");
         }
 
         private void iISNETOnlineToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=213859");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=213859");
         }
 
         private void iISKBsOnlineToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210477");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210477");
         }
 
         private void actConnectServer_Execute(object sender, EventArgs e)
@@ -857,7 +857,7 @@ namespace JexusManager
 
         private void btnAbout_Click(object sender, EventArgs e)
         {
-            Process.Start("https://jexus.codeplex.com");
+            DialogHelper.ProcessStart("https://jexus.codeplex.com");
         }
 
         private void treeView1_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)

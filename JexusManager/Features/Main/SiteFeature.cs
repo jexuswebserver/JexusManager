@@ -10,8 +10,6 @@
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 
-using System.Threading.Tasks;
-
 namespace JexusManager.Features.Main
 {
     using System;
@@ -239,7 +237,7 @@ namespace JexusManager.Features.Main
 
         public virtual bool ShowHelp()
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210463");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210463");
             return false;
         }
 
@@ -278,7 +276,7 @@ namespace JexusManager.Features.Main
                 Start();
             }
 
-            Process.Start(uri.ToString());
+            DialogHelper.ProcessStart(uri.ToString());
         }
 
         private void Stop()

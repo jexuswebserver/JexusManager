@@ -179,7 +179,7 @@ namespace JexusManager.Features.Logging
 
         private void FieldsDialog_HelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210517#W3CLoggingFields");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210517#W3CLoggingFields");
         }
     }
 }

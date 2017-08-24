@@ -77,7 +77,7 @@ namespace JexusManager.Features.Asp
 
         public virtual bool ShowHelp()
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210460");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210460");
             return false;
         }
 

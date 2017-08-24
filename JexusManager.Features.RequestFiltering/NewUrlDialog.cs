@@ -48,7 +48,7 @@ namespace JexusManager.Features.RequestFiltering
 
         private void NewHiddenSegmentDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210526#Add_Sequence");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210526#Add_Sequence");
         }
     }
 }

@@ -61,7 +61,7 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         private void AddVariableDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=163108");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=163108");
         }
 
         public MapItem Item { get; set; }

@@ -237,7 +237,7 @@ namespace JexusManager.Features.IpSecurity
 
         public virtual bool ShowHelp()
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210513");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210513");
             return false;
         }
 

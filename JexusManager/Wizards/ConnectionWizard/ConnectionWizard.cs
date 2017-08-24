@@ -59,7 +59,7 @@ namespace JexusManager.Wizards.ConnectionWizard
 
         protected override void ShowHelp()
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210463#ServerConnectionDetails");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210463#ServerConnectionDetails");
         }
     }
 }

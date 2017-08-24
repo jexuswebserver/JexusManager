@@ -96,7 +96,7 @@ namespace JexusManager.Features.Authentication
 
         private void AnonymousEditDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210461#Anonymous");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210461#Anonymous");
         }
     }
 }

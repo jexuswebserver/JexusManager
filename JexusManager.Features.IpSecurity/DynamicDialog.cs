@@ -104,7 +104,7 @@ namespace JexusManager.Features.IpSecurity
 
         private void DynamicDialog_HelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210513");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210513");
         }
     }
 }

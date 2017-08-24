@@ -123,7 +123,7 @@ namespace JexusManager.Features.Authentication
 
         public override bool ShowHelp()
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210461#Digest");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210461#Digest");
             return true;
         }
 

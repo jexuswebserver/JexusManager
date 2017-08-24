@@ -107,7 +107,7 @@ namespace JexusManager.Features.RequestFiltering
 
         public override bool ShowHelp()
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210526#Hidden_Segments");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210526#Hidden_Segments");
             return true;
         }
 

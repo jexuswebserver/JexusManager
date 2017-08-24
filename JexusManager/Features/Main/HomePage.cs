@@ -18,17 +18,17 @@ namespace JexusManager.Features.Main
 
         private void txtHomepage_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start("https://www.jexusmanager.com");
+            DialogHelper.ProcessStart("https://www.jexusmanager.com");
         }
 
         private void txtHomepageChinese_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start("http://linuxdot.net");
+            DialogHelper.ProcessStart("http://linuxdot.net");
         }
 
         private void txtLeXtudio_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start("https://www.lextudio.com");
+            DialogHelper.ProcessStart("https://www.lextudio.com");
         }
 
         protected override bool ShowTaskList => false;

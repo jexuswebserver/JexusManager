@@ -77,7 +77,7 @@ namespace JexusManager.Features.Cgi
 
         public virtual bool ShowHelp()
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210534");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210534");
             return false;
         }
 

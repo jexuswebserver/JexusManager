@@ -55,7 +55,7 @@ namespace JexusManager.Features.Authentication
 
         private void WindowsAdvancedDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210461#Advanced_Windows");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210461#Advanced_Windows");
         }
     }
 }

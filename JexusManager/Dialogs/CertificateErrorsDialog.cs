@@ -34,12 +34,12 @@ namespace JexusManager.Dialogs
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210463#CertificateNameMismatch");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210463#CertificateNameMismatch");
         }
 
         private void CertificateErrorsDialog_HelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210463#CertificateVerificationHelp");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210463#CertificateVerificationHelp");
         }
     }
 }

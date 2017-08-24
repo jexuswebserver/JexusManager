@@ -120,7 +120,7 @@ namespace JexusManager.Features.HttpApi
 
         public override bool ShowHelp()
         {
-            Process.Start("https://msdn.microsoft.com/en-us/library/windows/desktop/cc307243(v=vs.85).aspx");
+            DialogHelper.ProcessStart("https://msdn.microsoft.com/en-us/library/windows/desktop/cc307243(v=vs.85).aspx");
             return false;
         }
 

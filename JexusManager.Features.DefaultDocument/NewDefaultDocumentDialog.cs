@@ -58,7 +58,7 @@ namespace JexusManager.Features.DefaultDocument
 
         private void NewDefaultDocumentDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210478");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210478");
         }
     }
 }

@@ -8,10 +8,12 @@ namespace JexusManager
     using Microsoft.Web.Administration;
     using Ookii.Dialogs;
     using System;
+    using System.ComponentModel;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Net;
+    using System.Runtime.InteropServices;
     using System.Security.Cryptography;
     using System.Security.Cryptography.X509Certificates;
     using System.Windows.Forms;
@@ -24,12 +26,29 @@ namespace JexusManager
             {
                 SelectedPath = textBox.Text.ExpandIisExpressEnvironmentVariables()
             };
-            if (dialog.ShowDialog() == DialogResult.Cancel)
+            try
             {
-                return;
-            }
+                if (dialog.ShowDialog() == DialogResult.Cancel)
+                {
+                    return;
+                }
 
-            textBox.Text = dialog.SelectedPath;
+                textBox.Text = dialog.SelectedPath;
+            }
+            catch (COMException ex)
+            {
+                if (ex.StackTrace.Contains("Ookii.Dialogs.VistaFolderBrowserDialog.RunDialog(System.IntPtr hwndOwner)"))
+                {
+                    // IMPORTANT: use a workaround to suppress failure.
+                    var fallback = new FolderBrowserDialog { SelectedPath = textBox.Text.ExpandIisExpressEnvironmentVariables() };
+                    if (fallback.ShowDialog() == DialogResult.Cancel)
+                    {
+                        return;
+                    }
+
+                    textBox.Text = fallback.SelectedPath;
+                }
+            }
         }
 
         public static void DisplayCertificate(X509Certificate2 x509Certificate2, IntPtr handle)
@@ -153,9 +172,24 @@ namespace JexusManager
                 InitialDirectory = string.IsNullOrEmpty(initial) ? string.Empty : Path.GetDirectoryName(initial),
                 Filter = filter
             };
-            if (dialog.ShowDialog() == DialogResult.Cancel)
+            try
             {
-                return;
+                if (dialog.ShowDialog() == DialogResult.Cancel)
+                {
+                    return;
+                }
+            }
+            catch (COMException ex)
+            {
+                if (ex.StackTrace.Contains("System.Windows.Forms.OpenFileDialog.CreateVistaDialog()"))
+                {
+                    // IMPORTANT: use a workaround to suppress failure.
+                    dialog.AutoUpgradeEnabled = false;
+                    if (dialog.ShowDialog() == DialogResult.Cancel)
+                    {
+                        return;
+                    }
+                }
             }
 
             textBox.Text = dialog.FileName;
@@ -187,5 +221,17 @@ namespace JexusManager
         public static string ListJexus => GetSpecialFolder("lists", "list");
 
         public static string DebugLog => GetSpecialFolder("temp", "debug");
+
+        public static void ProcessStart(string url)
+        {
+            try
+            {
+                Process.Start(url);
+            }
+            catch (Win32Exception)
+            {
+                Help.ShowHelp(null, url);
+            }
+        }
     }
 }

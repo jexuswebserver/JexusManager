@@ -109,7 +109,7 @@ namespace JexusManager.Features.RequestFiltering
 
         private void SegmentSettingsDialog_HelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210526#Edit_Filtering");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210526#Edit_Filtering");
         }
     }
 }

@@ -129,7 +129,7 @@ namespace JexusManager.Features.DirectoryBrowse
 
         public virtual bool ShowHelp()
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210534");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210534");
             return false;
         }
 

@@ -52,7 +52,7 @@ namespace JexusManager.Features.Authentication
 
         private void CredentialsDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210461#Anonymous");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210461#Anonymous");
         }
 
         public string Password { get; set; }

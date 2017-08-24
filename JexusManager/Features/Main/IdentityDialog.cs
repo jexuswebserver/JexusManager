@@ -111,7 +111,7 @@ namespace JexusManager.Features.Main
 
         private void IdentityDialogHelpButtonClicked(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210456#ApplicationPoolIdentity");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210456#ApplicationPoolIdentity");
         }
     }
 }

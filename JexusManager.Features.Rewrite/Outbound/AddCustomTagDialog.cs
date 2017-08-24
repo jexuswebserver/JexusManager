@@ -54,7 +54,7 @@ namespace JexusManager.Features.Rewrite.Outbound
 
         private void AddCustomTagDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=163112");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=163112");
         }
     }
 }

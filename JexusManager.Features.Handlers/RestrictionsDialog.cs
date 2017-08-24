@@ -116,7 +116,7 @@ namespace JexusManager.Features.Handlers
 
         private void RestrictionsDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210505#Request_Restrictions");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210505#Request_Restrictions");
         }
     }
 }

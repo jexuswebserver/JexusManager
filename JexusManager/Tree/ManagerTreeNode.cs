@@ -164,7 +164,7 @@ namespace JexusManager.Tree
 
         public void Browse()
         {
-            Process.Start(Uri);
+            DialogHelper.ProcessStart(Uri);
         }
 
         protected static int GetLevel(string pathToSite)

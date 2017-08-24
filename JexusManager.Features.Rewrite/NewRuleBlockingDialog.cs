@@ -126,7 +126,7 @@ namespace JexusManager.Features.Rewrite
 
         private void NewRuleBlockingHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkID=130412&amp;clcid=0x409");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkID=130412&amp;clcid=0x409");
         }
 
         private string GetInput(int inputType)

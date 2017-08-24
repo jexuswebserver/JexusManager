@@ -52,7 +52,7 @@ namespace JexusManager.Dialogs
 
         private void SelectPoolDialog_HelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210458");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210458");
         }
 
         internal ApplicationPool Selected { get; set; }

@@ -94,7 +94,7 @@ namespace JexusManager.Features.Authentication
 
         private void FormsEditDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210461#Forms");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210461#Forms");
         }
     }
 }

@@ -214,7 +214,7 @@ namespace JexusManager.Features.HttpErrors
 
         private void NewCustomErrorDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210481");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210481");
         }
     }
 }

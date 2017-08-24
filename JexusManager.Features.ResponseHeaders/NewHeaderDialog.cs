@@ -60,7 +60,7 @@ namespace JexusManager.Features.ResponseHeaders
 
         private void NewHeaderDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210509");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210509");
         }
 
         public ResponseHeadersItem Item { get; set; }

@@ -153,7 +153,7 @@ namespace JexusManager.Features.Authentication
         {
             if (listView1.SelectedItems.Count == 0)
             {
-                Process.Start("http://go.microsoft.com/fwlink/?LinkId=210461");
+                DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210461");
                 return true;
             }
 

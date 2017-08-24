@@ -87,7 +87,7 @@ namespace JexusManager.Dialogs
 
         private void EditSiteDialog_HelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210531#Edit_Site");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210531#Edit_Site");
         }
     }
 }

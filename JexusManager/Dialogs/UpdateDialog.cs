@@ -39,7 +39,7 @@ namespace JexusManager.Dialogs
             catch (Exception)
             {
                 MessageBox.Show("Cannot connect to GitHub. Will open https://github.com/jexuswebserver/JexusManager/releases.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
-                Process.Start("https://github.com/jexuswebserver/JexusManager/releases");
+                DialogHelper.ProcessStart("https://github.com/jexuswebserver/JexusManager/releases");
                 Close();
                 return;
             }
@@ -67,7 +67,7 @@ namespace JexusManager.Dialogs
                 return;
             }
 
-            Process.Start("https://github.com/jexuswebserver/JexusManager/releases");
+            DialogHelper.ProcessStart("https://github.com/jexuswebserver/JexusManager/releases");
             Close();
         }
     }

@@ -70,7 +70,7 @@ namespace JexusManager.Features.Modules
 
         private void NewRestrictionDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210521");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210521");
         }
     }
 }

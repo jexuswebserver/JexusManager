@@ -164,7 +164,7 @@ namespace JexusManager.Features.Main
                 .Subscribe(evt =>
                 {
                     var binding = (Binding)listView1.SelectedItems[0].Tag;
-                    Process.Start(binding.ToUri());
+                    DialogHelper.ProcessStart(binding.ToUri());
                 }));
         }
 
@@ -175,7 +175,7 @@ namespace JexusManager.Features.Main
 
         private void BindingsDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210531#Site_Bingings");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210531#Site_Bingings");
         }
 
         private void BindingsDialogFormClosing(object sender, FormClosingEventArgs e)

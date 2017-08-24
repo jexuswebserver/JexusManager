@@ -145,7 +145,7 @@ namespace JexusManager.Features.Authentication
 
         public override bool ShowHelp()
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210461#Windows");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210461#Windows");
             return true;
         }
 

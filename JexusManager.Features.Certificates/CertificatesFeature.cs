@@ -325,7 +325,7 @@ namespace JexusManager.Features.Certificates
 
         public virtual bool ShowHelp()
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210528");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210528");
             return false;
         }
 

@@ -146,7 +146,7 @@ namespace JexusManager.Features.Certificates
 
         private void ImportCertificateDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210528");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210528");
         }
 
         public string Store { get; set; }

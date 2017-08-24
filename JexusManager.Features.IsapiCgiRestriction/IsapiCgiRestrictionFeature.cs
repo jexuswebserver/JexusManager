@@ -206,7 +206,7 @@ namespace JexusManager.Features.IsapiCgiRestriction
 
         public virtual bool ShowHelp()
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210515");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210515");
             return false;
         }
 

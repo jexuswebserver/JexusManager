@@ -136,7 +136,7 @@ namespace JexusManager.Features.Rewrite
 
         private void RegexTestDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkID=130409&amp;clcid=0x409");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkID=130409&amp;clcid=0x409");
         }
     }
 }

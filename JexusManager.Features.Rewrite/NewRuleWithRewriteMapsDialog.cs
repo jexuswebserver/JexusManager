@@ -98,7 +98,7 @@ namespace JexusManager.Features.Rewrite
 
         private void NewRuleWithRewriteMapsDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkID=130413&amp;clcid=0x409");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkID=130413&amp;clcid=0x409");
         }
 
         private static readonly string s_rewriteText =

@@ -156,7 +156,7 @@ namespace JexusManager.Features.Main
 
         public virtual bool ShowHelp()
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210463");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210463");
             return false;
         }
 
@@ -194,7 +194,7 @@ namespace JexusManager.Features.Main
                 }
             }
 
-            Process.Start(uri + service.Application.Path);
+            DialogHelper.ProcessStart(uri + service.Application.Path);
         }
 
         private void VirtualDirectories()

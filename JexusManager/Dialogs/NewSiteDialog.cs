@@ -271,7 +271,7 @@ namespace JexusManager.Dialogs
 
         private void NewSiteDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210531#Add_Site");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210531#Add_Site");
         }
 
         private void NewSiteDialogLoad(object sender, EventArgs e)

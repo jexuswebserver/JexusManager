@@ -151,7 +151,7 @@ namespace JexusManager.Features.Rewrite
 
         private void NewRewriteRuleDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkID=130421&amp;clcid=0x409");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkID=130421&amp;clcid=0x409");
         }
     }
 }

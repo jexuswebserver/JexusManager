@@ -87,7 +87,7 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         private void AddConditionDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkID=130403&amp;clcid=0x409");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkID=130403&amp;clcid=0x409");
         }
     }
 }

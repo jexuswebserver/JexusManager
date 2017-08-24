@@ -131,7 +131,7 @@ namespace JexusManager.Features.Authorization
 
         private void NewRestrictionDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210462");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210462");
         }
     }
 }

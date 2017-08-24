@@ -147,7 +147,7 @@ namespace JexusManager.Features.MimeMap
 
         public virtual bool ShowHelp()
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210520");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210520");
             return false;
         }
 

@@ -39,7 +39,7 @@ namespace JexusManager.Features.IsapiCgiRestriction
 
         private void PermissionsDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210515");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210515");
         }
     }
 }

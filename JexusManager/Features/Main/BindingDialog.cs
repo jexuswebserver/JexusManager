@@ -234,7 +234,7 @@ namespace JexusManager.Features.Main
 
         private void BindingDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210531#Site_Bingings");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210531#Site_Bingings");
         }
 
         private void BindingDialogLoad(object sender, EventArgs e)

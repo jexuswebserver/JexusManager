@@ -262,7 +262,7 @@ namespace JexusManager.Features.Main
 
         public virtual bool ShowHelp()
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210531");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210531");
             return false;
         }
 
@@ -356,7 +356,7 @@ namespace JexusManager.Features.Main
                 Start();
             }
 
-            Process.Start(uri.ToString());
+            DialogHelper.ProcessStart(uri.ToString());
         }
 
         private void Stop()

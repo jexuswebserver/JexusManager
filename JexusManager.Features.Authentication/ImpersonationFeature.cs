@@ -120,7 +120,7 @@ namespace JexusManager.Features.Authentication
 
         public override bool ShowHelp()
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210461#Impersonation");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210461#Impersonation");
             return true;
         }
 
