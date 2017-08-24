@@ -50,13 +50,7 @@ namespace JexusManager.Features.Certificates
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    var dialog = new OpenFileDialog { Filter = ".pfx|*.pfx|*.*|*.*", FilterIndex = 0, Multiselect = false };
-                    if (dialog.ShowDialog() == DialogResult.Cancel)
-                    {
-                        return;
-                    }
-
-                    txtFile.Text = dialog.FileName;
+                    DialogHelper.ShowFileDialog(txtFile, ".pfx|*.pfx|*.*|*.*");
                 }));
 
             container.Add(
@@ -145,17 +139,7 @@ namespace JexusManager.Features.Certificates
                     }
                     catch (Exception ex)
                     {
-                        var message = new StringBuilder()
-                            .AppendLine("There was an error while performing this operation.")
-                            .AppendLine()
-                            .AppendLine("Details:")
-                            .AppendLine()
-                            .AppendLine(ex.Message);
-                        ShowMessage(
-                            message.ToString(),
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Error,
-                            MessageBoxDefaultButton.Button1);
+                        ShowError(ex, string.Empty, false);
                     }
                 }));
         }

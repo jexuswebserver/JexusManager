@@ -66,31 +66,38 @@ namespace JexusManager.Features.Certificates
                         return;
                     }
 
-                    // TODO: check administrator permission.
-                    var x509 = new X509Certificate2(txtPath.Text);
-
-                    var filename = DialogHelper.GetPrivateKeyFile(x509.Subject);
-                    if (!File.Exists(filename))
+                    var p12File = DialogHelper.GetTempFileName();
+                    var p12pwd = "test";
+                    try
                     {
-                        ShowMessage(
-                            string.Format(
-                                "There was an error while performing this operation.{0}{0}Details:{0}{0}Could not find private key for '{1}'.",
-                                Environment.NewLine,
-                                txtPath.Text),
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Error,
-                            MessageBoxDefaultButton.Button1);
+                        // TODO: check administrator permission.
+                        var x509 = new X509Certificate2(txtPath.Text);
+                        var filename = DialogHelper.GetPrivateKeyFile(x509.Subject);
+                        if (!File.Exists(filename))
+                        {
+                            ShowMessage(
+                                string.Format(
+                                    "There was an error while performing this operation.{0}{0}Details:{0}{0}Could not find private key for '{1}'.",
+                                    Environment.NewLine,
+                                    txtPath.Text),
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error,
+                                MessageBoxDefaultButton.Button1);
+                            return;
+                        }
+
+                        x509.PrivateKey = PrivateKey.CreateFromFile(filename).RSA;
+                        x509.FriendlyName = txtName.Text;
+                        var raw = x509.Export(X509ContentType.Pfx, p12pwd);
+                        File.WriteAllBytes(p12File, raw);
+                        Item = x509;
+                    }
+                    catch (Exception ex)
+                    {
+                        ShowError(ex, string.Empty, false);
                         return;
                     }
 
-                    x509.PrivateKey = PrivateKey.CreateFromFile(filename).RSA;
-                    x509.FriendlyName = txtName.Text;
-                    var p12File = DialogHelper.GetTempFileName();
-                    var p12pwd = "test";
-                    var raw = x509.Export(X509ContentType.Pfx, p12pwd);
-                    File.WriteAllBytes(p12File, raw);
-
-                    Item = x509;
                     Store = cbStore.SelectedIndex == 0 ? "Personal" : "WebHosting";
 
                     try
@@ -133,16 +140,7 @@ namespace JexusManager.Features.Certificates
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    var dialog = new OpenFileDialog
-                    {
-                        FileName = txtPath.Text
-                    };
-                    if (dialog.ShowDialog() == DialogResult.Cancel)
-                    {
-                        return;
-                    }
-
-                    txtPath.Text = dialog.FileName;
+                    DialogHelper.ShowFileDialog(txtPath, "*.cer|*.cer|*.*|*.*");
                 }));
         }
 

@@ -86,6 +86,10 @@
     <Compile Include="StringUtility.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\lib\Rollbar.NET\Rollbar\Rollbar.csproj">
+      <Project>{3a99c5e2-ae41-49ca-9cb3-2c3a70d2a8c1}</Project>
+      <Name>Rollbar</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Microsoft.Web.Administration\Microsoft.Web.Administration.csproj">
       <Project>{BD24AFDA-292F-4F41-BA80-C48F21D4D9F2}</Project>
       <Name>Microsoft.Web.Administration</Name>
