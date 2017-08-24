@@ -51,6 +51,8 @@ namespace Microsoft.Web.Administration
 
         public WorkingMode Mode { get; protected set; }
 
+        private object locker = new object();
+
         public ServerManager()
             : this(null, true)
         {
@@ -85,72 +87,75 @@ namespace Microsoft.Web.Administration
 
         private void Initialize()
         {
-            if (Initialized)
+            lock (locker)
             {
-                return;
-            }
+                if (Initialized)
+                {
+                    return;
+                }
 
-            Initialized = true;
-            PreInitialize();
-            var machineConfig = Helper.IsRunningOnMono()
-                ? "/Library/Frameworks/Mono.framework/Versions/Current/etc/mono/4.5/machine.config"
-                : Path.Combine(
+                Initialized = true;
+                PreInitialize();
+                var machineConfig = Helper.IsRunningOnMono()
+                    ? "/Library/Frameworks/Mono.framework/Versions/Current/etc/mono/4.5/machine.config"
+                    : Path.Combine(
+                                        Environment.GetFolderPath(Environment.SpecialFolder.Windows),
+                                        "Microsoft.NET",
+                                        IntPtr.Size == 2 ? "Framework" : "Framework64",
+                                        "v4.0.30319",
+                                        "config",
+                                        "machine.config");
+                var machine =
+                    new Configuration(
+                        new FileContext(
+                            this,
+                            machineConfig,
+                            null,
+                            null,
+                            false,
+                            true,
+                            true));
+                var webConfig = Helper.IsRunningOnMono()
+                    ? "/Library/Frameworks/Mono.framework/Versions/Current/etc/mono/4.5/web.config"
+                    : Path.Combine(
                                     Environment.GetFolderPath(Environment.SpecialFolder.Windows),
                                     "Microsoft.NET",
                                     IntPtr.Size == 2 ? "Framework" : "Framework64",
                                     "v4.0.30319",
                                     "config",
-                                    "machine.config");
-            var machine =
-                new Configuration(
-                    new FileContext(
-                        this,
-                        machineConfig,
-                        null,
-                        null,
-                        false,
-                        true,
-                        true));
-            var webConfig = Helper.IsRunningOnMono()
-                ? "/Library/Frameworks/Mono.framework/Versions/Current/etc/mono/4.5/web.config"
-                : Path.Combine(
-                                Environment.GetFolderPath(Environment.SpecialFolder.Windows),
-                                "Microsoft.NET",
-                                IntPtr.Size == 2 ? "Framework" : "Framework64",
-                                "v4.0.30319",
-                                "config",
-                                "web.config");
-            _web =
-                new Configuration(
-                    new FileContext(
-                        this,
-                        webConfig,
-                        machine.FileContext,
-                        null,
-                        false,
-                        true,
-                        false));
+                                    "web.config");
+                _web =
+                    new Configuration(
+                        new FileContext(
+                            this,
+                            webConfig,
+                            machine.FileContext,
+                            null,
+                            false,
+                            true,
+                            false));
 
-            _applicationHost =
-                new Configuration(
-                new FileContext(this, FileName, _web.FileContext, null, true, false, ReadOnly));
+                _applicationHost =
+                    new Configuration(
+                    new FileContext(this, FileName, _web.FileContext, null, true, false, ReadOnly));
 
-            LoadCache();
+                LoadCache();
 
-            var poolSection = _applicationHost.GetSection("system.applicationHost/applicationPools");
-            _applicationPoolDefaults =
-                new ApplicationPoolDefaults(poolSection.GetChildElement("applicationPoolDefaults"), poolSection);
-            ApplicationPoolCollection = new ApplicationPoolCollection(poolSection, this);
-            var siteSection = _applicationHost.GetSection("system.applicationHost/sites");
-            _siteDefaults = new SiteDefaults(siteSection.GetChildElement("siteDefaults"), siteSection);
-            _applicationDefaults = new ApplicationDefaults(
-                siteSection.GetChildElement("applicationDefaults"),
-                siteSection);
-            _virtualDirectoryDefaults =
-                new VirtualDirectoryDefaults(siteSection.GetChildElement("virtualDirectoryDefaults"), siteSection);
-            SiteCollection = new SiteCollection(siteSection, this);
+                var poolSection = _applicationHost.GetSection("system.applicationHost/applicationPools");
+                _applicationPoolDefaults =
+                    new ApplicationPoolDefaults(poolSection.GetChildElement("applicationPoolDefaults"), poolSection);
+                ApplicationPoolCollection = new ApplicationPoolCollection(poolSection, this);
+                var siteSection = _applicationHost.GetSection("system.applicationHost/sites");
+                _siteDefaults = new SiteDefaults(siteSection.GetChildElement("siteDefaults"), siteSection);
+                _applicationDefaults = new ApplicationDefaults(
+                    siteSection.GetChildElement("applicationDefaults"),
+                    siteSection);
+                _virtualDirectoryDefaults =
+                    new VirtualDirectoryDefaults(siteSection.GetChildElement("virtualDirectoryDefaults"), siteSection);
+                SiteCollection = new SiteCollection(siteSection, this);
 
-            PostInitialize();
+                PostInitialize();
+            }
         }
 
         internal virtual void CleanSiteFile(string file)
