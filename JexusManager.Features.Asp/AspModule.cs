@@ -21,8 +21,8 @@ namespace JexusManager.Features.Asp
                 typeof(AspPage),
                 "ASP",
                 "Configure properties for ASP applications",
-                Resources.cgi_36,
-                Resources.cgi_36);
+                Resources.asp_36,
+                Resources.asp_36);
             controlPanel.RegisterPage(modulePage);
         }
     }

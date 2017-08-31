@@ -92,12 +92,14 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="JexusManager.snk" />
-    <None Include="Resources\cgi_36.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.Reactive">
       <Version>3.1.1</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\asp_36.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
