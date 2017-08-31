@@ -78,6 +78,11 @@ namespace JexusManager.Services
                 return section;
             }
 
+            if (section == null)
+            {
+                throw new InvalidOperationException("null section");
+            }
+
             return section.IsLocallyStored ? section : ServerManager.GetApplicationHostConfiguration().GetSection(sectionPath, _location);
         }
     }

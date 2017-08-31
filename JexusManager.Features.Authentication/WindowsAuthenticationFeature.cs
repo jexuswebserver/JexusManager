@@ -6,7 +6,6 @@ namespace JexusManager.Features.Authentication
 {
     using System;
     using System.Collections;
-    using System.Diagnostics;
     using System.Reflection;
     using System.Windows.Forms;
 

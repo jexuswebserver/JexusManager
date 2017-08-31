@@ -6,7 +6,11 @@ using Microsoft.Web.Management.Client.Win32;
 
 namespace JexusManager
 {
+#if DESIGN
+    public class DefaultWizardPage : WizardPage
+#else
     public abstract class DefaultWizardPage : WizardPage
+#endif
     {
         public new void SetNextPage(WizardPage page)
         {

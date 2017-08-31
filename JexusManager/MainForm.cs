@@ -301,7 +301,7 @@ namespace JexusManager
             var data = GetCurrentData(selected);
             if (data.ServerManager == null)
             {
-                throw new InvalidOperationException("null server");
+                throw new InvalidOperationException($"null server: {data.Name} : {data.Mode}");
             }
 
             var dialog = new NewSiteDialog(_serviceContainer, data.ServerManager.Sites);
