@@ -184,10 +184,6 @@
       <Project>{e4040a45-b156-4048-b1a4-bd262ba18047}</Project>
       <Name>JexusManager.Shared</Name>
     </ProjectReference>
-    <ProjectReference Include="..\lib\Rollbar.NET\Rollbar\Rollbar.csproj">
-      <Project>{3A99C5E2-AE41-49CA-9CB3-2C3A70D2A8C1}</Project>
-      <Name>Rollbar</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Microsoft.Web.Administration\Microsoft.Web.Administration.csproj">
       <Project>{BD24AFDA-292F-4F41-BA80-C48F21D4D9F2}</Project>
       <Name>Microsoft.Web.Administration</Name>

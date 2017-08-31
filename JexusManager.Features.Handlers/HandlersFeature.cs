@@ -51,7 +51,7 @@ namespace JexusManager.Features.Handlers
                 {
                     result.Add(GetMoveUpTaskItem(_owner.CanMoveUp));
                     result.Add(GetMoveDownTaskItem(_owner.CanMoveDown));
-                    result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     result.Add(new MethodTaskItem("Unorder", "View Unordered List...", string.Empty).SetUsage());
                 }
                 else
@@ -62,12 +62,12 @@ namespace JexusManager.Features.Handlers
                     result.Add(new MethodTaskItem("Add", "Add Module Mapping...", string.Empty).SetUsage());
                     if (_owner.SelectedItem != null)
                     {
-                        result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                        result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                         result.Add(new MethodTaskItem("Edit", "Edit...", string.Empty).SetUsage());
                         result.Add(RemoveTaskItem);
                     }
 
-                    result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     result.Add(new MethodTaskItem("Set", "Edit Feature Permissions...", string.Empty).SetUsage());
                     if (_owner.CanRevert)
                     {

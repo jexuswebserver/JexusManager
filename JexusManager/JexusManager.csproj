@@ -555,6 +555,10 @@
       <Project>{425cee66-72b3-42c0-989c-685b28b05230}</Project>
       <Name>JexusManager.Features.Rewrite</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JexusManager.Features.TraceFailedRequests\JexusManager.Features.TraceFailedRequests.csproj">
+      <Project>{eb518eb5-2dfc-430b-90f8-d87124be17de}</Project>
+      <Name>JexusManager.Features.TraceFailedRequests</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JexusManager.Shared\JexusManager.Shared.csproj">
       <Project>{e4040a45-b156-4048-b1a4-bd262ba18047}</Project>
       <Name>JexusManager.Shared</Name>
@@ -566,10 +570,6 @@
     <ProjectReference Include="..\lib\ExpandCollapsePanel\MakarovDev.ExpandCollapsePanel\MakarovDev.ExpandCollapsePanel.csproj">
       <Project>{BE76A6FE-225F-4287-9CA0-231F5AF4CDC1}</Project>
       <Name>MakarovDev.ExpandCollapsePanel</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\lib\Rollbar.NET\Rollbar\Rollbar.csproj">
-      <Project>{3a99c5e2-ae41-49ca-9cb3-2c3a70d2a8c1}</Project>
-      <Name>Rollbar</Name>
     </ProjectReference>
     <ProjectReference Include="..\lib\Vista.Controls.BreadcrumbBar\Vista.Controls.BreadcrumbBar.csproj">
       <Project>{95BC6698-E149-4388-B077-BEDB7453046B}</Project>
@@ -647,7 +647,7 @@
       <Version>1.8.2</Version>
     </PackageReference>
     <PackageReference Include="Enums.NET">
-      <Version>2.3.1</Version>
+      <Version>2.3.2</Version>
     </PackageReference>
     <PackageReference Include="ini-parser">
       <Version>2.5.2</Version>
@@ -659,7 +659,7 @@
       <Version>1.0.0</Version>
     </PackageReference>
     <PackageReference Include="StrongNamer">
-      <Version>0.0.6</Version>
+      <Version>0.0.7</Version>
     </PackageReference>
     <PackageReference Include="System.Reactive">
       <Version>3.1.1</Version>

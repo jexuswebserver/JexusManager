@@ -48,7 +48,7 @@ namespace JexusManager.Features.Modules
                 {
                     result.Add(GetMoveUpTaskItem(_owner.CanMoveUp));
                     result.Add(GetMoveDownTaskItem(_owner.CanMoveDown));
-                    result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     result.Add(new MethodTaskItem("Unorder", "View Unordered List...", string.Empty).SetUsage());
                 }
                 else
@@ -57,12 +57,12 @@ namespace JexusManager.Features.Modules
                     result.Add(new MethodTaskItem("Add", "Configure Native Modules...", string.Empty).SetUsage());
                     if (_owner.SelectedItem != null)
                     {
-                        result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                        result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                         result.Add(new MethodTaskItem("Edit", "Edit...", string.Empty).SetUsage(_owner.SelectedItem.IsManaged));
                         result.Add(RemoveTaskItem);
                     }
 
-                    result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     if (_owner.CanRevert)
                     {
                         result.Add(new MethodTaskItem("Revert", "Revert to Parent", string.Empty).SetUsage());

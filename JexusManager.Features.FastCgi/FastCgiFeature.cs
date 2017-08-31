@@ -45,7 +45,7 @@ namespace JexusManager.Features.FastCgi
                 result.Add(new MethodTaskItem("AddAllow", "Add Application...", string.Empty).SetUsage());
                 if (_owner.SelectedItem != null)
                 {
-                    result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     result.Add(new MethodTaskItem("Set", "Edit...", string.Empty).SetUsage());
                     result.Add(RemoveTaskItem);
                 }

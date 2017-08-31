@@ -48,7 +48,7 @@ namespace JexusManager.Features.Authorization
                 result.Add(new MethodTaskItem("AddDeny", "Add Deny Rule...", string.Empty).SetUsage());
                 if (_owner.SelectedItem != null)
                 {
-                    result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     result.Add(new MethodTaskItem("Set", "Edit...", string.Empty).SetUsage());
                     result.Add(RemoveTaskItem);
                 }

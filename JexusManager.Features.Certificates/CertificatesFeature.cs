@@ -11,7 +11,7 @@
  */
 
 using System.ComponentModel;
-using RollbarDotNet;
+using Rollbar;
 
 namespace JexusManager.Features.Certificates
 {
@@ -57,16 +57,16 @@ namespace JexusManager.Features.Certificates
             {
                 var result = new ArrayList();
                 result.Add(new MethodTaskItem("Import", "Import...", string.Empty).SetUsage());
-                result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                 result.Add(new MethodTaskItem("CreateRequest", "Create Certificate Request...", string.Empty).SetUsage());
                 result.Add(new MethodTaskItem("Complete", "Complete Certificate Request...", string.Empty).SetUsage());
-                result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                 result.Add(new MethodTaskItem("CreateDomain", "Create Domain Certificate...", string.Empty).SetUsage());
-                result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                 result.Add(new MethodTaskItem("CreateSelf", "Create Self-Signed Certificate...", string.Empty).SetUsage());
                 if (_owner.SelectedItem != null)
                 {
-                    result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     result.Add(new MethodTaskItem("View", "View...", string.Empty).SetUsage());
                     if (_owner.SelectedItem.Certificate.HasPrivateKey)
                     {
@@ -99,7 +99,7 @@ namespace JexusManager.Features.Certificates
                     }
                 }
 
-                result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                 if (!_owner.AutomicRebindEnabled)
                 {
                     result.Add(new MethodTaskItem("Enable", "Enable Automatic Rebind of Renewed Certificate", string.Empty).SetUsage());
@@ -317,13 +317,13 @@ namespace JexusManager.Features.Certificates
                 // elevation is cancelled.
                 if (ex.NativeErrorCode != NativeMethods.ErrorCancelled)
                 {
-                    Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> {{ "native", ex.NativeErrorCode } });
+                    RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> {{ "native", ex.NativeErrorCode } });
                     // throw;
                 }
             }
             catch (Exception ex)
             {
-                Rollbar.Report(ex, ErrorLevel.Error);
+                RollbarLocator.RollbarInstance.Error(ex);
             }
         }
 

@@ -47,7 +47,7 @@ namespace JexusManager.Features.HttpErrors
                 result.Add(new MethodTaskItem("Add", "Add...", string.Empty).SetUsage());
                 if (_owner.SelectedItem != null)
                 {
-                    result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     result.Add(new MethodTaskItem("Edit", "Edit...", string.Empty).SetUsage());
                     if (_owner.SelectedItem.Flag == "Local")
                     {
@@ -57,7 +57,7 @@ namespace JexusManager.Features.HttpErrors
                     result.Add(RemoveTaskItem);
                 }
 
-                result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                 result.Add(new MethodTaskItem("Set", "Edit Feature Settings...", string.Empty).SetUsage());
                 return result.ToArray(typeof(TaskItem)) as TaskItem[];
             }

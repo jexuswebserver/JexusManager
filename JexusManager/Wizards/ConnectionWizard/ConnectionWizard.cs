@@ -5,7 +5,6 @@
 namespace JexusManager.Wizards.ConnectionWizard
 {
     using System;
-    using System.Diagnostics;
 
     using JexusManager.Main.Properties;
 

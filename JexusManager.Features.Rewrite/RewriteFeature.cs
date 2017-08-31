@@ -45,14 +45,14 @@ namespace JexusManager.Features.Rewrite
                 result.Add(new MethodTaskItem("Add", "Add Rule(s)...", string.Empty).SetUsage());
                 if (_owner.Inbound.CanRevert)
                 {
-                    result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     result.Add(new MethodTaskItem("Revert", "Revert to Parent", string.Empty).SetUsage());
                 }
 
-                result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                 result.Add(new TextTaskItem("Manage Server Variables", string.Empty, true));
                 result.Add(new MethodTaskItem("ViewServerVariables", "View Server Variables...", string.Empty).SetUsage());
-                result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                 result.Add(new TextTaskItem("Manage Providers", string.Empty, true));
                 result.Add(new MethodTaskItem("ViewMaps", "View Rewrite Maps...", string.Empty).SetUsage());
                 result.Add(new MethodTaskItem("ViewProviders", "View Providers...", string.Empty).SetUsage());
@@ -81,10 +81,10 @@ namespace JexusManager.Features.Rewrite
                         inboundGroup.Items.Add(new MethodTaskItem("Disable", "Disable Rule", string.Empty).SetUsage());
                     }
 
-                    inboundGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    inboundGroup.Items.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     inboundGroup.Items.Add(GetMoveUpTaskItem(_owner.Inbound.CanMoveUp));
                     inboundGroup.Items.Add(GetMoveDownTaskItem(_owner.Inbound.CanMoveDown));
-                    inboundGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    inboundGroup.Items.Add(MethodTaskItem.CreateSeparator().SetUsage());
                 }
 
                 inboundGroup.Items.Add(new MethodTaskItem("Import", "Import Rules...", string.Empty).SetUsage());
@@ -106,10 +106,10 @@ namespace JexusManager.Features.Rewrite
                         outboundGroup.Items.Add(new MethodTaskItem("DisableOut", "Disable Rule", string.Empty).SetUsage());
                     }
 
-                    outboundGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    outboundGroup.Items.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     outboundGroup.Items.Add(GetMoveUpTaskItem("MoveUpOut", _owner.Outbound.CanMoveUp));
                     outboundGroup.Items.Add(GetMoveDownTaskItem("MoveDownOut", _owner.Outbound.CanMoveDown));
-                    outboundGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    outboundGroup.Items.Add(MethodTaskItem.CreateSeparator().SetUsage());
                 }
 
                 outboundGroup.Items.Add(new MethodTaskItem("ViewPreconditions", "View Preconditions...", string.Empty).SetUsage());

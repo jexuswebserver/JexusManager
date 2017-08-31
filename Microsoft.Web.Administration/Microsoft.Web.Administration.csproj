@@ -193,14 +193,14 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.WebApi.Client">
-      <Version>5.2.4</Version>
+      <Version>5.2.6</Version>
     </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\lib\Rollbar.NET\Rollbar\Rollbar.csproj">
-      <Project>{3a99c5e2-ae41-49ca-9cb3-2c3a70d2a8c1}</Project>
-      <Name>Rollbar</Name>
-    </ProjectReference>
+    <PackageReference Include="Rollbar">
+      <Version>1.5.4</Version>
+    </PackageReference>
+    <PackageReference Include="StrongNamer">
+      <Version>0.0.7</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

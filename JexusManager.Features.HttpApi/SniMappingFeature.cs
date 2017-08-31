@@ -12,7 +12,7 @@
 
 using System.ComponentModel;
 using System.IO;
-using RollbarDotNet;
+using Rollbar;
 
 namespace JexusManager.Features.HttpApi
 {
@@ -56,7 +56,7 @@ namespace JexusManager.Features.HttpApi
                 if (_owner.SelectedItem != null)
                 {
                     result.Add(RemoveTaskItem);
-                    result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     result.Add(new MethodTaskItem("View", "View Certificate...", string.Empty).SetUsage());
                 }
 
@@ -139,13 +139,13 @@ namespace JexusManager.Features.HttpApi
                 // elevation is cancelled.
                 if (ex.NativeErrorCode != NativeMethods.ErrorCancelled)
                 {
-                    Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> {{ "native", ex.NativeErrorCode } });
+                    RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> {{ "native", ex.NativeErrorCode } });
                     // throw;
                 }
             }
             catch (Exception ex)
             {
-                Rollbar.Report(ex, ErrorLevel.Error);
+                RollbarLocator.RollbarInstance.Error(ex);
             }
         }
 

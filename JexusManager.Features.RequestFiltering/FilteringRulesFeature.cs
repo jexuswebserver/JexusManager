@@ -37,7 +37,7 @@ namespace JexusManager.Features.RequestFiltering
                 if (_owner.SelectedItem != null)
                 {
                     result.Add(new MethodTaskItem("EditRule", "Edit Filtering Rule...", string.Empty).SetUsage());
-                    result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     result.Add(RemoveTaskItem);
                 }
 

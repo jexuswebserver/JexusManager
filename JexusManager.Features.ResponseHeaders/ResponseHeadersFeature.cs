@@ -48,7 +48,7 @@ namespace JexusManager.Features.ResponseHeaders
                 result.Add(new MethodTaskItem("Set", "Set Common Headers...", string.Empty).SetUsage());
                 if (_owner.SelectedItem != null)
                 {
-                    result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     result.Add(new MethodTaskItem("Edit", "Edit...", string.Empty).SetUsage());
                     result.Add(RemoveTaskItem);
                 }

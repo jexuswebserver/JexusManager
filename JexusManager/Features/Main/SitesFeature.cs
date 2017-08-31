@@ -54,27 +54,27 @@ namespace JexusManager.Features.Main
                 result.Add(new MethodTaskItem("Set", "Set Website Defaults", string.Empty).SetUsage());
                 if (_owner.SelectedItem != null)
                 {
-                    result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     result.Add(new TextTaskItem("Edit Site", string.Empty, true));
                     result.Add(new MethodTaskItem("Bindings", "Bindings...", string.Empty).SetUsage());
                     result.Add(
                         new MethodTaskItem("Basic", "Basic Settings...", string.Empty, string.Empty,
                             Resources.basic_settings_16).SetUsage());
-                    result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     result.Add(
                         new MethodTaskItem("Explore", "Explore", string.Empty, string.Empty, Resources.explore_16)
                             .SetUsage());
                     result.Add(new MethodTaskItem("Permissions", "Edit Permissions...", string.Empty).SetUsage());
                     result.Add(RemoveTaskItem);
                     result.Add(new MethodTaskItem("Rename", "Rename", string.Empty).SetUsage());
-                    result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     result.Add(new MethodTaskItem("Applications", "View Applications", string.Empty).SetUsage());
                     result.Add(
                         new MethodTaskItem("VirtualDirectories", "View Virtual Directories", string.Empty).SetUsage());
 
                     if (_owner.SelectedItem.Bindings.Any(item => item.CanBrowse))
                     {
-                        result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                        result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                         var manageGroup = new GroupTaskItem(string.Empty, "Manage Website", string.Empty, true);
                         result.Add(manageGroup);
                         manageGroup.Items.Add(
@@ -87,7 +87,7 @@ namespace JexusManager.Features.Main
                             Resources.stop_16)
                             .SetUsage(
                                 !_owner.IsBusy && _owner.SelectedItem.State == ObjectState.Started));
-                        manageGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                        manageGroup.Items.Add(MethodTaskItem.CreateSeparator().SetUsage());
                         manageGroup.Items.Add(new TextTaskItem("Browse Website", string.Empty, true));
                         foreach (Binding binding in _owner.SelectedItem.Bindings)
                         {
@@ -101,10 +101,10 @@ namespace JexusManager.Features.Main
                             }
                         }
 
-                        manageGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                        manageGroup.Items.Add(MethodTaskItem.CreateSeparator().SetUsage());
                         manageGroup.Items.Add(
                             new MethodTaskItem("Advanced", "Advanced Settings...", string.Empty).SetUsage());
-                        manageGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                        manageGroup.Items.Add(MethodTaskItem.CreateSeparator().SetUsage());
                         manageGroup.Items.Add(new TextTaskItem("Configure", string.Empty, true));
                         manageGroup.Items.Add(
                             new MethodTaskItem("Tracing", "Failed Request Tracing...", string.Empty).SetUsage());

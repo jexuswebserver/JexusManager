@@ -58,6 +58,7 @@ namespace JexusManager
     using Application = Microsoft.Web.Administration.Application;
     using Features;
     using JexusManager.Features.Asp;
+    using JexusManager.Features.TraceFailedRequests;
 
     public sealed partial class MainForm : Form
     {
@@ -103,8 +104,9 @@ namespace JexusManager
                 new CompressionModuleProvider(),
                 new DefaultDocumentModuleProvider(),
                 new DirectoryBrowseModuleProvider(),
-                new FastCgiModuleProvider(),
                 new HttpErrorsModuleProvider(),
+                new TraceFailedRequestsModuleProvider(),
+                new FastCgiModuleProvider(),
                 new HandlersModuleProvider(),
                 new HttpRedirectModuleProvider(),
                 new ResponseHeadersModuleProvider(),
@@ -330,13 +332,13 @@ namespace JexusManager
 
             if (data.ServerManager == null)
             {
-                RollbarDotNet.Rollbar.Report($"null server: {data.DisplayName} : {data.Mode} : {selected.Text} : {selected.GetType().FullName}");
+                Rollbar.RollbarLocator.RollbarInstance.Error($"null server: {data.DisplayName} : {data.Mode} : {selected.Text} : {selected.GetType().FullName}");
                 return;
             }
 
             if (data.ServerManager.Sites == null)
             {
-                RollbarDotNet.Rollbar.Report($"null sites collection: {data.DisplayName} : {data.Mode} : {selected.Text} : {selected.GetType().FullName} : {data.ServerManager.FileName}");
+                Rollbar.RollbarLocator.RollbarInstance.Error($"null sites collection: {data.DisplayName} : {data.Mode} : {selected.Text} : {selected.GetType().FullName} : {data.ServerManager.FileName}");
                 return;
             }
 
@@ -565,7 +567,7 @@ namespace JexusManager
             {
                 if (e.Node.Text != ManagerTreeNode.TempNodeName)
                 {
-                    RollbarDotNet.Rollbar.Report($"wrong node {e.Node.GetType().FullName} {e.Node.Text}");
+                    Rollbar.RollbarLocator.RollbarInstance.Error($"wrong node {e.Node.GetType().FullName} {e.Node.Text}");
                 }
 
                 return;

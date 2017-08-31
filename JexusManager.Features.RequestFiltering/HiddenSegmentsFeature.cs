@@ -36,7 +36,7 @@ namespace JexusManager.Features.RequestFiltering
                 result.Add(new MethodTaskItem("AddSegement", "Add Hidden Segment...", string.Empty).SetUsage());
                 if (_owner.SelectedItem != null)
                 {
-                    result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     result.Add(RemoveTaskItem);
                 }
 

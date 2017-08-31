@@ -5,12 +5,13 @@
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Win32;
-using RollbarDotNet;
+using Rollbar;
 
 namespace JexusManager
 {
     using JexusManager.Dialogs;
     using Mono.Options;
+    using Rollbar.DTOs;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -95,34 +96,38 @@ namespace JexusManager
 
         private static void SetupRollbar()
         {
-            Rollbar.Init(new RollbarConfig
-            {
-                AccessToken = "5b11a2cb773f42d8afb4265951208c24",
-                Environment = "production"
-            });
+
             var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             var userName = $"{version} on {GetWindowsVersion()} with {Get45PlusFromRegistry()}";
-            Rollbar.PersonData(() => new Person(version)
-            {
-                UserName = userName
-            });
-            Rollbar.Report($"Jexus Manager started", ErrorLevel.Info);
+            RollbarLocator.RollbarInstance.Configure(
+                new RollbarConfig("5b11a2cb773f42d8afb4265951208c24")
+                {
+                    Environment = "production",
+                    Transform = payload =>
+                    {
+                        payload.Data.Person = new Person(version)
+                        {
+                            UserName = $"{version}"
+                        };
+                    }
+                });
+            RollbarLocator.RollbarInstance.Info($"Jexus Manager started");
             
             Application.ThreadException += (sender, args) =>
             {
-                Rollbar.Report(args.Exception);
+                RollbarLocator.RollbarInstance.Error(args.Exception);
                 ExceptionDialog.Report(userName, args.Exception.ToString());
             };
 
             AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
             {
-                Rollbar.Report(args.ExceptionObject as Exception);
+                RollbarLocator.RollbarInstance.Error(args.ExceptionObject as System.Exception);
                 ExceptionDialog.Report(userName, args.ExceptionObject.ToString());
             };
 
             TaskScheduler.UnobservedTaskException += (sender, args) =>
             {
-                Rollbar.Report(args.Exception);
+                RollbarLocator.RollbarInstance.Error(args.Exception);
                 ExceptionDialog.Report(userName, args.Exception.ToString());
             };
         }

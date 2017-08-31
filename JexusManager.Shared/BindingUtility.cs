@@ -5,7 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using RollbarDotNet;
+using Rollbar;
 using Exception = System.Exception;
 
 namespace Microsoft.Web.Administration
@@ -97,7 +97,7 @@ namespace Microsoft.Web.Administration
                             // elevation is cancelled.
                             if (ex.NativeErrorCode != NativeMethods.ErrorCancelled)
                             {
-                                Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> {{ "native", ex.NativeErrorCode } });
+                                RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> {{ "native", ex.NativeErrorCode } });
                                 return $"Register new certificate failed: unknown (native {ex.NativeErrorCode})";
                             }
                             
@@ -105,7 +105,7 @@ namespace Microsoft.Web.Administration
                         }
                         catch (Exception ex)
                         {
-                            Rollbar.Report(ex, ErrorLevel.Error);
+                            RollbarLocator.RollbarInstance.Error(ex);
                             return $"Register new certificate failed: unknown ({ex.Message})";
                         }
                     }
@@ -154,7 +154,7 @@ namespace Microsoft.Web.Administration
                             // elevation is cancelled.
                             if (ex.NativeErrorCode != NativeMethods.ErrorCancelled)
                             {
-                                Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> {{ "native", ex.NativeErrorCode } });
+                                RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> {{ "native", ex.NativeErrorCode } });
                                 return $"Register new certificate failed: unknown (native {ex.NativeErrorCode})";
                             }
                             
@@ -162,7 +162,7 @@ namespace Microsoft.Web.Administration
                         }
                         catch (Exception ex)
                         {
-                            Rollbar.Report(ex, ErrorLevel.Error);
+                            RollbarLocator.RollbarInstance.Error(ex);
                             return $"Register new certificate failed: unknown ({ex.Message})";
                         }
                     }
@@ -210,7 +210,7 @@ namespace Microsoft.Web.Administration
                     // elevation is cancelled.
                     if (ex.NativeErrorCode != NativeMethods.ErrorCancelled)
                     {
-                        Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> {{ "native", ex.NativeErrorCode } });
+                        RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> {{ "native", ex.NativeErrorCode } });
                         return $"Register new certificate failed: unknown (native {ex.NativeErrorCode})";
                     }
                             
@@ -218,7 +218,7 @@ namespace Microsoft.Web.Administration
                 }
                 catch (Exception ex)
                 {
-                    Rollbar.Report(ex, ErrorLevel.Error);
+                    RollbarLocator.RollbarInstance.Error(ex);
                     return $"Register new certificate failed: unknown ({ex.Message})";
                 }
             }
@@ -265,7 +265,7 @@ namespace Microsoft.Web.Administration
                     // elevation is cancelled.
                     if (ex.NativeErrorCode != NativeMethods.ErrorCancelled)
                     {
-                        Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> {{ "native", ex.NativeErrorCode } });
+                        RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> {{ "native", ex.NativeErrorCode } });
                         return $"Register new certificate failed: unknown (native {ex.NativeErrorCode})";
                     }
                             
@@ -273,7 +273,7 @@ namespace Microsoft.Web.Administration
                 }
                 catch (Exception ex)
                 {
-                    Rollbar.Report(ex, ErrorLevel.Error);
+                    RollbarLocator.RollbarInstance.Error(ex);
                     return $"Register new certificate failed: unknown ({ex.Message})";
                 }
             }
@@ -386,7 +386,7 @@ namespace Microsoft.Web.Administration
                 // elevation is cancelled.
                 if (ex.NativeErrorCode != NativeMethods.ErrorCancelled)
                 {
-                    Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> {{ "native", ex.NativeErrorCode } });
+                    RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> {{ "native", ex.NativeErrorCode } });
                     return $"Remove SNI certificate failed: unknown (native {ex.NativeErrorCode})";
                 }
                             
@@ -394,12 +394,12 @@ namespace Microsoft.Web.Administration
             }
             catch (NullReferenceException ex)
             {
-                Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> { { "binding", binding.ToString() }, { "endpointNull", binding.EndPoint == null } });
+                RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> { { "binding", binding.ToString() }, { "endpointNull", binding.EndPoint == null } });
                 return $"Remove SNI certificate failed: unknown ({ex.Message})";
             }
             catch (Exception ex)
             {
-                Rollbar.Report(ex, ErrorLevel.Error);
+                RollbarLocator.RollbarInstance.Error(ex);
                 return $"Remove SNI certificate failed: unknown ({ex.Message})";
             }
         }
@@ -427,13 +427,13 @@ namespace Microsoft.Web.Administration
                 // elevation is cancelled.
                 if (ex.NativeErrorCode != NativeMethods.ErrorCancelled)
                 {
-                    Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> { { "native", ex.NativeErrorCode } });
+                    RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> { { "native", ex.NativeErrorCode } });
                     // throw;
                 }
             }
             catch (Exception ex)
             {
-                Rollbar.Report(ex, ErrorLevel.Error);
+                RollbarLocator.RollbarInstance.Error(ex);
             }
 
             return false;

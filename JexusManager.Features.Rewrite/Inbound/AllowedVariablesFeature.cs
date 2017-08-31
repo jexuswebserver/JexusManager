@@ -47,14 +47,14 @@ namespace JexusManager.Features.Rewrite.Inbound
                 result.Add(new MethodTaskItem("Add", "Add...", string.Empty).SetUsage());
                 if (_owner.SelectedItem != null)
                 {
-                    result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     result.Add(new MethodTaskItem("Rename", "Rename", string.Empty).SetUsage());
                     result.Add(RemoveTaskItem);
                 }
 
                 if (_owner.CanRevert)
                 {
-                    result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     result.Add(new MethodTaskItem("Revert", "Revert to Parent", string.Empty).SetUsage());
                 }
 

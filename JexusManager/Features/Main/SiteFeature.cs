@@ -50,19 +50,19 @@ namespace JexusManager.Features.Main
                 var result = new ArrayList();
                 result.Add(new MethodTaskItem("Explore", "Explore", string.Empty, string.Empty, Resources.explore_16).SetUsage());
                 result.Add(new MethodTaskItem("Permissions", "Edit Permissions...", string.Empty).SetUsage());
-                result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                 result.Add(new TextTaskItem("Edit Site", string.Empty, true));
                 result.Add(new MethodTaskItem("Bindings", "Bindings...", string.Empty).SetUsage());
                 result.Add(
                     new MethodTaskItem("Basic", "Basic Settings...", string.Empty, string.Empty,
                         Resources.basic_settings_16).SetUsage());
-                result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                 result.Add(new MethodTaskItem("Applications", "View Applications", string.Empty).SetUsage());
                 result.Add(new MethodTaskItem("VirtualDirectories", "View Virtual Directories", string.Empty).SetUsage());
 
                 if (_owner.SiteBindings.Any(item => item.CanBrowse))
                 {
-                    result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     var manageGroup = new GroupTaskItem(string.Empty, "Manage Website", string.Empty, true);
                     result.Add(manageGroup);
                     manageGroup.Items.Add(
@@ -73,7 +73,7 @@ namespace JexusManager.Features.Main
                     manageGroup.Items.Add(new MethodTaskItem("Stop", "Stop", string.Empty, string.Empty, Resources.stop_16)
                         .SetUsage(
                             !_owner.IsBusy && _owner.IsStarted));
-                    manageGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    manageGroup.Items.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     manageGroup.Items.Add(new TextTaskItem("Browse Website", string.Empty, true));
                     foreach (Binding binding in _owner.SiteBindings)
                     {
@@ -86,13 +86,13 @@ namespace JexusManager.Features.Main
                         }
                     }
 
-                    manageGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    manageGroup.Items.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     manageGroup.Items.Add(new MethodTaskItem("Advanced", "Advanced Settings...", string.Empty).SetUsage());
-                    manageGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    manageGroup.Items.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     manageGroup.Items.Add(new TextTaskItem("Configure", string.Empty, true));
                     manageGroup.Items.Add(new MethodTaskItem("Tracing", "Failed Request Tracing...", string.Empty).SetUsage());
                     manageGroup.Items.Add(new MethodTaskItem("Limits", "Limits...", string.Empty).SetUsage());
-                    manageGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    manageGroup.Items.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     manageGroup.Items.Add(new TextTaskItem("Troubleshooting", string.Empty, true));
                     manageGroup.Items.Add(new MethodTaskItem("FixBinding", "Binding Diagnostics", string.Empty).SetUsage());
                     manageGroup.Items.Add(new MethodTaskItem("FixProject", "Project Diagnostics", string.Empty).SetUsage());

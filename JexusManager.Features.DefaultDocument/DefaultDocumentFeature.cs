@@ -47,13 +47,13 @@ namespace JexusManager.Features.DefaultDocument
                 result.Add(new MethodTaskItem("Add", "Add...", string.Empty).SetUsage());
                 if (_owner.SelectedItem != null)
                 {
-                    result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     result.Add(RemoveTaskItem);
                     result.Add(GetMoveUpTaskItem(_owner.CanMoveUp));
                     result.Add(GetMoveDownTaskItem(_owner.CanMoveDown));
                 }
 
-                result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                 if (!_owner.IsEnabled)
                 {
                     result.Add(new MethodTaskItem("Enable", "Enable", string.Empty).SetUsage());

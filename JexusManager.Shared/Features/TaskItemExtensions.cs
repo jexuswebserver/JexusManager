@@ -52,10 +52,10 @@ namespace JexusManager.Features
             actionMenu?.Items.Add(new ToolStripSeparator());
         }
 
-        public static MethodTaskItem SetUsage(this MethodTaskItem method, bool enabled = true)
+        public static MethodTaskItem SetUsage(this MethodTaskItem method, bool enabled = true, MethodTaskItemUsages usage = MethodTaskItemUsages.ContextMenu | MethodTaskItemUsages.TaskList)
         {
             method.Enabled = enabled;
-            method.Usage = MethodTaskItemUsages.ContextMenu | MethodTaskItemUsages.TaskList;
+            method.Usage = usage;
             return method;
         }
 
@@ -94,7 +94,7 @@ namespace JexusManager.Features
                             if (ex.InnerException is UnauthorizedAccessException)
                             {
                                 MessageBox.Show($"{ex.InnerException.Message}. Running Jexus Manager as administrator might resolve it.", "Jexus Manager", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                RollbarDotNet.Rollbar.Report(ex.InnerException, RollbarDotNet.ErrorLevel.Debug);
+                                Rollbar.RollbarLocator.RollbarInstance.Debug(ex.InnerException);
                                 return;
                             }
 
@@ -123,7 +123,7 @@ namespace JexusManager.Features
                                 if (ex.InnerException is UnauthorizedAccessException)
                                 {
                                     MessageBox.Show($"{ex.InnerException.Message}. Running Jexus Manager as administrator might resolve it.", "Jexus Manager", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                    RollbarDotNet.Rollbar.Report(ex.InnerException, RollbarDotNet.ErrorLevel.Debug);
+                                    Rollbar.RollbarLocator.RollbarInstance.Debug(ex.InnerException);
                                     return;
                                 }
 

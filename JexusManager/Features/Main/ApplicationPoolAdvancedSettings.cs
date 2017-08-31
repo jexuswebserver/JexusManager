@@ -169,10 +169,10 @@ namespace JexusManager.Features.Main
             pool.ProcessModel.LoadUserProfile = LoadUserProfile;
             pool.ProcessModel.MaxProcesses = MaxProcesses;
             pool.ProcessModel.PingingEnabled = PingingEnabled;
-            pool.ProcessModel.PingResponseTime = new TimeSpan(0, 0, PingResponseTime);
-            pool.ProcessModel.PingInterval = new TimeSpan(0, 0, PingInterval);
-            pool.ProcessModel.ShutdownTimeLimit = new TimeSpan(0, 0, ShutdownTimeLimit);
-            pool.ProcessModel.StartupTimeLimit = new TimeSpan(0, 0, StartupTimeLimit);
+            pool.ProcessModel.PingResponseTime = TimeSpan.FromSeconds(PingResponseTime);
+            pool.ProcessModel.PingInterval = TimeSpan.FromSeconds(PingInterval);
+            pool.ProcessModel.ShutdownTimeLimit = TimeSpan.FromSeconds( ShutdownTimeLimit);
+            pool.ProcessModel.StartupTimeLimit = TimeSpan.FromSeconds(StartupTimeLimit);
 
             pool.Failure.OrphanWorkerProcess = OrphanWorkerProcess;
             pool.Failure.OrphanActionExe = OrphanActionExe;
@@ -389,28 +389,28 @@ namespace JexusManager.Features.Main
         [Description("[pingResponseTime] Maximum time (in seconds) that a worker process is given to respond to a health monitoring ping. If the worker process does not respond, it is terminated.")]
         [DisplayName("Ping Maximum Response Time (seconds)")]
         [DefaultValue(90)]
-        public int PingResponseTime { get; set; }
+        public long PingResponseTime { get; set; }
 
         [Browsable(true)]
         [Category("Process Model")]
         [Description("[pingInterval] Period of time (in seconds) between health monitoring pings sent to the worker process(es) serving this application pool.")]
         [DisplayName("Ping Period (seconds)")]
         [DefaultValue(30)]
-        public int PingInterval { get; set; }
+        public long PingInterval { get; set; }
 
         [Browsable(true)]
         [Category("Process Model")]
         [Description("[shutdownTimeLimit] Period of time (in seconds) a worker process is given to finish processing requests and shut down. If the worker process exceeds the shutdown time limit, it is terminated.")]
         [DisplayName("Shutdown Time Limit (seconds)")]
         [DefaultValue(90)]
-        public int ShutdownTimeLimit { get; set; }
+        public long ShutdownTimeLimit { get; set; }
 
         [Browsable(true)]
         [Category("Process Model")]
         [Description("[startupTimeLimit] Period of time (in seconds) a worker process is given to start up and initialize. If the worker process initialization exceeds the startup time limit,  it is terminated.")]
         [DisplayName("Startup Time Limit (seconds)")]
         [DefaultValue(30)]
-        public int StartupTimeLimit { get; set; }
+        public long StartupTimeLimit { get; set; }
 
         [Browsable(true)]
         [Category("Process Orphaning")]

@@ -2,6 +2,7 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
 using System.Drawing;
 
 namespace Microsoft.Web.Management.Client.Win32
@@ -34,5 +35,10 @@ namespace Microsoft.Web.Management.Client.Win32
         public string MethodName { get; }
         public MethodTaskItemUsages Usage { get; set; }
         public object UserData { get; }
+
+        public static MethodTaskItem CreateSeparator()
+        {
+            return new MethodTaskItem(string.Empty, "-", string.Empty);
+        }
     }
 }

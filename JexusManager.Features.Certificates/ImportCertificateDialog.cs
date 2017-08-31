@@ -3,7 +3,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Collections.Generic;
-using RollbarDotNet;
+using Rollbar;
 
 namespace JexusManager.Features.Certificates
 {
@@ -139,13 +139,13 @@ namespace JexusManager.Features.Certificates
                                 // elevation is cancelled.
                                 if (ex.NativeErrorCode != NativeMethods.ErrorCancelled)
                                 {
-                                    Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> {{ "native", ex.NativeErrorCode } });
+                                    RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> {{ "native", ex.NativeErrorCode } });
                                     // throw;
                                 }
                             }
                             catch (Exception ex)
                             {
-                                Rollbar.Report(ex, ErrorLevel.Error);
+                                RollbarLocator.RollbarInstance.Error(ex);
                             }
                         }
                     }

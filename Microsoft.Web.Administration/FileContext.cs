@@ -169,7 +169,7 @@ namespace Microsoft.Web.Administration
                     }
                     catch (SystemException ex)
                     {
-                        RollbarDotNet.Rollbar.Report(ex);
+                        Rollbar.RollbarLocator.RollbarInstance.Error(ex);
                     }
                 }
             }

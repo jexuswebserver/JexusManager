@@ -14,7 +14,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
-using RollbarDotNet;
+using Rollbar;
 using Exception = System.Exception;
 
 namespace JexusManager.Features.HttpApi
@@ -39,7 +39,7 @@ namespace JexusManager.Features.HttpApi
                 result.Add(new MethodTaskItem("CreateSelf", "Add...", string.Empty).SetUsage());
                 if (_owner.SelectedItem != null)
                 {
-                    result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     result.Add(RemoveTaskItem);
                 }
 
@@ -122,13 +122,13 @@ namespace JexusManager.Features.HttpApi
                 // elevation is cancelled.
                 if (ex.NativeErrorCode != Microsoft.Web.Administration.NativeMethods.ErrorCancelled)
                 {
-                    Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> {{ "native", ex.NativeErrorCode } });
+                    RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> {{ "native", ex.NativeErrorCode } });
                     // throw;
                 }
             }
             catch (Exception ex)
             {
-                Rollbar.Report(ex, ErrorLevel.Error);
+                RollbarLocator.RollbarInstance.Error(ex);
             }
         }
 

@@ -46,10 +46,10 @@ namespace JexusManager.Features.Main
                 result.Add(
                     new MethodTaskItem("Stop", "Stop", string.Empty, string.Empty, Resources.stop_16).SetUsage(
                         !_owner.IsBusy && _owner.IsStarted));
-                result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                 result.Add(new MethodTaskItem("ApplicationPools", "View Application Pools", string.Empty).SetUsage());
                 result.Add(new MethodTaskItem("Sites", "View Sites", string.Empty).SetUsage());
-                result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                 result.Add(new MethodTaskItem("FxVersion", "Change .NET CLR Version", string.Empty).SetUsage());
                 result.Add(new TextTaskItem("Troubleshooting", string.Empty, true));
                 result.Add(

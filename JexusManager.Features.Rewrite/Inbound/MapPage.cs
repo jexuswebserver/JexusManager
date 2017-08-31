@@ -39,15 +39,15 @@ namespace JexusManager.Features.Rewrite.Inbound
                 result.Add(new MethodTaskItem("Set", "Edit Map Settings...", string.Empty).SetUsage());
                 if (_owner.Map.SelectedItem != null)
                 {
-                    //result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    //result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     result.Add(new MethodTaskItem("Edit", "Edit Mapping Entry...", string.Empty).SetUsage());
                     result.Add(RemoveTaskItem);
                 }
 
-                result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                 result.Add(GetBackTaskItem("BackMore", "Back to Rewrite Maps"));
                 result.Add(GetBackTaskItem("Back", "Back to Rules"));
-                result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                 result.Add(HelpTaskItem);
                 return result.ToArray(typeof(TaskItem)) as TaskItem[];
             }

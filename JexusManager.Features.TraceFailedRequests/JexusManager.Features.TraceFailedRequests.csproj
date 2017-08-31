@@ -11,6 +11,7 @@
     <AssemblyName>JexusManager.Features.TraceFailedRequests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -48,12 +49,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TraceFailedRequestsPage.cs" />
+    <Compile Include="SettingsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SettingsDialog.Designer.cs">
+      <DependentUpon>SettingsDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TraceFailedRequestsPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="TraceFailedRequestsPage.Designer.cs">
       <DependentUpon>TraceFailedRequestsPage.cs</DependentUpon>
     </Compile>
     <Compile Include="TraceFailedRequestsSettingsSavedEventHandler.cs" />
-    <Compile Include="NewTraceDialog.cs" />
+    <Compile Include="NewTraceDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="NewTraceDialog.Designer.cs">
       <DependentUpon>NewTraceDialog.cs</DependentUpon>
     </Compile>
@@ -80,18 +91,24 @@
     <Compile Include="Wizards\AddTraceWizard\ConditionsPage.Designer.cs">
       <DependentUpon>ConditionsPage.cs</DependentUpon>
     </Compile>
+    <Compile Include="Wizards\AddTraceWizard\Provider.cs" />
     <Compile Include="Wizards\AddTraceWizard\ProvidersPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Wizards\AddTraceWizard\ProvidersPage.Designer.cs">
       <DependentUpon>ProvidersPage.cs</DependentUpon>
     </Compile>
-    <Compile Include="Wizards\AddTraceWizard\ContentPage.cs" />
+    <Compile Include="Wizards\AddTraceWizard\ContentPage.cs">
+      <SubType>usercontrol</SubType>
+    </Compile>
     <Compile Include="Wizards\AddTraceWizard\ContentPage.Designer.cs">
       <DependentUpon>ContentPage.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="SettingsDialog.resx">
+      <DependentUpon>SettingsDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="TraceFailedRequestsPage.resx">
       <DependentUpon>TraceFailedRequestsPage.cs</DependentUpon>
     </EmbeddedResource>
@@ -132,12 +149,15 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="JexusManager.snk" />
-    <None Include="Resources\isapi_filters_36.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.Reactive">
       <Version>3.1.1</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\trace_failed_requests_36.png" />
+    <Content Include="Resources\trace_failed_requests_48.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -43,7 +43,7 @@ namespace JexusManager.Features.Main
                 result.Add(new MethodTaskItem("Set", "Set Application Pool Defaults...", string.Empty).SetUsage());
                 if (_owner.SelectedItem != null)
                 {
-                    result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     result.Add(new TextTaskItem("Application Pool Tasks", string.Empty, true));
                     result.Add(
                         new MethodTaskItem("Start", "Start", string.Empty, string.Empty, Resources.start_16).SetUsage(
@@ -54,7 +54,7 @@ namespace JexusManager.Features.Main
                     result.Add(
                         new MethodTaskItem("Recycle", "Recycle...", string.Empty, string.Empty, Resources.restart_16)
                             .SetUsage(!_owner.IsBusy && _owner.SelectedItem.State == ObjectState.Started));
-                    result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     result.Add(new TextTaskItem("Edit Application Pool", string.Empty, true));
                     result.Add(
                         new MethodTaskItem("Basic", "Basic Settings...", string.Empty, string.Empty,
@@ -62,9 +62,9 @@ namespace JexusManager.Features.Main
                     result.Add(new MethodTaskItem("Recycling", "Recycling...", string.Empty).SetUsage());
                     result.Add(new MethodTaskItem("Advanced", "Advanced Settings", string.Empty).SetUsage());
                     result.Add(new MethodTaskItem("Rename", "Rename", string.Empty).SetUsage());
-                    result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     result.Add(RemoveTaskItem);
-                    result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     result.Add(
                         new MethodTaskItem("Applications", "View Applications", string.Empty).SetUsage());
                 }

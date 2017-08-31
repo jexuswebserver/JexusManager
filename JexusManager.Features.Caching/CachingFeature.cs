@@ -51,7 +51,7 @@ namespace JexusManager.Features.Caching
                     result.Add(RemoveTaskItem);
                 }
 
-                result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                 result.Add(new MethodTaskItem("Set", "Edit Feature Settings...", string.Empty).SetUsage());
 
                 return result.ToArray(typeof(TaskItem)) as TaskItem[];

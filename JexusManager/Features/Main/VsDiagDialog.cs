@@ -97,7 +97,7 @@ namespace JexusManager.Features.Main
                     catch (Exception ex)
                     {
                         Debug(ex.ToString());
-                        RollbarDotNet.Rollbar.Report(ex);
+                        Rollbar.RollbarLocator.RollbarInstance.Error(ex);
                     }
                 }));
 
@@ -289,7 +289,7 @@ namespace JexusManager.Features.Main
                 {
                     //TODO:  What?
                     Warn($"An unexpected condition hit.");
-                    RollbarDotNet.Rollbar.Report("unexpected condition hit.");
+                    Rollbar.RollbarLocator.RollbarInstance.Error("unexpected condition hit.");
                     return;
                 }
             }

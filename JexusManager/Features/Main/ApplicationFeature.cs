@@ -48,16 +48,16 @@ namespace JexusManager.Features.Main
                 var result = new ArrayList();
                 result.Add(new MethodTaskItem("Explore", "Explore", string.Empty, string.Empty, Resources.explore_16).SetUsage());
                 result.Add(new MethodTaskItem("Permissions", "Edit Permissions...", string.Empty).SetUsage());
-                result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                 result.Add(
                     new MethodTaskItem("Basic", "Basic Settings...", string.Empty, string.Empty,
                         Resources.basic_settings_16).SetUsage());
-                result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                 result.Add(new MethodTaskItem("VirtualDirectories", "View Virtual Directories", string.Empty).SetUsage());
 
                 if (_owner.SiteBindings.Any(item => item.CanBrowse))
                 {
-                    result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     var manageGroup = new GroupTaskItem(string.Empty, "Manage Application", string.Empty, true);
                     result.Add(manageGroup);
                     manageGroup.Items.Add(new TextTaskItem("Browse Application", string.Empty, true));
@@ -73,7 +73,7 @@ namespace JexusManager.Features.Main
                         }
                     }
 
-                    manageGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    manageGroup.Items.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     manageGroup.Items.Add(new MethodTaskItem("Advanced", "Advanced Settings...", string.Empty).SetUsage());
                 }
 

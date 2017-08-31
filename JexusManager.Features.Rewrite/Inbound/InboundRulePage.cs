@@ -33,7 +33,7 @@ namespace JexusManager.Features.Rewrite.Inbound
                 return new TaskItem[]
                            {
                                GetBackTaskItem("Back", "Back to Rules"),
-                               new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage(),
+                               MethodTaskItem.CreateSeparator().SetUsage(),
                                HelpTaskItem
                            };
             }

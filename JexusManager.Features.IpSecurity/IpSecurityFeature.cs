@@ -49,11 +49,11 @@ namespace JexusManager.Features.IpSecurity
                 result.Add(new MethodTaskItem("AddDeny", "Add Deny Entry...", string.Empty).SetUsage());
                 if (_owner.SelectedItem != null)
                 {
-                    result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     result.Add(RemoveTaskItem);
                 }
 
-                result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage()); // IMPORTANT: this is where IIS Manager was wrong
+                result.Add(MethodTaskItem.CreateSeparator().SetUsage()); // IMPORTANT: this is where IIS Manager was wrong
                 result.Add(new MethodTaskItem("Set", "Edit Feature Settings...", string.Empty).SetUsage());
                 if (_owner.CanRevert)
                 {
@@ -61,7 +61,7 @@ namespace JexusManager.Features.IpSecurity
                 }
 
                 result.Add(new MethodTaskItem("View", "View Ordered List...", string.Empty).SetUsage());
-                result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                 result.Add(new MethodTaskItem("Dynamic", "Edit Dynamic Restriction Settings...", string.Empty).SetUsage());
                 return result.ToArray(typeof(TaskItem)) as TaskItem[];
             }

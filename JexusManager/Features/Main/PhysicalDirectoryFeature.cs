@@ -53,7 +53,7 @@ namespace JexusManager.Features.Main
 
                 if (_owner.SiteBindings.Any(item => item.CanBrowse))
                 {
-                    result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     var manageGroup = new GroupTaskItem(string.Empty, "Manage Folder", string.Empty, true);
                     result.Add(manageGroup);
                     manageGroup.Items.Add(new TextTaskItem("Browse Folder", string.Empty, true));

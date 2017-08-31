@@ -41,7 +41,7 @@ namespace JexusManager.Features.Authentication
                 if (_owner.IsEnabled)
                 {
                     result.Add(new MethodTaskItem("Disable", "Disable", string.Empty).SetUsage());
-                    result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     result.Add(new MethodTaskItem("Edit", "Advanced Settings...", string.Empty).SetUsage());
                     result.Add(new MethodTaskItem("Providers", "Providers...", string.Empty).SetUsage());
                 }

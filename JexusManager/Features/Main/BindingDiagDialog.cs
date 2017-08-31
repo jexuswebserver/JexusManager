@@ -178,12 +178,12 @@ namespace JexusManager.Features.Main
                     catch (CryptographicException ex)
                     {
                         Debug(ex.ToString());
-                        RollbarDotNet.Rollbar.Report(ex, custom: new Dictionary<string, object>{ { "hResult", ex.HResult } });
+                        Rollbar.RollbarLocator.RollbarInstance.Error(ex, custom: new Dictionary<string, object>{ { "hResult", ex.HResult } });
                     }
                     catch (Exception ex)
                     {
                         Debug(ex.ToString());
-                        RollbarDotNet.Rollbar.Report(ex);
+                        Rollbar.RollbarLocator.RollbarInstance.Error(ex);
                     }
                 }));
 

@@ -48,7 +48,7 @@ namespace JexusManager.Features.Rewrite.Outbound
                 result.Add(new MethodTaskItem("Add", "Add Custom Tag...", string.Empty).SetUsage());
                 if (_owner.SelectedItem != null)
                 {
-                    result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     result.Add(new MethodTaskItem("Rename", "Rename", string.Empty).SetUsage());
                     result.Add(RemoveTaskItem);
                 }

@@ -11,7 +11,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using RollbarDotNet;
+using Rollbar;
 using Exception = System.Exception;
 
 namespace Microsoft.Web.Administration
@@ -86,7 +86,7 @@ namespace Microsoft.Web.Administration
                 // elevation is cancelled.
                 if (ex.NativeErrorCode != NativeMethods.ErrorCancelled)
                 {
-                    Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> {{"native", ex.NativeErrorCode}});
+                    RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> {{"native", ex.NativeErrorCode}});
                     // throw;
                 }
             }
@@ -94,12 +94,12 @@ namespace Microsoft.Web.Administration
             {
                 if (ex.HResult != NativeMethods.NoProcessAssociated)
                 {
-                    Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> { { "hresult", ex.HResult } });
+                    RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> { { "hresult", ex.HResult } });
                 }
             }
             catch (Exception ex)
             {
-                Rollbar.Report(ex, ErrorLevel.Error);
+                RollbarLocator.RollbarInstance.Error(ex);
             }
 
             return true;
@@ -288,13 +288,13 @@ namespace Microsoft.Web.Administration
                 // elevation is cancelled.
                 if (ex.NativeErrorCode != NativeMethods.ErrorCancelled)
                 {
-                    Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> {{ "native", ex.NativeErrorCode } });
+                    RollbarLocator.RollbarInstance.Error(ex,  new Dictionary<string, object> {{ "native", ex.NativeErrorCode } });
                     // throw;
                 }
             }
             catch (Exception ex)
             {
-                Rollbar.Report(ex, ErrorLevel.Error);
+                RollbarLocator.RollbarInstance.Error(ex);
             }
         }
 

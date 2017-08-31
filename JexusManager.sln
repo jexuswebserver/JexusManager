@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.3
+VisualStudioVersion = 15.0.26730.8
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JexusManager", "JexusManager\JexusManager.csproj", "{5203A38D-6A1D-4785-8E83-54081AD2ADAA}"
 EndProject
@@ -81,9 +81,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.IIS", "Tests.IIS\Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{763C6B9C-29E4-4638-965B-7E49041A6B41}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rollbar", "lib\Rollbar.NET\Rollbar\Rollbar.csproj", "{3A99C5E2-AE41-49CA-9CB3-2C3A70D2A8C1}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JexusManager.Features.Asp", "JexusManager.Features.Asp\JexusManager.Features.Asp.csproj", "{7FAAFA3B-A3E7-4339-A69F-102177FD5097}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JexusManager.Features.TraceFailedRequests", "JexusManager.Features.TraceFailedRequests\JexusManager.Features.TraceFailedRequests.csproj", "{EB518EB5-2DFC-430B-90F8-D87124BE17DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -235,14 +235,14 @@ Global
 		{763C6B9C-29E4-4638-965B-7E49041A6B41}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{763C6B9C-29E4-4638-965B-7E49041A6B41}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{763C6B9C-29E4-4638-965B-7E49041A6B41}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3A99C5E2-AE41-49CA-9CB3-2C3A70D2A8C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3A99C5E2-AE41-49CA-9CB3-2C3A70D2A8C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3A99C5E2-AE41-49CA-9CB3-2C3A70D2A8C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3A99C5E2-AE41-49CA-9CB3-2C3A70D2A8C1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7FAAFA3B-A3E7-4339-A69F-102177FD5097}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7FAAFA3B-A3E7-4339-A69F-102177FD5097}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7FAAFA3B-A3E7-4339-A69F-102177FD5097}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7FAAFA3B-A3E7-4339-A69F-102177FD5097}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB518EB5-2DFC-430B-90F8-D87124BE17DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB518EB5-2DFC-430B-90F8-D87124BE17DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB518EB5-2DFC-430B-90F8-D87124BE17DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB518EB5-2DFC-430B-90F8-D87124BE17DE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -275,8 +275,8 @@ Global
 		{56D44318-5979-4FC5-9F01-4D7F78709A0E} = {02EA3ED9-4B28-4CD2-9461-00111A75D6F7}
 		{425CEE66-72B3-42C0-989C-685B28B05230} = {02EA3ED9-4B28-4CD2-9461-00111A75D6F7}
 		{7184AE3D-12D2-444D-B75A-2589F66E6B54} = {02EA3ED9-4B28-4CD2-9461-00111A75D6F7}
-		{3A99C5E2-AE41-49CA-9CB3-2C3A70D2A8C1} = {678654EE-C2A2-49A5-ACE3-ECB31288C2F7}
 		{7FAAFA3B-A3E7-4339-A69F-102177FD5097} = {02EA3ED9-4B28-4CD2-9461-00111A75D6F7}
+		{EB518EB5-2DFC-430B-90F8-D87124BE17DE} = {02EA3ED9-4B28-4CD2-9461-00111A75D6F7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7363EF70-243E-4614-9C23-FCF14D370A8A}
