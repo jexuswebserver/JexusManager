@@ -86,6 +86,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BindingExtensions.cs" />
+    <Compile Include="Dialogs\ExceptionDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\ExceptionDialog.Designer.cs">
+      <DependentUpon>ExceptionDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Features\Main\ApplicationFeature.cs" />
     <Compile Include="Features\Main\ApplicationPage.cs">
       <SubType>UserControl</SubType>
@@ -307,6 +313,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\SelectPoolDialog.resx">
       <DependentUpon>SelectPoolDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\ExceptionDialog.resx">
+      <DependentUpon>ExceptionDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\UpdateDialog.resx">
       <DependentUpon>UpdateDialog.cs</DependentUpon>

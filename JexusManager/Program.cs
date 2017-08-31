@@ -9,6 +9,7 @@ using RollbarDotNet;
 
 namespace JexusManager
 {
+    using JexusManager.Dialogs;
     using System;
     using System.Windows.Forms;
 
@@ -71,25 +72,29 @@ namespace JexusManager
                 Environment = "production"
             });
             var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            var userName = $"{version} on {GetWindowsVersion()} with {Get45PlusFromRegistry()}";
             Rollbar.PersonData(() => new Person(version)
             {
-                UserName = $"{version} on {GetWindowsVersion()} with {Get45PlusFromRegistry()}"
+                UserName = userName
             });
             Rollbar.Report($"Jexus Manager started", ErrorLevel.Info);
             
             Application.ThreadException += (sender, args) =>
             {
                 Rollbar.Report(args.Exception);
+                ExceptionDialog.Report(userName, args.Exception.ToString());
             };
 
             AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
             {
                 Rollbar.Report(args.ExceptionObject as Exception);
+                ExceptionDialog.Report(userName, args.ExceptionObject.ToString());
             };
 
             TaskScheduler.UnobservedTaskException += (sender, args) =>
             {
                 Rollbar.Report(args.Exception);
+                ExceptionDialog.Report(userName, args.Exception.ToString());
             };
         }
 
