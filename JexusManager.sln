@@ -76,7 +76,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JexusManager.Features.ResponseHeaders", "JexusManager.Features.ResponseHeaders\JexusManager.Features.ResponseHeaders.csproj", "{7184AE3D-12D2-444D-B75A-2589F66E6B54}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Web.Administration", "lib\Microsoft.Web.Administration\Microsoft.Web.Administration\Microsoft.Web.Administration.csproj", "{BD24AFDA-292F-4F41-BA80-C48F21D4D9F2}"
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Web.Administration", "Microsoft.Web.Administration\Microsoft.Web.Administration.csproj", "{BD24AFDA-292F-4F41-BA80-C48F21D4D9F2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Web.Administration", "Microsoft.Web.Administration\Microsoft.Web.Administration.csproj", "{75C11467-DE43-4CD7-A748-A36B702B5254}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.IIS", "Tests.IIS\Tests.IIS.csproj", "{4BB387EE-FE05-4215-AEA4-F7BECABBB9A9}"
 EndProject
@@ -228,6 +229,10 @@ Global
 		{BD24AFDA-292F-4F41-BA80-C48F21D4D9F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BD24AFDA-292F-4F41-BA80-C48F21D4D9F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BD24AFDA-292F-4F41-BA80-C48F21D4D9F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75C11467-DE43-4CD7-A748-A36B702B5254}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75C11467-DE43-4CD7-A748-A36B702B5254}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75C11467-DE43-4CD7-A748-A36B702B5254}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75C11467-DE43-4CD7-A748-A36B702B5254}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4BB387EE-FE05-4215-AEA4-F7BECABBB9A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4BB387EE-FE05-4215-AEA4-F7BECABBB9A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4BB387EE-FE05-4215-AEA4-F7BECABBB9A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
