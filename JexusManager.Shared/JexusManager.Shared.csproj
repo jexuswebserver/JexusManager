@@ -17,7 +17,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;DESIGN</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -51,10 +51,6 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System.Security" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
@@ -66,7 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationExtensions.cs" />
-    <Compile Include="BindingExtensions.cs" />
+    <Compile Include="BindingUtility.cs" />
     <Compile Include="CertificateInfo.cs" />
     <Compile Include="ConfigurationElementExtensions.cs" />
     <Compile Include="ConfigurationSectionExtensions.cs" />
@@ -99,9 +95,15 @@
     <Compile Include="Services\ControlPanel.cs" />
     <Compile Include="Services\IConfigurationService.cs" />
     <Compile Include="Services\ManagementUIService.cs" />
+    <Compile Include="StringUtility.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\lib\Microsoft.Web.Administration\Microsoft.Web.Administration\Microsoft.Web.Administration.csproj">
+    <ProjectReference Include="..\lib\Rollbar.NET\Rollbar\Rollbar.csproj">
+      <Project>{3a99c5e2-ae41-49ca-9cb3-2c3a70d2a8c1}</Project>
+      <Name>Rollbar</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Microsoft.Web.Administration\Microsoft.Web.Administration.csproj">
       <Project>{BD24AFDA-292F-4F41-BA80-C48F21D4D9F2}</Project>
       <Name>Microsoft.Web.Administration</Name>
     </ProjectReference>
@@ -120,7 +122,6 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="JexusManager.snk" />
-    <None Include="packages.config" />
     <None Include="Resources\application_32.png" />
   </ItemGroup>
   <ItemGroup>
@@ -140,6 +141,14 @@
     <None Include="Resources\basic_settings_16.png" />
     <Content Include="Resources\help_16.png" />
     <None Include="Resources\remove_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="BouncyCastle">
+      <Version>1.8.1</Version>
+    </PackageReference>
+    <PackageReference Include="Ookii.Dialogs.WindowsForms">
+      <Version>1.0.0</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

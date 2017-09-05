@@ -40,13 +40,13 @@ namespace JexusManager.Features.HttpApi
             public SniMappingListViewItem(SniMappingItem item, HttpApiPage page)
                 : base(item.Host)
             {
-                this.Item = item;
+                Item = item;
                 _page = page;
-                this.SubItems.Add(new ListViewSubItem(this, item.Port));
-                this.SubItems.Add(new ListViewSubItem(this, BindingExtensions.GetAppName(item.AppId)));
-                this.SubItems.Add(new ListViewSubItem(this, item.AppId));
-                this.SubItems.Add(new ListViewSubItem(this, item.Hash));
-                this.SubItems.Add(new ListViewSubItem(this, item.Store));
+                SubItems.Add(new ListViewSubItem(this, item.Port));
+                SubItems.Add(new ListViewSubItem(this, BindingUtility.GetAppName(item.AppId)));
+                SubItems.Add(new ListViewSubItem(this, item.AppId));
+                SubItems.Add(new ListViewSubItem(this, item.Hash));
+                SubItems.Add(new ListViewSubItem(this, item.Store));
             }
         }
 
@@ -58,13 +58,13 @@ namespace JexusManager.Features.HttpApi
             public IpMappingListViewItem(IpMappingItem item, HttpApiPage page)
                 : base(item.Address)
             {
-                this.Item = item;
+                Item = item;
                 _page = page;
-                this.SubItems.Add(new ListViewSubItem(this, item.Port));
-                this.SubItems.Add(new ListViewSubItem(this, BindingExtensions.GetAppName(item.AppId)));
-                this.SubItems.Add(new ListViewSubItem(this, item.AppId));
-                this.SubItems.Add(new ListViewSubItem(this, item.Hash));
-                this.SubItems.Add(new ListViewSubItem(this, item.Store));
+                SubItems.Add(new ListViewSubItem(this, item.Port));
+                SubItems.Add(new ListViewSubItem(this, BindingUtility.GetAppName(item.AppId)));
+                SubItems.Add(new ListViewSubItem(this, item.AppId));
+                SubItems.Add(new ListViewSubItem(this, item.Hash));
+                SubItems.Add(new ListViewSubItem(this, item.Store));
             }
         }
 
@@ -86,7 +86,7 @@ namespace JexusManager.Features.HttpApi
 
         public HttpApiPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         protected override void Initialize(object navigationData)
@@ -128,7 +128,7 @@ namespace JexusManager.Features.HttpApi
 
             if (feature.SelectedItem == null)
             {
-                this.Refresh();
+                Refresh();
                 return;
             }
 
@@ -157,7 +157,7 @@ namespace JexusManager.Features.HttpApi
 
             if (feature.SelectedItem == null)
             {
-                this.Refresh();
+                Refresh();
                 return;
             }
 
@@ -186,7 +186,7 @@ namespace JexusManager.Features.HttpApi
 
             if (feature.SelectedItem == null)
             {
-                this.Refresh();
+                Refresh();
                 return;
             }
 
@@ -207,7 +207,7 @@ namespace JexusManager.Features.HttpApi
         {
             var feature = (IHttpApiFeature)tabControl1.SelectedTab.Tag;
             var extra = feature?.GetTaskList();
-            this.Tasks.Fill(tsActionPanel, cmsActionPanel, extra);
+            Tasks.Fill(tsActionPanel, cmsActionPanel, extra);
             base.Refresh();
         }
 
@@ -217,7 +217,7 @@ namespace JexusManager.Features.HttpApi
             feature.SelectedItem = lvSni.SelectedItems.Count > 0
                 ? ((SniMappingListViewItem)lvSni.SelectedItems[0]).Item
                 : null;
-            this.Refresh();
+            Refresh();
         }
 
         private void LvIPSelectedIndexChanged(object sender, EventArgs e)
@@ -226,7 +226,7 @@ namespace JexusManager.Features.HttpApi
             feature.SelectedItem = lvIP.SelectedItems.Count > 0
                 ? ((IpMappingListViewItem)lvIP.SelectedItems[0]).Item
                 : null;
-            this.Refresh();
+            Refresh();
         }
 
         private void LvURLSelectedIndexChanged(object sender, EventArgs e)
@@ -235,7 +235,7 @@ namespace JexusManager.Features.HttpApi
             feature.SelectedItem = lvURL.SelectedItems.Count > 0
                 ? ((ReservedUrlListViewItem)lvURL.SelectedItems[0]).Item
                 : null;
-            this.Refresh();
+            Refresh();
         }
 
         protected override bool ShowHelp()

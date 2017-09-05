@@ -22,7 +22,7 @@ namespace JexusManager.Tree
     {
         private bool _loaded;
 
-        public SiteTreeNode(IServiceProvider serviceProvider, Site site)
+        public SiteTreeNode(IServiceProvider serviceProvider, Site site, ServerTreeNode server)
             : base(site.Name, serviceProvider)
         {
             ImageIndex = 4;
@@ -31,6 +31,7 @@ namespace JexusManager.Tree
             Site = site;
             Nodes.Add("temp");
             ServerManager = site.Server;
+            ServerNode = server;
         }
 
         public Site Site { get; }
@@ -42,10 +43,23 @@ namespace JexusManager.Tree
 
         public override string Uri
         {
-            get { return Site.Bindings[0].ToUri(); }
+            get
+            {
+                foreach (Microsoft.Web.Administration.Binding binding in Site.Bindings)
+                {
+                    if (binding.CanBrowse)
+                    {
+                        return binding.ToUri();
+                    }
+                }
+
+                return string.Empty;
+            }
         }
 
         public override ServerManager ServerManager { get; set; }
+
+        public override ServerTreeNode ServerNode { get; }
 
         public override void LoadPanels(MainForm mainForm, ServiceContainer serviceContainer, List<ModuleProvider> moduleProviders)
         {
@@ -88,7 +102,7 @@ namespace JexusManager.Tree
             mainForm.LoadPage(page);
         }
 
-        public async override Task Expand(MainForm mainForm)
+        public override void Expand(MainForm mainForm)
         {
             if (_loaded)
             {
@@ -97,13 +111,13 @@ namespace JexusManager.Tree
 
             Nodes.Clear();
             var rootApp = Site.Applications[0];
-            var rootFolder = rootApp.VirtualDirectories[0].PhysicalPath.ExpandIisExpressEnvironmentVariables();
+            var rootFolder = rootApp.PhysicalPath.ExpandIisExpressEnvironmentVariables();
             LoadChildren(rootApp, 0, rootFolder, PathToSite, mainForm.PhysicalDirectoryMenu,
                 mainForm.VirtualDirectoryMenu, mainForm.ApplicationMenu);
             _loaded = true;
         }
 
-        public override async Task AddApplication(ContextMenuStrip appMenu)
+        public override void AddApplication(ContextMenuStrip appMenu)
         {
             var dialog = new NewApplicationDialog(ServiceProvider, Site, PathToSite, Site.Applications[0].ApplicationPoolName, null);
             if (dialog.ShowDialog() != DialogResult.OK)
@@ -112,7 +126,7 @@ namespace JexusManager.Tree
             }
 
             dialog.Application.Save();
-            AddToParent(this, new ApplicationTreeNode(ServiceProvider, dialog.Application) { ContextMenuStrip = appMenu });
+            AddToParent(this, new ApplicationTreeNode(ServiceProvider, dialog.Application, this.ServerNode) { ContextMenuStrip = appMenu });
         }
 
         public override void AddVirtualDirectory(ContextMenuStrip vDirMenu)
@@ -124,19 +138,18 @@ namespace JexusManager.Tree
             }
 
             //await dialog.VirtualDirectory.SaveAsync();
-            AddToParent(this, new VirtualDirectoryTreeNode(ServiceProvider, dialog.VirtualDirectory) { ContextMenuStrip = vDirMenu });
+            AddToParent(this, new VirtualDirectoryTreeNode(ServiceProvider, dialog.VirtualDirectory, this.ServerNode) { ContextMenuStrip = vDirMenu });
         }
 
         public override string Folder
         {
             get
             {
-                var rootApp = Site.Applications[0];
-                return rootApp.VirtualDirectories[0].PhysicalPath.ExpandIisExpressEnvironmentVariables();
+                return Site.PhysicalPath.ExpandIisExpressEnvironmentVariables();
             }
         }
 
-        public async override Task HandleDoubleClick(MainForm mainForm)
+        public override void HandleDoubleClick(MainForm mainForm)
         { }
     }
 }

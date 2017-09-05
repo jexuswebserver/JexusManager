@@ -79,24 +79,24 @@ namespace JexusManager.Features.Authentication
         public override void Load()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.webServer/security/authentication/anonymousAuthentication");
+            var section = service.GetSection("system.webServer/security/authentication/anonymousAuthentication", null, false);
             var anonymousEnabled = (bool)section["enabled"];
             SetEnabled(anonymousEnabled);
         }
 
-        private void Enable()
+        public void Enable()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var anonymousSection = service.GetSection("system.webServer/security/authentication/anonymousAuthentication");
+            var anonymousSection = service.GetSection("system.webServer/security/authentication/anonymousAuthentication", null, false);
             anonymousSection["enabled"] = true;
             service.ServerManager.CommitChanges();
             SetEnabled(true);
         }
 
-        private void Disable()
+        public void Disable()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var anonymousSection = service.GetSection("system.webServer/security/authentication/anonymousAuthentication");
+            var anonymousSection = service.GetSection("system.webServer/security/authentication/anonymousAuthentication", null, false);
             anonymousSection["enabled"] = false;
             service.ServerManager.CommitChanges();
             SetEnabled(false);
@@ -105,7 +105,7 @@ namespace JexusManager.Features.Authentication
         private void Edit()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var anonymousSection = service.GetSection("system.webServer/security/authentication/anonymousAuthentication");
+            var anonymousSection = service.GetSection("system.webServer/security/authentication/anonymousAuthentication", null, false);
             var dialog = new AnonymousEditDialog(this.Module, new AnonymousItem(anonymousSection));
             if (dialog.ShowDialog() != DialogResult.OK)
             {
@@ -123,7 +123,7 @@ namespace JexusManager.Features.Authentication
 
         public override bool ShowHelp()
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210461#Anonymous");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210461#Anonymous");
             return true;
         }
 

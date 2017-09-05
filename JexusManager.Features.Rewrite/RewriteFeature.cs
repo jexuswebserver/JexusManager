@@ -19,7 +19,6 @@ namespace JexusManager.Features.Rewrite
 
     using JexusManager.Features.Rewrite.Inbound;
     using JexusManager.Features.Rewrite.Outbound;
-    using JexusManager.Properties;
 
     using Microsoft.Web.Management.Client;
     using Microsoft.Web.Management.Client.Win32;
@@ -259,9 +258,9 @@ namespace JexusManager.Features.Rewrite
 
         public RewriteFeature(Module module)
         {
-            this.Module = module;
-            this.Inbound = new InboundFeature(module);
-            this.Outbound = new OutboundFeature(module);
+            Module = module;
+            Inbound = new InboundFeature(module);
+            Outbound = new OutboundFeature(module);
         }
 
         protected static readonly Version FxVersion10 = new Version("1.0");
@@ -272,13 +271,13 @@ namespace JexusManager.Features.Rewrite
 
         protected void DisplayErrorMessage(Exception ex, ResourceManager resourceManager)
         {
-            var service = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+            var service = (IManagementUIService)GetService(typeof(IManagementUIService));
             service.ShowError(ex, resourceManager.GetString("General"), string.Empty, false);
         }
 
         protected object GetService(Type type)
         {
-            return (this.Module as IServiceProvider).GetService(type);
+            return (Module as IServiceProvider).GetService(type);
         }
 
         public TaskList GetTaskList()
@@ -288,13 +287,13 @@ namespace JexusManager.Features.Rewrite
 
         public void Load()
         {
-            this.Inbound.Load();
-            this.Outbound.Load();
+            Inbound.Load();
+            Outbound.Load();
         }
 
         public void Add()
         {
-            var dialog = new NewRewriteRuleDialog(this.Inbound.Module);
+            var dialog = new NewRewriteRuleDialog(Inbound.Module);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
@@ -302,13 +301,13 @@ namespace JexusManager.Features.Rewrite
 
             if (dialog.SelectedIndex == 0)
             {
-                var service = (INavigationService)this.GetService(typeof(INavigationService));
-                service.Navigate(null, null, typeof(InboundRulePage), new Tuple<InboundFeature, InboundRule>(this.Inbound, null));
-                this.Inbound.Refresh();
+                var service = (INavigationService)GetService(typeof(INavigationService));
+                service.Navigate(null, null, typeof(InboundRulePage), new Tuple<InboundFeature, InboundRule>(Inbound, null));
+                Inbound.Refresh();
             }
             else if (dialog.SelectedIndex == 1)
             {
-                var rule = new NewRuleWithRewriteMapsDialog(this.Inbound.Module, this.Inbound);
+                var rule = new NewRuleWithRewriteMapsDialog(Inbound.Module, Inbound);
                 if (rule.ShowDialog() != DialogResult.OK)
                 {
                     return;
@@ -316,7 +315,7 @@ namespace JexusManager.Features.Rewrite
             }
             else if (dialog.SelectedIndex == 2)
             {
-                var rule = new NewRuleBlockingDialog(this.Inbound.Module, this.Inbound);
+                var rule = new NewRuleBlockingDialog(Inbound.Module, Inbound);
                 if (rule.ShowDialog() != DialogResult.OK)
                 {
                     return;
@@ -324,13 +323,13 @@ namespace JexusManager.Features.Rewrite
             }
             else if (dialog.SelectedIndex == 4)
             {
-                var service = (INavigationService)this.GetService(typeof(INavigationService));
-                service.Navigate(null, null, typeof(OutboundRulePage), new Tuple<OutboundFeature, OutboundRule>(this.Outbound, null));
-                this.Outbound.Refresh();
+                var service = (INavigationService)GetService(typeof(INavigationService));
+                service.Navigate(null, null, typeof(OutboundRulePage), new Tuple<OutboundFeature, OutboundRule>(Outbound, null));
+                Outbound.Refresh();
             }
             else if (dialog.SelectedIndex == 5)
             {
-                var service = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+                var service = (IManagementUIService)GetService(typeof(IManagementUIService));
                 if (
                     service.ShowMessage("Search engines treat Web sites that can be accessed by more than one URL, each differing only in letter casing, as if they are two different sites. This results in a reduced ranking for the Web site. Use this rule template to create a redirect rule that will enforce the use of lowercase letters in the URL." + Environment.NewLine + Environment.NewLine + "Do you want to create a rule?", "Add a rule that will enforce lowercase URLs",
                         MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) !=
@@ -339,13 +338,13 @@ namespace JexusManager.Features.Rewrite
                     return;
                 }
 
-                this.Inbound.Add();
+                Inbound.Add();
             }
         }
 
         public virtual bool ShowHelp()
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkID=130403&amp;clcid=0x409");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkID=130403&amp;clcid=0x409");
             return false;
         }
 
@@ -363,13 +362,13 @@ namespace JexusManager.Features.Rewrite
 
         private void ViewMaps()
         {
-            var service = (INavigationService)this.GetService(typeof(INavigationService));
+            var service = (INavigationService)GetService(typeof(INavigationService));
             service.Navigate(null, null, typeof(MapsPage), null);
         }
 
         private void ViewServerVariables()
         {
-            var service = (INavigationService)this.GetService(typeof(INavigationService));
+            var service = (INavigationService)GetService(typeof(INavigationService));
             service.Navigate(null, null, typeof(ServerVariablesPage), null);
         }
 

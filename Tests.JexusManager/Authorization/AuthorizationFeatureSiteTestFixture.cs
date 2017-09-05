@@ -22,6 +22,8 @@ namespace Tests.Authorization
     using Moq;
 
     using Xunit;
+    using System.Xml.Linq;
+    using System.Xml.XPath;
 
     public class AuthorizationFeatureSiteTestFixture
     {
@@ -33,7 +35,7 @@ namespace Tests.Authorization
 
         private const string Current = @"applicationHost.config";
 
-        public async Task SetUp()
+        public void SetUp()
         {
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -82,16 +84,29 @@ namespace Tests.Authorization
         }
 
         [Fact]
-        public async void TestBasic()
+        public void TestBasic()
         {
-            await this.SetUp();
+            SetUp();
             Assert.Equal(1, _feature.Items.Count);
         }
 
         [Fact]
-        public async void TestRemoveInherited()
+        public void TestRemoveInherited()
         {
-            await this.SetUp();
+            SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_remove.site.config";
+            var document = XDocument.Load(site);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer");
+            var security = new XElement("security");
+            var authorization = new XElement("authorization");
+            var remove = new XElement("remove");
+            remove.SetAttributeValue("users", "*");
+            node?.Add(security);
+            security.Add(authorization);
+            authorization.Add(remove);
+            document.Save(expected);
 
             _feature.SelectedItem = _feature.Items[0];
             Assert.Equal("*", _feature.SelectedItem.Users);
@@ -103,13 +118,18 @@ namespace Tests.Authorization
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("Authorization", "expected_remove.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
 
         [Fact]
-        public async void TestRemove()
+        public void TestRemove()
         {
-            await this.SetUp();
+            SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_remove1.site.config";
+            var document = XDocument.Load(site);
+            document.Save(expected);
 
             var item = new AuthorizationRule(null);
             item.Roles = "test";
@@ -125,35 +145,67 @@ namespace Tests.Authorization
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("Authorization", "expected_remove1.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
 
 
         [Fact]
-        public async void TestEditInherited()
+        public void TestEditInherited()
         {
-            await this.SetUp();
+            SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_edit.site.config";
+            var document = XDocument.Load(site);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer");
+            var security = new XElement("security");
+            var authorization = new XElement("authorization");
+            var remove = new XElement("remove");
+            remove.SetAttributeValue("users", "*");
+            var add = new XElement("add");
+            add.SetAttributeValue("accessType", "Allow");
+            add.SetAttributeValue("roles", "testers");
+            add.SetAttributeValue("users", "*");
+            node?.Add(security);
+            security.Add(authorization);
+            authorization.Add(remove);
+            authorization.Add(add);
+            document.Save(expected);
 
             _feature.SelectedItem = _feature.Items[0];
             Assert.Equal("", _feature.SelectedItem.Roles);
             var item = _feature.SelectedItem;
-            var expected = "testers";
-            item.Roles = expected;
+            var expectedValue = "testers";
+            item.Roles = expectedValue;
             _feature.EditItem(item);
             Assert.NotNull(_feature.SelectedItem);
-            Assert.Equal(expected, _feature.SelectedItem.Roles);
+            Assert.Equal(expectedValue, _feature.SelectedItem.Roles);
 
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("Authorization", "expected_edit.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
 
         [Fact]
-        public async void TestEdit()
+        public void TestEdit()
         {
-            await this.SetUp();
+            SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_edit1.site.config";
+            var document = XDocument.Load(site);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer");
+            var security = new XElement("security");
+            var authorization = new XElement("authorization");
+            var add = new XElement("add");
+            add.SetAttributeValue("accessType", "Allow");
+            add.SetAttributeValue("roles", "defenders");
+            node?.Add(security);
+            security.Add(authorization);
+            authorization.Add(add);
+            document.Save(expected);
 
             var item = new AuthorizationRule(null);
             var original = "testers";
@@ -162,25 +214,40 @@ namespace Tests.Authorization
 
             Assert.Equal(original, _feature.SelectedItem.Roles);
             Assert.Equal(2, _feature.Items.Count);
-            var expected = "defenders";
-            item.Roles = expected;
+            var expectedValue = "defenders";
+            item.Roles = expectedValue;
             _feature.EditItem(item);
             Assert.NotNull(_feature.SelectedItem);
-            Assert.Equal(expected, _feature.SelectedItem.Roles);
+            Assert.Equal(expectedValue, _feature.SelectedItem.Roles);
             Assert.Equal(2, _feature.Items.Count);
 
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("Authorization", "expected_edit1.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
 
 
         [Fact]
-        public async void TestAdd()
+        public void TestAdd()
         {
-            await this.SetUp();
+            SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_add.site.config";
+            var document = XDocument.Load(site);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer");
+            var security = new XElement("security");
+            var authorization = new XElement("authorization");
+            var add = new XElement("add");
+            add.SetAttributeValue("roles", "test");
+            add.SetAttributeValue("accessType", "Allow");
+            node?.Add(security);
+            security.Add(authorization);
+            authorization.Add(add);
+            document.Save(expected);
+
             var item = new AuthorizationRule(null);
             item.Roles = "test";
             _feature.AddItem(item);
@@ -191,7 +258,7 @@ namespace Tests.Authorization
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("Authorization", "expected_add.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
     }
 }

@@ -10,6 +10,7 @@ namespace JexusManager.Services
     using System.Windows.Forms;
 
     using Microsoft.Web.Management.Client.Win32;
+    using System.Text;
 
     public sealed class ManagementUIService : IManagementUIService
     {
@@ -29,16 +30,24 @@ namespace JexusManager.Services
 
         public void ShowError(Exception exception, string message, string caption, bool isWarning)
         {
+            message = new StringBuilder()
+                .AppendLine("There was an error while performing this operation.")
+                .AppendLine()
+                .AppendLine("Details:")
+                .AppendLine()
+                .AppendLine(exception.Message)
+                .ToString();
+            ShowMessage(message, caption, MessageBoxButtons.OK, isWarning ? MessageBoxIcon.Warning : MessageBoxIcon.Error);
         }
 
         public void ShowMessage(string text, string caption)
         {
-            MessageBox.Show(DialogOwner, text, caption, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            ShowMessage(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         public DialogResult ShowMessage(string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon)
         {
-            return MessageBox.Show(DialogOwner, text, caption, buttons, icon);
+            return ShowMessage(text, caption, buttons, icon, MessageBoxDefaultButton.Button1);
         }
 
         public DialogResult ShowMessage(string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon,

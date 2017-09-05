@@ -176,7 +176,7 @@ namespace JexusManager.Features.ResponseHeaders
 
         private void SetCommonHeadersDialog_HelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210509");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210509");
         }
 
         private void cbExpired_CheckedChanged(object sender, EventArgs e)

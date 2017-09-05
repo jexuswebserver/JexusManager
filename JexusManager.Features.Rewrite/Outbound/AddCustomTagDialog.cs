@@ -32,6 +32,7 @@ namespace JexusManager.Features.Rewrite.Outbound
                 Observable.FromEventPattern<EventArgs>(txtName, "TextChanged")
                 .Merge(Observable.FromEventPattern<EventArgs>(txtAttribute, "TextChanged"))
                 .Sample(TimeSpan.FromSeconds(1))
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnOK.Enabled = !string.IsNullOrWhiteSpace(txtName.Text) && !string.IsNullOrWhiteSpace(txtAttribute.Text);
@@ -39,6 +40,7 @@ namespace JexusManager.Features.Rewrite.Outbound
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     Item = new CustomTagItem(null);
@@ -52,7 +54,7 @@ namespace JexusManager.Features.Rewrite.Outbound
 
         private void AddCustomTagDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=163112");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=163112");
         }
     }
 }

@@ -33,6 +33,7 @@ namespace JexusManager.Features.ResponseHeaders
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     if (feature.Items.Any(item => item != Item && txtName.Text == item.Name))
@@ -59,7 +60,7 @@ namespace JexusManager.Features.ResponseHeaders
 
         private void NewHeaderDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210509");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210509");
         }
 
         public ResponseHeadersItem Item { get; set; }

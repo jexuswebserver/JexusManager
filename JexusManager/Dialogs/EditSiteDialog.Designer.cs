@@ -66,7 +66,6 @@
             this.btnOK.TabIndex = 28;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
-            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
             // btnBrowse
             // 
@@ -77,7 +76,6 @@
             this.btnBrowse.Text = "...";
             this.btnBrowse.UseVisualStyleBackColor = true;
             this.btnBrowse.Visible = false;
-            this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
             // 
             // btnTest
             // 
@@ -114,7 +112,6 @@
             this.txtPhysicalPath.Name = "txtPhysicalPath";
             this.txtPhysicalPath.Size = new System.Drawing.Size(324, 20);
             this.txtPhysicalPath.TabIndex = 23;
-            this.txtPhysicalPath.TextChanged += new System.EventHandler(this.txtPhysicalPath_TextChanged);
             // 
             // label6
             // 
@@ -134,7 +131,6 @@
             this.btnSelect.TabIndex = 21;
             this.btnSelect.Text = "Select...";
             this.btnSelect.UseVisualStyleBackColor = true;
-            this.btnSelect.Click += new System.EventHandler(this.btnSelect_Click);
             // 
             // txtPool
             // 

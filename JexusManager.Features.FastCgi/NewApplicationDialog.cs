@@ -35,6 +35,7 @@ namespace JexusManager.Features.FastCgi
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     this.Item.Path = txtPath.Text;
@@ -55,6 +56,7 @@ namespace JexusManager.Features.FastCgi
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(txtPath, "TextChanged")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnOK.Enabled = true;
@@ -62,6 +64,7 @@ namespace JexusManager.Features.FastCgi
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnBrowse, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     DialogHelper.ShowFileDialog(txtPath, "CGI Executables|*.exe|CGI Files|*.dll|All Files|*.*");
@@ -72,7 +75,7 @@ namespace JexusManager.Features.FastCgi
 
         private void NewRestrictionDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210483");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210483");
         }
     }
 }

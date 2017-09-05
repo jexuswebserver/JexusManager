@@ -22,6 +22,8 @@ namespace Tests.Authorization
     using Moq;
 
     using Xunit;
+    using System.Xml.Linq;
+    using System.Xml.XPath;
 
     public class AuthorizationFeatureServerTestFixture
     {
@@ -93,25 +95,28 @@ namespace Tests.Authorization
         {
             SetUp();
             const string Expected = @"expected_remove.config";
-            const string ExpectedMono = @"expected_remove.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer/security/authorization");
+            node?.Remove();
+            document.Save(Expected);
 
             _feature.SelectedItem = _feature.Items[0];
             _feature.Remove();
             Assert.Null(_feature.SelectedItem);
             Assert.Equal(0, _feature.Items.Count);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("Authorization", ExpectedMono)
-                    : Path.Combine("Authorization", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
 
         [Fact]
         public void TestEdit()
         {
             SetUp();
+
             const string Expected = @"expected_edit.config";
-            const string ExpectedMono = @"expected_edit.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer/security/authorization/add");
+            node?.SetAttributeValue("roles", "test1");
+            document.Save(Expected);
 
             _feature.SelectedItem = _feature.Items[0];
             var item = _feature.SelectedItem;
@@ -120,11 +125,7 @@ namespace Tests.Authorization
             Assert.NotNull(_feature.SelectedItem);
             Assert.Equal("test1", _feature.SelectedItem.Roles);
             Assert.Equal(1, _feature.Items.Count);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("Authorization", ExpectedMono)
-                    : Path.Combine("Authorization", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
 
         [Fact]
@@ -132,7 +133,13 @@ namespace Tests.Authorization
         {
             SetUp();
             const string Expected = @"expected_add.config";
-            const string ExpectedMono = @"expected_add.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer/security/authorization/add");
+            var newNode = new XElement("add");
+            newNode.SetAttributeValue("accessType", "Allow");
+            newNode.SetAttributeValue("roles", "Administration");
+            node?.AddAfterSelf(newNode);
+            document.Save(Expected);
 
             var item = new AuthorizationRule(null);
             item.Roles = "Administration";
@@ -140,11 +147,7 @@ namespace Tests.Authorization
             Assert.NotNull(_feature.SelectedItem);
             Assert.Equal("Administration", _feature.SelectedItem.Roles);
             Assert.Equal(2, _feature.Items.Count);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("Authorization", ExpectedMono)
-                    : Path.Combine("Authorization", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
     }
 }

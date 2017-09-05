@@ -30,7 +30,7 @@ namespace JexusManager.Features.Rewrite.Outbound
 
         protected override void OnSettingsSaved()
         {
-            this.RewriteSettingsUpdated?.Invoke();
+            RewriteSettingsUpdated?.Invoke();
         }
 
         public void Refresh()
@@ -50,26 +50,26 @@ namespace JexusManager.Features.Rewrite.Outbound
 
         public void Load()
         {
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var outSection = service.GetSection("system.webServer/rewrite/outboundRules");
             var preConditions = outSection.ChildElements["preConditions"];
 
-            this.PreConditions = new List<PreConditionItem>();
-            this.Tags = new List<CustomTagsItem>();
+            PreConditions = new List<PreConditionItem>();
+            Tags = new List<CustomTagsItem>();
             foreach (ConfigurationElement condition in preConditions.GetCollection())
             {
                 var item = new PreConditionItem(condition);
-                this.PreConditions.Add(item);
+                PreConditions.Add(item);
             }
 
             var tags = outSection.ChildElements["customTags"];
             foreach (ConfigurationElement condition in tags.GetCollection())
             {
                 var item = new CustomTagsItem(condition);
-                this.Tags.Add(item);
+                Tags.Add(item);
             }
 
-            this.LoadItems();
+            LoadItems();
         }
 
         public List<CustomTagsItem> Tags { get; set; }
@@ -78,20 +78,20 @@ namespace JexusManager.Features.Rewrite.Outbound
 
         public void Edit()
         {
-            var service = (INavigationService)this.GetService(typeof(INavigationService));
-            service.Navigate(null, null, typeof(OutboundRulePage), new Tuple<OutboundFeature, OutboundRule>(this, this.SelectedItem));
-            this.OnSettingsSaved();
+            var service = (INavigationService)GetService(typeof(INavigationService));
+            service.Navigate(null, null, typeof(OutboundRulePage), new Tuple<OutboundFeature, OutboundRule>(this, SelectedItem));
+            OnSettingsSaved();
         }
 
         public void MoveUp()
         {
-            if (this.Items.Any(item => item.Flag != "Local"))
+            if (Items.Any(item => item.Flag != "Local"))
             {
-                var dialog = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+                var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
                 var result =
                     dialog.ShowMessage(
                         "The list order will be changed for this feature. If you continue, changes made to this feature at a parent level will no longer be inherited at this level. Do you want to continue?",
-                        this.Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question,
+                        Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question,
                         MessageBoxDefaultButton.Button1);
                 if (result != DialogResult.Yes)
                 {
@@ -99,18 +99,18 @@ namespace JexusManager.Features.Rewrite.Outbound
                 }
             }
 
-            this.MoveUpItem();
+            MoveUpItem();
         }
 
         public void MoveDown()
         {
-            if (this.Items.Any(item => item.Flag != "Local"))
+            if (Items.Any(item => item.Flag != "Local"))
             {
-                var dialog = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+                var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
                 var result =
                     dialog.ShowMessage(
                         "The list order will be changed for this feature. If you continue, changes made to this feature at a parent level will no longer be inherited at this level. Do you want to continue?",
-                        this.Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question,
+                        Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question,
                         MessageBoxDefaultButton.Button1);
                 if (result != DialogResult.Yes)
                 {
@@ -118,30 +118,30 @@ namespace JexusManager.Features.Rewrite.Outbound
                 }
             }
 
-            this.MoveDownItem();
+            MoveDownItem();
         }
 
         public void Disable()
         {
-            this.SelectedItem.Enabled = false;
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
-            this.SelectedItem.Element["enabled"] = false;
+            SelectedItem.Enabled = false;
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+            SelectedItem.Element["enabled"] = false;
             service.ServerManager.CommitChanges();
-            this.OnSettingsSaved();
+            OnSettingsSaved();
         }
 
         public void Enable()
         {
-            this.SelectedItem.Enabled = true;
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
-            this.SelectedItem.Element["enabled"] = true;
+            SelectedItem.Enabled = true;
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+            SelectedItem.Element["enabled"] = true;
             service.ServerManager.CommitChanges();
-            this.OnSettingsSaved();
+            OnSettingsSaved();
         }
 
         public void Remove()
         {
-            var dialog = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+            var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
             if (
                 dialog.ShowMessage("Are you sure that you want to remove the selected rule?", "Confirm Remove",
                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) !=
@@ -150,7 +150,7 @@ namespace JexusManager.Features.Rewrite.Outbound
                 return;
             }
 
-            this.RemoveItem();
+            RemoveItem();
         }
     }
 }

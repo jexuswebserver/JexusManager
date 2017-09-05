@@ -71,24 +71,24 @@ namespace JexusManager.Features.Authentication
         public override void Load()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var anonymousSection = service.GetSection("system.webServer/security/authentication/clientCertificateMappingAuthentication");
+            var anonymousSection = service.GetSection("system.webServer/security/authentication/clientCertificateMappingAuthentication", null, false);
             var anonymousEnabled = (bool)anonymousSection["enabled"];
             SetEnabled(anonymousEnabled);
         }
 
-        private void Enable()
+        public void Enable()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var anonymousSection = service.GetSection("system.webServer/security/authentication/clientCertificateMappingAuthentication");
+            var anonymousSection = service.GetSection("system.webServer/security/authentication/clientCertificateMappingAuthentication", null, false);
             anonymousSection["enabled"] = true;
             service.ServerManager.CommitChanges();
             SetEnabled(true);
         }
 
-        private void Disable()
+        public void Disable()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var anonymousSection = service.GetSection("system.webServer/security/authentication/clientCertificateMappingAuthentication");
+            var anonymousSection = service.GetSection("system.webServer/security/authentication/clientCertificateMappingAuthentication", null, false);
             anonymousSection["enabled"] = false;
             service.ServerManager.CommitChanges();
             SetEnabled(false);
@@ -101,7 +101,7 @@ namespace JexusManager.Features.Authentication
 
         public override bool ShowHelp()
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210461#Active_Directory");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210461#Active_Directory");
             return true;
         }
 

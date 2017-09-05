@@ -1,0 +1,9 @@
+version: 1.0.{build}
+skip_tags: true
+image: Visual Studio 2017
+before_build:
+  - git submodule update --init --recursive
+build_script:
+  - .\release.bat
+test_script:
+  - .\test.bat

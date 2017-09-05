@@ -14,11 +14,11 @@ namespace JexusManager.Dialogs
     using Microsoft.Web.Management.Client.Win32;
 
     using Application = Microsoft.Web.Administration.Application;
+    using System.Reactive.Disposables;
+    using System.Reactive.Linq;
 
     public sealed partial class NewVirtualDirectoryDialog : DialogForm
     {
-        private readonly Application _application;
-
         public NewVirtualDirectoryDialog(IServiceProvider serviceProvider, VirtualDirectory existing, string pathToSite, Application application)
             : base(serviceProvider)
         {
@@ -26,79 +26,93 @@ namespace JexusManager.Dialogs
             txtSite.Text = application.Site.Name;
             txtPath.Text = pathToSite;
             btnBrowse.Visible = application.Server.IsLocalhost;
-            _application = application;
             VirtualDirectory = existing;
             Text = VirtualDirectory == null ? "Add Virtual Directory" : "Edit Virtual Directory";
             txtAlias.ReadOnly = VirtualDirectory != null;
             if (VirtualDirectory == null)
             {
                 // TODO: test if IIS does this
-                return;
+            }
+            else
+            {
+                txtAlias.Text = VirtualDirectory.Path.PathToName();
+                txtPhysicalPath.Text = VirtualDirectory.PhysicalPath;
             }
 
-            txtAlias.Text = VirtualDirectory.Path.PathToName();
-            txtPhysicalPath.Text = VirtualDirectory.PhysicalPath;
-        }
+            var container = new CompositeDisposable();
+            FormClosed += (sender, args) => container.Dispose();
 
-        private void btnBrowse_Click(object sender, EventArgs e)
-        {
-            DialogHelper.ShowBrowseDialog(txtPhysicalPath);
-        }
+            container.Add(
+                Observable.FromEventPattern<EventArgs>(btnBrowse, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(evt =>
+                {
+                    DialogHelper.ShowBrowseDialog(txtPhysicalPath);
+                }));
 
-        private void txtAlias_TextChanged(object sender, EventArgs e)
-        {
-            btnOK.Enabled = !string.IsNullOrWhiteSpace(txtAlias.Text) && !string.IsNullOrWhiteSpace(txtPhysicalPath.Text);
+            container.Add(
+                Observable.FromEventPattern<EventArgs>(txtAlias, "TextChanged")
+                .Merge(Observable.FromEventPattern<EventArgs>(txtPhysicalPath, "TextChanged"))
+                .Sample(TimeSpan.FromSeconds(1))
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(evt =>
+                {
+                    btnOK.Enabled = !string.IsNullOrWhiteSpace(txtAlias.Text) && !string.IsNullOrWhiteSpace(txtPhysicalPath.Text);
+                }));
+
+           container.Add(
+                Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(evt =>
+                {
+                    foreach (var ch in ApplicationCollection.InvalidApplicationPathCharacters())
+                    {
+                        if (txtAlias.Text.Contains(ch.ToString(CultureInfo.InvariantCulture)))
+                        {
+                            MessageBox.Show("The application path cannot contain the following characters: \\, ?, ;, :, @, &, =, +, $, ,, |, \", <, >, *.", Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            return;
+                        }
+                    }
+
+                    foreach (var ch in SiteCollection.InvalidSiteNameCharactersJexus())
+                    {
+                        if (txtAlias.Text.Contains(ch.ToString(CultureInfo.InvariantCulture)))
+                        {
+                            MessageBox.Show("The site name cannot contain the following characters: ' '.", Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            return;
+                        }
+                    }
+
+                    if (!application.Server.Verify(txtPhysicalPath.Text))
+                    {
+                        MessageBox.Show("The specified directory does not exist on the server.", Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        return;
+                    }
+
+                    if (VirtualDirectory == null)
+                    {
+                        // TODO: fix this
+                        VirtualDirectory = new VirtualDirectory(null, application.VirtualDirectories)
+                        {
+                            Path = "/" + txtAlias.Text
+                        };
+                        VirtualDirectory.PhysicalPath = txtPhysicalPath.Text;
+                        VirtualDirectory.Parent.Add(VirtualDirectory);
+                    }
+                    else
+                    {
+                        VirtualDirectory.PhysicalPath = txtPhysicalPath.Text;
+                    }
+
+                    DialogResult = DialogResult.OK;
+                }));
         }
 
         public VirtualDirectory VirtualDirectory { get; private set; }
 
-        private async void btnOK_Click(object sender, EventArgs e)
-        {
-            foreach (var ch in ApplicationCollection.InvalidApplicationPathCharacters())
-            {
-                if (txtAlias.Text.Contains(ch.ToString(CultureInfo.InvariantCulture)))
-                {
-                    MessageBox.Show("The application path cannot contain the following characters: \\, ?, ;, :, @, &, =, +, $, ,, |, \", <, >, *.", Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    return;
-                }
-            }
-
-            foreach (var ch in SiteCollection.InvalidSiteNameCharactersJexus())
-            {
-                if (txtAlias.Text.Contains(ch.ToString(CultureInfo.InvariantCulture)))
-                {
-                    MessageBox.Show("The site name cannot contain the following characters: ' '.", Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    return;
-                }
-            }
-
-            if (!await _application.Server.VerifyAsync(txtPhysicalPath.Text))
-            {
-                MessageBox.Show("The specified directory does not exist on the server.", Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                return;
-            }
-
-            if (VirtualDirectory == null)
-            {
-                // TODO: fix this
-                VirtualDirectory = new VirtualDirectory(null, _application.VirtualDirectories)
-                {
-                    Path = "/" + txtAlias.Text
-                };
-                VirtualDirectory.PhysicalPath = txtPhysicalPath.Text;
-                VirtualDirectory.Parent.Add(VirtualDirectory);
-            }
-            else
-            {
-                VirtualDirectory.PhysicalPath = txtPhysicalPath.Text;
-            }
-
-            DialogResult = DialogResult.OK;
-        }
-
         private void NewVirtualDirectoryDialog_HelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210458");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210458");
         }
     }
 }

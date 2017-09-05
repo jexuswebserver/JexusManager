@@ -70,7 +70,7 @@ namespace JexusManager.Features.HttpRedirect
 
         public virtual bool ShowHelp()
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210508");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210508");
             return false;
         }
 

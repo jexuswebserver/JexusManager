@@ -27,6 +27,7 @@ namespace JexusManager.Features.HttpErrors
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnBrowse, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     DialogHelper.ShowBrowseDialog(txtDirectory);
@@ -34,6 +35,7 @@ namespace JexusManager.Features.HttpErrors
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     item.Prefix = txtDirectory.Text;
@@ -44,7 +46,7 @@ namespace JexusManager.Features.HttpErrors
 
         private void LocalErrorDialog_HelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210481");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210481");
         }
     }
 }

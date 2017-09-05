@@ -209,8 +209,7 @@ namespace JexusManager.Features.Modules
                 this.Items.Add(item);
                 this.SelectedItem = item;
                 // server level modules are in "" location.
-                ConfigurationSection section = service.Scope == ManagementScope.Server ? service.GetSection("system.webServer/modules", string.Empty) : service.GetSection("system.webServer/modules");
-                ConfigurationElementCollection collection = section.GetCollection();
+                ConfigurationElementCollection collection = GetCollection(service);
                 item.AppendTo(collection);
             }
 
@@ -358,7 +357,7 @@ namespace JexusManager.Features.Modules
 
         public virtual bool ShowHelp()
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210521");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210521");
             return false;
         }
 

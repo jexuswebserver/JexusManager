@@ -38,6 +38,7 @@ namespace JexusManager.Features.IpSecurity
                 Observable.FromEventPattern<EventArgs>(cbInterval, "CheckedChanged")
                 .Merge(load)
                 .Sample(TimeSpan.FromSeconds(1))
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     txtPeriod.Enabled = txtNumer.Enabled = cbInterval.Checked;
@@ -47,6 +48,7 @@ namespace JexusManager.Features.IpSecurity
                 Observable.FromEventPattern<EventArgs>(cbConcurrent, "CheckedChanged")
                 .Merge(load)
                 .Sample(TimeSpan.FromSeconds(1))
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     txtConcurrent.Enabled = cbConcurrent.Checked;
@@ -54,6 +56,7 @@ namespace JexusManager.Features.IpSecurity
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     uint result;
@@ -101,7 +104,7 @@ namespace JexusManager.Features.IpSecurity
 
         private void DynamicDialog_HelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210513");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210513");
         }
     }
 }

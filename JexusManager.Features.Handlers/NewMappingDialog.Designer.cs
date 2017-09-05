@@ -52,7 +52,7 @@
             this.btnCancel.Location = new System.Drawing.Point(332, 301);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(95, 23);
-            this.btnCancel.TabIndex = 0;
+            this.btnCancel.TabIndex = 7;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
@@ -62,7 +62,7 @@
             this.btnOK.Location = new System.Drawing.Point(231, 301);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(95, 23);
-            this.btnOK.TabIndex = 1;
+            this.btnOK.TabIndex = 6;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
             // 
@@ -80,14 +80,16 @@
             this.txtName.Location = new System.Drawing.Point(15, 191);
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(269, 20);
-            this.txtName.TabIndex = 6;
+            this.txtName.TabIndex = 4;
             // 
             // txtExecutable
             // 
+            this.txtExecutable.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.txtExecutable.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystem;
             this.txtExecutable.Location = new System.Drawing.Point(15, 140);
             this.txtExecutable.Name = "txtExecutable";
             this.txtExecutable.Size = new System.Drawing.Size(367, 20);
-            this.txtExecutable.TabIndex = 8;
+            this.txtExecutable.TabIndex = 2;
             // 
             // label1
             // 
@@ -112,7 +114,7 @@
             this.txtPath.Location = new System.Drawing.Point(15, 25);
             this.txtPath.Name = "txtPath";
             this.txtPath.Size = new System.Drawing.Size(297, 20);
-            this.txtPath.TabIndex = 12;
+            this.txtPath.TabIndex = 0;
             // 
             // label4
             // 
@@ -128,7 +130,7 @@
             this.btnRestrictions.Location = new System.Drawing.Point(15, 220);
             this.btnRestrictions.Name = "btnRestrictions";
             this.btnRestrictions.Size = new System.Drawing.Size(140, 23);
-            this.btnRestrictions.TabIndex = 14;
+            this.btnRestrictions.TabIndex = 5;
             this.btnRestrictions.Text = "Request Restrictions...";
             this.btnRestrictions.UseVisualStyleBackColor = true;
             // 
@@ -137,7 +139,7 @@
             this.btnBrowse.Location = new System.Drawing.Point(388, 138);
             this.btnBrowse.Name = "btnBrowse";
             this.btnBrowse.Size = new System.Drawing.Size(28, 23);
-            this.btnBrowse.TabIndex = 15;
+            this.btnBrowse.TabIndex = 3;
             this.btnBrowse.Text = "...";
             this.btnBrowse.UseVisualStyleBackColor = true;
             // 
@@ -152,10 +154,12 @@
             // 
             // txtModule
             // 
+            this.txtModule.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.txtModule.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.txtModule.Location = new System.Drawing.Point(15, 92);
             this.txtModule.Name = "txtModule";
             this.txtModule.Size = new System.Drawing.Size(393, 21);
-            this.txtModule.TabIndex = 16;
+            this.txtModule.TabIndex = 1;
             // 
             // NewMappingDialog
             // 

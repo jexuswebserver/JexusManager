@@ -2,6 +2,9 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Xml.Linq;
+using System.Xml.XPath;
+
 namespace Tests.RequestFiltering.QueryStrings
 {
     using System;
@@ -31,7 +34,7 @@ namespace Tests.RequestFiltering.QueryStrings
 
         private const string Current = @"applicationHost.config";
 
-        public async Task SetUp()
+        public void SetUp()
         {
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -89,16 +92,31 @@ namespace Tests.RequestFiltering.QueryStrings
         }
 
         [Fact]
-        public async void TestBasic()
+        public void TestBasic()
         {
-            await this.SetUp();
+            SetUp();
             Assert.Equal(2, _feature.Items.Count);
         }
 
         [Fact]
-        public async void TestRemoveInherited()
+        public void TestRemoveInherited()
         {
-            await this.SetUp();
+            SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_remove.site.config";
+            var document = XDocument.Load(site);
+            var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
+            var security = new XElement("security");
+            var request = new XElement("requestFiltering");
+            var file = new XElement("alwaysAllowedQueryStrings");
+            var remove = new XElement("remove");
+            remove.SetAttributeValue("queryString", "test");
+            node?.Add(security);
+            security.Add(request);
+            request.Add(file);
+            file.Add(remove);
+            document.Save(expected);
 
             _feature.SelectedItem = _feature.Items[0];
             Assert.Equal("test", _feature.SelectedItem.QueryString);
@@ -110,13 +128,51 @@ namespace Tests.RequestFiltering.QueryStrings
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("RequestFiltering", "QueryStrings", "expected_remove.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
 
         [Fact]
-        public async void TestRemove()
+        public void TestRemoveDenyInherited()
         {
-            await this.SetUp();
+            SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_remove.site.config";
+            var document = XDocument.Load(site);
+            var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
+            var security = new XElement("security");
+            var request = new XElement("requestFiltering");
+            var file = new XElement("denyQueryStringSequences");
+            var remove = new XElement("remove");
+            remove.SetAttributeValue("sequence", "test");
+            node?.Add(security);
+            security.Add(request);
+            request.Add(file);
+            file.Add(remove);
+            document.Save(expected);
+
+            _feature.SelectedItem = _feature.Items[1];
+            Assert.Equal("test", _feature.SelectedItem.QueryString);
+            _feature.Remove();
+            Assert.Null(_feature.SelectedItem);
+            Assert.Equal(1, _feature.Items.Count);
+
+            const string Original = @"original.config";
+            const string OriginalMono = @"original.mono.config";
+
+            XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
+            XmlAssert.Equal(expected, site);
+        }
+
+        [Fact]
+        public void TestRemove()
+        {
+            SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_remove.site.config";
+            var document = XDocument.Load(site);
+            document.Save(expected);
 
             var item = new QueryStringsItem(null, true);
             item.QueryString = "test1";
@@ -132,13 +188,18 @@ namespace Tests.RequestFiltering.QueryStrings
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("RequestFiltering", "QueryStrings", "expected_remove1.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
 
         [Fact]
-        public async void TestRemoveDeny()
+        public void TestRemoveDeny()
         {
-            await this.SetUp();
+            SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_remove.site.config";
+            var document = XDocument.Load(site);
+            document.Save(expected);
 
             var item = new QueryStringsItem(null, false);
             item.QueryString = "test1";
@@ -154,13 +215,29 @@ namespace Tests.RequestFiltering.QueryStrings
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("RequestFiltering", "QueryStrings", "expected_remove1_deny.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
 
         [Fact]
-        public async void TestAdd()
+        public void TestAdd()
         {
-            await this.SetUp();
+            SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_remove.site.config";
+            var document = XDocument.Load(site);
+            var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
+            var security = new XElement("security");
+            var request = new XElement("requestFiltering");
+            var file = new XElement("alwaysAllowedQueryStrings");
+            var remove = new XElement("add");
+            remove.SetAttributeValue("queryString", "test1");
+            node?.Add(security);
+            security.Add(request);
+            request.Add(file);
+            file.Add(remove);
+            document.Save(expected);
+
             var item = new QueryStringsItem(null, true);
             item.QueryString = "test1";
             _feature.AddItem(item);
@@ -171,13 +248,29 @@ namespace Tests.RequestFiltering.QueryStrings
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("RequestFiltering", "QueryStrings", "expected_add.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
 
         [Fact]
-        public async void TestAddDeny()
+        public void TestAddDeny()
         {
-            await this.SetUp();
+            SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_remove.site.config";
+            var document = XDocument.Load(site);
+            var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
+            var security = new XElement("security");
+            var request = new XElement("requestFiltering");
+            var file = new XElement("denyQueryStringSequences");
+            var remove = new XElement("add");
+            remove.SetAttributeValue("sequence", "test1");
+            node?.Add(security);
+            security.Add(request);
+            request.Add(file);
+            file.Add(remove);
+            document.Save(expected);
+
             var item = new QueryStringsItem(null, false);
             item.QueryString = "test1";
             _feature.AddItem(item);
@@ -188,7 +281,7 @@ namespace Tests.RequestFiltering.QueryStrings
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("RequestFiltering", "QueryStrings", "expected_add_deny.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
     }
 }

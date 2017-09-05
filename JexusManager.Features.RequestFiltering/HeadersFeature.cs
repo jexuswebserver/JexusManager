@@ -111,7 +111,7 @@ namespace JexusManager.Features.RequestFiltering
 
         public override bool ShowHelp()
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210526#Headers");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210526#Headers");
             return true;
         }
 

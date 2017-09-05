@@ -2,6 +2,9 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Xml.Linq;
+using System.Xml.XPath;
+
 namespace Tests.RequestFiltering.Verbs
 {
     using System;
@@ -31,7 +34,7 @@ namespace Tests.RequestFiltering.Verbs
 
         private const string Current = @"applicationHost.config";
 
-        public async Task SetUp()
+        public void SetUp()
         {
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -89,16 +92,31 @@ namespace Tests.RequestFiltering.Verbs
         }
 
         [Fact]
-        public async void TestBasic()
+        public void TestBasic()
         {
-            await this.SetUp();
+            SetUp();
             Assert.Equal(1, _feature.Items.Count);
         }
 
         [Fact]
-        public async void TestRemoveInherited()
+        public void TestRemoveInherited()
         {
-            await this.SetUp();
+            SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_remove.site.config";
+            var document = XDocument.Load(site);
+            var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
+            var security = new XElement("security");
+            var request = new XElement("requestFiltering");
+            var file = new XElement("verbs");
+            var remove = new XElement("remove");
+            remove.SetAttributeValue("verb", "PUT");
+            node?.Add(security);
+            security.Add(request);
+            request.Add(file);
+            file.Add(remove);
+            document.Save(expected);
 
             _feature.SelectedItem = _feature.Items[0];
             Assert.Equal("PUT", _feature.SelectedItem.Verb);
@@ -110,13 +128,18 @@ namespace Tests.RequestFiltering.Verbs
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("RequestFiltering", "Verbs", "expected_remove.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
 
         [Fact]
-        public async void TestRemove()
+        public void TestRemove()
         {
-            await this.SetUp();
+            SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_remove.site.config";
+            var document = XDocument.Load(site);
+            document.Save(expected);
 
             var item = new VerbsItem(null);
             item.Verb = "GET";
@@ -132,13 +155,30 @@ namespace Tests.RequestFiltering.Verbs
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("RequestFiltering", "Verbs", "expected_remove1.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
 
         [Fact]
-        public async void TestAdd()
+        public void TestAdd()
         {
-            await this.SetUp();
+            SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_remove.site.config";
+            var document = XDocument.Load(site);
+            var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
+            var security = new XElement("security");
+            var request = new XElement("requestFiltering");
+            var file = new XElement("verbs");
+            var remove = new XElement("add");
+            remove.SetAttributeValue("allowed", "false");
+            remove.SetAttributeValue("verb", "GET");
+            node?.Add(security);
+            security.Add(request);
+            request.Add(file);
+            file.Add(remove);
+            document.Save(expected);
+
             var item = new VerbsItem(null);
             item.Verb = "GET";
             _feature.AddItem(item);
@@ -149,7 +189,7 @@ namespace Tests.RequestFiltering.Verbs
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("RequestFiltering", "Verbs", "expected_add.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
     }
 }

@@ -164,7 +164,7 @@ namespace JexusManager.Features.ResponseHeaders
 
         public virtual bool ShowHelp()
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210509");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210509");
             return false;
         }
 

@@ -79,24 +79,24 @@ namespace JexusManager.Features.Authentication
         public override void Load()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var digestSection = service.GetSection("system.webServer/security/authentication/digestAuthentication");
+            var digestSection = service.GetSection("system.webServer/security/authentication/digestAuthentication", null, false);
             var digestEnabled = (bool)digestSection["enabled"];
             SetEnabled(digestEnabled);
         }
 
-        private void Enable()
+        public void Enable()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var digestSection = service.GetSection("system.webServer/security/authentication/digestAuthentication");
+            var digestSection = service.GetSection("system.webServer/security/authentication/digestAuthentication", null, false);
             digestSection["enabled"] = true;
             service.ServerManager.CommitChanges();
             SetEnabled(true);
         }
 
-        private void Disable()
+        public void Disable()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var digestSection = service.GetSection("system.webServer/security/authentication/digestAuthentication");
+            var digestSection = service.GetSection("system.webServer/security/authentication/digestAuthentication", null, false);
             digestSection["enabled"] = false;
             service.ServerManager.CommitChanges();
             SetEnabled(false);
@@ -105,7 +105,7 @@ namespace JexusManager.Features.Authentication
         private void Edit()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var digestSection = service.GetSection("system.webServer/security/authentication/digestAuthentication");
+            var digestSection = service.GetSection("system.webServer/security/authentication/digestAuthentication", null, false);
             var dialog = new DigestEditDialog(this.Module, new DigestItem(digestSection));
             if (dialog.ShowDialog() != DialogResult.OK)
             {
@@ -123,7 +123,7 @@ namespace JexusManager.Features.Authentication
 
         public override bool ShowHelp()
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210461#Digest");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210461#Digest");
             return true;
         }
 

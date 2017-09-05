@@ -30,6 +30,7 @@ namespace JexusManager.Features.Main
 
     using Binding = Microsoft.Web.Administration.Binding;
     using Module = Microsoft.Web.Management.Client.Module;
+    using System.Linq;
 
     /// <summary>
     /// Description of DefaultDocumentFeature.
@@ -54,20 +55,30 @@ namespace JexusManager.Features.Main
                 result.Add(
                     new MethodTaskItem("Basic", "Basic Settings...", string.Empty, string.Empty,
                         Resources.basic_settings_16).SetUsage());
-                result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
-                var manageGroup = new GroupTaskItem(string.Empty, "Manage Virtual Directory", string.Empty, true);
-                result.Add(manageGroup);
-                manageGroup.Items.Add(new TextTaskItem("Browse Virtual Directory", string.Empty, true));
-                foreach (Binding binding in _owner.SiteBindings)
+
+                if (_owner.SiteBindings.Any(item => item.CanBrowse))
                 {
-                    manageGroup.Items.Add(
-                        new MethodTaskItem("Browse", string.Format("Browse {0}", binding.ToShortString()), string.Empty, string.Empty,
-                            Resources.browse_16, binding).SetUsage());
+                    result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    var manageGroup = new GroupTaskItem(string.Empty, "Manage Virtual Directory", string.Empty, true);
+                    result.Add(manageGroup);
+                    manageGroup.Items.Add(new TextTaskItem("Browse Virtual Directory", string.Empty, true));
+                    foreach (Binding binding in _owner.SiteBindings)
+                    {
+                        if (binding.CanBrowse)
+                        {
+                            var uri = binding.ToUri();
+                            manageGroup.Items.Add(
+                                new MethodTaskItem("Browse", $"Browse {binding.ToShortString()}", string.Empty,
+                                    string.Empty,
+                                    Resources.browse_16, uri).SetUsage());
+                        }
+                    }
+
+                    manageGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    manageGroup.Items.Add(new TextTaskItem("Edit Virtual Directory", string.Empty, true));
+                    manageGroup.Items.Add(new MethodTaskItem("Advanced", "Advanced Settings...", string.Empty).SetUsage());
                 }
 
-                manageGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
-                manageGroup.Items.Add(new TextTaskItem("Edit Virtual Directory", string.Empty, true));
-                manageGroup.Items.Add(new MethodTaskItem("Advanced", "Advanced Settings...", string.Empty).SetUsage());
                 return result.ToArray(typeof(TaskItem)) as TaskItem[];
             }
 
@@ -141,7 +152,7 @@ namespace JexusManager.Features.Main
 
         public virtual bool ShowHelp()
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210463");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210463");
             return false;
         }
 
@@ -151,12 +162,11 @@ namespace JexusManager.Features.Main
 
         private void Browse(object uri)
         {
-            var binding = (Binding)uri;
-            var target = binding.ToUri();
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+            var application = service.VirtualDirectory.Application;
 
             // IMPORTANT: help users launch IIS Express instance.
-            var site = service.VirtualDirectory.Application.Site;
+            var site = application.Site;
             if (site.Server.Mode == WorkingMode.IisExpress && site.State != ObjectState.Started)
             {
                 var message = (IManagementUIService)GetService(typeof(IManagementUIService));
@@ -182,14 +192,15 @@ namespace JexusManager.Features.Main
             }
 
             // TODO: virtual directory path?
-            Process.Start(target + service.Application.Path);
+            DialogHelper.ProcessStart(uri + application.Path);
         }
 
         private void Basic()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var dialog = new NewVirtualDirectoryDialog(Module, service.VirtualDirectory, service.VirtualDirectory.PathToSite().GetParentPath(),
-                service.VirtualDirectory.Application);
+            var virtualDirectory = service.VirtualDirectory;
+            var dialog = new NewVirtualDirectoryDialog(Module, virtualDirectory, virtualDirectory.PathToSite().GetParentPath(),
+                virtualDirectory.Application);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
@@ -208,7 +219,7 @@ namespace JexusManager.Features.Main
         private void Explore()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            Process.Start(service.VirtualDirectory.PhysicalPath.ExpandIisExpressEnvironmentVariables());
+            DialogHelper.Explore(service.VirtualDirectory.PhysicalPath.ExpandIisExpressEnvironmentVariables());
         }
 
         public IEnumerable<Binding> SiteBindings
@@ -216,7 +227,7 @@ namespace JexusManager.Features.Main
             get
             {
                 var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-                var site = service.VirtualDirectory.Parent.Parent.Site;
+                var site = service.VirtualDirectory.Application.Site;
                 return site.Bindings;
             }
         }

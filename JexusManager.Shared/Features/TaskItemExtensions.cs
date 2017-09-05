@@ -2,6 +2,9 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
+using System.Reflection;
+
 namespace JexusManager.Features
 {
     using System.Collections;
@@ -80,7 +83,24 @@ namespace JexusManager.Features
                 }
 
                 var result = new ToolStripButton(method.Text, method.Image ?? Resources.transparent_16,
-                    (o, args) => list.InvokeMethod(method.MethodName, method.UserData))
+                    (o, args) =>
+                    {
+                        try
+                        {
+                            list.InvokeMethod(method.MethodName, method.UserData);
+                        }
+                        catch (TargetInvocationException ex)
+                        {
+                            if (ex.InnerException is UnauthorizedAccessException)
+                            {
+                                MessageBox.Show($"{ex.InnerException.Message}. Running Jexus Manager as administrator might resolve it.", "Jexus Manager", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                RollbarDotNet.Rollbar.Report(ex.InnerException, RollbarDotNet.ErrorLevel.Debug);
+                                return;
+                            }
+
+                            throw new InvalidOperationException($"menu item {method.Text} function {method.MethodName}", ex);
+                        }
+                    })
                 {
                     ImageAlign = ContentAlignment.MiddleLeft,
                     ImageTransparentColor = Color.Magenta,
@@ -92,7 +112,24 @@ namespace JexusManager.Features
                 if ((method.Usage & MethodTaskItemUsages.ContextMenu) == MethodTaskItemUsages.ContextMenu)
                 {
                     var result2 = new ToolStripMenuItem(method.Text, method.Image ?? Resources.transparent_16,
-                        (o, args) => list.InvokeMethod(method.MethodName, method.UserData))
+                        (o, args) =>
+                        {
+                            try
+                            {
+                                list.InvokeMethod(method.MethodName, method.UserData);
+                            }
+                            catch (TargetInvocationException ex)
+                            {
+                                if (ex.InnerException is UnauthorizedAccessException)
+                                {
+                                    MessageBox.Show($"{ex.InnerException.Message}. Running Jexus Manager as administrator might resolve it.", "Jexus Manager", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    RollbarDotNet.Rollbar.Report(ex.InnerException, RollbarDotNet.ErrorLevel.Debug);
+                                    return;
+                                }
+
+                                throw new InvalidOperationException($"menu item {method.Text} function {method.MethodName}", ex);
+                            }
+                        })
                     {
                         ImageTransparentColor = Color.Magenta,
                         Enabled = method.Enabled,

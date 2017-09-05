@@ -9,7 +9,6 @@ namespace JexusManager.Tree
     using System.ComponentModel.Design;
     using System.Diagnostics;
     using System.IO;
-    using System.Threading.Tasks;
     using System.Windows.Forms;
 
     using Microsoft.Web.Administration;
@@ -32,9 +31,11 @@ namespace JexusManager.Tree
         public abstract string Uri { get; }
         public abstract ServerManager ServerManager { get; set; }
 
+        public abstract ServerTreeNode ServerNode { get; }
+
         public abstract void LoadPanels(MainForm mainForm, ServiceContainer serviceContainer, List<ModuleProvider> moduleProviders);
 
-        public abstract Task HandleDoubleClick(MainForm mainForm);
+        public abstract void HandleDoubleClick(MainForm mainForm);
 
         protected void LoadChildren(Application rootApp, int rootLevel, string rootFolder, string pathToSite, ContextMenuStrip phyMenu, ContextMenuStrip vDirMenu, ContextMenuStrip appMenu)
         {
@@ -53,7 +54,7 @@ namespace JexusManager.Tree
                 }
 
                 // IMPORTANT: only create level+1 vDir nodes.
-                var virtualDirectoryNode = new VirtualDirectoryTreeNode(ServiceProvider, virtualDirectory) { ContextMenuStrip = vDirMenu };
+                var virtualDirectoryNode = new VirtualDirectoryTreeNode(ServiceProvider, virtualDirectory, ServerNode) { ContextMenuStrip = vDirMenu };
                 treeNodes.Add(virtualDirectoryNode);
             }
 
@@ -77,8 +78,13 @@ namespace JexusManager.Tree
                             continue;
                         }
 
+                        if (app.VirtualDirectories.Count == 0)
+                        {
+                            continue;
+                        }
+
                         loaded.Add(app.Path);
-                        var appNode = new ApplicationTreeNode(ServiceProvider, app) { ContextMenuStrip = appMenu };
+                        var appNode = new ApplicationTreeNode(ServiceProvider, app, ServerNode) { ContextMenuStrip = appMenu };
                         treeNodes.Add(appNode);
                         isApp = true;
                     }
@@ -88,7 +94,7 @@ namespace JexusManager.Tree
                         continue;
                     }
 
-                    var directory = new PhysicalDirectoryTreeNode(ServiceProvider, new PhysicalDirectory(folder, path, rootApp))
+                    var directory = new PhysicalDirectoryTreeNode(ServiceProvider, new PhysicalDirectory(folder, path, rootApp), ServerNode)
                     {
                         ContextMenuStrip = phyMenu
                     };
@@ -118,8 +124,13 @@ namespace JexusManager.Tree
                     continue;
                 }
 
+                if (application.VirtualDirectories.Count == 0)
+                {
+                    continue;
+                }
+
                 // IMPORTANT: only create level+1 physical nodes.
-                var appNode = new ApplicationTreeNode(ServiceProvider, application) { ContextMenuStrip = appMenu };
+                var appNode = new ApplicationTreeNode(ServiceProvider, application, ServerNode) { ContextMenuStrip = appMenu };
                 treeNodes.Add(appNode);
             }
 
@@ -137,13 +148,13 @@ namespace JexusManager.Tree
             }
         }
 
-        public abstract Task Expand(MainForm mainForm);
-        public abstract Task AddApplication(ContextMenuStrip appMenu);
+        public abstract void Expand(MainForm mainForm);
+        public abstract void AddApplication(ContextMenuStrip appMenu);
         public abstract void AddVirtualDirectory(ContextMenuStrip vDirMenu);
 
         public void Explore()
         {
-            Process.Start(Folder);
+            DialogHelper.Explore(Folder);
         }
 
         public void EditPermissions()
@@ -153,7 +164,7 @@ namespace JexusManager.Tree
 
         public void Browse()
         {
-            Process.Start(Uri);
+            DialogHelper.ProcessStart(Uri);
         }
 
         protected static int GetLevel(string pathToSite)

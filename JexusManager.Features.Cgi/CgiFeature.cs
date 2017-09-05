@@ -34,7 +34,7 @@ namespace JexusManager.Features.Cgi
 
         public CgiFeature(Module module)
         {
-            this.Module = module;
+            Module = module;
         }
 
         protected static readonly Version FxVersion10 = new Version("1.0");
@@ -46,13 +46,13 @@ namespace JexusManager.Features.Cgi
 
         protected void DisplayErrorMessage(Exception ex, ResourceManager resourceManager)
         {
-            var service = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+            var service = (IManagementUIService)GetService(typeof(IManagementUIService));
             service.ShowError(ex, resourceManager.GetString("General"), "", false);
         }
 
         protected object GetService(Type type)
         {
-            return (this.Module as IServiceProvider).GetService(type);
+            return (Module as IServiceProvider).GetService(type);
         }
 
         public TaskList GetTaskList()
@@ -62,22 +62,22 @@ namespace JexusManager.Features.Cgi
 
         public void Load()
         {
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.webServer/cgi");
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+            var section = service.GetSection("system.webServer/cgi", null, false);
             PropertyGridObject = new CgiItem(section);
-            this.OnCgiSettingsSaved();
+            OnCgiSettingsSaved();
         }
 
         public CgiItem PropertyGridObject { get; set; }
 
         protected void OnCgiSettingsSaved()
         {
-            this.CgiSettingsUpdated?.Invoke();
+            CgiSettingsUpdated?.Invoke();
         }
 
         public virtual bool ShowHelp()
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210534");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210534");
             return false;
         }
 
@@ -107,12 +107,12 @@ namespace JexusManager.Features.Cgi
 
         public void CancelChanges()
         {
-            this.Load();
+            Load();
         }
 
         public bool ApplyChanges()
         {
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             PropertyGridObject.Apply();
             service.ServerManager.CommitChanges();
             return true;

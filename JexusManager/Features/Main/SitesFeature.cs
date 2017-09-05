@@ -31,6 +31,7 @@ namespace JexusManager.Features.Main
 
     using Binding = Microsoft.Web.Administration.Binding;
     using Module = Microsoft.Web.Management.Client.Module;
+    using System.Linq;
 
     /// <summary>
     /// Description of DefaultDocumentFeature.
@@ -72,37 +73,45 @@ namespace JexusManager.Features.Main
                     result.Add(new MethodTaskItem("Applications", "View Applications", string.Empty).SetUsage());
                     result.Add(
                         new MethodTaskItem("VirtualDirectories", "View Virtual Directories", string.Empty).SetUsage());
-                    result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
-                    var manageGroup = new GroupTaskItem(string.Empty, "Manage Website", string.Empty, true);
-                    result.Add(manageGroup);
-                    manageGroup.Items.Add(
-                        new MethodTaskItem("Restart", "Restart", string.Empty, string.Empty, Resources.restart_16)
-                            .SetUsage(!_owner.IsBusy));
-                    manageGroup.Items.Add(
-                        new MethodTaskItem("Start", "Start", string.Empty, string.Empty, Resources.start_16).SetUsage(
-                            !_owner.IsBusy && _owner.SelectedItem.State != ObjectState.Started));
-                    manageGroup.Items.Add(new MethodTaskItem("Stop", "Stop", string.Empty, string.Empty,
-                        Resources.stop_16)
-                        .SetUsage(
-                            !_owner.IsBusy && _owner.SelectedItem.State == ObjectState.Started));
-                    manageGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
-                    manageGroup.Items.Add(new TextTaskItem("Browse Website", string.Empty, true));
-                    foreach (Binding binding in _owner.SelectedItem.Bindings)
-                    {
-                        var uri = binding.ToUri();
-                        manageGroup.Items.Add(
-                            new MethodTaskItem("Browse", string.Format("Browse {0}", uri), string.Empty, string.Empty,
-                                Resources.browse_16, uri).SetUsage());
-                    }
 
-                    manageGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
-                    manageGroup.Items.Add(
-                        new MethodTaskItem("Advanced", "Advanced Settings...", string.Empty).SetUsage());
-                    manageGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
-                    manageGroup.Items.Add(new TextTaskItem("Configure", string.Empty, true));
-                    manageGroup.Items.Add(
-                        new MethodTaskItem("Tracing", "Failed Request Tracing...", string.Empty).SetUsage());
-                    manageGroup.Items.Add(new MethodTaskItem("Limits", "Limits...", string.Empty).SetUsage());
+                    if (_owner.SelectedItem.Bindings.Any(item => item.CanBrowse))
+                    {
+                        result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                        var manageGroup = new GroupTaskItem(string.Empty, "Manage Website", string.Empty, true);
+                        result.Add(manageGroup);
+                        manageGroup.Items.Add(
+                            new MethodTaskItem("Restart", "Restart", string.Empty, string.Empty, Resources.restart_16)
+                                .SetUsage(!_owner.IsBusy));
+                        manageGroup.Items.Add(
+                            new MethodTaskItem("Start", "Start", string.Empty, string.Empty, Resources.start_16).SetUsage(
+                                !_owner.IsBusy && _owner.SelectedItem.State != ObjectState.Started));
+                        manageGroup.Items.Add(new MethodTaskItem("Stop", "Stop", string.Empty, string.Empty,
+                            Resources.stop_16)
+                            .SetUsage(
+                                !_owner.IsBusy && _owner.SelectedItem.State == ObjectState.Started));
+                        manageGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                        manageGroup.Items.Add(new TextTaskItem("Browse Website", string.Empty, true));
+                        foreach (Binding binding in _owner.SelectedItem.Bindings)
+                        {
+                            if (binding.CanBrowse)
+                            {
+                                var uri = binding.ToUri();
+                                manageGroup.Items.Add(
+                                    new MethodTaskItem("Browse", $"Browse {uri}", string.Empty,
+                                        string.Empty,
+                                        Resources.browse_16, uri).SetUsage());
+                            }
+                        }
+
+                        manageGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                        manageGroup.Items.Add(
+                            new MethodTaskItem("Advanced", "Advanced Settings...", string.Empty).SetUsage());
+                        manageGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                        manageGroup.Items.Add(new TextTaskItem("Configure", string.Empty, true));
+                        manageGroup.Items.Add(
+                            new MethodTaskItem("Tracing", "Failed Request Tracing...", string.Empty).SetUsage());
+                        manageGroup.Items.Add(new MethodTaskItem("Limits", "Limits...", string.Empty).SetUsage());
+                    }
                 }
 
                 return result.ToArray(typeof(TaskItem)) as TaskItem[];
@@ -261,7 +270,7 @@ namespace JexusManager.Features.Main
 
         public virtual bool ShowHelp()
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210531");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210531");
             return false;
         }
 
@@ -359,17 +368,17 @@ namespace JexusManager.Features.Main
                 Start();
             }
 
-            Process.Start(uri.ToString());
+            DialogHelper.ProcessStart(uri.ToString());
         }
 
-        private async void Stop()
+        private void Stop()
         {
             if (SelectedItem == null)
             {
                 return;
             }
 
-            if (SelectedItem.Bindings.RequireElevation() && !JexusManager.NativeMethods.IsProcessElevated)
+            if (SelectedItem.Bindings.ElevationRequired && !PublicNativeMethods.IsProcessElevated)
             {
                 var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
                 dialog.ShowMessage("This site cannot be stopped. Please run Jexus Manager as administrator.", Name);
@@ -378,12 +387,12 @@ namespace JexusManager.Features.Main
 
             IsBusy = true;
             OnSitesSettingsSaved();
-            await SelectedItem.StopAsync();
+            SelectedItem.Stop();
             IsBusy = false;
             OnSitesSettingsSaved();
         }
 
-        private async void Start()
+        private void Start()
         {
             if (SelectedItem == null)
             {
@@ -391,7 +400,7 @@ namespace JexusManager.Features.Main
             }
 
             var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
-            if (SelectedItem.Bindings.RequireElevation() && !JexusManager.NativeMethods.IsProcessElevated)
+            if (SelectedItem.Bindings.ElevationRequired && !PublicNativeMethods.IsProcessElevated)
             {
                 dialog.ShowMessage("This site cannot be started. Please run Jexus Manager as administrator.", Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -401,7 +410,7 @@ namespace JexusManager.Features.Main
             OnSitesSettingsSaved();
             try
             {
-                await SelectedItem.StartAsync();
+                SelectedItem.Start();
             }
             catch (Exception ex)
             {
@@ -412,7 +421,7 @@ namespace JexusManager.Features.Main
             OnSitesSettingsSaved();
         }
 
-        private async void Restart()
+        private void Restart()
         {
             if (SelectedItem == null)
             {
@@ -420,7 +429,7 @@ namespace JexusManager.Features.Main
             }
 
             var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
-            if (SelectedItem.Bindings.RequireElevation() && !JexusManager.NativeMethods.IsProcessElevated)
+            if (SelectedItem.Bindings.ElevationRequired && !PublicNativeMethods.IsProcessElevated)
             {
                 dialog.ShowMessage("This site cannot be restarted. Please run Jexus Manager as administrator.", Name);
                 return;
@@ -430,7 +439,7 @@ namespace JexusManager.Features.Main
             OnSitesSettingsSaved();
             try
             {
-                await SelectedItem.RestartAsync();
+                SelectedItem.Restart();
             }
             catch (Exception ex)
             {
@@ -468,12 +477,20 @@ namespace JexusManager.Features.Main
 
         private void Permissions()
         {
-            NativeMethods.ShowFileProperties(SelectedItem.Applications[0].VirtualDirectories[0].PhysicalPath.ExpandIisExpressEnvironmentVariables());
+            var path = SelectedItem.PhysicalPath.ExpandIisExpressEnvironmentVariables();
+            if (!string.IsNullOrWhiteSpace(path))
+            {
+                NativeMethods.ShowFileProperties(path);
+            }
         }
 
         private void Explore()
         {
-            Process.Start(SelectedItem.Applications[0].VirtualDirectories[0].PhysicalPath.ExpandIisExpressEnvironmentVariables());
+            var path = SelectedItem.PhysicalPath.ExpandIisExpressEnvironmentVariables();
+            if (!string.IsNullOrWhiteSpace(path))
+            {
+                DialogHelper.Explore(path);
+            }
         }
 
         private void Bindings()

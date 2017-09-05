@@ -26,6 +26,7 @@ namespace JexusManager.Features.RequestFiltering
             container.Add(
                 Observable.FromEventPattern<EventArgs>(txtName, "TextChanged")
                 .Sample(TimeSpan.FromSeconds(1))
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnOK.Enabled = !string.IsNullOrWhiteSpace(txtName.Text);
@@ -33,6 +34,7 @@ namespace JexusManager.Features.RequestFiltering
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     Item = new HiddenSegmentsItem(null);
@@ -45,7 +47,7 @@ namespace JexusManager.Features.RequestFiltering
 
         private void NewHiddenSegmentDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210526#Add_Hidden");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210526#Add_Hidden");
         }
     }
 }

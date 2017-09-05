@@ -52,6 +52,7 @@ namespace JexusManager.Features.Handlers
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     Item.ScriptProcessor = txtExecutable.Text;
@@ -70,6 +71,32 @@ namespace JexusManager.Features.Handlers
                             return;
                         }
 
+                        var path = txtExecutable.Text;
+                        if (!string.IsNullOrWhiteSpace(path))
+                        {
+                            var ext = Path.GetExtension(path);
+                            if (!string.Equals(ext, ".dll", StringComparison.OrdinalIgnoreCase) &&
+                                !string.Equals(ext, ".exe", StringComparison.OrdinalIgnoreCase))
+                            {
+                                // TODO: test path with spaces case.
+                                ShowMessage("The specific executable for the handler must be a .dll or .exe file. If the path to the script processor (only in the case of a .exe file) has spaces, use double quotation marks to specify the executable.",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Warning,
+                                    MessageBoxDefaultButton.Button1);
+                                return;
+                            }
+
+                            if (!File.Exists(path))
+                            {
+                                ShowMessage(
+                                    "The specific executable does not exist on the server.",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Error,
+                                    MessageBoxDefaultButton.Button1);
+                                return;
+                            }
+                        }
+
                         if (txtModule.Text == "FastCgiModule")
                         {
                             var result = ShowMessage(
@@ -86,16 +113,6 @@ namespace JexusManager.Features.Handlers
                                 }
                             }
                         }
-
-                        if (!string.IsNullOrWhiteSpace(txtExecutable.Text) && !File.Exists(txtExecutable.Text))
-                        {
-                            ShowMessage(
-                                "The specific executable does not exist on the server.",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error,
-                                MessageBoxDefaultButton.Button1);
-                            return;
-                        }
                     }
 
                     DialogResult = DialogResult.OK;
@@ -106,6 +123,7 @@ namespace JexusManager.Features.Handlers
                 .Merge(Observable.FromEventPattern<EventArgs>(txtExecutable, "TextChanged"))
                 .Merge(Observable.FromEventPattern<EventArgs>(txtPath, "TextChanged"))
                 .Sample(TimeSpan.FromSeconds(1))
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnOK.Enabled = !string.IsNullOrWhiteSpace(txtName.Text)
@@ -115,6 +133,7 @@ namespace JexusManager.Features.Handlers
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnRestrictions, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     var dialog = new RestrictionsDialog(ServiceProvider, Item);
@@ -126,6 +145,7 @@ namespace JexusManager.Features.Handlers
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnBrowse, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     DialogHelper.ShowFileDialog(txtExecutable, "|*.dll||*.exe");
@@ -136,7 +156,7 @@ namespace JexusManager.Features.Handlers
 
         private void NewRestrictionDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210505#Add_Module");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210505#Add_Module");
         }
     }
 }

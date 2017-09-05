@@ -22,6 +22,8 @@ namespace Tests.IsapiFilters
     using Moq;
 
     using Xunit;
+    using System.Xml.Linq;
+    using System.Xml.XPath;
 
     public class IsapiFiltersFeatureServerTestFixture
     {
@@ -33,7 +35,7 @@ namespace Tests.IsapiFilters
 
         private const string Current = @"applicationHost.config";
 
-        public async Task SetUp()
+        public void SetUp()
         {
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -82,37 +84,40 @@ namespace Tests.IsapiFilters
         }
 
         [Fact]
-        public async void TestBasic()
+        public void TestBasic()
         {
-            await this.SetUp();
+            SetUp();
             Assert.Equal(5, _feature.Items.Count);
             Assert.Equal("ASP.Net_2.0.50727-64", _feature.Items[0].Name);
         }
 
         [Fact]
-        public async void TestRemove()
+        public void TestRemove()
         {
-            await this.SetUp();
+            SetUp();
             const string Expected = @"expected_remove.config";
-            const string ExpectedMono = @"expected_remove.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer/isapiFilters");
+            node?.FirstNode?.Remove();
+            document.Save(Expected);
 
             _feature.SelectedItem = _feature.Items[0];
             _feature.Remove();
             Assert.Null(_feature.SelectedItem);
             Assert.Equal(4, _feature.Items.Count);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("IsapiFilters", ExpectedMono)
-                    : Path.Combine("IsapiFilters", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
 
         [Fact]
-        public async void TestEdit()
+        public void TestEdit()
         {
-            await this.SetUp();
+            SetUp();
             const string Expected = @"expected_edit.config";
-            const string ExpectedMono = @"expected_edit.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer/isapiFilters");
+            var element = node?.FirstNode as XElement;
+            element?.SetAttributeValue("path", "c:\\test.dll");
+            document.Save(Expected);
 
             _feature.SelectedItem = _feature.Items[0];
             var item = _feature.SelectedItem;
@@ -122,19 +127,21 @@ namespace Tests.IsapiFilters
             Assert.NotNull(_feature.SelectedItem);
             Assert.Equal(expected, _feature.SelectedItem.Path);
             Assert.Equal(5, _feature.Items.Count);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("IsapiFilters", ExpectedMono)
-                    : Path.Combine("IsapiFilters", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
 
         [Fact]
-        public async void TestAdd()
+        public void TestAdd()
         {
-            await this.SetUp();
+            SetUp();
             const string Expected = @"expected_add.config";
-            const string ExpectedMono = @"expected_add.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer/isapiFilters");
+            var element = new XElement("filter");
+            element.SetAttributeValue("name", "my cgi");
+            element.SetAttributeValue("path", "c:\\test.dll");
+            node?.Add(element);
+            document.Save(Expected);
 
             var item = new IsapiFiltersItem(null);
             item.Name = "my cgi";
@@ -144,27 +151,31 @@ namespace Tests.IsapiFilters
             Assert.Equal("my cgi", _feature.SelectedItem.Name);
             Assert.Equal("c:\\test.dll", _feature.SelectedItem.Path);
             Assert.Equal(6, _feature.Items.Count);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("IsapiFilters", ExpectedMono)
-                    : Path.Combine("IsapiFilters", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
 
         [Fact]
-        public async void TestRevert()
+        public void TestRevert()
         {
-            await SetUp();
+            SetUp();
             var exception = Assert.Throws<InvalidOperationException>(() => _feature.Revert());
             Assert.Equal("Revert operation cannot be done at server level", exception.Message);
         }
 
         [Fact]
-        public async void TestMoveUp()
+        public void TestMoveUp()
         {
-            await SetUp();
+            SetUp();
             const string Expected = @"expected_up.config";
-            const string ExpectedMono = @"expected_up.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer/isapiFilters");
+            var node1 = document.Root.XPathSelectElement("/configuration/system.webServer/isapiFilters/filter[@name='ASP.Net_2.0.50727.0']");
+            var node2 = document.Root.XPathSelectElement("/configuration/system.webServer/isapiFilters/filter[@name='ASP.Net_2.0.50727.0-64']");
+            node1?.Remove();
+            node2?.Remove();
+            node?.AddFirst(node1);
+            node?.AddFirst(node2);
+            document.Save(Expected);
 
             _feature.SelectedItem = _feature.Items[1];
             var selected = "ASP.Net_2.0.50727.0";
@@ -176,19 +187,23 @@ namespace Tests.IsapiFilters
             Assert.Equal(selected, _feature.SelectedItem.Name);
             Assert.Equal(selected, _feature.Items[0].Name);
             Assert.Equal(other, _feature.Items[1].Name);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("IsapiFilters", ExpectedMono)
-                    : Path.Combine("IsapiFilters", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
 
         [Fact]
-        public async void TestMoveDown()
+        public void TestMoveDown()
         {
-            await SetUp();
+            SetUp();
             const string Expected = @"expected_up.config";
-            const string ExpectedMono = @"expected_up.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer/isapiFilters");
+            var node1 = document.Root.XPathSelectElement("/configuration/system.webServer/isapiFilters/filter[@name='ASP.Net_2.0.50727.0']");
+            var node2 = document.Root.XPathSelectElement("/configuration/system.webServer/isapiFilters/filter[@name='ASP.Net_2.0.50727.0-64']");
+            node1?.Remove();
+            node2?.Remove();
+            node?.AddFirst(node1);
+            node?.AddFirst(node2);
+            document.Save(Expected);
 
             _feature.SelectedItem = _feature.Items[0];
             var other = "ASP.Net_2.0.50727.0";
@@ -200,11 +215,7 @@ namespace Tests.IsapiFilters
             Assert.Equal(selected, _feature.SelectedItem.Name);
             Assert.Equal(other, _feature.Items[0].Name);
             Assert.Equal(selected, _feature.Items[1].Name);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("IsapiFilters", ExpectedMono)
-                    : Path.Combine("IsapiFilters", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
     }
 }

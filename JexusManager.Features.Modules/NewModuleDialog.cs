@@ -35,6 +35,7 @@ namespace JexusManager.Features.Modules
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     Item.Type = txtPath.Text;
@@ -57,6 +58,7 @@ namespace JexusManager.Features.Modules
                 Observable.FromEventPattern<EventArgs>(txtName, "TextChanged")
                 .Merge(Observable.FromEventPattern<EventArgs>(txtPath, "TextChanged"))
                 .Sample(TimeSpan.FromSeconds(1))
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnOK.Enabled = !string.IsNullOrWhiteSpace(txtName.Text)
@@ -68,7 +70,7 @@ namespace JexusManager.Features.Modules
 
         private void NewRestrictionDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210521");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210521");
         }
     }
 }

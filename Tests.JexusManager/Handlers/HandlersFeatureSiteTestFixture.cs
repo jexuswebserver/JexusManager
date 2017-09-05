@@ -22,6 +22,8 @@ namespace Tests.Handlers
     using Moq;
 
     using Xunit;
+    using System.Xml.Linq;
+    using System.Xml.XPath;
 
     public class HandlersFeatureSiteTestFixture
     {
@@ -31,7 +33,7 @@ namespace Tests.Handlers
 
         private const string Current = @"applicationHost.config";
 
-        public async Task SetUp()
+        public void SetUp()
         {
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -89,17 +91,31 @@ namespace Tests.Handlers
         }
 
         [Fact]
-        public async void TestBasic()
+        public void TestBasic()
         {
-            await this.SetUp();
+            SetUp();
             Assert.Equal(82, _feature.Items.Count);
             Assert.Equal("AXD-ISAPI-4.0_64bit", _feature.Items[0].Name);
         }
 
         [Fact]
-        public async void TestRemoveInherited()
+        public void TestRemoveInherited()
         {
-            await this.SetUp();
+            SetUp();
+
+            const string Expected = @"expected_add.site.config";
+            var document = XDocument.Load(Current);
+            var node = new XElement("location");
+            node.SetAttributeValue("path", "WebSite1");
+            document.Root?.Add(node);
+            var web = new XElement("system.webServer");
+            node.Add(web);
+            var content = new XElement("handlers");
+            web.Add(content);
+            var remove = new XElement("remove");
+            remove.SetAttributeValue("name", "AXD-ISAPI-4.0_64bit");
+            content.Add(remove);
+            document.Save(Expected);
 
             _feature.SelectedItem = _feature.Items[0];
             Assert.Equal("AXD-ISAPI-4.0_64bit", _feature.SelectedItem.Name);
@@ -107,17 +123,21 @@ namespace Tests.Handlers
             Assert.Null(_feature.SelectedItem);
             Assert.Equal(81, _feature.Items.Count);
 
-            const string Expected = @"expected_remove.site.config";
-            const string ExpectedMono = @"expected_remove.site.mono.config";
-
-            XmlAssert.Equal(Path.Combine("Handlers", Helper.IsRunningOnMono() ? ExpectedMono : Expected), Current);
+            XmlAssert.Equal(Expected, Current);
             XmlAssert.Equal(Path.Combine("Website1", "original.config"), Path.Combine("Website1", "web.config"));
         }
 
         [Fact]
-        public async void TestRemove()
+        public void TestRemove()
         {
-            await this.SetUp();
+            SetUp();
+
+            const string Expected = @"expected_add.site.config";
+            var document = XDocument.Load(Current);
+            var node = new XElement("location");
+            node.SetAttributeValue("path", "WebSite1");
+            document.Root?.Add(node);
+            document.Save(Expected);
 
             var item = new HandlersItem(null);
             item.Name = "test";
@@ -130,17 +150,38 @@ namespace Tests.Handlers
             Assert.Null(_feature.SelectedItem);
             Assert.Equal(82, _feature.Items.Count);
 
-            const string Expected = @"expected_remove1.site.config";
-            const string ExpectedMono = @"expected_remove1.site.mono.config";
-
-            XmlAssert.Equal(Path.Combine("Handlers", Helper.IsRunningOnMono() ? ExpectedMono : Expected), Current);
+            XmlAssert.Equal(Expected, Current);
             XmlAssert.Equal(Path.Combine("Website1", "original.config"), Path.Combine("Website1", "web.config"));
         }
 
         [Fact]
-        public async void TestEditInherited()
+        public void TestEditInherited()
         {
-            await this.SetUp();
+            SetUp();
+
+            const string Expected = @"expected_add.site.config";
+            var document = XDocument.Load(Current);
+            var node = new XElement("location");
+            node.SetAttributeValue("path", "WebSite1");
+            document.Root?.Add(node);
+            var web = new XElement("system.webServer");
+            node.Add(web);
+            var content = new XElement("handlers");
+            web.Add(content);
+            var remove = new XElement("remove");
+            remove.SetAttributeValue("name", "AXD-ISAPI-4.0_64bit");
+            content.Add(remove);
+            var add = new XElement("add");
+            add.SetAttributeValue("allowPathInfo", "true");
+            add.SetAttributeValue("modules", "IsapiModule");
+            add.SetAttributeValue("name", "AXD-ISAPI-4.0_64bit");
+            add.SetAttributeValue("path", "*.axd");
+            add.SetAttributeValue("preCondition", "classicMode,runtimeVersionv4.0,bitness64");
+            add.SetAttributeValue("responseBufferLimit", "0");
+            add.SetAttributeValue("scriptProcessor", @"%windir%\Microsoft.NET\Framework64\v4.0.30319\aspnet_isapi.dll");
+            add.SetAttributeValue("verb", "GET,HEAD,POST,DEBUG");
+            content.Add(add);
+            document.Save(Expected);
 
             _feature.SelectedItem = _feature.Items[0];
             Assert.Equal("AXD-ISAPI-4.0_64bit", _feature.SelectedItem.Name);
@@ -150,17 +191,33 @@ namespace Tests.Handlers
             Assert.NotNull(_feature.SelectedItem);
             Assert.Equal(true, _feature.SelectedItem.AllowPathInfo);
 
-            const string Expected = @"expected_edit.site.config";
-            const string ExpectedMono = @"expected_edit.site.mono.config";
-
-            XmlAssert.Equal(Path.Combine("Handlers", Helper.IsRunningOnMono() ? ExpectedMono : Expected), Current);
+            XmlAssert.Equal(Expected, Current);
             XmlAssert.Equal(Path.Combine("Website1", "original.config"), Path.Combine("Website1", "web.config"));
         }
 
         [Fact]
-        public async void TestEdit()
+        public void TestEdit()
         {
-            await this.SetUp();
+            SetUp();
+
+            const string Expected = @"expected_add.site.config";
+            var document = XDocument.Load(Current);
+            var node = new XElement("location");
+            node.SetAttributeValue("path", "WebSite1");
+            document.Root?.Add(node);
+            var web = new XElement("system.webServer");
+            node.Add(web);
+            var content = new XElement("handlers");
+            web.Add(content);
+            var add = new XElement("add");
+            add.SetAttributeValue("resourceType", "File");
+            add.SetAttributeValue("allowPathInfo", "true");
+            add.SetAttributeValue("modules", "");
+            add.SetAttributeValue("name", "test");
+            add.SetAttributeValue("path", "*");
+            add.SetAttributeValue("verb", "*");
+            content.Add(add);
+            document.Save(Expected);
 
             var item = new HandlersItem(null);
             item.Name = "test";
@@ -176,17 +233,33 @@ namespace Tests.Handlers
             Assert.Equal(true, _feature.SelectedItem.AllowPathInfo);
             Assert.Equal(83, _feature.Items.Count);
 
-            const string Expected = @"expected_edit1.site.config";
-            const string ExpectedMono = @"expected_edit1.site.mono.config";
-
-            XmlAssert.Equal(Path.Combine("Handlers", Helper.IsRunningOnMono() ? ExpectedMono : Expected), Current);
+            XmlAssert.Equal(Expected, Current);
             XmlAssert.Equal(Path.Combine("Website1", "original.config"), Path.Combine("Website1", "web.config"));
         }
 
         [Fact]
-        public async void TestAdd()
+        public void TestAdd()
         {
-            await this.SetUp();
+            SetUp();
+
+            const string Expected = @"expected_add.site.config";
+            var document = XDocument.Load(Current);
+            var node = new XElement("location");
+            node.SetAttributeValue("path", "WebSite1");
+            document.Root?.Add(node);
+            var web = new XElement("system.webServer");
+            node.Add(web);
+            var content = new XElement("handlers");
+            web.Add(content);
+            var add = new XElement("add");
+            add.SetAttributeValue("resourceType", "File");
+            add.SetAttributeValue("modules", "");
+            add.SetAttributeValue("name", "test");
+            add.SetAttributeValue("path", "*");
+            add.SetAttributeValue("verb", "*");
+            content.Add(add);
+            document.Save(Expected);
+
             var item = new HandlersItem(null);
             item.Name = "test";
             item.Path = "*";
@@ -194,17 +267,24 @@ namespace Tests.Handlers
             Assert.NotNull(_feature.SelectedItem);
             Assert.Equal("test", _feature.SelectedItem.Name);
 
-            const string Expected = @"expected_add.site.config";
-            const string ExpectedMono = @"expected_add.site.mono.config";
-
-            XmlAssert.Equal(Path.Combine("Handlers", Helper.IsRunningOnMono() ? ExpectedMono : Expected), Current);
+            XmlAssert.Equal(Expected, Current);
             XmlAssert.Equal(Path.Combine("Website1", "original.config"), Path.Combine("Website1", "web.config"));
         }
 
         [Fact]
-        public async void TestRevert()
+        public void TestRevert()
         {
-            await SetUp();
+            SetUp();
+
+            const string Expected = @"expected_add.site.config";
+            var document = XDocument.Load(Current);
+            var node = new XElement("location");
+            node.SetAttributeValue("path", "WebSite1");
+            document.Root?.Add(node);
+            var web = new XElement("system.webServer");
+            node.Add(web);
+            document.Save(Expected);
+
             var item = new HandlersItem(null);
             item.Name = "test";
             item.Path = "*";
@@ -214,17 +294,53 @@ namespace Tests.Handlers
             Assert.Null(_feature.SelectedItem);
             Assert.Equal(82, _feature.Items.Count);
 
-            const string Expected = @"expected_revert.site.config";
-            const string ExpectedMono = @"expected_revert.site.mono.config";
-
-            XmlAssert.Equal(Path.Combine("Handlers", Helper.IsRunningOnMono() ? ExpectedMono : Expected), Current);
+            XmlAssert.Equal(Expected, Current);
             XmlAssert.Equal(Path.Combine("Website1", "original.config"), Path.Combine("Website1", "web.config"));
         }
 
         [Fact]
-        public async void TestMoveUp()
+        public void TestMoveUp()
         {
-            await SetUp();
+            SetUp();
+
+            const string Expected = @"expected_add.site.config";
+            var document = XDocument.Load(Current);
+            var node = new XElement("location");
+            node.SetAttributeValue("path", "WebSite1");
+            document.Root?.Add(node);
+            var web = new XElement("system.webServer");
+            node.Add(web);
+            var content = new XElement("handlers");
+            web.Add(content);
+            var clear = new XElement("clear");
+            content.Add(clear);
+            var all = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/handlers");
+            if (all != null)
+            {
+                foreach (var element in all.Elements())
+                {
+                    content.Add(element);
+                }
+            }
+
+            content.LastNode.Remove();
+
+            var add = new XElement("add");
+            add.SetAttributeValue("resourceType", "File");
+            add.SetAttributeValue("modules", "");
+            add.SetAttributeValue("name", "test");
+            add.SetAttributeValue("path", "*");
+            add.SetAttributeValue("verb", "*");
+            content.Add(add);
+            var one = new XElement("add");
+            one.SetAttributeValue("modules", "StaticFileModule,DefaultDocumentModule,DirectoryListingModule");
+            one.SetAttributeValue("name", "StaticFile");
+            one.SetAttributeValue("path", "*");
+            one.SetAttributeValue("requireAccess", "Read");
+            one.SetAttributeValue("resourceType", "Either");
+            one.SetAttributeValue("verb", "*");
+            content.Add(one);
+            document.Save(Expected);
 
             var item = new HandlersItem(null);
             item.Name = "test";
@@ -244,17 +360,43 @@ namespace Tests.Handlers
             Assert.Equal(expected, _feature.Items[previous].Name);
             Assert.Equal(original, _feature.Items[last].Name);
 
-            const string Expected = @"expected_up.site.config";
-            const string ExpectedMono = @"expected_up.site.mono.config";
-
-            XmlAssert.Equal(Path.Combine("Handlers", Helper.IsRunningOnMono() ? ExpectedMono : Expected), Current);
+            XmlAssert.Equal(Expected, Current);
             XmlAssert.Equal(Path.Combine("Website1", "original.config"), Path.Combine("Website1", "web.config"));
         }
 
         [Fact]
-        public async void TestMoveDown()
+        public void TestMoveDown()
         {
-            await SetUp();
+            SetUp();
+
+            const string Expected = @"expected_add.site.config";
+            var document = XDocument.Load(Current);
+            var node = new XElement("location");
+            node.SetAttributeValue("path", "WebSite1");
+            document.Root.Add(node);
+            var web = new XElement("system.webServer");
+            node.Add(web);
+            var content = new XElement("handlers");
+            web.Add(content);
+            var remove = new XElement("remove");
+            remove.SetAttributeValue("name", "StaticFile");
+            content.Add(remove);
+            var add = new XElement("add");
+            add.SetAttributeValue("resourceType", "File");
+            add.SetAttributeValue("modules", "");
+            add.SetAttributeValue("name", "test");
+            add.SetAttributeValue("path", "*");
+            add.SetAttributeValue("verb", "*");
+            content.Add(add);
+            var one = new XElement("add");
+            one.SetAttributeValue("modules", "StaticFileModule,DefaultDocumentModule,DirectoryListingModule");
+            one.SetAttributeValue("name", "StaticFile");
+            one.SetAttributeValue("path", "*");
+            one.SetAttributeValue("requireAccess", "Read");
+            one.SetAttributeValue("resourceType", "Either");
+            one.SetAttributeValue("verb", "*");
+            content.Add(one);
+            document.Save(Expected);
 
             var item = new HandlersItem(null);
             item.Name = "test";
@@ -274,10 +416,7 @@ namespace Tests.Handlers
             Assert.Equal(expected, _feature.Items[previous].Name);
             Assert.Equal(original, _feature.Items[last].Name);
 
-            const string Expected = @"expected_up1.site.config";
-            const string ExpectedMono = @"expected_up.site.mono.config";
-
-            XmlAssert.Equal(Path.Combine("Handlers", Helper.IsRunningOnMono() ? ExpectedMono : Expected), Current);
+            XmlAssert.Equal(Expected, Current);
             XmlAssert.Equal(Path.Combine("Website1", "original.config"), Path.Combine("Website1", "web.config"));
         }
     }

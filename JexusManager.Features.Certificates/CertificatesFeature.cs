@@ -48,7 +48,7 @@ namespace JexusManager.Features.Certificates
             }
 
             private const string LocalhostIssuer = "CN=localhost";
-            private readonly string _localMachineIssuer = string.Format("CN={0}", Environment.MachineName);
+            private readonly string _localMachineIssuer = $"CN={Environment.MachineName}";
 
             public override ICollection GetTaskItems()
             {
@@ -81,9 +81,10 @@ namespace JexusManager.Features.Certificates
                         }
                         catch (CryptographicException ex)
                         {
-                            if (ex.HResult != -2146893802)
+                            if (ex.HResult != JexusManager.NativeMethods.BadKeySet)
                             {
-                                throw;
+                                // TODO: add CNG support.
+                                // throw;
                             }
                         }
                     }
@@ -233,17 +234,27 @@ namespace JexusManager.Features.Certificates
 
                 personal.Close();
 
-                if (Environment.OSVersion.Version.Major >= 8)
+                if (Environment.OSVersion.Version >= Version.Parse("6.2"))
                 {
                     // IMPORTANT: WebHosting store is available since Windows 8.
                     X509Store hosting = new X509Store("WebHosting", StoreLocation.LocalMachine);
-                    hosting.Open(OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
-                    foreach (var certificate in hosting.Certificates)
+                    try
                     {
-                        Items.Add(new CertificatesItem(certificate, "WebHosting", this));
-                    }
+                        hosting.Open(OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
+                        foreach (var certificate in hosting.Certificates)
+                        {
+                            Items.Add(new CertificatesItem(certificate, "WebHosting", this));
+                        }
 
-                    hosting.Close();
+                        hosting.Close();
+                    }
+                    catch (CryptographicException ex)
+                    {
+                        if (ex.HResult != JexusManager.NativeMethods.NonExistingStore)
+                        {
+                            throw;
+                        }
+                    }
                 }
             }
 
@@ -314,7 +325,7 @@ namespace JexusManager.Features.Certificates
 
         public virtual bool ShowHelp()
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210528");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210528");
             return false;
         }
 
@@ -391,7 +402,7 @@ namespace JexusManager.Features.Certificates
                 }
                 catch (CryptographicException ex)
                 {
-                    if (ex.HResult != -2147023673)
+                    if (ex.HResult != JexusManager.NativeMethods.UserCancelled)
                     {
                         throw;
                     }

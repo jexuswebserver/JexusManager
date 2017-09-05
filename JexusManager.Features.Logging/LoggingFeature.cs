@@ -112,7 +112,7 @@ namespace JexusManager.Features.Logging
                 }
                 else
                 {
-                    this.LogTargetW3C = -1;
+                    LogTargetW3C = -1;
                 }
 
                 LocalTimeRollover = (bool)element.Attributes["localTimeRollover"].Value;
@@ -130,7 +130,7 @@ namespace JexusManager.Features.Logging
                 }
                 else
                 {
-                    this.LogTargetW3C = -1;
+                    LogTargetW3C = -1;
                 }
 
                 LocalTimeRollover = logFile.LocalTimeRollover;
@@ -185,7 +185,7 @@ namespace JexusManager.Features.Logging
             var path = Directory.ExpandIisExpressEnvironmentVariables();
             if (System.IO.Directory.Exists(path))
             {
-                Process.Start(path);
+                DialogHelper.ProcessStart(path);
                 return;
             }
 
@@ -196,7 +196,19 @@ namespace JexusManager.Features.Logging
         internal void SelectFields()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var dialog = new FieldsDialog(Module, service.Application.GetSite().LogFile);
+            SiteLogFile element;
+            if (service.Server != null)
+            {
+                var section2 = service.GetSection("system.applicationHost/sites");
+                var parent = section2.ChildElements["siteDefaults"];
+                element = new SiteLogFile(parent.ChildElements["logFile"], parent);
+            }
+            else
+            {
+                element = service.Application.GetSite().LogFile;
+            }
+
+            var dialog = new FieldsDialog(Module, element);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
@@ -218,7 +230,7 @@ namespace JexusManager.Features.Logging
 
         public virtual bool ShowHelp()
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210517");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210517");
             return false;
         }
 
@@ -226,22 +238,13 @@ namespace JexusManager.Features.Logging
         public string Description { get; }
         public bool IsEnabled { get; private set; }
 
-        public virtual bool IsFeatureEnabled
-        {
-            get { return true; }
-        }
+        public virtual bool IsFeatureEnabled => true;
 
-        public virtual Version MinimumFrameworkVersion
-        {
-            get { return FxVersionNotRequired; }
-        }
+        public virtual Version MinimumFrameworkVersion => FxVersionNotRequired;
 
         public Module Module { get; }
 
-        public string Name
-        {
-            get { return "Logging"; }
-        }
+        public string Name => "Logging";
 
         public bool CanEncoding { get; set; }
 

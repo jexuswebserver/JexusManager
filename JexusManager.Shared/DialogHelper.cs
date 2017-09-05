@@ -8,10 +8,12 @@ namespace JexusManager
     using Microsoft.Web.Administration;
     using Ookii.Dialogs;
     using System;
+    using System.ComponentModel;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Net;
+    using System.Runtime.InteropServices;
     using System.Security.Cryptography;
     using System.Security.Cryptography.X509Certificates;
     using System.Windows.Forms;
@@ -24,12 +26,29 @@ namespace JexusManager
             {
                 SelectedPath = textBox.Text.ExpandIisExpressEnvironmentVariables()
             };
-            if (dialog.ShowDialog() == DialogResult.Cancel)
+            try
             {
-                return;
-            }
+                if (dialog.ShowDialog() == DialogResult.Cancel)
+                {
+                    return;
+                }
 
-            textBox.Text = dialog.SelectedPath;
+                textBox.Text = dialog.SelectedPath;
+            }
+            catch (COMException ex)
+            {
+                if (ex.StackTrace.Contains("Ookii.Dialogs.VistaFolderBrowserDialog.RunDialog(System.IntPtr hwndOwner)"))
+                {
+                    // IMPORTANT: use a workaround to suppress failure.
+                    var fallback = new FolderBrowserDialog { SelectedPath = textBox.Text.ExpandIisExpressEnvironmentVariables() };
+                    if (fallback.ShowDialog() == DialogResult.Cancel)
+                    {
+                        return;
+                    }
+
+                    textBox.Text = fallback.SelectedPath;
+                }
+            }
         }
 
         public static void DisplayCertificate(X509Certificate2 x509Certificate2, IntPtr handle)
@@ -46,10 +65,28 @@ namespace JexusManager
             Process.Start(file);
         }
 
+        public static void Explore(string folder)
+        {
+            try
+            {
+                Process.Start(folder);
+            }
+            catch (Exception ex)
+            {
+                // TODO: use dialog service.
+                MessageBox.Show(ex.Message, "Jexus Manager", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         public static void LoadCertificates(ComboBox comboBox, byte[] hash, IConfigurationService service)
         {
             comboBox.Items.Add("No selected");
             comboBox.SelectedIndex = 0;
+            if (service == null)
+            {
+                throw new InvalidOperationException("null service");
+            }
+
             if (service.ServerManager.Mode == WorkingMode.Jexus)
             {
                 var certificate = AsyncHelper.RunSync(() => ((JexusServerManager)service.ServerManager).GetCertificateAsync());
@@ -82,25 +119,35 @@ namespace JexusManager
 
             store1.Close();
 
-            if (Environment.OSVersion.Version.Major < 8)
+            if (Environment.OSVersion.Version < Version.Parse("6.2"))
             {
                 // IMPORTANT: WebHosting store is available since Windows 8.
                 return;
             }
 
             X509Store store2 = new X509Store("WebHosting", StoreLocation.LocalMachine);
-            store2.Open(OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
-            foreach (var certificate1 in store2.Certificates)
+            try
             {
-                var index1 = comboBox.Items.Add(new CertificateInfo(certificate1, store2.Name));
-                if (hash != null &&
-                    hash.SequenceEqual(certificate1.GetCertHash()))
+                store2.Open(OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
+                foreach (var certificate1 in store2.Certificates)
                 {
-                    comboBox.SelectedIndex = index1;
+                    var index1 = comboBox.Items.Add(new CertificateInfo(certificate1, store2.Name));
+                    if (hash != null &&
+                        hash.SequenceEqual(certificate1.GetCertHash()))
+                    {
+                        comboBox.SelectedIndex = index1;
+                    }
+                }
+
+                store2.Close();
+            }
+            catch (CryptographicException ex)
+            {
+                if (ex.HResult != NativeMethods.NonExistingStore)
+                {
+                    throw;
                 }
             }
-
-            store2.Close();
         }
 
         public static void LoadAddresses(ComboBox cbAddress)
@@ -125,9 +172,24 @@ namespace JexusManager
                 InitialDirectory = string.IsNullOrEmpty(initial) ? string.Empty : Path.GetDirectoryName(initial),
                 Filter = filter
             };
-            if (dialog.ShowDialog() == DialogResult.Cancel)
+            try
             {
-                return;
+                if (dialog.ShowDialog() == DialogResult.Cancel)
+                {
+                    return;
+                }
+            }
+            catch (COMException ex)
+            {
+                if (ex.StackTrace.Contains("System.Windows.Forms.OpenFileDialog.CreateVistaDialog()"))
+                {
+                    // IMPORTANT: use a workaround to suppress failure.
+                    dialog.AutoUpgradeEnabled = false;
+                    if (dialog.ShowDialog() == DialogResult.Cancel)
+                    {
+                        return;
+                    }
+                }
             }
 
             textBox.Text = dialog.FileName;
@@ -154,27 +216,21 @@ namespace JexusManager
             return GetSpecialFolder("PrivateKey", file);
         }
 
-        public static string ListIisExpress
-        {
-            get
-            {
-                return GetSpecialFolder("lists", "iisExpressList");
-            }
-        }
+        public static string ListIisExpress => GetSpecialFolder("lists", "iisExpressList");
 
-        public static string ListJexus
-        {
-            get
-            {
-                return GetSpecialFolder("lists", "list");
-            }
-        }
+        public static string ListJexus => GetSpecialFolder("lists", "list");
 
-        public static string DebugLog
+        public static string DebugLog => GetSpecialFolder("temp", "debug");
+
+        public static void ProcessStart(string url)
         {
-            get
+            try
             {
-                return GetSpecialFolder("temp", "debug");
+                Process.Start(url);
+            }
+            catch (Win32Exception)
+            {
+                Help.ShowHelp(null, url);
             }
         }
     }

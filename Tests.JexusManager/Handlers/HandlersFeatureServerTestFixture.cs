@@ -22,6 +22,8 @@ namespace Tests.Handlers
     using Moq;
 
     using Xunit;
+    using System.Xml.Linq;
+    using System.Xml.XPath;
 
     public class HandlersFeatureServerTestFixture
     {
@@ -33,7 +35,7 @@ namespace Tests.Handlers
 
         private const string Current = @"applicationHost.config";
 
-        public async Task SetUp()
+        public void SetUp()
         {
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -82,19 +84,23 @@ namespace Tests.Handlers
         }
 
         [Fact]
-        public async void TestBasic()
+        public void TestBasic()
         {
-            await this.SetUp();
+            SetUp();
             Assert.Equal(82, _feature.Items.Count);
             Assert.Equal("AXD-ISAPI-4.0_64bit", _feature.Items[0].Name);
         }
 
         [Fact]
-        public async void TestRemove()
+        public void TestRemove()
         {
-            await this.SetUp();
+            SetUp();
             const string Expected = @"expected_remove.config";
-            const string ExpectedMono = @"expected_remove.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/handlers");
+            node?.FirstNode?.Remove(); // remove comment
+            node?.FirstNode?.Remove();
+            document.Save(Expected);
 
             Assert.Equal("AXD-ISAPI-4.0_64bit", _feature.Items[0].Name);
             _feature.SelectedItem = _feature.Items[0];
@@ -103,19 +109,20 @@ namespace Tests.Handlers
             Assert.Equal(81, _feature.Items.Count);
             Assert.Equal("PageHandlerFactory-ISAPI-4.0_64bit", _feature.Items[0].Name);
 
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("Handlers", ExpectedMono)
-                    : Path.Combine("Handlers", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
 
         [Fact]
-        public async void TestEdit()
+        public void TestEdit()
         {
-            await this.SetUp();
+            SetUp();
             const string Expected = @"expected_edit.config";
-            const string ExpectedMono = @"expected_edit.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/handlers");
+            node?.FirstNode?.Remove();
+            var element = node?.FirstNode as XElement;
+            element?.SetAttributeValue("name", "test edit");
+            document.Save(Expected);
 
             _feature.SelectedItem = _feature.Items[0];
             var item = _feature.SelectedItem;
@@ -124,19 +131,24 @@ namespace Tests.Handlers
             Assert.NotNull(_feature.SelectedItem);
             Assert.Equal("test edit", _feature.SelectedItem.Name);
             Assert.Equal(82, _feature.Items.Count);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("Handlers", ExpectedMono)
-                    : Path.Combine("Handlers", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
 
         [Fact]
-        public async void TestAdd()
+        public void TestAdd()
         {
-            await this.SetUp();
+            SetUp();
             const string Expected = @"expected_add.config";
-            const string ExpectedMono = @"expected_add.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/handlers");
+            var element = new XElement("add");
+            element.SetAttributeValue("modules", "");
+            element.SetAttributeValue("resourceType", "File");
+            element.SetAttributeValue("verb", "*");
+            element.SetAttributeValue("name", "test");
+            element.SetAttributeValue("path", "*");
+            node?.Add(element);
+            document.Save(Expected);
 
             var item = new HandlersItem(null);
             item.Name = "test";
@@ -145,27 +157,31 @@ namespace Tests.Handlers
             Assert.NotNull(_feature.SelectedItem);
             Assert.Equal("test", _feature.SelectedItem.Name);
             Assert.Equal(83, _feature.Items.Count);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("Handlers", ExpectedMono)
-                    : Path.Combine("Handlers", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
 
         [Fact]
-        public async void TestRevert()
+        public void TestRevert()
         {
-            await SetUp();
+            SetUp();
             var exception = Assert.Throws<InvalidOperationException>(() => _feature.Revert());
             Assert.Equal("Revert operation cannot be done at server level", exception.Message);
         }
 
         [Fact]
-        public async void TestMoveUp()
+        public void TestMoveUp()
         {
-            await SetUp();
+            SetUp();
             const string Expected = @"expected_up.config";
-            const string ExpectedMono = @"expected_up.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/handlers");
+            var node1 = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/handlers/add[@name='PageHandlerFactory-ISAPI-4.0_64bit']");
+            var node2 = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/handlers/add[@name='AXD-ISAPI-4.0_64bit']");
+            node1?.Remove();
+            node2?.Remove();
+            node?.AddFirst(node2);
+            node?.AddFirst(node1);
+            document.Save(Expected);
 
             _feature.SelectedItem = _feature.Items[1];
             var selected = "PageHandlerFactory-ISAPI-4.0_64bit";
@@ -177,19 +193,23 @@ namespace Tests.Handlers
             Assert.Equal(selected, _feature.SelectedItem.Name);
             Assert.Equal(selected, _feature.Items[0].Name);
             Assert.Equal(other, _feature.Items[1].Name);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("Handlers", ExpectedMono)
-                    : Path.Combine("Handlers", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
 
         [Fact]
-        public async void TestMoveDown()
+        public void TestMoveDown()
         {
-            await SetUp();
+            SetUp();
             const string Expected = @"expected_up.config";
-            const string ExpectedMono = @"expected_up.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/handlers");
+            var node1 = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/handlers/add[@name='PageHandlerFactory-ISAPI-4.0_64bit']");
+            var node2 = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/handlers/add[@name='AXD-ISAPI-4.0_64bit']");
+            node1?.Remove();
+            node2?.Remove();
+            node?.AddFirst(node2);
+            node?.AddFirst(node1);
+            document.Save(Expected);
 
             _feature.SelectedItem = _feature.Items[0];
             var other = "PageHandlerFactory-ISAPI-4.0_64bit";
@@ -201,11 +221,7 @@ namespace Tests.Handlers
             Assert.Equal(selected, _feature.SelectedItem.Name);
             Assert.Equal(other, _feature.Items[0].Name);
             Assert.Equal(selected, _feature.Items[1].Name);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("Handlers", ExpectedMono)
-                    : Path.Combine("Handlers", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
     }
 }

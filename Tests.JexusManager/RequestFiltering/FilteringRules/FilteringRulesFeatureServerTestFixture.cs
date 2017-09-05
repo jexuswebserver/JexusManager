@@ -22,6 +22,8 @@ namespace Tests.RequestFiltering.FilteringRules
     using Moq;
 
     using Xunit;
+    using System.Xml.Linq;
+    using System.Xml.XPath;
 
     public class FilteringRulesFeatureServerTestFixture
     {
@@ -33,7 +35,7 @@ namespace Tests.RequestFiltering.FilteringRules
 
         private const string Current = @"applicationHost.config";
 
-        public async Task SetUp()
+        public void SetUp()
         {
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -82,37 +84,39 @@ namespace Tests.RequestFiltering.FilteringRules
         }
 
         [Fact]
-        public async void TestBasic()
+        public void TestBasic()
         {
-            await this.SetUp();
+            SetUp();
             Assert.Equal(1, _feature.Items.Count);
             Assert.Equal("test", _feature.Items[0].Name);
         }
 
         [Fact]
-        public async void TestRemove()
+        public void TestRemove()
         {
-            await this.SetUp();
+            SetUp();
             const string Expected = @"expected_remove.config";
-            const string ExpectedMono = @"expected_remove.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root?.XPathSelectElement("/configuration/system.webServer/security/requestFiltering/filteringRules");
+            node?.Remove();
+            document.Save(Expected);
 
             _feature.SelectedItem = _feature.Items[0];
             _feature.Remove();
             Assert.Null(_feature.SelectedItem);
             Assert.Equal(0, _feature.Items.Count);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("RequestFiltering", "FilteringRules", ExpectedMono)
-                    : Path.Combine("RequestFiltering", "FilteringRules", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
 
         [Fact]
-        public async void TestEdit()
+        public void TestEdit()
         {
-            await this.SetUp();
+            SetUp();
             const string Expected = @"expected_edit.config";
-            const string ExpectedMono = @"expected_edit.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root?.XPathSelectElement("/configuration/system.webServer/security/requestFiltering/filteringRules/filteringRule");
+            node?.SetAttributeValue("scanQueryString", "true");
+            document.Save(Expected);
 
             _feature.SelectedItem = _feature.Items[0];
             var item = _feature.SelectedItem;
@@ -121,19 +125,20 @@ namespace Tests.RequestFiltering.FilteringRules
             Assert.NotNull(_feature.SelectedItem);
             Assert.Equal(true, _feature.SelectedItem.ScanQueryString);
             Assert.Equal(1, _feature.Items.Count);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("RequestFiltering", "FilteringRules", ExpectedMono)
-                    : Path.Combine("RequestFiltering", "FilteringRules", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
 
         [Fact]
-        public async void TestAdd()
+        public void TestAdd()
         {
-            await this.SetUp();
+            SetUp();
             const string Expected = @"expected_add.config";
-            const string ExpectedMono = @"expected_add.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root?.XPathSelectElement("/configuration/system.webServer/security/requestFiltering/filteringRules");
+            var element = new XElement("filteringRule");
+            element.SetAttributeValue("name", "test1");
+            node?.Add(element);
+            document.Save(Expected);
 
             var item = new FilteringRulesItem(null);
             item.Name = "test1";
@@ -141,11 +146,7 @@ namespace Tests.RequestFiltering.FilteringRules
             Assert.NotNull(_feature.SelectedItem);
             Assert.Equal("test1", _feature.SelectedItem.Name);
             Assert.Equal(2, _feature.Items.Count);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("RequestFiltering", "FilteringRules", ExpectedMono)
-                    : Path.Combine("RequestFiltering", "FilteringRules", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
     }
 }

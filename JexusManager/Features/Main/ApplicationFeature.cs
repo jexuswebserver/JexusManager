@@ -12,22 +12,20 @@
 
 namespace JexusManager.Features.Main
 {
+    using JexusManager.Dialogs;
+    using JexusManager.Main.Properties;
+    using JexusManager.Services;
+    using Microsoft.Web.Administration;
+    using Microsoft.Web.Management.Client;
+    using Microsoft.Web.Management.Client.Win32;
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Linq;
     using System.Reflection;
     using System.Resources;
     using System.Windows.Forms;
-
-    using JexusManager.Dialogs;
-    using JexusManager.Main.Properties;
-    using JexusManager.Services;
-
-    using Microsoft.Web.Administration;
-    using Microsoft.Web.Management.Client;
-    using Microsoft.Web.Management.Client.Win32;
-
     using Binding = Microsoft.Web.Administration.Binding;
     using Module = Microsoft.Web.Management.Client.Module;
 
@@ -56,19 +54,29 @@ namespace JexusManager.Features.Main
                         Resources.basic_settings_16).SetUsage());
                 result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
                 result.Add(new MethodTaskItem("VirtualDirectories", "View Virtual Directories", string.Empty).SetUsage());
-                result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
-                var manageGroup = new GroupTaskItem(string.Empty, "Manage Application", string.Empty, true);
-                result.Add(manageGroup);
-                manageGroup.Items.Add(new TextTaskItem("Browse Application", string.Empty, true));
-                foreach (Binding binding in _owner.SiteBindings)
+
+                if (_owner.SiteBindings.Any(item => item.CanBrowse))
                 {
-                    manageGroup.Items.Add(
-                        new MethodTaskItem("Browse", string.Format("Browse {0}", binding.ToShortString()), string.Empty, string.Empty,
-                            Resources.browse_16, binding).SetUsage());
+                    result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    var manageGroup = new GroupTaskItem(string.Empty, "Manage Application", string.Empty, true);
+                    result.Add(manageGroup);
+                    manageGroup.Items.Add(new TextTaskItem("Browse Application", string.Empty, true));
+                    foreach (Binding binding in _owner.SiteBindings)
+                    {
+                        if (binding.CanBrowse)
+                        {
+                            var uri = binding.ToUri();
+                            manageGroup.Items.Add(
+                                new MethodTaskItem("Browse", $"Browse {binding.ToShortString()}",
+                                    string.Empty, string.Empty,
+                                    Resources.browse_16, uri).SetUsage());
+                        }
+                    }
+
+                    manageGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    manageGroup.Items.Add(new MethodTaskItem("Advanced", "Advanced Settings...", string.Empty).SetUsage());
                 }
 
-                manageGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
-                manageGroup.Items.Add(new MethodTaskItem("Advanced", "Advanced Settings...", string.Empty).SetUsage());
                 return result.ToArray(typeof(TaskItem)) as TaskItem[];
             }
 
@@ -148,7 +156,7 @@ namespace JexusManager.Features.Main
 
         public virtual bool ShowHelp()
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210463");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210463");
             return false;
         }
 
@@ -158,8 +166,6 @@ namespace JexusManager.Features.Main
 
         private void Browse(object uri)
         {
-            var binding = (Binding)uri;
-            var target = binding.ToUri();
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
 
             // IMPORTANT: help users launch IIS Express instance.
@@ -188,7 +194,7 @@ namespace JexusManager.Features.Main
                 }
             }
 
-            Process.Start(target + service.Application.Path);
+            DialogHelper.ProcessStart(uri + service.Application.Path);
         }
 
         private void VirtualDirectories()
@@ -214,13 +220,13 @@ namespace JexusManager.Features.Main
         private void Permissions()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            NativeMethods.ShowFileProperties(service.Application.VirtualDirectories[0].PhysicalPath.ExpandIisExpressEnvironmentVariables());
+            NativeMethods.ShowFileProperties(service.Application.PhysicalPath.ExpandIisExpressEnvironmentVariables());
         }
 
         private void Explore()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            Process.Start(service.Application.VirtualDirectories[0].PhysicalPath.ExpandIisExpressEnvironmentVariables());
+            DialogHelper.Explore(service.Application.PhysicalPath.ExpandIisExpressEnvironmentVariables());
         }
 
         public IEnumerable<Binding> SiteBindings

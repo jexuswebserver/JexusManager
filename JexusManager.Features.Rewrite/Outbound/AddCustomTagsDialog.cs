@@ -31,6 +31,7 @@ namespace JexusManager.Features.Rewrite.Outbound
             container.Add(
                 Observable.FromEventPattern<EventArgs>(txtName, "TextChanged")
                 .Sample(TimeSpan.FromSeconds(1))
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnOK.Enabled = !string.IsNullOrWhiteSpace(txtName.Text);
@@ -38,6 +39,7 @@ namespace JexusManager.Features.Rewrite.Outbound
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnRemove, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     foreach (DataGridViewRow row in dgvTags.SelectedRows)
@@ -51,6 +53,7 @@ namespace JexusManager.Features.Rewrite.Outbound
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     Item = new CustomTagsItem(null);
@@ -68,6 +71,7 @@ namespace JexusManager.Features.Rewrite.Outbound
 
             container.Add(
                 Observable.FromEventPattern<DataGridViewCellEventArgs>(dgvTags, "RowEnter")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnRemove.Enabled = !dgvTags.SelectedRows[0].IsNewRow;
@@ -78,7 +82,7 @@ namespace JexusManager.Features.Rewrite.Outbound
 
         private void AddCustomTagsDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=163112");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=163112");
         }
     }
 }

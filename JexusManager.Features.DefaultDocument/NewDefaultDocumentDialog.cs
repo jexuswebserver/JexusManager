@@ -26,6 +26,7 @@ namespace JexusManager.Features.DefaultDocument
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     var invalid = "*".ToCharArray();
@@ -46,6 +47,7 @@ namespace JexusManager.Features.DefaultDocument
             container.Add(
                 Observable.FromEventPattern<EventArgs>(txtName, "TextChanged")
                 .Sample(TimeSpan.FromSeconds(1))
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnOK.Enabled = !string.IsNullOrWhiteSpace(txtName.Text);
@@ -56,7 +58,7 @@ namespace JexusManager.Features.DefaultDocument
 
         private void NewDefaultDocumentDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210478");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210478");
         }
     }
 }

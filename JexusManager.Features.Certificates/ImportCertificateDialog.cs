@@ -31,7 +31,7 @@ namespace JexusManager.Features.Certificates
         {
             InitializeComponent();
             cbStore.SelectedIndex = 0;
-            if (Environment.OSVersion.Version.Major < 8)
+            if (Environment.OSVersion.Version < Version.Parse("6.2"))
             {
                 // IMPORTANT: WebHosting store is available since Windows 8.
                 cbStore.Enabled = false;
@@ -47,20 +47,16 @@ namespace JexusManager.Features.Certificates
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnBrowse, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    var dialog = new OpenFileDialog { Filter = ".pfx|*.pfx|*.*|*.*", FilterIndex = 0, Multiselect = false };
-                    if (dialog.ShowDialog() == DialogResult.Cancel)
-                    {
-                        return;
-                    }
-
-                    txtFile.Text = dialog.FileName;
+                    DialogHelper.ShowFileDialog(txtFile, ".pfx|*.pfx|*.*|*.*");
                 }));
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(txtFile, "TextChanged")
                 .Sample(TimeSpan.FromSeconds(1))
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnOK.Enabled = !string.IsNullOrWhiteSpace(txtFile.Text);
@@ -68,7 +64,8 @@ namespace JexusManager.Features.Certificates
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
-                .Subscribe(async evt =>
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(evt =>
                 {
                     try
                     {
@@ -84,7 +81,7 @@ namespace JexusManager.Features.Certificates
                             publicBuilder.AppendLine("-----BEGIN CERTIFICATE-----");
                             publicBuilder.AppendLine(Convert.ToBase64String(Item.Export(X509ContentType.Cert), Base64FormattingOptions.InsertLineBreaks));
                             publicBuilder.AppendLine("-----END CERTIFICATE-----");
-                            var file = await server.SaveCertificateAsync(publicBuilder.ToString());
+                            var file = AsyncHelper.RunSync(() => server.SaveCertificateAsync(publicBuilder.ToString()));
                             server.SetCertificate(file);
                             // Private Key
                             RSACryptoServiceProvider rsa = (RSACryptoServiceProvider)Item.PrivateKey;
@@ -99,9 +96,9 @@ namespace JexusManager.Features.Certificates
                             memoryStream.Close();
                             streamWriter.Close();
                             string key = output.Substring(0, indexOfFooter + 29);
-                            var keyFile = await server.SaveKeyAsync(key);
+                            var keyFile = AsyncHelper.RunSync(() => server.SaveKeyAsync(key));
                             server.SetKeyFile(keyFile);
-                            await service.ServerManager.CommitChangesAsync();
+                            service.ServerManager.CommitChanges();
                         }
                         else
                         {
@@ -126,7 +123,7 @@ namespace JexusManager.Features.Certificates
                                     process.WaitForExit();
                                     if (process.ExitCode == 0)
                                     {
-                                        this.DialogResult = DialogResult.OK;
+                                        DialogResult = DialogResult.OK;
                                     }
                                     else
                                     {
@@ -142,24 +139,14 @@ namespace JexusManager.Features.Certificates
                     }
                     catch (Exception ex)
                     {
-                        var message = new StringBuilder()
-                            .AppendLine("There was an error while performing this operation.")
-                            .AppendLine()
-                            .AppendLine("Details:")
-                            .AppendLine()
-                            .AppendLine(ex.Message);
-                        ShowMessage(
-                            message.ToString(),
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Error,
-                            MessageBoxDefaultButton.Button1);
+                        ShowError(ex, string.Empty, false);
                     }
                 }));
         }
 
         private void ImportCertificateDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210528");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210528");
         }
 
         public string Store { get; set; }

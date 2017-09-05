@@ -20,9 +20,9 @@ namespace JexusManager.Features.Modules
             {
                 txtName.Text = existing.Name;
                 txtPath.Text = existing.Image;
-                this.Text = "Edit Native Module Registration";
+                Text = "Edit Native Module Registration";
                 txtName.SelectAll();
-                this.Item = existing;
+                Item = existing;
             }
 
             var container = new CompositeDisposable();
@@ -30,6 +30,7 @@ namespace JexusManager.Features.Modules
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnBrowse, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     DialogHelper.ShowFileDialog(txtPath, "(*.dll)|*.dll|All Files (*.*)|*.*");
@@ -39,6 +40,7 @@ namespace JexusManager.Features.Modules
                 Observable.FromEventPattern<EventArgs>(txtName, "TextChanged")
                 .Merge(Observable.FromEventPattern<EventArgs>(txtPath, "TextChanged"))
                 .Sample(TimeSpan.FromSeconds(1))
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnOK.Enabled = !string.IsNullOrWhiteSpace(txtName.Text)
@@ -47,6 +49,7 @@ namespace JexusManager.Features.Modules
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     if (Item == null)
@@ -54,8 +57,9 @@ namespace JexusManager.Features.Modules
                         Item = new GlobalModule(null);
                     }
 
-                    this.Item.Name = txtName.Text;
-                    this.Item.Image = txtPath.Text;
+                    Item.Name = txtName.Text;
+                    Item.Image = txtPath.Text;
+                    DialogResult = System.Windows.Forms.DialogResult.OK;
                 }));
         }
 

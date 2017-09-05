@@ -12,5 +12,10 @@ namespace JexusManager.Features
         {
             return time.Minutes + (time.Hours + time.Days * 24) * 60;
         }
+
+        public static int GetTotalSeconds(this TimeSpan time)
+        {
+            return time.Seconds + (time.Minutes + (time.Hours + time.Days * 24) * 60) * 60;
+        }
     }
 }

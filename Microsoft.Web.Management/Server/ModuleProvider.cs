@@ -7,7 +7,6 @@ using System;
 namespace Microsoft.Web.Management.Server
 {
     public abstract class ModuleProvider
-
     {
         public virtual DelegationState GetChildDelegationState(string path)
         {

@@ -29,6 +29,7 @@ namespace JexusManager.Features.Main
 
     using Binding = Microsoft.Web.Administration.Binding;
     using Module = Microsoft.Web.Management.Client.Module;
+    using System.Linq;
 
     /// <summary>
     /// Description of DefaultDocumentFeature.
@@ -49,15 +50,24 @@ namespace JexusManager.Features.Main
                 var result = new ArrayList();
                 result.Add(new MethodTaskItem("Explore", "Explore", string.Empty, string.Empty, Resources.explore_16).SetUsage());
                 result.Add(new MethodTaskItem("Permissions", "Edit Permissions...", string.Empty).SetUsage());
-                result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
-                var manageGroup = new GroupTaskItem(string.Empty, "Manage Folder", string.Empty, true);
-                result.Add(manageGroup);
-                manageGroup.Items.Add(new TextTaskItem("Browse Folder", string.Empty, true));
-                foreach (Binding binding in _owner.SiteBindings)
+
+                if (_owner.SiteBindings.Any(item => item.CanBrowse))
                 {
-                    manageGroup.Items.Add(
-                        new MethodTaskItem("Browse", string.Format("Browse {0}", binding.ToShortString()), string.Empty, string.Empty,
-                            Resources.browse_16, binding).SetUsage());
+                    result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    var manageGroup = new GroupTaskItem(string.Empty, "Manage Folder", string.Empty, true);
+                    result.Add(manageGroup);
+                    manageGroup.Items.Add(new TextTaskItem("Browse Folder", string.Empty, true));
+                    foreach (Binding binding in _owner.SiteBindings)
+                    {
+                        if (binding.CanBrowse)
+                        {
+                            var uri = binding.ToUri();
+                            manageGroup.Items.Add(
+                                new MethodTaskItem("Browse", $"Browse {binding.ToShortString()}",
+                                    string.Empty, string.Empty,
+                                    Resources.browse_16, uri).SetUsage());
+                        }
+                    }
                 }
 
                 return result.ToArray(typeof(TaskItem)) as TaskItem[];
@@ -124,14 +134,12 @@ namespace JexusManager.Features.Main
 
         public virtual bool ShowHelp()
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210463");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210463");
             return false;
         }
 
         private void Browse(object uri)
         {
-            var binding = (Binding)uri;
-            var target = binding.ToUri();
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
 
             // IMPORTANT: help users launch IIS Express instance.
@@ -160,7 +168,7 @@ namespace JexusManager.Features.Main
                 }
             }
 
-            Process.Start(target + service.PhysicalDirectory.PathToSite);
+            DialogHelper.ProcessStart(uri + service.PhysicalDirectory.PathToSite);
         }
 
         private void Permissions()
@@ -172,7 +180,7 @@ namespace JexusManager.Features.Main
         private void Explore()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            Process.Start(service.PhysicalDirectory.FullName);
+            DialogHelper.Explore(service.PhysicalDirectory.FullName.ExpandIisExpressEnvironmentVariables());
         }
 
         public IEnumerable<Binding> SiteBindings

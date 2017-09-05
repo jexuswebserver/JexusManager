@@ -62,7 +62,6 @@
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(23, 22);
             this.btnSave.Text = "Save";
-            this.btnSave.Click += new System.EventHandler(this.BtnSaveClick);
             // 
             // toolStripSeparator1
             // 
@@ -76,7 +75,6 @@
             this.btnGenerate.Name = "btnGenerate";
             this.btnGenerate.Size = new System.Drawing.Size(112, 22);
             this.btnGenerate.Text = "Generate Report";
-            this.btnGenerate.Click += new System.EventHandler(this.BtnGenerateClick);
             // 
             // btnVerify
             // 
@@ -86,7 +84,6 @@
             this.btnVerify.Size = new System.Drawing.Size(86, 22);
             this.btnVerify.Text = "Verify Store";
             this.btnVerify.Visible = false;
-            this.btnVerify.Click += new System.EventHandler(this.BtnVerifyClick);
             // 
             // toolStripSeparator2
             // 

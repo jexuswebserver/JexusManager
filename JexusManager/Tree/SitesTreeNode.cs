@@ -19,13 +19,14 @@ namespace JexusManager.Tree
 
     internal sealed class SitesTreeNode : ManagerTreeNode
     {
-        public SitesTreeNode(IServiceProvider serviceProvider, SiteCollection sites)
+        public SitesTreeNode(IServiceProvider serviceProvider, SiteCollection sites, ServerTreeNode server)
             : base("Sites", serviceProvider)
         {
             ImageIndex = 3;
             SelectedImageIndex = 3;
             Tag = sites;
             ServerManager = sites.Parent;
+            ServerNode = server;
         }
 
         public override string PathToSite
@@ -45,12 +46,15 @@ namespace JexusManager.Tree
 
         public override ServerManager ServerManager { get; set; }
 
+        public override ServerTreeNode ServerNode { get; }
+
         public override void LoadPanels(MainForm mainForm, ServiceContainer serviceContainer, List<ModuleProvider> moduleProviders)
         {
             serviceContainer.RemoveService(typeof(IConfigurationService));
             serviceContainer.RemoveService(typeof(IControlPanel));
             var sites = (SiteCollection)Tag;
             var scope = ManagementScope.Server;
+            serviceContainer.AddService(typeof(IControlPanel), new ControlPanel());
             serviceContainer.AddService(typeof(IConfigurationService),
                 new ConfigurationService(mainForm, null, scope, sites.Parent, null, null, null, null, null));
             IModulePage page = new SitesPage(mainForm);
@@ -60,14 +64,14 @@ namespace JexusManager.Tree
             mainForm.LoadPage(page);
         }
 
-        public async override Task HandleDoubleClick(MainForm mainForm)
+        public override void HandleDoubleClick(MainForm mainForm)
         {
         }
 
-        public async override Task Expand(MainForm mainForm)
+        public override void Expand(MainForm mainForm)
         { }
 
-        public async override Task AddApplication(ContextMenuStrip appMenu)
+        public override void AddApplication(ContextMenuStrip appMenu)
         {
         }
 

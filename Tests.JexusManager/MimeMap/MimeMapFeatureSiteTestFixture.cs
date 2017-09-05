@@ -22,6 +22,8 @@ namespace Tests.MimeMap
     using Moq;
 
     using Xunit;
+    using System.Xml.Linq;
+    using System.Xml.XPath;
 
     public class MimeMapFeatureSiteTestFixture
     {
@@ -31,7 +33,7 @@ namespace Tests.MimeMap
 
         private const string Current = @"applicationHost.config";
 
-        public async Task SetUp()
+        public void SetUp()
         {
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -89,16 +91,27 @@ namespace Tests.MimeMap
         }
 
         [Fact]
-        public async void TestBasic()
+        public void TestBasic()
         {
-            await this.SetUp();
+            SetUp();
             Assert.Equal(374, _feature.Items.Count);
         }
 
         [Fact]
-        public async void TestRemoveInherited()
+        public void TestRemoveInherited()
         {
-            await this.SetUp();
+            SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_remove.site.config";
+            var document = XDocument.Load(site);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer");
+            var content = new XElement("staticContent");
+            node?.Add(content);
+            var remove = new XElement("remove");
+            remove.SetAttributeValue("fileExtension", ".323");
+            content.Add(remove);
+            document.Save(expected);
 
             _feature.SelectedItem = _feature.Items[0];
             Assert.Equal(".323", _feature.SelectedItem.FileExtension);
@@ -110,13 +123,18 @@ namespace Tests.MimeMap
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("MimeMap", "expected_remove.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
 
         [Fact]
-        public async void TestRemove()
+        public void TestRemove()
         {
-            await this.SetUp();
+            SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_remove1.site.config";
+            var document = XDocument.Load(site);
+            document.Save(expected);
 
             var item = new MimeMapItem(null);
             item.FileExtension = ".xl1";
@@ -133,13 +151,28 @@ namespace Tests.MimeMap
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("MimeMap", "expected_remove1.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
 
         [Fact]
-        public async void TestEditInherited()
+        public void TestEditInherited()
         {
-            await this.SetUp();
+            SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_edit.site.config";
+            var document = XDocument.Load(site);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer");
+            var content = new XElement("staticContent");
+            node?.Add(content);
+            var remove = new XElement("remove");
+            remove.SetAttributeValue("fileExtension", ".323");
+            content.Add(remove);
+            var add = new XElement("mimeMap");
+            add.SetAttributeValue("fileExtension", ".323");
+            add.SetAttributeValue("mimeType", "text/test");
+            content.Add(add);
+            document.Save(expected);
 
             _feature.SelectedItem = _feature.Items[0];
             Assert.Equal(".323", _feature.SelectedItem.FileExtension);
@@ -153,13 +186,25 @@ namespace Tests.MimeMap
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("MimeMap", "expected_edit.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
 
         [Fact]
-        public async void TestEdit()
+        public void TestEdit()
         {
-            await this.SetUp();
+            SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_edit.site.config";
+            var document = XDocument.Load(site);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer");
+            var content = new XElement("staticContent");
+            node?.Add(content);
+            var add = new XElement("mimeMap");
+            add.SetAttributeValue("fileExtension", ".xl1");
+            add.SetAttributeValue("mimeType", "text/test2");
+            content.Add(add);
+            document.Save(expected);
 
             var item = new MimeMapItem(null);
             item.FileExtension = ".xl1";
@@ -178,13 +223,26 @@ namespace Tests.MimeMap
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("MimeMap", "expected_edit1.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
 
         [Fact]
-        public async void TestAdd()
+        public void TestAdd()
         {
-            await this.SetUp();
+            SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_edit.site.config";
+            var document = XDocument.Load(site);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer");
+            var content = new XElement("staticContent");
+            node?.Add(content);
+            var add = new XElement("mimeMap");
+            add.SetAttributeValue("fileExtension", ".pp1");
+            add.SetAttributeValue("mimeType", "text/test");
+            content.Add(add);
+            document.Save(expected);
+
             var item = new MimeMapItem(null);
             item.FileExtension = ".pp1";
             item.MimeType = "text/test";
@@ -196,7 +254,7 @@ namespace Tests.MimeMap
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("MimeMap", "expected_add.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
     }
 }

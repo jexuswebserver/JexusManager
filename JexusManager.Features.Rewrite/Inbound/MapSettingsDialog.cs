@@ -37,6 +37,7 @@ namespace JexusManager.Features.Rewrite.Inbound
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     item.Name = txtName.Text;
@@ -49,7 +50,7 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         private void MapSettingsDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkID=130406&amp;clcid=0x409");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkID=130406&amp;clcid=0x409");
         }
     }
 }
