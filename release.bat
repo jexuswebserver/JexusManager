@@ -1,5 +1,17 @@
-set EnableNuGetPackageRestore=true
-set msBuildDir=C:\Program Files (x86)\MSBuild\14.0\Bin
-call .nuget\nuget.exe restore jexusmanager.sln
-call "%MSBuildDir%\msbuild" jexusmanager.sln /p:Configuration=Release
+@echo off
+
+for /f "usebackq tokens=*" %%i in (`vswhere -latest -products * -requires Microsoft.Component.MSBuild -property installationPath`) do (
+  set InstallDir=%%i
+)
+
+if exist "%InstallDir%\MSBuild\15.0\Bin\MSBuild.exe" (
+  set msBuildExe="%InstallDir%\MSBuild\15.0\Bin\MSBuild.exe"
+)
+
+@echo on
+
+call %msBuildExe% jexusmanager.sln /p:Configuration=Release /t:restore
+call %msBuildExe% jexusmanager.sln /p:Configuration=Release /t:clean
+call %msBuildExe% jexusmanager.sln /p:Configuration=Release
+
 @IF %ERRORLEVEL% NEQ 0 PAUSE

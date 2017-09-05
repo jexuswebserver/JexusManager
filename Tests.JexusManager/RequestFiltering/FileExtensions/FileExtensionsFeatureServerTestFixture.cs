@@ -2,6 +2,9 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Xml.Linq;
+using System.Xml.XPath;
+
 namespace Tests.RequestFiltering.FileExtensions
 {
     using System;
@@ -33,7 +36,7 @@ namespace Tests.RequestFiltering.FileExtensions
 
         private const string Current = @"applicationHost.config";
 
-        public async Task SetUp()
+        public void SetUp()
         {
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -82,37 +85,42 @@ namespace Tests.RequestFiltering.FileExtensions
         }
 
         [Fact]
-        public async void TestBasic()
+        public void TestBasic()
         {
-            await this.SetUp();
+            SetUp();
             Assert.Equal(44, _feature.Items.Count);
             Assert.Equal(".asa", _feature.Items[0].Extension);
         }
 
         [Fact]
-        public async void TestRemove()
+        public void TestRemove()
         {
-            await this.SetUp();
+            SetUp();
             const string Expected = @"expected_remove.config";
-            const string ExpectedMono = @"expected_remove.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root?.XPathSelectElement("/configuration/system.webServer/security/requestFiltering/fileExtensions");
+            node?.FirstNode.Remove();
+            document.Save(Expected);
 
             _feature.SelectedItem = _feature.Items[0];
             _feature.Remove();
             Assert.Null(_feature.SelectedItem);
             Assert.Equal(43, _feature.Items.Count);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("RequestFiltering", "FileExtensions", ExpectedMono)
-                    : Path.Combine("RequestFiltering", "FileExtensions", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
 
         [Fact]
-        public async void TestAdd()
+        public void TestAdd()
         {
-            await this.SetUp();
+            SetUp();
             const string Expected = @"expected_add.config";
-            const string ExpectedMono = @"expected_add.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root?.XPathSelectElement("/configuration/system.webServer/security/requestFiltering/fileExtensions");
+            var element = new XElement("add");
+            element.SetAttributeValue("fileExtension", ".csv");
+            element.SetAttributeValue("allowed", "false");
+            node?.Add(element);
+            document.Save(Expected);
 
             var item = new FileExtensionsItem(null);
             item.Extension = ".csv";
@@ -120,11 +128,7 @@ namespace Tests.RequestFiltering.FileExtensions
             Assert.NotNull(_feature.SelectedItem);
             Assert.Equal(".csv", _feature.SelectedItem.Extension);
             Assert.Equal(45, _feature.Items.Count);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("RequestFiltering", "FileExtensions", ExpectedMono)
-                    : Path.Combine("RequestFiltering", "FileExtensions", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
     }
 }

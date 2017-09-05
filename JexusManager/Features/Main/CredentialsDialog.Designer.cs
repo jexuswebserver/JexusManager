@@ -59,7 +59,6 @@
             this.btnOK.TabIndex = 1;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
-            this.btnOK.Click += new System.EventHandler(this.BtnOkClick);
             // 
             // label1
             // 
@@ -76,7 +75,6 @@
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(286, 20);
             this.txtName.TabIndex = 3;
-            this.txtName.TextChanged += new System.EventHandler(this.TextBox1TextChanged);
             // 
             // label2
             // 
@@ -94,7 +92,6 @@
             this.txtPassword.PasswordChar = '*';
             this.txtPassword.Size = new System.Drawing.Size(286, 20);
             this.txtPassword.TabIndex = 5;
-            this.txtPassword.TextChanged += new System.EventHandler(this.TextBox1TextChanged);
             // 
             // label3
             // 
@@ -112,7 +109,6 @@
             this.txtConfirm.PasswordChar = '*';
             this.txtConfirm.Size = new System.Drawing.Size(286, 20);
             this.txtConfirm.TabIndex = 7;
-            this.txtConfirm.TextChanged += new System.EventHandler(this.TextBox1TextChanged);
             // 
             // CredentialsDialog
             // 

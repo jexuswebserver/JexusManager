@@ -27,6 +27,7 @@ namespace JexusManager.Features.Authentication
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(cbExtended, "SelectedIndexChanged")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnOK.Enabled = true;
@@ -34,6 +35,7 @@ namespace JexusManager.Features.Authentication
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(cbKernelMode, "CheckedChanged")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnOK.Enabled = true;
@@ -41,6 +43,7 @@ namespace JexusManager.Features.Authentication
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     item.TokenChecking = cbExtended.SelectedIndex;
@@ -52,7 +55,7 @@ namespace JexusManager.Features.Authentication
 
         private void WindowsAdvancedDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210461#Advanced_Windows");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210461#Advanced_Windows");
         }
     }
 }

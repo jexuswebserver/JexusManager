@@ -80,7 +80,6 @@
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(210, 20);
             this.txtName.TabIndex = 1;
-            this.txtName.TextChanged += new System.EventHandler(this.TxtNameTextChanged);
             // 
             // label2
             // 
@@ -109,7 +108,6 @@
             this.btnChoose.TabIndex = 4;
             this.btnChoose.Text = "Select...";
             this.btnChoose.UseVisualStyleBackColor = true;
-            this.btnChoose.Click += new System.EventHandler(this.BtnChooseClick);
             // 
             // groupBox1
             // 
@@ -164,7 +162,6 @@
             this.btnBrowse.Text = "...";
             this.btnBrowse.UseVisualStyleBackColor = true;
             this.btnBrowse.Visible = false;
-            this.btnBrowse.Click += new System.EventHandler(this.BtnBrowseClick);
             // 
             // txtPath
             // 
@@ -172,7 +169,6 @@
             this.txtPath.Name = "txtPath";
             this.txtPath.Size = new System.Drawing.Size(316, 20);
             this.txtPath.TabIndex = 1;
-            this.txtPath.TextChanged += new System.EventHandler(this.TxtNameTextChanged);
             // 
             // label3
             // 
@@ -224,7 +220,6 @@
             this.btnView.TabIndex = 28;
             this.btnView.Text = "View...";
             this.btnView.UseVisualStyleBackColor = true;
-            this.btnView.Click += new System.EventHandler(this.BtnViewClick);
             // 
             // btnSelect
             // 
@@ -244,7 +239,6 @@
             this.cbCertificates.Name = "cbCertificates";
             this.cbCertificates.Size = new System.Drawing.Size(303, 21);
             this.cbCertificates.TabIndex = 26;
-            this.cbCertificates.SelectedIndexChanged += new System.EventHandler(this.CbCertificatesSelectedIndexChanged);
             // 
             // cbSniRequired
             // 
@@ -288,7 +282,6 @@
             this.txtPort.Size = new System.Drawing.Size(48, 20);
             this.txtPort.TabIndex = 21;
             this.txtPort.Text = "80";
-            this.txtPort.TextChanged += new System.EventHandler(this.TxtNameTextChanged);
             // 
             // cbAddress
             // 
@@ -298,7 +291,6 @@
             this.cbAddress.Size = new System.Drawing.Size(210, 21);
             this.cbAddress.TabIndex = 20;
             this.cbAddress.Text = "All Unassigned";
-            this.cbAddress.TextChanged += new System.EventHandler(this.TxtNameTextChanged);
             // 
             // cbType
             // 
@@ -311,7 +303,6 @@
             this.cbType.Name = "cbType";
             this.cbType.Size = new System.Drawing.Size(115, 21);
             this.cbType.TabIndex = 19;
-            this.cbType.SelectedIndexChanged += new System.EventHandler(this.CbTypeSelectedIndexChanged);
             // 
             // label7
             // 
@@ -358,7 +349,6 @@
             this.btnOK.TabIndex = 8;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
-            this.btnOK.Click += new System.EventHandler(this.BtnOkClick);
             // 
             // cbStart
             // 

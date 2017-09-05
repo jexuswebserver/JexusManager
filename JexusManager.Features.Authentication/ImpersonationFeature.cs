@@ -106,7 +106,7 @@ namespace JexusManager.Features.Authentication
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var section = service.GetSection("system.web/identity");
-            var dialog = new ImpersonationEditDialog(this.Module, new ImpersonationItem(section));
+            var dialog = new ImpersonationEditDialog(Module, new ImpersonationItem(section));
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
@@ -116,30 +116,18 @@ namespace JexusManager.Features.Authentication
             OnAuthenticationSettingsSaved();
         }
 
-        public override Version MinimumFrameworkVersion
-        {
-            get { return FxVersion20; }
-        }
+        public override Version MinimumFrameworkVersion => FxVersion20;
 
         public override bool ShowHelp()
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210461#Impersonation");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210461#Impersonation");
             return true;
         }
 
-        public override bool IsFeatureEnabled
-        {
-            get { return true; }
-        }
+        public override bool IsFeatureEnabled => true;
 
-        public override AuthenticationType AuthenticationType
-        {
-            get { return AuthenticationType.Other; }
-        }
+        public override AuthenticationType AuthenticationType => AuthenticationType.Other;
 
-        public override string Name
-        {
-            get { return "ASP.NET Impersonation"; }
-        }
+        public override string Name => "ASP.NET Impersonation";
     }
 }

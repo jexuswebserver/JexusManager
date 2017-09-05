@@ -10,7 +10,6 @@ namespace JexusManager.Wizards.ConnectionWizard
     using System.Net.Security;
     using System.Text;
     using System.Threading;
-    using System.Threading.Tasks;
     using System.Windows.Forms;
 
     using JexusManager.Dialogs;
@@ -48,7 +47,7 @@ namespace JexusManager.Wizards.ConnectionWizard
         {
             base.Activate();
             var wizardData = (ConnectionWizardData)WizardData;
-            txtConnect.Text = string.Format("Connecting to {0}.", wizardData.HostName.ExtractName());
+            txtConnect.Text = $"Connecting to {wizardData.HostName.ExtractName()}.";
             cbUserName.Focus();
         }
 
@@ -63,12 +62,12 @@ namespace JexusManager.Wizards.ConnectionWizard
             ShowProgress(true);
             var context = SynchronizationContext.Current;
 
-            var result = AsyncHelper.RunSync(() => OpenConnection(context));
+            var result = OpenConnection(context);
             ShowProgress(false);
             return result;
         }
 
-        private async Task<bool> OpenConnection(SynchronizationContext context)
+        private bool OpenConnection(SynchronizationContext context)
         {
             string accepted = null;
             var handler = ServicePointManager.ServerCertificateValidationCallback;
@@ -106,7 +105,7 @@ namespace JexusManager.Wizards.ConnectionWizard
                 var data = (ConnectionWizardData)WizardData;
                 var server = new JexusServerManager(data.HostName, data.UserName + "|" + data.Password);
                 data.Server = server;
-                var version = await server.GetVersionAsync();
+                var version = AsyncHelper.RunSync(() => server.GetVersionAsync());
                 if (version == null)
                 {
                     service.ShowMessage("Authentication failed.", Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -116,7 +115,7 @@ namespace JexusManager.Wizards.ConnectionWizard
                 if (version < JexusServerManager.MinimumServerVersion)
                 {
                     var toContinue =
-                        service.ShowMessage(
+                        service?.ShowMessage(
                             string.Format(
                                 "The server version is {0}, while minimum compatible version is {1}. Making changes might corrupt server configuration. Do you want to continue?",
                                 version,
@@ -130,10 +129,10 @@ namespace JexusManager.Wizards.ConnectionWizard
                     }
                 }
 
-                var conflict = await server.HelloAsync();
+                var conflict = AsyncHelper.RunSync(() => server.HelloAsync());
                 if (Environment.MachineName != conflict)
                 {
-                    service.ShowMessage(string.Format("The server is also connected to {0}. Making changes on multiple clients might corrupt server configuration.", conflict), Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    service?.ShowMessage($"The server is also connected to {conflict}. Making changes on multiple clients might corrupt server configuration.", Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
 
                 data.CertificateHash = accepted;
@@ -151,8 +150,8 @@ namespace JexusManager.Wizards.ConnectionWizard
                 var message = new StringBuilder();
                 message.AppendLine("Could not connect to the specified computer.")
                                     .AppendLine()
-                                    .AppendFormat("Details: {0}", last.Message);
-                service.ShowMessage(message.ToString(), Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    .AppendFormat("Details: {0}", last?.Message);
+                service?.ShowMessage(message.ToString(), Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
             finally

@@ -2,6 +2,9 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Xml.Linq;
+using System.Xml.XPath;
+
 namespace Tests.IsapiCgiRestriction
 {
     using System;
@@ -33,7 +36,7 @@ namespace Tests.IsapiCgiRestriction
 
         private const string Current = @"applicationHost.config";
 
-        public async Task SetUp()
+        public void SetUp()
         {
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -82,37 +85,40 @@ namespace Tests.IsapiCgiRestriction
         }
 
         [Fact]
-        public async void TestBasic()
+        public void TestBasic()
         {
-            await this.SetUp();
+            SetUp();
             Assert.Equal(4, _feature.Items.Count);
             Assert.Equal(true, _feature.Items[0].Allowed);
         }
 
         [Fact]
-        public async void TestRemove()
+        public void TestRemove()
         {
-            await this.SetUp();
+            SetUp();
             const string Expected = @"expected_remove.config";
-            const string ExpectedMono = @"expected_remove.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root?.XPathSelectElement("/configuration/system.webServer/security/isapiCgiRestriction");
+            node?.FirstNode.Remove();
+            document.Save(Expected);
 
             _feature.SelectedItem = _feature.Items[0];
             _feature.Remove();
             Assert.Null(_feature.SelectedItem);
             Assert.Equal(3, _feature.Items.Count);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("IsapiCgiRestriction", ExpectedMono)
-                    : Path.Combine("IsapiCgiRestriction", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
 
         [Fact]
-        public async void TestEdit()
+        public void TestEdit()
         {
-            await this.SetUp();
-            const string Expected = @"expected_edit.config";
-            const string ExpectedMono = @"expected_edit.mono.config";
+            SetUp();
+            const string Expected = @"expected_remove.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root?.XPathSelectElement("/configuration/system.webServer/security/isapiCgiRestriction");
+            var element = node?.FirstNode as XElement;
+            element?.SetAttributeValue("description", "test edit");
+            document.Save(Expected);
 
             _feature.SelectedItem = _feature.Items[0];
             var item = _feature.SelectedItem;
@@ -121,19 +127,22 @@ namespace Tests.IsapiCgiRestriction
             Assert.NotNull(_feature.SelectedItem);
             Assert.Equal("test edit", _feature.SelectedItem.Description);
             Assert.Equal(4, _feature.Items.Count);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("IsapiCgiRestriction", ExpectedMono)
-                    : Path.Combine("IsapiCgiRestriction", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
 
         [Fact]
-        public async void TestAdd()
+        public void TestAdd()
         {
-            await this.SetUp();
-            const string Expected = @"expected_add.config";
-            const string ExpectedMono = @"expected_add.mono.config";
+            SetUp();
+            const string Expected = @"expected_remove.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root?.XPathSelectElement("/configuration/system.webServer/security/isapiCgiRestriction");
+            var element = new XElement("add");
+            element.SetAttributeValue("description", "my cgi");
+            element.SetAttributeValue("path", "c:\\test.dll");
+            element.SetAttributeValue("allowed", "true");
+            node?.Add(element);
+            document.Save(Expected);
 
             var item = new IsapiCgiRestrictionItem(null);
             item.Description = "my cgi";
@@ -144,11 +153,7 @@ namespace Tests.IsapiCgiRestriction
             Assert.Equal("my cgi", _feature.SelectedItem.Description);
             Assert.Equal(true, _feature.SelectedItem.Allowed);
             Assert.Equal(5, _feature.Items.Count);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("IsapiCgiRestriction", ExpectedMono)
-                    : Path.Combine("IsapiCgiRestriction", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
     }
 }

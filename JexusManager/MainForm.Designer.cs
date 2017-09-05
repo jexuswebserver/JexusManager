@@ -203,7 +203,7 @@
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.convertToApplicationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItem40 = new System.Windows.Forms.ToolStripMenuItem();
+            this.manageVirtualDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem42 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
@@ -215,7 +215,7 @@
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem48 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItem51 = new System.Windows.Forms.ToolStripMenuItem();
+            this.manageFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem54 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
@@ -1326,7 +1326,7 @@
             this.toolStripMenuItem52.AutoToolTip = true;
             this.toolStripMenuItem52.Image = global::JexusManager.Main.Properties.Resources.browse_16;
             this.toolStripMenuItem52.Name = "toolStripMenuItem52";
-            this.toolStripMenuItem52.Size = new System.Drawing.Size(112, 22);
+            this.toolStripMenuItem52.Size = new System.Drawing.Size(152, 22);
             this.toolStripMenuItem52.Text = "Browse";
             // 
             // cmsIis
@@ -1597,7 +1597,7 @@
             this.toolStripMenuItem38,
             this.toolStripMenuItem39,
             this.toolStripSeparator4,
-            this.toolStripMenuItem40,
+            this.manageVirtualDirectoryToolStripMenuItem,
             this.toolStripSeparator6,
             this.toolStripMenuItem43,
             this.toolStripMenuItem44,
@@ -1623,15 +1623,15 @@
             this.toolStripSeparator4.Name = "toolStripSeparator4";
             this.toolStripSeparator4.Size = new System.Drawing.Size(202, 6);
             // 
-            // toolStripMenuItem40
+            // manageVirtualDirectoryToolStripMenuItem
             // 
-            this.toolStripMenuItem40.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.manageVirtualDirectoryToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem41,
             this.toolStripSeparator5,
             this.toolStripMenuItem42});
-            this.toolStripMenuItem40.Name = "toolStripMenuItem40";
-            this.toolStripMenuItem40.Size = new System.Drawing.Size(205, 22);
-            this.toolStripMenuItem40.Text = "Manage Virtual Directory";
+            this.manageVirtualDirectoryToolStripMenuItem.Name = "manageVirtualDirectoryToolStripMenuItem";
+            this.manageVirtualDirectoryToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.manageVirtualDirectoryToolStripMenuItem.Text = "Manage Virtual Directory";
             // 
             // toolStripSeparator5
             // 
@@ -1688,13 +1688,13 @@
             this.toolStripMenuItem49,
             this.toolStripMenuItem50,
             this.toolStripSeparator9,
-            this.toolStripMenuItem51,
+            this.manageFolderToolStripMenuItem,
             this.toolStripSeparator11,
             this.toolStripMenuItem54,
             this.toolStripSeparator12,
             this.toolStripMenuItem56});
             this.cmsPhysicalDirectory.Name = "cmsPhysicalDirectory";
-            this.cmsPhysicalDirectory.Size = new System.Drawing.Size(198, 204);
+            this.cmsPhysicalDirectory.Size = new System.Drawing.Size(198, 226);
             // 
             // toolStripSeparator8
             // 
@@ -1713,13 +1713,13 @@
             this.toolStripSeparator9.Name = "toolStripSeparator9";
             this.toolStripSeparator9.Size = new System.Drawing.Size(194, 6);
             // 
-            // toolStripMenuItem51
+            // manageFolderToolStripMenuItem
             // 
-            this.toolStripMenuItem51.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.manageFolderToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem52});
-            this.toolStripMenuItem51.Name = "toolStripMenuItem51";
-            this.toolStripMenuItem51.Size = new System.Drawing.Size(197, 22);
-            this.toolStripMenuItem51.Text = "Manage Folder";
+            this.manageFolderToolStripMenuItem.Name = "manageFolderToolStripMenuItem";
+            this.manageFolderToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.manageFolderToolStripMenuItem.Text = "Manage Folder";
             // 
             // toolStripSeparator11
             // 
@@ -1774,6 +1774,7 @@
             this.Name = "MainForm";
             this.Text = "Jexus Manager";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1FormClosing);
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.scMain.Panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.scMain)).EndInit();
             this.scMain.ResumeLayout(false);
@@ -1964,7 +1965,7 @@
         private ToolStripMenuItem toolStripMenuItem38;
         private ToolStripMenuItem toolStripMenuItem39;
         private ToolStripSeparator toolStripSeparator4;
-        private ToolStripMenuItem toolStripMenuItem40;
+        private ToolStripMenuItem manageVirtualDirectoryToolStripMenuItem;
         private ToolStripMenuItem toolStripMenuItem41;
         private ToolStripSeparator toolStripSeparator5;
         private ToolStripMenuItem toolStripMenuItem42;
@@ -1981,7 +1982,7 @@
         private ToolStripMenuItem toolStripMenuItem49;
         private ToolStripMenuItem toolStripMenuItem50;
         private ToolStripSeparator toolStripSeparator9;
-        private ToolStripMenuItem toolStripMenuItem51;
+        private ToolStripMenuItem manageFolderToolStripMenuItem;
         private ToolStripMenuItem toolStripMenuItem52;
         private ToolStripSeparator toolStripSeparator11;
         private ToolStripMenuItem toolStripMenuItem54;

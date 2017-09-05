@@ -2,6 +2,8 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
+
 namespace JexusManager.Tree
 {
     using System.Collections.Generic;
@@ -23,37 +25,30 @@ namespace JexusManager.Tree
             ImageIndex = 0;
         }
 
-        public override string PathToSite
-        {
-            get { return string.Empty; }
-        }
+        public override string PathToSite => string.Empty;
 
-        public override string Folder
-        {
-            get { return string.Empty; }
-        }
+        public override string Folder => string.Empty;
 
-        public override string Uri
-        {
-            get { return null; }
-        }
+        public override string Uri => null;
 
         public override ServerManager ServerManager { get; set; }
 
+        public override ServerTreeNode ServerNode => throw new InvalidOperationException("Server node access is invalid for home page node");
 
         public override void LoadPanels(MainForm mainForm, ServiceContainer serviceContainer, List<ModuleProvider> moduleProviders)
         {
             mainForm.LoadInner(new HomePage());
         }
 
-        public async override Task HandleDoubleClick(MainForm mainForm)
+        public override void HandleDoubleClick(MainForm mainForm)
         {
         }
 
-        public async override Task Expand(MainForm mainForm)
-        { }
+        public override void Expand(MainForm mainForm)
+        {
+        }
 
-        public async override Task AddApplication(ContextMenuStrip appMenu)
+        public override void AddApplication(ContextMenuStrip appMenu)
         {
         }
 

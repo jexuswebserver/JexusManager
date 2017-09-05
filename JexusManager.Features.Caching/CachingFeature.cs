@@ -166,7 +166,7 @@ namespace JexusManager.Features.Caching
 
         public virtual bool ShowHelp()
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210522");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210522");
             return false;
         }
 

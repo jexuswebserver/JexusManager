@@ -28,6 +28,7 @@ namespace JexusManager.Features.IsapiCgiRestriction
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     element["notListedIsapisAllowed"] = cbIsapi.Checked;
@@ -38,7 +39,7 @@ namespace JexusManager.Features.IsapiCgiRestriction
 
         private void PermissionsDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210515");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210515");
         }
     }
 }

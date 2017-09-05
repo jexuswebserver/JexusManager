@@ -48,6 +48,7 @@ namespace JexusManager.Features.Caching
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     Item.Extension = txtExtension.Text;
@@ -101,6 +102,7 @@ namespace JexusManager.Features.Caching
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnAdvanced, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     var dialog = new CachingAdvancedDialog(ServiceProvider, Item);
@@ -109,6 +111,7 @@ namespace JexusManager.Features.Caching
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(txtExtension, "TextChanged")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnOK.Enabled = !string.IsNullOrWhiteSpace(txtExtension.Text);
@@ -119,7 +122,7 @@ namespace JexusManager.Features.Caching
 
         private void NewRestrictionDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210522");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210522");
         }
     }
 }

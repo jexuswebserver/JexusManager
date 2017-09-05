@@ -34,6 +34,7 @@ namespace JexusManager.Features.RequestFiltering
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     section.ChildElements["fileExtensions"]["allowUnlisted"] = cbExtension.Checked;
@@ -97,6 +98,7 @@ namespace JexusManager.Features.RequestFiltering
                 .Merge(Observable.FromEventPattern<EventArgs>(txtQuery, "TextChanged"))
                 .Merge(Observable.FromEventPattern<EventArgs>(txtURL, "TextChanged"))
                 .Sample(TimeSpan.FromSeconds(1))
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnOK.Enabled = !string.IsNullOrWhiteSpace(txtContent.Text) &&
@@ -107,7 +109,7 @@ namespace JexusManager.Features.RequestFiltering
 
         private void SegmentSettingsDialog_HelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210526#Edit_Filtering");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210526#Edit_Filtering");
         }
     }
 }

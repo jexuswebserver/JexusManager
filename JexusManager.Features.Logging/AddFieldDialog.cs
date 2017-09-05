@@ -41,6 +41,7 @@ namespace JexusManager.Features.Logging
                 Observable.FromEventPattern<EventArgs>(txtName, "TextChanged")
                 .Merge(Observable.FromEventPattern<EventArgs>(cbSource, "TextChanged"))
                 .Sample(TimeSpan.FromSeconds(1))
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnOK.Enabled = !string.IsNullOrWhiteSpace(txtName.Text) && !string.IsNullOrWhiteSpace(cbSource.Text);
@@ -48,6 +49,7 @@ namespace JexusManager.Features.Logging
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(cbType, "SelectedIndexChanged")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     cbSource.Items.Clear();
@@ -161,6 +163,7 @@ namespace JexusManager.Features.Logging
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     if (Custom == null)
@@ -178,7 +181,7 @@ namespace JexusManager.Features.Logging
 
         private void AddFieldDialog_HelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210517#W3CLoggingFields");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210517#W3CLoggingFields");
         }
     }
 }

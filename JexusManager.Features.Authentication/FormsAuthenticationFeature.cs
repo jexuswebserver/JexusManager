@@ -85,7 +85,7 @@ namespace JexusManager.Features.Authentication
             this.SetEnabled(enabled);
         }
 
-        private void Enable()
+        public void Enable()
         {
             var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
             var section = service.GetSection("system.web/authentication");
@@ -94,7 +94,7 @@ namespace JexusManager.Features.Authentication
             this.SetEnabled(true);
         }
 
-        private void Disable()
+        public void Disable()
         {
             var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
             var section = service.GetSection("system.web/authentication");
@@ -117,30 +117,18 @@ namespace JexusManager.Features.Authentication
             this.OnAuthenticationSettingsSaved();
         }
 
-        public override Version MinimumFrameworkVersion
-        {
-            get { return FxVersion20; }
-        }
+        public override Version MinimumFrameworkVersion => FxVersion20;
 
         public override bool ShowHelp()
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210461#Forms");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210461#Forms");
             return true;
         }
 
-        public override bool IsFeatureEnabled
-        {
-            get { return true; }
-        }
+        public override bool IsFeatureEnabled => true;
 
-        public override AuthenticationType AuthenticationType
-        {
-            get { return AuthenticationType.LoginRedirectBased; }
-        }
+        public override AuthenticationType AuthenticationType => AuthenticationType.LoginRedirectBased;
 
-        public override string Name
-        {
-            get { return "Forms Authentication"; }
-        }
+        public override string Name => "Forms Authentication";
     }
 }

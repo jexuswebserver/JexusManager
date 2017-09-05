@@ -46,6 +46,7 @@ namespace JexusManager.Features.Rewrite.Inbound
                 Observable.FromEventPattern<EventArgs>(txtValue, "TextChanged")
                 .Merge(Observable.FromEventPattern<EventArgs>(cbName, "TextChanged"))
                 .Sample(TimeSpan.FromSeconds(1))
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnOK.Enabled = !string.IsNullOrWhiteSpace(cbName.Text) && !string.IsNullOrWhiteSpace(txtValue.Text);
@@ -53,6 +54,7 @@ namespace JexusManager.Features.Rewrite.Inbound
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     Item.Name = cbName.Text;
@@ -66,7 +68,7 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         private void AddServerVariableDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=163108");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=163108");
         }
     }
 }

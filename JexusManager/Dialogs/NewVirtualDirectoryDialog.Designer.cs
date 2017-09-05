@@ -111,7 +111,6 @@
             this.txtAlias.Name = "txtAlias";
             this.txtAlias.Size = new System.Drawing.Size(185, 20);
             this.txtAlias.TabIndex = 3;
-            this.txtAlias.TextChanged += new System.EventHandler(this.txtAlias_TextChanged);
             // 
             // label5
             // 
@@ -137,7 +136,6 @@
             this.txtPhysicalPath.Name = "txtPhysicalPath";
             this.txtPhysicalPath.Size = new System.Drawing.Size(324, 20);
             this.txtPhysicalPath.TabIndex = 8;
-            this.txtPhysicalPath.TextChanged += new System.EventHandler(this.txtAlias_TextChanged);
             // 
             // label7
             // 
@@ -177,7 +175,6 @@
             this.btnBrowse.Text = "...";
             this.btnBrowse.UseVisualStyleBackColor = true;
             this.btnBrowse.Visible = false;
-            this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
             // 
             // btnOK
             // 
@@ -188,7 +185,6 @@
             this.btnOK.TabIndex = 14;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
-            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
             // btnCancel
             // 

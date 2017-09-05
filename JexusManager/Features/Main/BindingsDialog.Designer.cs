@@ -67,8 +67,6 @@
             this.listView1.TabIndex = 0;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
-            this.listView1.SelectedIndexChanged += new System.EventHandler(this.ListView1SelectedIndexChanged);
-            this.listView1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.ListView1MouseDoubleClick);
             // 
             // chType
             // 
@@ -133,7 +131,6 @@
             this.btnBrowse.TabIndex = 5;
             this.btnBrowse.Text = "Browse";
             this.btnBrowse.UseVisualStyleBackColor = true;
-            this.btnBrowse.Click += new System.EventHandler(this.BtnBrowseClick);
             // 
             // btnRemove
             // 
@@ -144,7 +141,6 @@
             this.btnRemove.TabIndex = 4;
             this.btnRemove.Text = "Remove";
             this.btnRemove.UseVisualStyleBackColor = true;
-            this.btnRemove.Click += new System.EventHandler(this.BtnRemoveClick);
             // 
             // btnEdit
             // 
@@ -155,7 +151,6 @@
             this.btnEdit.TabIndex = 3;
             this.btnEdit.Text = "Edit...";
             this.btnEdit.UseVisualStyleBackColor = true;
-            this.btnEdit.Click += new System.EventHandler(this.BtnEditClick);
             // 
             // btnAdd
             // 
@@ -165,7 +160,6 @@
             this.btnAdd.TabIndex = 2;
             this.btnAdd.Text = "Add...";
             this.btnAdd.UseVisualStyleBackColor = true;
-            this.btnAdd.Click += new System.EventHandler(this.BtnAddClick);
             // 
             // panel2
             // 
@@ -184,7 +178,6 @@
             this.btnClose.TabIndex = 1;
             this.btnClose.Text = "Close";
             this.btnClose.UseVisualStyleBackColor = true;
-            this.btnClose.Click += new System.EventHandler(this.BtnCloseClick);
             // 
             // BindingsDialog
             // 

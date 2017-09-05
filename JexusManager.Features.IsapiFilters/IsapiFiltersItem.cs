@@ -6,7 +6,6 @@ namespace JexusManager.Features.IsapiFilters
 {
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
 
     using Microsoft.Web.Administration;
 
@@ -52,24 +51,8 @@ namespace JexusManager.Features.IsapiFilters
         {
             Element["name"] = Name;
             Element["path"] = Path;
-            Element["preCondition"] = Combine(PreConditions);
+            Element["preCondition"] = PreConditions.Combine(",");
             Element["enableCache"] = EnableCache;
-        }
-
-        private static string Combine(List<string> preConditions)
-        {
-            if (preConditions.Count == 0)
-            {
-                return string.Empty;
-            }
-
-            var result = new StringBuilder(preConditions[0]);
-            for (int index = 1; index < preConditions.Count; index++)
-            {
-                result.AppendFormat(",{0}", preConditions[index]);
-            }
-
-            return result.ToString();
         }
 
         public bool Match(IsapiFiltersItem other)

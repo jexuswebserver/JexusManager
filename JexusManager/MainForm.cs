@@ -2,6 +2,9 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Globalization;
+using Microsoft.Win32;
+
 namespace JexusManager
 {
     using System;
@@ -55,6 +58,7 @@ namespace JexusManager
     using Action = Crad.Windows.Forms.Actions.Action;
     using Application = Microsoft.Web.Administration.Application;
     using Features;
+    using JexusManager.Features.Asp;
 
     public sealed partial class MainForm : Form
     {
@@ -91,6 +95,7 @@ namespace JexusManager
 
             _providers = new List<ModuleProvider>
             {
+                new AspModuleProvider(),
                 new AuthenticationModuleProvider(),
                 new AuthorizationModuleProvider(),
                 new CgiModuleProvider(),
@@ -124,16 +129,16 @@ namespace JexusManager
                     item.Tag = args.NewItem;
                     eanLocation.Navigation.AddHistory(item);
                 };
-            this.UIService = new ManagementUIService(this);
+            UIService = new ManagementUIService(this);
             _serviceContainer = new ServiceContainer();
             _serviceContainer.AddService(typeof(INavigationService), _navigationService);
-            _serviceContainer.AddService(typeof(IManagementUIService), this.UIService);
+            _serviceContainer.AddService(typeof(IManagementUIService), UIService);
 
             LoadIisExpress();
-            this.LoadIis();
-            this.LoadJexus();
+            LoadIis();
+            LoadJexus();
 
-            Text = NativeMethods.IsProcessElevated ? string.Format("{0} (Administrator)", this.Text) : Text;
+            Text = PublicNativeMethods.IsProcessElevated ? string.Format("{0} (Administrator)", Text) : Text;
         }
 
         internal ToolStripButton DisconnectButton
@@ -223,6 +228,12 @@ namespace JexusManager
 
         private void LoadIis()
         {
+            if (!PublicNativeMethods.IsProcessElevated)
+            {
+                // IMPORTANT: only elevated can manipulate IIS.
+                return;
+            }
+
             // TODO: load if only on Windows.
             var config = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.System),
@@ -267,22 +278,34 @@ namespace JexusManager
             }
         }
 
-        private ServerTreeNode GetCurrentData()
+        private ServerTreeNode GetCurrentData(TreeNode node)
         {
-            var top = treeView1.SelectedNode;
-            while (top.Parent != null)
-            {
-                top = top.Parent;
-            }
+            if (node == null)
+                throw new InvalidOperationException("no selected node");
 
-            return (top as ServerTreeNode);
+            var managerNode = node as ManagerTreeNode;
+            if (managerNode?.ServerNode == null)
+                throw new InvalidOperationException($"no server node {node.GetType().FullName}");
+
+            return managerNode.ServerNode;
         }
 
-        private async void actCreateSite_Execute(object sender, EventArgs e)
+        private void actCreateSite_Execute(object sender, EventArgs e)
         {
-            var data = GetCurrentData();
+            var selected = treeView1.SelectedNode;
+            if (selected == null)
+            {
+                return;
+            }
+
+            var data = GetCurrentData(selected);
+            if (data.ServerManager == null)
+            {
+                throw new InvalidOperationException($"null server: {data.Name} : {data.Mode}");
+            }
+
             var dialog = new NewSiteDialog(_serviceContainer, data.ServerManager.Sites);
-            if (dialog.ShowDialog() != DialogResult.OK)
+            if (dialog.ShowDialog(this) != DialogResult.OK)
             {
                 return;
             }
@@ -326,10 +349,10 @@ namespace JexusManager
         {
             var node = (Site)treeView1.SelectedNode.Tag;
             var dialog = new BindingsDialog(_serviceContainer, node);
-            dialog.ShowDialog();
+            dialog.ShowDialog(this);
         }
 
-        private async void btnRemoveSite_Click(object sender, EventArgs e)
+        private void btnRemoveSite_Click(object sender, EventArgs e)
         {
             var result = UIService.ShowMessage(
                 "Are you sure that you want to remove the selected site?",
@@ -348,11 +371,11 @@ namespace JexusManager
             treeView1.SelectedNode.Remove();
         }
 
-        private async void Form1FormClosing(object sender, FormClosingEventArgs e)
+        private void Form1FormClosing(object sender, FormClosingEventArgs e)
         {
             if (actSave.Enabled)
             {
-                var result = this.UIService.ShowMessage("The connection list has changed. Do you want to save changes?", Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                var result = UIService.ShowMessage("The connection list has changed. Do you want to save changes?", Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                 if (result == DialogResult.Yes)
                 {
                     actSave.DoExecute();
@@ -369,8 +392,8 @@ namespace JexusManager
 
                 try
                 {
-                    await serverNode.ServerManager.CommitChangesAsync();
-                    var conflict = await ((JexusServerManager)serverNode.ServerManager).ByeAsync();
+                    serverNode.ServerManager.CommitChanges();
+                    var conflict = AsyncHelper.RunSync(() => ((JexusServerManager)serverNode.ServerManager).ByeAsync());
                     if (Environment.MachineName != conflict)
                     {
                         MessageBox.Show(string.Format("The server is also connected to {0}. Making changes on multiple clients might corrupt server configuration.", conflict), Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -400,7 +423,7 @@ namespace JexusManager
             treeView1.SelectedNode.BeginEdit();
         }
 
-        private async void treeView1_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
+        private void treeView1_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
         {
             var site = (Site)e.Node.Tag;
             if (string.IsNullOrEmpty(e.Label))
@@ -413,7 +436,7 @@ namespace JexusManager
             {
                 if (e.Label.Contains(ch))
                 {
-                    this.UIService.ShowMessage("The site name cannot contain the following characters: '\\, /, ?, ;, :, @, &, =, +, $, ,, |, \", <, >'.", "Sites", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    UIService.ShowMessage("The site name cannot contain the following characters: '\\, /, ?, ;, :, @, &, =, +, $, ,, |, \", <, >'.", "Sites", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     e.CancelEdit = true;
                     return;
                 }
@@ -423,16 +446,17 @@ namespace JexusManager
             {
                 if (e.Label.Contains(ch) || e.Label.StartsWith("~"))
                 {
-                    this.UIService.ShowMessage("The site name cannot contain the following characters: '~,  '.", "Sites", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    UIService.ShowMessage("The site name cannot contain the following characters: '~,  '.", "Sites", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     e.CancelEdit = true;
                     return;
                 }
             }
 
-            await site.RemoveApplicationsAsync();
+            // TODO: is this required by Jexus?
+            // await site.RemoveApplicationsAsync();
             site.Name = e.Label;
-            site.Save();
-            // TODO: how to handle rename.
+            site.Server.CommitChanges();
+
             treeView1.SelectedNode = null;
             treeView1.SelectedNode = e.Node;
         }
@@ -447,7 +471,13 @@ namespace JexusManager
 
         internal void RemoveSiteNode(Site site)
         {
-            var data = GetCurrentData();
+            var selected = treeView1.SelectedNode;
+            if (selected == null)
+            {
+                return;
+            }
+                
+            var data = GetCurrentData(selected);
             foreach (TreeNode node in data.SitesNode.Nodes)
             {
                 if (node?.Tag == site)
@@ -472,16 +502,77 @@ namespace JexusManager
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            var node = ((ManagerTreeNode)e.Node);
-            var serverNode = node as ServerTreeNode;
-            if (serverNode != null && serverNode.IsBusy)
+            if (IsDisposed)
             {
                 return;
             }
 
-            actDisconnect.Enabled = serverNode != null && !serverNode.IsBusy && !serverNode.Ignore;
-            EnableServerMenuItems(serverNode?.ServerManager != null);
+            if (e.Node == null)
+            {
+                return;
+            }
+                       
+            var node = ((ManagerTreeNode)e.Node);
+            var serverNode = node as ServerTreeNode;
             actUp.Enabled = !(serverNode != null || node is HomePageTreeNode);
+            if (serverNode != null)
+            {
+                if (serverNode.IsBusy)
+                {
+                    return;
+                }
+
+                actDisconnect.Enabled = !serverNode.IsBusy && !serverNode.Ignore;
+                EnableServerMenuItems(serverNode.ServerManager != null);
+                node.LoadPanels(this, _serviceContainer, _providers);
+                ShowInfo("Ready");
+                return;
+            }
+
+            var siteNode = node as SiteTreeNode;
+            if (siteNode != null)
+            {
+                var canBrowse = siteNode.Site.Bindings.Any(binding => binding.CanBrowse);
+                toolStripMenuItem12.Visible = canBrowse;
+                manageWebsiteToolStripMenuItem.Visible = canBrowse;
+                node.LoadPanels(this, _serviceContainer, _providers);
+                ShowInfo("Ready");
+                return;
+            }
+
+            var appNode = node as ApplicationTreeNode;
+            if (appNode != null)
+            {
+                var canBrowse = appNode.Application.Site.Bindings.Any(binding => binding.CanBrowse);
+                toolStripMenuItem15.Visible = canBrowse;
+                manageApplicationToolStripMenuItem.Visible = canBrowse;
+                node.LoadPanels(this, _serviceContainer, _providers);
+                ShowInfo("Ready");
+                return;
+            }
+
+            var vdirNode = node as VirtualDirectoryTreeNode;
+            if (vdirNode != null)
+            {
+                var canBrowse = vdirNode.VirtualDirectory.Application.Site.Bindings.Any(binding => binding.CanBrowse);
+                toolStripSeparator4.Visible = canBrowse;
+                manageVirtualDirectoryToolStripMenuItem.Visible = canBrowse;
+                node.LoadPanels(this, _serviceContainer, _providers);
+                ShowInfo("Ready");
+                return;
+            }
+
+            var physNode = node as PhysicalDirectoryTreeNode;
+            if (physNode != null)
+            {
+                var canBrowse = physNode.PhysicalDirectory.Application.Site.Bindings.Any(binding => binding.CanBrowse);
+                toolStripSeparator9.Visible = canBrowse;
+                manageFolderToolStripMenuItem.Visible = canBrowse;
+                node.LoadPanels(this, _serviceContainer, _providers);
+                ShowInfo("Ready");
+                return;
+            }
+
             node.LoadPanels(this, _serviceContainer, _providers);
             ShowInfo("Ready");
         }
@@ -510,7 +601,13 @@ namespace JexusManager
 
         internal void UpdateSiteNode(Site site)
         {
-            var data = GetCurrentData();
+            var selected = treeView1.SelectedNode;
+            if (selected == null)
+            {
+                return;
+            }
+            
+            var data = GetCurrentData(selected);
             foreach (TreeNode node in data.SitesNode.Nodes)
             {
                 if (node.Tag == site)
@@ -523,7 +620,13 @@ namespace JexusManager
 
         internal void ShowSite(Site site)
         {
-            var data = GetCurrentData();
+            var selected = treeView1.SelectedNode;
+            if (selected == null)
+            {
+                return;
+            }
+            
+            var data = GetCurrentData(selected);
             foreach (TreeNode node in data.SitesNode.Nodes)
             {
                 if (node.Tag == site)
@@ -536,7 +639,14 @@ namespace JexusManager
 
         internal void AddSiteNode(Site site)
         {
-            ManagerTreeNode.AddToParent(GetCurrentData().SitesNode, new SiteTreeNode(_serviceContainer, site) { ContextMenuStrip = cmsSite });
+            var selected = treeView1.SelectedNode;
+            if (selected == null)
+            {
+                return;
+            }
+            
+            var server = GetCurrentData(selected);
+            ManagerTreeNode.AddToParent(server.SitesNode, new SiteTreeNode(_serviceContainer, site, server) { ContextMenuStrip = cmsSite });
         }
 
         internal void AddFarmNode(string farmName, List<FarmServerAdvancedSettings> servers)
@@ -559,12 +669,24 @@ namespace JexusManager
 
         internal void LoadSites()
         {
-            treeView1.SelectedNode = GetCurrentData().SitesNode;
+            var selected = treeView1.SelectedNode;
+            if (selected == null)
+            {
+                return;
+            }
+            
+            treeView1.SelectedNode = GetCurrentData(selected).SitesNode;
         }
 
         internal void LoadPools()
         {
-            treeView1.SelectedNode = GetCurrentData().PoolsNode;
+            var selected = treeView1.SelectedNode;
+            if (selected == null)
+            {
+                return;
+            }
+            
+            treeView1.SelectedNode = GetCurrentData(selected).PoolsNode;
         }
 
         private void actUp_Execute(object sender, EventArgs e)
@@ -579,20 +701,20 @@ namespace JexusManager
 
         private void iISOnMSDNOnlineToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=213860");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=213860");
         }
 
         private void iISNETOnlineToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=213859");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=213859");
         }
 
         private void iISKBsOnlineToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210477");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210477");
         }
 
-        private async void actConnectServer_Execute(object sender, EventArgs e)
+        private void actConnectServer_Execute(object sender, EventArgs e)
         {
             var names = new List<string>();
             names.Add("Start Page");
@@ -606,7 +728,7 @@ namespace JexusManager
             }
 
             var dialog = new ConnectionWizard(_serviceContainer, names.ToArray());
-            if (dialog.ShowDialog() != DialogResult.OK)
+            if (dialog.ShowDialog(this) != DialogResult.OK)
             {
                 return;
             }
@@ -629,7 +751,7 @@ namespace JexusManager
                 var path = Path.GetTempFileName();
                 var random = Guid.NewGuid().ToString();
                 File.WriteAllText(path, random);
-                node.IsLocalhost = await ((JexusServerManager)node.ServerManager).LocalhostTestAsync(path, random);
+                node.IsLocalhost = AsyncHelper.RunSync(() => ((JexusServerManager)node.ServerManager).LocalhostTestAsync(path, random));
                 data.Server.IsLocalhost = node.IsLocalhost;
             }
             else
@@ -646,9 +768,28 @@ namespace JexusManager
                     false);
             }
 
-            RegisterServer(node);
-            await node.LoadServerAsync(cmsApplicationPools, cmsSites, cmsSite);
-            actSave.Enabled = true;
+            try
+            {
+                RegisterServer(node);
+                // TODO: trigger the load in connection wizard to throw exception earlier.
+                node.LoadServer(cmsApplicationPools, cmsSites, cmsSite);
+                actSave.Enabled = true;
+            }
+            catch (Exception ex)
+            {
+                File.WriteAllText(DialogHelper.DebugLog, ex.ToString());
+                var last = ex;
+                while (last is AggregateException)
+                {
+                    last = last.InnerException;
+                }
+
+                var message = new StringBuilder();
+                message.AppendLine("Could not connect to the specified computer.")
+                    .AppendLine()
+                    .AppendFormat("Details: {0}", last?.Message);
+                MessageBox.Show(message.ToString(), Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void actSave_Execute(object sender, EventArgs e)
@@ -696,7 +837,7 @@ namespace JexusManager
 
         private void actDisconnect_Execute(object sender, EventArgs e)
         {
-            var result = this.UIService.ShowMessage("Are you sure that you want to remove this connection?", "Confirm Remove", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+            var result = UIService.ShowMessage("Are you sure that you want to remove this connection?", "Confirm Remove", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
             if (result != DialogResult.Yes)
             {
                 return;
@@ -707,28 +848,39 @@ namespace JexusManager
             actSave.Enabled = true;
         }
 
-        private async void actCreateApplication_Execute(object sender, EventArgs e)
+        private void actCreateApplication_Execute(object sender, EventArgs e)
         {
             var treeNode = ((ManagerTreeNode)treeView1.SelectedNode);
-            await treeNode.AddApplication(cmsApplication);
+            treeNode.AddApplication(cmsApplication);
             treeNode.ServerManager.CommitChanges();
         }
 
         private void btnAbout_Click(object sender, EventArgs e)
         {
-            Process.Start("https://jexus.codeplex.com");
+            DialogHelper.ProcessStart("https://jexus.codeplex.com");
         }
 
         private void treeView1_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             treeView1.SelectedNode = null;
             treeView1.SelectedNode = e.Node;
+
+            if (e.Node is HomePageTreeNode)
+            {
+                return;
+            }
+
+            if (GetCurrentData(e.Node)?.ServerManager == null && e.Button == MouseButtons.Right)
+            {
+                treeView1_NodeMouseDoubleClick(sender, e);
+                treeView1_AfterSelect(sender, new TreeViewEventArgs(e.Node));
+            }
         }
 
-        private async void btnRemoveApplication_Click(object sender, EventArgs e)
+        private void btnRemoveApplication_Click(object sender, EventArgs e)
         {
             var node = (Application)treeView1.SelectedNode.Tag;
-            node.Site.Applications = await node.RemoveAsync();
+            node.Site.Applications = node.Remove();
             node.Server.CommitChanges();
             treeView1.SelectedNode.Remove();
         }
@@ -737,13 +889,13 @@ namespace JexusManager
         {
         }
 
-        private async void btnRestartSite_Click(object sender, EventArgs e)
+        private void btnRestartSite_Click(object sender, EventArgs e)
         {
             btnRestartSite.Enabled = false;
             var node = (Site)treeView1.SelectedNode.Tag;
             try
             {
-                await node.RestartAsync();
+                node.Restart();
             }
             catch (Exception ex)
             {
@@ -753,15 +905,16 @@ namespace JexusManager
             btnRestartSite.Enabled = true;
         }
 
-        private async void treeView1_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        private void treeView1_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            await ((ManagerTreeNode)e.Node).HandleDoubleClick(this);
+            ((ManagerTreeNode)e.Node).HandleDoubleClick(this);
+            treeView1_AfterSelect(sender, new TreeViewEventArgs(e.Node));
         }
 
         private void btnUpdate_Click(object sender, EventArgs e)
         {
             var dialog = new UpdateDialog();
-            dialog.ShowDialog();
+            dialog.ShowDialog(this);
         }
 
         private void btnRemoveFarmServer_Click(object sender, EventArgs e)
@@ -855,6 +1008,32 @@ namespace JexusManager
             treeNode.VirtualDirectory.Application.VirtualDirectories.Remove(treeNode.VirtualDirectory);
             treeNode.ServerManager.CommitChanges();
             treeNode.Parent.Nodes.Remove(treeNode);
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            var key = Registry.CurrentUser.CreateSubKey(@"Software\LeXtudio\JexusManager");
+            if (key == null)
+            {
+                return;
+            }
+
+            var last = (string)key.GetValue("LastUpdateCheck", string.Empty);
+            DateTime lastDate;
+            var valid = DateTime.TryParseExact(last, "D", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out lastDate);
+            if (!valid)
+            {
+                lastDate = DateTime.UtcNow.Date.Subtract(TimeSpan.FromDays(1));
+            }
+
+            var span = DateTime.UtcNow.Date.Subtract(lastDate);
+            if (span.TotalHours < 24)
+            {
+                return;
+            }
+
+            key.SetValue("LastUpdateCheck", DateTime.UtcNow.Date.ToString("D", CultureInfo.InvariantCulture));
+            btnUpdate.PerformClick();
         }
     }
 }

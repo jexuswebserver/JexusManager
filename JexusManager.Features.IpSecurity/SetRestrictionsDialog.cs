@@ -55,6 +55,7 @@ namespace JexusManager.Features.IpSecurity
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     section["enableReverseDns"] = cbDomain.Checked;
@@ -90,7 +91,7 @@ namespace JexusManager.Features.IpSecurity
 
         private void SetRestrictionsDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210513");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210513");
         }
     }
 }

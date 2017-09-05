@@ -11,11 +11,13 @@ namespace Tests.Main
     using Microsoft.Web.Administration;
 
     using Xunit;
+    using System.Xml.Linq;
+    using System.Xml.XPath;
 
     public class SiteTestFixture
     {
         [Fact]
-        public async void AddSite()
+        public void AddSite()
         {
             const string Current = @"applicationHost.config";
             const string Original = @"original.config";
@@ -36,6 +38,31 @@ namespace Tests.Main
                 Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
 
             var serverManager = new IisExpressServerManager(Current);
+
+            const string Expected = @"expected_site_add.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root.XPathSelectElement("/configuration/system.applicationHost/sites");
+            var siteNode = new XElement("site");
+            siteNode.SetAttributeValue("name", "Contoso");
+            siteNode.SetAttributeValue("id", "2");
+            var bindingsNode = new XElement("bindings");
+            siteNode.Add(bindingsNode);
+            node?.Add(siteNode);
+
+            var bindingNode = new XElement("binding");
+            bindingNode.SetAttributeValue("protocol", "http");
+            bindingNode.SetAttributeValue("bindingInformation", @"*:80:www.contoso.com");
+            bindingsNode.Add(bindingNode);
+
+            var appNode = new XElement("application");
+            appNode.SetAttributeValue("path", "/");
+            siteNode.Add(appNode);
+            var vDirNode = new XElement("virtualDirectory");
+            vDirNode.SetAttributeValue("path", "/");
+            vDirNode.SetAttributeValue("physicalPath", @"C:\Inetpub\www.contoso.com\wwwroot");
+            appNode.Add(vDirNode);
+
+            document.Save(Expected);
 
             Configuration config = serverManager.GetApplicationHostConfiguration();
             ConfigurationSection sitesSection = config.GetSection("system.applicationHost/sites");
@@ -65,18 +92,11 @@ namespace Tests.Main
 
             serverManager.CommitChanges();
 
-            const string Expected = @"expected_site_add.config";
-            const string ExpectedMono = @"expected_site_add.mono.config";
-
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("Main", ExpectedMono)
-                    : Path.Combine("Main", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
 
         [Fact]
-        public async void AddSiteManaged()
+        public void AddSiteManaged()
         {
             const string Current = @"applicationHost.config";
             const string Original = @"original.config";
@@ -97,6 +117,31 @@ namespace Tests.Main
                 Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
 
             var serverManager = new IisExpressServerManager(Current);
+
+            const string Expected = @"expected_site_add.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root.XPathSelectElement("/configuration/system.applicationHost/sites");
+            var siteNode = new XElement("site");
+            siteNode.SetAttributeValue("name", "Contoso");
+            siteNode.SetAttributeValue("id", "2");
+            var bindingsNode = new XElement("bindings");
+            siteNode.Add(bindingsNode);
+            node?.Add(siteNode);
+
+            var bindingNode = new XElement("binding");
+            bindingNode.SetAttributeValue("protocol", "http");
+            bindingNode.SetAttributeValue("bindingInformation", @"*:80:www.contoso.com");
+            bindingsNode.Add(bindingNode);
+
+            var appNode = new XElement("application");
+            appNode.SetAttributeValue("path", "/");
+            siteNode.Add(appNode);
+            var vDirNode = new XElement("virtualDirectory");
+            vDirNode.SetAttributeValue("path", "/");
+            vDirNode.SetAttributeValue("physicalPath", @"C:\Inetpub\www.contoso.com\wwwroot");
+            appNode.Add(vDirNode);
+
+            document.Save(Expected);
 
             var sites = serverManager.Sites;
             var site = new Site(sites);
@@ -122,14 +167,7 @@ namespace Tests.Main
 
             serverManager.CommitChanges();
 
-            const string Expected = @"expected_site_add.config";
-            const string ExpectedMono = @"expected_site_add.mono.config";
-
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("Main", ExpectedMono)
-                    : Path.Combine("Main", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
     }
 }

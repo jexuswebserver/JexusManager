@@ -22,6 +22,8 @@ namespace Tests.Caching
     using Moq;
 
     using Xunit;
+    using System.Xml.Linq;
+    using System.Xml.XPath;
 
     public class CachingFeatureServerTestFixture
     {
@@ -33,7 +35,7 @@ namespace Tests.Caching
 
         private const string Current = @"applicationHost.config";
 
-        public async Task SetUp()
+        public void SetUp()
         {
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -82,37 +84,39 @@ namespace Tests.Caching
         }
 
         [Fact]
-        public async void TestBasic()
+        public void TestBasic()
         {
-            await this.SetUp();
+            SetUp();
             Assert.Equal(1, _feature.Items.Count);
             Assert.Equal(".cs", _feature.Items[0].Extension);
         }
 
         [Fact]
-        public async void TestRemove()
+        public void TestRemove()
         {
-            await this.SetUp();
+            SetUp();
             const string Expected = @"expected_remove.config";
-            const string ExpectedMono = @"expected_remove.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer/caching");
+            node?.Remove();
+            document.Save(Expected);
 
             _feature.SelectedItem = _feature.Items[0];
             _feature.Remove();
             Assert.Null(_feature.SelectedItem);
             Assert.Equal(0, _feature.Items.Count);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("Caching", ExpectedMono)
-                    : Path.Combine("Caching", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
 
         [Fact]
-        public async void TestEdit()
+        public void TestEdit()
         {
-            await this.SetUp();
+            SetUp();
             const string Expected = @"expected_edit.config";
-            const string ExpectedMono = @"expected_edit.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer/caching/profiles/add");
+            node?.SetAttributeValue("extension", ".doc");
+            document.Save(Expected);
 
             _feature.SelectedItem = _feature.Items[0];
             var item = _feature.SelectedItem;
@@ -121,19 +125,21 @@ namespace Tests.Caching
             Assert.NotNull(_feature.SelectedItem);
             Assert.Equal(".doc", _feature.SelectedItem.Extension);
             Assert.Equal(1, _feature.Items.Count);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("Caching", ExpectedMono)
-                    : Path.Combine("Caching", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
 
         [Fact]
-        public async void TestAdd()
+        public void TestAdd()
         {
-            await this.SetUp();
+            SetUp();
             const string Expected = @"expected_add.config";
-            const string ExpectedMono = @"expected_add.mono.config";
+            var document = XDocument.Load(Current);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer/caching/profiles/add");
+            var newNode = new XElement("add");
+            newNode.SetAttributeValue("duration", "00:00:00");
+            newNode.SetAttributeValue("extension", ".txt");
+            node?.AddAfterSelf(newNode);
+            document.Save(Expected);
 
             var item = new CachingItem(null);
             item.Extension = ".txt";
@@ -141,11 +147,7 @@ namespace Tests.Caching
             Assert.NotNull(_feature.SelectedItem);
             Assert.Equal(".txt", _feature.SelectedItem.Extension);
             Assert.Equal(2, _feature.Items.Count);
-            XmlAssert.Equal(
-                Helper.IsRunningOnMono()
-                    ? Path.Combine("Caching", ExpectedMono)
-                    : Path.Combine("Caching", Expected),
-                Current);
+            XmlAssert.Equal(Expected, Current);
         }
     }
 }

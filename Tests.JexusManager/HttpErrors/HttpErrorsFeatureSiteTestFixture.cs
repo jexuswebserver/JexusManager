@@ -2,6 +2,9 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Xml.Linq;
+using System.Xml.XPath;
+
 namespace Tests.HttpErrors
 {
     using System;
@@ -31,7 +34,7 @@ namespace Tests.HttpErrors
 
         private const string Current = @"applicationHost.config";
 
-        public async Task SetUp()
+        public void SetUp()
         {
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -89,16 +92,27 @@ namespace Tests.HttpErrors
         }
 
         [Fact]
-        public async void TestBasic()
+        public void TestBasic()
         {
-            await this.SetUp();
+            SetUp();
             Assert.Equal(9, _feature.Items.Count);
         }
 
         [Fact]
-        public async void TestRemoveInherited()
+        public void TestRemoveInherited()
         {
-            await this.SetUp();
+            SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_remove.site.config";
+            var document = XDocument.Load(site);
+            var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
+            var errors = new XElement("httpErrors");
+            var remove = new XElement("remove");
+            remove.SetAttributeValue("statusCode", "401");
+            node?.Add(errors);
+            errors.Add(remove);
+            document.Save(expected);
 
             _feature.SelectedItem = _feature.Items[0];
             Assert.Equal(401U, _feature.SelectedItem.Status);
@@ -110,13 +124,18 @@ namespace Tests.HttpErrors
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("HttpErrors", "expected_remove.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
 
         [Fact]
-        public async void TestRemove()
+        public void TestRemove()
         {
-            await this.SetUp();
+            SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_remove1.site.config";
+            var document = XDocument.Load(site);
+            document.Save(expected);
 
             var item = new HttpErrorsItem(null);
             item.Status = 455;
@@ -133,34 +152,62 @@ namespace Tests.HttpErrors
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("HttpErrors", "expected_remove1.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
 
         [Fact]
-        public async void TestEditInherited()
+        public void TestEditInherited()
         {
-            await this.SetUp();
+            SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_edit.site.config";
+            var document = XDocument.Load(site);
+            var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
+            var errors = new XElement("httpErrors");
+            var remove = new XElement("remove");
+            remove.SetAttributeValue("statusCode", "401");
+            var add = new XElement("error");
+            add.SetAttributeValue("prefixLanguageFilePath", "%IIS_BIN%\\custerr");
+            add.SetAttributeValue("statusCode", "401");
+            add.SetAttributeValue("path", "c:\\test.htm");
+            node?.Add(errors);
+            errors.Add(remove);
+            errors.Add(add);
+            document.Save(expected);
 
             _feature.SelectedItem = _feature.Items[0];
             Assert.Equal("401.htm", _feature.SelectedItem.Path);
             var item = _feature.SelectedItem;
-            var expected = "c:\\test.htm";
-            item.Path = expected;
+            var expectedValue = "c:\\test.htm";
+            item.Path = expectedValue;
             _feature.EditItem(item);
             Assert.NotNull(_feature.SelectedItem);
-            Assert.Equal(expected, _feature.SelectedItem.Path);
+            Assert.Equal(expectedValue, _feature.SelectedItem.Path);
 
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("HttpErrors", "expected_edit.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
 
         [Fact]
-        public async void TestEdit()
+        public void TestEdit()
         {
-            await this.SetUp();
+            SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_edit.site.config";
+            var document = XDocument.Load(site);
+            var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
+            var errors = new XElement("httpErrors");
+            var add = new XElement("error");
+            add.SetAttributeValue("statusCode", "455");
+            add.SetAttributeValue("path", "c:\\test1.htm");
+            node?.Add(errors);
+            errors.Add(add);
+            document.Save(expected);
 
             var item = new HttpErrorsItem(null);
             item.Status = 455;
@@ -170,24 +217,37 @@ namespace Tests.HttpErrors
 
             Assert.Equal(original, _feature.SelectedItem.Path);
             Assert.Equal(10, _feature.Items.Count);
-            var expected = "c:\\test1.htm";
-            item.Path = expected;
+            var expectedValue = "c:\\test1.htm";
+            item.Path = expectedValue;
             _feature.EditItem(item);
             Assert.NotNull(_feature.SelectedItem);
-            Assert.Equal(expected, _feature.SelectedItem.Path);
+            Assert.Equal(expectedValue, _feature.SelectedItem.Path);
             Assert.Equal(10, _feature.Items.Count);
 
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("HttpErrors", "expected_edit1.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
 
         [Fact]
-        public async void TestAdd()
+        public void TestAdd()
         {
-            await this.SetUp();
+            SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_edit.site.config";
+            var document = XDocument.Load(site);
+            var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
+            var errors = new XElement("httpErrors");
+            var add = new XElement("error");
+            add.SetAttributeValue("statusCode", "455");
+            add.SetAttributeValue("path", "c:\\test.htm");
+            node?.Add(errors);
+            errors.Add(add);
+            document.Save(expected);
+
             var item = new HttpErrorsItem(null);
             item.Status = 455;
             item.Path = "c:\\test.htm";
@@ -199,7 +259,7 @@ namespace Tests.HttpErrors
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("HttpErrors", "expected_add.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
     }
 }

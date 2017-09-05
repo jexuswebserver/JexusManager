@@ -22,6 +22,8 @@ namespace Tests.ResponseHeaders
     using Moq;
 
     using Xunit;
+    using System.Xml.Linq;
+    using System.Xml.XPath;
 
     public class ResponseHeadersFeatureSiteTestFixture
     {
@@ -31,7 +33,7 @@ namespace Tests.ResponseHeaders
 
         private const string Current = @"applicationHost.config";
 
-        public async Task SetUp()
+        public void SetUp()
         {
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -89,16 +91,29 @@ namespace Tests.ResponseHeaders
         }
 
         [Fact]
-        public async void TestBasic()
+        public void TestBasic()
         {
-            await this.SetUp();
+            SetUp();
             Assert.Equal(1, _feature.Items.Count);
         }
 
         [Fact]
-        public async void TestRemoveInherited()
+        public void TestRemoveInherited()
         {
-            await this.SetUp();
+            SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_remove.site.config";
+            var document = XDocument.Load(site);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer");
+            var http = new XElement("httpProtocol");
+            node?.Add(http);
+            var headers = new XElement("customHeaders");
+            http.Add(headers);
+            var remove = new XElement("remove");
+            remove.SetAttributeValue("name", "X-Powered-By");
+            headers.Add(remove);
+            document.Save(expected);
 
             _feature.SelectedItem = _feature.Items[0];
             Assert.Equal("X-Powered-By", _feature.SelectedItem.Name);
@@ -110,13 +125,19 @@ namespace Tests.ResponseHeaders
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("ResponseHeaders", "expected_remove.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
 
         [Fact]
-        public async void TestRemove()
+        public void TestRemove()
         {
-            await this.SetUp();
+            SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_remove1.site.config";
+            var document = XDocument.Load(site);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer");
+            document.Save(expected);
 
             var item = new ResponseHeadersItem(null);
             item.Name = "Server";
@@ -133,13 +154,30 @@ namespace Tests.ResponseHeaders
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("ResponseHeaders", "expected_remove1.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
 
         [Fact]
-        public async void TestEditInherited()
+        public void TestEditInherited()
         {
-            await this.SetUp();
+            SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_edit.site.config";
+            var document = XDocument.Load(site);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer");
+            var http = new XElement("httpProtocol");
+            node?.Add(http);
+            var headers = new XElement("customHeaders");
+            http.Add(headers);
+            var remove = new XElement("remove");
+            remove.SetAttributeValue("name", "X-Powered-By");
+            headers.Add(remove);
+            var add = new XElement("add");
+            add.SetAttributeValue("name", "X-Powered-By");
+            add.SetAttributeValue("value", "XSP");
+            headers.Add(add);
+            document.Save(expected);
 
             _feature.SelectedItem = _feature.Items[0];
             Assert.Equal("X-Powered-By", _feature.SelectedItem.Name);
@@ -153,13 +191,27 @@ namespace Tests.ResponseHeaders
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("ResponseHeaders", "expected_edit.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
 
         [Fact]
-        public async void TestEdit()
+        public void TestEdit()
         {
-            await this.SetUp();
+            SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_edit1.site.config";
+            var document = XDocument.Load(site);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer");
+            var http = new XElement("httpProtocol");
+            node?.Add(http);
+            var headers = new XElement("customHeaders");
+            http.Add(headers);
+            var add = new XElement("add");
+            add.SetAttributeValue("name", "Server");
+            add.SetAttributeValue("value", "Jexus2");
+            headers.Add(add);
+            document.Save(expected);
 
             var item = new ResponseHeadersItem(null);
             item.Name = "Server";
@@ -178,13 +230,28 @@ namespace Tests.ResponseHeaders
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("ResponseHeaders", "expected_edit1.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
 
         [Fact]
-        public async void TestAdd()
+        public void TestAdd()
         {
-            await this.SetUp();
+            SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_edit.site.config";
+            var document = XDocument.Load(site);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer");
+            var http = new XElement("httpProtocol");
+            node?.Add(http);
+            var headers = new XElement("customHeaders");
+            http.Add(headers);
+            var add = new XElement("add");
+            add.SetAttributeValue("name", "Server");
+            add.SetAttributeValue("value", "Jexus");
+            headers.Add(add);
+            document.Save(expected);
+
             var item = new ResponseHeadersItem(null);
             item.Name = "Server";
             item.Value = "Jexus";
@@ -196,7 +263,7 @@ namespace Tests.ResponseHeaders
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("ResponseHeaders", "expected_add.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
     }
 }

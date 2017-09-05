@@ -136,7 +136,7 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         protected override bool ShowHelp()
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkID=130425&amp;clcid=0x409");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkID=130425&amp;clcid=0x409");
             return true;
         }
 

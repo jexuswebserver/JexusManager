@@ -30,6 +30,7 @@ namespace JexusManager.Features.Caching
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     item.VaryByHeaders = txtHeaders.Text;
@@ -39,6 +40,7 @@ namespace JexusManager.Features.Caching
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(cbString, "CheckedChanged")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     txtString.Enabled = cbString.Checked;
@@ -50,6 +52,7 @@ namespace JexusManager.Features.Caching
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(cbHeaders, "CheckedChanged")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     txtHeaders.Enabled = cbHeaders.Checked;
@@ -62,7 +65,7 @@ namespace JexusManager.Features.Caching
 
         private void CachingAdvancedDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210522");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210522");
         }
     }
 }

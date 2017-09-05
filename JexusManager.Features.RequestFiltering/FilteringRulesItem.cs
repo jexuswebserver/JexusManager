@@ -44,31 +44,15 @@ namespace JexusManager.Features.RequestFiltering
         {
             get
             {
-                return Combine(Extensions.Select(item => item.FileExtension).ToList());
+                return Extensions.Select(item => item.FileExtension).Combine(", ");
             }
-        }
-
-        private static string Combine(List<string> preConditions)
-        {
-            if (preConditions.Count == 0)
-            {
-                return string.Empty;
-            }
-
-            var result = new StringBuilder(preConditions[0]);
-            for (int index = 1; index < preConditions.Count; index++)
-            {
-                result.AppendFormat(", {0}", preConditions[index]);
-            }
-
-            return result.ToString();
         }
 
         public string DenyStringsString
         {
             get
             {
-                return Combine(DenyStrings.Select(item => item.DenyString).ToList());
+                return DenyStrings.Select(item => item.DenyString).Combine(", ");
             }
         }
 
@@ -81,7 +65,7 @@ namespace JexusManager.Features.RequestFiltering
 
         public FilteringRulesItem(ConfigurationElement element)
         {
-            this.Element = element;
+            Element = element;
             Headers = new List<ScanHeadersItem>();
             Extensions = new List<AppliesToItem>();
             DenyStrings = new List<DenyStringsItem>();

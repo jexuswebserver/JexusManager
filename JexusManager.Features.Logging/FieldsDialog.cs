@@ -99,6 +99,7 @@ namespace JexusManager.Features.Logging
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(lvCustom, "SelectedIndexChanged")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnRemove.Enabled = lvCustom.SelectedItems.Count > 0;
@@ -107,6 +108,7 @@ namespace JexusManager.Features.Logging
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(lvStandard, "ItemChecked")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnOK.Enabled = true;
@@ -114,6 +116,7 @@ namespace JexusManager.Features.Logging
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnAdd, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     var dialog = new AddFieldDialog(ServiceProvider, null, logFile);
@@ -128,6 +131,7 @@ namespace JexusManager.Features.Logging
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnEdit, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     var selected = (CustomListViewItem)lvCustom.SelectedItems[0];
@@ -143,6 +147,7 @@ namespace JexusManager.Features.Logging
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnRemove, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     foreach (CustomListViewItem item in lvCustom.SelectedItems)
@@ -156,6 +161,7 @@ namespace JexusManager.Features.Logging
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     logFile.LogExtFileFlags = 0;
@@ -173,7 +179,7 @@ namespace JexusManager.Features.Logging
 
         private void FieldsDialog_HelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210517#W3CLoggingFields");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210517#W3CLoggingFields");
         }
     }
 }

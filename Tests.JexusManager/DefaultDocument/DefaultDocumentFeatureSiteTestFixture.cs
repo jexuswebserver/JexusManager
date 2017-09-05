@@ -22,6 +22,8 @@ namespace Tests.DefaultDocument
     using Moq;
 
     using Xunit;
+    using System.Xml.Linq;
+    using System.Xml.XPath;
 
     public class DefaultDocumentFeatureSiteTestFixture
     {
@@ -33,7 +35,7 @@ namespace Tests.DefaultDocument
 
         private const string Current = @"applicationHost.config";
 
-        public async Task SetUp()
+        public void SetUp()
         {
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -82,25 +84,32 @@ namespace Tests.DefaultDocument
         }
 
         [Fact]
-        public async void TestBasic()
+        public void TestBasic()
         {
-            await SetUp();
+            SetUp();
             Assert.Equal(7, _feature.Items.Count);
         }
 
         [Fact]
-        public async void TestEnable()
+        public void TestEnable()
         {
-            await this.SetUp();
+            SetUp();
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_disabled.site.config";
+            var document = XDocument.Load(site);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer/defaultDocument");
+            node?.SetAttributeValue("enabled", "false");
+            document.Save(expected);
 
             Assert.True(_feature.IsEnabled);
             _feature.Disable();
             Assert.False(_feature.IsEnabled);
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("DefaultDocument", "expected_disabled.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
 
             _feature.Enable();
             Assert.True(_feature.IsEnabled);
@@ -110,9 +119,18 @@ namespace Tests.DefaultDocument
         }
 
         [Fact]
-        public async void TestRemoveInherited()
+        public void TestRemoveInherited()
         {
-            await this.SetUp();
+            SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_remove.site.config";
+            var document = XDocument.Load(site);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer/defaultDocument/files");
+            var remove = new XElement("remove");
+            remove.SetAttributeValue("value", "Default.asp");
+            node?.AddFirst(remove);
+            document.Save(expected);
 
             _feature.SelectedItem = _feature.Items[2];
             Assert.Equal("Default.asp", _feature.Items[2].Name);
@@ -124,13 +142,19 @@ namespace Tests.DefaultDocument
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("DefaultDocument", "expected_remove.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
 
         [Fact]
-        public async void TestRemove()
+        public void TestRemove()
         {
-            await SetUp();
+            SetUp();
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_remove1.site.config";
+            var document = XDocument.Load(site);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer");
+            node?.Remove();
+            document.Save(expected);
 
             _feature.SelectedItem = _feature.Items[0];
             Assert.Equal("home1.html", _feature.Items[0].Name);
@@ -142,13 +166,23 @@ namespace Tests.DefaultDocument
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("DefaultDocument", "expected_remove1.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
 
         [Fact]
-        public async void TestAdd()
+        public void TestAdd()
         {
-            await SetUp();
+            SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_add.site.config";
+            var document = XDocument.Load(site);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer/defaultDocument/files");
+            var add = new XElement("add");
+            add.SetAttributeValue("value", "default.my");
+            node?.AddFirst(add);
+            document.Save(expected);
+
             var item = new DocumentItem(null);
             item.Name = "default.my";
             _feature.InsertItem(_feature.Items.FindIndex(i => i.Flag == "Local"), item);
@@ -159,13 +193,21 @@ namespace Tests.DefaultDocument
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("DefaultDocument", "expected_add.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
 
         [Fact]
-        public async void TestRevert()
+        public void TestRevert()
         {
-            await SetUp();
+            SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_revert.site.config";
+            var document = XDocument.Load(site);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer/defaultDocument/files");
+            node?.Remove();
+            document.Save(expected);
+
             _feature.Revert();
             Assert.Null(_feature.SelectedItem);
             Assert.Equal(6, _feature.Items.Count);
@@ -174,13 +216,25 @@ namespace Tests.DefaultDocument
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("DefaultDocument", "expected_revert.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
 
         [Fact]
-        public async void TestMoveUp()
+        public void TestMoveUp()
         {
-            await SetUp();
+            SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_up.site.config";
+            var document = XDocument.Load(site);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer/defaultDocument/files");
+            var add = new XElement("add");
+            add.SetAttributeValue("value", "Default.htm");
+            node?.AddFirst(add);
+            var remove = new XElement("remove");
+            remove.SetAttributeValue("value", "Default.htm");
+            node?.AddFirst(remove);
+            document.Save(expected);
 
             _feature.SelectedItem = _feature.Items[1];
             Assert.Equal("Default.htm", _feature.Items[1].Name);
@@ -194,13 +248,38 @@ namespace Tests.DefaultDocument
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("DefaultDocument", "expected_up1.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
 
         [Fact]
-        public async void TestMoveDown()
+        public void TestMoveDown()
         {
-            await SetUp();
+            SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_up.site.config";
+            var document = XDocument.Load(site);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer/defaultDocument/files");
+            var htm = new XElement("add");
+            htm.SetAttributeValue("value", "Default.htm");
+            node?.AddFirst(htm);
+            node?.AddFirst(new XElement("clear"));
+            var asp = new XElement("add");
+            asp.SetAttributeValue("value", "Default.asp");
+            node?.Add(asp);
+            var index = new XElement("add");
+            index.SetAttributeValue("value", "index.htm");
+            node?.Add(index);
+            var index1 = new XElement("add");
+            index1.SetAttributeValue("value", "index.html");
+            node?.Add(index1);
+            var iis = new XElement("add");
+            iis.SetAttributeValue("value", "iisstart.htm");
+            node?.Add(iis);
+            var aspx = new XElement("add");
+            aspx.SetAttributeValue("value", "default.aspx");
+            node?.Add(aspx);
+            document.Save(expected);
 
             _feature.SelectedItem = _feature.Items[0];
             Assert.Equal("Default.htm", _feature.Items[1].Name);
@@ -214,7 +293,7 @@ namespace Tests.DefaultDocument
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(Path.Combine("DefaultDocument", "expected_up.site.config"), Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
     }
 }

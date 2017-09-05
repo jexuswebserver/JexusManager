@@ -19,13 +19,14 @@ namespace JexusManager.Tree
 
     internal sealed class ApplicationPoolsTreeNode : ManagerTreeNode
     {
-        public ApplicationPoolsTreeNode(IServiceProvider serviceProvider, ApplicationPoolCollection pools)
+        public ApplicationPoolsTreeNode(IServiceProvider serviceProvider, ApplicationPoolCollection pools, ServerTreeNode server)
             : base("Application Pools", serviceProvider)
         {
             ImageIndex = 2;
             SelectedImageIndex = 2;
             Tag = pools;
             ServerManager = pools.Parent;
+            ServerNode = server;
         }
 
         public override string PathToSite
@@ -45,6 +46,8 @@ namespace JexusManager.Tree
 
         public override ServerManager ServerManager { get; set; }
 
+        public override ServerTreeNode ServerNode { get; }
+
         public override void LoadPanels(MainForm mainForm, ServiceContainer serviceContainer, List<ModuleProvider> moduleProviders)
         {
             serviceContainer.RemoveService(typeof(IConfigurationService));
@@ -61,14 +64,14 @@ namespace JexusManager.Tree
             mainForm.LoadPage(page);
         }
 
-        public async override Task HandleDoubleClick(MainForm mainForm)
+        public override void HandleDoubleClick(MainForm mainForm)
         {
         }
 
-        public async override Task Expand(MainForm mainForm)
+        public override void Expand(MainForm mainForm)
         { }
 
-        public async override Task AddApplication(ContextMenuStrip appMenu)
+        public override void AddApplication(ContextMenuStrip appMenu)
         {
         }
 

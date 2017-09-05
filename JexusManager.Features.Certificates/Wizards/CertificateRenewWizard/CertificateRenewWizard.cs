@@ -138,7 +138,15 @@ namespace JexusManager.Features.Certificates.Wizards.CertificateRenewWizard
             PrivateKey pvk = new PrivateKey();
             pvk.RSA = new RSACryptoServiceProvider();
             pvk.RSA.ImportParameters(key);
-            pvk.Save(DialogHelper.GetPrivateKeyFile(_existing.Subject));
+
+            var file = DialogHelper.GetPrivateKeyFile(_existing.Subject);
+            var folder = Path.GetDirectoryName(file);
+            if (!Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
+
+            pvk.Save(file);
         }
 
         protected override bool CanComplete
@@ -161,7 +169,7 @@ namespace JexusManager.Features.Certificates.Wizards.CertificateRenewWizard
 
         protected override void ShowHelp()
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210528");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210528");
         }
     }
 }

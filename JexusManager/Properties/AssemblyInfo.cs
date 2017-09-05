@@ -10,11 +10,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("JexusManager")]
-[assembly: AssemblyDescription("Management Console for Jexus web server.")]
+[assembly: AssemblyDescription("Management Console for Jexus web server/IIS Express/IIS.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("LeXtudio")]
 [assembly: AssemblyProduct("JexusManager")]
-[assembly: AssemblyCopyright("Copyright (C) Lex Li 2014. All rights reserved.")]
+[assembly: AssemblyCopyright("Copyright (C) Lex Li 2014-2017. All rights reserved.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

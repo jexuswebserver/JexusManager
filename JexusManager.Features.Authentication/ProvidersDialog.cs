@@ -38,6 +38,7 @@ namespace JexusManager.Features.Authentication
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnRemove, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     cbAvailable.Items.Add(lbProviders.SelectedItem);
@@ -49,7 +50,8 @@ namespace JexusManager.Features.Authentication
             var add = Observable.FromEventPattern<EventArgs>(btnAdd, "Click");
             var load = Observable.FromEventPattern<EventArgs>(this, "Load");
             container.Add(
-                add.Subscribe(evt =>
+                add.ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(evt =>
                 {
                     var selected = cbAvailable.Text;
                     lbProviders.Items.Add(selected);
@@ -62,6 +64,7 @@ namespace JexusManager.Features.Authentication
                 Observable.FromEventPattern<EventArgs>(cbAvailable, "SelectedIndexChanged")
                 .Merge(load)
                 .Merge(add)
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnAdd.Enabled = cbAvailable.SelectedIndex > -1;
@@ -73,6 +76,7 @@ namespace JexusManager.Features.Authentication
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     item.Providers.Clear();
@@ -88,6 +92,7 @@ namespace JexusManager.Features.Authentication
             container.Add(
                 Observable.FromEventPattern<EventArgs>(lbProviders, "SelectedIndexChanged")
                 .Merge(load)
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnRemove.Enabled = lbProviders.SelectedIndex > -1;
@@ -97,6 +102,7 @@ namespace JexusManager.Features.Authentication
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnUp, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     var current = lbProviders.SelectedItem;
@@ -109,6 +115,7 @@ namespace JexusManager.Features.Authentication
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnDown, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     var current = lbProviders.SelectedItem;

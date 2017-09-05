@@ -60,7 +60,7 @@ namespace JexusManager.Features.DirectoryBrowse
 
         public DirectoryBrowseFeature(Module module)
         {
-            this.Module = module;
+            Module = module;
         }
 
         protected static readonly Version FxVersion10 = new Version("1.0");
@@ -72,13 +72,13 @@ namespace JexusManager.Features.DirectoryBrowse
 
         protected void DisplayErrorMessage(Exception ex, ResourceManager resourceManager)
         {
-            var service = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+            var service = (IManagementUIService)GetService(typeof(IManagementUIService));
             service.ShowError(ex, resourceManager.GetString("General"), "", false);
         }
 
         protected object GetService(Type type)
         {
-            return (this.Module as IServiceProvider).GetService(type);
+            return (Module as IServiceProvider).GetService(type);
         }
 
         public TaskList GetTaskList()
@@ -88,7 +88,7 @@ namespace JexusManager.Features.DirectoryBrowse
 
         public void Load()
         {
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var section = service.GetSection("system.webServer/directoryBrowse");
             var enabled = (bool)section["enabled"];
             var flags = (long)section["showFlags"];
@@ -97,39 +97,39 @@ namespace JexusManager.Features.DirectoryBrowse
             ExtensionEnabled = (flags & 16) == 16;
             DateEnabled = (flags & 2) == 2;
             LongDateEnabled = (flags & 32) == 32;
-            this.SetEnabled(enabled);
+            SetEnabled(enabled);
         }
 
         private void Enable()
         {
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             ConfigurationSection section = service.GetSection("system.webServer/directoryBrowse");
             section["enabled"] = true;
-            this.SetEnabled(true);
+            SetEnabled(true);
         }
 
         private void Disable()
         {
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             ConfigurationSection section = service.GetSection("system.webServer/directoryBrowse");
             section["enabled"] = false;
-            this.SetEnabled(false);
+            SetEnabled(false);
         }
 
         public void SetEnabled(bool enabled)
         {
-            this.IsEnabled = enabled;
-            this.OnDirectoryBrowseSettingsSaved();
+            IsEnabled = enabled;
+            OnDirectoryBrowseSettingsSaved();
         }
 
         protected void OnDirectoryBrowseSettingsSaved()
         {
-            this.DirectoryBrowseSettingsUpdated?.Invoke();
+            DirectoryBrowseSettingsUpdated?.Invoke();
         }
 
         public virtual bool ShowHelp()
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210534");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210534");
             return false;
         }
 
@@ -157,14 +157,14 @@ namespace JexusManager.Features.DirectoryBrowse
 
         public void CancelChanges()
         {
-            this.Load();
+            Load();
         }
 
         public bool ApplyChanges()
         {
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var section = service.GetSection("system.webServer/directoryBrowse");
-            section["enabled"] = this.IsEnabled;
+            section["enabled"] = IsEnabled;
             long flags = 0;
             if (DateEnabled)
             {

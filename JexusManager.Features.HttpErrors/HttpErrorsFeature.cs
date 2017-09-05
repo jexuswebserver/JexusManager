@@ -170,7 +170,7 @@ namespace JexusManager.Features.HttpErrors
 
         public virtual bool ShowHelp()
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210481");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210481");
             return false;
         }
 

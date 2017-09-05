@@ -34,6 +34,7 @@ namespace JexusManager.Features.IsapiFilters
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     Item.Path = txtPath.Text;
@@ -55,6 +56,7 @@ namespace JexusManager.Features.IsapiFilters
                 Observable.FromEventPattern<EventArgs>(txtName, "TextChanged")
                 .Merge(Observable.FromEventPattern<EventArgs>(txtPath, "TextChanged"))
                 .Sample(TimeSpan.FromSeconds(1))
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnOK.Enabled = !string.IsNullOrWhiteSpace(txtName.Text)
@@ -63,6 +65,7 @@ namespace JexusManager.Features.IsapiFilters
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnBrowse, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     DialogHelper.ShowBrowseDialog(txtPath);
@@ -73,7 +76,7 @@ namespace JexusManager.Features.IsapiFilters
 
         private void NewRestrictionDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210516");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210516");
         }
     }
 }

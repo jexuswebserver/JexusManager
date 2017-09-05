@@ -22,7 +22,7 @@ namespace JexusManager.Tree
     {
         private bool _loaded;
 
-        public PhysicalDirectoryTreeNode(IServiceProvider serviceProvider, PhysicalDirectory physicalDirectory)
+        public PhysicalDirectoryTreeNode(IServiceProvider serviceProvider, PhysicalDirectory physicalDirectory, ServerTreeNode server)
             : base(physicalDirectory.Name, serviceProvider)
         {
             ImageIndex = 6;
@@ -30,6 +30,7 @@ namespace JexusManager.Tree
             PhysicalDirectory = physicalDirectory;
             Nodes.Add("temp");
             ServerManager = physicalDirectory.Application.Server;
+            ServerNode = server;
         }
 
         public PhysicalDirectory PhysicalDirectory { get; }
@@ -48,11 +49,21 @@ namespace JexusManager.Tree
         {
             get
             {
-                return PhysicalDirectory.Application.Site.Bindings[0].ToUri() + PathToSite;
+                foreach (Microsoft.Web.Administration.Binding binding in PhysicalDirectory.Application.Site.Bindings)
+                {
+                    if (binding.CanBrowse)
+                    {
+                        return binding.ToUri() + PathToSite;
+                    }
+                }
+
+                return string.Empty;
             }
         }
 
         public override ServerManager ServerManager { get; set; }
+
+        public override ServerTreeNode ServerNode { get; }
 
         public override void LoadPanels(MainForm mainForm, ServiceContainer serviceContainer, List<ModuleProvider> moduleProviders)
         {
@@ -94,7 +105,7 @@ namespace JexusManager.Tree
             mainForm.LoadPage(page);
         }
 
-        public async override Task Expand(MainForm mainForm)
+        public override void Expand(MainForm mainForm)
         {
             if (_loaded)
             {
@@ -108,7 +119,7 @@ namespace JexusManager.Tree
             _loaded = true;
         }
 
-        public override async Task AddApplication(ContextMenuStrip appMenu)
+        public override void AddApplication(ContextMenuStrip appMenu)
         {
             var dialog = new NewApplicationDialog(ServiceProvider, PhysicalDirectory.Application.Site, PathToSite, PhysicalDirectory.Application.ApplicationPoolName, null);
             if (dialog.ShowDialog() != DialogResult.OK)
@@ -117,7 +128,7 @@ namespace JexusManager.Tree
             }
 
             dialog.Application.Save();
-            AddToParent(this, new ApplicationTreeNode(ServiceProvider, dialog.Application) { ContextMenuStrip = appMenu });
+            AddToParent(this, new ApplicationTreeNode(ServiceProvider, dialog.Application, this.ServerNode) { ContextMenuStrip = appMenu });
         }
 
         public override void AddVirtualDirectory(ContextMenuStrip vDirMenu)
@@ -129,10 +140,10 @@ namespace JexusManager.Tree
             }
 
             //await dialog.VirtualDirectory.SaveAsync();
-            AddToParent(this, new VirtualDirectoryTreeNode(ServiceProvider, dialog.VirtualDirectory) { ContextMenuStrip = vDirMenu });
+            AddToParent(this, new VirtualDirectoryTreeNode(ServiceProvider, dialog.VirtualDirectory, this.ServerNode) { ContextMenuStrip = vDirMenu });
         }
 
-        public async override Task HandleDoubleClick(MainForm mainForm)
+        public override void HandleDoubleClick(MainForm mainForm)
         { }
     }
 }

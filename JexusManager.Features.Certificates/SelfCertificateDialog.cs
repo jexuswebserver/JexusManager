@@ -40,7 +40,7 @@ namespace JexusManager.Features.Certificates
             cbHashing.SelectedIndex = 1;
             txtCommonName.Text = Environment.MachineName;
 
-            if (Environment.OSVersion.Version.Major < 8)
+            if (Environment.OSVersion.Version < Version.Parse("6.2"))
             {
                 // IMPORTANT: WebHosting store is available since Windows 8.
                 cbStore.Enabled = false;
@@ -56,6 +56,7 @@ namespace JexusManager.Features.Certificates
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(txtName, "TextChanged")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnOK.Enabled = !string.IsNullOrWhiteSpace(txtName.Text);
@@ -63,10 +64,12 @@ namespace JexusManager.Features.Certificates
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
+                    var name = txtCommonName.Text;
                     // Generate certificate
-                    string defaultIssuer = string.Format("CN={0}", txtCommonName.Text);
+                    string defaultIssuer = string.Format("CN={0}", name);
                     string defaultSubject = defaultIssuer;
                     byte[] sn = Guid.NewGuid().ToByteArray();
                     string subject = defaultSubject;
@@ -134,6 +137,13 @@ namespace JexusManager.Features.Certificates
 
                     cb.Extensions.Add(new SubjectKeyIdentifierExtension { Identifier = resBuf });
                     cb.Extensions.Add(new AuthorityKeyIdentifierExtension { Identifier = resBuf });
+                    SubjectAltNameExtension subjectAltNameExtension = new SubjectAltNameExtension(
+                        new string[0],
+                        new string[1] { name },
+                        new string[0],
+                        new string[0])
+                    { Critical = false };
+                    cb.Extensions.Add(subjectAltNameExtension);
                     // signature
                     string hashName = cbHashing.SelectedIndex == 0 ? "SHA1" : "SHA256";
                     cb.Hash = hashName;
@@ -198,7 +208,7 @@ namespace JexusManager.Features.Certificates
 
         private void SelfCertificateDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210528");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210528");
         }
     }
 }

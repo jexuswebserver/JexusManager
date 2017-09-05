@@ -26,6 +26,7 @@ namespace JexusManager.Features.Authentication
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     item.Realm = txtRealm.Text;
@@ -36,7 +37,7 @@ namespace JexusManager.Features.Authentication
 
         private void BasicEditDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210461#Digest");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210461#Digest");
         }
     }
 }

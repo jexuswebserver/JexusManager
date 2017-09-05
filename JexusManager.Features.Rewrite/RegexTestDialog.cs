@@ -49,6 +49,7 @@ namespace JexusManager.Features.Rewrite
             container.Add(
                 Observable.FromEventPattern<EventArgs>(txtPattern, "TextChanged")
                 .Sample(TimeSpan.FromSeconds(1))
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnTest.Enabled = !string.IsNullOrWhiteSpace(txtPattern.Text);
@@ -56,6 +57,7 @@ namespace JexusManager.Features.Rewrite
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnTest, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     Regex expression = null;
@@ -71,12 +73,19 @@ namespace JexusManager.Features.Rewrite
                         ShowMessage(ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     }
 
-                    var result = expression.Match(txtData.Text);
-                    pbMessage.Image = result.Success ? Resources.tick_16 : Resources.error_16;
-                    txtMessage.Text = result.Success ? Succeeded : Failed;
-                    txtTitle.Visible = result.Success;
-                    lvResults.Visible = result.Success;
-                    if (result.Success)
+                    bool success = false;
+                    Match result = null;
+                    if (expression != null)
+                    {
+                        result = expression.Match(txtData.Text);
+                        success = result.Success;
+                    }
+
+                    pbMessage.Image = success ? Resources.tick_16 : Resources.error_16;
+                    txtMessage.Text = success ? Succeeded : Failed;
+                    txtTitle.Visible = success;
+                    lvResults.Visible = success;
+                    if (success)
                     {
                         lvResults.Items.Clear();
                         var count = 0;
@@ -84,15 +93,16 @@ namespace JexusManager.Features.Rewrite
                         {
                             lvResults.Items.Add(new ListViewItem(new[]
                             {
-                        string.Format(_condition ? "{{C:{0}}}" : "{{R:{0}}}", count++),
-                        group.Value
-                    }));
+                                string.Format(_condition ? "{{C:{0}}}" : "{{R:{0}}}", count++),
+                                group.Value
+                            }));
                         }
                     }
                 }));
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnClose, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     if (txtPattern.Text == _pattern && cbIgnoreCase.Checked == _ignore)
@@ -126,7 +136,7 @@ namespace JexusManager.Features.Rewrite
 
         private void RegexTestDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkID=130409&amp;clcid=0x409");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkID=130409&amp;clcid=0x409");
         }
     }
 }

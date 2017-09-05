@@ -22,6 +22,8 @@ namespace Tests.DirectoryBrowse
     using Moq;
 
     using Xunit;
+    using System.Xml.Linq;
+    using System.Xml.XPath;
 
     public class DirectoryBrowseFeatureSiteTestFixture
     {
@@ -31,7 +33,7 @@ namespace Tests.DirectoryBrowse
 
         private const string Current = @"applicationHost.config";
 
-        public async Task SetUp()
+        public void SetUp()
         {
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -90,16 +92,26 @@ namespace Tests.DirectoryBrowse
         }
 
         [Fact]
-        public async void TestBasic()
+        public void TestBasic()
         {
-            await this.SetUp();
+            SetUp();
             Assert.Equal(false, _feature.IsEnabled);
         }
 
         [Fact]
-        public async void TestEdit()
+        public void TestEdit()
         {
-            await this.SetUp();
+            SetUp();
+
+            var site = Path.Combine("Website1", "web.config");
+            var expected = "expected_edit1.site.config";
+            var document = XDocument.Load(site);
+            var node = document.Root.XPathSelectElement("/configuration/system.webServer");
+            var directory = new XElement("directoryBrowse");
+            directory.SetAttributeValue("enabled", "true");
+            directory.SetAttributeValue("showFlags", "LongDate");
+            node?.Add(directory);
+            document.Save(expected);
 
             _feature.IsEnabled = true;
             _feature.DateEnabled = _feature.ExtensionEnabled = _feature.SizeEnabled = _feature.TimeEnabled = false;
@@ -110,9 +122,7 @@ namespace Tests.DirectoryBrowse
             const string OriginalMono = @"original.mono.config";
 
             XmlAssert.Equal(Helper.IsRunningOnMono() ? OriginalMono : Original, Current);
-            XmlAssert.Equal(
-                Path.Combine("DirectoryBrowse", "expected_edit1.site.config"),
-                Path.Combine("Website1", "web.config"));
+            XmlAssert.Equal(expected, site);
         }
     }
 }

@@ -42,6 +42,7 @@ namespace JexusManager.Features.Handlers
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     Item.ScriptProcessor = txtExecutable.Text;
@@ -65,6 +66,7 @@ namespace JexusManager.Features.Handlers
                 .Merge(Observable.FromEventPattern<EventArgs>(txtExecutable, "TextChanged"))
                 .Merge(Observable.FromEventPattern<EventArgs>(txtPath, "TextChanged"))
                 .Sample(TimeSpan.FromSeconds(1))
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnOK.Enabled = !string.IsNullOrWhiteSpace(txtName.Text)
@@ -74,6 +76,7 @@ namespace JexusManager.Features.Handlers
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnRestrictions, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     var dialog = new RestrictionsDialog(ServiceProvider, Item);
@@ -85,6 +88,7 @@ namespace JexusManager.Features.Handlers
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnBrowse, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     DialogHelper.ShowBrowseDialog(txtExecutable);
@@ -95,7 +99,7 @@ namespace JexusManager.Features.Handlers
 
         private void NewRestrictionDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210505#Add_ScriptMap");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210505#Add_ScriptMap");
         }
     }
 }

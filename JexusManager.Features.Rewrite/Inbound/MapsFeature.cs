@@ -230,7 +230,7 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         public virtual bool ShowHelp()
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkID=130403&amp;clcid=0x409");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkID=130403&amp;clcid=0x409");
             return false;
         }
 

@@ -27,6 +27,7 @@ namespace JexusManager.Features.RequestFiltering
                 Observable.FromEventPattern<EventArgs>(txtName, "TextChanged")
                 .Merge(Observable.FromEventPattern<EventArgs>(txtLimit, "TextChanged"))
                 .Sample(TimeSpan.FromSeconds(1))
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnOK.Enabled = !string.IsNullOrWhiteSpace(txtName.Text)
@@ -35,6 +36,7 @@ namespace JexusManager.Features.RequestFiltering
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     Item = new HeadersItem(null) { Header = txtName.Text, SizeLimit = uint.Parse(txtLimit.Text) };
@@ -46,7 +48,7 @@ namespace JexusManager.Features.RequestFiltering
 
         private void NewHiddenSegmentDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210526#Allow_Header");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210526#Allow_Header");
         }
     }
 }

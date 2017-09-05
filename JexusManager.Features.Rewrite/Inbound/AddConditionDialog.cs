@@ -35,7 +35,8 @@ namespace JexusManager.Features.Rewrite.Inbound
 
             var check = Observable.FromEventPattern<EventArgs>(cbCheck, "SelectedIndexChanged");
             container.Add(
-                check.Subscribe(evt =>
+                check.ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(evt =>
                 {
                     txtPattern.Enabled = btnTest.Enabled = cbCheck.SelectedIndex > 3;
                     if (!txtPattern.Enabled)
@@ -48,6 +49,7 @@ namespace JexusManager.Features.Rewrite.Inbound
                 Observable.FromEventPattern<EventArgs>(txtPattern, "TextChanged")
                 .Merge(check)
                 .Sample(TimeSpan.FromSeconds(1))
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     btnOK.Enabled = !string.IsNullOrWhiteSpace(txtInput.Text) && (cbCheck.SelectedIndex < 4 || !string.IsNullOrWhiteSpace(txtPattern.Text));
@@ -55,6 +57,7 @@ namespace JexusManager.Features.Rewrite.Inbound
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     Item.Input = txtInput.Text;
@@ -66,6 +69,7 @@ namespace JexusManager.Features.Rewrite.Inbound
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnTest, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     var dialog = new RegexTestDialog(ServiceProvider, txtPattern.Text, cbIgnore.Checked, true);
@@ -83,7 +87,7 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         private void AddConditionDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkID=130403&amp;clcid=0x409");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkID=130403&amp;clcid=0x409");
         }
     }
 }

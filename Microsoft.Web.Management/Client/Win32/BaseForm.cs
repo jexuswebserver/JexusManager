@@ -33,7 +33,7 @@ namespace Microsoft.Web.Management.Client.Win32
             ServiceProvider = null;
         }
 
-        internal protected new object GetService(Type serviceType)
+        protected internal new object GetService(Type serviceType)
         {
             return ServiceProvider.GetService(serviceType);
         }
@@ -74,7 +74,7 @@ namespace Microsoft.Web.Management.Client.Win32
             return service.ShowMessage(message, Text, buttons, icon, defaultButton);
         }
 
-        protected virtual new void Update()
+        protected new virtual void Update()
         {
             base.Update();
         }
@@ -84,10 +84,7 @@ namespace Microsoft.Web.Management.Client.Win32
             base.WndProc(ref m);
         }
 
-        protected virtual bool CanShowHelp
-        {
-            get { return true; }
-        }
+        protected virtual bool CanShowHelp { get; } = true;
 
         protected internal IServiceProvider ServiceProvider { get; private set; }
     }

@@ -24,7 +24,7 @@ namespace JexusManager.Tree
     {
         private bool _loaded;
 
-        public ApplicationTreeNode(IServiceProvider serviceProvider, Application application)
+        public ApplicationTreeNode(IServiceProvider serviceProvider, Application application, ServerTreeNode server)
             : base(application.Path.Substring(application.Path.LastIndexOf('/') + 1), serviceProvider)
         {
             ImageIndex = 5;
@@ -33,6 +33,7 @@ namespace JexusManager.Tree
             Application = application;
             Nodes.Add("temp");
             ServerManager = application.Server;
+            ServerNode = server;
         }
 
         public Application Application { get; }
@@ -46,7 +47,7 @@ namespace JexusManager.Tree
         {
             get
             {
-                return Application.VirtualDirectories[0].PhysicalPath.ExpandIisExpressEnvironmentVariables();
+                return Application.PhysicalPath.ExpandIisExpressEnvironmentVariables();
             }
         }
 
@@ -54,11 +55,21 @@ namespace JexusManager.Tree
         {
             get
             {
-                return Application.Site.Bindings[0].ToUri() + PathToSite;
+                foreach (Microsoft.Web.Administration.Binding binding in Application.Site.Bindings)
+                {
+                    if (binding.CanBrowse)
+                    {
+                        return binding.ToUri() + PathToSite;
+                    }
+                }
+
+                return string.Empty;
             }
         }
 
         public override ServerManager ServerManager { get; set; }
+
+        public override ServerTreeNode ServerNode { get; }
 
         public override void LoadPanels(MainForm mainForm, ServiceContainer serviceContainer, List<ModuleProvider> moduleProviders)
         {
@@ -100,7 +111,7 @@ namespace JexusManager.Tree
             mainForm.LoadPage(page);
         }
 
-        public async override Task Expand(MainForm mainForm)
+        public override void Expand(MainForm mainForm)
         {
             if (_loaded)
             {
@@ -108,14 +119,13 @@ namespace JexusManager.Tree
             }
 
             Nodes.Clear();
-            var rootApp = Application;
-            var rootFolder = rootApp.VirtualDirectories[0].PhysicalPath.ExpandIisExpressEnvironmentVariables();
+            var rootFolder = Application.PhysicalPath.ExpandIisExpressEnvironmentVariables();
             var rootLevel = GetLevel(Application.Path);
-            LoadChildren(rootApp, rootLevel, rootFolder, Application.Path, mainForm.PhysicalDirectoryMenu, mainForm.VirtualDirectoryMenu, mainForm.ApplicationMenu);
+            LoadChildren(Application, rootLevel, rootFolder, Application.Path, mainForm.PhysicalDirectoryMenu, mainForm.VirtualDirectoryMenu, mainForm.ApplicationMenu);
             _loaded = true;
         }
 
-        public override async Task AddApplication(ContextMenuStrip appMenu)
+        public override void AddApplication(ContextMenuStrip appMenu)
         {
             var dialog = new NewApplicationDialog(ServiceProvider, Application.Site, PathToSite, Application.ApplicationPoolName, null);
             if (dialog.ShowDialog() != DialogResult.OK)
@@ -124,7 +134,7 @@ namespace JexusManager.Tree
             }
 
             dialog.Application.Save();
-            AddToParent(this, new ApplicationTreeNode(ServiceProvider, dialog.Application) { ContextMenuStrip = appMenu });
+            AddToParent(this, new ApplicationTreeNode(ServiceProvider, dialog.Application, ServerNode) { ContextMenuStrip = appMenu });
         }
 
         public override void AddVirtualDirectory(ContextMenuStrip vDirMenu)
@@ -136,10 +146,10 @@ namespace JexusManager.Tree
             }
 
             //await dialog.VirtualDirectory.SaveAsync();
-            AddToParent(this, new VirtualDirectoryTreeNode(ServiceProvider, dialog.VirtualDirectory) { ContextMenuStrip = vDirMenu });
+            AddToParent(this, new VirtualDirectoryTreeNode(ServiceProvider, dialog.VirtualDirectory, ServerNode) { ContextMenuStrip = vDirMenu });
         }
 
-        public async override Task HandleDoubleClick(MainForm mainForm)
+        public override void HandleDoubleClick(MainForm mainForm)
         { }
     }
 }

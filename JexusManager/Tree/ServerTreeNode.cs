@@ -11,7 +11,6 @@ namespace JexusManager.Tree
     using System.Net;
     using System.Net.Security;
     using System.Text;
-    using System.Threading;
     using System.Threading.Tasks;
     using System.Windows.Forms;
 
@@ -38,15 +37,11 @@ namespace JexusManager.Tree
         public string Credentials;
         public bool Ignore;
 
-        public TreeNode PoolsNode
-        {
-            get { return Nodes[0]; }
-        }
+        public TreeNode PoolsNode { get; private set; }
 
-        public TreeNode SitesNode
-        {
-            get { return Nodes[1]; }
-        }
+        public TreeNode SitesNode { get; private set; }
+
+        public override ServerTreeNode ServerNode => this;
 
         public bool IsLocalhost;
         public WorkingMode Mode;
@@ -70,7 +65,7 @@ namespace JexusManager.Tree
             Handler = (sender1, certificate, chain, sslPolicyErrors) =>
                 {
                     var remoteHash = certificate.GetCertHashString();
-                    if (remoteHash == this.CertificateHash)
+                    if (remoteHash == CertificateHash)
                     {
                         return true;
                     }
@@ -79,7 +74,7 @@ namespace JexusManager.Tree
                     var result = dialog.ShowDialog();
                     if (result == DialogResult.OK)
                     {
-                        this.MainForm.SaveMenuItem.Enabled = true;
+                        MainForm.SaveMenuItem.Enabled = true;
                     }
 
                     if (result != DialogResult.OK)
@@ -87,17 +82,14 @@ namespace JexusManager.Tree
                         return false;
                     }
 
-                    this.CertificateHash = remoteHash;
+                    CertificateHash = remoteHash;
                     return true;
                 };
         }
 
-        public bool IsBusy
-        {
-            get { return _status == NodeStatus.Loading; }
-        }
+        public bool IsBusy => _status == NodeStatus.Loading;
 
-        public override async Task HandleDoubleClick(MainForm mainForm)
+        public override void HandleDoubleClick(MainForm mainForm)
         {
             if (ServerManager != null)
             {
@@ -112,7 +104,7 @@ namespace JexusManager.Tree
             MainForm = mainForm;
             mainForm.DisconnectButton.Enabled = false;
             _status = NodeStatus.Loading;
-            mainForm.ShowInfo(string.Format("Connecting to {0}...", HostName));
+            mainForm.ShowInfo($"Connecting to {HostName}...");
             try
             {
                 if (Mode == WorkingMode.IisExpress)
@@ -121,20 +113,20 @@ namespace JexusManager.Tree
                 }
                 else if (Mode == WorkingMode.Iis)
                 {
-                    ServerManager = new IisServerManager(true, this.HostName);
+                    ServerManager = new IisServerManager(false, HostName);
                 }
                 else
                 {
                     ServerManager = new JexusServerManager(HostName, Credentials);
                 }
 
-                ServerManager.Name = this.DisplayName;
+                ServerManager.Name = DisplayName;
 
-                if (this.Mode == WorkingMode.Jexus)
+                if (Mode == WorkingMode.Jexus)
                 {
-                    this.SetHandler();
+                    SetHandler();
                     var server = (JexusServerManager)ServerManager;
-                    var version = await server.GetVersionAsync();
+                    var version = AsyncHelper.RunSync(() => server.GetVersionAsync());
                     if (version == null)
                     {
                         MessageBox.Show("Authentication failed.", Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -148,10 +140,7 @@ namespace JexusManager.Tree
                     {
                         var toContinue =
                             MessageBox.Show(
-                                string.Format(
-                                    "The server version is {0}, while minimum compatible version is {1}. Making changes might corrupt server configuration. Do you want to continue?",
-                                    version,
-                                    JexusServerManager.MinimumServerVersion),
+                                $"The server version is {version}, while minimum compatible version is {JexusServerManager.MinimumServerVersion}. Making changes might corrupt server configuration. Do you want to continue?",
                                 Text,
                                 MessageBoxButtons.YesNoCancel,
                                 MessageBoxIcon.Question);
@@ -164,13 +153,11 @@ namespace JexusManager.Tree
                         }
                     }
 
-                    var conflict = await server.HelloAsync();
+                    var conflict = AsyncHelper.RunSync(() => server.HelloAsync());
                     if (Environment.MachineName != conflict)
                     {
                         MessageBox.Show(
-                            string.Format(
-                                "The server is also connected to {0}. Making changes on multiple clients might corrupt server configuration.",
-                                conflict),
+                            $"The server is also connected to {conflict}. Making changes on multiple clients might corrupt server configuration.",
                             Text,
                             MessageBoxButtons.OK,
                             MessageBoxIcon.Warning);
@@ -178,7 +165,7 @@ namespace JexusManager.Tree
                 }
 
                 ServerManager.IsLocalhost = IsLocalhost;
-                await LoadServerAsync(mainForm.ApplicationPoolsMenu, mainForm.SitesMenu, mainForm.SiteMenu);
+                LoadServer(mainForm.ApplicationPoolsMenu, mainForm.SitesMenu, mainForm.SiteMenu);
                 Tag = ServerManager;
                 mainForm.EnableServerMenuItems(true);
                 _status = NodeStatus.Loaded;
@@ -196,7 +183,7 @@ namespace JexusManager.Tree
                 var message = new StringBuilder();
                 message.AppendLine("Could not connect to the specified computer.")
                     .AppendLine()
-                    .AppendFormat("Details: {0}", last.Message);
+                    .AppendFormat("Details: {0}", last?.Message);
                 MessageBox.Show(message.ToString(), mainForm.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 ServerManager = null;
                 _status = NodeStatus.Default;
@@ -212,20 +199,11 @@ namespace JexusManager.Tree
 
         private static RemoteCertificateValidationCallback Handler { get; set; }
 
-        public override string PathToSite
-        {
-            get { return string.Empty; }
-        }
+        public override string PathToSite => string.Empty;
 
-        public override string Folder
-        {
-            get { return string.Empty; }
-        }
+        public override string Folder => string.Empty;
 
-        public override string Uri
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public override string Uri => throw new NotImplementedException();
 
         public override ServerManager ServerManager { get; set; }
 
@@ -283,14 +261,14 @@ namespace JexusManager.Tree
         internal static string GetNodeName(string name, string credentials, bool isLocalhost)
         {
             return isLocalhost
-                ? string.Format("{0} ({1}\\{2})", name, Environment.UserDomainName, Environment.UserName)
-                : string.Format("{0} ({1})", name, credentials.ExtractUser());
+                ? $"{name} ({Environment.UserDomainName}\\{Environment.UserName})"
+                : $"{name} ({credentials.ExtractUser()})";
         }
 
-        public async override Task Expand(MainForm mainForm)
+        public override void Expand(MainForm mainForm)
         { }
 
-        public async override Task AddApplication(ContextMenuStrip appMenu)
+        public override void AddApplication(ContextMenuStrip appMenu)
         {
         }
 
@@ -298,21 +276,23 @@ namespace JexusManager.Tree
         {
         }
 
-        public async Task<bool> LoadServerAsync(ContextMenuStrip poolsMenu, ContextMenuStrip sitesMenu, ContextMenuStrip siteMenu)
+        public bool LoadServer(ContextMenuStrip poolsMenu, ContextMenuStrip sitesMenu, ContextMenuStrip siteMenu)
         {
-            Nodes.Add(new ApplicationPoolsTreeNode(ServiceProvider, ServerManager.ApplicationPools)
+            PoolsNode = new ApplicationPoolsTreeNode(ServiceProvider, ServerManager.ApplicationPools, this)
             {
                 ContextMenuStrip = poolsMenu
-            });
-            Nodes.Add(new SitesTreeNode(ServiceProvider, ServerManager.Sites)
+            };
+            Nodes.Add(PoolsNode);
+            SitesNode = new SitesTreeNode(ServiceProvider, ServerManager.Sites, this)
             {
                 ContextMenuStrip = sitesMenu
-            });
+            };
+            Nodes.Add(SitesNode);
             TreeView.SelectedNode = this;
 
             foreach (Site site in ServerManager.Sites)
             {
-                var siteNode = new SiteTreeNode(ServiceProvider, site) { ContextMenuStrip = siteMenu };
+                var siteNode = new SiteTreeNode(ServiceProvider, site, this) { ContextMenuStrip = siteMenu };
                 SitesNode.Nodes.Add(siteNode);
             }
 

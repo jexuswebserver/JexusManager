@@ -30,6 +30,11 @@ namespace JexusManager.Features.Main
 
     using Binding = Microsoft.Web.Administration.Binding;
     using Module = Microsoft.Web.Management.Client.Module;
+    using System.IO;
+    using System.Xml.Linq;
+    using System.Xml.XPath;
+    using System.Linq;
+    using System.Xml;
 
     /// <summary>
     /// Description of DefaultDocumentFeature.
@@ -59,32 +64,48 @@ namespace JexusManager.Features.Main
                 result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
                 result.Add(new MethodTaskItem("Applications", "View Applications", string.Empty).SetUsage());
                 result.Add(new MethodTaskItem("VirtualDirectories", "View Virtual Directories", string.Empty).SetUsage());
-                result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
-                var manageGroup = new GroupTaskItem(string.Empty, "Manage Website", string.Empty, true);
-                result.Add(manageGroup);
-                manageGroup.Items.Add(
-                    new MethodTaskItem("Restart", "Restart", string.Empty, string.Empty, Resources.restart_16).SetUsage(!_owner.IsBusy));
-                manageGroup.Items.Add(
-                    new MethodTaskItem("Start", "Start", string.Empty, string.Empty, Resources.start_16).SetUsage(
-                        !_owner.IsBusy && !_owner.IsStarted));
-                manageGroup.Items.Add(new MethodTaskItem("Stop", "Stop", string.Empty, string.Empty, Resources.stop_16)
-                    .SetUsage(
-                        !_owner.IsBusy && _owner.IsStarted));
-                manageGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
-                manageGroup.Items.Add(new TextTaskItem("Browse Website", string.Empty, true));
-                foreach (Binding binding in _owner.SiteBindings)
+
+                if (_owner.SiteBindings.Any(item => item.CanBrowse))
                 {
+                    result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    var manageGroup = new GroupTaskItem(string.Empty, "Manage Website", string.Empty, true);
+                    result.Add(manageGroup);
                     manageGroup.Items.Add(
-                        new MethodTaskItem("Browse", string.Format("Browse {0}", binding.ToShortString()), string.Empty, string.Empty,
-                            Resources.browse_16, binding.ToUri()).SetUsage());
+                        new MethodTaskItem("Restart", "Restart", string.Empty, string.Empty, Resources.restart_16).SetUsage(!_owner.IsBusy));
+                    manageGroup.Items.Add(
+                        new MethodTaskItem("Start", "Start", string.Empty, string.Empty, Resources.start_16).SetUsage(
+                            !_owner.IsBusy && !_owner.IsStarted));
+                    manageGroup.Items.Add(new MethodTaskItem("Stop", "Stop", string.Empty, string.Empty, Resources.stop_16)
+                        .SetUsage(
+                            !_owner.IsBusy && _owner.IsStarted));
+                    manageGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    manageGroup.Items.Add(new TextTaskItem("Browse Website", string.Empty, true));
+                    foreach (Binding binding in _owner.SiteBindings)
+                    {
+                        if (binding.CanBrowse)
+                        {
+                            manageGroup.Items.Add(
+                                new MethodTaskItem("Browse", string.Format("Browse {0}", binding.ToShortString()),
+                                    string.Empty, string.Empty,
+                                    Resources.browse_16, binding.ToUri()).SetUsage());
+                        }
+                    }
+
+                    manageGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    manageGroup.Items.Add(new MethodTaskItem("Advanced", "Advanced Settings...", string.Empty).SetUsage());
+                    manageGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    manageGroup.Items.Add(new TextTaskItem("Configure", string.Empty, true));
+                    manageGroup.Items.Add(new MethodTaskItem("Tracing", "Failed Request Tracing...", string.Empty).SetUsage());
+                    manageGroup.Items.Add(new MethodTaskItem("Limits", "Limits...", string.Empty).SetUsage());
+
+                    if (_owner.HasProject)
+                    {
+                        manageGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                        manageGroup.Items.Add(new TextTaskItem("Troubleshooting", string.Empty, true));
+                        manageGroup.Items.Add(new MethodTaskItem("FixProject", "Project Diagnostics", string.Empty).SetUsage());
+                    }
                 }
 
-                manageGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
-                manageGroup.Items.Add(new MethodTaskItem("Advanced", "Advanced Settings...", string.Empty).SetUsage());
-                manageGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
-                manageGroup.Items.Add(new TextTaskItem("Configure", string.Empty, true));
-                manageGroup.Items.Add(new MethodTaskItem("Tracing", "Failed Request Tracing...", string.Empty).SetUsage());
-                manageGroup.Items.Add(new MethodTaskItem("Limits", "Limits...", string.Empty).SetUsage());
                 return result.ToArray(typeof(TaskItem)) as TaskItem[];
             }
 
@@ -165,6 +186,12 @@ namespace JexusManager.Features.Main
             {
                 _owner.Limits();
             }
+
+            [Obfuscation (Exclude = true)]
+            public void FixProject()
+            {
+                _owner.FixProject();
+            }
         }
 
         public SiteFeature(Module module)
@@ -194,11 +221,12 @@ namespace JexusManager.Features.Main
             return _taskList ?? (_taskList = new FeatureTaskList(this));
         }
 
-        public async void Load()
+        public void Load()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var site = service.Site;
-            IsStarted = await site.GetStateAsync();
+            IsStarted = site.GetState();
+            HasProject = SiteHasProject(site);
             OnSiteSettingsSaved();
         }
 
@@ -209,7 +237,7 @@ namespace JexusManager.Features.Main
 
         public virtual bool ShowHelp()
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210463");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210463");
             return false;
         }
 
@@ -248,44 +276,31 @@ namespace JexusManager.Features.Main
                 Start();
             }
 
-            Process.Start(uri.ToString());
+            DialogHelper.ProcessStart(uri.ToString());
         }
 
-        private async void Stop()
+        private void Stop()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var site = service.Site;
-            if (site.Bindings.RequireElevation() && !JexusManager.NativeMethods.IsProcessElevated)
-            {
-                var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
-                dialog.ShowMessage("This site cannot be stopped. Please run Jexus Manager as administrator.", Name);
-                return;
-            }
-
             IsBusy = true;
             OnSiteSettingsSaved();
-            await site.StopAsync();
+            site.Stop();
             IsStarted = false;
             IsBusy = false;
             OnSiteSettingsSaved();
         }
 
-        private async void Start()
+        private void Start()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
             var site = service.Site;
-            if (site.Bindings.RequireElevation() && !JexusManager.NativeMethods.IsProcessElevated)
-            {
-                dialog.ShowMessage("This site cannot be started. Please run Jexus Manager as administrator.", Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
             IsBusy = true;
             OnSiteSettingsSaved();
             try
             {
-                await site.StartAsync();
+                site.Start();
             }
             catch (Exception ex)
             {
@@ -297,22 +312,16 @@ namespace JexusManager.Features.Main
             OnSiteSettingsSaved();
         }
 
-        private async void Restart()
+        private void Restart()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
             var site = service.Site;
-            if (site.Bindings.RequireElevation() && !JexusManager.NativeMethods.IsProcessElevated)
-            {
-                dialog.ShowMessage("This site cannot be restarted. Please run Jexus Manager as administrator.", Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
             IsBusy = true;
             OnSiteSettingsSaved();
             try
             {
-                await site.RestartAsync();
+                site.Restart();
             }
             catch (Exception ex)
             {
@@ -350,15 +359,22 @@ namespace JexusManager.Features.Main
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var site = service.Site;
-            NativeMethods.ShowFileProperties(
-                site.Applications[0].VirtualDirectories[0].PhysicalPath.ExpandIisExpressEnvironmentVariables());
+            var path = site.PhysicalPath.ExpandIisExpressEnvironmentVariables();
+            if (!string.IsNullOrWhiteSpace(path))
+            {
+                NativeMethods.ShowFileProperties(path);
+            }
         }
 
         private void Explore()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var site = service.Site;
-            Process.Start(site.Applications[0].VirtualDirectories[0].PhysicalPath.ExpandIisExpressEnvironmentVariables());
+            var path = site.PhysicalPath.ExpandIisExpressEnvironmentVariables();
+            if (!string.IsNullOrWhiteSpace(path))
+            {
+                DialogHelper.Explore(path);
+            }
         }
 
         private void Bindings()
@@ -368,6 +384,197 @@ namespace JexusManager.Features.Main
             var dialog = new BindingsDialog(Module, site);
             dialog.ShowDialog();
             OnSiteSettingsSaved();
+        }
+
+        private void FixProject()
+        {
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+            var site = service.Site;
+            var root = site.PhysicalPath.ExpandIisExpressEnvironmentVariables();
+            var projects = Directory.GetFiles(root, "*.csproj");
+
+            var project = projects[0];
+            // TODO: free the resources.
+            var xmlReader = XmlReader.Create(new StringReader(File.ReadAllText(project))); // Or whatever your source is, of course.
+            var xml = XDocument.Load(xmlReader);
+            var namespaceManager = new XmlNamespaceManager(xmlReader.NameTable); // We now have a namespace manager that knows of the namespaces used in your document.
+            var name = xml.Root.GetDefaultNamespace();
+            namespaceManager.AddNamespace("x", name.NamespaceName); // We add an explicit prefix mapping for our query.
+
+            var webSettings = xml.Root.XPathSelectElement("/x:Project/x:ProjectExtensions/x:VisualStudio/x:FlavorProperties/x:WebProjectProperties", namespaceManager);
+            var useIIS = webSettings.Element(name + "UseIIS")?.Value;
+            var autoAssignPort = webSettings.Element(name + "AutoAssignPort")?.Value;
+            var developmentServerPort = webSettings.Element(name + "DevelopmentServerPort")?.Value;
+            var developmentServerVPath = webSettings.Element(name + "DevelopmentServerVPath")?.Value;
+            var iisUrl = webSettings.Element(name + "IISUrl")?.Value;
+            var ntlmAuthentication = webSettings.Element(name + "NTLMAuthentication")?.Value;
+            var useCustomServer = webSettings.Element(name + "UseCustomServer")?.Value;
+            var customServerUrl = webSettings.Element(name + "CustomServerUrl")?.Value;
+            var saveServerSettingsInUserFile = webSettings.Element(name + "SaveServerSettingsInUserFile")?.Value;
+
+            var useIISExpress = xml.Root.XPathSelectElement("/x:Project/x:PropertyGroup/x:UseIISExpress", namespaceManager)?.Value;
+            var iisExpressSSLPort = xml.Root.XPathSelectElement("/x:Project/x:PropertyGroup/x:IISExpressSSLPort", namespaceManager)?.Value;
+            var iisExpressAnonymousAuthentication = xml.Root.XPathSelectElement("/x:Project/x:PropertyGroup/x:IISExpressAnonymousAuthentication", namespaceManager)?.Value;
+            var iisExpressWindowsAuthentication = xml.Root.XPathSelectElement("/x:Project/x:PropertyGroup/x:IISExpressWindowsAuthentication", namespaceManager)?.Value;
+            var iisExpressUseClassicPipelineMode = xml.Root.XPathSelectElement("/x:Project/x:PropertyGroup/x:IISExpressUseClassicPipelineMode", namespaceManager)?.Value;
+            var useGlobalApplicationHostFile = xml.Root.XPathSelectElement("/x:Project/x:PropertyGroup/x:UseGlobalApplicationHostFile", namespaceManager)?.Value;
+
+            string url = null;
+            foreach (Binding binding in site.Bindings)
+            {
+                if (string.IsNullOrEmpty(iisExpressSSLPort))
+                {
+                    // http
+                    if (binding.Protocol == "http")
+                    {
+                        url = binding.ToIisUrl();
+                        break;
+                    }
+                }
+                else
+                {
+                    // https
+                    if (binding.Protocol == "https")
+                    {
+                        url = binding.ToIisUrl();
+                        break;
+                    }
+                }
+            }
+
+            if (url != null)
+            {
+                webSettings.Element(name + "IISUrl").SetValue(url);
+                MessageBox.Show("Changed IISUrl to " + url);
+                xml.Save(project);
+                return;
+            }
+
+            MessageBox.Show("No binding is valid to generate IISUrl");
+        }
+
+        private static bool SiteHasProject(Site site)
+        {
+            var root = site.PhysicalPath.ExpandIisExpressEnvironmentVariables();
+            if (string.IsNullOrWhiteSpace(root))
+            {
+                return false;
+            }
+
+            string[] projects;
+            try
+            {
+                projects = Directory.GetFiles(root, "*.csproj");
+                if (projects.Length != 1)
+                {
+                    return false;
+                }
+            }
+            catch (IOException)
+            {
+                return false;
+            }
+
+            var project = projects[0];
+            // TODO: free the resources.
+            var xmlReader = XmlReader.Create(new StringReader(File.ReadAllText(project))); // Or whatever your source is, of course.
+            var xml = XDocument.Load(xmlReader);
+            var namespaceManager = new XmlNamespaceManager(xmlReader.NameTable); // We now have a namespace manager that knows of the namespaces used in your document.
+            var name = xml.Root.GetDefaultNamespace();
+            namespaceManager.AddNamespace("x", name.NamespaceName); // We add an explicit prefix mapping for our query.
+
+            if (!IsWebProject(xml.Root.XPathSelectElement("/x:Project/x:PropertyGroup/x:ProjectTypeGuids", namespaceManager)?.Value))
+            {
+                // Not web project
+                return false;
+            }
+
+            var webSettings = xml.Root.XPathSelectElement("/x:Project/x:ProjectExtensions/x:VisualStudio/x:FlavorProperties/x:WebProjectProperties", namespaceManager);
+            if (webSettings == null)
+            {
+                return false;
+            }
+
+            var useIIS = webSettings.Element(name + "UseIIS")?.Value;
+            var autoAssignPort = webSettings.Element(name + "AutoAssignPort")?.Value;
+            var developmentServerPort = webSettings.Element(name + "DevelopmentServerPort")?.Value;
+            var developmentServerVPath = webSettings.Element(name + "DevelopmentServerVPath")?.Value;
+            var iisUrl = webSettings.Element(name + "IISUrl")?.Value;
+            var ntlmAuthentication = webSettings.Element(name + "NTLMAuthentication")?.Value;
+            var useCustomServer = webSettings.Element(name + "UseCustomServer")?.Value;
+            var customServerUrl = webSettings.Element(name + "CustomServerUrl")?.Value;
+            var saveServerSettingsInUserFile = webSettings.Element(name + "SaveServerSettingsInUserFile")?.Value;
+
+            var useIISExpress = xml.Root.XPathSelectElement("/x:Project/x:PropertyGroup/x:UseIISExpress", namespaceManager)?.Value;
+            var iisExpressSSLPort = xml.Root.XPathSelectElement("/x:Project/x:PropertyGroup/x:IISExpressSSLPort", namespaceManager)?.Value;
+            var iisExpressAnonymousAuthentication = xml.Root.XPathSelectElement("/x:Project/x:PropertyGroup/x:IISExpressAnonymousAuthentication", namespaceManager)?.Value;
+            var iisExpressWindowsAuthentication = xml.Root.XPathSelectElement("/x:Project/x:PropertyGroup/x:IISExpressWindowsAuthentication", namespaceManager)?.Value;
+            var iisExpressUseClassicPipelineMode = xml.Root.XPathSelectElement("/x:Project/x:PropertyGroup/x:IISExpressUseClassicPipelineMode", namespaceManager)?.Value;
+            var useGlobalApplicationHostFile = xml.Root.XPathSelectElement("/x:Project/x:PropertyGroup/x:UseGlobalApplicationHostFile", namespaceManager)?.Value;
+
+            if (string.Equals(useIIS, "true", StringComparison.OrdinalIgnoreCase))
+            {
+                if (string.Equals(useIISExpress, "true", StringComparison.OrdinalIgnoreCase))
+                {
+                    // IIS Express
+                    foreach (Binding binding in site.Bindings)
+                    {
+                        var url = binding.ToIisUrl();
+                        if (string.Equals(url, iisUrl, StringComparison.OrdinalIgnoreCase))
+                        {
+                            return false;
+                        }
+                    }
+                }
+                else if (string.Equals(useIISExpress, "false", StringComparison.OrdinalIgnoreCase))
+                {
+                    // IIS
+                    foreach (Binding binding in site.Bindings)
+                    {
+                        if (string.Equals(binding.ToIisUrl(), iisUrl, StringComparison.OrdinalIgnoreCase))
+                        {
+                            return false;
+                        }
+                    }
+                }
+                else
+                {
+                    //TODO:  What?
+                    return false;
+                }
+            }
+            else
+            {
+                // External server
+                return false;
+            }
+
+            return true;
+        }
+
+        //*
+        private static readonly string[] mvc = {"{603C0E0B-DB56-11DC-BE95-000D561079B0}", // ASP.NET MVC 1	
+        "{F85E285D-A4E0-4152-9332-AB1D724D3325}", // ASP.NET MVC 2	
+        "{E53F8FEA-EAE0-44A6-8774-FFD645390401}", // ASP.NET MVC 3	
+        "{E3E379DF-F4C6-4180-9B81-6769533ABE47}", // ASP.NET MVC 4	
+        "{349C5851-65DF-11DA-9384-00065B846F21}" // ASP.NET MVC 5
+        };
+        // */
+
+        private static bool IsWebProject(string value)
+        {
+            if (value == null)
+                return false;
+
+            foreach (var name in mvc)
+            {
+                if (value.IndexOf(name, StringComparison.OrdinalIgnoreCase) > -1)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public IEnumerable<Binding> SiteBindings
@@ -380,11 +587,14 @@ namespace JexusManager.Features.Main
             }
         }
 
+        public bool HasProject { get; set; }
+
         public bool IsStarted { get; set; }
 
         public bool IsBusy { get; set; }
 
         public SiteSettingsSavedEventHandler SiteSettingsUpdated { get; set; }
+
         public string Description { get; }
 
         public virtual bool IsFeatureEnabled

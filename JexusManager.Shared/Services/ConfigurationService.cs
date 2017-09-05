@@ -6,6 +6,7 @@ namespace JexusManager.Services
 {
     using Microsoft.Web.Administration;
     using Microsoft.Web.Management.Server;
+    using System;
     using System.Windows.Forms;
 
     public class ConfigurationService : IConfigurationService
@@ -23,13 +24,13 @@ namespace JexusManager.Services
 
         public ConfigurationService(Form form, Configuration config, ManagementScope scope, ServerManager server, Site site, Microsoft.Web.Administration.Application application, VirtualDirectory virtualDirectory, PhysicalDirectory physicalDirectory, string location)
         {
-            this.Scope = scope;
-            this.Server = server;
-            this.Application = application;
-            this.Site = site;
-            this.Form = form;
-            this.VirtualDirectory = virtualDirectory;
-            this.PhysicalDirectory = physicalDirectory;
+            Scope = scope;
+            Server = server;
+            Application = application;
+            Site = site;
+            Form = form;
+            VirtualDirectory = virtualDirectory;
+            PhysicalDirectory = physicalDirectory;
             _config = config;
             _location = location;
         }
@@ -43,11 +44,15 @@ namespace JexusManager.Services
         {
             get
             {
-                return this.Server ??
-                       this.Site?.Server ??
-                       this.Application?.Server ??
-                       this.VirtualDirectory?.Application.Server ??
-                       this.PhysicalDirectory?.Application.Server;
+                var result = Server ??
+                       Site?.Server ??
+                       Application?.Server ??
+                       VirtualDirectory?.Application.Server ??
+                       PhysicalDirectory?.Application.Server;
+                if (result == null)
+                    throw new InvalidOperationException("server manager cannot be null");
+
+                return result;
             }
         }
 
@@ -73,7 +78,12 @@ namespace JexusManager.Services
                 return section;
             }
 
-            return section.IsLocallyStored ? section : this.ServerManager.GetApplicationHostConfiguration().GetSection(sectionPath, _location);
+            if (section == null)
+            {
+                throw new InvalidOperationException("null section");
+            }
+
+            return section.IsLocallyStored ? section : ServerManager.GetApplicationHostConfiguration().GetSection(sectionPath, _location);
         }
     }
 }

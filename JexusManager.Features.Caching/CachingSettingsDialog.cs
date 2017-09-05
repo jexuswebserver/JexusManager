@@ -55,7 +55,7 @@ namespace JexusManager.Features.Caching
 
         private void PermissionsDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210522");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210522");
         }
     }
 }

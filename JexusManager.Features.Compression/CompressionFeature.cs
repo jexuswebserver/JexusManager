@@ -65,7 +65,7 @@ namespace JexusManager.Features.Compression
 
         public virtual bool ShowHelp()
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210466");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210466");
             return false;
         }
 
@@ -125,7 +125,7 @@ namespace JexusManager.Features.Compression
                 httpCompressionSection["minFileSizeForComp"] = MinFileSizeForComp;
             }
 
-            AsyncHelper.RunSync(() => service.ServerManager.CommitChangesAsync());
+            service.ServerManager.CommitChanges();
             return true;
         }
     }

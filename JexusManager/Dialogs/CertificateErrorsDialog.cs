@@ -12,30 +12,34 @@ namespace JexusManager.Dialogs
     using System.Windows.Forms;
 
     using Microsoft.Web.Administration;
+    using System.Reactive.Disposables;
+    using System.Reactive.Linq;
 
     public partial class CertificateErrorsDialog : Form
     {
-        private readonly X509Certificate _certificate;
-
         public CertificateErrorsDialog(X509Certificate certificate)
         {
             InitializeComponent();
-            _certificate = certificate;
-        }
+            var container = new CompositeDisposable();
+            FormClosed += (sender, args) => container.Dispose();
 
-        private void BtnViewClick(object sender, EventArgs e)
-        {
-            DialogHelper.DisplayCertificate((X509Certificate2)_certificate, Handle);
+            container.Add(
+                Observable.FromEventPattern<EventArgs>(btnView, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(evt =>
+                {
+                    DialogHelper.DisplayCertificate((X509Certificate2)certificate, Handle);
+                }));
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210463#CertificateNameMismatch");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210463#CertificateNameMismatch");
         }
 
         private void CertificateErrorsDialog_HelpButtonClicked(object sender, CancelEventArgs e)
         {
-            Process.Start("http://go.microsoft.com/fwlink/?LinkId=210463#CertificateVerificationHelp");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210463#CertificateVerificationHelp");
         }
     }
 }
