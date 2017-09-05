@@ -299,6 +299,11 @@ namespace JexusManager
             }
 
             var data = GetCurrentData(selected);
+            if (data.IsBusy)
+            {
+                return;
+            }
+
             if (data.ServerManager == null)
             {
                 throw new InvalidOperationException($"null server: {data.Name} : {data.Mode}");
@@ -478,6 +483,11 @@ namespace JexusManager
             }
                 
             var data = GetCurrentData(selected);
+            if (data.IsBusy)
+            {
+                return;
+            }
+
             foreach (TreeNode node in data.SitesNode.Nodes)
             {
                 if (node.Tag == site)
@@ -608,6 +618,11 @@ namespace JexusManager
             }
             
             var data = GetCurrentData(selected);
+            if (data.IsBusy)
+            {
+                return;
+            }
+
             foreach (TreeNode node in data.SitesNode.Nodes)
             {
                 if (node.Tag == site)
@@ -627,6 +642,11 @@ namespace JexusManager
             }
             
             var data = GetCurrentData(selected);
+            if (data.IsBusy)
+            {
+                return;
+            }
+
             foreach (TreeNode node in data.SitesNode.Nodes)
             {
                 if (node.Tag == site)
@@ -646,6 +666,11 @@ namespace JexusManager
             }
             
             var server = GetCurrentData(selected);
+            if (server.IsBusy)
+            {
+                return;
+            }
+
             ManagerTreeNode.AddToParent(server.SitesNode, new SiteTreeNode(_serviceContainer, site, server) { ContextMenuStrip = cmsSite });
         }
 
@@ -674,8 +699,14 @@ namespace JexusManager
             {
                 return;
             }
-            
-            treeView1.SelectedNode = GetCurrentData(selected).SitesNode;
+
+            var server = GetCurrentData(selected);
+            if (server.IsBusy)
+            {
+                return;
+            }
+
+            treeView1.SelectedNode = server.SitesNode;
         }
 
         internal void LoadPools()
@@ -685,8 +716,14 @@ namespace JexusManager
             {
                 return;
             }
-            
-            treeView1.SelectedNode = GetCurrentData(selected).PoolsNode;
+
+            var server = GetCurrentData(selected);
+            if (server.IsBusy)
+            {
+                return;
+            }
+
+            treeView1.SelectedNode = server.PoolsNode;
         }
 
         private void actUp_Execute(object sender, EventArgs e)
@@ -870,7 +907,13 @@ namespace JexusManager
                 return;
             }
 
-            if (GetCurrentData(e.Node)?.ServerManager == null && e.Button == MouseButtons.Right)
+            var server = GetCurrentData(e.Node);
+            if (server.IsBusy)
+            {
+                return;
+            }
+
+            if (server.ServerManager == null && e.Button == MouseButtons.Right)
             {
                 treeView1_NodeMouseDoubleClick(sender, e);
                 treeView1_AfterSelect(sender, new TreeViewEventArgs(e.Node));
