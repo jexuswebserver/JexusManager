@@ -32,16 +32,16 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.rbCustom = new System.Windows.Forms.RadioButton();
-            this.rbDetailed = new System.Windows.Forms.RadioButton();
             this.rbRemote = new System.Windows.Forms.RadioButton();
+            this.rbDetailed = new System.Windows.Forms.RadioButton();
+            this.rbCustom = new System.Windows.Forms.RadioButton();
+            this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.txtPath = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.cbType = new System.Windows.Forms.ComboBox();
             this.btnSelect = new System.Windows.Forms.Button();
+            this.cbType = new System.Windows.Forms.ComboBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.txtPath = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
@@ -61,25 +61,16 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Error Responses";
             // 
-            // label1
+            // rbRemote
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(7, 20);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(217, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "When the server encounters an error, return:";
-            // 
-            // rbCustom
-            // 
-            this.rbCustom.AutoSize = true;
-            this.rbCustom.Location = new System.Drawing.Point(10, 48);
-            this.rbCustom.Name = "rbCustom";
-            this.rbCustom.Size = new System.Drawing.Size(116, 17);
-            this.rbCustom.TabIndex = 1;
-            this.rbCustom.TabStop = true;
-            this.rbCustom.Text = "Custom error pages";
-            this.rbCustom.UseVisualStyleBackColor = true;
+            this.rbRemote.AutoSize = true;
+            this.rbRemote.Location = new System.Drawing.Point(10, 94);
+            this.rbRemote.Name = "rbRemote";
+            this.rbRemote.Size = new System.Drawing.Size(290, 30);
+            this.rbRemote.TabIndex = 3;
+            this.rbRemote.TabStop = true;
+            this.rbRemote.Text = "Detailed errors for local requests and custom error pages\r\nfor remote requests";
+            this.rbRemote.UseVisualStyleBackColor = true;
             // 
             // rbDetailed
             // 
@@ -92,16 +83,25 @@
             this.rbDetailed.Text = "Detailed errors";
             this.rbDetailed.UseVisualStyleBackColor = true;
             // 
-            // rbRemote
+            // rbCustom
             // 
-            this.rbRemote.AutoSize = true;
-            this.rbRemote.Location = new System.Drawing.Point(10, 94);
-            this.rbRemote.Name = "rbRemote";
-            this.rbRemote.Size = new System.Drawing.Size(290, 30);
-            this.rbRemote.TabIndex = 3;
-            this.rbRemote.TabStop = true;
-            this.rbRemote.Text = "Detailed errors for local requests and custom error pages\r\nfor remote requests";
-            this.rbRemote.UseVisualStyleBackColor = true;
+            this.rbCustom.AutoSize = true;
+            this.rbCustom.Location = new System.Drawing.Point(10, 48);
+            this.rbCustom.Name = "rbCustom";
+            this.rbCustom.Size = new System.Drawing.Size(116, 17);
+            this.rbCustom.TabIndex = 1;
+            this.rbCustom.TabStop = true;
+            this.rbCustom.Text = "Custom error pages";
+            this.rbCustom.UseVisualStyleBackColor = true;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(7, 20);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(217, 13);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "When the server encounters an error, return:";
             // 
             // groupBox2
             // 
@@ -117,30 +117,14 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Default Page";
             // 
-            // label2
+            // btnSelect
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(7, 27);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(32, 13);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "Path:";
-            // 
-            // txtPath
-            // 
-            this.txtPath.Location = new System.Drawing.Point(10, 52);
-            this.txtPath.Name = "txtPath";
-            this.txtPath.Size = new System.Drawing.Size(268, 20);
-            this.txtPath.TabIndex = 1;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(7, 88);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(59, 13);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "Path Type:";
+            this.btnSelect.Location = new System.Drawing.Point(284, 50);
+            this.btnSelect.Name = "btnSelect";
+            this.btnSelect.Size = new System.Drawing.Size(34, 23);
+            this.btnSelect.TabIndex = 4;
+            this.btnSelect.Text = "...";
+            this.btnSelect.UseVisualStyleBackColor = true;
             // 
             // cbType
             // 
@@ -155,14 +139,32 @@
             this.cbType.Size = new System.Drawing.Size(238, 21);
             this.cbType.TabIndex = 3;
             // 
-            // btnSelect
+            // label3
             // 
-            this.btnSelect.Location = new System.Drawing.Point(284, 50);
-            this.btnSelect.Name = "btnSelect";
-            this.btnSelect.Size = new System.Drawing.Size(34, 23);
-            this.btnSelect.TabIndex = 4;
-            this.btnSelect.Text = "...";
-            this.btnSelect.UseVisualStyleBackColor = true;
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(7, 88);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(59, 13);
+            this.label3.TabIndex = 2;
+            this.label3.Text = "Path Type:";
+            // 
+            // txtPath
+            // 
+            this.txtPath.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.txtPath.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystem;
+            this.txtPath.Location = new System.Drawing.Point(10, 52);
+            this.txtPath.Name = "txtPath";
+            this.txtPath.Size = new System.Drawing.Size(268, 20);
+            this.txtPath.TabIndex = 1;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(7, 27);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(32, 13);
+            this.label2.TabIndex = 0;
+            this.label2.Text = "Path:";
             // 
             // btnOK
             // 

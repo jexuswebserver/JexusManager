@@ -166,7 +166,7 @@ namespace JexusManager.Features.HttpErrors
                     }
                     else
                     {
-                        DialogHelper.ShowBrowseDialog(txtStatic);
+                        DialogHelper.ShowFileDialog(txtStatic, string.Empty);
                     }
                 }));
 

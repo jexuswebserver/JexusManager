@@ -84,7 +84,7 @@
             // 
             // txtExecutable
             // 
-            this.txtExecutable.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.txtExecutable.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.txtExecutable.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystem;
             this.txtExecutable.Location = new System.Drawing.Point(15, 140);
             this.txtExecutable.Name = "txtExecutable";

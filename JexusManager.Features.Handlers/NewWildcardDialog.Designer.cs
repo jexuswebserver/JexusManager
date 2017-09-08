@@ -80,6 +80,8 @@
             // 
             // txtExecutable
             // 
+            this.txtExecutable.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.txtExecutable.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystem;
             this.txtExecutable.Location = new System.Drawing.Point(15, 96);
             this.txtExecutable.Name = "txtExecutable";
             this.txtExecutable.Size = new System.Drawing.Size(367, 20);

@@ -64,6 +64,8 @@
             // 
             // txtPath
             // 
+            this.txtPath.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.txtPath.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystem;
             this.txtPath.Location = new System.Drawing.Point(15, 25);
             this.txtPath.Name = "txtPath";
             this.txtPath.Size = new System.Drawing.Size(420, 20);
@@ -115,6 +117,7 @@
             // pgProperties
             // 
             this.pgProperties.CategoryForeColor = System.Drawing.SystemColors.InactiveCaptionText;
+            this.pgProperties.LineColor = System.Drawing.SystemColors.ControlDark;
             this.pgProperties.Location = new System.Drawing.Point(15, 130);
             this.pgProperties.Name = "pgProperties";
             this.pgProperties.Size = new System.Drawing.Size(461, 335);

@@ -78,6 +78,8 @@
             // 
             // txtPath
             // 
+            this.txtPath.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.txtPath.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystem;
             this.txtPath.Location = new System.Drawing.Point(15, 82);
             this.txtPath.Name = "txtPath";
             this.txtPath.Size = new System.Drawing.Size(360, 20);

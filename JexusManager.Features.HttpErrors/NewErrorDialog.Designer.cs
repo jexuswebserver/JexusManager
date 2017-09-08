@@ -171,6 +171,8 @@
             // 
             // txtStatic
             // 
+            this.txtStatic.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.txtStatic.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystem;
             this.txtStatic.Location = new System.Drawing.Point(36, 77);
             this.txtStatic.Name = "txtStatic";
             this.txtStatic.Size = new System.Drawing.Size(334, 20);
@@ -237,7 +239,7 @@
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
             // 
-            // NewCustomErrorDialog
+            // NewErrorDialog
             // 
             this.AcceptButton = this.btnOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);

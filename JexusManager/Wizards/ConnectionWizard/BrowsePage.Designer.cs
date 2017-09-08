@@ -47,6 +47,8 @@
             // 
             // txtName
             // 
+            this.txtName.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.txtName.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystem;
             this.txtName.Location = new System.Drawing.Point(37, 91);
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(305, 20);

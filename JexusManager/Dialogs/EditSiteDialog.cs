@@ -65,7 +65,6 @@ namespace JexusManager.Dialogs
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-
                     DialogHelper.ShowBrowseDialog(txtPhysicalPath);
                 }));
 

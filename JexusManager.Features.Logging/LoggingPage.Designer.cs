@@ -34,6 +34,7 @@
             this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.cmsActionPanel = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.label2 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.cbLocalTime = new System.Windows.Forms.CheckBox();
@@ -59,7 +60,6 @@
             this.btnSelect = new System.Windows.Forms.Button();
             this.cbFormat = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label3 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
@@ -107,6 +107,16 @@
             // 
             this.cmsActionPanel.Name = "cmsActionPanel";
             this.cmsActionPanel.Size = new System.Drawing.Size(61, 4);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(7, 48);
+            this.label2.Margin = new System.Windows.Forms.Padding(5);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(338, 13);
+            this.label2.TabIndex = 1;
+            this.label2.Text = "Use this feature to configure how IIS logs requests on the Web server.";
             // 
             // panel2
             // 
@@ -350,6 +360,8 @@
             // 
             // txtPath
             // 
+            this.txtPath.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.txtPath.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
             this.txtPath.Location = new System.Drawing.Point(9, 97);
             this.txtPath.Name = "txtPath";
             this.txtPath.Size = new System.Drawing.Size(364, 20);
@@ -400,16 +412,6 @@
             this.label5.Size = new System.Drawing.Size(42, 13);
             this.label5.TabIndex = 0;
             this.label5.Text = "Format:";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(7, 48);
-            this.label2.Margin = new System.Windows.Forms.Padding(5);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(338, 13);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "Use this feature to configure how IIS logs requests on the Web server.";
             // 
             // pictureBox1
             // 

@@ -54,6 +54,8 @@
             // 
             // txtDirectory
             // 
+            this.txtDirectory.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.txtDirectory.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
             this.txtDirectory.Location = new System.Drawing.Point(15, 25);
             this.txtDirectory.Name = "txtDirectory";
             this.txtDirectory.Size = new System.Drawing.Size(300, 20);

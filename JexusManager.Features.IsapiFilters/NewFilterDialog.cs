@@ -68,7 +68,7 @@ namespace JexusManager.Features.IsapiFilters
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    DialogHelper.ShowBrowseDialog(txtPath);
+                    DialogHelper.ShowFileDialog(txtPath, "(*.dll)|*.dll|All Files (*.*)|*.*");
                 }));
         }
 

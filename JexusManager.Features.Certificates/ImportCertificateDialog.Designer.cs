@@ -83,6 +83,8 @@
             // 
             // txtFile
             // 
+            this.txtFile.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.txtFile.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystem;
             this.txtFile.Location = new System.Drawing.Point(12, 38);
             this.txtFile.Name = "txtFile";
             this.txtFile.Size = new System.Drawing.Size(299, 20);
@@ -154,13 +156,7 @@
             this.Controls.Add(this.btnBrowse);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.btnCancel);
-            this.HelpButton = true;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
             this.Name = "ImportCertificateDialog";
-            this.ShowIcon = false;
-            this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Import Certificate";
             this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.ImportCertificateDialogHelpButtonClicked);
             this.ResumeLayout(false);
