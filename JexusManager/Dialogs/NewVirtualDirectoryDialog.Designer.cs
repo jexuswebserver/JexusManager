@@ -132,6 +132,8 @@
             // 
             // txtPhysicalPath
             // 
+            this.txtPhysicalPath.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.txtPhysicalPath.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
             this.txtPhysicalPath.Location = new System.Drawing.Point(15, 196);
             this.txtPhysicalPath.Name = "txtPhysicalPath";
             this.txtPhysicalPath.Size = new System.Drawing.Size(324, 20);
@@ -215,13 +217,7 @@
             this.Controls.Add(this.txtAlias);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.groupBox1);
-            this.HelpButton = true;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
             this.Name = "NewVirtualDirectoryDialog";
-            this.ShowIcon = false;
-            this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Add Application";
             this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.NewVirtualDirectoryDialog_HelpButtonClicked);
             this.groupBox1.ResumeLayout(false);

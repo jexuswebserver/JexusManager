@@ -165,6 +165,8 @@
             // 
             // txtPath
             // 
+            this.txtPath.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.txtPath.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
             this.txtPath.Location = new System.Drawing.Point(24, 46);
             this.txtPath.Name = "txtPath";
             this.txtPath.Size = new System.Drawing.Size(316, 20);

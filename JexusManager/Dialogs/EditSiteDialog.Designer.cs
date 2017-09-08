@@ -108,6 +108,8 @@
             // 
             // txtPhysicalPath
             // 
+            this.txtPhysicalPath.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.txtPhysicalPath.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
             this.txtPhysicalPath.Location = new System.Drawing.Point(15, 98);
             this.txtPhysicalPath.Name = "txtPhysicalPath";
             this.txtPhysicalPath.Size = new System.Drawing.Size(324, 20);
@@ -197,14 +199,7 @@
             this.Controls.Add(this.txtAlias);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label2);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.HelpButton = true;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
             this.Name = "EditSiteDialog";
-            this.ShowIcon = false;
-            this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Edit Site";
             this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.EditSiteDialog_HelpButtonClicked);
             this.ResumeLayout(false);

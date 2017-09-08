@@ -6,7 +6,6 @@ namespace JexusManager.Dialogs
 {
     using System;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Windows.Forms;
 
     using Microsoft.Web.Administration;
@@ -18,6 +17,7 @@ namespace JexusManager.Dialogs
         public SelectPoolDialog(string name, ServerManager server)
         {
             InitializeComponent();
+
             int selected = 0;
             foreach (ApplicationPool pool in server.ApplicationPools)
             {
@@ -25,7 +25,13 @@ namespace JexusManager.Dialogs
                 if (pool.Name == name)
                 {
                     selected = index;
+                    btnOK.Enabled = true;
                 }
+            }
+
+            if (server.ApplicationPools.Count == 0)
+            {
+                cbPools.Items.Add(name);
             }
 
             cbPools.SelectedIndex = selected;
@@ -47,6 +53,7 @@ namespace JexusManager.Dialogs
                     Selected = item;
                     txtVersion.Text = string.Format(".Net CLR Version: {0}", item.ManagedRuntimeVersion.RuntimeVersionToDisplay());
                     txtMode.Text = string.Format("Pipeline mode: {0}", item.ManagedPipelineMode);
+                    btnOK.Enabled = true;
                 }));
         }
 

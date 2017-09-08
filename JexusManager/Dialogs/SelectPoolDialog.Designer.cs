@@ -35,8 +35,8 @@
             this.cbPools = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.txtVersion = new System.Windows.Forms.Label();
             this.txtMode = new System.Windows.Forms.Label();
+            this.txtVersion = new System.Windows.Forms.Label();
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
@@ -79,27 +79,28 @@
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
             // 
-            // txtVersion
-            // 
-            this.txtVersion.AutoSize = true;
-            this.txtVersion.Location = new System.Drawing.Point(19, 22);
-            this.txtVersion.Name = "txtVersion";
-            this.txtVersion.Size = new System.Drawing.Size(35, 13);
-            this.txtVersion.TabIndex = 0;
-            this.txtVersion.Text = "label3";
-            // 
             // txtMode
             // 
             this.txtMode.AutoSize = true;
-            this.txtMode.Location = new System.Drawing.Point(19, 42);
+            this.txtMode.Location = new System.Drawing.Point(6, 42);
             this.txtMode.Name = "txtMode";
-            this.txtMode.Size = new System.Drawing.Size(35, 13);
+            this.txtMode.Size = new System.Drawing.Size(156, 13);
             this.txtMode.TabIndex = 1;
-            this.txtMode.Text = "label4";
+            this.txtMode.Text = "Specify a valid applicaiton pool.";
+            // 
+            // txtVersion
+            // 
+            this.txtVersion.AutoSize = true;
+            this.txtVersion.Location = new System.Drawing.Point(6, 16);
+            this.txtVersion.Name = "txtVersion";
+            this.txtVersion.Size = new System.Drawing.Size(175, 13);
+            this.txtVersion.TabIndex = 0;
+            this.txtVersion.Text = "This application pool does not exist.";
             // 
             // btnOK
             // 
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.btnOK.Enabled = false;
             this.btnOK.Location = new System.Drawing.Point(112, 151);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(90, 23);
