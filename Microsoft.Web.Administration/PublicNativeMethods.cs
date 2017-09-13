@@ -69,8 +69,21 @@ namespace Microsoft.Web.Administration
             get
             {
                 RegistryKey uacKey = Registry.LocalMachine.OpenSubKey(uacRegistryKey, false);
-                bool result = uacKey != null && uacKey.GetValue(uacRegistryValue).Equals(1);
-                return result;
+                if (uacKey == null)
+                {
+                    // TODO: what should be returned?
+                    RollbarDotNet.Rollbar.Report("uacKey is null");
+                    return false;
+                }
+
+                var uacValue = uacKey.GetValue(uacRegistryValue);
+                if (uacValue == null)
+                {
+                    // IMPORTANT: default value is enabled. https://technet.microsoft.com/en-us/library/dd835564(v=ws.10).aspx
+                    return true;
+                }
+
+                return uacValue.Equals(1);
             }
         }
 
