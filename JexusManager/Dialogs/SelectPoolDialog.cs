@@ -22,19 +22,19 @@ namespace JexusManager.Dialogs
             foreach (ApplicationPool pool in server.ApplicationPools)
             {
                 int index = cbPools.Items.Add(pool);
-                if (pool.Name == name)
+                if (pool.Name != name)
                 {
-                    selected = index;
-                    btnOK.Enabled = true;
+                    continue;
                 }
+                
+                selected = index;
+                btnOK.Enabled = true;
             }
 
             if (server.ApplicationPools.Count == 0)
             {
                 cbPools.Items.Add(name);
             }
-
-            cbPools.SelectedIndex = selected;
 
             var container = new CompositeDisposable();
             FormClosed += (sender, args) => container.Dispose();
@@ -44,17 +44,18 @@ namespace JexusManager.Dialogs
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    var item = cbPools.SelectedItem as ApplicationPool;
-                    if (item == null)
+                    if (!(cbPools.SelectedItem is ApplicationPool item))
                     {
                         return;
                     }
 
                     Selected = item;
-                    txtVersion.Text = string.Format(".Net CLR Version: {0}", item.ManagedRuntimeVersion.RuntimeVersionToDisplay());
-                    txtMode.Text = string.Format("Pipeline mode: {0}", item.ManagedPipelineMode);
+                    txtVersion.Text = $".Net CLR Version: {item.ManagedRuntimeVersion.RuntimeVersionToDisplay()}";
+                    txtMode.Text = $"Pipeline mode: {item.ManagedPipelineMode}";
                     btnOK.Enabled = true;
                 }));
+
+            cbPools.SelectedIndex = selected;
         }
 
         private void SelectPoolDialog_HelpButtonClicked(object sender, CancelEventArgs e)
