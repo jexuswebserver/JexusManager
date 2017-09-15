@@ -49,6 +49,11 @@ namespace Microsoft.Web.Administration
             Name = name;
             Schema = schema;
             IsProtected = schema?.IsEncrypted ?? false;
+            ResetValue();
+        }
+
+        private void ResetValue()
+        {
             var clear = this.Decrypt(this.ExtractDefaultValue());
             IsInheritedFromDefaultValue = true;
             SetValue(clear);
@@ -89,6 +94,7 @@ namespace Microsoft.Web.Administration
                         catch (COMException)
                         {
                             // IMPORTANT: If validators do not like default value, simply ignore.
+                            return Schema.DefaultValueByType;
                         }
 
                         result = Schema.DefaultValue;
@@ -106,12 +112,19 @@ namespace Microsoft.Web.Administration
                 throw new InvalidOperationException("null element");
             }
 
-            if (_element.InnerEntity == null)
+            var innerEntity = _element.InnerEntity;
+            if (innerEntity == null)
             {
-                throw new InvalidOperationException("null entity");
+                return;
             }
 
-            _element.InnerEntity.SetAttributeValue(Name, null);
+            innerEntity.SetAttributeValue(Name, null);
+            if (!innerEntity.HasAttributes && !innerEntity.HasElements)
+            {
+                innerEntity.Remove();
+            }
+
+            ResetValue();
         }
 
         public object GetMetadata(string metadataType)

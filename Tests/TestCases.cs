@@ -178,6 +178,44 @@ namespace Tests
 
             {
                 var config = server.GetApplicationHostConfiguration();
+                var asp = config.GetSection("system.webServer/asp");
+                var comPlus = asp.ChildElements["comPlus"];
+                var sxsName = comPlus.GetAttribute("sxsName");
+                sxsName.Delete();
+                Assert.Equal("", (string)sxsName.Value);
+
+                comPlus["sxsName"] = "test";
+                server.CommitChanges();
+            }
+
+            {
+                var config = server.GetApplicationHostConfiguration();
+                var asp = config.GetSection("system.webServer/asp");
+                var comPlus = asp.ChildElements["comPlus"];
+                var sxsName = (string)comPlus["sxsName"];
+                Assert.Equal("test", sxsName);
+
+                var exception = Assert.Throws<COMException>(() => comPlus["sxsName"] = string.Empty);
+                Assert.Equal("String must not be empty\r\n", exception.Message);
+                server.CommitChanges();
+            }
+
+            {
+                var config = server.GetApplicationHostConfiguration();
+                var asp = config.GetSection("system.webServer/asp");
+                var comPlus = asp.ChildElements["comPlus"];
+                var sxsName = (string)comPlus["sxsName"];
+                Assert.Equal("test", sxsName);
+
+                comPlus.GetAttribute("sxsName").Delete();
+                server.CommitChanges();
+
+                sxsName = (string)comPlus.GetAttribute("sxsName").Value;
+                Assert.Equal("", sxsName);
+            }
+
+            {
+                var config = server.GetApplicationHostConfiguration();
                 var locations = config.GetLocationPaths();
                 Assert.Equal(3, locations.Length);
 

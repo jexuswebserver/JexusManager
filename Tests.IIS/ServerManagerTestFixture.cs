@@ -151,6 +151,10 @@ namespace Tests
 
                 var extended = windows.Element("extendedProtection");
                 extended?.SetAttributeValue("flags", "None");
+
+                var asp = root.XPathSelectElement("/configuration/system.webServer/asp/comPlus");
+                asp.Remove();
+
                 file.Save(Current);
             }
 

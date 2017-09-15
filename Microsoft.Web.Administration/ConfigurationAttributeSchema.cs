@@ -88,7 +88,7 @@ namespace Microsoft.Web.Administration
                 var enum1 = GetEnumValues()[value];
                 if (enum1 == null)
                 {
-                    throw new COMException(string.Format("Enum must be one of {0}\r\n", this.GetEnumValues().FormattedString));
+                    throw new COMException(string.Format("Enum must be one of {0}\r\n", GetEnumValues().FormattedString));
                 }
 
                 result = enum1.Value;
@@ -110,7 +110,7 @@ namespace Microsoft.Web.Administration
                         var item = values[part.Trim()];
                         if (item == null)
                         {
-                            throw new COMException(string.Format("Flags must be some combination of {0}\r\n", this.GetEnumValues().FormattedString));
+                            throw new COMException(string.Format("Flags must be some combination of {0}\r\n", GetEnumValues().FormattedString));
                         }
 
                         flags |= item.Value;
@@ -158,50 +158,11 @@ namespace Microsoft.Web.Administration
         {
             get
             {
-                // bool|enum|flags|uint|int|int64|string|timeSpan
-                //if (Type == "bool")
-                //{
-                //    return "false";
-                //}
-
-                //if (this.Type == "uint")
-                //{
-                //    return "0";
-                //}
-
-                //if (this.Type == "int")
-                //{
-                //    return "0";
-                //}
-
-                //if (this.Type == "int64")
-                //{
-                //    return "0";
-                //}
-
-                if (this.Type == "string")
+                if (Type == "string")
                 {
-                    if (ValidationType != "nonEmptyString")
-                    {
-                        // IMPORTANT: httpErrors / path
-                        return string.Empty;
-                    }
+                    // IMPORTANT: httpErrors / path
+                    return string.Empty;
                 }
-
-                //if (this.Type == "enum")
-                //{
-                //    return "0";
-                //}
-
-                //if (this.Type == "flags")
-                //{
-                //    return "0";
-                //}
-
-                //if (this.Type == "timeSpan")
-                //{
-                //    return "0:00:00";
-                //}
 
                 return null;
             }
@@ -242,18 +203,18 @@ namespace Microsoft.Web.Administration
                 return;
             }
 
-            var type = ValidatorRegistry.GetValidator(this.ValidationType);
+            var type = ValidatorRegistry.GetValidator(ValidationType);
             _validator = (ConfigurationValidatorBase)Activator.CreateInstance(
                 type,
                 BindingFlags.CreateInstance | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public,
                 null,
-                ValidationParameter == null ? null : new object[] { this.ValidationParameter },
+                ValidationParameter == null ? null : new object[] { ValidationParameter },
                 CultureInfo.InvariantCulture);
         }
 
         public object CheckType(object value)
         {
-            var result = this.CheckRawType(value);
+            var result = CheckRawType(value);
             Validate(result);
             return result;
         }
@@ -261,13 +222,80 @@ namespace Microsoft.Web.Administration
         private object CheckRawType(object value)
         {
             // bool|enum|flags|uint|int|int64|string|timeSpan
-            if (this.Type == "bool" && value is bool)
+            if (Type == "bool" && value is bool)
             {
                 return value;
             }
 
+            if (Type == "enum" && value is long)
+            {
+                return value;
+            }
+
+            if (Type == "enum" && value is int)
+            {
+                return Convert.ToInt64(value);
+            }
+
+            if (Type == "enum" && value is string)
+            {
+                return Parse((string)value);
+            }
+
+            // TODO: is this needed?
+            if (Type == "flags" && value is long)
+            {
+                return value;
+            }
+
+            if (Type == "flags" && value is string)
+            {
+                return Parse((string)value);
+            }
+
+            if (Type == "uint" && value is uint)
+            {
+                return value;
+            }
+
+            if (Type == "uint" && value is int)
+            {
+                return Convert.ToUInt32(value);
+            }
+
+            // IMPORTANT: site id
+            if (Type == "uint" && value is long)
+            {
+                return Convert.ToUInt32(value);
+            }
+
+            if (Type == "int" && value is int)
+            {
+                return value;
+            }
+
+            if (Type == "int64" && value is long)
+            {
+                return value;
+            }
+
+            if (Type == "string" && value is string)
+            {
+                return value;
+            }
+
+            if (Type == "timeSpan" && value is TimeSpan)
+            {
+                return value;
+            }
+
+            if (Type == "string" && value == null)
+            {
+                return value;
+            }
+            
             var valueType = value.GetType();
-            if (Type == "enum" && valueType.BaseType.FullName == "System.Enum")
+            if (Type == "enum" && valueType.BaseType?.FullName == "System.Enum")
             {
                 var enumType = Enum.GetUnderlyingType(valueType);
                 if (enumType == typeof(long))
@@ -279,68 +307,6 @@ namespace Microsoft.Web.Administration
                 {
                     return (long)(int)value;
                 }
-            }
-
-            if (this.Type == "enum" && value is long)
-            {
-                return value;
-            }
-
-            if (this.Type == "enum" && value is int)
-            {
-                return Convert.ToInt64(value);
-            }
-
-            if (this.Type == "enum" && value is string)
-            {
-                return Parse((string)value);
-            }
-
-            // TODO: is this needed?
-            if (this.Type == "flags" && value is long)
-            {
-                return value;
-            }
-
-            if (this.Type == "flags" && value is string)
-            {
-                return Parse((string)value);
-            }
-
-            if (this.Type == "uint" && value is uint)
-            {
-                return value;
-            }
-
-            if (this.Type == "uint" && value is int)
-            {
-                return Convert.ToUInt32(value);
-            }
-
-            // IMPORTANT: site id
-            if (this.Type == "uint" && value is long)
-            {
-                return Convert.ToUInt32(value);
-            }
-
-            if (this.Type == "int" && value is int)
-            {
-                return value;
-            }
-
-            if (this.Type == "int64" && value is long)
-            {
-                return value;
-            }
-
-            if (this.Type == "string" && value is string)
-            {
-                return value;
-            }
-
-            if (this.Type == "timeSpan" && value is TimeSpan)
-            {
-                return value;
             }
 
             throw new InvalidCastException();

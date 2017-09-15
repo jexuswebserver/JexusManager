@@ -108,7 +108,18 @@ namespace JexusManager.Features.Asp
                 flags &= 4L;
             }
 
-            comPlus["sxsName"] = ComPlusProperties.SxsName;
+            comPlus["appServiceFlags"] = flags;
+
+            var attribute = comPlus.GetAttribute("sxsName");
+            if (string.IsNullOrWhiteSpace(ComPlusProperties.SxsName))
+            {
+                attribute.Delete();
+            }
+            else
+            { 
+                attribute.Value = ComPlusProperties.SxsName;
+            }
+
             comPlus["partitionId"] = ComPlusProperties.PartitionId;
             comPlus["trackThreadingModel"] = ComPlusProperties.TrackThreadingModel;
             comPlus["executeInMta"] = ComPlusProperties.ExecuteInMta;
