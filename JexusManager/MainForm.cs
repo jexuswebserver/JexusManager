@@ -312,6 +312,12 @@ namespace JexusManager
                 return;
             }
 
+            if (data.ServerManager.Sites == null)
+            {
+                RollbarDotNet.Rollbar.Report($"null sites collection: {data.DisplayName} : {data.Mode} : {selected.Text} : {selected.GetType().FullName} : {data.ServerManager.FileName}");
+                return;
+            }
+
             var dialog = new NewSiteDialog(_serviceContainer, data.ServerManager.Sites);
             if (dialog.ShowDialog(this) != DialogResult.OK)
             {
