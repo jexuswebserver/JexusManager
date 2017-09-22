@@ -73,7 +73,7 @@ namespace JexusManager.Features.Jexus
 
         public virtual bool ShowHelp()
         {
-            DialogHelper.ProcessStart("https://jexus.codeplex.com/wikipage?title=Configuration%20Files");
+            DialogHelper.ProcessStart("https://server.jexusmanager.com/en/latest/tutorials/configuration.html");
             return false;
         }
 

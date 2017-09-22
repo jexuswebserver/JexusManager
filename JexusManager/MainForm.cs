@@ -894,7 +894,7 @@ namespace JexusManager
 
         private void btnAbout_Click(object sender, EventArgs e)
         {
-            DialogHelper.ProcessStart("https://jexus.codeplex.com");
+            DialogHelper.ProcessStart("https://jexusmanager.com");
         }
 
         private void treeView1_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
