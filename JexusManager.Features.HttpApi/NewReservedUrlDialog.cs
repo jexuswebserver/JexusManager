@@ -56,7 +56,7 @@ namespace JexusManager.Features.HttpApi
 
         private void NewRestrictionDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            DialogHelper.ProcessStart("https://msdn.microsoft.com/en-us/library/windows/desktop/cc307223(v=vs.85).aspx");
+            DialogHelper.ProcessStart("https://msdn.microsoft.com/en-us/library/windows/desktop/aa364698(v=vs.85).aspx");
         }
     }
 }

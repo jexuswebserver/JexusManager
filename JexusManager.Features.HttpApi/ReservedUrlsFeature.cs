@@ -156,6 +156,11 @@ namespace JexusManager.Features.HttpApi
                         Items.Add(dialog.Item);
                         OnHttpApiSettingsSaved();
                     }
+                    else
+                    {
+                        var service = (IManagementUIService)GetService(typeof(IManagementUIService));
+                        service.ShowMessage("Invalid URL prefix input is detected.", Name, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
                 }
             }
             catch (Exception)
