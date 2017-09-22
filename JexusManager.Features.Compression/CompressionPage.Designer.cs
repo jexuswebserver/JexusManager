@@ -127,7 +127,7 @@
             this.txtDiskspaceLimit.Name = "txtDiskspaceLimit";
             this.txtDiskspaceLimit.Size = new System.Drawing.Size(110, 20);
             this.txtDiskspaceLimit.TabIndex = 6;
-            this.txtDiskspaceLimit.TextChanged += new System.EventHandler(this.cbStatic_CheckedChanged);
+            this.txtDiskspaceLimit.TextChanged += new System.EventHandler(this.txtDiskspaceLimit_TextChanged);
             // 
             // cbDiskspaceLimit
             // 
@@ -158,7 +158,7 @@
             this.txtPath.Name = "txtPath";
             this.txtPath.Size = new System.Drawing.Size(375, 20);
             this.txtPath.TabIndex = 3;
-            this.txtPath.TextChanged += new System.EventHandler(this.cbStatic_CheckedChanged);
+            this.txtPath.TextChanged += new System.EventHandler(this.txtPath_TextChanged);
             // 
             // label4
             // 

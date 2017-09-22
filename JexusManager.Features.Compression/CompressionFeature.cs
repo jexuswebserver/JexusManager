@@ -13,6 +13,7 @@ namespace JexusManager.Features.Compression
     using Microsoft.Web.Administration;
     using Microsoft.Web.Management.Client;
     using Microsoft.Web.Management.Client.Win32;
+    using System.Windows.Forms;
 
     internal class CompressionFeature
     {
@@ -47,7 +48,7 @@ namespace JexusManager.Features.Compression
             {
                 var httpCompressionSection = service.GetSection("system.webServer/httpCompression");
                 DoDiskSpaceLimiting = (bool)httpCompressionSection["doDiskSpaceLimiting"];
-                MaxDiskSpaceUsage = (uint)httpCompressionSection["maxDiskSpaceUsage"];
+                MaxDiskSpaceUsage = httpCompressionSection["maxDiskSpaceUsage"].ToString();
                 Directory = httpCompressionSection["directory"].ToString();
                 MinFileSizeForComp = httpCompressionSection["minFileSizeForComp"].ToString();
                 DoFileSize = MinFileSizeForComp != "0";
@@ -92,7 +93,7 @@ namespace JexusManager.Features.Compression
         }
 
         public string MinFileSizeForComp { get; set; }
-        public uint MaxDiskSpaceUsage { get; set; }
+        public string MaxDiskSpaceUsage { get; set; }
         public bool DoDiskSpaceLimiting { get; set; }
         public bool DynamicEnabled { get; set; }
         public bool StaticEnabled { get; set; }
@@ -118,11 +119,27 @@ namespace JexusManager.Features.Compression
 
             if (service.Server != null)
             {
+                uint fileSize;
+                if (!uint.TryParse(MinFileSizeForComp, out fileSize) || fileSize > 4294967295)
+                {
+                    var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
+                    dialog.ShowMessage($"'{MinFileSizeForComp}' is an invalid value for file size. The value must be between 0 and 4294967295.", Name, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return false;
+                }
+
+                uint diskspace;
+                if (!uint.TryParse(MaxDiskSpaceUsage, out diskspace) || diskspace > 2147483647)
+                {
+                    var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
+                    dialog.ShowMessage($"'{MaxDiskSpaceUsage}' is an invalid value for maximum disk space usage. The value must be between 0 and 2147483647.", Name, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return false;
+                }
+
                 var httpCompressionSection = service.GetSection("system.webServer/httpCompression");
                 httpCompressionSection["doDiskSpaceLimiting"] = DoDiskSpaceLimiting;
-                httpCompressionSection["maxDiskSpaceUsage"] = MaxDiskSpaceUsage;
+                httpCompressionSection["maxDiskSpaceUsage"] = diskspace;
                 httpCompressionSection["directory"] = Directory;
-                httpCompressionSection["minFileSizeForComp"] = MinFileSizeForComp;
+                httpCompressionSection["minFileSizeForComp"] = fileSize;
             }
 
             service.ServerManager.CommitChanges();

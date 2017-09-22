@@ -35,17 +35,15 @@ namespace Microsoft.Web.Management.Client.Win32
                 {
                     new MethodTaskItem("ApplyChanges", "Apply", string.Empty, string.Empty, Resources.apply_16)
                     {
-                        Usage = usage
+                        Usage = usage,
+                        Enabled = _owner.HasChanges && _owner.CanApplyChanges
                     },
                     new MethodTaskItem("CancelChanges", "Cancel", string.Empty, string.Empty, Resources.cancel_16)
                     {
-                        Usage = usage
+                        Usage = usage,
+                        Enabled = _owner.HasChanges
                     }
                 };
-                foreach (TaskItem item in result)
-                {
-                    item.Enabled = _owner.HasChanges;
-                }
 
                 return result.ToArray(typeof(TaskItem)) as TaskItem[];
             }

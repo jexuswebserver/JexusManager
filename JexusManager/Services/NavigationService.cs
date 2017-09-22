@@ -50,7 +50,7 @@ namespace JexusManager.Services
                     var dialog = previous as ModuleDialogPage;
                     if (dialog != null)
                     {
-                        if (!dialog.CanApplyChanges || !dialog.ApplyChanges())
+                        if (!dialog.ApplyChanges())
                         {
                             _host.UIService.ShowMessage("Changes cannot be applied", dialog.Text);
                         }

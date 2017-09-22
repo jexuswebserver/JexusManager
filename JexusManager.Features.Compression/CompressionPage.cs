@@ -5,11 +5,9 @@
 namespace JexusManager.Features.Compression
 {
     using System;
-    using System.Collections;
     using System.Reflection;
     using System.Windows.Forms;
 
-    using JexusManager.Properties;
     using JexusManager.Services;
 
     using Microsoft.Web.Management.Client;
@@ -105,6 +103,18 @@ namespace JexusManager.Features.Compression
             InformChanges();
         }
 
+        private void txtPath_TextChanged(object sender, EventArgs e)
+        {
+            _feature.Directory = txtPath.Text;
+            InformChanges();
+        }
+
+        private void txtDiskspaceLimit_TextChanged(object sender, EventArgs e)
+        {
+            _feature.MaxDiskSpaceUsage = txtDiskspaceLimit.Text;
+            InformChanges();
+        }
+
         protected override bool ApplyChanges()
         {
             if (!_feature.ApplyChanges())
@@ -118,6 +128,8 @@ namespace JexusManager.Features.Compression
 
         protected override void CancelChanges()
         {
+            _initialized = false;
+            _hasChanges = false;
             _feature.CancelChanges();
             ClearChanges();
         }
@@ -129,7 +141,9 @@ namespace JexusManager.Features.Compression
 
         protected override bool CanApplyChanges
         {
-            get { return true; }
+            get { return !gbStatic.Visible || (!string.IsNullOrWhiteSpace(txtFileSize.Text)
+                    && !string.IsNullOrWhiteSpace(txtPath.Text)
+                    && !string.IsNullOrWhiteSpace(txtDiskspaceLimit.Text)); }
         }
 
         private void InformChanges()
