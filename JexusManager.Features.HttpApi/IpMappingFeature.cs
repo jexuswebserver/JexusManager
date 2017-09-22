@@ -81,26 +81,31 @@ namespace JexusManager.Features.HttpApi
                 return;
             }
 
-            // remove IP mapping
-            using (var process = new Process())
+            try
             {
-                var start = process.StartInfo;
-                start.Verb = "runas";
-                start.FileName = "cmd";
-                start.Arguments =
-                    $"/c \"\"{Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe")}\" /a:\"{SelectedItem.Address}\" /o:{SelectedItem.Port}\"";
-                start.CreateNoWindow = true;
-                start.WindowStyle = ProcessWindowStyle.Hidden;
-                process.Start();
-                process.WaitForExit();
-
-                if (process.ExitCode == 0)
+                // remove IP mapping
+                using (var process = new Process())
                 {
-                    Items.Remove(SelectedItem);
-                    SelectedItem = null;
-                    OnHttpApiSettingsSaved();
+                    var start = process.StartInfo;
+                    start.Verb = "runas";
+                    start.FileName = "cmd";
+                    start.Arguments =
+                        $"/c \"\"{Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe")}\" /a:\"{SelectedItem.Address}\" /o:{SelectedItem.Port}\"";
+                    start.CreateNoWindow = true;
+                    start.WindowStyle = ProcessWindowStyle.Hidden;
+                    process.Start();
+                    process.WaitForExit();
+
+                    if (process.ExitCode == 0)
+                    {
+                        Items.Remove(SelectedItem);
+                        SelectedItem = null;
+                        OnHttpApiSettingsSaved();
+                    }
                 }
             }
+            catch (Exception)
+            { }
         }
 
         protected void OnHttpApiSettingsSaved()

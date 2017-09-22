@@ -99,26 +99,31 @@ namespace JexusManager.Features.HttpApi
                 return;
             }
 
-            // remove certificate and mapping
-            using (var process = new Process())
+            try
             {
-                var start = process.StartInfo;
-                start.Verb = "runas";
-                start.FileName = "cmd";
-                start.Arguments =
-                    $"/c \"\"{Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe")}\" /h:\"{SelectedItem.Host}\" /o:{SelectedItem.Port}\"";
-                start.CreateNoWindow = true;
-                start.WindowStyle = ProcessWindowStyle.Hidden;
-                process.Start();
-                process.WaitForExit();
-
-                if (process.ExitCode == 0)
+                // remove certificate and mapping
+                using (var process = new Process())
                 {
-                    Items.Remove(SelectedItem);
-                    SelectedItem = null;
-                    this.OnHttpApiSettingsSaved();
+                    var start = process.StartInfo;
+                    start.Verb = "runas";
+                    start.FileName = "cmd";
+                    start.Arguments =
+                        $"/c \"\"{Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe")}\" /h:\"{SelectedItem.Host}\" /o:{SelectedItem.Port}\"";
+                    start.CreateNoWindow = true;
+                    start.WindowStyle = ProcessWindowStyle.Hidden;
+                    process.Start();
+                    process.WaitForExit();
+
+                    if (process.ExitCode == 0)
+                    {
+                        Items.Remove(SelectedItem);
+                        SelectedItem = null;
+                        this.OnHttpApiSettingsSaved();
+                    }
                 }
             }
+            catch (Exception)
+            { }
         }
 
         protected void OnHttpApiSettingsSaved()

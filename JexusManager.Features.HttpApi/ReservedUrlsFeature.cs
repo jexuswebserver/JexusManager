@@ -92,25 +92,30 @@ namespace JexusManager.Features.HttpApi
                 return;
             }
 
-            // remove reserved URL
-            using (var process = new Process())
+            try
             {
-                var start = process.StartInfo;
-                start.Verb = "runas";
-                start.FileName = "cmd";
-                start.Arguments = $"/c \"\"{Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe")}\" /u:\"{SelectedItem.UrlPrefix}\" /d:\"{SelectedItem.SecurityDescriptor}\"";
-                start.CreateNoWindow = true;
-                start.WindowStyle = ProcessWindowStyle.Hidden;
-                process.Start();
-                process.WaitForExit();
-
-                if (process.ExitCode == 0)
+                // remove reserved URL
+                using (var process = new Process())
                 {
-                    Items.Remove(SelectedItem);
-                    SelectedItem = null;
-                    OnHttpApiSettingsSaved();
+                    var start = process.StartInfo;
+                    start.Verb = "runas";
+                    start.FileName = "cmd";
+                    start.Arguments = $"/c \"\"{Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe")}\" /u:\"{SelectedItem.UrlPrefix}\" /d:\"{SelectedItem.SecurityDescriptor}\"";
+                    start.CreateNoWindow = true;
+                    start.WindowStyle = ProcessWindowStyle.Hidden;
+                    process.Start();
+                    process.WaitForExit();
+
+                    if (process.ExitCode == 0)
+                    {
+                        Items.Remove(SelectedItem);
+                        SelectedItem = null;
+                        OnHttpApiSettingsSaved();
+                    }
                 }
             }
+            catch (Exception)
+            { }
         }
 
         protected void OnHttpApiSettingsSaved()
@@ -127,26 +132,34 @@ namespace JexusManager.Features.HttpApi
         private void Create()
         {
             var dialog = new NewReservedUrlDialog(Module, this);
-            dialog.ShowDialog();
-
-            // add reserved URL
-            using (var process = new Process())
+            if (dialog.ShowDialog() != DialogResult.OK)
             {
-                var start = process.StartInfo;
-                start.Verb = "runas";
-                start.FileName = "cmd";
-                start.Arguments = $"/c \"\"{Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe")}\" /u:\"{dialog.Item.UrlPrefix}\"";
-                start.CreateNoWindow = true;
-                start.WindowStyle = ProcessWindowStyle.Hidden;
-                process.Start();
-                process.WaitForExit();
+                return;
+            }
 
-                if (process.ExitCode == 0)
+            try
+            {
+                // add reserved URL
+                using (var process = new Process())
                 {
-                    Items.Add(dialog.Item);
-                    OnHttpApiSettingsSaved();
+                    var start = process.StartInfo;
+                    start.Verb = "runas";
+                    start.FileName = "cmd";
+                    start.Arguments = $"/c \"\"{Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe")}\" /u:\"{dialog.Item.UrlPrefix}\"";
+                    start.CreateNoWindow = true;
+                    start.WindowStyle = ProcessWindowStyle.Hidden;
+                    process.Start();
+                    process.WaitForExit();
+
+                    if (process.ExitCode == 0)
+                    {
+                        Items.Add(dialog.Item);
+                        OnHttpApiSettingsSaved();
+                    }
                 }
             }
+            catch (Exception)
+            { }
         }
 
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
