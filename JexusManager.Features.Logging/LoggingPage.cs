@@ -214,6 +214,8 @@ namespace JexusManager.Features.Logging
 
         protected override void CancelChanges()
         {
+            _initialized = false;
+            _hasChanges = false;
             _feature.CancelChanges();
             ClearChanges();
         }

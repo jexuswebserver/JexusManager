@@ -39,16 +39,16 @@ namespace JexusManager.Features.DirectoryBrowse
 
         public DirectoryBrowsePage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         protected override void Initialize(object navigationData)
         {
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             pictureBox1.Image = service.Scope.GetImage();
 
-            _feature = new DirectoryBrowseFeature(this.Module);
-            _feature.DirectoryBrowseSettingsUpdated = this.Refresh;
+            _feature = new DirectoryBrowseFeature(Module);
+            _feature.DirectoryBrowseSettingsUpdated = Refresh;
             _feature.Load();
             base.Initialize(navigationData);
         }
@@ -78,14 +78,16 @@ namespace JexusManager.Features.DirectoryBrowse
                 return false;
             }
 
-            this.ClearChanges();
+            ClearChanges();
             return true;
         }
 
         protected override void CancelChanges()
         {
+            _initialized = false;
+            _hasChanges = false;
             _feature.CancelChanges();
-            this.ClearChanges();
+            ClearChanges();
         }
 
         protected override bool HasChanges
@@ -106,13 +108,13 @@ namespace JexusManager.Features.DirectoryBrowse
             }
 
             _hasChanges = true;
-            this.Refresh();
+            Refresh();
         }
 
         private void ClearChanges()
         {
             _hasChanges = false;
-            this.Refresh();
+            Refresh();
         }
 
         protected override TaskListCollection Tasks
@@ -143,12 +145,12 @@ namespace JexusManager.Features.DirectoryBrowse
                 _initialized = true;
             }
 
-            this.Tasks.Fill(tsActionPanel, cmsActionPanel);
+            Tasks.Fill(tsActionPanel, cmsActionPanel);
         }
 
         private void CbDateCheckedChanged(object sender, EventArgs e)
         {
-            this.InformChanges();
+            InformChanges();
             cbLongDate.Enabled = cbDate.Checked && cbDate.Enabled;
         }
 

@@ -41,13 +41,13 @@ namespace JexusManager.Features.HttpRedirect
 
             public CodeItem(long code, string description)
             {
-                this.Code = code;
-                this.Description = description;
+                Code = code;
+                Description = description;
             }
 
             public override string ToString()
             {
-                return this.Description;
+                return Description;
             }
         }
 
@@ -58,16 +58,16 @@ namespace JexusManager.Features.HttpRedirect
 
         public HttpRedirectPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         protected override void Initialize(object navigationData)
         {
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             pictureBox1.Image = service.Scope.GetImage();
 
-            _feature = new HttpRedirectFeature(this.Module, null, null);
-            _feature.HttpRedirectSettingsUpdated = this.Refresh;
+            _feature = new HttpRedirectFeature(Module, null, null);
+            _feature.HttpRedirectSettingsUpdated = Refresh;
             _feature.Load();
 
             base.Initialize(navigationData);
@@ -98,14 +98,16 @@ namespace JexusManager.Features.HttpRedirect
                 return false;
             }
 
-            this.ClearChanges();
+            ClearChanges();
             return true;
         }
 
         protected override void CancelChanges()
         {
+            _initialized = false;
+            _hasChanges = false;
             _feature.CancelChanges();
-            this.ClearChanges();
+            ClearChanges();
         }
 
         protected override bool HasChanges
@@ -126,13 +128,13 @@ namespace JexusManager.Features.HttpRedirect
             }
 
             _hasChanges = true;
-            this.Refresh();
+            Refresh();
         }
 
         private void ClearChanges()
         {
             _hasChanges = false;
-            this.Refresh();
+            Refresh();
         }
 
         protected override TaskListCollection Tasks
@@ -186,28 +188,28 @@ namespace JexusManager.Features.HttpRedirect
                 _initialized = true;
             }
 
-            this.Tasks.Fill(tsActionPanel, cmsActionPanel);
+            Tasks.Fill(tsActionPanel, cmsActionPanel);
         }
 
         private void CbSslCheckedChanged(object sender, EventArgs e)
         {
-            this.InformChanges();
+            InformChanges();
             txtLink.Enabled = cbCode.Enabled = cbExact.Enabled = cbThis.Enabled = cbRedirect.Checked;
         }
 
         private void CbExactCheckedChanged(object sender, EventArgs e)
         {
-            this.InformChanges();
+            InformChanges();
         }
 
         private void CbCodeSelectedIndexChanged(object sender, EventArgs e)
         {
-            this.InformChanges();
+            InformChanges();
         }
 
         private void TxtLinkTextChanged(object sender, EventArgs e)
         {
-            this.InformChanges();
+            InformChanges();
         }
     }
 }

@@ -100,6 +100,8 @@ namespace JexusManager.Features.Access
 
         protected override void CancelChanges()
         {
+            _initialized = false;
+            _hasChanges = false;
             _feature.CancelChanges();
             this.ClearChanges();
         }

@@ -40,16 +40,16 @@ namespace JexusManager.Features.Jexus
 
         public JexusPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         protected override void Initialize(object navigationData)
         {
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             pictureBox1.Image = service.Scope.GetImage();
 
-            _feature = new JexusFeature(this.Module);
-            _feature.JexusSettingsUpdated = this.Refresh;
+            _feature = new JexusFeature(Module);
+            _feature.JexusSettingsUpdated = Refresh;
             _feature.Load();
             txtSettings.Enabled = _feature.IsFeatureEnabled;
             base.Initialize(navigationData);
@@ -71,7 +71,7 @@ namespace JexusManager.Features.Jexus
         private void txtSettings_TextChanged(object sender, EventArgs e)
         {
             _feature.Contents = txtSettings.Text;
-            this.InformChanges();
+            InformChanges();
         }
 
         protected override bool ApplyChanges()
@@ -81,14 +81,16 @@ namespace JexusManager.Features.Jexus
                 return false;
             }
 
-            this.ClearChanges();
+            ClearChanges();
             return true;
         }
 
         protected override void CancelChanges()
         {
+            _initialized = false;
+            _hasChanges = false;
             _feature.CancelChanges();
-            this.ClearChanges();
+            ClearChanges();
         }
 
         protected override bool HasChanges
@@ -109,13 +111,13 @@ namespace JexusManager.Features.Jexus
             }
 
             _hasChanges = true;
-            this.Refresh();
+            Refresh();
         }
 
         private void ClearChanges()
         {
             _hasChanges = false;
-            this.Refresh();
+            Refresh();
         }
 
         protected override TaskListCollection Tasks
@@ -140,7 +142,7 @@ namespace JexusManager.Features.Jexus
                 _initialized = true;
             }
 
-            this.Tasks.Fill(tsActionPanel, cmsActionPanel);
+            Tasks.Fill(tsActionPanel, cmsActionPanel);
         }
     }
 }

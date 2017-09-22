@@ -62,19 +62,19 @@ namespace JexusManager.Features.Rewrite.Inbound
                 : base(variable.Name)
             {
                 _value = new ListViewSubItem(this, variable.Value);
-                this.SubItems.Add(_value);
+                SubItems.Add(_value);
                 _replace = new ListViewSubItem(this, variable.Replace.ToString());
-                this.SubItems.Add(_replace);
-                this.Item = variable;
+                SubItems.Add(_replace);
+                Item = variable;
             }
 
             public ServerVariableItem Item { get; }
 
             public void Update()
             {
-                this.Text = this.Item.Name;
-                _value.Text = this.Item.Value;
-                _replace.Text = this.Item.Replace.ToString();
+                Text = Item.Name;
+                _value.Text = Item.Value;
+                _replace.Text = Item.Replace.ToString();
             }
         }
 
@@ -88,7 +88,7 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         public InboundRulePage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         protected override void Initialize(object navigationData)
@@ -97,21 +97,21 @@ namespace JexusManager.Features.Rewrite.Inbound
             // TODO: pictureBox1.Image
             var info = (Tuple<InboundFeature, InboundRule>)navigationData;
             _feature = info.Item1;
-            this.Rule = info.Item2;
-            txtName.ReadOnly = this.Rule != null;
-            if (this.Rule != null)
+            Rule = info.Item2;
+            txtName.ReadOnly = Rule != null;
+            if (Rule != null)
             {
                 // TODO: invoke RuleSettingsUpdate somewhere.
-                this.Rule.RuleSettingsUpdated = this.Refresh;
+                Rule.RuleSettingsUpdated = Refresh;
             }
 
-            if (this.Rule == null)
+            if (Rule == null)
             {
-                this.Rule = new InboundRule(null);
+                Rule = new InboundRule(null);
                 Rule.Enabled = true;
             }
 
-            this.Refresh();
+            Refresh();
         }
 
         protected override bool ShowHelp()
@@ -144,26 +144,26 @@ namespace JexusManager.Features.Rewrite.Inbound
 
                 if (result == DialogResult.Yes)
                 {
-                    this.ApplyChanges();
+                    ApplyChanges();
                 }
             }
 
-            var service = (INavigationService)this.GetService(typeof(INavigationService));
+            var service = (INavigationService)GetService(typeof(INavigationService));
             service?.NavigateBack(1);
-            _feature.SelectedItem = this.Rule;
+            _feature.SelectedItem = Rule;
             _feature.Refresh();
         }
 
         private void TxtNameTextChanged(object sender, EventArgs e)
         {
-            this.InformChanges();
+            InformChanges();
         }
 
         public InboundRule Rule { get; set; }
 
         private void BtnTestClick(object sender, EventArgs e)
         {
-            var dialog = new RegexTestDialog(this.Module, txtPattern.Text, cbIgnoreCase.Checked, false);
+            var dialog = new RegexTestDialog(Module, txtPattern.Text, cbIgnoreCase.Checked, false);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
@@ -221,21 +221,23 @@ namespace JexusManager.Features.Rewrite.Inbound
             Rule.StatusReason = txtReason.Text;
             Rule.StatusDescription = txtError.Text;
 
-            _feature.AddItem(this.Rule);
-            if (!this.Rule.ApplyChanges())
+            _feature.AddItem(Rule);
+            if (!Rule.ApplyChanges())
             {
                 return false;
             }
 
-            this.ClearChanges();
+            ClearChanges();
             txtName.ReadOnly = true;
             return true;
         }
 
         protected override void CancelChanges()
         {
-            this.Rule.CancelChanges();
-            this.ClearChanges();
+            _initialized = false;
+            _hasChanges = false;
+            Rule.CancelChanges();
+            ClearChanges();
         }
 
         protected override bool HasChanges
@@ -263,14 +265,14 @@ namespace JexusManager.Features.Rewrite.Inbound
             }
 
             _hasChanges = true;
-            this.Refresh();
+            Refresh();
         }
 
         private void ClearChanges()
         {
             _hasChanges = false;
             _initialized = false;
-            this.Refresh();
+            Refresh();
         }
 
         protected override TaskListCollection Tasks
@@ -301,51 +303,51 @@ namespace JexusManager.Features.Rewrite.Inbound
                 cbLog.Checked = false;
                 cbRedirect.SelectedIndex = 0;
                 cbAny.SelectedIndex = 0;
-                if (this.Rule != null)
+                if (Rule != null)
                 {
-                    txtName.Text = this.Rule.Name;
-                    cbAction.SelectedIndex = (int)this.Rule.Type;
-                    cbAppend.Checked = cbAppendRedirect.Checked = this.Rule.AppendQueryString;
-                    cbIgnoreCase.Checked = this.Rule.IgnoreCase;
-                    txtRedirect.Text = txtUrl.Text = this.Rule.ActionUrl;
-                    cbMatch.SelectedIndex = this.Rule.Negate ? 1 : 0;
-                    cbStop.Checked = this.Rule.StopProcessing;
-                    cbType.SelectedIndex = (int)this.Rule.PatternSyntax;
-                    txtPattern.Text = this.Rule.PatternUrl;
-                    cbLog.Checked = this.Rule.LogRewrittenUrl;
-                    cbRedirect.SelectedIndex = this.Rule.RedirectType;
-                    txtStatus.Text = this.Rule.StatusCode.ToString();
-                    txtSubstatus.Text = this.Rule.SubStatusCode.ToString();
-                    txtReason.Text = this.Rule.StatusReason;
-                    txtError.Text = this.Rule.StatusDescription;
+                    txtName.Text = Rule.Name;
+                    cbAction.SelectedIndex = (int)Rule.Type;
+                    cbAppend.Checked = cbAppendRedirect.Checked = Rule.AppendQueryString;
+                    cbIgnoreCase.Checked = Rule.IgnoreCase;
+                    txtRedirect.Text = txtUrl.Text = Rule.ActionUrl;
+                    cbMatch.SelectedIndex = Rule.Negate ? 1 : 0;
+                    cbStop.Checked = Rule.StopProcessing;
+                    cbType.SelectedIndex = (int)Rule.PatternSyntax;
+                    txtPattern.Text = Rule.PatternUrl;
+                    cbLog.Checked = Rule.LogRewrittenUrl;
+                    cbRedirect.SelectedIndex = Rule.RedirectType;
+                    txtStatus.Text = Rule.StatusCode.ToString();
+                    txtSubstatus.Text = Rule.SubStatusCode.ToString();
+                    txtReason.Text = Rule.StatusReason;
+                    txtError.Text = Rule.StatusDescription;
 
                     lvVariables.Items.Clear();
-                    foreach (var variable in this.Rule.ServerVariables)
+                    foreach (var variable in Rule.ServerVariables)
                     {
                         lvVariables.Items.Add(new ServerVariableListViewItem(variable));
                         gbVariables.IsExpanded = true;
                     }
 
                     lvConditions.Items.Clear();
-                    foreach (var condition in this.Rule.Conditions)
+                    foreach (var condition in Rule.Conditions)
                     {
                         lvConditions.Items.Add(new ConditionListViewItem(condition));
                         gbConditions.IsExpanded = true;
                     }
 
-                    cbAny.SelectedIndex = (int)this.Rule.LogicalGrouping;
-                    cbTrack.Checked = this.Rule.TrackAllCaptures;
+                    cbAny.SelectedIndex = (int)Rule.LogicalGrouping;
+                    cbTrack.Checked = Rule.TrackAllCaptures;
                 }
 
                 _initialized = true;
             }
 
-            this.CbActionSelectedIndexChanged(null, null);
+            CbActionSelectedIndexChanged(null, null);
             cbStop.Visible = cbAction.SelectedIndex == 0 || cbAction.SelectedIndex == 1;
-            this.UpdateVariablesButtons();
-            this.UpdateConditionsButtons();
+            UpdateVariablesButtons();
+            UpdateConditionsButtons();
 
-            this.Tasks.Fill(tsActionPanel, cmsActionPanel);
+            Tasks.Fill(tsActionPanel, cmsActionPanel);
         }
 
         public IModulePage ParentPage { get; set; }
@@ -359,28 +361,28 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         private void CbAppendRedirectCheckedChanged(object sender, EventArgs e)
         {
-            this.InformChanges();
+            InformChanges();
         }
 
         private void BtnAddClick(object sender, EventArgs e)
         {
-            var dialog = new AddConditionDialog(this.ServiceProvider, null);
+            var dialog = new AddConditionDialog(ServiceProvider, null);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
             var newItem = dialog.Item;
-            this.Rule.Conditions.Add(newItem);
+            Rule.Conditions.Add(newItem);
             var listViewItem = new ConditionListViewItem(newItem);
             lvConditions.Items.Add(listViewItem);
             listViewItem.Selected = true;
-            this.InformChanges();
+            InformChanges();
         }
 
         private void BtnRemoveClick(object sender, EventArgs e)
         {
-            var dialog = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+            var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
             if (dialog.ShowMessage(
                 "Are you sure that you want to remove the selected condition?",
                 "Confirm Remove",
@@ -394,21 +396,21 @@ namespace JexusManager.Features.Rewrite.Inbound
             var listViewItem = ((ConditionListViewItem)lvConditions.SelectedItems[0]);
             listViewItem.Remove();
             var item = listViewItem.Item;
-            this.Rule.Conditions.Remove(item);
-            this.InformChanges();
+            Rule.Conditions.Remove(item);
+            InformChanges();
         }
 
         private void BtnEditClick(object sender, EventArgs e)
         {
             var listViewItem = ((ConditionListViewItem)lvConditions.SelectedItems[0]);
-            var dialog = new AddConditionDialog(this.ServiceProvider, listViewItem.Item);
+            var dialog = new AddConditionDialog(ServiceProvider, listViewItem.Item);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
             listViewItem.Update();
-            this.InformChanges();
+            InformChanges();
         }
 
         private void BtnDownClick(object sender, EventArgs e)
@@ -417,13 +419,13 @@ namespace JexusManager.Features.Rewrite.Inbound
             var index = listViewItem.Index;
 
             var item = listViewItem.Item;
-            this.Rule.Conditions.RemoveAt(index);
+            Rule.Conditions.RemoveAt(index);
             listViewItem.Remove();
 
-            this.Rule.Conditions.Insert(index + 1, item);
+            Rule.Conditions.Insert(index + 1, item);
             lvConditions.Items.Insert(index + 1, listViewItem);
             listViewItem.Selected = true;
-            this.InformChanges();
+            InformChanges();
         }
 
         private void BtnUpClick(object sender, EventArgs e)
@@ -432,13 +434,13 @@ namespace JexusManager.Features.Rewrite.Inbound
             var index = listViewItem.Index;
 
             var item = listViewItem.Item;
-            this.Rule.Conditions.RemoveAt(index);
+            Rule.Conditions.RemoveAt(index);
             listViewItem.Remove();
 
-            this.Rule.Conditions.Insert(index - 1, item);
+            Rule.Conditions.Insert(index - 1, item);
             lvConditions.Items.Insert(index - 1, listViewItem);
             listViewItem.Selected = true;
-            this.InformChanges();
+            InformChanges();
         }
 
         private void UpdateConditionsButtons()
@@ -452,23 +454,23 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         private void BtnVarAddClick(object sender, EventArgs e)
         {
-            var dialog = new AddServerVariableDialog(this.ServiceProvider, null);
+            var dialog = new AddServerVariableDialog(ServiceProvider, null);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
             var newItem = dialog.Item;
-            this.Rule.ServerVariables.Add(newItem);
+            Rule.ServerVariables.Add(newItem);
             var listViewItem = new ServerVariableListViewItem(newItem);
             lvVariables.Items.Add(listViewItem);
             listViewItem.Selected = true;
-            this.InformChanges();
+            InformChanges();
         }
 
         private void BtnVarRemoveClick(object sender, EventArgs e)
         {
-            var dialog = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+            var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
             if (dialog.ShowMessage(
                 "Are you sure that you want to remove the selected entry?",
                 "Confirm Remove",
@@ -482,21 +484,21 @@ namespace JexusManager.Features.Rewrite.Inbound
             var listViewItem = ((ServerVariableListViewItem)lvVariables.SelectedItems[0]);
             listViewItem.Remove();
             var item = listViewItem.Item;
-            this.Rule.ServerVariables.Remove(item);
-            this.InformChanges();
+            Rule.ServerVariables.Remove(item);
+            InformChanges();
         }
 
         private void BtnVarEditClick(object sender, EventArgs e)
         {
             var listViewItem = ((ServerVariableListViewItem)lvVariables.SelectedItems[0]);
-            var dialog = new AddServerVariableDialog(this.ServiceProvider, listViewItem.Item);
+            var dialog = new AddServerVariableDialog(ServiceProvider, listViewItem.Item);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
             listViewItem.Update();
-            this.InformChanges();
+            InformChanges();
         }
 
         private void BtnVarDownClick(object sender, EventArgs e)
@@ -505,13 +507,13 @@ namespace JexusManager.Features.Rewrite.Inbound
             var index = listViewItem.Index;
 
             var item = listViewItem.Item;
-            this.Rule.ServerVariables.RemoveAt(index);
+            Rule.ServerVariables.RemoveAt(index);
             listViewItem.Remove();
 
-            this.Rule.ServerVariables.Insert(index + 1, item);
+            Rule.ServerVariables.Insert(index + 1, item);
             lvVariables.Items.Insert(index + 1, listViewItem);
             listViewItem.Selected = true;
-            this.InformChanges();
+            InformChanges();
         }
 
         private void BtnVarUpClick(object sender, EventArgs e)
@@ -520,13 +522,13 @@ namespace JexusManager.Features.Rewrite.Inbound
             var index = listViewItem.Index;
 
             var item = listViewItem.Item;
-            this.Rule.ServerVariables.RemoveAt(index);
+            Rule.ServerVariables.RemoveAt(index);
             listViewItem.Remove();
 
-            this.Rule.ServerVariables.Insert(index - 1, item);
+            Rule.ServerVariables.Insert(index - 1, item);
             lvVariables.Items.Insert(index - 1, listViewItem);
             listViewItem.Selected = true;
-            this.InformChanges();
+            InformChanges();
         }
 
         private void UpdateVariablesButtons()

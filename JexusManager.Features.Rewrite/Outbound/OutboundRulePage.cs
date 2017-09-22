@@ -69,19 +69,19 @@ namespace JexusManager.Features.Rewrite.Outbound
                 : base(condition.Input)
             {
                 _matchType = new ListViewSubItem(this, GetText(condition.MatchType));
-                this.SubItems.Add(_matchType);
+                SubItems.Add(_matchType);
                 _pattern = new ListViewSubItem(this, condition.Pattern);
-                this.SubItems.Add(_pattern);
-                this.Item = condition;
+                SubItems.Add(_pattern);
+                Item = condition;
             }
 
             public ConditionItem Item { get; }
 
             public void Update()
             {
-                this.Text = this.Item.Input;
-                _matchType.Text = GetText(this.Item.MatchType);
-                _pattern.Text = this.Item.MatchType > 3 ? this.Item.Pattern : "N/A";
+                Text = Item.Input;
+                _matchType.Text = GetText(Item.MatchType);
+                _pattern.Text = Item.MatchType > 3 ? Item.Pattern : "N/A";
             }
 
             private static string GetText(int matchType)
@@ -113,7 +113,7 @@ namespace JexusManager.Features.Rewrite.Outbound
 
         public OutboundRulePage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         protected override void Initialize(object navigationData)
@@ -122,9 +122,9 @@ namespace JexusManager.Features.Rewrite.Outbound
             // TODO: pictureBox1.Image
             var info = (Tuple<OutboundFeature, OutboundRule>)navigationData;
             _feature = info.Item1;
-            this.Rule = info.Item2;
-            txtName.ReadOnly = this.Rule != null;
-            if (this.Rule != null)
+            Rule = info.Item2;
+            txtName.ReadOnly = Rule != null;
+            if (Rule != null)
             {
                 foreach (var preCondition in _feature.PreConditions)
                 {
@@ -137,13 +137,13 @@ namespace JexusManager.Features.Rewrite.Outbound
                 }
 
                 // TODO: invoke RuleSettingsUpdate somewhere.
-                this.Rule.RuleSettingsUpdated = this.Refresh;
+                Rule.RuleSettingsUpdated = Refresh;
             }
 
             cbPreCondition.Items.Add("<None>");
             cbPreCondition.Items.Add("<Create New Precondition...>");
             cbTags.Items.Add("<Create New Tags Collection...>");
-            this.Refresh();
+            Refresh();
         }
 
         protected override bool ShowHelp()
@@ -172,26 +172,26 @@ namespace JexusManager.Features.Rewrite.Outbound
 
                 if (result == DialogResult.Yes)
                 {
-                    this.ApplyChanges();
+                    ApplyChanges();
                 }
             }
 
-            var service = (INavigationService)this.GetService(typeof(INavigationService));
+            var service = (INavigationService)GetService(typeof(INavigationService));
             service?.NavigateBack(1);
-            _feature.SelectedItem = this.Rule;
+            _feature.SelectedItem = Rule;
             _feature.Refresh();
         }
 
         private void TxtNameTextChanged(object sender, EventArgs e)
         {
-            this.InformChanges();
+            InformChanges();
         }
 
         public OutboundRule Rule { get; set; }
 
         private void BtnTestClick(object sender, EventArgs e)
         {
-            var dialog = new RegexTestDialog(this.Module, txtPattern.Text, cbIgnoreCase.Checked, false);
+            var dialog = new RegexTestDialog(Module, txtPattern.Text, cbIgnoreCase.Checked, false);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
@@ -204,36 +204,36 @@ namespace JexusManager.Features.Rewrite.Outbound
         protected override bool ApplyChanges()
         {
             var filter = GetFilter(cbMatch);
-            if (this.Rule == null)
+            if (Rule == null)
             {
-                this.Rule = new OutboundRule(null);
+                Rule = new OutboundRule(null);
             }
 
-            this.Rule.Name = txtName.Text;
-            this.Rule.PreCondition = cbPreCondition.Text == "<None>" ? string.Empty : cbPreCondition.Text;
+            Rule.Name = txtName.Text;
+            Rule.PreCondition = cbPreCondition.Text == "<None>" ? string.Empty : cbPreCondition.Text;
             Rule.CustomTags = cbTags.Text;
-            this.Rule.Enabled = true;
-            this.Rule.Syntax = cbUsing.SelectedIndex;
-            this.Rule.Stopping = cbStop.Checked;
-            this.Rule.Filter = filter;
-            this.Rule.ServerVariable = txtVariable.Text;
-            this.Rule.Pattern = txtPattern.Text;
-            this.Rule.Negate = cbContent.SelectedIndex == 1;
-            this.Rule.IgnoreCase = cbIgnoreCase.Checked;
-            this.Rule.TrackAllCaptures = cbTrack.Checked;
-            this.Rule.LogicalGrouping = cbAny.SelectedIndex;
-            this.Rule.Action = cbAction.SelectedIndex;
+            Rule.Enabled = true;
+            Rule.Syntax = cbUsing.SelectedIndex;
+            Rule.Stopping = cbStop.Checked;
+            Rule.Filter = filter;
+            Rule.ServerVariable = txtVariable.Text;
+            Rule.Pattern = txtPattern.Text;
+            Rule.Negate = cbContent.SelectedIndex == 1;
+            Rule.IgnoreCase = cbIgnoreCase.Checked;
+            Rule.TrackAllCaptures = cbTrack.Checked;
+            Rule.LogicalGrouping = cbAny.SelectedIndex;
+            Rule.Action = cbAction.SelectedIndex;
             Rule.Value = txtValue.Text;
             Rule.Replace = !string.IsNullOrWhiteSpace(txtValue.Text);
 
-            if (!this.Rule.ApplyChanges())
+            if (!Rule.ApplyChanges())
             {
                 return false;
             }
 
-            this.ClearChanges();
+            ClearChanges();
             txtName.ReadOnly = true;
-            _feature.AddItem(this.Rule);
+            _feature.AddItem(Rule);
             return true;
         }
 
@@ -262,8 +262,10 @@ namespace JexusManager.Features.Rewrite.Outbound
 
         protected override void CancelChanges()
         {
-            this.Rule.CancelChanges();
-            this.ClearChanges();
+            _initialized = false;
+            _hasChanges = false;
+            Rule.CancelChanges();
+            ClearChanges();
         }
 
         protected override bool HasChanges
@@ -289,14 +291,14 @@ namespace JexusManager.Features.Rewrite.Outbound
             }
 
             _hasChanges = true;
-            this.Refresh();
+            Refresh();
         }
 
         private void ClearChanges()
         {
             _hasChanges = false;
             _initialized = false;
-            this.Refresh();
+            Refresh();
         }
 
         protected override TaskListCollection Tasks
@@ -317,7 +319,7 @@ namespace JexusManager.Features.Rewrite.Outbound
         {
             if (!_hasChanges)
             {
-                txtName.ReadOnly = this.Rule != null;
+                txtName.ReadOnly = Rule != null;
                 cbPreCondition.SelectedIndex = 0;
                 cbAction.SelectedIndex = 0;
                 cbIgnoreCase.Checked = true;
@@ -325,42 +327,42 @@ namespace JexusManager.Features.Rewrite.Outbound
                 cbStop.Checked = false;
                 cbUsing.SelectedIndex = 0;
                 cbContent.SelectedIndex = 0;
-                if (this.Rule != null)
+                if (Rule != null)
                 {
-                    SetFilter(this.Rule.Filter, cbMatch);
-                    txtName.Text = this.Rule.Name;
-                    cbPreCondition.Text = this.Rule.PreCondition == string.Empty ? "<None>" : this.Rule.PreCondition;
+                    SetFilter(Rule.Filter, cbMatch);
+                    txtName.Text = Rule.Name;
+                    cbPreCondition.Text = Rule.PreCondition == string.Empty ? "<None>" : Rule.PreCondition;
                     cbTags.Text = Rule.CustomTags;
-                    cbAction.SelectedIndex = (int)this.Rule.Action;
-                    cbIgnoreCase.Checked = this.Rule.IgnoreCase;
-                    txtVariable.Text = this.Rule.ServerVariable;
-                    cbScope.SelectedIndex = string.IsNullOrWhiteSpace(this.Rule.ServerVariable) ? 0 : 1;
-                    cbStop.Checked = this.Rule.Stopping;
-                    cbUsing.SelectedIndex = (int)this.Rule.Syntax;
-                    cbContent.SelectedIndex = this.Rule.Negate ? 1 : 0;
-                    txtPattern.Text = this.Rule.Pattern;
-                    txtValue.Text = this.Rule.Value;
+                    cbAction.SelectedIndex = (int)Rule.Action;
+                    cbIgnoreCase.Checked = Rule.IgnoreCase;
+                    txtVariable.Text = Rule.ServerVariable;
+                    cbScope.SelectedIndex = string.IsNullOrWhiteSpace(Rule.ServerVariable) ? 0 : 1;
+                    cbStop.Checked = Rule.Stopping;
+                    cbUsing.SelectedIndex = (int)Rule.Syntax;
+                    cbContent.SelectedIndex = Rule.Negate ? 1 : 0;
+                    txtPattern.Text = Rule.Pattern;
+                    txtValue.Text = Rule.Value;
 
                     lvConditions.Items.Clear();
-                    foreach (var condition in this.Rule.Conditions)
+                    foreach (var condition in Rule.Conditions)
                     {
                         lvConditions.Items.Add(new ConditionListViewItem(condition));
                         gbConditions.IsExpanded = true;
                     }
 
-                    cbAny.SelectedIndex = (int)this.Rule.LogicalGrouping;
-                    cbTrack.Checked = this.Rule.TrackAllCaptures;
+                    cbAny.SelectedIndex = (int)Rule.LogicalGrouping;
+                    cbTrack.Checked = Rule.TrackAllCaptures;
                 }
 
                 _initialized = true;
             }
 
             cbTags.Enabled = cbMatch.CheckBoxItems[12].Checked;
-            this.CbActionSelectedIndexChanged(null, null);
+            CbActionSelectedIndexChanged(null, null);
             cbStop.Visible = cbAction.SelectedIndex == 0 || cbAction.SelectedIndex == 1;
-            this.UpdateConditionsButtons();
+            UpdateConditionsButtons();
 
-            this.Tasks.Fill(tsActionPanel, cmsActionPanel);
+            Tasks.Fill(tsActionPanel, cmsActionPanel);
         }
 
         public IModulePage ParentPage { get; set; }
@@ -372,28 +374,28 @@ namespace JexusManager.Features.Rewrite.Outbound
 
         private void CbAppendRedirectCheckedChanged(object sender, EventArgs e)
         {
-            this.InformChanges();
+            InformChanges();
         }
 
         private void BtnAddClick(object sender, EventArgs e)
         {
-            var dialog = new AddConditionDialog(this.ServiceProvider, null);
+            var dialog = new AddConditionDialog(ServiceProvider, null);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
             var newItem = dialog.Item;
-            this.Rule.Conditions.Add(newItem);
+            Rule.Conditions.Add(newItem);
             var listViewItem = new ConditionListViewItem(newItem);
             lvConditions.Items.Add(listViewItem);
             listViewItem.Selected = true;
-            this.InformChanges();
+            InformChanges();
         }
 
         private void BtnRemoveClick(object sender, EventArgs e)
         {
-            var dialog = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+            var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
             if (
                 dialog.ShowMessage("Are you sure that you want to remove the selected condition?", "Confirm Remove",
                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) !=
@@ -405,21 +407,21 @@ namespace JexusManager.Features.Rewrite.Outbound
             var listViewItem = ((ConditionListViewItem)lvConditions.SelectedItems[0]);
             listViewItem.Remove();
             var item = listViewItem.Item;
-            this.Rule.Conditions.Remove(item);
-            this.InformChanges();
+            Rule.Conditions.Remove(item);
+            InformChanges();
         }
 
         private void BtnEditClick(object sender, EventArgs e)
         {
             var listViewItem = ((ConditionListViewItem)lvConditions.SelectedItems[0]);
-            var dialog = new AddConditionDialog(this.ServiceProvider, listViewItem.Item);
+            var dialog = new AddConditionDialog(ServiceProvider, listViewItem.Item);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
             listViewItem.Update();
-            this.InformChanges();
+            InformChanges();
         }
 
         private void BtnDownClick(object sender, EventArgs e)
@@ -428,13 +430,13 @@ namespace JexusManager.Features.Rewrite.Outbound
             var index = listViewItem.Index;
 
             var item = listViewItem.Item;
-            this.Rule.Conditions.RemoveAt(index);
+            Rule.Conditions.RemoveAt(index);
             listViewItem.Remove();
 
-            this.Rule.Conditions.Insert(index + 1, item);
+            Rule.Conditions.Insert(index + 1, item);
             lvConditions.Items.Insert(index + 1, listViewItem);
             listViewItem.Selected = true;
-            this.InformChanges();
+            InformChanges();
         }
 
         private void BtnUpClick(object sender, EventArgs e)
@@ -443,13 +445,13 @@ namespace JexusManager.Features.Rewrite.Outbound
             var index = listViewItem.Index;
 
             var item = listViewItem.Item;
-            this.Rule.Conditions.RemoveAt(index);
+            Rule.Conditions.RemoveAt(index);
             listViewItem.Remove();
 
-            this.Rule.Conditions.Insert(index - 1, item);
+            Rule.Conditions.Insert(index - 1, item);
             lvConditions.Items.Insert(index - 1, listViewItem);
             listViewItem.Selected = true;
-            this.InformChanges();
+            InformChanges();
         }
 
         private void UpdateConditionsButtons()
@@ -471,12 +473,12 @@ namespace JexusManager.Features.Rewrite.Outbound
         {
             if (cbPreCondition.SelectedIndex == cbPreCondition.Items.Count - 1)
             {
-                var dialog = new AddPreConditionDialog(this.ServiceProvider, null);
+                var dialog = new AddPreConditionDialog(ServiceProvider, null);
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
                     cbPreCondition.Items.Insert(0, dialog.Item.Name);
                     _feature.PreConditions.Add(dialog.Item);
-                    this.Rule.PreCondition = dialog.Item.Name;
+                    Rule.PreCondition = dialog.Item.Name;
                     cbPreCondition.SelectedIndex = 0;
                 }
             }
@@ -486,7 +488,7 @@ namespace JexusManager.Features.Rewrite.Outbound
 
         private void BtnEditPreconditionClick(object sender, EventArgs e)
         {
-            var dialog = new AddPreConditionDialog(this.ServiceProvider, _feature.PreConditions.FirstOrDefault(item => item.Name == cbPreCondition.Text));
+            var dialog = new AddPreConditionDialog(ServiceProvider, _feature.PreConditions.FirstOrDefault(item => item.Name == cbPreCondition.Text));
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 return;
@@ -497,12 +499,12 @@ namespace JexusManager.Features.Rewrite.Outbound
         {
             if (cbTags.SelectedIndex == cbTags.Items.Count - 1)
             {
-                var dialog = new AddCustomTagsDialog(this.ServiceProvider);
+                var dialog = new AddCustomTagsDialog(ServiceProvider);
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
                     cbTags.Items.Insert(0, dialog.Item.Name);
                     _feature.Tags.Add(dialog.Item);
-                    this.Rule.CustomTags = dialog.Item.Name;
+                    Rule.CustomTags = dialog.Item.Name;
                     cbPreCondition.SelectedIndex = 0;
                 }
             }

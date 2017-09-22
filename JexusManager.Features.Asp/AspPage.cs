@@ -40,16 +40,16 @@ namespace JexusManager.Features.Asp
 
         public AspPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         protected override void Initialize(object navigationData)
         {
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             pictureBox1.Image = service.Scope.GetImage();
 
-            _feature = new AspFeature(this.Module);
-            _feature.AspSettingsUpdated = this.Refresh;
+            _feature = new AspFeature(Module);
+            _feature.AspSettingsUpdated = Refresh;
             _feature.Load();
             base.Initialize(navigationData);
         }
@@ -74,14 +74,16 @@ namespace JexusManager.Features.Asp
                 return false;
             }
 
-            this.ClearChanges();
+            ClearChanges();
             return true;
         }
 
         protected override void CancelChanges()
         {
+            _initialized = false;
+            _hasChanges = false;
             _feature.CancelChanges();
-            this.ClearChanges();
+            ClearChanges();
         }
 
         protected override bool HasChanges
@@ -102,13 +104,13 @@ namespace JexusManager.Features.Asp
             }
 
             _hasChanges = true;
-            this.Refresh();
+            Refresh();
         }
 
         private void ClearChanges()
         {
             _hasChanges = false;
-            this.Refresh();
+            Refresh();
         }
 
         protected override TaskListCollection Tasks
@@ -134,7 +136,7 @@ namespace JexusManager.Features.Asp
                 _initialized = true;
             }
 
-            this.Tasks.Fill(tsActionPanel, cmsActionPanel);
+            Tasks.Fill(tsActionPanel, cmsActionPanel);
         }
 
         private void PgAspPropertyValueChanged(object s, PropertyValueChangedEventArgs e)
