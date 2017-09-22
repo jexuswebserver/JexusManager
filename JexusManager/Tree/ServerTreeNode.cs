@@ -35,7 +35,7 @@ namespace JexusManager.Tree
         public string HostName;
         public string CertificateHash;
         public string Credentials;
-        public bool Ignore;
+        public bool IgnoreInCache;
 
         public TreeNode PoolsNode { get; private set; }
 
@@ -47,7 +47,7 @@ namespace JexusManager.Tree
         public WorkingMode Mode;
         private NodeStatus _status;
 
-        public ServerTreeNode(IServiceProvider serviceProvider, string name, string hostName, string credentials, string hash, ServerManager server, bool isLocalhost, WorkingMode mode, bool ignore)
+        private ServerTreeNode(IServiceProvider serviceProvider, string name, string hostName, string credentials, string hash, ServerManager server, bool isLocalhost, WorkingMode mode, bool ignoreInCache)
             : base(GetNodeName(name, credentials, isLocalhost), serviceProvider)
         {
             ImageIndex = 1;
@@ -60,7 +60,7 @@ namespace JexusManager.Tree
             Mode = mode;
             IsLocalhost = isLocalhost;
             CertificateHash = hash;
-            Ignore = ignore;
+            IgnoreInCache = ignoreInCache;
 
             Handler = (sender1, certificate, chain, sslPolicyErrors) =>
                 {
@@ -309,6 +309,21 @@ namespace JexusManager.Tree
         public void SetHandler()
         {
             ServicePointManager.ServerCertificateValidationCallback = Handler;
+        }
+
+        public static ServerTreeNode CreateJexusNode(IServiceProvider serviceProvider, string name, string hostName, string credentials, string hash, ServerManager server, bool isLocalhost)
+        {
+            return new ServerTreeNode(serviceProvider, name, hostName, credentials, hash, server, isLocalhost, WorkingMode.Jexus, false);
+        }
+
+        public static ServerTreeNode CreateIisExpressNode(IServiceProvider serviceProvider, string name, string hostName, ServerManager server, bool ignoreInCache)
+        {
+            return new ServerTreeNode(serviceProvider, name, hostName, string.Empty, string.Empty, server, true, WorkingMode.IisExpress, ignoreInCache);
+        }
+        
+        public static ServerTreeNode CreateIisNode(IServiceProvider serviceProvider, string name, string hostName)
+        {
+            return new ServerTreeNode(serviceProvider, name, hostName, string.Empty, string.Empty, null, true, WorkingMode.Iis, true);
         }
     }
 }

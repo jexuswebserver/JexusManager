@@ -194,16 +194,12 @@ namespace JexusManager
                 "applicationhost.config");
             if (File.Exists(globalFile))
             {
-                var global = new ServerTreeNode(
+                var global = ServerTreeNode.CreateIisExpressNode(
                     _serviceContainer,
                     expressGlobalInstanceName,
                     globalFile,
-                    "",
-                    "",
-                    null,
-                    true,
-                    WorkingMode.IisExpress,
-                    true);
+                    server: null,
+                    ignoreInCache: true);
                 RegisterServer(global);
             }
 
@@ -221,7 +217,12 @@ namespace JexusManager
                     continue;
                 }
 
-                var data = new ServerTreeNode(_serviceContainer, parts[0], parts[1], "", "", null, true, WorkingMode.IisExpress, true);
+                var data = ServerTreeNode.CreateIisExpressNode(
+                    _serviceContainer,
+                    name: parts[0],
+                    hostName: parts[1], 
+                    server: null,
+                    ignoreInCache: true);
                 RegisterServer(data);
             }
         }
@@ -242,16 +243,10 @@ namespace JexusManager
                 "applicationhost.config");
             if (File.Exists(config))
             {
-                var data = new ServerTreeNode(
+                var data = ServerTreeNode.CreateIisNode(
                     _serviceContainer,
                     Environment.MachineName,
-                    config,
-                    "",
-                    "",
-                    null,
-                    true,
-                    WorkingMode.Iis,
-                    true);
+                    config);
                 RegisterServer(data);
             }
         }
@@ -273,7 +268,14 @@ namespace JexusManager
             foreach (var item in lines)
             {
                 var parts = item.Split(',');
-                var data = new ServerTreeNode(_serviceContainer, parts[0], parts[1], parts[4], parts[2], null, bool.Parse(parts[3]), WorkingMode.Jexus, false);
+                var data =  ServerTreeNode.CreateJexusNode(
+                    _serviceContainer, 
+                    name: parts[0],
+                    hostName: parts[1],
+                    credentials: parts[4],
+                    hash: parts[2],
+                    server: null,
+                    isLocalhost: bool.Parse(parts[3]));
                 RegisterServer(data);
             }
         }
@@ -306,7 +308,8 @@ namespace JexusManager
 
             if (data.ServerManager == null)
             {
-                throw new InvalidOperationException($"null server: {data.Name} : {data.Mode}");
+                RollbarDotNet.Rollbar.Report($"null server: {data.DisplayName} : {data.Mode} : {selected.Text} : {selected.GetType().FullName}");
+                return;
             }
 
             var dialog = new NewSiteDialog(_serviceContainer, data.ServerManager.Sites);
@@ -532,7 +535,7 @@ namespace JexusManager
                     return;
                 }
 
-                actDisconnect.Enabled = !serverNode.IsBusy && !serverNode.Ignore;
+                actDisconnect.Enabled = !serverNode.IsBusy && !serverNode.IgnoreInCache;
                 EnableServerMenuItems(serverNode.ServerManager != null);
                 node.LoadPanels(this, _serviceContainer, _providers);
                 ShowInfo("Ready");
@@ -774,16 +777,14 @@ namespace JexusManager
             ServerTreeNode node;
             if (data.Mode == WorkingMode.Jexus)
             {
-                node = new ServerTreeNode(
+                node = ServerTreeNode.CreateJexusNode(
                     _serviceContainer,
                     data.Name,
                     data.HostName,
                     data.UserName + "|" + data.Password,
                     data.CertificateHash,
                     data.Server,
-                    true,
-                    WorkingMode.Jexus,
-                    false);
+                    isLocalhost: true);
                 node.SetHandler();
                 var path = Path.GetTempFileName();
                 var random = Guid.NewGuid().ToString();
@@ -793,16 +794,12 @@ namespace JexusManager
             }
             else
             {
-                node = new ServerTreeNode(
+                node = ServerTreeNode.CreateIisExpressNode(
                     _serviceContainer,
                     data.Name,
                     data.FileName,
-                    string.Empty,
-                    null,
                     data.Server,
-                    true,
-                    WorkingMode.IisExpress,
-                    false);
+                    ignoreInCache: false);
             }
 
             try
@@ -836,7 +833,7 @@ namespace JexusManager
             foreach (var item in treeView1.Nodes)
             {
                 var serverNode = item as ServerTreeNode;
-                if (serverNode == null || serverNode.Ignore)
+                if (serverNode == null || serverNode.IgnoreInCache)
                 {
                     continue;
                 }
