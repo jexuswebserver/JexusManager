@@ -13,6 +13,7 @@ namespace JexusManager.Features.Main
     using Microsoft.Web.Management.Client.Win32;
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
+    using System.Linq;
 
     public sealed partial class ApplicationPoolBasicSettingsDialog : DialogForm
     {
@@ -51,6 +52,13 @@ namespace JexusManager.Features.Main
                 {
                     if (Pool == null)
                     {
+                        if (collection.Any(item => item.Name == txtName.Text))
+                        {
+                            ShowMessage("An application pool with this name already exists.", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                            txtName.Focus();
+                            return;
+                        }
+
                         Pool = collection.Add(txtName.Text);
                     }
                     else
