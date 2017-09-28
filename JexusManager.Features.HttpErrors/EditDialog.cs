@@ -36,7 +36,7 @@ namespace JexusManager.Features.HttpErrors
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    DialogHelper.ShowFileDialog(txtPath, string.Empty);
+                    DialogHelper.ShowOpenFileDialog(txtPath, string.Empty);
                 }));
 
             container.Add(

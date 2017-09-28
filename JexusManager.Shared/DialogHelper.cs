@@ -50,6 +50,75 @@ namespace JexusManager
                 }
             }
         }
+        
+        public static void ShowOpenFileDialog(TextBox textBox, string filter)
+        {
+            var initial = textBox.Text.ExpandIisExpressEnvironmentVariables();
+            var dialog = new OpenFileDialog
+            {
+                InitialDirectory = string.IsNullOrEmpty(initial) ? string.Empty : Path.GetDirectoryName(initial),
+                Filter = filter
+            };
+            try
+            {
+                if (dialog.ShowDialog() == DialogResult.Cancel)
+                {
+                    return;
+                }
+            }
+            catch (COMException ex)
+            {
+                if (ex.StackTrace.Contains("System.Windows.Forms.OpenFileDialog.CreateVistaDialog()"))
+                {
+                    // IMPORTANT: use a workaround to suppress failure.
+                    dialog.AutoUpgradeEnabled = false;
+                    if (dialog.ShowDialog() == DialogResult.Cancel)
+                    {
+                        return;
+                    }
+                }
+            }
+
+            textBox.Text = dialog.FileName;
+        }
+
+        public static string ShowSaveFileDialog(TextBox textBox, string filter)
+        {
+            var initial = textBox?.Text.ExpandIisExpressEnvironmentVariables();
+            var dialog = new SaveFileDialog
+            {
+                InitialDirectory = string.IsNullOrEmpty(initial) ? string.Empty : Path.GetDirectoryName(initial),
+                Filter = filter,
+                FileName = textBox?.Text
+            };
+            try
+            {
+                if (dialog.ShowDialog() == DialogResult.Cancel)
+                {
+                    return string.Empty;
+                }
+            }
+            catch (COMException ex)
+            {
+                if (ex.StackTrace.Contains("System.Windows.Forms.SaveFileDialog.CreateVistaDialog()"))
+                {
+                    // IMPORTANT: use a workaround to suppress failure.
+                    dialog.AutoUpgradeEnabled = false;
+                    if (dialog.ShowDialog() == DialogResult.Cancel)
+                    {
+                        return string.Empty;
+                    }
+                }
+            }
+
+            if (textBox != null)
+            {
+                textBox.Text = dialog.FileName;
+            }
+
+            return dialog.FileName;
+        }
+
 
         public static void DisplayCertificate(X509Certificate2 x509Certificate2, IntPtr handle)
         {
@@ -162,37 +231,6 @@ namespace JexusManager
             }
 
             cbAddress.Text = DefaultBinding;
-        }
-
-        public static void ShowFileDialog(TextBox textBox, string filter)
-        {
-            var initial = textBox.Text.ExpandIisExpressEnvironmentVariables();
-            var dialog = new OpenFileDialog
-            {
-                InitialDirectory = string.IsNullOrEmpty(initial) ? string.Empty : Path.GetDirectoryName(initial),
-                Filter = filter
-            };
-            try
-            {
-                if (dialog.ShowDialog() == DialogResult.Cancel)
-                {
-                    return;
-                }
-            }
-            catch (COMException ex)
-            {
-                if (ex.StackTrace.Contains("System.Windows.Forms.OpenFileDialog.CreateVistaDialog()"))
-                {
-                    // IMPORTANT: use a workaround to suppress failure.
-                    dialog.AutoUpgradeEnabled = false;
-                    if (dialog.ShowDialog() == DialogResult.Cancel)
-                    {
-                        return;
-                    }
-                }
-            }
-
-            textBox.Text = dialog.FileName;
         }
 
         public static string GetTempFileName()

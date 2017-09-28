@@ -44,16 +44,7 @@ namespace JexusManager.Features.Certificates
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    var dialog = new SaveFileDialog
-                    {
-                        FileName = txtPath.Text
-                    };
-                    if (dialog.ShowDialog() == DialogResult.Cancel)
-                    {
-                        return;
-                    }
-
-                    txtPath.Text = dialog.FileName;
+                    DialogHelper.ShowSaveFileDialog(txtPath, "*.pfx|*.pfx|*.*|*.*");
                 }));
 
             container.Add(

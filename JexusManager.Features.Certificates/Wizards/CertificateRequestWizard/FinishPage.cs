@@ -41,16 +41,7 @@ namespace JexusManager.Features.Certificates.Wizards.CertificateRequestWizard
 
         private void btnBrowse_Click(object sender, EventArgs e)
         {
-            var dialog = new SaveFileDialog
-            {
-                FileName = txtPath.Text
-            };
-            if (dialog.ShowDialog() == DialogResult.Cancel)
-            {
-                return;
-            }
-
-            txtPath.Text = dialog.FileName;
+            DialogHelper.ShowSaveFileDialog(txtPath, "*.txt|*.txt|*.*|*.*");
         }
 
         private void FileStyle_Changed(object sender, EventArgs e)

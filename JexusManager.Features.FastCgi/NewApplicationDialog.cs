@@ -67,7 +67,7 @@ namespace JexusManager.Features.FastCgi
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    DialogHelper.ShowFileDialog(txtPath, "CGI Executables|*.exe|CGI Files|*.dll|All Files|*.*");
+                    DialogHelper.ShowOpenFileDialog(txtPath, "CGI Executables|*.exe|CGI Files|*.dll|All Files|*.*");
                 }));
         }
 

@@ -79,7 +79,7 @@ namespace JexusManager.Wizards.ConnectionWizard
 
         private void BtnBrowseClick(object sender, EventArgs e)
         {
-            DialogHelper.ShowFileDialog(txtName, "Common Files|*.config;*.sln|Config Files|*.config|Solution Files|*.sln|All Files|*.*");
+            DialogHelper.ShowOpenFileDialog(txtName, "Common Files|*.config;*.sln|Config Files|*.config|Solution Files|*.sln|All Files|*.*");
         }
     }
 }

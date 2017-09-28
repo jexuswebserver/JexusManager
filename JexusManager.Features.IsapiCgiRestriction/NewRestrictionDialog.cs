@@ -67,7 +67,7 @@ namespace JexusManager.Features.IsapiCgiRestriction
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    DialogHelper.ShowFileDialog(txtPath, "(*.dll)|*.dll|(*.exe)|*.exe|All files (*.*)|*.*");
+                    DialogHelper.ShowOpenFileDialog(txtPath, "(*.dll)|*.dll|(*.exe)|*.exe|All files (*.*)|*.*");
                 }));
         }
 

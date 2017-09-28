@@ -193,16 +193,13 @@ namespace JexusManager.Features.Main
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    var dialog = new SaveFileDialog
-                    {
-                        Filter = "Text Files|*.txt|All Files|*.*"
-                    };
-                    if (dialog.ShowDialog() == DialogResult.Cancel)
+                    var fileName = DialogHelper.ShowSaveFileDialog(null, "Text Files|*.txt|All Files|*.*");
+                    if (string.IsNullOrEmpty(fileName))
                     {
                         return;
                     }
-
-                    File.WriteAllText(dialog.FileName, txtResult.Text);
+                    
+                    File.WriteAllText(fileName, txtResult.Text);
                 }));
 
            container.Add(
