@@ -16,7 +16,11 @@ namespace Microsoft.Web.Administration
 
         public Application Add(string path, string physicalPath)
         {
-            throw new NotImplementedException();
+            var result = new Application(this);
+            result.Path = path;
+            result.Load(VirtualDirectory.RootPath, physicalPath);
+            Add(result);
+            return result;
         }
 
         protected override Application CreateNewElement(string elementTagName)

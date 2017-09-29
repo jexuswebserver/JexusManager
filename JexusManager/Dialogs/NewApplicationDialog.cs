@@ -105,14 +105,9 @@ namespace JexusManager.Dialogs
 
                     if (Application == null)
                     {
-                        Application = new Application(_site.Applications)
-                        {
-                            Name = txtAlias.Text,
-                            ApplicationPoolName = txtPool.Text
-                        };
-                        Application.Path = string.Format("{0}/{1}", _parentPath.TrimEnd('/'), Application.Name);
-                        Application.Load(Application.Path, txtPhysicalPath.Text);
-                        Application.Parent.Add(Application);
+                        Application = _site.Applications.Add(string.Format("{0}/{1}", _parentPath.TrimEnd('/'), txtAlias.Text), txtPhysicalPath.Text);
+                        Application.Name = txtAlias.Text;
+                        Application.ApplicationPoolName = txtPool.Text;
                     }
                     else
                     {

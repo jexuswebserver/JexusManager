@@ -194,14 +194,9 @@ namespace JexusManager.Dialogs
                         }
                     }
 
-                    var app = new Application(NewSite.Applications)
-                    {
-                        Path = Application.RootPath,
-                        Name = string.Empty,
-                        ApplicationPoolName = txtPool.Text
-                    };
-                    app.Load(VirtualDirectory.RootPath, txtPath.Text);
-                    NewSite.Applications.Add(app);
+                    var app = NewSite.Applications.Add(Application.RootPath, txtPath.Text);
+                    app.Name = string.Empty;
+                    app.ApplicationPoolName = txtPool.Text;
                     NewSite.Bindings.Add(binding);
                     DialogResult = DialogResult.OK;
                 }));
