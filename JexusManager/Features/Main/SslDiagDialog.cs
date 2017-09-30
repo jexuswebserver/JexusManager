@@ -71,6 +71,29 @@ namespace JexusManager.Features.Main
                                 Info($"BINDING: {binding.Protocol} {binding}");
                                 if (binding.Protocol == "https")
                                 {
+                                    if (binding.CertificateHash == null)
+                                    {
+                                        // SNI mapping missing.
+                                        Debug($"SSL Flags: {binding.SslFlags}");
+                                        if (binding.SslFlags == SslFlags.Sni)
+                                        {
+                                            Error(
+                                                $"Cannot find {binding.Host}:{binding.EndPoint.Port} combination for this binding.");
+                                        }
+                                        else
+                                        {
+                                            var querySslCertificateInfo = Microsoft.Web.Administration.NativeMethods.QuerySslCertificateInfo(
+                                                binding.EndPoint);
+                                            Error(
+                                                querySslCertificateInfo == null
+                                                    ? $"Cannot find {binding.EndPoint} combination for this binding."
+                                                    : $"Cannot find certificate with thumpprint {querySslCertificateInfo.Hash} in store {querySslCertificateInfo.StoreName}.");
+                                        }
+                                        
+                                        Debug(string.Empty);
+                                        continue;
+                                    }
+                                    
                                     var hashString = Hex.ToHexString(binding.CertificateHash);
                                     Debug($"SSLCertHash: {hashString}");
                                     if (site.Server.SupportsSni)

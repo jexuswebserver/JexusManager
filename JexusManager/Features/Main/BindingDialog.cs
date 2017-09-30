@@ -124,10 +124,10 @@ namespace JexusManager.Features.Main
                     if (matched == true)
                     {
                         var result = ShowMessage(
-                            $"The binding '{Binding}' is assigned to another site. If you assign the same binding to this site, you will only be able to start one of the sites. Are you sure that you want to add this duplicate binding?",
-                                MessageBoxButtons.YesNo,
-                                MessageBoxIcon.Question,
-                                MessageBoxDefaultButton.Button1);
+                            $"The binding '{binding}' is assigned to another site. If you assign the same binding to this site, you will only be able to start one of the sites. Are you sure that you want to add this duplicate binding?",
+                            MessageBoxButtons.YesNo,
+                            MessageBoxIcon.Question,
+                            MessageBoxDefaultButton.Button1);
                         if (result != DialogResult.Yes)
                         {
                             return;
@@ -142,6 +142,20 @@ namespace JexusManager.Features.Main
                             MessageBoxIcon.Warning,
                             MessageBoxDefaultButton.Button1);
                         return;
+                    }
+
+                    var conflicts = binding.DetectConflicts();
+                    if (conflicts)
+                    {
+                        var result = ShowMessage(
+                            $"This binding is already being used. If you continue you might overwrite the existing certificate for this IP Address:Port or Host Name:Port combination. Do you want to use this binding anyway?",
+                            MessageBoxButtons.YesNo,
+                            MessageBoxIcon.Question,
+                            MessageBoxDefaultButton.Button1);
+                        if (result != DialogResult.Yes)
+                        {
+                            return;
+                        }
                     }
 
                     if (Binding == null)
@@ -240,7 +254,8 @@ namespace JexusManager.Features.Main
         private void BindingDialogLoad(object sender, EventArgs e)
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            DialogHelper.LoadCertificates(cbCertificates, Binding?.CertificateHash, service);
+            Binding?.RefreshCertificate();
+            DialogHelper.LoadCertificates(cbCertificates, Binding?.CertificateHash, Binding?.CertificateStoreName, service);
         }
     }
 }

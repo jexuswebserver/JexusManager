@@ -147,7 +147,7 @@ namespace JexusManager
             }
         }
 
-        public static void LoadCertificates(ComboBox comboBox, byte[] hash, IConfigurationService service)
+        public static void LoadCertificates(ComboBox comboBox, byte[] hash, string store, IConfigurationService service)
         {
             comboBox.Items.Add("No selected");
             comboBox.SelectedIndex = 0;
@@ -180,7 +180,8 @@ namespace JexusManager
             {
                 var index = comboBox.Items.Add(new CertificateInfo(certificate, store1.Name));
                 if (hash != null &&
-                    hash.SequenceEqual(certificate.GetCertHash()))
+                    hash.SequenceEqual(certificate.GetCertHash()) &&
+                    store1.Name == store)
                 {
                     comboBox.SelectedIndex = index;
                 }
@@ -202,7 +203,8 @@ namespace JexusManager
                 {
                     var index1 = comboBox.Items.Add(new CertificateInfo(certificate1, store2.Name));
                     if (hash != null &&
-                        hash.SequenceEqual(certificate1.GetCertHash()))
+                        hash.SequenceEqual(certificate1.GetCertHash()) &&
+                        store2.Name == store)
                     {
                         comboBox.SelectedIndex = index1;
                     }

@@ -5,6 +5,7 @@
 using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.ConstrainedExecution;
 
 namespace Microsoft.Web.Administration
 {
@@ -96,27 +97,7 @@ namespace Microsoft.Web.Administration
                 return;
             }
 
-            if (Parent.Parent.Server.SupportsSni)
-            {
-                if (this.GetIsSni())
-                {
-                    var sni = NativeMethods.QuerySslSniInfo(new Tuple<string, int>(_host, _endPoint.Port));
-                    if (sni != null)
-                    {
-                        CertificateHash = sni.Hash;
-                        CertificateStoreName = sni.StoreName;
-                        SslFlags = SslFlags.Sni;
-                        return;
-                    }
-                }
-            }
-
-            var certificate = NativeMethods.QuerySslCertificateInfo(_endPoint);
-            if (certificate != null)
-            {
-                CertificateHash = certificate.Hash;
-                CertificateStoreName = certificate.StoreName;
-            }
+            RefreshCertificate();
         }
 
         public byte[] CertificateHash { get; set; }
@@ -213,5 +194,53 @@ namespace Microsoft.Web.Administration
         }
 
         internal bool CanBrowse => Protocol == "http" || Protocol == "https";
+
+        internal bool DetectConflicts()
+        {
+            if (SslFlags == SslFlags.Sni)
+            {
+                var sni = NativeMethods.QuerySslSniInfo(new Tuple<string, int>(_host, _endPoint.Port));
+                return sni != null; // true if detect existing SNI mapping.
+            }
+
+            var certificate = NativeMethods.QuerySslCertificateInfo(_endPoint);
+            return certificate != null; // true if detect existing IP mapping.
+        }
+
+        public void RefreshCertificate()
+        {
+            if (Parent.Parent.Server.SupportsSni)
+            {
+                if (this.GetIsSni())
+                {
+                    var sni = NativeMethods.QuerySslSniInfo(new Tuple<string, int>(_host, _endPoint.Port));
+                    if (sni == null)
+                    {
+                        CertificateHash = null;
+                        CertificateStoreName = string.Empty;
+                        SslFlags = SslFlags.Sni;
+                        return;
+                    }
+                    else
+                    {
+                        CertificateHash = sni.Hash;
+                        CertificateStoreName = sni.StoreName;
+                        SslFlags = SslFlags.Sni;
+                        return;
+                    }
+                }
+            }
+
+            var certificate = NativeMethods.QuerySslCertificateInfo(_endPoint);
+            if (certificate == null)
+            {
+                CertificateHash = null;
+                CertificateStoreName = string.Empty;
+                return;
+            }
+            
+            CertificateHash = certificate.Hash;
+            CertificateStoreName = certificate.StoreName;
+        }
     }
 }

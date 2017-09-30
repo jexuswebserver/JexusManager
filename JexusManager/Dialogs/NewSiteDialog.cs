@@ -272,7 +272,7 @@ namespace JexusManager.Dialogs
         private void NewSiteDialogLoad(object sender, EventArgs e)
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            DialogHelper.LoadCertificates(cbCertificates, null, service);
+            DialogHelper.LoadCertificates(cbCertificates, null, null, service);
         }
     }
 }

@@ -85,7 +85,7 @@ namespace JexusManager.Features.HttpApi
         {
             var dialog = (IManagementUIService)this.GetService(typeof(IManagementUIService));
             if (
-                dialog.ShowMessage("Are you sure that you want to remove reserved URL?", "Confirm Remove",
+                dialog.ShowMessage("Are you sure that you want to remove this URL reservation?", "Confirm Remove",
                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) !=
                 DialogResult.Yes)
             {
@@ -172,12 +172,6 @@ namespace JexusManager.Features.HttpApi
             return null;
         }
 
-        public override string Name
-        {
-            get
-            {
-                return "Reserved URLs";
-            }
-        }
+        public override string Name => "URL Reservations";
     }
 }

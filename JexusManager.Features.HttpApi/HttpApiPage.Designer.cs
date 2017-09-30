@@ -264,7 +264,7 @@
             this.tpURL.Padding = new System.Windows.Forms.Padding(3);
             this.tpURL.Size = new System.Drawing.Size(552, 501);
             this.tpURL.TabIndex = 2;
-            this.tpURL.Text = "Reserved URL";
+            this.tpURL.Text = "URL Reservation";
             this.tpURL.UseVisualStyleBackColor = true;
             // 
             // lvURL

@@ -71,15 +71,8 @@ namespace Microsoft.Web.Administration
                                 var start = process.StartInfo;
                                 start.Verb = "runas";
                                 start.FileName = "cmd";
-                                start.Arguments = string.Format(
-                                    "/c \"\"{2}\" /h:\"{0}\" /s:{1}\" /i:{3} /a:{4} /o:{5} /x:{6}",
-                                    Hex.ToHexString(binding.CertificateHash),
-                                    binding.CertificateStoreName,
-                                    Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe"),
-                                    AppIdIisExpress,
-                                    binding.EndPoint.Address,
-                                    binding.EndPoint.Port,
-                                    binding.Host);
+                                start.Arguments =
+                                    $"/c \"\"{Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe")}\" /h:\"{Hex.ToHexString(binding.CertificateHash)}\" /s:{binding.CertificateStoreName}\" /i:{AppIdIisExpress} /a:{binding.EndPoint.Address} /o:{binding.EndPoint.Port} /x:{binding.Host}";
                                 start.CreateNoWindow = true;
                                 start.WindowStyle = ProcessWindowStyle.Hidden;
                                 process.Start();
@@ -124,15 +117,8 @@ namespace Microsoft.Web.Administration
                                 var start = process.StartInfo;
                                 start.Verb = "runas";
                                 start.FileName = "cmd";
-                                start.Arguments = string.Format(
-                                    "/c \"\"{2}\" /h:\"{0}\" /s:{1}\" /i:{3} /a:{4} /o:{5} /x:{6}",
-                                    Hex.ToHexString(binding.CertificateHash),
-                                    binding.CertificateStoreName,
-                                    Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe"),
-                                    AppIdIisExpress,
-                                    binding.EndPoint.Address,
-                                    binding.EndPoint.Port,
-                                    binding.Host);
+                                start.Arguments =
+                                    $"/c \"\"{Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe")}\" /h:\"{Hex.ToHexString(binding.CertificateHash)}\" /s:{binding.CertificateStoreName}\" /i:{AppIdIisExpress} /a:{binding.EndPoint.Address} /o:{binding.EndPoint.Port} /x:{binding.Host}";
                                 start.CreateNoWindow = true;
                                 start.WindowStyle = ProcessWindowStyle.Hidden;
                                 process.Start();
@@ -176,14 +162,8 @@ namespace Microsoft.Web.Administration
                         var start = process.StartInfo;
                         start.Verb = "runas";
                         start.FileName = "cmd";
-                        start.Arguments = string.Format(
-                            "/c \"\"{2}\" /h:\"{0}\" /s:{1}\" /i:{3} /a:{4} /o:{5}",
-                            Hex.ToHexString(binding.CertificateHash),
-                            binding.CertificateStoreName,
-                            Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe"),
-                            AppIdIisExpress,
-                            binding.EndPoint.Address,
-                            binding.EndPoint.Port);
+                        start.Arguments =
+                            $"/c \"\"{Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe")}\" /h:\"{Hex.ToHexString(binding.CertificateHash)}\" /s:{binding.CertificateStoreName}\" /i:{AppIdIisExpress} /a:{binding.EndPoint.Address} /o:{binding.EndPoint.Port}";
                         start.CreateNoWindow = true;
                         start.WindowStyle = ProcessWindowStyle.Hidden;
                         process.Start();
@@ -226,14 +206,8 @@ namespace Microsoft.Web.Administration
                         var start = process.StartInfo;
                         start.Verb = "runas";
                         start.FileName = "cmd";
-                        start.Arguments = string.Format(
-                            "/c \"\"{2}\" /h:\"{0}\" /s:{1}\" /i:{3} /a:{4} /o:{5}",
-                            Hex.ToHexString(binding.CertificateHash),
-                            binding.CertificateStoreName,
-                            Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe"),
-                            AppIdIisExpress,
-                            binding.EndPoint.Address,
-                            binding.EndPoint.Port);
+                        start.Arguments =
+                            $"/c \"\"{Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe")}\" /h:\"{Hex.ToHexString(binding.CertificateHash)}\" /s:{binding.CertificateStoreName}\" /i:{AppIdIisExpress} /a:{binding.EndPoint.Address} /o:{binding.EndPoint.Port}";
                         start.CreateNoWindow = true;
                         start.WindowStyle = ProcessWindowStyle.Hidden;
                         process.Start();
@@ -337,14 +311,8 @@ namespace Microsoft.Web.Administration
                     var start = process.StartInfo;
                     start.Verb = "runas";
                     start.FileName = "cmd";
-                    start.Arguments = string.Format(
-                        "/c \"\"{2}\" /h:\"{0}\" /s:{1}\" /i:{3} /o:{4} /x:{5}",
-                        Hex.ToHexString(binding.CertificateHash),
-                        binding.CertificateStoreName,
-                        Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe"),
-                        AppIdIisExpress,
-                        binding.EndPoint.Port,
-                        binding.Host);
+                    start.Arguments =
+                        $"/c \"\"{Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe")}\" /h:\"{Hex.ToHexString(binding.CertificateHash)}\" /s:{binding.CertificateStoreName}\" /i:{AppIdIisExpress} /o:{binding.EndPoint.Port} /x:{binding.Host}";
                     start.CreateNoWindow = true;
                     start.WindowStyle = ProcessWindowStyle.Hidden;
                     process.Start();

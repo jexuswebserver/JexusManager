@@ -92,7 +92,7 @@ namespace JexusManager.Features.HttpApi
         {
             var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
             if (
-                dialog.ShowMessage("Are you sure that you want to remove this certificate, and permanently remove it from the certificate store?", "Confirm Remove",
+                dialog.ShowMessage("Are you sure that you want to remove this SNI mapping?", "Confirm Remove",
                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) !=
                 DialogResult.Yes)
             {
@@ -108,7 +108,7 @@ namespace JexusManager.Features.HttpApi
                     start.Verb = "runas";
                     start.FileName = "cmd";
                     start.Arguments =
-                        $"/c \"\"{Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe")}\" /h:\"{SelectedItem.Host}\" /o:{SelectedItem.Port}\"";
+                        $"/c \"\"{Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe")}\" /x:\"{SelectedItem.Host}\" /o:{SelectedItem.Port}\"";
                     start.CreateNoWindow = true;
                     start.WindowStyle = ProcessWindowStyle.Hidden;
                     process.Start();

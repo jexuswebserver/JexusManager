@@ -86,7 +86,7 @@
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.btnCancel);
             this.Name = "NewRestrictionDialog";
-            this.Text = "Add Reserved URL";
+            this.Text = "Add URL Reservation";
             this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.NewRestrictionDialogHelpButtonClicked);
             this.ResumeLayout(false);
             this.PerformLayout();

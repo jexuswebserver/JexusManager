@@ -294,11 +294,8 @@ namespace JexusManager.Features.Certificates
                     var start = process.StartInfo;
                     start.Verb = "runas";
                     start.FileName = "cmd";
-                    start.Arguments = string.Format(
-                        "/c \"\"{2}\" /h:\"{0}\" /s:{1}\"",
-                        SelectedItem.Certificate.Thumbprint,
-                        SelectedItem.Store == "Personal" ? "MY" : "WebHosting",
-                        Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe"));
+                    start.Arguments =
+                        $"/c \"\"{Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe")}\" /h:\"{SelectedItem.Certificate.Thumbprint}\" /s:{(SelectedItem.Store == "Personal" ? "MY" : "WebHosting")}\"";
                     start.CreateNoWindow = true;
                     start.WindowStyle = ProcessWindowStyle.Hidden;
                     process.Start();
