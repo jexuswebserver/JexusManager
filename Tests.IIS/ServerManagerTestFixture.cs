@@ -51,16 +51,6 @@ namespace Tests
                 var pool = root.XPathSelectElement("/configuration/system.applicationHost/applicationPools/add[@name='Clr4IntegratedAppPool']");
                 pool.SetAttributeValue("managedPipelineMode", "Integrated");
 
-                var windows = root.XPathSelectElement("/configuration/location[@path='WebSite2']/system.webServer/security/authentication/windowsAuthentication");
-                windows.SetAttributeValue("enabled", true);
-
-                var security = root.XPathSelectElement("/configuration/location[@path='WebSite1']/system.webServer/security");
-                security.Remove();
-                var httpLogging = root.XPathSelectElement("/configuration/location[@path='WebSite1']/system.webServer/httpLogging");
-                httpLogging.AddAfterSelf(security);
-
-                var extended = windows.Element("extendedProtection");
-                extended?.SetAttributeValue("flags", "None");
                 file.Save(Current);
             }
 
@@ -77,28 +67,6 @@ namespace Tests
                 var staticContent = root.XPathSelectElement("/configuration/system.webServer/staticContent");
                 staticContent?.Remove();
                 top.AddBeforeSelf(staticContent);
-
-                var rewrite = root.XPathSelectElement("/configuration/system.webServer/rewrite");
-                var urlCompression = root.XPathSelectElement("/configuration/system.webServer/urlCompression");
-                urlCompression.Remove();
-                var httpErrors = root.XPathSelectElement("/configuration/system.webServer/httpErrors");
-                httpErrors?.Remove();
-                var security = root.XPathSelectElement("/configuration/system.webServer/security");
-                security.Remove();
-                rewrite.AddAfterSelf(httpErrors, urlCompression, security);
-                httpErrors?.Element("error")?.SetAttributeValue("prefixLanguageFilePath", string.Empty);
-                httpErrors?.Element("error")?.SetAttributeValue("responseMode", "File");
-
-                // IMPORTANT: workaround an IIS issue.
-                //var document = root.XPathSelectElement("/configuration/system.webServer/defaultDocument/files/add[@value='index.htm']");
-                //var item = new XElement("add");
-                //item.SetAttributeValue("value", "index.html");
-                //document?.AddAfterSelf(item);
-
-                //var clear = root.XPathSelectElement("/configuration/system.webServer/defaultDocument/files/clear");
-                //var remove = new XElement("remove");
-                //remove.SetAttributeValue("value", "index.html");
-                //clear?.AddAfterSelf(remove);
 
                 file.Save(TestHelper.GetSiteConfig(directoryName));
             }
