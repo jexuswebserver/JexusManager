@@ -42,5 +42,26 @@ namespace JexusManager
         public const int NonExistingStore = -2147024894; //0x80070002
         public const int UserCancelled = -2147023673;
         public const int BadKeySet = -2146893802;
+        
+        // BOOL WINAPI CryptAcquireCertificatePrivateKey(
+        //		PCCERT_CONTEXT pCert,
+        //		DWORD dwFlags,
+        //		void* pvReserved,
+        //		HCRYPTPROV* phCryptProv,
+        //		DWORD* pdwKeySpec,
+        //		BOOL* pfCallerFreeProv
+        // );
+        [DllImport("Crypt32.dll", SetLastError = true)]
+
+        public static extern bool CryptAcquireCertificatePrivateKey(
+            IntPtr pCert,
+            int dwFlags,
+            IntPtr pvReserved,
+            ref IntPtr phCryptProv,
+            ref int pdwKeySpec,
+            ref bool pfCallerFreeProv);
+        
+        [System.Runtime.InteropServices.DllImport("Kernel32")]
+        public static extern bool CloseHandle(IntPtr handle);
     }
 }

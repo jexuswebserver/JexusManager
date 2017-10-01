@@ -10,12 +10,9 @@ using System.Security.Cryptography;
 
 namespace JexusManager.Features.Main
 {
-    using System.Diagnostics;
     using System.Drawing;
     using System.IO;
     using System.Security.Cryptography.X509Certificates;
-    using System.Windows.Forms;
-
     using Microsoft.Win32;
 
     using Org.BouncyCastle.Utilities.Encoders;
@@ -119,11 +116,32 @@ namespace JexusManager.Features.Main
                                             Debug($"#Version: {cert.Version}");
                                             if (cert.HasPrivateKey)
                                             {
-                                                Debug("#You have a private key that corresponds to this certificate.");
+                                                var newHandle = IntPtr.Zero;
+                                                int newCount = 0;
+                                                var shouldRelease = false;
+                                                if (NativeMethods.CryptAcquireCertificatePrivateKey(
+                                                    cert.Handle, 0, IntPtr.Zero, ref newHandle, ref newCount,
+                                                    ref shouldRelease))
+                                                {
+                                                    Debug(
+                                                        "#You have a private key that corresponds to this certificate.");
+                                                }
+                                                else
+                                                {
+                                                    Error("#You have a private key that corresponds to this certificate but CryptAcquireCertificatePrivateKey failed.");
+                                                    RollbarDotNet.Rollbar.Report(
+                                                        "CryptAcquireCertificatePrivateKey failed");
+                                                }
+
+                                                if (shouldRelease)
+                                                {
+                                                    NativeMethods.CloseHandle(newHandle);
+                                                }
                                             }
                                             else
                                             {
-                                                Error("#You don't have a private key that corresponds to this certificate.");
+                                                Error(
+                                                    "#You don't have a private key that corresponds to this certificate.");
                                             }
 
                                             var key = cert.PublicKey.Key;
@@ -131,11 +149,11 @@ namespace JexusManager.Features.Main
                                             Debug($"#Key Exchange Algorithm: {key.KeyExchangeAlgorithm} Key Size: {key.KeySize}");
                                             Debug($"#Subject: {cert.Subject}");
                                             Debug($"#Issuer: {cert.Issuer}");
-                                            Debug($"#Validity: From {cert.NotBefore:U} To {cert.NotAfter:U}");
+                                            Debug($"#Validity: From {cert.NotBefore:G} To {cert.NotAfter:G}");
                                             Debug($"#Serial Number: {cert.SerialNumber}");
                                             Debug($"DS Mapper Usage: {(binding.UseDsMapper ? "Enabled" : "Disabled")}");
                                             Debug($"Archived: {cert.Archived}");
-
+                                            
                                             foreach (var extension in cert.Extensions)
                                             {
                                                 if (extension.Oid.FriendlyName == "Key Usage")
@@ -163,9 +181,10 @@ namespace JexusManager.Features.Main
                                             }
 
                                             X509Chain chain = X509Chain.Create();
-                                            X509ChainPolicy policy = new X509ChainPolicy();
-                                            policy.RevocationMode = X509RevocationMode.NoCheck;
-                                            chain.ChainPolicy = policy;
+                                            chain.ChainPolicy = new X509ChainPolicy
+                                            {
+                                                RevocationMode = X509RevocationMode.Online
+                                            };
                                             bool valid = chain.Build(cert);
                                             if (valid)
                                             {
@@ -173,7 +192,7 @@ namespace JexusManager.Features.Main
                                             }
                                             else
                                             {
-                                                Error("Certificate valication failed.");
+                                                Error("Certificate validation failed.");
                                             }
 
                                             foreach (var item in chain.ChainStatus)
