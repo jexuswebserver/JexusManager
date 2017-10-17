@@ -1,6 +1,6 @@
 ﻿namespace JexusManager.Features.Main
 {
-    partial class SslDiagDialog
+    partial class VsDiagDialog
     {
         /// <summary>
         /// Required designer variable.
@@ -110,15 +110,15 @@
             this.txtResult.TabIndex = 1;
             this.txtResult.Text = "";
             // 
-            // SslDiagDialog
+            // VsDiagDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(590, 401);
             this.Controls.Add(this.txtResult);
             this.Controls.Add(this.toolStrip1);
-            this.Name = "SslDiagDialog";
-            this.Text = "SSL Diagnostics";
+            this.Name = "VsDiagDialog";
+            this.Text = "Visual Studio Project Diagnostics";
             this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.SslDiagDialogHelpButtonClicked);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();

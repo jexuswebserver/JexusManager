@@ -191,6 +191,12 @@
     <Compile Include="Features\Main\SitesPage.Designer.cs">
       <DependentUpon>SitesPage.cs</DependentUpon>
     </Compile>
+    <Compile Include="Features\Main\VsDiagDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Features\Main\VsDiagDialog.Designer.cs">
+      <DependentUpon>VsDiagDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Features\Main\SslDiagDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -361,6 +367,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Features\Main\SitesPage.resx">
       <DependentUpon>SitesPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Features\Main\VsDiagDialog.resx">
+      <DependentUpon>VsDiagDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Features\Main\SslDiagDialog.resx">
       <DependentUpon>SslDiagDialog.cs</DependentUpon>
