@@ -41,7 +41,7 @@ namespace JexusManager.Tree
 
         public override string Uri
         {
-            get { throw new NotImplementedException(); }
+            get { return string.Empty; }
         }
 
         public override ServerManager ServerManager { get; set; }

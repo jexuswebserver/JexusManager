@@ -29,7 +29,7 @@ namespace JexusManager.Tree
 
         public override string Folder => string.Empty;
 
-        public override string Uri => null;
+        public override string Uri => string.Empty;
 
         public override ServerManager ServerManager { get; set; }
 

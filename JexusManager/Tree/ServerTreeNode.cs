@@ -203,7 +203,7 @@ namespace JexusManager.Tree
 
         public override string Folder => string.Empty;
 
-        public override string Uri => throw new NotImplementedException();
+        public override string Uri => string.Empty;
 
         public override ServerManager ServerManager { get; set; }
 

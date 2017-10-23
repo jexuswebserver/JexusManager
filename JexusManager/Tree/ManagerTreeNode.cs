@@ -29,6 +29,7 @@ namespace JexusManager.Tree
         public abstract string Folder { get; }
 
         public abstract string Uri { get; }
+
         public abstract ServerManager ServerManager { get; set; }
 
         public abstract ServerTreeNode ServerNode { get; }
@@ -164,7 +165,10 @@ namespace JexusManager.Tree
 
         public void Browse()
         {
-            DialogHelper.ProcessStart(Uri);
+            if (!string.IsNullOrWhiteSpace(Uri))
+            {
+                DialogHelper.ProcessStart(Uri);
+            }
         }
 
         protected static int GetLevel(string pathToSite)
