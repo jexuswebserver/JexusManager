@@ -53,7 +53,14 @@ namespace JexusManager.Services
         public DialogResult ShowMessage(string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon,
             MessageBoxDefaultButton defaultButton)
         {
-            return MessageBox.Show(DialogOwner, text, caption, buttons, icon, defaultButton);
+            try
+            {
+                return MessageBox.Show(DialogOwner, text, caption, buttons, icon, defaultButton);
+            }
+            catch (ObjectDisposedException)
+            {
+                return MessageBox.Show(text, caption, buttons, icon, defaultButton);
+            }
         }
 
         public object StartProgress(string text, MethodInvoker cancelMethod)
