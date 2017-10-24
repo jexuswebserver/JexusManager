@@ -102,31 +102,8 @@ namespace JexusManager.Dialogs
                         return;
                     }
 
-                    IPAddress address;
-                    try
+                    if (!IPEndPointIsValid(out IPAddress address, out int port))
                     {
-                        address = cbAddress.Text.ComboToAddress();
-                    }
-                    catch (Exception)
-                    {
-                        MessageBox.Show("The specified IP address is invalid. Specify a valid IP address.", Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                        return;
-                    }
-
-                    int port;
-                    try
-                    {
-                        port = int.Parse(txtPort.Text);
-                    }
-                    catch (Exception)
-                    {
-                        MessageBox.Show("The server port number must be a positive integer between 1 and 65535", Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                        return;
-                    }
-
-                    if (port < 1 || port > 65535)
-                    {
-                        MessageBox.Show("The server port number must be a positive integer between 1 and 65535", Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                         return;
                     }
 
@@ -225,7 +202,7 @@ namespace JexusManager.Dialogs
                         return;
                     }
 
-                    var toElevate = BindingUtility.Verify(cbType.Text, cbAddress.Text, txtPort.Text, cbCertificates.SelectedItem as CertificateInfo);
+                    var toElevate = IPEndPointIsValid(out IPAddress address, out int port, false) ? BindingUtility.Verify(cbType.Text, cbAddress.Text, txtPort.Text, cbCertificates.SelectedItem as CertificateInfo) : false;
                     btnOK.Enabled = toElevate != null && !string.IsNullOrWhiteSpace(txtName.Text)
                                     && !string.IsNullOrWhiteSpace(txtPath.Text);
                     if (!toElevate.HasValue || !toElevate.Value)
@@ -260,6 +237,52 @@ namespace JexusManager.Dialogs
 
                     txtPool.Text = dialog.Selected.Name;
                 }));
+        }
+
+        private bool IPEndPointIsValid(out IPAddress address, out int port, bool showDialog = true)
+        {
+            try
+            {
+                address = cbAddress.Text.ComboToAddress();
+            }
+            catch (Exception)
+            {
+                if (showDialog)
+                {
+                    MessageBox.Show("The specified IP address is invalid. Specify a valid IP address.", Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                }
+
+                address = null;
+                port = 0;
+                return false;
+            }
+
+            try
+            {
+                port = int.Parse(txtPort.Text);
+            }
+            catch (Exception)
+            {
+                if (showDialog)
+                {
+                    MessageBox.Show("The server port number must be a positive integer between 1 and 65535", Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                }
+
+                port = 0;
+                return false;
+            }
+
+            if (port < 1 || port > 65535)
+            {
+                if (showDialog)
+                {
+                    MessageBox.Show("The server port number must be a positive integer between 1 and 65535", Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                }
+
+                return false;
+            }
+
+            return true;
         }
 
         public Site NewSite { get; set; }

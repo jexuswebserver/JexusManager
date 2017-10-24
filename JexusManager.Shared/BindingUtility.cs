@@ -246,8 +246,7 @@ namespace Microsoft.Web.Administration
                 return null;
             }
 
-            int portNumber;
-            if (!int.TryParse(port, out portNumber))
+            if (!int.TryParse(port, out int portNumber))
             {
                 return null;
             }
