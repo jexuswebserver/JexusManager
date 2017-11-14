@@ -14,6 +14,8 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 using Org.BouncyCastle.Utilities.Encoders;
+using System.Security.Cryptography.X509Certificates;
+using System.Security.Cryptography;
 
 namespace JexusManager.Features.HttpApi
 {
@@ -34,6 +36,8 @@ namespace JexusManager.Features.HttpApi
                 if (_owner.SelectedItem != null)
                 {
                     result.Add(RemoveTaskItem);
+                    result.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
+                    result.Add(new MethodTaskItem("View", "View Certificate...", string.Empty).SetUsage());
                 }
 
                 return result.ToArray(typeof(TaskItem)) as TaskItem[];
@@ -43,6 +47,12 @@ namespace JexusManager.Features.HttpApi
             public override void Remove()
             {
                 _owner.Remove();
+            }
+
+            [Obfuscation(Exclude = true)]
+            public void View()
+            {
+                _owner.View();
             }
         }
 
@@ -106,6 +116,35 @@ namespace JexusManager.Features.HttpApi
             }
             catch (Exception)
             { }
+        }
+
+        private void View()
+        {
+            X509Certificate2 cert = null;
+            X509Store personal = new X509Store(SelectedItem.Store, StoreLocation.LocalMachine);
+            try
+            {
+                personal.Open(OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
+                var found = personal.Certificates.Find(X509FindType.FindByThumbprint, SelectedItem.Hash, false);
+                if (found.Count > 0)
+                {
+                    cert = found[0];
+                }
+
+                personal.Close();
+            }
+            catch (CryptographicException ex)
+            {
+                if (ex.HResult != NativeMethods.NonExistingStore)
+                {
+                    throw;
+                }
+            }
+
+            if (cert != null)
+            {
+                DialogHelper.DisplayCertificate(cert, IntPtr.Zero);
+            }
         }
 
         protected void OnHttpApiSettingsSaved()
