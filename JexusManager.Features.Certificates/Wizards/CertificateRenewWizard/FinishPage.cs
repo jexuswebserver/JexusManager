@@ -5,7 +5,6 @@
 namespace JexusManager.Features.Certificates.Wizards.CertificateRenewWizard
 {
     using System;
-    using System.Windows.Forms;
 
     public partial class FinishPage : DefaultWizardPage
     {

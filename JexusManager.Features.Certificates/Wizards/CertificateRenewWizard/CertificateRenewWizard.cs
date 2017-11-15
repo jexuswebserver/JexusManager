@@ -22,7 +22,7 @@ namespace JexusManager.Features.Certificates.Wizards.CertificateRenewWizard
     using Properties;
     using Org.BouncyCastle.Crypto.Operators;
 
-    public partial class CertificateRenewWizard : WizardForm
+    public partial class CertificateRenewWizard : DefaultWizardForm
     {
         private readonly X509Certificate2 _existing;
         private CertificateRenewWizardData _wizardData;
