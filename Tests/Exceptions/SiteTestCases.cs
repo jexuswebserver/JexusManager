@@ -274,6 +274,64 @@ namespace Tests.Exceptions
 #if IIS
             Assert.Equal(string.Format("Filename: \\\\?\\{0}\r\nError: \r\n", siteConfig), exception.Message);
 #else
+            Assert.Null(exception.Data["oob"]);
+            Assert.Equal(string.Format("Filename: \\\\?\\{0}\r\nLine number: 10\r\nError: Unrecognized element 'test'\r\n\r\n", siteConfig), exception.Message);
+#endif
+        }
+
+        [Fact]
+        public void TestIisExpressArrSection()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string Current = Path.Combine(directoryName, @"applicationHost.config");
+            string Original = Path.Combine(directoryName, @"original2.config");
+            var siteConfig = TestHelper.CopySiteConfig(directoryName, "original.config");
+            File.Copy(Original, Current, true);
+            TestHelper.FixPhysicalPathMono(Current);
+
+            {
+                // Add the section.
+                var file = XDocument.Load(siteConfig);
+                var root = file.Root;
+                if (root == null)
+                {
+                    return;
+                }
+
+                var pool = root.XPathSelectElement("/configuration/system.webServer");
+                var unknown = new XElement("webFarms");
+                pool.Add(unknown);
+                var test = new XElement("test");
+                unknown.Add(test);
+                test.SetAttributeValue("test", "test");
+                file.Save(siteConfig);
+            }
+
+#if IIS
+            var server = new ServerManager(Current);
+#else
+            var server = new IisExpressServerManager(Current);
+#endif
+            var config = server.Sites[0].Applications[0].GetWebConfiguration();
+            var exception = Assert.Throws<COMException>(
+                () =>
+                {
+                    // enable Windows authentication
+                    var windowsSection =
+                        config.GetSection("system.webServer/security/authentication/windowsAuthentication");
+                });
+#if IIS
+            Assert.Equal(string.Format("Filename: \\\\?\\{0}\r\nError: \r\n", siteConfig), exception.Message);
+#else
+            Assert.Equal("Application Request Routing Module (system.webServer/webFarms/)", exception.Data["oob"]);
+            Assert.Equal("https://docs.microsoft.com/en-us/iis/extensions/configuring-application-request-routing-arr/define-and-configure-an-application-request-routing-server-farm#prerequisites", exception.Data["link"]);
             Assert.Equal(string.Format("Filename: \\\\?\\{0}\r\nLine number: 10\r\nError: Unrecognized element 'test'\r\n\r\n", siteConfig), exception.Message);
 #endif
         }

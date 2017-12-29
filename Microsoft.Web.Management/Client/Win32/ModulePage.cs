@@ -147,7 +147,20 @@ namespace Microsoft.Web.Management.Client.Win32
             var display = new StringBuilder(message ?? "There was an error while performing this operation.");
             if (exception != null)
             {
-                display.AppendLine().AppendLine().AppendLine("Details:").AppendLine().Append(exception.Message);
+                display
+                    .AppendLine()
+                    .AppendLine()
+                    .AppendLine("Details:")
+                    .AppendLine()
+                    .Append(exception.Message);
+                if (exception.Data.Contains("oob"))
+                {
+                    display
+                        .AppendLine()
+                        .AppendLine("More Information:")
+                        .AppendLine()
+                        .Append($"{exception.Data["oob"]} might be missing. Download and install it from {exception.Data["link"]}.");
+                }
             }
 
             ShowMessage(

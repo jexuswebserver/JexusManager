@@ -94,7 +94,13 @@ namespace Microsoft.Web.Administration
             catch (COMException ex)
             {
                 _initialized = false;
-                throw new COMException(string.Format("Filename: \\\\?\\{0}\r\n{1}\r\n", file, ex.Message));
+                var exception = new COMException(string.Format("Filename: \\\\?\\{0}\r\n{1}\r\n", file, ex.Message));
+                foreach (object key in ex.Data.Keys)
+                {
+                    exception.Data.Add(key, ex.Data[key]);
+                }
+
+                throw exception;
             }
         }
 
@@ -413,11 +419,36 @@ namespace Microsoft.Web.Administration
 
             if (!result && !_dontThrow && name != "location")
             {
-                throw new COMException(
+                string link = null;
+                string oob = null;
+                if (path.StartsWith("system.webServer/aspNetCore/"))
+                {
+                    oob = "ASP.NET Core Module (system.webServer/aspNetCore/)";
+                    link = "https://docs.microsoft.com/en-us/aspnet/core/publishing/iis?tabs=aspnetcore2x#install-the-net-core-windows-server-hosting-bundle";
+                }
+                else if (path.StartsWith("system.webServer/rewrite/"))
+                {
+                    oob = "URL Rewrite Module (system.webServer/rewrite/)";
+                    link = "https://docs.microsoft.com/en-us/iis/extensions/url-rewrite-module/using-the-url-rewrite-module#where-to-get-the-url-rewrite-module";
+                }
+                else if (path.StartsWith("system.webServer/webFarms/"))
+                {
+                    oob = "Application Request Routing Module (system.webServer/webFarms/)";
+                    link = "https://docs.microsoft.com/en-us/iis/extensions/configuring-application-request-routing-arr/define-and-configure-an-application-request-routing-server-farm#prerequisites";
+                }
+
+                var exception = new COMException(
                     string.Format(
                         "Line number: {0}\r\nError: Unrecognized element '{1}'\r\n",
                         (element as IXmlLineInfo).LineNumber,
                         name));
+                if (oob != null)
+                {
+                    exception.Data.Add("oob", oob);
+                    exception.Data.Add("link", link);
+                }
+
+                throw exception;
             }
 
             return result;
