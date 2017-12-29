@@ -59,7 +59,6 @@
             this.chPattern = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.cbTrack = new System.Windows.Forms.CheckBox();
             this.btnAdd = new System.Windows.Forms.Button();
-            this.label19 = new System.Windows.Forms.Label();
             this.cbAny = new System.Windows.Forms.ComboBox();
             this.label20 = new System.Windows.Forms.Label();
             this.gbVariables = new MakarovDev.ExpandCollapsePanel.ExpandCollapsePanel();
@@ -200,7 +199,6 @@
             // 
             // gbMatch
             // 
-            this.gbMatch.ButtonSize = MakarovDev.ExpandCollapsePanel.ExpandCollapseButton.ExpandButtonSize.Small;
             this.gbMatch.ButtonStyle = MakarovDev.ExpandCollapsePanel.ExpandCollapseButton.ExpandButtonStyle.Circle;
             this.gbMatch.Controls.Add(this.cbIgnoreCase);
             this.gbMatch.Controls.Add(this.btnTest);
@@ -211,7 +209,6 @@
             this.gbMatch.Controls.Add(this.cbMatch);
             this.gbMatch.Controls.Add(this.label4);
             this.gbMatch.ExpandedHeight = 182;
-            this.gbMatch.IsExpanded = true;
             this.gbMatch.Location = new System.Drawing.Point(3, 3);
             this.gbMatch.Name = "gbMatch";
             this.gbMatch.Size = new System.Drawing.Size(545, 182);
@@ -222,7 +219,7 @@
             // cbIgnoreCase
             // 
             this.cbIgnoreCase.AutoSize = true;
-            this.cbIgnoreCase.Location = new System.Drawing.Point(18, 140);
+            this.cbIgnoreCase.Location = new System.Drawing.Point(18, 153);
             this.cbIgnoreCase.Name = "cbIgnoreCase";
             this.cbIgnoreCase.Size = new System.Drawing.Size(90, 19);
             this.cbIgnoreCase.TabIndex = 7;
@@ -232,7 +229,7 @@
             // 
             // btnTest
             // 
-            this.btnTest.Location = new System.Drawing.Point(549, 111);
+            this.btnTest.Location = new System.Drawing.Point(549, 116);
             this.btnTest.Name = "btnTest";
             this.btnTest.Size = new System.Drawing.Size(95, 23);
             this.btnTest.TabIndex = 6;
@@ -242,7 +239,7 @@
             // 
             // txtPattern
             // 
-            this.txtPattern.Location = new System.Drawing.Point(18, 113);
+            this.txtPattern.Location = new System.Drawing.Point(18, 126);
             this.txtPattern.Name = "txtPattern";
             this.txtPattern.Size = new System.Drawing.Size(525, 21);
             this.txtPattern.TabIndex = 5;
@@ -251,7 +248,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(15, 85);
+            this.label6.Location = new System.Drawing.Point(15, 98);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(49, 15);
             this.label6.TabIndex = 4;
@@ -265,7 +262,7 @@
             "Regular Expressions",
             "Wildcards",
             "Exact Match"});
-            this.cbType.Location = new System.Drawing.Point(379, 43);
+            this.cbType.Location = new System.Drawing.Point(379, 56);
             this.cbType.Name = "cbType";
             this.cbType.Size = new System.Drawing.Size(265, 21);
             this.cbType.TabIndex = 3;
@@ -274,7 +271,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(376, 27);
+            this.label5.Location = new System.Drawing.Point(376, 40);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(42, 15);
             this.label5.TabIndex = 2;
@@ -287,7 +284,7 @@
             this.cbMatch.Items.AddRange(new object[] {
             "Matches the Pattern",
             "Does Not Match the Pattern"});
-            this.cbMatch.Location = new System.Drawing.Point(18, 43);
+            this.cbMatch.Location = new System.Drawing.Point(18, 56);
             this.cbMatch.Name = "cbMatch";
             this.cbMatch.Size = new System.Drawing.Size(265, 21);
             this.cbMatch.TabIndex = 1;
@@ -296,7 +293,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(15, 27);
+            this.label4.Location = new System.Drawing.Point(15, 40);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(98, 15);
             this.label4.TabIndex = 0;
@@ -304,7 +301,6 @@
             // 
             // gbConditions
             // 
-            this.gbConditions.ButtonSize = MakarovDev.ExpandCollapsePanel.ExpandCollapseButton.ExpandButtonSize.Small;
             this.gbConditions.ButtonStyle = MakarovDev.ExpandCollapsePanel.ExpandCollapseButton.ExpandButtonStyle.Circle;
             this.gbConditions.Controls.Add(this.btnDown);
             this.gbConditions.Controls.Add(this.btnUp);
@@ -313,10 +309,9 @@
             this.gbConditions.Controls.Add(this.lvConditions);
             this.gbConditions.Controls.Add(this.cbTrack);
             this.gbConditions.Controls.Add(this.btnAdd);
-            this.gbConditions.Controls.Add(this.label19);
             this.gbConditions.Controls.Add(this.cbAny);
             this.gbConditions.Controls.Add(this.label20);
-            this.gbConditions.ExpandedHeight = 288;
+            this.gbConditions.ExpandedHeight = 300;
             this.gbConditions.IsExpanded = false;
             this.gbConditions.Location = new System.Drawing.Point(3, 191);
             this.gbConditions.Name = "gbConditions";
@@ -329,7 +324,7 @@
             // 
             this.btnDown.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.btnDown.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(130)))), ((int)(((byte)(180)))));
-            this.btnDown.Location = new System.Drawing.Point(539, 219);
+            this.btnDown.Location = new System.Drawing.Point(539, 233);
             this.btnDown.Name = "btnDown";
             this.btnDown.Size = new System.Drawing.Size(95, 23);
             this.btnDown.TabIndex = 12;
@@ -341,7 +336,7 @@
             // 
             this.btnUp.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.btnUp.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(130)))), ((int)(((byte)(180)))));
-            this.btnUp.Location = new System.Drawing.Point(539, 190);
+            this.btnUp.Location = new System.Drawing.Point(539, 204);
             this.btnUp.Name = "btnUp";
             this.btnUp.Size = new System.Drawing.Size(95, 23);
             this.btnUp.TabIndex = 11;
@@ -353,7 +348,7 @@
             // 
             this.btnRemove.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.btnRemove.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(130)))), ((int)(((byte)(180)))));
-            this.btnRemove.Location = new System.Drawing.Point(539, 141);
+            this.btnRemove.Location = new System.Drawing.Point(539, 155);
             this.btnRemove.Name = "btnRemove";
             this.btnRemove.Size = new System.Drawing.Size(95, 23);
             this.btnRemove.TabIndex = 10;
@@ -365,7 +360,7 @@
             // 
             this.btnEdit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.btnEdit.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(130)))), ((int)(((byte)(180)))));
-            this.btnEdit.Location = new System.Drawing.Point(539, 112);
+            this.btnEdit.Location = new System.Drawing.Point(539, 126);
             this.btnEdit.Name = "btnEdit";
             this.btnEdit.Size = new System.Drawing.Size(95, 23);
             this.btnEdit.TabIndex = 9;
@@ -383,7 +378,7 @@
             this.lvConditions.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.lvConditions.FullRowSelect = true;
             this.lvConditions.HideSelection = false;
-            this.lvConditions.Location = new System.Drawing.Point(8, 70);
+            this.lvConditions.Location = new System.Drawing.Point(8, 84);
             this.lvConditions.MultiSelect = false;
             this.lvConditions.Name = "lvConditions";
             this.lvConditions.Size = new System.Drawing.Size(525, 185);
@@ -411,7 +406,7 @@
             this.cbTrack.AutoSize = true;
             this.cbTrack.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.cbTrack.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(130)))), ((int)(((byte)(180)))));
-            this.cbTrack.Location = new System.Drawing.Point(18, 261);
+            this.cbTrack.Location = new System.Drawing.Point(18, 275);
             this.cbTrack.Name = "cbTrack";
             this.cbTrack.Size = new System.Drawing.Size(239, 19);
             this.cbTrack.TabIndex = 7;
@@ -422,24 +417,13 @@
             // 
             this.btnAdd.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.btnAdd.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(130)))), ((int)(((byte)(180)))));
-            this.btnAdd.Location = new System.Drawing.Point(539, 83);
+            this.btnAdd.Location = new System.Drawing.Point(539, 97);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(95, 23);
             this.btnAdd.TabIndex = 6;
             this.btnAdd.Text = "Add...";
             this.btnAdd.UseVisualStyleBackColor = false;
             this.btnAdd.Click += new System.EventHandler(this.BtnAddClick);
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.label19.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(130)))), ((int)(((byte)(180)))));
-            this.label19.Location = new System.Drawing.Point(376, 27);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(42, 15);
-            this.label19.TabIndex = 2;
-            this.label19.Text = "Using:";
             // 
             // cbAny
             // 
@@ -450,7 +434,7 @@
             this.cbAny.Items.AddRange(new object[] {
             "Match All",
             "Match Any"});
-            this.cbAny.Location = new System.Drawing.Point(18, 43);
+            this.cbAny.Location = new System.Drawing.Point(18, 56);
             this.cbAny.Name = "cbAny";
             this.cbAny.Size = new System.Drawing.Size(131, 21);
             this.cbAny.TabIndex = 1;
@@ -460,7 +444,7 @@
             this.label20.AutoSize = true;
             this.label20.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.label20.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(130)))), ((int)(((byte)(180)))));
-            this.label20.Location = new System.Drawing.Point(15, 27);
+            this.label20.Location = new System.Drawing.Point(15, 40);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(102, 15);
             this.label20.TabIndex = 0;
@@ -468,7 +452,6 @@
             // 
             // gbVariables
             // 
-            this.gbVariables.ButtonSize = MakarovDev.ExpandCollapsePanel.ExpandCollapseButton.ExpandButtonSize.Small;
             this.gbVariables.ButtonStyle = MakarovDev.ExpandCollapsePanel.ExpandCollapseButton.ExpandButtonStyle.Circle;
             this.gbVariables.Controls.Add(this.btnVarRemove);
             this.gbVariables.Controls.Add(this.btnVarEdit);
@@ -489,7 +472,7 @@
             // 
             this.btnVarRemove.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.btnVarRemove.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(130)))), ((int)(((byte)(180)))));
-            this.btnVarRemove.Location = new System.Drawing.Point(539, 99);
+            this.btnVarRemove.Location = new System.Drawing.Point(539, 113);
             this.btnVarRemove.Name = "btnVarRemove";
             this.btnVarRemove.Size = new System.Drawing.Size(95, 23);
             this.btnVarRemove.TabIndex = 17;
@@ -501,7 +484,7 @@
             // 
             this.btnVarEdit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.btnVarEdit.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(130)))), ((int)(((byte)(180)))));
-            this.btnVarEdit.Location = new System.Drawing.Point(539, 70);
+            this.btnVarEdit.Location = new System.Drawing.Point(539, 84);
             this.btnVarEdit.Name = "btnVarEdit";
             this.btnVarEdit.Size = new System.Drawing.Size(95, 23);
             this.btnVarEdit.TabIndex = 16;
@@ -513,7 +496,7 @@
             // 
             this.btnVarAdd.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.btnVarAdd.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(130)))), ((int)(((byte)(180)))));
-            this.btnVarAdd.Location = new System.Drawing.Point(539, 41);
+            this.btnVarAdd.Location = new System.Drawing.Point(539, 55);
             this.btnVarAdd.Name = "btnVarAdd";
             this.btnVarAdd.Size = new System.Drawing.Size(95, 23);
             this.btnVarAdd.TabIndex = 15;
@@ -525,7 +508,7 @@
             // 
             this.btnVarUp.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.btnVarUp.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(130)))), ((int)(((byte)(180)))));
-            this.btnVarUp.Location = new System.Drawing.Point(539, 152);
+            this.btnVarUp.Location = new System.Drawing.Point(539, 166);
             this.btnVarUp.Name = "btnVarUp";
             this.btnVarUp.Size = new System.Drawing.Size(95, 23);
             this.btnVarUp.TabIndex = 14;
@@ -537,7 +520,7 @@
             // 
             this.btnVarDown.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.btnVarDown.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(130)))), ((int)(((byte)(180)))));
-            this.btnVarDown.Location = new System.Drawing.Point(539, 181);
+            this.btnVarDown.Location = new System.Drawing.Point(539, 195);
             this.btnVarDown.Name = "btnVarDown";
             this.btnVarDown.Size = new System.Drawing.Size(95, 23);
             this.btnVarDown.TabIndex = 13;
@@ -555,7 +538,7 @@
             this.lvVariables.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.lvVariables.FullRowSelect = true;
             this.lvVariables.HideSelection = false;
-            this.lvVariables.Location = new System.Drawing.Point(8, 29);
+            this.lvVariables.Location = new System.Drawing.Point(8, 43);
             this.lvVariables.MultiSelect = false;
             this.lvVariables.Name = "lvVariables";
             this.lvVariables.Size = new System.Drawing.Size(525, 185);
@@ -580,7 +563,6 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.ButtonSize = MakarovDev.ExpandCollapsePanel.ExpandCollapseButton.ExpandButtonSize.Small;
             this.groupBox2.ButtonStyle = MakarovDev.ExpandCollapsePanel.ExpandCollapseButton.ExpandButtonStyle.Circle;
             this.groupBox2.Controls.Add(this.gbRedirect);
             this.groupBox2.Controls.Add(this.gbCustom);
@@ -589,7 +571,6 @@
             this.groupBox2.Controls.Add(this.cbAction);
             this.groupBox2.Controls.Add(this.label7);
             this.groupBox2.ExpandedHeight = 261;
-            this.groupBox2.IsExpanded = true;
             this.groupBox2.Location = new System.Drawing.Point(3, 273);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(545, 261);
@@ -604,7 +585,7 @@
             this.gbRedirect.Controls.Add(this.cbAppendRedirect);
             this.gbRedirect.Controls.Add(this.txtRedirect);
             this.gbRedirect.Controls.Add(this.label9);
-            this.gbRedirect.Location = new System.Drawing.Point(18, 70);
+            this.gbRedirect.Location = new System.Drawing.Point(18, 84);
             this.gbRedirect.Name = "gbRedirect";
             this.gbRedirect.Size = new System.Drawing.Size(626, 176);
             this.gbRedirect.TabIndex = 4;
@@ -675,7 +656,7 @@
             this.gbCustom.Controls.Add(this.label11);
             this.gbCustom.Controls.Add(this.txtSubstatus);
             this.gbCustom.Controls.Add(this.label10);
-            this.gbCustom.Location = new System.Drawing.Point(18, 70);
+            this.gbCustom.Location = new System.Drawing.Point(18, 84);
             this.gbCustom.Name = "gbCustom";
             this.gbCustom.Size = new System.Drawing.Size(626, 197);
             this.gbCustom.TabIndex = 4;
@@ -753,7 +734,7 @@
             // cbStop
             // 
             this.cbStop.AutoSize = true;
-            this.cbStop.Location = new System.Drawing.Point(18, 229);
+            this.cbStop.Location = new System.Drawing.Point(18, 243);
             this.cbStop.Name = "cbStop";
             this.cbStop.Size = new System.Drawing.Size(224, 19);
             this.cbStop.TabIndex = 3;
@@ -767,7 +748,7 @@
             this.gbRewrite.Controls.Add(this.cbAppend);
             this.gbRewrite.Controls.Add(this.txtUrl);
             this.gbRewrite.Controls.Add(this.label8);
-            this.gbRewrite.Location = new System.Drawing.Point(18, 70);
+            this.gbRewrite.Location = new System.Drawing.Point(18, 84);
             this.gbRewrite.Name = "gbRewrite";
             this.gbRewrite.Size = new System.Drawing.Size(626, 143);
             this.gbRewrite.TabIndex = 2;
@@ -825,7 +806,7 @@
             "Redirect",
             "Custom Response",
             "Abort Request"});
-            this.cbAction.Location = new System.Drawing.Point(18, 42);
+            this.cbAction.Location = new System.Drawing.Point(18, 56);
             this.cbAction.Name = "cbAction";
             this.cbAction.Size = new System.Drawing.Size(140, 21);
             this.cbAction.TabIndex = 1;
@@ -835,7 +816,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(15, 26);
+            this.label7.Location = new System.Drawing.Point(15, 40);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(68, 15);
             this.label7.TabIndex = 0;
@@ -1018,7 +999,6 @@
         private ColumnHeader chPattern;
         private CheckBox cbTrack;
         private Button btnAdd;
-        private Label label19;
         private ComboBox cbAny;
         private Label label20;
         private ExpandCollapsePanel gbVariables;
