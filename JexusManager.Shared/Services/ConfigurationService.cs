@@ -68,6 +68,10 @@ namespace JexusManager.Services
             {
                 section = config.GetSection(sectionPath, VirtualDirectory.LocationPath());
             }
+            else if (Application != null)
+            {
+                section = config.GetSection(sectionPath, Application.LocationPath());
+            }
             else
             {
                 section = locationPath == null ? config.GetSection(sectionPath) : config.GetSection(sectionPath, locationPath);

@@ -36,7 +36,7 @@
             this.cmsActionPanel = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.label2 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.gbRollover = new System.Windows.Forms.GroupBox();
             this.cbLocalTime = new System.Windows.Forms.CheckBox();
             this.rbNoFile = new System.Windows.Forms.RadioButton();
             this.txtSize = new System.Windows.Forms.TextBox();
@@ -71,7 +71,7 @@
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.panel2.SuspendLayout();
-            this.groupBox3.SuspendLayout();
+            this.gbRollover.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -124,7 +124,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel2.AutoScroll = true;
-            this.panel2.Controls.Add(this.groupBox3);
+            this.panel2.Controls.Add(this.gbRollover);
             this.panel2.Controls.Add(this.groupBox2);
             this.panel2.Controls.Add(this.label4);
             this.panel2.Controls.Add(this.cbLogType);
@@ -134,21 +134,21 @@
             this.panel2.Size = new System.Drawing.Size(560, 540);
             this.panel2.TabIndex = 7;
             // 
-            // groupBox3
+            // gbRollover
             // 
-            this.groupBox3.Controls.Add(this.cbLocalTime);
-            this.groupBox3.Controls.Add(this.rbNoFile);
-            this.groupBox3.Controls.Add(this.txtSize);
-            this.groupBox3.Controls.Add(this.rbSize);
-            this.groupBox3.Controls.Add(this.cbSchedule);
-            this.groupBox3.Controls.Add(this.rbSchedule);
-            this.groupBox3.Controls.Add(this.label9);
-            this.groupBox3.Location = new System.Drawing.Point(6, 429);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(517, 219);
-            this.groupBox3.TabIndex = 7;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Log File Rollover";
+            this.gbRollover.Controls.Add(this.cbLocalTime);
+            this.gbRollover.Controls.Add(this.rbNoFile);
+            this.gbRollover.Controls.Add(this.txtSize);
+            this.gbRollover.Controls.Add(this.rbSize);
+            this.gbRollover.Controls.Add(this.cbSchedule);
+            this.gbRollover.Controls.Add(this.rbSchedule);
+            this.gbRollover.Controls.Add(this.label9);
+            this.gbRollover.Location = new System.Drawing.Point(6, 429);
+            this.gbRollover.Name = "gbRollover";
+            this.gbRollover.Size = new System.Drawing.Size(517, 219);
+            this.gbRollover.TabIndex = 7;
+            this.gbRollover.TabStop = false;
+            this.gbRollover.Text = "Log File Rollover";
             // 
             // cbLocalTime
             // 
@@ -179,6 +179,7 @@
             this.txtSize.Name = "txtSize";
             this.txtSize.Size = new System.Drawing.Size(110, 20);
             this.txtSize.TabIndex = 4;
+            this.txtSize.TextChanged += new System.EventHandler(this.txtSize_TextChanged);
             // 
             // rbSize
             // 
@@ -205,6 +206,7 @@
             this.cbSchedule.Name = "cbSchedule";
             this.cbSchedule.Size = new System.Drawing.Size(175, 21);
             this.cbSchedule.TabIndex = 2;
+            this.cbSchedule.SelectedIndexChanged += new System.EventHandler(this.cbSchedule_SelectedIndexChanged);
             // 
             // rbSchedule
             // 
@@ -493,8 +495,8 @@
             this.splitContainer1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
+            this.gbRollover.ResumeLayout(false);
+            this.gbRollover.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
@@ -531,7 +533,7 @@
         private Panel panel2;
         private PictureBox pictureBox1;
         private ContextMenuStrip cmsActionPanel;
-        private GroupBox groupBox3;
+        private GroupBox gbRollover;
         private CheckBox cbLocalTime;
         private RadioButton rbNoFile;
         private TextBox txtSize;

@@ -5,11 +5,9 @@
 namespace JexusManager.Features.Logging
 {
     using System;
-    using System.Collections;
     using System.Reflection;
     using System.Windows.Forms;
 
-    using JexusManager.Properties;
     using JexusManager.Services;
 
     using Microsoft.Web.Management.Client;
@@ -33,6 +31,7 @@ namespace JexusManager.Features.Logging
             }
         }
 
+        private const string MaxLogSize = "4294967295";
         private PageTaskList _taskList;
         private LoggingFeature _feature;
         private bool _hasChanges;
@@ -107,10 +106,11 @@ namespace JexusManager.Features.Logging
                 cbFormat.SelectedIndex = (int)_feature.LogFormat;
                 txtPath.Text = _feature.Directory;
                 txtPath.Enabled = _feature.CanBrowse && _feature.IsEnabled;
-                btnSelect.Enabled = _feature.IsEnabled;
+                btnSelect.Enabled = _feature.CanBrowse && _feature.IsEnabled;
                 btnBrowse.Enabled = _feature.CanBrowse && _feature.IsEnabled;
                 cbFormat.Enabled = _feature.CanBrowse && _feature.IsEnabled;
-                cbEncoding.Enabled = _feature.CanEncoding;
+                cbEncoding.Enabled = _feature.CanEncoding && _feature.IsEnabled;
+                gbRollover.Enabled = _feature.CanBrowse && _feature.IsEnabled;
 
                 rbFile.Enabled = rbEvent.Enabled = rbBoth.Enabled = _feature.LogTargetW3C == -1;
                 if (_feature.LogTargetW3C != -1)
@@ -129,31 +129,25 @@ namespace JexusManager.Features.Logging
                     }
                 }
 
-                if (_feature.Period == 0)
+                rbSchedule.Checked = cbSchedule.Enabled = _feature.Period > 0;
+                rbSize.Checked = txtSize.Enabled = _feature.Period == 0 && _feature.TruncateSizeString != MaxLogSize;
+                rbNoFile.Checked = _feature.Period == 0 && _feature.TruncateSizeString == MaxLogSize;
+                txtSize.Text = txtSize.Enabled ? _feature.TruncateSizeString.ToString() : string.Empty;
+
+                switch (_feature.Period)
                 {
-                    rbSize.Checked = true;
-                    cbSchedule.Enabled = false;
-                    txtSize.Text = _feature.TruncateSize.ToString();
-                }
-                else
-                {
-                    rbSchedule.Checked = true;
-                    txtSize.Enabled = false;
-                    switch (_feature.Period)
-                    {
-                        case 2:
-                            cbSchedule.SelectedIndex = 2;
-                            break;
-                        case 1:
-                            cbSchedule.SelectedIndex = 1;
-                            break;
-                        case 4:
-                            cbSchedule.SelectedIndex = 0;
-                            break;
-                        case 3:
-                            cbSchedule.SelectedIndex = 3;
-                            break;
-                    }
+                    case 2:
+                        cbSchedule.SelectedIndex = 2;
+                        break;
+                    case 1:
+                        cbSchedule.SelectedIndex = 1;
+                        break;
+                    case 4:
+                        cbSchedule.SelectedIndex = 0;
+                        break;
+                    case 3:
+                        cbSchedule.SelectedIndex = 3;
+                        break;
                 }
 
                 cbLocalTime.Checked = _feature.LocalTimeRollover;
@@ -192,7 +186,7 @@ namespace JexusManager.Features.Logging
 
         protected override bool CanApplyChanges
         {
-            get { return true; }
+            get { return !rbSize.Checked || !string.IsNullOrWhiteSpace(txtSize.Text); }
         }
 
         private void cbEncoding_SelectedIndexChanged(object sender, EventArgs e)
@@ -223,6 +217,7 @@ namespace JexusManager.Features.Logging
         private void btnSelect_Click(object sender, EventArgs e)
         {
             _feature.SelectFields();
+            InformChanges();
         }
 
         private void rbFile_CheckedChanged(object sender, EventArgs e)
@@ -239,10 +234,14 @@ namespace JexusManager.Features.Logging
             {
                 _feature.LogTargetW3C = 3;
             }
+
+            InformChanges();
         }
 
         private void rbSchedule_CheckedChanged(object sender, EventArgs e)
         {
+            cbSchedule.Enabled = rbSchedule.Checked;
+            txtSize.Enabled = rbSize.Checked;
             if (rbSchedule.Checked)
             {
                 switch (cbSchedule.SelectedIndex)
@@ -264,13 +263,51 @@ namespace JexusManager.Features.Logging
             else if (rbSize.Checked)
             {
                 _feature.Period = 0;
-                _feature.TruncateSize = long.Parse(txtSize.Text);
+                _feature.TruncateSizeString = txtSize.Text;
             }
+            else
+            {
+                _feature.Period = 0;
+                _feature.TruncateSizeString = MaxLogSize;
+            }
+
+            InformChanges();
         }
 
         private void cbLocalTime_CheckedChanged(object sender, EventArgs e)
         {
             _feature.LocalTimeRollover = cbLocalTime.Checked;
+            InformChanges();
+        }
+
+        private void cbSchedule_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (cbSchedule.SelectedIndex)
+            {
+                case 0:
+                    _feature.Period = 4;
+                    break;
+                case 1:
+                    _feature.Period = 1;
+                    break;
+                case 2:
+                    _feature.Period = 2;
+                    break;
+                case 3:
+                    _feature.Period = 3;
+                    break;
+            }
+
+            InformChanges();
+        }
+
+        private void txtSize_TextChanged(object sender, EventArgs e)
+        {
+            if (txtSize.Enabled)
+            {
+                _feature.TruncateSizeString = txtSize.Text;
+                InformChanges();
+            }
         }
     }
 }

@@ -96,7 +96,7 @@ namespace JexusManager.Features.Logging
         public void Load()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.applicationHost/log");
+            var section = service.GetSection("system.applicationHost/log", null, false);
             Mode = (long)section.Attributes["centralLogFileMode"].Value;
             Encoding = (bool)section.Attributes["logInUTF8"].Value ? 0 : 1;
 
@@ -116,7 +116,7 @@ namespace JexusManager.Features.Logging
                 }
 
                 LocalTimeRollover = (bool)element.Attributes["localTimeRollover"].Value;
-                TruncateSize = (long)element.Attributes["truncateSize"].Value;
+                TruncateSizeString = element.Attributes["truncateSize"].Value.ToString();
                 Period = (long)element.Attributes["period"].Value;
             }
             else
@@ -134,7 +134,7 @@ namespace JexusManager.Features.Logging
                 }
 
                 LocalTimeRollover = logFile.LocalTimeRollover;
-                TruncateSize = logFile.TruncateSize;
+                TruncateSizeString = logFile.TruncateSize.ToString();
                 Period = (long)logFile.Period;
             }
 
@@ -148,7 +148,7 @@ namespace JexusManager.Features.Logging
 
         public long Period { get; set; }
 
-        public long TruncateSize { get; set; }
+        public string TruncateSizeString { get; set; }
 
         public bool LocalTimeRollover { get; set; }
 
@@ -272,7 +272,7 @@ namespace JexusManager.Features.Logging
                 }
 
                 element.Attributes["localTimeRollover"].Value = LocalTimeRollover;
-                element.Attributes["truncateSize"].Value = TruncateSize;
+                element.Attributes["truncateSize"].Value = TruncateSizeString;
                 element.Attributes["period"].Value = Period;
             }
             else
@@ -286,7 +286,21 @@ namespace JexusManager.Features.Logging
                 }
 
                 logFile.LocalTimeRollover = LocalTimeRollover;
-                logFile.TruncateSize = TruncateSize;
+                var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
+                long size;
+                if (!long.TryParse(TruncateSizeString, out size))
+                {
+                    dialog.ShowMessage("The maximum file size must be a valid, positive integer.", Name, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return false;
+                }
+
+                if (size < 1048576 || size > 4294967295)
+                {
+                    dialog.ShowMessage("The specified number is invalid. The valid range is between 1 MB and 4 GB.", Name, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return false;
+                }
+
+                logFile.TruncateSize = size;
                 logFile.Period = (LoggingRolloverPeriod)Period;
             }
 

@@ -111,6 +111,11 @@ namespace Microsoft.Web.Administration
             return virtualDirectory.Application.Site.Name + virtualDirectory.PathToSite();
         }
 
+        internal static string LocationPath(this Application application)
+        {
+            return application.Site.Name + application.Path;
+        }
+
         internal static bool IsJexus(ServerManager server, Application application)
         {
             if (server != null)
