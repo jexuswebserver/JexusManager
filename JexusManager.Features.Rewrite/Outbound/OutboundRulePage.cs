@@ -226,14 +226,22 @@ namespace JexusManager.Features.Rewrite.Outbound
             Rule.Value = txtValue.Text;
             Rule.Replace = !string.IsNullOrWhiteSpace(txtValue.Text);
 
+            if (txtName.ReadOnly)
+            {
+                _feature.EditItem(Rule);
+            }
+            else
+            {
+                txtName.ReadOnly = true;
+                _feature.AddItem(Rule);
+            }
+
             if (!Rule.ApplyChanges())
             {
                 return false;
             }
 
             ClearChanges();
-            txtName.ReadOnly = true;
-            _feature.AddItem(Rule);
             return true;
         }
 

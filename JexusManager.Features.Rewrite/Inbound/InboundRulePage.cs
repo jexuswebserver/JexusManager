@@ -221,14 +221,22 @@ namespace JexusManager.Features.Rewrite.Inbound
             Rule.StatusReason = txtReason.Text;
             Rule.StatusDescription = txtError.Text;
 
-            _feature.AddItem(Rule);
+            if (txtName.ReadOnly)
+            {
+                _feature.EditItem(Rule);
+            }
+            else
+            {
+                txtName.ReadOnly = true;
+                _feature.AddItem(Rule);
+            }
+
             if (!Rule.ApplyChanges())
             {
                 return false;
             }
 
             ClearChanges();
-            txtName.ReadOnly = true;
             return true;
         }
 

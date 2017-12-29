@@ -19,14 +19,14 @@ namespace JexusManager.Features.Rewrite.Inbound
         public InboundRule(ConfigurationElement element)
         {
             Flag = element == null || element.IsLocallyStored ? "Local" : "Inherited";
-            this.Element = element;
-            this.ServerVariables = new List<ServerVariableItem>();
-            this.Conditions = new List<ConditionItem>();
+            Element = element;
+            ServerVariables = new List<ServerVariableItem>();
+            Conditions = new List<ConditionItem>();
             if (element == null)
             {
-                this.Type = 1;
+                Type = 1;
                 IgnoreCase = true;
-                this.AppendQueryString = true;
+                AppendQueryString = true;
                 Enabled = true;
                 return;
             }
@@ -85,7 +85,7 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         public bool Match(InboundRule other)
         {
-            return other != null && other.Name == this.Name;
+            return other != null && other.Name == Name;
         }
 
         public bool ShowHelp()
@@ -101,55 +101,55 @@ namespace JexusManager.Features.Rewrite.Inbound
                 return;
             }
 
-            this.Name = (string)this.Element["name"];
-            this.Enabled = (bool)this.Element["enabled"];
-            this.PatternSyntax = (long)this.Element["patternSyntax"];
-            this.StopProcessing = (bool)this.Element["stopProcessing"];
-            ConfigurationElement matchElement = this.Element.ChildElements["match"];
-            this.PatternUrl = (string)matchElement["url"];
-            this.Negate = (bool)matchElement["negate"];
-            ConfigurationElement actionElement = this.Element.ChildElements["action"];
-            this.Type = (long)actionElement["type"];
-            this.ActionUrl = (string)actionElement["url"];
-            this.AppendQueryString = (bool)actionElement["appendQueryString"];
-            this.LogRewrittenUrl = (bool)actionElement["logRewrittenUrl"];
+            Name = (string)Element["name"];
+            Enabled = (bool)Element["enabled"];
+            PatternSyntax = (long)Element["patternSyntax"];
+            StopProcessing = (bool)Element["stopProcessing"];
+            ConfigurationElement matchElement = Element.ChildElements["match"];
+            PatternUrl = (string)matchElement["url"];
+            Negate = (bool)matchElement["negate"];
+            ConfigurationElement actionElement = Element.ChildElements["action"];
+            Type = (long)actionElement["type"];
+            ActionUrl = (string)actionElement["url"];
+            AppendQueryString = (bool)actionElement["appendQueryString"];
+            LogRewrittenUrl = (bool)actionElement["logRewrittenUrl"];
             var redirect = (long)actionElement["redirectType"];
             switch (redirect)
             {
                 case 301:
-                    this.RedirectType = 0;
+                    RedirectType = 0;
                     break;
                 case 302:
-                    this.RedirectType = 1;
+                    RedirectType = 1;
                     break;
                 case 303:
-                    this.RedirectType = 2;
+                    RedirectType = 2;
                     break;
                 case 307:
-                    this.RedirectType = 3;
+                    RedirectType = 3;
                     break;
             }
 
-            this.StatusCode = (uint)actionElement["statusCode"];
-            this.SubStatusCode = (uint)actionElement["subStatusCode"];
-            this.StatusReason = (string)actionElement["statusReason"];
-            this.StatusDescription = (string)actionElement["statusDescription"];
+            StatusCode = (uint)actionElement["statusCode"];
+            SubStatusCode = (uint)actionElement["subStatusCode"];
+            StatusReason = (string)actionElement["statusReason"];
+            StatusDescription = (string)actionElement["statusDescription"];
 
-            var conditions = this.Element.ChildElements["conditions"];
-            this.TrackAllCaptures = (bool)conditions["trackAllCaptures"];
-            this.LogicalGrouping = (long)conditions["logicalGrouping"];
+            var conditions = Element.ChildElements["conditions"];
+            TrackAllCaptures = (bool)conditions["trackAllCaptures"];
+            LogicalGrouping = (long)conditions["logicalGrouping"];
 
             foreach (ConfigurationElement condition in conditions.GetCollection())
             {
                 var item = new ConditionItem(condition);
-                this.Conditions.Add(item);
+                Conditions.Add(item);
             }
 
-            var variables = this.Element.ChildElements["serverVariables"];
+            var variables = Element.ChildElements["serverVariables"];
             foreach (ConfigurationElement variable in variables.GetCollection())
             {
                 var item = new ServerVariableItem(variable);
-                this.ServerVariables.Add(item);
+                ServerVariables.Add(item);
             }
         }
 
@@ -159,7 +159,7 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         public bool ApplyChanges()
         {
-            this.Apply();
+            Apply();
             return true;
         }
 
@@ -167,16 +167,16 @@ namespace JexusManager.Features.Rewrite.Inbound
         {
             Element["name"] = Name;
             Element["enabled"] = Enabled;
-            Element["patternSyntax"] = this.PatternSyntax;
-            Element["stopProcessing"] = this.StopProcessing;
+            Element["patternSyntax"] = PatternSyntax;
+            Element["stopProcessing"] = StopProcessing;
             ConfigurationElement matchElement = Element.ChildElements["match"];
-            matchElement["url"] = this.PatternUrl;
-            matchElement["negate"] = this.Negate;
+            matchElement["url"] = PatternUrl;
+            matchElement["negate"] = Negate;
             ConfigurationElement actionElement = Element.ChildElements["action"];
-            actionElement["type"] = this.Type;
-            actionElement["url"] = this.ActionUrl;
-            actionElement["appendQueryString"] = this.AppendQueryString;
-            actionElement["logRewrittenUrl"] = this.LogRewrittenUrl;
+            actionElement["type"] = Type;
+            actionElement["url"] = ActionUrl;
+            actionElement["appendQueryString"] = AppendQueryString;
+            actionElement["logRewrittenUrl"] = LogRewrittenUrl;
 
             switch (RedirectType)
             {
@@ -194,10 +194,10 @@ namespace JexusManager.Features.Rewrite.Inbound
                     break;
             }
 
-            actionElement["statusCode"] = this.StatusCode;
-            actionElement["subStatusCode"] = this.SubStatusCode;
-            actionElement["statusReason"] = this.StatusReason;
-            actionElement["statusDescription"] = this.StatusDescription;
+            actionElement["statusCode"] = StatusCode;
+            actionElement["subStatusCode"] = SubStatusCode;
+            actionElement["statusReason"] = StatusReason;
+            actionElement["statusDescription"] = StatusDescription;
 
             var conditions = Element.ChildElements["conditions"];
             conditions["trackAllCaptures"] = TrackAllCaptures;
