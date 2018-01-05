@@ -8,7 +8,7 @@ namespace JexusManager.Features.HttpApi
     using System.Reflection;
     using System.Windows.Forms;
 
-    using JexusManager.Services;
+    using Services;
 
     using Microsoft.Web.Administration;
     using Microsoft.Web.Management.Client;

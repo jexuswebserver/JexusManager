@@ -39,10 +39,7 @@ namespace JexusManager
             SendMessage(b.Handle, BCM_SETSHIELD, IntPtr.Zero, (IntPtr)0);
         }
 
-        public const int NonExistingStore = -2147024894; //0x80070002
-        public const int UserCancelled = -2147023673;
-        public const int BadKeySet = -2146893802;
-        
+       
         // BOOL WINAPI CryptAcquireCertificatePrivateKey(
         //		PCCERT_CONTEXT pCert,
         //		DWORD dwFlags,

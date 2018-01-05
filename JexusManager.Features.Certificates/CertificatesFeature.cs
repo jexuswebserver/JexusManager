@@ -10,6 +10,9 @@
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 
+using System.ComponentModel;
+using RollbarDotNet;
+
 namespace JexusManager.Features.Certificates
 {
     using System;
@@ -81,7 +84,7 @@ namespace JexusManager.Features.Certificates
                         }
                         catch (CryptographicException ex)
                         {
-                            if (ex.HResult != JexusManager.NativeMethods.BadKeySet)
+                            if (ex.HResult != NativeMethods.BadKeySet)
                             {
                                 // TODO: add CNG support.
                                 // throw;
@@ -250,7 +253,7 @@ namespace JexusManager.Features.Certificates
                     }
                     catch (CryptographicException ex)
                     {
-                        if (ex.HResult != JexusManager.NativeMethods.NonExistingStore)
+                        if (ex.HResult != NativeMethods.NonExistingStore)
                         {
                             throw;
                         }
@@ -309,9 +312,18 @@ namespace JexusManager.Features.Certificates
                     }
                 }
             }
-            catch (Exception)
+            catch (Win32Exception ex)
             {
                 // elevation is cancelled.
+                if (ex.HResult != NativeMethods.UserCancelled)
+                {
+                    Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> {{"hresult", ex.HResult}});
+                    // throw;
+                }
+            }
+            catch (Exception ex)
+            {
+                Rollbar.Report(ex, ErrorLevel.Error);
             }
         }
 
@@ -399,7 +411,7 @@ namespace JexusManager.Features.Certificates
                 }
                 catch (CryptographicException ex)
                 {
-                    if (ex.HResult != JexusManager.NativeMethods.UserCancelled)
+                    if (ex.HResult != NativeMethods.UserCancelled)
                     {
                         var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
                         dialog.ShowMessage($"An unexpected error happened. HResult is {ex.HResult}. Contact your system administrator.", Name,

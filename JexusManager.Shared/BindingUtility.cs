@@ -3,6 +3,10 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using RollbarDotNet;
+using Exception = System.Exception;
 
 namespace Microsoft.Web.Administration
 {
@@ -86,10 +90,21 @@ namespace Microsoft.Web.Administration
                                 return string.Empty;
                             }
                         }
-                        catch (Exception)
+                        catch (Win32Exception ex)
                         {
                             // elevation is cancelled.
+                            if (ex.HResult != NativeMethods.UserCancelled)
+                            {
+                                Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> {{"hresult", ex.HResult}});
+                                return $"Register new certificate failed: unknown (hresult {ex.HResult})";
+                            }
+                            
                             return "Register new certificate failed: operation is cancelled";
+                        }
+                        catch (Exception ex)
+                        {
+                            Rollbar.Report(ex, ErrorLevel.Error);
+                            return $"Register new certificate failed: unknown ({ex.Message})";
                         }
                     }
 
@@ -132,10 +147,21 @@ namespace Microsoft.Web.Administration
                                 return string.Empty;
                             }
                         }
-                        catch (Exception)
+                        catch (Win32Exception ex)
                         {
                             // elevation is cancelled.
+                            if (ex.HResult != NativeMethods.UserCancelled)
+                            {
+                                Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> {{"hresult", ex.HResult}});
+                                return $"Register new certificate failed: unknown (hresult {ex.HResult})";
+                            }
+                            
                             return "Register new certificate failed: operation is cancelled";
+                        }
+                        catch (Exception ex)
+                        {
+                            Rollbar.Report(ex, ErrorLevel.Error);
+                            return $"Register new certificate failed: unknown ({ex.Message})";
                         }
                     }
 
@@ -177,10 +203,21 @@ namespace Microsoft.Web.Administration
                         return string.Empty;
                     }
                 }
-                catch (Exception)
+                catch (Win32Exception ex)
                 {
                     // elevation is cancelled.
+                    if (ex.HResult != NativeMethods.UserCancelled)
+                    {
+                        Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> {{"hresult", ex.HResult}});
+                        return $"Register new certificate failed: unknown (hresult {ex.HResult})";
+                    }
+                            
                     return "Register new certificate failed: operation is cancelled";
+                }
+                catch (Exception ex)
+                {
+                    Rollbar.Report(ex, ErrorLevel.Error);
+                    return $"Register new certificate failed: unknown ({ex.Message})";
                 }
             }
 
@@ -221,10 +258,21 @@ namespace Microsoft.Web.Administration
                         return string.Empty;
                     }
                 }
-                catch (Exception)
+                catch (Win32Exception ex)
                 {
                     // elevation is cancelled.
+                    if (ex.HResult != NativeMethods.UserCancelled)
+                    {
+                        Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> {{"hresult", ex.HResult}});
+                        return $"Register new certificate failed: unknown (hresult {ex.HResult})";
+                    }
+                            
                     return "Register new certificate failed: operation is cancelled";
+                }
+                catch (Exception ex)
+                {
+                    Rollbar.Report(ex, ErrorLevel.Error);
+                    return $"Register new certificate failed: unknown ({ex.Message})";
                 }
             }
 
@@ -325,10 +373,21 @@ namespace Microsoft.Web.Administration
                     return string.Empty;
                 }
             }
-            catch (Exception)
+            catch (Win32Exception ex)
             {
                 // elevation is cancelled.
+                if (ex.HResult != NativeMethods.UserCancelled)
+                {
+                    Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> {{"hresult", ex.HResult}});
+                    return $"Remove SNI certificate failed: unknown (hresult {ex.HResult})";
+                }
+                            
                 return "Remove SNI certificate failed: operation is cancelled";
+            }
+            catch (Exception ex)
+            {
+                Rollbar.Report(ex, ErrorLevel.Error);
+                return $"Remove SNI certificate failed: unknown ({ex.Message})";
             }
         }
     }

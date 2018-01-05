@@ -11,6 +11,8 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using RollbarDotNet;
+using Exception = System.Exception;
 
 namespace Microsoft.Web.Administration
 {
@@ -34,20 +36,40 @@ namespace Microsoft.Web.Administration
 
         internal override bool GetSiteState(Site site)
         {
-            using (var process = new Process())
+            try
             {
-                var start = process.StartInfo;
-                start.Verb = site.Bindings.ElevationRequired && !PublicNativeMethods.IsProcessElevated ? "runas" : null;
-                start.FileName = "cmd";
-                start.Arguments =
-                    $"/c \"\"{Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe")}\" /config:\"{site.FileContext.FileName}\" /siteId:{site.Id}\"";
-                start.CreateNoWindow = true;
-                start.WindowStyle = ProcessWindowStyle.Hidden;
-                process.Start();
-                process.WaitForExit();
+                using (var process = new Process())
+                {
+                    var start = process.StartInfo;
+                    start.Verb = site.Bindings.ElevationRequired && !PublicNativeMethods.IsProcessElevated
+                        ? "runas"
+                        : null;
+                    start.FileName = "cmd";
+                    start.Arguments =
+                        $"/c \"\"{Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe")}\" /config:\"{site.FileContext.FileName}\" /siteId:{site.Id}\"";
+                    start.CreateNoWindow = true;
+                    start.WindowStyle = ProcessWindowStyle.Hidden;
+                    process.Start();
+                    process.WaitForExit();
 
-                return process.ExitCode == 1;
+                    return process.ExitCode == 1;
+                }
             }
+            catch (Win32Exception ex)
+            {
+                // elevation is cancelled.
+                if (ex.HResult != NativeMethods.UserCancelled)
+                {
+                    Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> {{"hresult", ex.HResult}});
+                    // throw;
+                }
+            }
+            catch (Exception ex)
+            {
+                Rollbar.Report(ex, ErrorLevel.Error);
+            }
+
+            return true;
         }
 
         internal override bool GetPoolState(ApplicationPool pool)
@@ -107,6 +129,18 @@ namespace Microsoft.Web.Administration
                     {
                         throw new InvalidOperationException("The process has terminated");
                     }
+                }
+                catch (Win32Exception ex)
+                {
+                    // elevation is cancelled.
+                    if (ex.HResult != NativeMethods.UserCancelled)
+                    {
+                        throw new COMException(
+                            $"cannot start site: {ex.Message}, {File.ReadAllText(temp)}");
+                    }
+                    
+                    throw new COMException(
+                        $"site start cancelled: {ex.Message}, {File.ReadAllText(temp)}");
                 }
                 catch (Exception ex)
                 {
@@ -210,8 +244,19 @@ namespace Microsoft.Web.Administration
                     }
                 }
             }
-            catch (Win32Exception)
-            {}
+            catch (Win32Exception ex)
+            {
+                // elevation is cancelled.
+                if (ex.HResult != NativeMethods.UserCancelled)
+                {
+                    Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> {{"hresult", ex.HResult}});
+                    // throw;
+                }
+            }
+            catch (Exception ex)
+            {
+                Rollbar.Report(ex, ErrorLevel.Error);
+            }
         }
 
         internal override void Restart(Site site)

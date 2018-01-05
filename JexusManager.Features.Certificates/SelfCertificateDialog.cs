@@ -2,7 +2,9 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Collections.Generic;
 using Microsoft.Web.Administration;
+using RollbarDotNet;
 
 namespace JexusManager.Features.Certificates
 {
@@ -195,9 +197,18 @@ namespace JexusManager.Features.Certificates
                             }
                         }
                     }
-                    catch (Exception)
+                    catch (Win32Exception ex)
                     {
                         // elevation is cancelled.
+                        if (ex.HResult != Microsoft.Web.Administration.NativeMethods.UserCancelled)
+                        {
+                            Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> {{"hresult", ex.HResult}});
+                            // throw;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Rollbar.Report(ex, ErrorLevel.Error);
                     }
                 }));
         }

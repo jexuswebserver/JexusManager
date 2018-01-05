@@ -15,7 +15,7 @@ namespace JexusManager.Features.HttpApi
         protected override void Initialize(IServiceProvider serviceProvider, ModuleInfo moduleInfo)
         {
             base.Initialize(serviceProvider, moduleInfo);
-            var controlPanel = (IControlPanel)this.GetService(typeof(IControlPanel));
+            var controlPanel = (IControlPanel)GetService(typeof(IControlPanel));
             var modulePage = new ModulePageInfo(this, typeof(HttpApiPage), "HTTP API",
                 "Manage certificate bindings for websites that use SSL", Resources.http_36,
                 Resources.http_36);

@@ -10,7 +10,9 @@
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 
+using System.ComponentModel;
 using System.IO;
+using RollbarDotNet;
 
 namespace JexusManager.Features.HttpApi
 {
@@ -132,8 +134,19 @@ namespace JexusManager.Features.HttpApi
                     }
                 }
             }
-            catch (Exception)
-            { }
+            catch (Win32Exception ex)
+            {
+                // elevation is cancelled.
+                if (ex.HResult != NativeMethods.UserCancelled)
+                {
+                    Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> {{"hresult", ex.HResult}});
+                    // throw;
+                }
+            }
+            catch (Exception ex)
+            {
+                Rollbar.Report(ex, ErrorLevel.Error);
+            }
         }
 
         private void View()
@@ -153,7 +166,7 @@ namespace JexusManager.Features.HttpApi
             }
             catch (CryptographicException ex)
             {
-                if (ex.HResult != JexusManager.NativeMethods.NonExistingStore)
+                if (ex.HResult != NativeMethods.NonExistingStore)
                 {
                     throw;
                 }

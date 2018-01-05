@@ -10,12 +10,12 @@ namespace JexusManager.Features.HttpApi
     {
         public SniMappingItem(string host, string port, string appId, string hash, string store, SniMappingFeature feature)
         {
-            this.Host = host;
-            this.Port = port;
-            this.AppId = appId;
-            this.Hash = hash;
-            this.Store = store;
-            this.Feature = feature;
+            Host = host;
+            Port = port;
+            AppId = appId;
+            Hash = hash;
+            Store = store;
+            Feature = feature;
         }
 
         public string Hash { get; set; }
@@ -38,8 +38,8 @@ namespace JexusManager.Features.HttpApi
 
         public bool Match(SniMappingItem other)
         {
-            return other != null && other.Hash == this.Hash && other.Store == this.Store && other.Host == this.Host
-                   && other.Port == this.Port && other.AppId == this.AppId;
+            return other != null && other.Hash == Hash && other.Store == Store && other.Host == Host
+                   && other.Port == Port && other.AppId == AppId;
         }
     }
 }

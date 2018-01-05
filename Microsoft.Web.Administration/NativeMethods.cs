@@ -16,7 +16,8 @@ namespace Microsoft.Web.Administration
 {
     internal static class NativeMethods
     {
-#region HTTP API
+        #region HTTP API
+
         private static readonly HTTPAPI_VERSION s_httpApiVersion = new HTTPAPI_VERSION(2, 0);
 
         #region DllImport
@@ -29,11 +30,11 @@ namespace Microsoft.Web.Administration
 
         [DllImport("httpapi.dll", SetLastError = true)]
         private static extern uint HttpSetServiceConfiguration(
-                IntPtr serviceIntPtr,
-                HTTP_SERVICE_CONFIG_ID configId,
-                IntPtr pConfigInformation,
-                int configInformationLength,
-                IntPtr pOverlapped);
+            IntPtr serviceIntPtr,
+            HTTP_SERVICE_CONFIG_ID configId,
+            IntPtr pConfigInformation,
+            int configInformationLength,
+            IntPtr pOverlapped);
 
         [DllImport("httpapi.dll", SetLastError = true)]
         private static extern uint HttpDeleteServiceConfiguration(
@@ -50,15 +51,14 @@ namespace Microsoft.Web.Administration
 
         [DllImport("httpapi.dll", SetLastError = true)]
         private static extern uint HttpQueryServiceConfiguration(
-                IntPtr serviceIntPtr,
-                HTTP_SERVICE_CONFIG_ID configId,
-                IntPtr pInputConfigInfo,
-                int inputConfigInfoLength,
-                IntPtr pOutputConfigInfo,
-                int outputConfigInfoLength,
-                [Optional]
-                        out int pReturnLength,
-                IntPtr pOverlapped);
+            IntPtr serviceIntPtr,
+            HTTP_SERVICE_CONFIG_ID configId,
+            IntPtr pInputConfigInfo,
+            int inputConfigInfoLength,
+            IntPtr pOutputConfigInfo,
+            int outputConfigInfoLength,
+            [Optional] out int pReturnLength,
+            IntPtr pOverlapped);
 
         private enum HTTP_SERVICE_CONFIG_ID
         {
@@ -89,8 +89,7 @@ namespace Microsoft.Web.Administration
         private struct HTTP_SERVICE_CONFIG_SSL_SNI_KEY
         {
             public SOCKADDR_STORAGE IpPort;
-            [MarshalAs(UnmanagedType.LPWStr)]
-            public string Host;
+            [MarshalAs(UnmanagedType.LPWStr)] public string Host;
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -124,15 +123,12 @@ namespace Microsoft.Web.Administration
             public int SslHashLength;
             public IntPtr pSslHash;
             public Guid AppId;
-            [MarshalAs(UnmanagedType.LPWStr)]
-            public string pSslCertStoreName;
+            [MarshalAs(UnmanagedType.LPWStr)] public string pSslCertStoreName;
             public uint DefaultCertCheckMode;
             public int DefaultRevocationFreshnessTime;
             public int DefaultRevocationUrlRetrievalTimeout;
-            [MarshalAs(UnmanagedType.LPWStr)]
-            public string pDefaultSslCtlIdentifier;
-            [MarshalAs(UnmanagedType.LPWStr)]
-            public string pDefaultSslCtlStoreName;
+            [MarshalAs(UnmanagedType.LPWStr)] public string pDefaultSslCtlIdentifier;
+            [MarshalAs(UnmanagedType.LPWStr)] public string pDefaultSslCtlStoreName;
             public uint DefaultFlags;
         }
 
@@ -182,8 +178,7 @@ namespace Microsoft.Web.Administration
 
         private struct HTTP_SERVICE_CONFIG_URLACL_KEY
         {
-            [MarshalAs(UnmanagedType.LPWStr)]
-            public string pUrlPrefix;
+            [MarshalAs(UnmanagedType.LPWStr)] public string pUrlPrefix;
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -195,8 +190,7 @@ namespace Microsoft.Web.Administration
 
         private struct HTTP_SERVICE_CONFIG_URLACL_PARAM
         {
-            [MarshalAs(UnmanagedType.LPWStr)]
-            public string pStringSecurityDescriptor;
+            [MarshalAs(UnmanagedType.LPWStr)] public string pStringSecurityDescriptor;
         }
 
         #endregion
@@ -255,13 +249,13 @@ namespace Microsoft.Web.Administration
                     HTTP_SERVICE_CONFIG_ID queryType = HTTP_SERVICE_CONFIG_ID.HttpServiceConfigSSLCertInfo;
                     int inputConfigInfoSize = Marshal.SizeOf(inputConfigInfoQuery);
                     retVal = HttpQueryServiceConfiguration(IntPtr.Zero,
-                                                            queryType,
-                                                            pInputConfigInfo,
-                                                            inputConfigInfoSize,
-                                                            pOutputConfigInfo,
-                                                            returnLength,
-                                                            out returnLength,
-                                                            IntPtr.Zero);
+                        queryType,
+                        pInputConfigInfo,
+                        inputConfigInfoSize,
+                        pOutputConfigInfo,
+                        returnLength,
+                        out returnLength,
+                        IntPtr.Zero);
                     if (retVal == ERROR_FILE_NOT_FOUND)
                         return;
 
@@ -272,13 +266,13 @@ namespace Microsoft.Web.Administration
                         try
                         {
                             retVal = HttpQueryServiceConfiguration(IntPtr.Zero,
-                                                                                    queryType,
-                                                                                    pInputConfigInfo,
-                                                                                    inputConfigInfoSize,
-                                                                                    pOutputConfigInfo,
-                                                                                    returnLength,
-                                                                                    out returnLength,
-                                                                                    IntPtr.Zero);
+                                queryType,
+                                pInputConfigInfo,
+                                inputConfigInfoSize,
+                                pOutputConfigInfo,
+                                returnLength,
+                                out returnLength,
+                                IntPtr.Zero);
                             ThrowWin32ExceptionIfError(retVal);
 
                             var outputConfigInfo =
@@ -291,7 +285,13 @@ namespace Microsoft.Web.Administration
                             Guid appId = outputConfigInfo.ParamDesc.AppId;
                             string storeName = outputConfigInfo.ParamDesc.pSslCertStoreName;
 
-                            result = new SslCertificateInfo { AppId = appId, Hash = hash, StoreName = storeName, IpPort = ipPort };
+                            result = new SslCertificateInfo
+                            {
+                                AppId = appId,
+                                Hash = hash,
+                                StoreName = storeName,
+                                IpPort = ipPort
+                            };
                         }
                         finally
                         {
@@ -350,10 +350,10 @@ namespace Microsoft.Web.Administration
                     try
                     {
                         uint retVal = HttpSetServiceConfiguration(IntPtr.Zero,
-                                                                    HTTP_SERVICE_CONFIG_ID.HttpServiceConfigSSLCertInfo,
-                                                                    pInputConfigInfo,
-                                                                    Marshal.SizeOf(configSslSet),
-                                                                    IntPtr.Zero);
+                            HTTP_SERVICE_CONFIG_ID.HttpServiceConfigSSLCertInfo,
+                            pInputConfigInfo,
+                            Marshal.SizeOf(configSslSet),
+                            IntPtr.Zero);
 
                         if (ERROR_ALREADY_EXISTS != retVal)
                         {
@@ -362,17 +362,17 @@ namespace Microsoft.Web.Administration
                         else
                         {
                             retVal = HttpDeleteServiceConfiguration(IntPtr.Zero,
-                                                                    HTTP_SERVICE_CONFIG_ID.HttpServiceConfigSSLCertInfo,
-                                                                    pInputConfigInfo,
-                                                                    Marshal.SizeOf(configSslSet),
-                                                                    IntPtr.Zero);
+                                HTTP_SERVICE_CONFIG_ID.HttpServiceConfigSSLCertInfo,
+                                pInputConfigInfo,
+                                Marshal.SizeOf(configSslSet),
+                                IntPtr.Zero);
                             ThrowWin32ExceptionIfError(retVal);
 
                             retVal = HttpSetServiceConfiguration(IntPtr.Zero,
-                                                                    HTTP_SERVICE_CONFIG_ID.HttpServiceConfigSSLCertInfo,
-                                                                    pInputConfigInfo,
-                                                                    Marshal.SizeOf(configSslSet),
-                                                                    IntPtr.Zero);
+                                HTTP_SERVICE_CONFIG_ID.HttpServiceConfigSSLCertInfo,
+                                pInputConfigInfo,
+                                Marshal.SizeOf(configSslSet),
+                                IntPtr.Zero);
                             ThrowWin32ExceptionIfError(retVal);
                         }
                     }
@@ -393,41 +393,41 @@ namespace Microsoft.Web.Administration
                 return;
 
             CallHttpApi(
-            delegate
-            {
-                foreach (var ipPort in ipPorts)
+                delegate
                 {
-                    HTTP_SERVICE_CONFIG_SSL_SET configSslSet =
-                        new HTTP_SERVICE_CONFIG_SSL_SET();
-
-                    GCHandle sockAddrHandle = CreateSockaddrStructure(ipPort);
-                    IntPtr pIpPort = sockAddrHandle.AddrOfPinnedObject();
-                    HTTP_SERVICE_CONFIG_SSL_KEY httpServiceConfigSslKey =
-                        new HTTP_SERVICE_CONFIG_SSL_KEY(pIpPort);
-                    configSslSet.KeyDesc = httpServiceConfigSslKey;
-
-                    IntPtr pInputConfigInfo =
-                        Marshal.AllocCoTaskMem(
-                            Marshal.SizeOf(typeof(HTTP_SERVICE_CONFIG_SSL_SET)));
-                    Marshal.StructureToPtr(configSslSet, pInputConfigInfo, false);
-
-                    try
+                    foreach (var ipPort in ipPorts)
                     {
-                        uint retVal = HttpDeleteServiceConfiguration(IntPtr.Zero,
-                                                                        HTTP_SERVICE_CONFIG_ID.HttpServiceConfigSSLCertInfo,
-                                                                        pInputConfigInfo,
-                                                                        Marshal.SizeOf(configSslSet),
-                                                                        IntPtr.Zero);
-                        ThrowWin32ExceptionIfError(retVal);
+                        HTTP_SERVICE_CONFIG_SSL_SET configSslSet =
+                            new HTTP_SERVICE_CONFIG_SSL_SET();
+
+                        GCHandle sockAddrHandle = CreateSockaddrStructure(ipPort);
+                        IntPtr pIpPort = sockAddrHandle.AddrOfPinnedObject();
+                        HTTP_SERVICE_CONFIG_SSL_KEY httpServiceConfigSslKey =
+                            new HTTP_SERVICE_CONFIG_SSL_KEY(pIpPort);
+                        configSslSet.KeyDesc = httpServiceConfigSslKey;
+
+                        IntPtr pInputConfigInfo =
+                            Marshal.AllocCoTaskMem(
+                                Marshal.SizeOf(typeof(HTTP_SERVICE_CONFIG_SSL_SET)));
+                        Marshal.StructureToPtr(configSslSet, pInputConfigInfo, false);
+
+                        try
+                        {
+                            uint retVal = HttpDeleteServiceConfiguration(IntPtr.Zero,
+                                HTTP_SERVICE_CONFIG_ID.HttpServiceConfigSSLCertInfo,
+                                pInputConfigInfo,
+                                Marshal.SizeOf(configSslSet),
+                                IntPtr.Zero);
+                            ThrowWin32ExceptionIfError(retVal);
+                        }
+                        finally
+                        {
+                            Marshal.FreeCoTaskMem(pInputConfigInfo);
+                            if (sockAddrHandle.IsAllocated)
+                                sockAddrHandle.Free();
+                        }
                     }
-                    finally
-                    {
-                        Marshal.FreeCoTaskMem(pInputConfigInfo);
-                        if (sockAddrHandle.IsAllocated)
-                            sockAddrHandle.Free();
-                    }
-                }
-            });
+                });
         }
 
         public static SslCertificateInfo[] QuerySslCertificateInfo()
@@ -462,13 +462,13 @@ namespace Microsoft.Web.Administration
                         {
                             int inputConfigInfoSize = Marshal.SizeOf(inputConfigInfoQuery);
                             retVal = HttpQueryServiceConfiguration(IntPtr.Zero,
-                                                                    queryType,
-                                                                    pInputConfigInfo,
-                                                                    inputConfigInfoSize,
-                                                                    pOutputConfigInfo,
-                                                                    returnLength,
-                                                                    out returnLength,
-                                                                    IntPtr.Zero);
+                                queryType,
+                                pInputConfigInfo,
+                                inputConfigInfoSize,
+                                pOutputConfigInfo,
+                                returnLength,
+                                out returnLength,
+                                IntPtr.Zero);
                             if (ERROR_NO_MORE_ITEMS == retVal)
                                 break;
                             if (ERROR_INSUFFICIENT_BUFFER == retVal) // ERROR_INSUFFICIENT_BUFFER = 122
@@ -579,13 +579,13 @@ namespace Microsoft.Web.Administration
                     HTTP_SERVICE_CONFIG_ID queryType = HTTP_SERVICE_CONFIG_ID.HttpServiceConfigSslSniCertInfo;
                     int inputConfigInfoSize = Marshal.SizeOf(inputConfigInfoQuery);
                     retVal = HttpQueryServiceConfiguration(IntPtr.Zero,
-                                                            queryType,
-                                                            pInputConfigInfo,
-                                                            inputConfigInfoSize,
-                                                            pOutputConfigInfo,
-                                                            returnLength,
-                                                            out returnLength,
-                                                            IntPtr.Zero);
+                        queryType,
+                        pInputConfigInfo,
+                        inputConfigInfoSize,
+                        pOutputConfigInfo,
+                        returnLength,
+                        out returnLength,
+                        IntPtr.Zero);
                     if (retVal == ERROR_FILE_NOT_FOUND)
                         return;
 
@@ -596,13 +596,13 @@ namespace Microsoft.Web.Administration
                         try
                         {
                             retVal = HttpQueryServiceConfiguration(IntPtr.Zero,
-                                                                                    queryType,
-                                                                                    pInputConfigInfo,
-                                                                                    inputConfigInfoSize,
-                                                                                    pOutputConfigInfo,
-                                                                                    returnLength,
-                                                                                    out returnLength,
-                                                                                    IntPtr.Zero);
+                                queryType,
+                                pInputConfigInfo,
+                                inputConfigInfoSize,
+                                pOutputConfigInfo,
+                                returnLength,
+                                out returnLength,
+                                IntPtr.Zero);
                             ThrowWin32ExceptionIfError(retVal);
 
                             var outputConfigInfo =
@@ -618,7 +618,14 @@ namespace Microsoft.Web.Administration
                             var host = outputConfigInfo.KeyDesc.Host;
                             var ipPort = ReadSockAddrStorageStructure(outputConfigInfo.KeyDesc.IpPort);
 
-                            result = new SslSniInfo { AppId = appId, Hash = hash, StoreName = storeName, Port = ipPort.Port, Host = host };
+                            result = new SslSniInfo
+                            {
+                                AppId = appId,
+                                Hash = hash,
+                                StoreName = storeName,
+                                Port = ipPort.Port,
+                                Host = host
+                            };
                         }
                         finally
                         {
@@ -681,10 +688,10 @@ namespace Microsoft.Web.Administration
                     try
                     {
                         uint retVal = HttpSetServiceConfiguration(IntPtr.Zero,
-                                                                    HTTP_SERVICE_CONFIG_ID.HttpServiceConfigSslSniCertInfo,
-                                                                    pInputConfigInfo,
-                                                                    Marshal.SizeOf(configSslSet),
-                                                                    IntPtr.Zero);
+                            HTTP_SERVICE_CONFIG_ID.HttpServiceConfigSslSniCertInfo,
+                            pInputConfigInfo,
+                            Marshal.SizeOf(configSslSet),
+                            IntPtr.Zero);
 
                         if (ERROR_ALREADY_EXISTS != retVal)
                         {
@@ -693,17 +700,17 @@ namespace Microsoft.Web.Administration
                         else
                         {
                             retVal = HttpDeleteServiceConfiguration(IntPtr.Zero,
-                                                                    HTTP_SERVICE_CONFIG_ID.HttpServiceConfigSslSniCertInfo,
-                                                                    pInputConfigInfo,
-                                                                    Marshal.SizeOf(configSslSet),
-                                                                    IntPtr.Zero);
+                                HTTP_SERVICE_CONFIG_ID.HttpServiceConfigSslSniCertInfo,
+                                pInputConfigInfo,
+                                Marshal.SizeOf(configSslSet),
+                                IntPtr.Zero);
                             ThrowWin32ExceptionIfError(retVal);
 
                             retVal = HttpSetServiceConfiguration(IntPtr.Zero,
-                                                                    HTTP_SERVICE_CONFIG_ID.HttpServiceConfigSslSniCertInfo,
-                                                                    pInputConfigInfo,
-                                                                    Marshal.SizeOf(configSslSet),
-                                                                    IntPtr.Zero);
+                                HTTP_SERVICE_CONFIG_ID.HttpServiceConfigSslSniCertInfo,
+                                pInputConfigInfo,
+                                Marshal.SizeOf(configSslSet),
+                                IntPtr.Zero);
                             ThrowWin32ExceptionIfError(retVal);
                         }
                     }
@@ -727,39 +734,39 @@ namespace Microsoft.Web.Administration
             }
 
             CallHttpApi(
-            delegate
-            {
-                foreach (var binding in bindings)
+                delegate
                 {
-                    HTTP_SERVICE_CONFIG_SSL_SNI_SET configSslSet =
-                        new HTTP_SERVICE_CONFIG_SSL_SNI_SET();
-
-                    HTTP_SERVICE_CONFIG_SSL_SNI_KEY httpServiceConfigSslKey =
-                        new HTTP_SERVICE_CONFIG_SSL_SNI_KEY();
-                    httpServiceConfigSslKey.Host = binding.Item1;
-                    httpServiceConfigSslKey.IpPort = CreateSockAddrStorageStructure(binding.Item2);
-                    configSslSet.KeyDesc = httpServiceConfigSslKey;
-
-                    IntPtr pInputConfigInfo =
-                        Marshal.AllocCoTaskMem(
-                            Marshal.SizeOf(typeof(HTTP_SERVICE_CONFIG_SSL_SNI_SET)));
-                    Marshal.StructureToPtr(configSslSet, pInputConfigInfo, false);
-
-                    try
+                    foreach (var binding in bindings)
                     {
-                        uint retVal = HttpDeleteServiceConfiguration(IntPtr.Zero,
-                                                                        HTTP_SERVICE_CONFIG_ID.HttpServiceConfigSslSniCertInfo,
-                                                                        pInputConfigInfo,
-                                                                        Marshal.SizeOf(configSslSet),
-                                                                        IntPtr.Zero);
-                        ThrowWin32ExceptionIfError(retVal);
+                        HTTP_SERVICE_CONFIG_SSL_SNI_SET configSslSet =
+                            new HTTP_SERVICE_CONFIG_SSL_SNI_SET();
+
+                        HTTP_SERVICE_CONFIG_SSL_SNI_KEY httpServiceConfigSslKey =
+                            new HTTP_SERVICE_CONFIG_SSL_SNI_KEY();
+                        httpServiceConfigSslKey.Host = binding.Item1;
+                        httpServiceConfigSslKey.IpPort = CreateSockAddrStorageStructure(binding.Item2);
+                        configSslSet.KeyDesc = httpServiceConfigSslKey;
+
+                        IntPtr pInputConfigInfo =
+                            Marshal.AllocCoTaskMem(
+                                Marshal.SizeOf(typeof(HTTP_SERVICE_CONFIG_SSL_SNI_SET)));
+                        Marshal.StructureToPtr(configSslSet, pInputConfigInfo, false);
+
+                        try
+                        {
+                            uint retVal = HttpDeleteServiceConfiguration(IntPtr.Zero,
+                                HTTP_SERVICE_CONFIG_ID.HttpServiceConfigSslSniCertInfo,
+                                pInputConfigInfo,
+                                Marshal.SizeOf(configSslSet),
+                                IntPtr.Zero);
+                            ThrowWin32ExceptionIfError(retVal);
+                        }
+                        finally
+                        {
+                            Marshal.FreeCoTaskMem(pInputConfigInfo);
+                        }
                     }
-                    finally
-                    {
-                        Marshal.FreeCoTaskMem(pInputConfigInfo);
-                    }
-                }
-            });
+                });
         }
 
         public static SslSniInfo[] QuerySslSniInfo()
@@ -799,13 +806,13 @@ namespace Microsoft.Web.Administration
                         {
                             int inputConfigInfoSize = Marshal.SizeOf(inputConfigInfoQuery);
                             retVal = HttpQueryServiceConfiguration(IntPtr.Zero,
-                                                                    queryType,
-                                                                    pInputConfigInfo,
-                                                                    inputConfigInfoSize,
-                                                                    pOutputConfigInfo,
-                                                                    returnLength,
-                                                                    out returnLength,
-                                                                    IntPtr.Zero);
+                                queryType,
+                                pInputConfigInfo,
+                                inputConfigInfoSize,
+                                pOutputConfigInfo,
+                                returnLength,
+                                out returnLength,
+                                IntPtr.Zero);
                             if (ERROR_NO_MORE_ITEMS == retVal)
                                 break;
                             if (ERROR_INSUFFICIENT_BUFFER == retVal) // ERROR_INSUFFICIENT_BUFFER = 122
@@ -827,7 +834,8 @@ namespace Microsoft.Web.Administration
 
                                     var outputConfigInfo =
                                         (HTTP_SERVICE_CONFIG_SSL_SNI_SET)
-                                        Marshal.PtrToStructure(pOutputConfigInfo, typeof(HTTP_SERVICE_CONFIG_SSL_SNI_SET));
+                                        Marshal.PtrToStructure(pOutputConfigInfo,
+                                            typeof(HTTP_SERVICE_CONFIG_SSL_SNI_SET));
 
                                     byte[] hash = new byte[outputConfigInfo.ParamDesc.SslHashLength];
                                     Marshal.Copy(outputConfigInfo.ParamDesc.pSslHash, hash, 0, hash.Length);
@@ -906,13 +914,13 @@ namespace Microsoft.Web.Administration
                         {
                             int inputConfigInfoSize = Marshal.SizeOf(inputConfigInfoQuery);
                             retVal = HttpQueryServiceConfiguration(IntPtr.Zero,
-                                                                    queryType,
-                                                                    pInputConfigInfo,
-                                                                    inputConfigInfoSize,
-                                                                    pOutputConfigInfo,
-                                                                    returnLength,
-                                                                    out returnLength,
-                                                                    IntPtr.Zero);
+                                queryType,
+                                pInputConfigInfo,
+                                inputConfigInfoSize,
+                                pOutputConfigInfo,
+                                returnLength,
+                                out returnLength,
+                                IntPtr.Zero);
                             if (ERROR_NO_MORE_ITEMS == retVal)
                                 break;
                             if (ERROR_INSUFFICIENT_BUFFER == retVal) // ERROR_INSUFFICIENT_BUFFER = 122
@@ -934,7 +942,8 @@ namespace Microsoft.Web.Administration
 
                                     var outputConfigInfo =
                                         (HTTP_SERVICE_CONFIG_URLACL_SET)
-                                        Marshal.PtrToStructure(pOutputConfigInfo, typeof(HTTP_SERVICE_CONFIG_URLACL_SET));
+                                        Marshal.PtrToStructure(pOutputConfigInfo,
+                                            typeof(HTTP_SERVICE_CONFIG_URLACL_SET));
 
                                     var resultItem = new HttpNamespaceAcl
                                     {
@@ -972,14 +981,16 @@ namespace Microsoft.Web.Administration
             {
                 if (NOERROR == retVal)
                 {
-                    var keyDesc = new HTTP_SERVICE_CONFIG_URLACL_KEY { pUrlPrefix = networkURL };
-                    var paramDesc = new HTTP_SERVICE_CONFIG_URLACL_PARAM { pStringSecurityDescriptor =  securityDescriptor};
+                    var keyDesc = new HTTP_SERVICE_CONFIG_URLACL_KEY {pUrlPrefix = networkURL};
+                    var paramDesc =
+                        new HTTP_SERVICE_CONFIG_URLACL_PARAM {pStringSecurityDescriptor = securityDescriptor};
 
                     var inputConfigInfoSet = new HTTP_SERVICE_CONFIG_URLACL_SET();
                     inputConfigInfoSet.KeyDesc = keyDesc;
                     inputConfigInfoSet.ParamDesc = paramDesc;
 
-                    var pInputConfigInfo = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(HTTP_SERVICE_CONFIG_URLACL_SET)));
+                    var pInputConfigInfo =
+                        Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(HTTP_SERVICE_CONFIG_URLACL_SET)));
                     Marshal.StructureToPtr(inputConfigInfoSet, pInputConfigInfo, false);
 
                     retVal = HttpSetServiceConfiguration(
@@ -1031,22 +1042,24 @@ namespace Microsoft.Web.Administration
             {
                 if (NOERROR == retVal)
                 {
-                    var keyDesc = new HTTP_SERVICE_CONFIG_URLACL_KEY { pUrlPrefix = networkURL };
-                    var paramDesc = new HTTP_SERVICE_CONFIG_URLACL_PARAM { pStringSecurityDescriptor = securityDescriptor };
+                    var keyDesc = new HTTP_SERVICE_CONFIG_URLACL_KEY {pUrlPrefix = networkURL};
+                    var paramDesc =
+                        new HTTP_SERVICE_CONFIG_URLACL_PARAM {pStringSecurityDescriptor = securityDescriptor};
 
                     var inputConfigInfoSet = new HTTP_SERVICE_CONFIG_URLACL_SET();
                     inputConfigInfoSet.KeyDesc = keyDesc;
                     inputConfigInfoSet.ParamDesc = paramDesc;
 
-                    var pInputConfigInfo = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(HTTP_SERVICE_CONFIG_URLACL_SET)));
+                    var pInputConfigInfo =
+                        Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(HTTP_SERVICE_CONFIG_URLACL_SET)));
                     Marshal.StructureToPtr(inputConfigInfoSet, pInputConfigInfo, false);
 
                     retVal = HttpDeleteServiceConfiguration(
-                            IntPtr.Zero,
-                            HTTP_SERVICE_CONFIG_ID.HttpServiceConfigUrlAclInfo,
-                            pInputConfigInfo,
-                            Marshal.SizeOf(inputConfigInfoSet),
-                            IntPtr.Zero);
+                        IntPtr.Zero,
+                        HTTP_SERVICE_CONFIG_ID.HttpServiceConfigUrlAclInfo,
+                        pInputConfigInfo,
+                        Marshal.SizeOf(inputConfigInfoSet),
+                        IntPtr.Zero);
 
                     if (ERROR_ACCESS_DENIED == retVal)
                     {
@@ -1063,6 +1076,7 @@ namespace Microsoft.Web.Administration
                 }
             });
         }
+
         #endregion
 
         private static void ThrowWin32ExceptionIfError(uint retVal)
@@ -1105,13 +1119,14 @@ namespace Microsoft.Web.Administration
             {
                 sockAddrStructureBytes[i] = socketAddress[i];
             }
+
             return sockAddrHandle;
         }
 
         private static SOCKADDR_STORAGE CreateSockAddrStorageStructure(int port)
         {
             var result = new SOCKADDR_STORAGE();
-            result.ss_family = (short)AddressFamily.InterNetwork;
+            result.ss_family = (short) AddressFamily.InterNetwork;
             var ipEndPoint = new IPEndPoint(IPAddress.Any, port);
             var socketAddress = ipEndPoint.Serialize();
             result.__ss_pad1 = new byte[6];
@@ -1131,7 +1146,7 @@ namespace Microsoft.Web.Administration
         private static IPEndPoint ReadSockaddrStructure(IntPtr pSockaddrStructure)
         {
             short sAddressFamily = Marshal.ReadInt16(pSockaddrStructure);
-            AddressFamily addressFamily = (AddressFamily)sAddressFamily;
+            AddressFamily addressFamily = (AddressFamily) sAddressFamily;
 
             int sockAddrSructureSize;
             IPEndPoint ipEndPointAny;
@@ -1164,7 +1179,7 @@ namespace Microsoft.Web.Administration
             }
 
             // create IPEndPoint from SocketAddress
-            IPEndPoint result = (IPEndPoint)ipEndPointAny.Create(socketAddress);
+            IPEndPoint result = (IPEndPoint) ipEndPointAny.Create(socketAddress);
             return result;
         }
 
@@ -1176,7 +1191,7 @@ namespace Microsoft.Web.Administration
         private static IPEndPoint ReadSockAddrStorageStructure(SOCKADDR_STORAGE sockAddrStorageStructure)
         {
             short sAddressFamily = sockAddrStorageStructure.ss_family;
-            AddressFamily addressFamily = (AddressFamily)sAddressFamily;
+            AddressFamily addressFamily = (AddressFamily) sAddressFamily;
 
             int sockAddrSructureSize;
             IPEndPoint ipEndPointAny;
@@ -1194,14 +1209,15 @@ namespace Microsoft.Web.Administration
                     }
 
                     ipEndPointAny = new IPEndPoint(IPAddress.Any, 0);
-                    return (IPEndPoint)ipEndPointAny.Create(socketAddress);
+                    return (IPEndPoint) ipEndPointAny.Create(socketAddress);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(sockAddrStorageStructure), "Unknown address family");
             }
         }
-#endregion
-        
-#region View Folder Information
+
+        #endregion
+
+        #region View Folder Information
 
         [DllImport("shell32.dll", CharSet = CharSet.Auto)]
         private static extern bool ShellExecuteEx(ref SHELLEXECUTEINFO lpExecInfo);
@@ -1212,19 +1228,14 @@ namespace Microsoft.Web.Administration
             public int cbSize;
             public uint fMask;
             public IntPtr hwnd;
-            [MarshalAs(UnmanagedType.LPTStr)]
-            public string lpVerb;
-            [MarshalAs(UnmanagedType.LPTStr)]
-            public string lpFile;
-            [MarshalAs(UnmanagedType.LPTStr)]
-            public string lpParameters;
-            [MarshalAs(UnmanagedType.LPTStr)]
-            public string lpDirectory;
+            [MarshalAs(UnmanagedType.LPTStr)] public string lpVerb;
+            [MarshalAs(UnmanagedType.LPTStr)] public string lpFile;
+            [MarshalAs(UnmanagedType.LPTStr)] public string lpParameters;
+            [MarshalAs(UnmanagedType.LPTStr)] public string lpDirectory;
             public int nShow;
             public IntPtr hInstApp;
             public IntPtr lpIDList;
-            [MarshalAs(UnmanagedType.LPTStr)]
-            public string lpClass;
+            [MarshalAs(UnmanagedType.LPTStr)] public string lpClass;
             public IntPtr hkeyClass;
             public uint dwHotKey;
             public IntPtr hIcon;
@@ -1244,6 +1255,16 @@ namespace Microsoft.Web.Administration
             info.fMask = SEE_MASK_INVOKEIDLIST;
             return ShellExecuteEx(ref info);
         }
-#endregion
+
+        #endregion
+
+
+        #region Win32 error codes
+
+        public const int NonExistingStore = -2147024894; //0x80070002
+        public const int UserCancelled = -2147023673;
+        public const int BadKeySet = -2146893802;
+
+        #endregion
     }
 }

@@ -18,7 +18,7 @@ namespace JexusManager.Features.HttpApi
 
         public override ModuleDefinition GetModuleDefinition(IManagementContext context)
         {
-            return new ModuleDefinition(this.Name, typeof(HttpApiModule).AssemblyQualifiedName);
+            return new ModuleDefinition(Name, typeof(HttpApiModule).AssemblyQualifiedName);
         }
 
         public override bool SupportsScope(ManagementScope scope)

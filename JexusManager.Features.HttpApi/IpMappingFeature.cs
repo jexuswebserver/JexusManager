@@ -9,6 +9,7 @@ using Microsoft.Web.Management.Client;
 using Microsoft.Web.Management.Client.Win32;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
@@ -16,6 +17,8 @@ using System.Windows.Forms;
 using Org.BouncyCastle.Utilities.Encoders;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography;
+using RollbarDotNet;
+using Exception = System.Exception;
 
 namespace JexusManager.Features.HttpApi
 {
@@ -114,8 +117,19 @@ namespace JexusManager.Features.HttpApi
                     }
                 }
             }
-            catch (Exception)
-            { }
+            catch (Win32Exception ex)
+            {
+                // elevation is cancelled.
+                if (ex.HResult != Microsoft.Web.Administration.NativeMethods.UserCancelled)
+                {
+                    Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> {{"hresult", ex.HResult}});
+                    // throw;
+                }
+            }
+            catch (Exception ex)
+            {
+                Rollbar.Report(ex, ErrorLevel.Error);
+            }
         }
 
         private void View()
@@ -135,7 +149,7 @@ namespace JexusManager.Features.HttpApi
             }
             catch (CryptographicException ex)
             {
-                if (ex.HResult != NativeMethods.NonExistingStore)
+                if (ex.HResult != Microsoft.Web.Administration.NativeMethods.NonExistingStore)
                 {
                     throw;
                 }

@@ -26,7 +26,7 @@ namespace JexusManager.Features.HttpApi
 
         protected override void OnSettingsSaved()
         {
-            this.HttpApiSettingsUpdate?.Invoke();
+            HttpApiSettingsUpdate?.Invoke();
         }
 
         public abstract bool ShowHelp();

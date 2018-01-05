@@ -214,7 +214,7 @@ namespace JexusManager
             }
             catch (CryptographicException ex)
             {
-                if (ex.HResult != NativeMethods.NonExistingStore)
+                if (ex.HResult != Microsoft.Web.Administration.NativeMethods.NonExistingStore)
                 {
                     throw;
                 }

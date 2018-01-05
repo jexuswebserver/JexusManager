@@ -10,12 +10,12 @@ namespace JexusManager.Features.HttpApi
     {
         public IpMappingItem(string address, string port, string appId, string hash, string store, IpMappingFeature feature)
         {
-            this.Address = address;
-            this.Port = port;
-            this.AppId = appId;
-            this.Hash = hash;
-            this.Store = store;
-            this.Feature = feature;
+            Address = address;
+            Port = port;
+            AppId = appId;
+            Hash = hash;
+            Store = store;
+            Feature = feature;
         }
 
         public string Hash { get; set; }
@@ -38,8 +38,8 @@ namespace JexusManager.Features.HttpApi
 
         public bool Match(IpMappingItem other)
         {
-            return other != null && other.Hash == this.Hash && other.Store == this.Store && other.Address == this.Address
-                   && other.Port == this.Port && other.AppId == this.AppId;
+            return other != null && other.Hash == Hash && other.Store == Store && other.Address == Address
+                   && other.Port == Port && other.AppId == AppId;
         }
     }
 }

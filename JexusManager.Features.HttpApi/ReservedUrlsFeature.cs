@@ -9,10 +9,13 @@ using Microsoft.Web.Management.Client.Win32;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
+using RollbarDotNet;
+using Exception = System.Exception;
 
 namespace JexusManager.Features.HttpApi
 {
@@ -71,19 +74,19 @@ namespace JexusManager.Features.HttpApi
 
         public override void Load()
         {
-            this.Items = new List<ReservedUrlsItem>();
+            Items = new List<ReservedUrlsItem>();
             var httpNamespaceAcls = Microsoft.Web.Administration.NativeMethods.QueryHttpNamespaceAcls();
             foreach (var mapping in httpNamespaceAcls)
             {
-                this.Items.Add(new ReservedUrlsItem(mapping.UrlPrefix, mapping.SecurityDescriptor, this));
+                Items.Add(new ReservedUrlsItem(mapping.UrlPrefix, mapping.SecurityDescriptor, this));
             }
 
-            this.OnHttpApiSettingsSaved();
+            OnHttpApiSettingsSaved();
         }
 
         public void Remove()
         {
-            var dialog = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+            var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
             if (
                 dialog.ShowMessage("Are you sure that you want to remove this URL reservation?", "Confirm Remove",
                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) !=
@@ -114,8 +117,19 @@ namespace JexusManager.Features.HttpApi
                     }
                 }
             }
-            catch (Exception)
-            { }
+            catch (Win32Exception ex)
+            {
+                // elevation is cancelled.
+                if (ex.HResult != Microsoft.Web.Administration.NativeMethods.UserCancelled)
+                {
+                    Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> {{"hresult", ex.HResult}});
+                    // throw;
+                }
+            }
+            catch (Exception ex)
+            {
+                Rollbar.Report(ex, ErrorLevel.Error);
+            }
         }
 
         protected void OnHttpApiSettingsSaved()
@@ -163,8 +177,19 @@ namespace JexusManager.Features.HttpApi
                     }
                 }
             }
-            catch (Exception)
-            { }
+            catch (Win32Exception ex)
+            {
+                // elevation is cancelled.
+                if (ex.HResult != Microsoft.Web.Administration.NativeMethods.UserCancelled)
+                {
+                    Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> {{"hresult", ex.HResult}});
+                    // throw;
+                }
+            }
+            catch (Exception ex)
+            {
+                Rollbar.Report(ex, ErrorLevel.Error);
+            }
         }
 
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)

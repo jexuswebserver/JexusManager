@@ -3,7 +3,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
 
 namespace CertificateInstaller
@@ -121,13 +120,18 @@ namespace CertificateInstaller
                         }
 
                         // start a site.
-                        var process = new Process();
-                        process.StartInfo.FileName = launcher;
-                        process.StartInfo.Arguments = $"/config:\"{config}\" /siteid:{siteId} /systray:false /trace:error";
-                        process.StartInfo.CreateNoWindow = true;
-                        process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                        process.StartInfo.RedirectStandardOutput = true;
-                        process.StartInfo.UseShellExecute = false;
+                        var process = new Process
+                        {
+                            StartInfo =
+                            {
+                                FileName = launcher,
+                                Arguments = $"/config:\"{config}\" /siteid:{siteId} /systray:false /trace:error",
+                                CreateNoWindow = true,
+                                WindowStyle = ProcessWindowStyle.Hidden,
+                                RedirectStandardOutput = true,
+                                UseShellExecute = false
+                            }
+                        };
                         process.Start();
                         process.WaitForExit(5000);
                         if (process.HasExited)

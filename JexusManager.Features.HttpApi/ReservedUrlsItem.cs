@@ -28,12 +28,12 @@ namespace JexusManager.Features.HttpApi
 
         public bool Equals(ReservedUrlsItem other)
         {
-            return Match(other) && other.SecurityDescriptor == this.SecurityDescriptor;
+            return Match(other) && other.SecurityDescriptor == SecurityDescriptor;
         }
 
         public bool Match(ReservedUrlsItem other)
         {
-            return other != null && other.UrlPrefix == this.UrlPrefix;
+            return other != null && other.UrlPrefix == UrlPrefix;
         }
     }
 }
