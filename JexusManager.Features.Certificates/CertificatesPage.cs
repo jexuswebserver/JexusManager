@@ -11,7 +11,7 @@ namespace JexusManager.Features.Certificates
     using System.Windows.Forms;
 
     using JexusManager.Properties;
-    using JexusManager.Services;
+    using Services;
 
     using Microsoft.Web.Management.Client;
     using Microsoft.Web.Management.Client.Win32;

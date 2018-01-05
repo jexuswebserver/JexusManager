@@ -23,9 +23,9 @@ namespace JexusManager.Features.Certificates
     using System.Security.Cryptography.X509Certificates;
     using System.Windows.Forms;
 
-    using JexusManager.Services;
-    using JexusManager.Features.Certificates.Wizards.CertificateRenewWizard;
-    using JexusManager.Features.Certificates.Wizards.CertificateRequestWizard;
+    using Services;
+    using Wizards.CertificateRenewWizard;
+    using Wizards.CertificateRequestWizard;
 
     using Microsoft.Web.Administration;
     using Microsoft.Web.Management.Client;
@@ -277,7 +277,7 @@ namespace JexusManager.Features.Certificates
 
         public void Remove()
         {
-            var dialog = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+            var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
             if (
                 dialog.ShowMessage("Are you sure that you want to remove this certificate, and permanently remove it from the certificate store?", "Confirm Remove",
                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) !=
@@ -401,7 +401,9 @@ namespace JexusManager.Features.Certificates
                 {
                     if (ex.HResult != JexusManager.NativeMethods.UserCancelled)
                     {
-                        throw;
+                        var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
+                        dialog.ShowMessage($"An unexpected error happened. HResult is {ex.HResult}. Contact your system administrator.", Name,
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
 
                     // add operation cancelled.

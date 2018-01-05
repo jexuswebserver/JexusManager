@@ -121,7 +121,7 @@ namespace JexusManager.Features.Certificates
                             File.Delete(p12File);
                             if (process.ExitCode == 0)
                             {
-                                this.DialogResult = DialogResult.OK;
+                                DialogResult = DialogResult.OK;
                             }
                             else
                             {
