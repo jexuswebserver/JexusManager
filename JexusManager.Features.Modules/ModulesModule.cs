@@ -15,7 +15,7 @@ namespace JexusManager.Features.Modules
         protected override void Initialize(IServiceProvider serviceProvider, ModuleInfo moduleInfo)
         {
             base.Initialize(serviceProvider, moduleInfo);
-            var controlPanel = (IControlPanel)this.GetService(typeof(IControlPanel));
+            var controlPanel = (IControlPanel)GetService(typeof(IControlPanel));
             var modulePage = new ModulePageInfo(this, typeof(ModulesPage), "Modules",
                 "Configure native and managed code modules that process requests on the Web server", Resources.modules_36,
                 Resources.modules_36);

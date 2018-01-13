@@ -15,9 +15,9 @@ namespace JexusManager.Features.Modules
                 return;
             }
 
-            this.Name = (string)element["name"];
-            this.Image = (string)element["image"];
-            this.Element = element;
+            Name = (string)element["name"];
+            Image = (string)element["image"];
+            Element = element;
         }
 
         public string Name { get; set; }
@@ -27,22 +27,22 @@ namespace JexusManager.Features.Modules
 
         public bool Equals(GlobalModule other)
         {
-            return Match(other) && other.Image == this.Image;
+            return Match(other) && other.Image == Image;
         }
 
         public string Flag { get; set; }
 
         public void Apply()
         {
-            this.Element["name"] = this.Name;
-            this.Element["image"] = this.Image;
+            Element["name"] = Name;
+            Element["image"] = Image;
         }
 
         public ConfigurationElement Element { get; set; }
 
         public bool Match(GlobalModule other)
         {
-            return other != null && other.Name == this.Name;
+            return other != null && other.Name == Name;
         }
     }
 }

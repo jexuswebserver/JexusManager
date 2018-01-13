@@ -42,11 +42,11 @@ namespace JexusManager.Features.Modules
             public ModulesListViewItem(ModulesItem item, ModulesPage page)
                 : base(item.Name)
             {
-                this.Item = item;
+                Item = item;
                 _page = page;
-                this.SubItems.Add(new ListViewSubItem(this, item.IsManaged ? item.Type : item.GlobalModule.Image));
-                this.SubItems.Add(new ListViewSubItem(this, item.IsManaged ? "Managed" : "Native"));
-                this.SubItems.Add(new ListViewSubItem(this, item.Flag));
+                SubItems.Add(new ListViewSubItem(this, item.ModuleName));
+                SubItems.Add(new ListViewSubItem(this, item.IsManaged ? "Managed" : "Native"));
+                SubItems.Add(new ListViewSubItem(this, item.Flag));
             }
         }
 
@@ -55,17 +55,17 @@ namespace JexusManager.Features.Modules
 
         public ModulesPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         protected override void Initialize(object navigationData)
         {
             base.Initialize(navigationData);
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             pictureBox1.Image = service.Scope.GetImage();
 
-            _feature = new ModulesFeature(this.Module);
-            _feature.ModulesSettingsUpdated = this.InitializeListPage;
+            _feature = new ModulesFeature(Module);
+            _feature.ModulesSettingsUpdated = InitializeListPage;
             _feature.Load();
         }
 
@@ -80,7 +80,7 @@ namespace JexusManager.Features.Modules
 
             if (_feature.SelectedItem == null)
             {
-                this.Refresh();
+                Refresh();
                 return;
             }
 
@@ -95,7 +95,7 @@ namespace JexusManager.Features.Modules
 
         protected override void Refresh()
         {
-            this.Tasks.Fill(tsActionPanel, cmsActionPanel);
+            Tasks.Fill(tsActionPanel, cmsActionPanel);
             base.Refresh();
         }
 
@@ -105,7 +105,7 @@ namespace JexusManager.Features.Modules
                 ? ((ModulesListViewItem)listView1.SelectedItems[0]).Item
                 : null;
             // TODO: optimize refresh when null to not null (vice versa)
-            this.Refresh();
+            Refresh();
         }
 
         protected override bool ShowHelp()

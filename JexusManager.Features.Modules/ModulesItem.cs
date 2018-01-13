@@ -13,8 +13,8 @@ namespace JexusManager.Features.Modules
     {
         public ModulesItem(ConfigurationElement element)
         {
-            this.Element = element;
-            this.Flag = element == null || element.IsLocallyStored ? "Local" : "Inhertied";
+            Element = element;
+            Flag = element == null || element.IsLocallyStored ? "Local" : "Inhertied";
             if (element == null)
             {
                 PreConditions = new List<string>();
@@ -22,15 +22,15 @@ namespace JexusManager.Features.Modules
                 return;
             }
 
-            this.Name = (string)element["name"];
-            this.Type = (string)element["type"];
+            Name = (string)element["name"];
+            Type = (string)element["type"];
             var content = (string)element["preCondition"];
-            this.PreConditions = content.Split(',').ToList();
+            PreConditions = content.Split(',').ToList();
 
             IsLocked = element.GetIsLocked();
-            if (!string.IsNullOrWhiteSpace(this.Type))
+            if (!string.IsNullOrWhiteSpace(Type))
             {
-                this.IsManaged = true;
+                IsManaged = true;
             }
         }
 
@@ -43,12 +43,12 @@ namespace JexusManager.Features.Modules
 
             foreach (var item in feature.GlobalModules)
             {
-                if (item.Name == this.Name)
+                if (item.Name == Name)
                 {
-                    this.Type = item.Image;
+                    Type = item.Image;
                     item.Loaded = true;
-                    this.GlobalModule = item;
-                    this.IsManaged = false;
+                    GlobalModule = item;
+                    IsManaged = false;
                     break;
                 }
             }
@@ -76,12 +76,12 @@ namespace JexusManager.Features.Modules
         {
             get
             {
-                return this.PreConditions.Contains("managedHandler");
+                return PreConditions.Contains("managedHandler");
             }
 
             set
             {
-                var current = this.PreConditions.Contains("managedHandler");
+                var current = PreConditions.Contains("managedHandler");
                 if (value == current)
                 {
                     return;
@@ -89,19 +89,31 @@ namespace JexusManager.Features.Modules
 
                 if (value)
                 {
-                    this.PreConditions.Add("managedHandler");
+                    PreConditions.Add("managedHandler");
                 }
                 else
                 {
-                    this.PreConditions.Remove("managedHandler");
+                    PreConditions.Remove("managedHandler");
                 }
+            }
+        }
+
+        public string ModuleName
+        {
+            get
+            {
+                return IsManaged 
+                    ? Type 
+                    : GlobalModule == null 
+                        ? string.Empty 
+                        : GlobalModule.Image;
             }
         }
 
         public bool Equals(ModulesItem other)
         {
             // all properties
-            return this.Match(other) && other.Type == this.Type;
+            return Match(other) && other.Type == Type;
         }
 
         public void Apply()
@@ -119,7 +131,7 @@ namespace JexusManager.Features.Modules
         public bool Match(ModulesItem other)
         {
             // match combined keys.
-            return other != null && other.Name == this.Name;
+            return other != null && other.Name == Name;
         }
 
         public void Unload()
@@ -129,8 +141,8 @@ namespace JexusManager.Features.Modules
                 return;
             }
 
-            this.GlobalModule.Loaded = false;
-            this.GlobalModule = null;
+            GlobalModule.Loaded = false;
+            GlobalModule = null;
         }
     }
 }

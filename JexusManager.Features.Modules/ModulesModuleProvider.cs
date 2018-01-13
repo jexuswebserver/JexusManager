@@ -17,7 +17,7 @@ namespace JexusManager.Features.Modules
 
         public override ModuleDefinition GetModuleDefinition(IManagementContext context)
         {
-            return new ModuleDefinition(this.Name, typeof(ModulesModule).AssemblyQualifiedName);
+            return new ModuleDefinition(Name, typeof(ModulesModule).AssemblyQualifiedName);
         }
 
         public override bool SupportsScope(ManagementScope scope)

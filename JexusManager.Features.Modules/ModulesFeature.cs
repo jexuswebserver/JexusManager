@@ -156,34 +156,34 @@ namespace JexusManager.Features.Modules
 
         public void Load()
         {
-            this.GlobalModules = new List<GlobalModule>();
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            GlobalModules = new List<GlobalModule>();
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
 
             ConfigurationSection globalSection = service.GetSection("system.webServer/globalModules", null, false);
             ConfigurationElementCollection globalCollection = globalSection.GetCollection();
             foreach (ConfigurationElement addElement in globalCollection)
             {
-                this.GlobalModules.Add(new GlobalModule(addElement));
+                GlobalModules.Add(new GlobalModule(addElement));
             }
 
-            this.CanRevert = service.Scope != ManagementScope.Server;
-            this.IsInOrder = false;
+            CanRevert = service.Scope != ManagementScope.Server;
+            IsInOrder = false;
             LoadItems();
         }
 
         public override void LoadItems()
         {
-            this.Items.Clear();
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
-            ConfigurationElementCollection collection = this.GetCollection(service);
+            Items.Clear();
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+            ConfigurationElementCollection collection = GetCollection(service);
             foreach (ConfigurationElement addElement in collection)
             {
                 var item = new ModulesItem(addElement);
                 item.Load(this);
-                this.Items.Add(item);
+                Items.Add(item);
             }
 
-            this.OnSettingsSaved();
+            OnSettingsSaved();
         }
 
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
@@ -197,17 +197,17 @@ namespace JexusManager.Features.Modules
 
         public void Add()
         {
-            var dialog = new NativeModulesDialog(this.Module, this);
+            var dialog = new NativeModulesDialog(Module, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             foreach (var item in dialog.Items)
             {
-                this.Items.Add(item);
-                this.SelectedItem = item;
+                Items.Add(item);
+                SelectedItem = item;
                 // server level modules are in "" location.
                 ConfigurationElementCollection collection = GetCollection(service);
                 item.AppendTo(collection);
@@ -215,24 +215,24 @@ namespace JexusManager.Features.Modules
 
             // TODO: how to add item?
             service.ServerManager.CommitChanges();
-            this.OnSettingsSaved();
+            OnSettingsSaved();
         }
 
         public void AddManaged()
         {
-            var dialog = new NewModuleDialog(this.Module, null, this);
+            var dialog = new NewModuleDialog(Module, null, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
-            this.AddItem(dialog.Item);
+            AddItem(dialog.Item);
         }
 
         public void AddGlobal(GlobalModule item)
         {
-            this.GlobalModules.Add(item);
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            GlobalModules.Add(item);
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             ConfigurationSection globalSection = service.GetSection("system.webServer/globalModules", null, false);
             ConfigurationElementCollection globalCollection = globalSection.GetCollection();
             item.AppendTo(globalCollection);
@@ -241,8 +241,8 @@ namespace JexusManager.Features.Modules
 
         public void RemoveGlobal(GlobalModule item)
         {
-            this.GlobalModules.Remove(item);
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            GlobalModules.Remove(item);
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             ConfigurationSection globalSection = service.GetSection("system.webServer/globalModules", null, false);
             ConfigurationElementCollection globalCollection = globalSection.GetCollection();
             globalCollection.Remove(item.Element);
@@ -252,7 +252,7 @@ namespace JexusManager.Features.Modules
         public void Remove()
         {
             // TODO: add multiple support
-            var dialog = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+            var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
             if (
                 dialog.ShowMessage("Are you sure that you want to remove the selected module or modules?", "Confirm Remove",
                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) !=
@@ -266,13 +266,13 @@ namespace JexusManager.Features.Modules
 
         public void Edit()
         {
-            var dialog = new NewModuleDialog(this.Module, this.SelectedItem, this);
+            var dialog = new NewModuleDialog(Module, SelectedItem, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
-            this.EditItem(dialog.Item);
+            EditItem(dialog.Item);
         }
 
         public void Rename()
@@ -281,13 +281,13 @@ namespace JexusManager.Features.Modules
 
         public void MoveUp()
         {
-            if (this.Items.Any(item => item.Flag != "Local"))
+            if (Items.Any(item => item.Flag != "Local"))
             {
-                var dialog = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+                var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
                 var result =
                     dialog.ShowMessage(
                         "The list order will be changed for this feature. If you continue, changes made to this feature at a parent level will no longer be inherited at this level. Do you want to continue?",
-                        this.Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question,
+                        Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question,
                         MessageBoxDefaultButton.Button1);
                 if (result != DialogResult.Yes)
                 {
@@ -300,13 +300,13 @@ namespace JexusManager.Features.Modules
 
         public void MoveDown()
         {
-            if (this.Items.Any(item => item.Flag != "Local"))
+            if (Items.Any(item => item.Flag != "Local"))
             {
-                var dialog = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+                var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
                 var result =
                     dialog.ShowMessage(
                         "The list order will be changed for this feature. If you continue, changes made to this feature at a parent level will no longer be inherited at this level. Do you want to continue?",
-                        this.Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question,
+                        Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question,
                         MessageBoxDefaultButton.Button1);
                 if (result != DialogResult.Yes)
                 {
@@ -319,14 +319,14 @@ namespace JexusManager.Features.Modules
 
         public void InOrder()
         {
-            this.IsInOrder = true;
-            this.OnSettingsSaved();
+            IsInOrder = true;
+            OnSettingsSaved();
         }
 
         public void Unorder()
         {
-            this.IsInOrder = false;
-            this.OnSettingsSaved();
+            IsInOrder = false;
+            OnSettingsSaved();
         }
 
         public void Revert()
@@ -336,11 +336,11 @@ namespace JexusManager.Features.Modules
                 throw new InvalidOperationException("Revert operation cannot be done at server level");
             }
 
-            var dialog = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+            var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
             var result =
                 dialog.ShowMessage(
                     "Reverting to the parent configuration will result in the loss of all settings in the local configuration file for this feature. Are you sure you want to continue?",
-                    this.Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning,
+                    Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning,
                     MessageBoxDefaultButton.Button1);
             if (result != DialogResult.Yes)
             {
@@ -352,7 +352,7 @@ namespace JexusManager.Features.Modules
 
         protected override void OnSettingsSaved()
         {
-            this.ModulesSettingsUpdated?.Invoke();
+            ModulesSettingsUpdated?.Invoke();
         }
 
         public virtual bool ShowHelp()
