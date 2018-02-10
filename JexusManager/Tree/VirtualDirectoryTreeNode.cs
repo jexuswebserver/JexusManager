@@ -116,11 +116,11 @@ namespace JexusManager.Tree
                 return;
             }
 
+            _loaded = true;
             Nodes.Clear();
             var rootFolder = VirtualDirectory.PhysicalPath.ExpandIisExpressEnvironmentVariables();
             var rootLevel = GetLevel(PathToSite);
             LoadChildren(VirtualDirectory.Application, rootLevel, rootFolder, PathToSite, mainForm.PhysicalDirectoryMenu, mainForm.VirtualDirectoryMenu, mainForm.ApplicationMenu);
-            _loaded = true;
         }
 
         public override void AddApplication(ContextMenuStrip appMenu)

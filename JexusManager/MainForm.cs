@@ -530,8 +530,14 @@ namespace JexusManager
             {
                 return;
             }
-                       
-            var node = ((ManagerTreeNode)e.Node);
+
+            var node = e.Node as ManagerTreeNode;
+            if (node == null)
+            {
+                RollbarDotNet.Rollbar.Report($"wrong node {e.Node.GetType().FullName}");
+                return;
+            }
+
             var serverNode = node as ServerTreeNode;
             actUp.Enabled = !(serverNode != null || node is HomePageTreeNode);
             if (serverNode != null)
