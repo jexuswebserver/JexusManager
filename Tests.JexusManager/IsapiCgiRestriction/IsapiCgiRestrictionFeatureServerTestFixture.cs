@@ -36,7 +36,7 @@ namespace Tests.IsapiCgiRestriction
 
         private const string Current = @"applicationHost.config";
 
-        public void SetUp()
+        private void SetUp()
         {
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -89,7 +89,7 @@ namespace Tests.IsapiCgiRestriction
         {
             SetUp();
             Assert.Equal(4, _feature.Items.Count);
-            Assert.Equal(true, _feature.Items[0].Allowed);
+            Assert.True(_feature.Items[0].Allowed);
         }
 
         [Fact]
@@ -151,7 +151,7 @@ namespace Tests.IsapiCgiRestriction
             _feature.AddItem(item);
             Assert.NotNull(_feature.SelectedItem);
             Assert.Equal("my cgi", _feature.SelectedItem.Description);
-            Assert.Equal(true, _feature.SelectedItem.Allowed);
+            Assert.True(_feature.SelectedItem.Allowed);
             Assert.Equal(5, _feature.Items.Count);
             XmlAssert.Equal(Expected, Current);
         }

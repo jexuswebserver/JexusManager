@@ -36,7 +36,7 @@ namespace Tests.RequestFiltering.Verbs
 
         private const string Current = @"applicationHost.config";
 
-        public void SetUp()
+        private void SetUp()
         {
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -88,7 +88,7 @@ namespace Tests.RequestFiltering.Verbs
         public void TestBasic()
         {
             SetUp();
-            Assert.Equal(1, _feature.Items.Count);
+            Assert.Single(_feature.Items);
             Assert.Equal("PUT", _feature.Items[0].Verb);
         }
 
@@ -105,7 +105,7 @@ namespace Tests.RequestFiltering.Verbs
             _feature.SelectedItem = _feature.Items[0];
             _feature.Remove();
             Assert.Null(_feature.SelectedItem);
-            Assert.Equal(0, _feature.Items.Count);
+            Assert.Empty(_feature.Items);
             XmlAssert.Equal(Expected, Current);
         }
 

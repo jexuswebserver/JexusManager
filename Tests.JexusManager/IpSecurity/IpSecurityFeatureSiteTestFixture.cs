@@ -33,7 +33,7 @@ namespace Tests.IpSecurity
 
         private const string Current = @"applicationHost.config";
 
-        public void SetUp()
+        private void SetUp()
         {
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -94,7 +94,7 @@ namespace Tests.IpSecurity
         public void TestBasic()
         {
             SetUp();
-            Assert.Equal(1, _feature.Items.Count);
+            Assert.Single(_feature.Items);
         }
 
         [Fact]
@@ -122,7 +122,7 @@ namespace Tests.IpSecurity
             Assert.Equal("10.0.0.0", _feature.SelectedItem.Address);
             _feature.Remove();
             Assert.Null(_feature.SelectedItem);
-            Assert.Equal(0, _feature.Items.Count);
+            Assert.Empty(_feature.Items);
 
             XmlAssert.Equal(Expected, Current);
             XmlAssert.Equal(Path.Combine("Website1", "original.config"), Path.Combine("Website1", "web.config"));
@@ -148,7 +148,7 @@ namespace Tests.IpSecurity
             Assert.Equal(2, _feature.Items.Count);
             _feature.Remove();
             Assert.Null(_feature.SelectedItem);
-            Assert.Equal(1, _feature.Items.Count);
+            Assert.Single(_feature.Items);
 
             XmlAssert.Equal(Expected, Current);
             XmlAssert.Equal(Path.Combine("Website1", "original.config"), Path.Combine("Website1", "web.config"));
@@ -209,7 +209,7 @@ namespace Tests.IpSecurity
 
             _feature.Revert();
             Assert.Null(_feature.SelectedItem);
-            Assert.Equal(1, _feature.Items.Count);
+            Assert.Single(_feature.Items);
 
             XmlAssert.Equal(Expected, Current);
             XmlAssert.Equal(Path.Combine("Website1", "original.config"), Path.Combine("Website1", "web.config"));

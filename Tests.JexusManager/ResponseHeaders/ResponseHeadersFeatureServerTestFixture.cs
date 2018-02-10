@@ -35,7 +35,7 @@ namespace Tests.ResponseHeaders
 
         private const string Current = @"applicationHost.config";
 
-        public void SetUp()
+        private void SetUp()
         {
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -87,7 +87,7 @@ namespace Tests.ResponseHeaders
         public void TestBasic()
         {
             SetUp();
-            Assert.Equal(1, _feature.Items.Count);
+            Assert.Single(_feature.Items);
             Assert.Equal("X-Powered-By", _feature.Items[0].Name);
             Assert.Equal("ASP.NET", _feature.Items[0].Value);
         }
@@ -105,7 +105,7 @@ namespace Tests.ResponseHeaders
             _feature.SelectedItem = _feature.Items[0];
             _feature.Remove();
             Assert.Null(_feature.SelectedItem);
-            Assert.Equal(0, _feature.Items.Count);
+            Assert.Empty(_feature.Items);
             XmlAssert.Equal(Expected, Current);
         }
 
@@ -125,7 +125,7 @@ namespace Tests.ResponseHeaders
             _feature.EditItem(item);
             Assert.NotNull(_feature.SelectedItem);
             Assert.Equal("XSP", _feature.SelectedItem.Value);
-            Assert.Equal(1, _feature.Items.Count);
+            Assert.Single(_feature.Items);
             XmlAssert.Equal(Expected, Current);
         }
 

@@ -33,7 +33,7 @@ namespace Tests.DirectoryBrowse
 
         private const string Current = @"applicationHost.config";
 
-        public void SetUp()
+        private void SetUp()
         {
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -95,7 +95,7 @@ namespace Tests.DirectoryBrowse
         public void TestBasic()
         {
             SetUp();
-            Assert.Equal(false, _feature.IsEnabled);
+            Assert.False(_feature.IsEnabled);
         }
 
         [Fact]

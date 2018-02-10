@@ -290,8 +290,8 @@ namespace Tests.Exceptions
             var windowsSection = config.GetSection("system.webServer/security/authentication/windowsAuthentication");
             Assert.Equal(OverrideMode.Inherit, windowsSection.OverrideMode);
             Assert.Equal(OverrideMode.Deny, windowsSection.OverrideModeEffective);
-            Assert.Equal(true, windowsSection.IsLocked);
-            Assert.Equal(false, windowsSection.IsLocallyStored);
+            Assert.True(windowsSection.IsLocked);
+            Assert.False(windowsSection.IsLocallyStored);
 
             var windowsEnabled = (bool)windowsSection["enabled"];
             Assert.False(windowsEnabled);
@@ -299,8 +299,8 @@ namespace Tests.Exceptions
             var compression = config.GetSection("system.webServer/urlCompression");
             Assert.Equal(OverrideMode.Inherit, compression.OverrideMode);
             Assert.Equal(OverrideMode.Allow, compression.OverrideModeEffective);
-            Assert.Equal(false, compression.IsLocked);
-            Assert.Equal(false, compression.IsLocallyStored);
+            Assert.False(compression.IsLocked);
+            Assert.False(compression.IsLocallyStored);
 
             Assert.Equal(true, compression["doDynamicCompression"]);
 
@@ -503,8 +503,8 @@ namespace Tests.Exceptions
             var windowsSection = config.GetSection("system.webServer/security/authentication/windowsAuthentication");
             Assert.Equal(OverrideMode.Inherit, windowsSection.OverrideMode);
             Assert.Equal(OverrideMode.Deny, windowsSection.OverrideModeEffective);
-            Assert.Equal(true, windowsSection.IsLocked);
-            Assert.Equal(false, windowsSection.IsLocallyStored);
+            Assert.True(windowsSection.IsLocked);
+            Assert.False(windowsSection.IsLocallyStored);
         }
 
         [Fact]
@@ -612,8 +612,8 @@ namespace Tests.Exceptions
             var windowsSection = config.GetSection("system.webServer/security/authentication/windowsAuthentication");
             Assert.Equal(OverrideMode.Inherit, windowsSection.OverrideMode);
             Assert.Equal(OverrideMode.Deny, windowsSection.OverrideModeEffective);
-            Assert.Equal(true, windowsSection.IsLocked);
-            Assert.Equal(false, windowsSection.IsLocallyStored);
+            Assert.True(windowsSection.IsLocked);
+            Assert.False(windowsSection.IsLocallyStored);
         }
 
         [Fact]

@@ -33,7 +33,7 @@ namespace Tests.Caching
 
         private const string Current = @"applicationHost.config";
 
-        public void SetUp()
+        private void SetUp()
         {
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -95,7 +95,7 @@ namespace Tests.Caching
         public void TestBasic()
         {
             SetUp();
-            Assert.Equal(1, _feature.Items.Count);
+            Assert.Single(_feature.Items);
         }
 
         [Fact]
@@ -120,7 +120,7 @@ namespace Tests.Caching
             Assert.Equal(".cs", _feature.SelectedItem.Extension);
             _feature.Remove();
             Assert.Null(_feature.SelectedItem);
-            Assert.Equal(0, _feature.Items.Count);
+            Assert.Empty(_feature.Items);
 
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -147,7 +147,7 @@ namespace Tests.Caching
             Assert.Equal(2, _feature.Items.Count);
             _feature.Remove();
             Assert.Null(_feature.SelectedItem);
-            Assert.Equal(1, _feature.Items.Count);
+            Assert.Single(_feature.Items);
 
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";

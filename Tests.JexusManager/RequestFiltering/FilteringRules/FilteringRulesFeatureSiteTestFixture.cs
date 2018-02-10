@@ -33,7 +33,7 @@ namespace Tests.RequestFiltering.FilteringRules
 
         private const string Current = @"applicationHost.config";
 
-        public void SetUp()
+        private void SetUp()
         {
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -94,7 +94,7 @@ namespace Tests.RequestFiltering.FilteringRules
         public void TestBasic()
         {
             SetUp();
-            Assert.Equal(1, _feature.Items.Count);
+            Assert.Single(_feature.Items);
         }
 
         [Fact]
@@ -121,7 +121,7 @@ namespace Tests.RequestFiltering.FilteringRules
             Assert.Equal("test", _feature.SelectedItem.Name);
             _feature.Remove();
             Assert.Null(_feature.SelectedItem);
-            Assert.Equal(0, _feature.Items.Count);
+            Assert.Empty(_feature.Items);
 
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -148,7 +148,7 @@ namespace Tests.RequestFiltering.FilteringRules
             Assert.Equal(2, _feature.Items.Count);
             _feature.Remove();
             Assert.Null(_feature.SelectedItem);
-            Assert.Equal(1, _feature.Items.Count);
+            Assert.Single(_feature.Items);
 
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -182,12 +182,12 @@ namespace Tests.RequestFiltering.FilteringRules
             document.Save(expected);
 
             _feature.SelectedItem = _feature.Items[0];
-            Assert.Equal(false, _feature.SelectedItem.ScanQueryString);
+            Assert.False(_feature.SelectedItem.ScanQueryString);
             var item = _feature.SelectedItem;
             item.ScanQueryString = true;
             _feature.EditItem(item);
             Assert.NotNull(_feature.SelectedItem);
-            Assert.Equal(true, _feature.SelectedItem.ScanQueryString);
+            Assert.True(_feature.SelectedItem.ScanQueryString);
 
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -226,7 +226,7 @@ namespace Tests.RequestFiltering.FilteringRules
             item.ScanQueryString = true;
             _feature.EditItem(item);
             Assert.NotNull(_feature.SelectedItem);
-            Assert.Equal(true, _feature.SelectedItem.ScanQueryString);
+            Assert.True(_feature.SelectedItem.ScanQueryString);
             Assert.Equal(2, _feature.Items.Count);
 
             const string Original = @"original.config";

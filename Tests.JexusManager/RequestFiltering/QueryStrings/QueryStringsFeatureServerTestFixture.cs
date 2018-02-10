@@ -36,7 +36,7 @@ namespace Tests.RequestFiltering.QueryStrings
 
         private const string Current = @"applicationHost.config";
 
-        public void SetUp()
+        private void SetUp()
         {
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -108,7 +108,7 @@ namespace Tests.RequestFiltering.QueryStrings
             _feature.SelectedItem = _feature.Items[0];
             _feature.Remove();
             Assert.Null(_feature.SelectedItem);
-            Assert.Equal(1, _feature.Items.Count);
+            Assert.Single(_feature.Items);
             XmlAssert.Equal(Expected, Current);
         }
 
@@ -125,7 +125,7 @@ namespace Tests.RequestFiltering.QueryStrings
             _feature.SelectedItem = _feature.Items[1];
             _feature.Remove();
             Assert.Null(_feature.SelectedItem);
-            Assert.Equal(1, _feature.Items.Count);
+            Assert.Single(_feature.Items);
             XmlAssert.Equal(Expected, Current);
         }
 

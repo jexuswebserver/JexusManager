@@ -35,7 +35,7 @@ namespace Tests.DirectoryBrowse
 
         private const string Current = @"applicationHost.config";
 
-        public void SetUp()
+        private void SetUp()
         {
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -87,12 +87,12 @@ namespace Tests.DirectoryBrowse
         public void TestBasic()
         {
             SetUp();
-            Assert.Equal(false, _feature.IsEnabled);
-            Assert.Equal(true, _feature.DateEnabled);
-            Assert.Equal(true, _feature.ExtensionEnabled);
-            Assert.Equal(false, _feature.LongDateEnabled);
-            Assert.Equal(true, _feature.SizeEnabled);
-            Assert.Equal(true, _feature.TimeEnabled);
+            Assert.False(_feature.IsEnabled);
+            Assert.True(_feature.DateEnabled);
+            Assert.True(_feature.ExtensionEnabled);
+            Assert.False(_feature.LongDateEnabled);
+            Assert.True(_feature.SizeEnabled);
+            Assert.True(_feature.TimeEnabled);
         }
 
         [Fact]

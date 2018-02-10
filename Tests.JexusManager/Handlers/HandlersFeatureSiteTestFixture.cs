@@ -33,7 +33,7 @@ namespace Tests.Handlers
 
         private const string Current = @"applicationHost.config";
 
-        public void SetUp()
+        private void SetUp()
         {
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -189,7 +189,7 @@ namespace Tests.Handlers
             item.AllowPathInfo = true;
             _feature.EditItem(item);
             Assert.NotNull(_feature.SelectedItem);
-            Assert.Equal(true, _feature.SelectedItem.AllowPathInfo);
+            Assert.True(_feature.SelectedItem.AllowPathInfo);
 
             XmlAssert.Equal(Expected, Current);
             XmlAssert.Equal(Path.Combine("Website1", "original.config"), Path.Combine("Website1", "web.config"));
@@ -230,7 +230,7 @@ namespace Tests.Handlers
             item.AllowPathInfo = true;
             _feature.EditItem(item);
             Assert.NotNull(_feature.SelectedItem);
-            Assert.Equal(true, _feature.SelectedItem.AllowPathInfo);
+            Assert.True(_feature.SelectedItem.AllowPathInfo);
             Assert.Equal(83, _feature.Items.Count);
 
             XmlAssert.Equal(Expected, Current);

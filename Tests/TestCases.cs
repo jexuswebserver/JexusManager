@@ -349,7 +349,7 @@ namespace Tests
                 Assert.Equal(
                     "Filename: \r\nError: Unrecognized configuration path 'MACHINE/WEBROOT/APPHOST/Default Web Site'\r\n\r\n",
                     exception.Message);
-                Assert.Equal(null, exception.FileName);
+                Assert.Null(exception.FileName);
 
                 var anonymousSection = config.GetSection(
                     "system.webServer/security/authentication/anonymousAuthentication",
@@ -370,7 +370,7 @@ namespace Tests
                 Assert.Equal(OverrideMode.Inherit, windowsSection.OverrideMode);
                 Assert.Equal(OverrideMode.Deny, windowsSection.OverrideModeEffective);
                 Assert.Equal(false, windowsSection.IsLocked);
-                Assert.Equal(true, windowsSection.IsLocallyStored);
+                Assert.True(windowsSection.IsLocallyStored);
 
                 var windowsEnabled = (bool)windowsSection["enabled"];
                 Assert.True(windowsEnabled);
@@ -413,7 +413,7 @@ namespace Tests
                 var windowsSection = config.GetSection("system.webServer/security/authentication/windowsAuthentication");
                 Assert.Equal(OverrideMode.Inherit, windowsSection.OverrideMode);
                 Assert.Equal(OverrideMode.Deny, windowsSection.OverrideModeEffective);
-                Assert.Equal(true, windowsSection.IsLocked);
+                Assert.True(windowsSection.IsLocked);
                 Assert.Equal(false, windowsSection.IsLocallyStored);
 
                 var windowsEnabled = (bool)windowsSection["enabled"];
@@ -422,7 +422,7 @@ namespace Tests
                 Assert.Equal(
                     "This configuration section cannot be used at this path. This happens when the section is locked at a parent level. Locking is either by default (overrideModeDefault=\"Deny\"), or set explicitly by a location tag with overrideMode=\"Deny\" or the legacy allowOverride=\"false\".\r\n",
                     exception.Message);
-                Assert.Equal(null, exception.FileName);
+                Assert.Null(exception.FileName);
 
                 var compression = config.GetSection("system.webServer/urlCompression");
                 Assert.Equal(OverrideMode.Inherit, compression.OverrideMode);
@@ -533,7 +533,7 @@ namespace Tests
                 error["responseMode"] = "File";
                 var ex1 = Assert.Throws<FileNotFoundException>(() => errorsCollection.Add(error));
                 Assert.Equal("Filename: \r\nError: Element is missing required attributes path\r\n\r\n", ex1.Message);
-                Assert.Equal(null, ex1.FileName);
+                Assert.Null(ex1.FileName);
 
                 var ex = Assert.Throws<COMException>(() => error["path"] = "");
                 Assert.Equal("String must not be empty\r\n", ex.Message);
@@ -571,12 +571,12 @@ namespace Tests
                 Assert.Equal(2, collection.Count);
 
                 collection.Clear();
-                Assert.Equal(0, collection.Count);
+                Assert.Empty(collection);
 
                 newElement = collection.CreateElement();
                 newElement["name"] = "test";
                 collection.Add(newElement);
-                Assert.Equal(1, collection.Count);
+                Assert.Single(collection);
             }
 
             {
@@ -588,7 +588,7 @@ namespace Tests
                 Assert.Equal(OverrideMode.Inherit, windowsSection.OverrideMode);
                 Assert.Equal(OverrideMode.Deny, windowsSection.OverrideModeEffective);
                 Assert.Equal(false, windowsSection.IsLocked);
-                Assert.Equal(true, windowsSection.IsLocallyStored);
+                Assert.True(windowsSection.IsLocallyStored);
 
                 var windowsEnabled = (bool)windowsSection["enabled"];
                 Assert.False(windowsEnabled);
@@ -632,7 +632,7 @@ namespace Tests
 
                 ConfigurationSection rulesSection = config.GetSection("system.webServer/rewrite/rules");
                 ConfigurationElementCollection rulesCollection = rulesSection.GetCollection();
-                Assert.Equal(1, rulesCollection.Count);
+                Assert.Single(rulesCollection);
 
                 ConfigurationElement ruleElement = rulesCollection[0];
                 Assert.Equal("lextudio2", ruleElement["name"]);

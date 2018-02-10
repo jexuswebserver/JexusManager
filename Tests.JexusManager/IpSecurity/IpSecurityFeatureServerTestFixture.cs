@@ -36,7 +36,7 @@ namespace Tests.IpSecurity
 
         private const string Current = @"applicationHost.config";
 
-        public void SetUp()
+        private void SetUp()
         {
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -88,8 +88,8 @@ namespace Tests.IpSecurity
         public void TestBasic()
         {
             SetUp();
-            Assert.Equal(1, _feature.Items.Count);
-            Assert.Equal(true, _feature.Items[0].Allowed);
+            Assert.Single(_feature.Items);
+            Assert.True(_feature.Items[0].Allowed);
         }
 
         [Fact]
@@ -105,7 +105,7 @@ namespace Tests.IpSecurity
             _feature.SelectedItem = _feature.Items[0];
             _feature.Remove();
             Assert.Null(_feature.SelectedItem);
-            Assert.Equal(0, _feature.Items.Count);
+            Assert.Empty(_feature.Items);
             XmlAssert.Equal(Expected, Current);
         }
 
@@ -128,7 +128,7 @@ namespace Tests.IpSecurity
             _feature.AddItem(item);
             Assert.NotNull(_feature.SelectedItem);
             Assert.Equal("12.0.0.0", _feature.SelectedItem.Address);
-            Assert.Equal(true, _feature.SelectedItem.Allowed);
+            Assert.True(_feature.SelectedItem.Allowed);
             Assert.Equal(2, _feature.Items.Count);
             XmlAssert.Equal(Expected, Current);
         }

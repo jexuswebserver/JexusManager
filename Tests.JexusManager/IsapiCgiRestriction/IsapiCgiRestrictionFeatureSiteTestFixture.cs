@@ -33,7 +33,7 @@ namespace Tests.IsapiCgiRestriction
 
         private const string Current = @"applicationHost.config";
 
-        public void SetUp()
+        private void SetUp()
         {
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";

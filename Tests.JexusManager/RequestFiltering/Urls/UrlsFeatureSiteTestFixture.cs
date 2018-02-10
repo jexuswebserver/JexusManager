@@ -34,7 +34,7 @@ namespace Tests.RequestFiltering.Urls
 
         private const string Current = @"applicationHost.config";
 
-        public void SetUp()
+        private void SetUp()
         {
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -122,7 +122,7 @@ namespace Tests.RequestFiltering.Urls
             Assert.Equal("test", _feature.SelectedItem.Url);
             _feature.Remove();
             Assert.Null(_feature.SelectedItem);
-            Assert.Equal(1, _feature.Items.Count);
+            Assert.Single(_feature.Items);
 
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
@@ -155,7 +155,7 @@ namespace Tests.RequestFiltering.Urls
             Assert.Equal("test", _feature.SelectedItem.Url);
             _feature.Remove();
             Assert.Null(_feature.SelectedItem);
-            Assert.Equal(1, _feature.Items.Count);
+            Assert.Single(_feature.Items);
 
             const string Original = @"original.config";
             const string OriginalMono = @"original.mono.config";
