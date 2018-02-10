@@ -58,7 +58,7 @@ namespace Microsoft.Web.Administration
             catch (Win32Exception ex)
             {
                 // elevation is cancelled.
-                if (ex.HResult != NativeMethods.UserCancelled)
+                if (ex.NativeErrorCode != NativeMethods.ErrorCancelled)
                 {
                     Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> {{"hresult", ex.HResult}});
                     // throw;
@@ -133,7 +133,7 @@ namespace Microsoft.Web.Administration
                 catch (Win32Exception ex)
                 {
                     // elevation is cancelled.
-                    if (ex.HResult != NativeMethods.UserCancelled)
+                    if (ex.NativeErrorCode != NativeMethods.ErrorCancelled)
                     {
                         throw new COMException(
                             $"cannot start site: {ex.Message}, {File.ReadAllText(temp)}");
@@ -247,7 +247,7 @@ namespace Microsoft.Web.Administration
             catch (Win32Exception ex)
             {
                 // elevation is cancelled.
-                if (ex.HResult != NativeMethods.UserCancelled)
+                if (ex.NativeErrorCode != NativeMethods.ErrorCancelled)
                 {
                     Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> {{"hresult", ex.HResult}});
                     // throw;

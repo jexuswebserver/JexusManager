@@ -1265,6 +1265,8 @@ namespace Microsoft.Web.Administration
         public const int UserCancelled = -2147023673;
         public const int BadKeySet = -2146893802;
 
+        public const int ErrorCancelled = 1223; // https://msdn.microsoft.com/en-us/library/windows/desktop/ms681383(v=vs.85).aspx
+
         #endregion
     }
 }

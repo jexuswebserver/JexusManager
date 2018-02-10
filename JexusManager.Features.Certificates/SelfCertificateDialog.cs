@@ -200,7 +200,7 @@ namespace JexusManager.Features.Certificates
                     catch (Win32Exception ex)
                     {
                         // elevation is cancelled.
-                        if (ex.HResult != Microsoft.Web.Administration.NativeMethods.UserCancelled)
+                        if (ex.NativeErrorCode != Microsoft.Web.Administration.NativeMethods.ErrorCancelled)
                         {
                             Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> {{"hresult", ex.HResult}});
                             // throw;
