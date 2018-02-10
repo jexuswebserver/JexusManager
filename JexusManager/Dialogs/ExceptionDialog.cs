@@ -18,7 +18,6 @@ namespace JexusManager.Dialogs
         {
             var dialog = new ExceptionDialog();
             dialog.txtInfo.Text = $"{userName}{Environment.NewLine}{Environment.NewLine}{exception}";
-            Clipboard.SetText(dialog.txtInfo.Text);
             dialog.ShowDialog();
         }
 
