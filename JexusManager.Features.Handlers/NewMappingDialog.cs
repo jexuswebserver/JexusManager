@@ -107,6 +107,7 @@ namespace JexusManager.Features.Handlers
                             if (result == DialogResult.Yes)
                             {
                                 var fastCgi = new FastCgiFeature((Module)ServiceProvider);
+                                fastCgi.Load();
                                 if (fastCgi.Items.All(item => item.Path != txtExecutable.Text))
                                 {
                                     fastCgi.AddItem(new FastCgiItem(null) { Path = txtExecutable.Text });
