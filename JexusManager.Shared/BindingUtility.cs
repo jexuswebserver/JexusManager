@@ -95,8 +95,8 @@ namespace Microsoft.Web.Administration
                             // elevation is cancelled.
                             if (ex.NativeErrorCode != NativeMethods.ErrorCancelled)
                             {
-                                Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> {{"hresult", ex.HResult}});
-                                return $"Register new certificate failed: unknown (hresult {ex.HResult})";
+                                Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> {{ "native", ex.NativeErrorCode } });
+                                return $"Register new certificate failed: unknown (native {ex.NativeErrorCode})";
                             }
                             
                             return "Register new certificate failed: operation is cancelled";
@@ -152,8 +152,8 @@ namespace Microsoft.Web.Administration
                             // elevation is cancelled.
                             if (ex.NativeErrorCode != NativeMethods.ErrorCancelled)
                             {
-                                Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> {{"hresult", ex.HResult}});
-                                return $"Register new certificate failed: unknown (hresult {ex.HResult})";
+                                Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> {{ "native", ex.NativeErrorCode } });
+                                return $"Register new certificate failed: unknown (native {ex.NativeErrorCode})";
                             }
                             
                             return "Register new certificate failed: operation is cancelled";
@@ -208,8 +208,8 @@ namespace Microsoft.Web.Administration
                     // elevation is cancelled.
                     if (ex.NativeErrorCode != NativeMethods.ErrorCancelled)
                     {
-                        Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> {{"hresult", ex.HResult}});
-                        return $"Register new certificate failed: unknown (hresult {ex.HResult})";
+                        Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> {{ "native", ex.NativeErrorCode } });
+                        return $"Register new certificate failed: unknown (native {ex.NativeErrorCode})";
                     }
                             
                     return "Register new certificate failed: operation is cancelled";
@@ -263,8 +263,8 @@ namespace Microsoft.Web.Administration
                     // elevation is cancelled.
                     if (ex.NativeErrorCode != NativeMethods.ErrorCancelled)
                     {
-                        Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> {{"hresult", ex.HResult}});
-                        return $"Register new certificate failed: unknown (hresult {ex.HResult})";
+                        Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> {{ "native", ex.NativeErrorCode } });
+                        return $"Register new certificate failed: unknown (native {ex.NativeErrorCode})";
                     }
                             
                     return "Register new certificate failed: operation is cancelled";
@@ -378,8 +378,8 @@ namespace Microsoft.Web.Administration
                 // elevation is cancelled.
                 if (ex.NativeErrorCode != NativeMethods.ErrorCancelled)
                 {
-                    Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> {{"hresult", ex.HResult}});
-                    return $"Remove SNI certificate failed: unknown (hresult {ex.HResult})";
+                    Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> {{ "native", ex.NativeErrorCode } });
+                    return $"Remove SNI certificate failed: unknown (native {ex.NativeErrorCode})";
                 }
                             
                 return "Remove SNI certificate failed: operation is cancelled";

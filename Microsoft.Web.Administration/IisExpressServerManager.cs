@@ -60,9 +60,13 @@ namespace Microsoft.Web.Administration
                 // elevation is cancelled.
                 if (ex.NativeErrorCode != NativeMethods.ErrorCancelled)
                 {
-                    Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> {{"hresult", ex.HResult}});
+                    Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> {{"native", ex.NativeErrorCode}});
                     // throw;
                 }
+            }
+            catch (InvalidOperationException ex)
+            {
+                Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> { { "hresult", ex.HResult } });
             }
             catch (Exception ex)
             {
@@ -249,7 +253,7 @@ namespace Microsoft.Web.Administration
                 // elevation is cancelled.
                 if (ex.NativeErrorCode != NativeMethods.ErrorCancelled)
                 {
-                    Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> {{"hresult", ex.HResult}});
+                    Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> {{ "native", ex.NativeErrorCode } });
                     // throw;
                 }
             }
