@@ -66,7 +66,10 @@ namespace Microsoft.Web.Administration
             }
             catch (InvalidOperationException ex)
             {
-                Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> { { "hresult", ex.HResult } });
+                if (ex.HResult != NativeMethods.NoProcessAssociated)
+                {
+                    Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> { { "hresult", ex.HResult } });
+                }
             }
             catch (Exception ex)
             {
