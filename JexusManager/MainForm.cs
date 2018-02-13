@@ -361,7 +361,12 @@ namespace JexusManager
 
         private void editBindingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var node = (Site)treeView1.SelectedNode.Tag;
+            var node = treeView1.SelectedNode.Tag as Site;
+            if (node == null)
+            {
+                return;
+            }
+
             var dialog = new BindingsDialog(_serviceContainer, node);
             dialog.ShowDialog(this);
         }
