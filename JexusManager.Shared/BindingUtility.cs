@@ -384,6 +384,11 @@ namespace Microsoft.Web.Administration
                             
                 return "Remove SNI certificate failed: operation is cancelled";
             }
+            catch (NullReferenceException ex)
+            {
+                Rollbar.Report($"null reference {binding}", ErrorLevel.Error);
+                return $"Remove SNI certificate failed: unknown ({ex.Message})";
+            }
             catch (Exception ex)
             {
                 Rollbar.Report(ex, ErrorLevel.Error);

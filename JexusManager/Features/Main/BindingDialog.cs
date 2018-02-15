@@ -182,6 +182,7 @@ namespace JexusManager.Features.Main
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(cbType, "SelectedIndexChanged")
+                .Merge(Observable.FromEventPattern<EventArgs>(this, "Load"))
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
