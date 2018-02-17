@@ -327,7 +327,7 @@ namespace JexusManager.Features.Main
 
         private void BtnHelpClick(object sender, EventArgs e)
         {
-            DialogHelper.ProcessStart("https://blog.lextudio.com/2015/11/jexus-manager-built-in-ssl-diagnostics/");
+            DialogHelper.ProcessStart("http://www.jexusmanager.com/en/latest/tutorials/ssl-diagnostics.html");
         }
 
         private void SslDiagDialogHelpButtonClicked(object sender, System.ComponentModel.CancelEventArgs e)

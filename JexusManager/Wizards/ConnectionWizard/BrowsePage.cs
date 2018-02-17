@@ -49,13 +49,22 @@ namespace JexusManager.Wizards.ConnectionWizard
                 var config = Path.Combine(folder, ".vs", "config", "applicationHost.config");
                 if (File.Exists(config))
                 {
+                    var iisExpress = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "IIS Express", "AppServer", "applicationhost.config");
+                    var iisExpressX86 = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "IIS Express", "AppServer", "applicationhost.config");
+                    if (string.Equals(iisExpress, config, StringComparison.OrdinalIgnoreCase) || string.Equals(iisExpressX86, config, StringComparison.OrdinalIgnoreCase))
+                    {
+                        var service = (IManagementUIService)GetService(typeof(IManagementUIService));
+                        service.ShowMessage("This file coming from IIS Express installation cannot be used. Please select another file.", Caption, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return false;
+                    }
+
                     data.Server = new IisExpressServerManager(config);
                     data.FileName = config;
                 }
                 else
                 {
                     var service = (IManagementUIService)GetService(typeof(IManagementUIService));
-                    service.ShowMessage("This solution does not contain IIS Express configuration file. Make sure you run the web project in Visual Studio 2015 once for the configuration file to be generated. If you are using other versions of Visual Studio, you might check the sites under IIS Express server node.", Caption, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    service.ShowMessage("This solution does not contain IIS Express configuration file. Make sure you run the web project in Visual Studio 2015/2017 once for the configuration file to be generated. If you are using other versions of Visual Studio, you might check the sites under IIS Express server node.", Caption, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
             }
