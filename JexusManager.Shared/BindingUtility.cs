@@ -386,7 +386,7 @@ namespace Microsoft.Web.Administration
             }
             catch (NullReferenceException ex)
             {
-                Rollbar.Report($"null reference {binding}", ErrorLevel.Error);
+                Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> { { "binding", binding.ToString() }, { "endpointNull", binding.EndPoint == null } });
                 return $"Remove SNI certificate failed: unknown ({ex.Message})";
             }
             catch (Exception ex)
