@@ -166,6 +166,15 @@ namespace JexusManager.Features.Main
                     var binding = (Binding)listView1.SelectedItems[0].Tag;
                     DialogHelper.ProcessStart(binding.ToUri());
                 }));
+
+            container.Add(
+                Observable.FromEventPattern<EventArgs>(btnLink, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(EnvironmentVariableTarget =>
+                {
+                    var dialog = new LinkDiagDialog(serviceProvider, site);
+                    dialog.ShowDialog();
+                }));
         }
 
         private static bool ProtocolMatched(ListView.SelectedListViewItemCollection collection)

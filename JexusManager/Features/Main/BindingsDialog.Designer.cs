@@ -39,6 +39,7 @@
             this.chInfo = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.btnLink = new System.Windows.Forms.Button();
             this.btnBrowse = new System.Windows.Forms.Button();
             this.btnRemove = new System.Windows.Forms.Button();
             this.btnEdit = new System.Windows.Forms.Button();
@@ -112,6 +113,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.btnLink);
             this.panel1.Controls.Add(this.btnBrowse);
             this.panel1.Controls.Add(this.btnRemove);
             this.panel1.Controls.Add(this.btnEdit);
@@ -121,6 +123,15 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(124, 200);
             this.panel1.TabIndex = 2;
+            // 
+            // btnLink
+            // 
+            this.btnLink.Location = new System.Drawing.Point(13, 133);
+            this.btnLink.Name = "btnLink";
+            this.btnLink.Size = new System.Drawing.Size(100, 25);
+            this.btnLink.TabIndex = 6;
+            this.btnLink.Text = "Link Diagnostics";
+            this.btnLink.UseVisualStyleBackColor = true;
             // 
             // btnBrowse
             // 
@@ -213,5 +224,6 @@
         private Button btnRemove;
         private Button btnEdit;
         private Button btnAdd;
+        private Button btnLink;
     }
 }

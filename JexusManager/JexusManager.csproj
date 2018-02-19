@@ -203,6 +203,12 @@
     <Compile Include="Features\Main\SslDiagDialog.Designer.cs">
       <DependentUpon>SslDiagDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Features\Main\LinkDiagDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Features\Main\LinkDiagDialog.Designer.cs">
+      <DependentUpon>LinkDiagDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Features\Main\VirtualDirectoryFeature.cs" />
     <Compile Include="Features\Main\VirtualDirectoryPage.cs">
       <SubType>UserControl</SubType>
@@ -373,6 +379,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Features\Main\SslDiagDialog.resx">
       <DependentUpon>SslDiagDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Features\Main\LinkDiagDialog.resx">
+      <DependentUpon>LinkDiagDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Features\Main\VirtualDirectoryPage.resx">
       <DependentUpon>VirtualDirectoryPage.cs</DependentUpon>
