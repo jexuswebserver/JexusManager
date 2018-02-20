@@ -107,7 +107,7 @@
             this.Controls.Add(this.txtResult);
             this.Controls.Add(this.toolStrip1);
             this.Name = "LinkDiagDialog";
-            this.Text = "Link Diagnostics";
+            this.Text = "Binding Diagnostics";
             this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.SslDiagDialogHelpButtonClicked);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();

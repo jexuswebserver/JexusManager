@@ -203,7 +203,7 @@ namespace JexusManager.Features.Main
 
         private void BtnHelpClick(object sender, EventArgs e)
         {
-            DialogHelper.ProcessStart("http://www.jexusmanager.com/en/latest/tutorials/link-diagnostics.html");
+            DialogHelper.ProcessStart("http://www.jexusmanager.com/en/latest/tutorials/binding-diagnostics.html");
         }
 
         private void SslDiagDialogHelpButtonClicked(object sender, System.ComponentModel.CancelEventArgs e)
