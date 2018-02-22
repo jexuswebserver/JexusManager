@@ -1092,5 +1092,15 @@ namespace JexusManager
             key.SetValue("LastUpdateCheck", DateTime.UtcNow.Date.ToString("D", CultureInfo.InvariantCulture));
             btnUpdate.PerformClick();
         }
+
+        private void btnOpenConfig_Click(object sender, EventArgs e)
+        {
+            var server = GetCurrentData(treeView1.SelectedNode);
+            if (server.Mode == WorkingMode.Iis || server.Mode == WorkingMode.IisExpress)
+            {
+                DialogHelper.ProcessStart(server.ServerManager.FileName);
+                return;
+            }
+        }
     }
 }
