@@ -112,13 +112,8 @@ namespace JexusManager.Features.Authentication
             var digestFeature = new DigestAuthenticationFeature(Module);
             listView1.Items.Add(new AuthenticationListViewItem(digestFeature, this));
 
-            if (service.Scope == ManagementScope.Server && PublicNativeMethods.IsProcessElevated)
-            {
-                // TODO: Elevation is needed to modify root web.config.
-                var formsFeature = new FormsAuthenticationFeature(Module);
-                listView1.Items.Add(new AuthenticationListViewItem(formsFeature, this));
-                formsFeature.Load();
-            }
+            var formsFeature = new FormsAuthenticationFeature(Module);
+            listView1.Items.Add(new AuthenticationListViewItem(formsFeature, this));
 
             var windowsFeature = new WindowsAuthenticationFeature(Module);
             listView1.Items.Add(new AuthenticationListViewItem(windowsFeature, this));
@@ -127,6 +122,7 @@ namespace JexusManager.Features.Authentication
             anonymousFeature.Load();
             basicFeature.Load();
             digestFeature.Load();
+            formsFeature.Load();
             windowsFeature.Load();
 
             InitializeListPage();

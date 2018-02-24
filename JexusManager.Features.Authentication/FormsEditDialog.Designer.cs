@@ -36,7 +36,7 @@
             this.txtURL = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.txtTimeout = new System.Windows.Forms.TextBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.gbCookie = new System.Windows.Forms.GroupBox();
             this.cbExpire = new System.Windows.Forms.CheckBox();
             this.cbSSL = new System.Windows.Forms.CheckBox();
             this.cbProtectedMode = new System.Windows.Forms.ComboBox();
@@ -45,7 +45,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.cbMode = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.groupBox1.SuspendLayout();
+            this.gbCookie.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnCancel
@@ -101,22 +101,22 @@
             this.txtTimeout.Size = new System.Drawing.Size(92, 20);
             this.txtTimeout.TabIndex = 5;
             // 
-            // groupBox1
+            // gbCookie
             // 
-            this.groupBox1.Controls.Add(this.cbExpire);
-            this.groupBox1.Controls.Add(this.cbSSL);
-            this.groupBox1.Controls.Add(this.cbProtectedMode);
-            this.groupBox1.Controls.Add(this.label5);
-            this.groupBox1.Controls.Add(this.txtName);
-            this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Controls.Add(this.cbMode);
-            this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Location = new System.Drawing.Point(12, 112);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(370, 264);
-            this.groupBox1.TabIndex = 6;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Cookie settings";
+            this.gbCookie.Controls.Add(this.cbExpire);
+            this.gbCookie.Controls.Add(this.cbSSL);
+            this.gbCookie.Controls.Add(this.cbProtectedMode);
+            this.gbCookie.Controls.Add(this.label5);
+            this.gbCookie.Controls.Add(this.txtName);
+            this.gbCookie.Controls.Add(this.label4);
+            this.gbCookie.Controls.Add(this.cbMode);
+            this.gbCookie.Controls.Add(this.label3);
+            this.gbCookie.Location = new System.Drawing.Point(12, 112);
+            this.gbCookie.Name = "gbCookie";
+            this.gbCookie.Size = new System.Drawing.Size(370, 264);
+            this.gbCookie.TabIndex = 6;
+            this.gbCookie.TabStop = false;
+            this.gbCookie.Text = "Cookie settings";
             // 
             // cbExpire
             // 
@@ -207,7 +207,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(394, 431);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.gbCookie);
             this.Controls.Add(this.txtTimeout);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.txtURL);
@@ -217,8 +217,8 @@
             this.Name = "FormsEditDialog";
             this.Text = "Edit Forms Authentication Settings";
             this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.FormsEditDialogHelpButtonClicked);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.gbCookie.ResumeLayout(false);
+            this.gbCookie.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -232,7 +232,7 @@
         private System.Windows.Forms.TextBox txtURL;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtTimeout;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox gbCookie;
         private System.Windows.Forms.CheckBox cbExpire;
         private System.Windows.Forms.CheckBox cbSSL;
         private System.Windows.Forms.ComboBox cbProtectedMode;

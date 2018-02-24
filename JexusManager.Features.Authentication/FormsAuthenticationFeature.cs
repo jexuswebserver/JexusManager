@@ -11,11 +11,11 @@ namespace JexusManager.Features.Authentication
     using System.Windows.Forms;
 
     using JexusManager.Services;
-
+    using Microsoft.Web.Administration;
     using Microsoft.Web.Management.Client;
     using Microsoft.Web.Management.Client.Extensions;
     using Microsoft.Web.Management.Client.Win32;
-
+    using Microsoft.Web.Management.Server;
     using Module = Microsoft.Web.Management.Client.Module;
 
     internal class FormsAuthenticationFeature : AuthenticationFeature
@@ -32,14 +32,21 @@ namespace JexusManager.Features.Authentication
             public override ICollection GetTaskItems()
             {
                 var result = new ArrayList();
-                if (!_owner.IsEnabled)
+                if (_owner.Scope == ManagementScope.Server && !PublicNativeMethods.IsProcessElevated)
                 {
-                    result.Add(new MethodTaskItem("Enable", "Enable", string.Empty).SetUsage());
                 }
-
-                if (_owner.IsEnabled)
+                else
                 {
-                    result.Add(new MethodTaskItem("Disable", "Disable", string.Empty).SetUsage());
+                    // TODO: Elevation is needed to modify root web.config.
+                    if (!_owner.IsEnabled)
+                    {
+                        result.Add(new MethodTaskItem("Enable", "Enable", string.Empty).SetUsage());
+                    }
+
+                    if (_owner.IsEnabled)
+                    {
+                        result.Add(new MethodTaskItem("Disable", "Disable", string.Empty).SetUsage());
+                    }
                 }
 
                 result.Add(new MethodTaskItem("Edit", "Edit...", string.Empty).SetUsage());
@@ -79,43 +86,46 @@ namespace JexusManager.Features.Authentication
 
         public override void Load()
         {
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var section = service.GetSection("system.web/authentication");
             var enabled = 3L == (long)section["mode"];
-            this.SetEnabled(enabled);
+            SetEnabled(enabled);
+            Scope = service.Scope;
         }
 
         public void Enable()
         {
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var section = service.GetSection("system.web/authentication");
             section["mode"] = "Forms";
             service.ServerManager.CommitChanges();
-            this.SetEnabled(true);
+            SetEnabled(true);
         }
 
         public void Disable()
         {
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var section = service.GetSection("system.web/authentication");
             section["mode"] = "Windows";
             service.ServerManager.CommitChanges();
-            this.SetEnabled(false);
+            SetEnabled(false);
         }
 
         private void Edit()
         {
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var section = service.GetSection("system.web/authentication");
-            var dialog = new FormsEditDialog(this.Module, new FormsItem(section.GetChildElement("forms")));
+            var dialog = new FormsEditDialog(Module, new FormsItem(section.GetChildElement("forms")), Scope == ManagementScope.Server && !PublicNativeMethods.IsProcessElevated);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
             service.ServerManager.CommitChanges();
-            this.OnAuthenticationSettingsSaved();
+            OnAuthenticationSettingsSaved();
         }
+
+        private ManagementScope Scope { get; set; }
 
         public override Version MinimumFrameworkVersion => FxVersion20;
 

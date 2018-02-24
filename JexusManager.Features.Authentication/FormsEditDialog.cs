@@ -6,16 +6,15 @@ using System.ComponentModel;
 
 namespace JexusManager.Features.Authentication
 {
+    using Microsoft.Web.Management.Client.Win32;
     using System;
-    using System.Diagnostics;
+    using System.Reactive.Disposables;
     using System.Reactive.Linq;
     using System.Windows.Forms;
 
-    using Microsoft.Web.Management.Client.Win32;
-    using System.Reactive.Disposables;
     public partial class FormsEditDialog : DialogForm
     {
-        public FormsEditDialog(IServiceProvider serviceProvider, FormsItem existing)
+        public FormsEditDialog(IServiceProvider serviceProvider, FormsItem existing, bool readOnly)
             : base(serviceProvider)
         {
             InitializeComponent();
@@ -29,6 +28,10 @@ namespace JexusManager.Features.Authentication
             cbSSL.Checked = existing.RequireSsl;
             cbExpire.Checked = existing.SlidinngExpiration;
             btnOK.Enabled = false;
+
+            gbCookie.Enabled = !readOnly;
+            txtURL.Enabled = !readOnly;
+            txtTimeout.Enabled = !readOnly;
 
             var container = new CompositeDisposable();
             FormClosed += (sender, args) => container.Dispose();
