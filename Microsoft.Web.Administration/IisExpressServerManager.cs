@@ -22,6 +22,30 @@ namespace Microsoft.Web.Administration
 
         public override bool SupportsSni => Version >=  Version.Parse("8.0") && Environment.OSVersion.Version >= Version.Parse("6.2");
 
+        public static bool ServerInstalled
+        {
+            get
+            {
+                var directory = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
+                    "IIS Express",
+                    "config",
+                    "schema");
+                if (Directory.Exists(directory))
+                {
+                    return true;
+                }
+
+                // IMPORTANT: for x86 IIS 7 Express
+                var x86 = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
+                    "IIS Express",
+                    "config",
+                    "schema");
+                return Directory.Exists(x86);
+            }
+        }
+
         public IisExpressServerManager(string applicationHostConfigurationPath)
             : this(false, applicationHostConfigurationPath)
         {

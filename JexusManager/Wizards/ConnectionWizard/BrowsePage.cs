@@ -42,6 +42,12 @@ namespace JexusManager.Wizards.ConnectionWizard
 
         public override bool OnNext()
         {
+            if (!IisExpressServerManager.ServerInstalled)
+            {
+                var service = (IManagementUIService)GetService(typeof(IManagementUIService));
+                service.ShowMessage("No IIS Express installation detected. Please install IIS Express before moving on.", Caption, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
             var data = ((ConnectionWizardData)WizardData);
             if (data.FileName.EndsWith(".sln", StringComparison.OrdinalIgnoreCase))
             {
