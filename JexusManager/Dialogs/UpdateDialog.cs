@@ -8,6 +8,7 @@ namespace JexusManager.Dialogs
 {
     using System;
     using System.Diagnostics;
+    using System.Net;
     using System.Reflection;
     using System.Windows.Forms;
 
@@ -22,8 +23,10 @@ namespace JexusManager.Dialogs
         {
             txtStep.Text = "Checking update...";
             string version = null;
+            var previous = ServicePointManager.SecurityProtocol;
             try
             {
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                 var client = new GitHubClient(new ProductHeaderValue("JexusManager"));
                 var releases = await client.Repository.Release.GetAll("jexuswebserver", "JexusManager");
                 if (releases.Count == 0)
@@ -42,6 +45,10 @@ namespace JexusManager.Dialogs
                 DialogHelper.ProcessStart("https://github.com/jexuswebserver/JexusManager/releases");
                 Close();
                 return;
+            }
+            finally
+            {
+                ServicePointManager.SecurityProtocol = previous;
             }
 
             Version latest;
