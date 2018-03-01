@@ -194,7 +194,14 @@ namespace Microsoft.Web.Administration
                     return value;
                 }
 
-                var inner = full.Substring(5, full.Length - 10);
+                var length = full.Length - 10;
+                if (length == 0)
+                {
+                    // TODO: why it happens?
+                    return "";
+                }
+
+                var inner = full.Substring(5, length);
                 var point = inner.IndexOf(':');
                 var name = inner.Substring(0, point);
                 var data = inner.Substring(point + 1);
