@@ -63,6 +63,7 @@ namespace JexusManager.Features.Main
                 SubItems.Add(new ListViewSubItem(this, ToString(Item.Bindings)));
                 SubItems.Add(new ListViewSubItem(this, Item.PhysicalPath));
                 ImageIndex = item.State == ObjectState.Started ? 0 : 1;
+                Tag = item;
             }
 
             private static string ToString(BindingCollection bindings)
@@ -194,6 +195,7 @@ namespace JexusManager.Features.Main
             var site = (Site)listView1.Items[e.Item].Tag;
             site.Name = e.Label;
             _form.UpdateSiteNode(site);
+            site.Server.CommitChanges();
         }
 
         private void cbFilter_TextChanged(object sender, EventArgs e)
