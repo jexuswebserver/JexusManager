@@ -84,7 +84,13 @@ namespace Microsoft.Web.Administration
                     var address = value.Substring(0, next);
                     if (PortIsValid(port, out int number, null, false))
                     {
-                        _endPoint = new IPEndPoint(address.DisplayToAddress(), number);
+                        try
+                        {
+                            _endPoint = new IPEndPoint(address.DisplayToAddress(), number);
+                        }
+                        catch (FormatException)
+                        {
+                        }
                     }
                 }
             }
