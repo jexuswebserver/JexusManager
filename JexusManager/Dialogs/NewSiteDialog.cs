@@ -257,32 +257,7 @@ namespace JexusManager.Dialogs
                 return false;
             }
 
-            try
-            {
-                port = int.Parse(txtPort.Text);
-            }
-            catch (Exception)
-            {
-                if (showDialog)
-                {
-                    MessageBox.Show("The server port number must be a positive integer between 1 and 65535", Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                }
-
-                port = 0;
-                return false;
-            }
-
-            if (port < 1 || port > 65535)
-            {
-                if (showDialog)
-                {
-                    MessageBox.Show("The server port number must be a positive integer between 1 and 65535", Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                }
-
-                return false;
-            }
-
-            return true;
+            return Binding.PortIsValid(txtPort.Text, out port, Text, showDialog);
         }
 
         public Site NewSite { get; set; }

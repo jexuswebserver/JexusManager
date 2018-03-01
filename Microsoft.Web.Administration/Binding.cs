@@ -5,7 +5,7 @@
 using System;
 using System.Net;
 using System.Net.Sockets;
-using System.Runtime.ConstrainedExecution;
+using System.Windows.Forms;
 
 namespace Microsoft.Web.Administration
 {
@@ -82,7 +82,10 @@ namespace Microsoft.Web.Administration
                 if (next > -1)
                 {
                     var address = value.Substring(0, next);
-                    _endPoint = new IPEndPoint(address.DisplayToAddress(), Int32.Parse(port));
+                    if (PortIsValid(port, out int number, null, false))
+                    {
+                        _endPoint = new IPEndPoint(address.DisplayToAddress(), number);
+                    }
                 }
             }
 
@@ -241,6 +244,36 @@ namespace Microsoft.Web.Administration
             
             CertificateHash = certificate.Hash;
             CertificateStoreName = certificate.StoreName;
+        }
+
+        internal static bool PortIsValid(string portText, out int port, string text, bool showDialog = true)
+        {
+            try
+            {
+                port = int.Parse(portText);
+            }
+            catch (Exception)
+            {
+                if (showDialog)
+                {
+                    MessageBox.Show("The server port number must be a positive integer between 1 and 65535", text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                }
+
+                port = 0;
+                return false;
+            }
+
+            if (port < 1 || port > 65535)
+            {
+                if (showDialog)
+                {
+                    MessageBox.Show("The server port number must be a positive integer between 1 and 65535", text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                }
+
+                return false;
+            }
+
+            return true;
         }
     }
 }
