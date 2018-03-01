@@ -15,6 +15,7 @@ namespace Tests.Exceptions
     using System.Xml.Linq;
     using System.Xml.XPath;
     using System.Linq;
+    using System.Net;
 
     public class ServerTestCases
     {
@@ -808,6 +809,50 @@ namespace Tests.Exceptions
             {
                 Assert.Null(server.Sites[1].Bindings[2].EndPoint);
                 Assert.Equal("1.1.1.1.1:61902:localhost", server.Sites[1].Bindings[2].BindingInformation);
+            }
+        }
+
+        [Fact]
+        public void TestIisExpressBindingInvalidAddress2()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string Current = Path.Combine(directoryName, @"applicationHost.config");
+            string Original = Path.Combine(directoryName, @"original2.config");
+            TestHelper.CopySiteConfig(directoryName, "original.config");
+            File.Copy(Original, Current, true);
+            TestHelper.FixPhysicalPathMono(Current);
+
+            {
+                // add the tags
+                var file = XDocument.Load(Current);
+                var root = file.Root;
+                if (root == null)
+                {
+                    return;
+                }
+
+                var site1 = root.XPathSelectElement("/configuration/system.applicationHost/sites/site[@id='2']/bindings");
+                var binding = new XElement("binding",
+                    new XAttribute("protocol", "http"),
+                    new XAttribute("bindingInformation", "1.1.1:61902:localhost"));
+                site1.Add(binding);
+                file.Save(Current);
+            }
+#if IIS
+            var server = new ServerManager(Current);
+#else
+            var server = new IisExpressServerManager(Current);
+#endif
+            {
+                Assert.Equal(IPAddress.Parse("1.1.0.1"), server.Sites[1].Bindings[2].EndPoint.Address);
+                Assert.Equal("1.1.1:61902:localhost", server.Sites[1].Bindings[2].BindingInformation);
             }
         }
 
