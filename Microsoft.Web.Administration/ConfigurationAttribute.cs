@@ -195,7 +195,7 @@ namespace Microsoft.Web.Administration
                 }
 
                 var length = full.Length - 10;
-                if (length == 0)
+                if (length < 0)
                 {
                     // TODO: why it happens?
                     return "";
