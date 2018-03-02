@@ -51,7 +51,10 @@ namespace Microsoft.Web.Administration
 
             if (File.Exists(fileName))
             {
-                return new Version(FileVersionInfo.GetVersionInfo(fileName).ProductVersion);
+                if (Version.TryParse(FileVersionInfo.GetVersionInfo(fileName).ProductVersion, out Version result))
+                {
+                    return result;
+                }
             }
 
             return Version.Parse("0.0.0.0");
