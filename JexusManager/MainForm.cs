@@ -615,6 +615,7 @@ namespace JexusManager
             btnRenameServer.Visible = enabled;
             btnStartServer.Visible = enabled;
             btnStopServer.Visible = enabled;
+            btnOpenConfig.Enabled = enabled;
             //actConnectServer.Visible = enabled;
         }
 
@@ -1096,6 +1097,11 @@ namespace JexusManager
         private void btnOpenConfig_Click(object sender, EventArgs e)
         {
             var server = GetCurrentData(treeView1.SelectedNode);
+            if (server.IsBusy)
+            {
+                return;
+            }
+
             if (server.Mode == WorkingMode.Iis || server.Mode == WorkingMode.IisExpress)
             {
                 DialogHelper.ProcessStart(server.ServerManager.FileName);
