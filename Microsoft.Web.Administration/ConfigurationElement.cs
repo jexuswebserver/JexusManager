@@ -481,6 +481,11 @@ namespace Microsoft.Web.Administration
                 return null;
             }
 
+            if (core == null)
+            {
+                return null;
+            }
+
             string parentLocation = Section.Location.GetParentPath();
             while (true)
             {

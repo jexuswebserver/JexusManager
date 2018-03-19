@@ -39,8 +39,8 @@ namespace Microsoft.Web.Administration
         {
             var schema = Schema.CollectionSchema.AddSchemas.FirstOrDefault(item => item.Name == elementTagName);
             return schema?.CollectionSchema == null
-                ? new ConfigurationElement(null, elementTagName, schema, this, null, this.FileContext) /*{  IsLocallyStored = this.Schema.Path != "system.webServer/defaultDocument/files" }*/
-                : new ConfigurationElementCollection(elementTagName, schema, this, null, this.FileContext);
+                ? new ConfigurationElement(null, elementTagName, schema, this, null, FileContext) /*{  IsLocallyStored = this.Schema.Path != "system.webServer/defaultDocument/files" }*/
+                : new ConfigurationElementCollection(elementTagName, schema, this, null, FileContext);
         }
 
         internal override void AddChild(ConfigurationElement child)
@@ -49,32 +49,32 @@ namespace Microsoft.Web.Administration
             if (Schema.CollectionSchema.ContainsAddElement(child.ElementTagName))
             {
                 child.AppendToParentElement(child.Entity, false);
-                this.Real.Add(child);
-                if (this.HasParent && this.Schema.Path == "system.webServer/defaultDocument/files")
+                Real.Add(child);
+                if (HasParent && Schema.Path == "system.webServer/defaultDocument/files")
                 {
-                    var index = this.Real.Count == 0 ? 0 : this.Exposed.IndexOf(this.Real[this.Real.Count - 1]) + 1;
-                    this.Exposed.Insert(index, child);
+                    var index = Real.Count == 0 ? 0 : Exposed.IndexOf(Real[Real.Count - 1]) + 1;
+                    Exposed.Insert(index, child);
                 }
                 else
                 {
-                    this.Exposed.Add(child);
+                    Exposed.Add(child);
                 }
             }
             else if (child.ElementTagName == Schema.CollectionSchema.ClearElementName)
             {
                 child.AppendToParentElement(child.Entity, false);
-                this.Real.Add(child);
-                this.Exposed.Clear();
+                Real.Add(child);
+                Exposed.Clear();
             }
             else if (child.ElementTagName == Schema.CollectionSchema.RemoveElementName)
             {
                 child.AppendToParentElement(child.Entity, false);
-                this.Real.Add(child);
-                foreach (var item in this.Exposed.ToList())
+                Real.Add(child);
+                foreach (var item in Exposed.ToList())
                 {
-                    if (Match(item, child, this.Schema.CollectionSchema.RemoveSchema))
+                    if (Match(item, child, Schema.CollectionSchema.RemoveSchema))
                     {
-                        this.Exposed.Remove(item);
+                        Exposed.Remove(item);
                     }
                 }
             }
@@ -93,38 +93,38 @@ namespace Microsoft.Web.Administration
 
             _initialized = true;
 
-            var duplicateElement = GetElementInFileContext(this.FileContext.Parent);
+            var duplicateElement = GetElementInFileContext(FileContext.Parent);
             var duplicateCollection = duplicateElement?.GetCollection();
             if (duplicateCollection != null)
             {
-                this.HasParent = true;
+                HasParent = true;
 
                 // IMPORTANT: load duplicate element.
                 foreach (ConfigurationElement element in duplicateCollection.Exposed)
                 {
                     var newItem = CreateNewElement(element.ElementTagName);
-                    this.Clone(element, newItem);
+                    Clone(element, newItem);
                     newItem.IsLocallyStored = false;
-                    this.Exposed.Add(newItem);
+                    Exposed.Add(newItem);
                 }
 
                 return this;
             }
 
-            var parentElement = this.FileContext.AppHost ? GetParentElement() : this.GetElementAtParentLocationInFileContext(this.FileContext.Parent);
+            var parentElement = FileContext.AppHost ? GetParentElement() : GetElementAtParentLocationInFileContext(FileContext.Parent);
             var parentCollection = parentElement?.GetCollection();
             if (parentCollection == null)
             {
                 return this;
             }
 
-            this.HasParent = true;
+            HasParent = true;
             foreach (ConfigurationElement element in parentCollection.Exposed)
             {
                 var newItem = CreateNewElement(element.ElementTagName);
-                this.Clone(element, newItem);
+                Clone(element, newItem);
                 newItem.IsLocallyStored = false;
-                this.Exposed.Add(newItem);
+                Exposed.Add(newItem);
             }
 
             return this;
@@ -137,19 +137,24 @@ namespace Microsoft.Web.Administration
                 return null;
             }
 
-            var section = core.GetSection(this.Section.SectionPath, this.Section.Location);
-            return section?.GetElementByPath(this.Schema.Path);
+            if (core == null)
+            {
+                return null;
+            }
+
+            var section = core.GetSection(Section.SectionPath, Section.Location);
+            return section?.GetElementByPath(Schema.Path);
         }
 
         internal void Revert()
         {
-            this.FileContext.SetDirty();
+            FileContext.SetDirty();
             _initialized = false;
-            this.HasParent = false;
-            this.Real.Clear();
-            this.Exposed.Clear();
-            this.InnerEntity?.Remove();
-            this.InnerEntity = null;
+            HasParent = false;
+            Real.Clear();
+            Exposed.Clear();
+            InnerEntity?.Remove();
+            InnerEntity = null;
         }
     }
 }
