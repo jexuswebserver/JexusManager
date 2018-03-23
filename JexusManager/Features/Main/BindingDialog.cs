@@ -167,7 +167,7 @@ namespace JexusManager.Features.Main
                         Binding.Reinitialize(binding);
                     }
 
-                    if (site.Server.Mode == WorkingMode.IisExpress)
+                    if (site.Server.Mode == WorkingMode.IisExpress || site.Server.Mode == WorkingMode.Iis)
                     {
                         var result = Binding.FixCertificateMapping(certificate?.Certificate);
                         if (!string.IsNullOrEmpty(result))

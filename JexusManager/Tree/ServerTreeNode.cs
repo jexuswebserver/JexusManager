@@ -50,14 +50,23 @@ namespace JexusManager.Tree
         private ServerTreeNode(IServiceProvider serviceProvider, string name, string hostName, string credentials, string hash, ServerManager server, bool isLocalhost, WorkingMode mode, bool ignoreInCache)
             : base(GetNodeName(name, credentials, isLocalhost), serviceProvider)
         {
-            ImageIndex = 1;
-            SelectedImageIndex = 1;
             Tag = server;
             ServerManager = server;
             DisplayName = name;
             HostName = hostName;
             Credentials = credentials;
             Mode = mode;
+            if (Mode == WorkingMode.Iis)
+            {
+                ImageIndex = 8;
+                SelectedImageIndex = 8;
+            }
+            else
+            {
+                ImageIndex = 1;
+                SelectedImageIndex = 1;
+            }
+
             IsLocalhost = isLocalhost;
             CertificateHash = hash;
             IgnoreInCache = ignoreInCache;
