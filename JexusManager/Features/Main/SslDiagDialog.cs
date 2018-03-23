@@ -17,10 +17,10 @@ namespace JexusManager.Features.Main
 
     using Org.BouncyCastle.Utilities.Encoders;
 
-    using Binding = Microsoft.Web.Administration.Binding;
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
     using System.Collections.Generic;
+    using System.Text;
 
     public partial class SslDiagDialog : DialogForm
     {
@@ -28,6 +28,22 @@ namespace JexusManager.Features.Main
             : base(provider)
         {
             InitializeComponent();
+
+            // from https://www.ibm.com/support/knowledgecenter/SSLTBW_2.1.0/com.ibm.zos.v2r1.ikya100/sigalg.htm
+            var wellKnownSignatureAlgorithms = new Dictionary<string, bool>
+            {
+                { "1.2.840.113549.1.1.5", false }, // sha1RSA, not secure
+                { "1.2.840.113549.1.1.14", true }, // sha224RSA, secure
+                { "1.2.840.113549.1.1.11", true }, // sha256RSA, secure
+                { "1.2.840.113549.1.1.12", true }, // sha384RSA, secure
+                { "1.2.840.113549.1.1.13", true }, // sha512RSA, secure
+                { "1.2.840.10040.4.3", false }, // sha1DSA, not secure
+                { "1.2.840.10045.4.1", false }, // sha1ECDSA, not secure
+                { "1.2.840.10045.4.3.1", true }, // sha224ECDSA, secure
+                { "1.2.840.10045.4.3.2", true }, // sha256ECDSA, secure
+                { "1.2.840.10045.4.3.3", true }, // sha384ECDSA, secure
+                { "1.2.840.10045.4.3.4", true }, // sha512ECDSA, secure
+            };
 
             var container = new CompositeDisposable();
             FormClosed += (sender, args) => container.Dispose();
@@ -46,14 +62,32 @@ namespace JexusManager.Features.Main
                         Debug($"{server.Type}");
                         Debug(Environment.NewLine);
                         Debug($"SERVER SSL PROTOCOLS{Environment.NewLine}");
-                        Debug($"PCT 1.0: {GetProtocol("PCT 1.0")}");
-                        Debug($"SSL 2.0: {GetProtocol("SSL 2.0")}");
-                        Debug($"SSL 3.0: {GetProtocol("SSL 3.0")}");
+                        bool ssl10Enabled = GetProtocol("PCT 1.0");
+                        Debug($"PCT 1.0: {ssl10Enabled}");
+                        if (ssl10Enabled)
+                        {
+                            Warn("PCT 1.0 is not secure. Please disable it.");
+                        }
+
+                        bool ssl20Enabled = GetProtocol("SSL 2.0");
+                        Debug($"SSL 2.0: {ssl20Enabled}");
+                        if (ssl20Enabled)
+                        {
+                            Warn("SSL 2.0 is not secure. Please disable it.");
+                        }
+
+                        bool ssl30Enabled = GetProtocol("SSL 3.0");
+                        Debug($"SSL 3.0: {ssl30Enabled}");
+                        if (ssl30Enabled)
+                        {
+                            Warn("SSL 3.0 is not secure. Please disable it.");
+                        }
+
                         Debug($"TLS 1.0: {GetProtocol("TLS 1.0")}");
                         Debug($"TLS 1.1: {GetProtocol("TLS 1.1")}");
                         Debug($"TLS 1.2: {GetProtocol("TLS 1.2")}");
-
                         Debug($"SChannel EventLogging: {GetEventLogging()} (hex)");
+                        Warn($"To tune TLS related settings, try out IIS Crypto from https://www.nartac.com/Products/IISCrypto/.");
                         Debug("-----");
 
                         foreach (Site site in server.Sites)
@@ -75,7 +109,7 @@ namespace JexusManager.Features.Main
                                         if (binding.SslFlags == SslFlags.Sni)
                                         {
                                             Error(
-                                                $"Cannot find {binding.Host}:{binding.EndPoint.Port} combination for this binding.");
+                                                $"Cannot find {binding.Host}:{binding.EndPoint.Port} combination for this SNI binding.");
                                         }
                                         else
                                         {
@@ -83,10 +117,10 @@ namespace JexusManager.Features.Main
                                                 binding.EndPoint);
                                             Error(
                                                 querySslCertificateInfo == null
-                                                    ? $"Cannot find {binding.EndPoint} combination for this binding."
+                                                    ? $"Cannot find {binding.EndPoint} combination for this IP based binding."
                                                     : $"Cannot find certificate with thumpprint {querySslCertificateInfo.Hash} in store {querySslCertificateInfo.StoreName}.");
                                         }
-                                        
+
                                         Debug(string.Empty);
                                         continue;
                                     }
@@ -116,26 +150,33 @@ namespace JexusManager.Features.Main
                                             Debug($"#Version: {cert.Version}");
                                             if (cert.HasPrivateKey)
                                             {
-                                                var newHandle = IntPtr.Zero;
-                                                int newCount = 0;
-                                                var shouldRelease = false;
-                                                if (NativeMethods.CryptAcquireCertificatePrivateKey(
-                                                    cert.Handle, 0, IntPtr.Zero, ref newHandle, ref newCount,
-                                                    ref shouldRelease))
+                                                if (PublicNativeMethods.IsProcessElevated)
                                                 {
-                                                    Debug(
-                                                        "#You have a private key that corresponds to this certificate.");
+                                                    var newHandle = IntPtr.Zero;
+                                                    int newCount = 0;
+                                                    var shouldRelease = false;
+                                                    if (NativeMethods.CryptAcquireCertificatePrivateKey(
+                                                        cert.Handle, 0, IntPtr.Zero, ref newHandle, ref newCount,
+                                                        ref shouldRelease))
+                                                    {
+                                                        Debug(
+                                                            "#You have a private key that corresponds to this certificate.");
+                                                    }
+                                                    else
+                                                    {
+                                                        Error("#You have a private key that corresponds to this certificate but CryptAcquireCertificatePrivateKey failed.");
+                                                        RollbarDotNet.Rollbar.Report(
+                                                            "CryptAcquireCertificatePrivateKey failed");
+                                                    }
+
+                                                    if (shouldRelease)
+                                                    {
+                                                        NativeMethods.CloseHandle(newHandle);
+                                                    }
                                                 }
                                                 else
                                                 {
-                                                    Error("#You have a private key that corresponds to this certificate but CryptAcquireCertificatePrivateKey failed.");
-                                                    RollbarDotNet.Rollbar.Report(
-                                                        "CryptAcquireCertificatePrivateKey failed");
-                                                }
-
-                                                if (shouldRelease)
-                                                {
-                                                    NativeMethods.CloseHandle(newHandle);
+                                                    Warn("It seems that you have a private key that corresponds to this certificate. Please run Jexus Manager as administrator and SSL Diag can report in more details.");
                                                 }
                                             }
                                             else
@@ -145,7 +186,20 @@ namespace JexusManager.Features.Main
                                             }
 
                                             var key = cert.PublicKey.Key;
-                                            Debug($"#Signature Algorithm: {cert.SignatureAlgorithm.FriendlyName}");
+                                            var signatureAlgorithm = cert.SignatureAlgorithm;
+                                            Debug($"#Signature Algorithm: {signatureAlgorithm.FriendlyName}");
+                                            if (wellKnownSignatureAlgorithms.ContainsKey(signatureAlgorithm.Value))
+                                            {
+                                                if (!wellKnownSignatureAlgorithms[signatureAlgorithm.Value])
+                                                {
+                                                    Warn("Modern web browsers require signature algorithm to be secure. This signature algorithm is not secure, and might trigger warnings and/or errors.");
+                                                }
+                                            }
+                                            else
+                                            {
+                                                Warn("This certificate uses a not-well-known signature algorithm, which might not be supported by all web browsers and servers.");
+                                            }
+
                                             Debug($"#Key Exchange Algorithm: {key.KeyExchangeAlgorithm} Key Size: {key.KeySize}");
                                             Debug($"#Subject: {cert.Subject}");
                                             Debug($"#Issuer: {cert.Issuer}");
@@ -153,16 +207,17 @@ namespace JexusManager.Features.Main
                                             Debug($"#Serial Number: {cert.SerialNumber}");
                                             Debug($"DS Mapper Usage: {(binding.UseDsMapper ? "Enabled" : "Disabled")}");
                                             Debug($"Archived: {cert.Archived}");
-                                            
+
+                                            var hasSAN = false;
                                             foreach (var extension in cert.Extensions)
                                             {
-                                                if (extension.Oid.FriendlyName == "Key Usage")
+                                                if (extension.Oid.Value == "2.5.29.15")
                                                 {
                                                     Debug($"#Key Usage: {((X509KeyUsageExtension)extension).KeyUsages}");
                                                     continue;
                                                 }
 
-                                                if (extension.Oid.FriendlyName == "Enhanced Key Usage")
+                                                if (extension.Oid.Value == "2.5.29.37")
                                                 {
                                                     var usages = ((X509EnhancedKeyUsageExtension)extension).EnhancedKeyUsages;
                                                     var enhancedKeyUsage = usages.Cast<Oid>().Select(usage => $"{usage.FriendlyName} ({usage.Value})")
@@ -172,12 +227,27 @@ namespace JexusManager.Features.Main
                                                     continue;
                                                 }
 
+                                                if (extension.Oid.Value == "2.5.29.17")
+                                                {
+                                                    var data = extension.RawData;
+                                                    AsnEncodedData asndata = new AsnEncodedData(extension.Oid, extension.RawData);
+                                                    var name = asndata.Format(true).TrimEnd();
+                                                    Debug($"#Subject Alternative Name: {name}");
+                                                    hasSAN = true;
+                                                    continue;
+                                                }
+
                                                 if (extension.Oid.FriendlyName == "Basic Constraints")
                                                 {
                                                     var ext = (X509BasicConstraintsExtension)extension;
                                                     Debug(
                                                         $"#Basic Constraints: Subject Type={(ext.CertificateAuthority ? "CA" : "End Entity")}, Path Length Constraint={(ext.HasPathLengthConstraint ? ext.PathLengthConstraint.ToString() : "None")}");
                                                 }
+                                            }
+
+                                            if (!hasSAN)
+                                            {
+                                                Warn("Modern web browsers require Subject Alternative Name extension to present. This certificate does not have SAN extension, so might trigger warnings and/or errors.");
                                             }
 
                                             X509Chain chain = X509Chain.Create();
@@ -221,7 +291,7 @@ namespace JexusManager.Features.Main
                     catch (CryptographicException ex)
                     {
                         Debug(ex.ToString());
-                        RollbarDotNet.Rollbar.Report(ex, custom: new Dictionary<string, object>{ { "hResult", ex.HResult } });
+                        RollbarDotNet.Rollbar.Report(ex, custom: new Dictionary<string, object> { { "hResult", ex.HResult } });
                     }
                     catch (Exception ex)
                     {
