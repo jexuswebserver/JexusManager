@@ -204,6 +204,17 @@ namespace JexusManager.Features.Main
                                             Debug($"#Subject: {cert.Subject}");
                                             Debug($"#Issuer: {cert.Issuer}");
                                             Debug($"#Validity: From {cert.NotBefore:G} To {cert.NotAfter:G}");
+                                            var now = DateTime.UtcNow;
+                                            if (now < cert.NotBefore)
+                                            {
+                                                Warn("This certificate is not yet valid.");
+                                            }
+
+                                            if (cert.NotAfter < now)
+                                            {
+                                                Error("This certificate is already expired.");
+                                            }
+
                                             Debug($"#Serial Number: {cert.SerialNumber}");
                                             Debug($"DS Mapper Usage: {(binding.UseDsMapper ? "Enabled" : "Disabled")}");
                                             Debug($"Archived: {cert.Archived}");
