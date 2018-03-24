@@ -31,7 +31,7 @@ namespace JexusManager.Dialogs
                 var releases = await client.Repository.Release.GetAll("jexuswebserver", "JexusManager");
                 if (releases.Count == 0)
                 {
-                    MessageBox.Show("No update is found", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("No update is found.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     Close();
                     return;
                 }
@@ -54,7 +54,7 @@ namespace JexusManager.Dialogs
             Version latest;
             if (!Version.TryParse(version, out latest))
             {
-                MessageBox.Show("No update is found", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("No update is found.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Close();
                 return;
             }
@@ -62,7 +62,7 @@ namespace JexusManager.Dialogs
             var current = Assembly.GetExecutingAssembly().GetName().Version;
             if (current >= latest)
             {
-                MessageBox.Show($"{current} is in use. No update is found, and {latest} is latest release", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"{current} is in use. No update is found, and {latest} is latest release.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Close();
                 return;
             }
