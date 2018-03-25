@@ -5,11 +5,10 @@
 namespace JexusManager.Features.RequestFiltering
 {
     using System.Collections;
-    using System.Diagnostics;
+    using System.Linq;
     using System.Reflection;
     using System.Windows.Forms;
 
-    using JexusManager.Properties;
     using JexusManager.Services;
 
     using Microsoft.Web.Administration;
@@ -78,32 +77,47 @@ namespace JexusManager.Features.RequestFiltering
 
         public void Add()
         {
-            this.CreateExtension(true);
+            CreateExtension(true);
         }
 
         public void AddDeny()
         {
-            this.CreateExtension(false);
+            CreateExtension(false);
         }
 
         private void CreateExtension(bool allowed)
         {
-            var dialog = new NewExtensionDialog(this.Module, allowed);
+            var dialog = new NewExtensionDialog(Module, allowed);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
-            this.AddItem(dialog.Item);
+            if (Items.Any(item => item.Match(dialog.Item)))
+            {
+                var service = (IManagementUIService)GetService(typeof(IManagementUIService));
+                service.ShowMessage(
+                    "The file extension specified already exists.",
+                    dialog.Text,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error,
+                    MessageBoxDefaultButton.Button1);
+                return;
+            }
+
+            AddItem(dialog.Item);
         }
 
         public void Remove()
         {
-            var dialog = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+            var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
             if (
-                dialog.ShowMessage("Are you sure that you want to remove the selected file extension?", this.Name,
-                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) !=
-                DialogResult.Yes)
+                dialog.ShowMessage(
+                    "Are you sure that you want to remove the selected file extension?",
+                    Name,
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question,
+                    MessageBoxDefaultButton.Button1) != DialogResult.Yes)
             {
                 return;
             }
