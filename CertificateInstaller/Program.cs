@@ -227,6 +227,20 @@ namespace CertificateInstaller
                     return 0;
                 }
 
+                if (string.IsNullOrEmpty(hash))
+                {
+                    if (address == null)
+                    {
+                        if (host != null)
+                        {
+                            NativeMethods.DeleteSniBinding(new Tuple<string, int>(host, int.Parse(port)));
+                            return 0;
+                        }
+                    }
+
+                    return -1;
+                }
+
                 var selectedItem = personal.Certificates.Find(X509FindType.FindByThumbprint, hash, false);
                 if (selectedItem.Count > 0)
                 {

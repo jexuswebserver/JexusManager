@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.ComponentModel;
 using System.Net;
 using System.Net.Sockets;
 using System.Windows.Forms;
@@ -222,18 +223,28 @@ namespace Microsoft.Web.Administration
             {
                 if (this.GetIsSni())
                 {
-                    var sni = NativeMethods.QuerySslSniInfo(new Tuple<string, int>(_host, _endPoint.Port));
-                    if (sni == null)
+                    try
+                    {
+                        var sni = NativeMethods.QuerySslSniInfo(new Tuple<string, int>(_host, _endPoint.Port));
+                        if (sni == null)
+                        {
+                            CertificateHash = null;
+                            CertificateStoreName = string.Empty;
+                            SslFlags = SslFlags.Sni;
+                            return;
+                        }
+                        else
+                        {
+                            CertificateHash = sni.Hash;
+                            CertificateStoreName = sni.StoreName;
+                            SslFlags = SslFlags.Sni;
+                            return;
+                        }
+                    }
+                    catch (Win32Exception)
                     {
                         CertificateHash = null;
                         CertificateStoreName = string.Empty;
-                        SslFlags = SslFlags.Sni;
-                        return;
-                    }
-                    else
-                    {
-                        CertificateHash = sni.Hash;
-                        CertificateStoreName = sni.StoreName;
                         SslFlags = SslFlags.Sni;
                         return;
                     }

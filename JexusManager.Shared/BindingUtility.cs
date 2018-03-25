@@ -352,6 +352,7 @@ namespace Microsoft.Web.Administration
 #endif
             try
             {
+                var hash = binding.CertificateHash == null ? string.Empty : Hex.ToHexString(binding.CertificateHash);
                 // remove sni mapping
                 using (var process = new Process())
                 {
@@ -359,7 +360,7 @@ namespace Microsoft.Web.Administration
                     start.Verb = "runas";
                     start.FileName = "cmd";
                     start.Arguments =
-                        $"/c \"\"{Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe")}\" /h:\"{Hex.ToHexString(binding.CertificateHash)}\" /s:{binding.CertificateStoreName}\" /i:{AppIdIisExpress} /o:{binding.EndPoint.Port} /x:{binding.Host}";
+                        $"/c \"\"{Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe")}\" /h:\"{hash}\" /s:{binding.CertificateStoreName}\" /i:{AppIdIisExpress} /o:{binding.EndPoint.Port} /x:{binding.Host}";
                     start.CreateNoWindow = true;
                     start.WindowStyle = ProcessWindowStyle.Hidden;
                     process.Start();
