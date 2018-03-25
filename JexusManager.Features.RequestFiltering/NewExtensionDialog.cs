@@ -7,6 +7,7 @@ namespace JexusManager.Features.RequestFiltering
     using System;
     using System.ComponentModel;
     using System.Diagnostics;
+    using System.Linq;
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
     using System.Windows.Forms;
@@ -15,7 +16,7 @@ namespace JexusManager.Features.RequestFiltering
 
     internal sealed partial class NewExtensionDialog : DialogForm
     {
-        public NewExtensionDialog(IServiceProvider serviceProvider, bool allowed)
+        public NewExtensionDialog(IServiceProvider serviceProvider, FileExtensionsFeature feature, bool allowed)
             : base(serviceProvider)
         {
             InitializeComponent();
@@ -39,6 +40,18 @@ namespace JexusManager.Features.RequestFiltering
                 .Subscribe(evt =>
                 {
                     Item = new FileExtensionsItem(null) { Extension = txtName.Text };
+                    if (feature.Items.Any(item => item.Match(Item)))
+                    {
+                        var service = (IManagementUIService)GetService(typeof(IManagementUIService));
+                        service.ShowMessage(
+                            "The file extension specified already exists.",
+                            Text,
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error,
+                            MessageBoxDefaultButton.Button1);
+                        return;
+                    }
+
                     DialogResult = DialogResult.OK;
                 }));
         }

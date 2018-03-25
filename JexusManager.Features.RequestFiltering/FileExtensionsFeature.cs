@@ -5,7 +5,6 @@
 namespace JexusManager.Features.RequestFiltering
 {
     using System.Collections;
-    using System.Linq;
     using System.Reflection;
     using System.Windows.Forms;
 
@@ -87,21 +86,9 @@ namespace JexusManager.Features.RequestFiltering
 
         private void CreateExtension(bool allowed)
         {
-            var dialog = new NewExtensionDialog(Module, allowed);
+            var dialog = new NewExtensionDialog(Module, this, allowed);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
-                return;
-            }
-
-            if (Items.Any(item => item.Match(dialog.Item)))
-            {
-                var service = (IManagementUIService)GetService(typeof(IManagementUIService));
-                service.ShowMessage(
-                    "The file extension specified already exists.",
-                    dialog.Text,
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error,
-                    MessageBoxDefaultButton.Button1);
                 return;
             }
 
