@@ -46,6 +46,7 @@ namespace JexusManager.Wizards.ConnectionWizard
             {
                 var service = (IManagementUIService)GetService(typeof(IManagementUIService));
                 service.ShowMessage("No IIS Express installation detected. Please install IIS Express before moving on.", Caption, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
             }
 
             var data = ((ConnectionWizardData)WizardData);
@@ -55,15 +56,6 @@ namespace JexusManager.Wizards.ConnectionWizard
                 var config = Path.Combine(folder, ".vs", "config", "applicationHost.config");
                 if (File.Exists(config))
                 {
-                    var iisExpress = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "IIS Express", "AppServer", "applicationhost.config");
-                    var iisExpressX86 = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "IIS Express", "AppServer", "applicationhost.config");
-                    if (string.Equals(iisExpress, config, StringComparison.OrdinalIgnoreCase) || string.Equals(iisExpressX86, config, StringComparison.OrdinalIgnoreCase))
-                    {
-                        var service = (IManagementUIService)GetService(typeof(IManagementUIService));
-                        service.ShowMessage("This file coming from IIS Express installation cannot be used. Please select another file.", Caption, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return false;
-                    }
-
                     data.Server = new IisExpressServerManager(config);
                     data.FileName = config;
                 }
@@ -76,6 +68,23 @@ namespace JexusManager.Wizards.ConnectionWizard
             }
             else
             {
+                var iisExpress = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "IIS Express", "AppServer", "applicationhost.config");
+                var iisExpressX86 = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "IIS Express", "AppServer", "applicationhost.config");
+                if (string.Equals(iisExpress, data.FileName, StringComparison.OrdinalIgnoreCase) || string.Equals(iisExpressX86, data.FileName, StringComparison.OrdinalIgnoreCase))
+                {
+                    var service = (IManagementUIService)GetService(typeof(IManagementUIService));
+                    service.ShowMessage("This file coming from IIS Express installation cannot be used. Please select another file.", Caption, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+
+                var iis = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "inetsrv", "config", "applicationHost.config");
+                if (string.Equals(iis, data.FileName, StringComparison.OrdinalIgnoreCase))
+                {
+                    var service = (IManagementUIService)GetService(typeof(IManagementUIService));
+                    service.ShowMessage("This file coming from IIS installation cannot be used. Please select another file.", Caption, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+
                 data.Server = new IisExpressServerManager(data.FileName);
             }
 
