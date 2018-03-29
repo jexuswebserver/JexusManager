@@ -14,11 +14,9 @@ namespace JexusManager.Features.FastCgi
 {
     using System;
     using System.Collections;
-    using System.Diagnostics;
     using System.Reflection;
     using System.Windows.Forms;
 
-    using JexusManager.Properties;
     using JexusManager.Services;
 
     using Microsoft.Web.Administration;

@@ -95,6 +95,7 @@ namespace JexusManager.Features.Main
                     manageGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
                     manageGroup.Items.Add(new TextTaskItem("Troubleshooting", string.Empty, true));
                     manageGroup.Items.Add(new MethodTaskItem("FixProject", "Project Diagnostics", string.Empty).SetUsage());
+                    manageGroup.Items.Add(new MethodTaskItem("FixPhp", "PHP Diagnostics", string.Empty).SetUsage());
                 }
 
                 return result.ToArray(typeof(TaskItem)) as TaskItem[];
@@ -182,6 +183,12 @@ namespace JexusManager.Features.Main
             public void FixProject()
             {
                 _owner.FixProject();
+            }
+
+            [Obfuscation(Exclude = true)]
+            public void FixPhp()
+            {
+                _owner.FixPhp();
             }
         }
 
@@ -380,6 +387,13 @@ namespace JexusManager.Features.Main
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var dialog = new VsDiagDialog(Module, service.Site);
+            dialog.ShowDialog();
+        }
+
+        private void FixPhp()
+        {
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+            var dialog = new PhpDiagDialog(Module, service.Site.Server);
             dialog.ShowDialog();
         }
 

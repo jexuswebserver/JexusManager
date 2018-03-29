@@ -20,7 +20,6 @@ namespace JexusManager.Features.Main
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
     using System.Collections.Generic;
-    using System.Text;
 
     public partial class SslDiagDialog : DialogForm
     {
