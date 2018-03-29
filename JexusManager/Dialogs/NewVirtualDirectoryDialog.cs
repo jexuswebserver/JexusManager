@@ -6,7 +6,6 @@ namespace JexusManager.Dialogs
 {
     using System;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Globalization;
     using System.Windows.Forms;
 
@@ -16,6 +15,7 @@ namespace JexusManager.Dialogs
     using Application = Microsoft.Web.Administration.Application;
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
+    using System.Runtime.InteropServices;
 
     public sealed partial class NewVirtualDirectoryDialog : DialogForm
     {
@@ -69,7 +69,7 @@ namespace JexusManager.Dialogs
                     {
                         if (txtAlias.Text.Contains(ch.ToString(CultureInfo.InvariantCulture)))
                         {
-                            MessageBox.Show("The application path cannot contain the following characters: \\, ?, ;, :, @, &, =, +, $, ,, |, \", <, >, *.", Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            ShowMessage("The application path cannot contain the following characters: \\, ?, ;, :, @, &, =, +, $, ,, |, \", <, >, *.", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                             return;
                         }
                     }
@@ -78,24 +78,33 @@ namespace JexusManager.Dialogs
                     {
                         if (txtAlias.Text.Contains(ch.ToString(CultureInfo.InvariantCulture)))
                         {
-                            MessageBox.Show("The site name cannot contain the following characters: ' '.", Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            ShowMessage("The site name cannot contain the following characters: ' '.", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                             return;
                         }
                     }
 
                     if (!application.Server.Verify(txtPhysicalPath.Text))
                     {
-                        MessageBox.Show("The specified directory does not exist on the server.", Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        ShowMessage("The specified directory does not exist on the server.", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                         return;
                     }
 
                     if (VirtualDirectory == null)
                     {
                         // TODO: fix this
-                        VirtualDirectory = new VirtualDirectory(null, application.VirtualDirectories)
+                        try
                         {
-                            Path = "/" + txtAlias.Text
-                        };
+                            VirtualDirectory = new VirtualDirectory(null, application.VirtualDirectories)
+                            {
+                                Path = "/" + txtAlias.Text
+                            };
+                        }
+                        catch (COMException ex)
+                        {
+                            ShowError(ex, string.Empty, false);
+                            return;
+                        }
+
                         VirtualDirectory.PhysicalPath = txtPhysicalPath.Text;
                         VirtualDirectory.Parent.Add(VirtualDirectory);
                     }
