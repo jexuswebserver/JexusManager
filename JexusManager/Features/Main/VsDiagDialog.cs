@@ -45,6 +45,8 @@ namespace JexusManager.Features.Main
                             return;
                         }
 
+                        Debug($"Scan the folder {root} for project files.");
+
                         string[] projects = null;
                         try
                         {
@@ -59,7 +61,7 @@ namespace JexusManager.Features.Main
 
                         foreach (var proj in projects)
                         {
-                            Info($"{Path.GetFileName(proj)}");
+                            Info($"* {Path.GetFileName(proj)}");
                         }
 
                         if (projects.Length != 1)
@@ -68,7 +70,9 @@ namespace JexusManager.Features.Main
                             return;
                         }
 
+                        Debug(Environment.NewLine);
                         var project = projects[0];
+
                         // TODO: free the resources.
                         var xmlReader = XmlReader.Create(new StringReader(File.ReadAllText(project))); // Or whatever your source is, of course.
                         var xml = XDocument.Load(xmlReader);
@@ -122,16 +126,24 @@ namespace JexusManager.Features.Main
 
         private void AnalyzeAspNetCoreProject(string project, Site site)
         {
-            Debug($"ASP.NET Core project {project}");
+            Debug($"Analyze ASP.NET Core project.");
             var folder = Path.GetDirectoryName(project);
             var settingsFile = Path.Combine(folder, "Properties", "launchSettings.json");
             if (!File.Exists(settingsFile))
             {
                 Error($"Cannot find {settingsFile}.");
+                return;
             }
 
+            Debug($"Extract debugging profiles.");
             JObject o1 = JObject.Parse(File.ReadAllText(settingsFile));
             var profiles = o1["profiles"].Children<JProperty>().ToList();
+            if (profiles.Count == 0)
+            {
+                Error($"Cannot find mandate profiles.");
+                return;
+            }
+
             Info($"Found {profiles.Count} profile(s).");
             foreach (var profile in profiles)
             {
@@ -139,14 +151,34 @@ namespace JexusManager.Features.Main
             }
 
             Debug(Environment.NewLine);
-            var iisSettings = o1["iisSettings"].Children<JProperty>().ToList();
+            Debug("Extract IIS settings.");
+            var iisSettings = o1["iisSettings"]?.Children<JProperty>().ToList();
+            if (iisSettings == null)
+            {
+                Error($"Cannot find 'iisSettings' section.");
+                return;
+            }
+
+            var hasExpress = false;
             foreach (var item in iisSettings)
             {
                 if (item.Name == "iisExpress")
                 {
-                    var sslPort = o1["iisSettings"]["iisExpress"]["sslPort"].Value<int>();
+                    hasExpress = true;
+                    var sslPort = o1["iisSettings"]["iisExpress"]["sslPort"]?.Value<int>();
+                    if (sslPort == null)
+                    {
+                        sslPort = 0; // the default value is 0.
+                    }
+
                     Info($"sslPort is {sslPort}.");
-                    var rawUrl = o1["iisSettings"]["iisExpress"]["applicationUrl"].Value<string>();
+                    var rawUrl = o1["iisSettings"]["iisExpress"]["applicationUrl"]?.Value<string>();
+                    if (rawUrl == null)
+                    {
+                        Error($"Cannot find applicationUrl.");
+                        return;
+                    }
+
                     Info($"applicationUrl is {rawUrl}.");
                     var iisUrl = sslPort == 0 ? rawUrl : $"https://localhost:{sslPort}/";
                     var matched = false;
@@ -166,6 +198,11 @@ namespace JexusManager.Features.Main
                     }
                 }
             }
+
+            if (!hasExpress)
+            {
+                Error("Cannot find 'iisSettings/iisExpress' section.");
+            }
         }
 
         private static bool IsAspNetCoreProject(XDocument xml)
@@ -181,7 +218,8 @@ namespace JexusManager.Features.Main
 
         private void AnalyzeWebProject(XDocument xml, XmlNamespaceManager namespaceManager, XNamespace name, Site site)
         {
-            Info($"Extract web project settings.");
+            Debug($"Analyze ASP.NET project.");
+            Debug($"Extract web project settings.");
             var webSettings = xml.Root.XPathSelectElement("/x:Project/x:ProjectExtensions/x:VisualStudio/x:FlavorProperties/x:WebProjectProperties", namespaceManager);
             var useIIS = webSettings.Element(name + "UseIIS")?.Value;
             Info($"UseIIS: {useIIS}");
