@@ -185,7 +185,11 @@ namespace JexusManager.Features.Main
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    txtPort.Text = cbType.Text == "http" ? "80" : "443";
+                    if (Binding == null)
+                    {
+                        txtPort.Text = cbType.Text == "http" ? "80" : "443";
+                    }
+
                     txtCertificates.Visible = cbType.SelectedIndex == 1;
                     cbSniRequired.Visible = cbType.SelectedIndex == 1;
                     cbCertificates.Visible = cbType.SelectedIndex == 1;
