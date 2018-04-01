@@ -120,7 +120,7 @@ namespace JexusManager.Features.Main
                                 }
                                 else
                                 {
-                                    Debug($"* PHP {info.FileVersion} ({path}) is supported. Please refer to http://php.net/supported-versions.php for more details.");
+                                    Debug($"* PHP {info.FileVersion} ({path}) is supported.");
                                 }
                             }
                             else
@@ -130,12 +130,24 @@ namespace JexusManager.Features.Main
                         }
 
                         Debug(Environment.NewLine);
-                        var systemPath = Environment.GetEnvironmentVariable("PATH");
-                        Debug($"Scan Windows PATH: {systemPath}.");
+                        var systemPath = Environment.GetEnvironmentVariable("Path");
+                        Debug($"Windows Path: {systemPath}.");
+                        Debug(Environment.NewLine);
                         string[] paths = systemPath.Split(new char[1] { Path.PathSeparator });
                         foreach (var path in foundPhp)
                         {
                             var folder = Path.GetDirectoryName(path);
+                            Debug($"[{folder}]");
+                            var config = Path.Combine(folder, "php.ini");
+                            if (File.Exists(config))
+                            {
+                                Info($"Found PHP config file {config}.");
+                            }
+                            else
+                            {
+                                Warn($"Cannot find PHP config file {config}. Default settings are used.");
+                            }
+
                             var matched = false;
                             foreach (var system in paths)
                             {
@@ -148,13 +160,19 @@ namespace JexusManager.Features.Main
 
                             if (matched)
                             {
-                                Debug($"* PHP installation {folder} has been added to Windows PATH.");
+                                Debug($"PHP installation has been added to Windows Path environment.");
                             }
                             else
                             {
-                                Error($"* PHP installation {folder} is not yet added to Windows PATH.");
+                                Error($"PHP installation is not yet added to Windows Path environment. Please refer to https://docs.microsoft.com/en-us/iis/application-frameworks/scenario-build-a-php-website-on-iis/configuring-step-1-install-iis-and-php#13-download-and-install-php-manually for more details.");
                             }
+
+                            Debug(Environment.NewLine);
                         }
+
+                        // TODO: verify extensions in php.ini, and extensions in C:\PHP\ext.
+
+                        // TODO: verify other configurations in php.info.
                     }
                     catch (Exception ex)
                     {
