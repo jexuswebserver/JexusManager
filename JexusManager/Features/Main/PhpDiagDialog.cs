@@ -24,6 +24,8 @@ namespace JexusManager.Features.Main
     using JexusManager.Features.FastCgi;
     using JexusManager.Features.Handlers;
     using System.Diagnostics;
+    using IniParser;
+    using IniParser.Parser;
 
     public partial class PhpDiagDialog : DialogForm
     {
@@ -136,12 +138,48 @@ namespace JexusManager.Features.Main
                         string[] paths = systemPath.Split(new char[1] { Path.PathSeparator });
                         foreach (var path in foundPhp)
                         {
-                            var folder = Path.GetDirectoryName(path);
-                            Debug($"[{folder}]");
-                            var config = Path.Combine(folder, "php.ini");
+                            var rootFolder = Path.GetDirectoryName(path);
+                            Debug($"[{rootFolder}]");
+                            var config = Path.Combine(rootFolder, "php.ini");
                             if (File.Exists(config))
                             {
                                 Info($"Found PHP config file {config}.");
+                                var parser = new ConcatenateDuplicatedKeysIniDataParser();
+                                parser.Configuration.ConcatenateSeparator = " ";
+                                var data = parser.Parse(File.ReadAllText(config));
+                                var extensionFolder = data["PHP"]["extension_dir"];
+                                if (extensionFolder == null)
+                                {
+                                    extensionFolder = "ext";
+                                }
+
+                                var fullPath = Path.Combine(rootFolder, extensionFolder);
+                                Info($"PHP loadable extension folder: {fullPath}");
+                                var extesionNames = data["PHP"]["extension"];
+                                if (extesionNames == null)
+                                {
+                                    Info("No extension to verify.");
+                                }
+                                else
+                                {
+                                    var extensions = extesionNames.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                                    Info($"Found {extensions.Length} extension(s) to verify.");
+                                    var noError = true;
+                                    foreach (var name in extensions)
+                                    {
+                                        var fileName = Path.Combine(fullPath, $"php_{name}.dll");
+                                        if (!File.Exists(fileName))
+                                        {
+                                            Error($"* Extension {name} is listed, but on disk the file cannot be found {fileName}");
+                                            noError = false;
+                                        }
+                                    }
+
+                                    if (noError)
+                                    {
+                                        Info("All extension(s) listed can be found on disk.");
+                                    }
+                                }
                             }
                             else
                             {
@@ -151,7 +189,7 @@ namespace JexusManager.Features.Main
                             var matched = false;
                             foreach (var system in paths)
                             {
-                                if (string.Equals(folder, system, StringComparison.OrdinalIgnoreCase))
+                                if (string.Equals(rootFolder, system, StringComparison.OrdinalIgnoreCase))
                                 {
                                     matched = true;
                                     break;
