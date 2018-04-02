@@ -43,6 +43,22 @@ namespace JexusManager.Features.Main
                         Debug($"{site.Server.Type}");
                         Debug("-----");
 
+                        var addresses = Dns.GetHostEntry(string.Empty).AddressList.Where(address => !address.IsIPv6LinkLocal).ToList();
+                        if (addresses.Count == 0)
+                        {
+                            Warn("This machine has no suitable IP address to accept external traffic.");
+                        }
+                        else
+                        {
+                            Info($"This machine has {addresses.Count} IP addresses to take external traffic.");
+                            foreach (IPAddress address in addresses)
+                            {
+                                Info($"* {address}.");
+                            }
+                        }
+
+                        Debug("-----");
+
                         Debug($"[W3SVC/{site.Id}]");
                         Debug($"ServerComment  : {site.Name}");
                         Debug($"ServerAutoStart: {site.ServerAutoStart}");
@@ -50,52 +66,52 @@ namespace JexusManager.Features.Main
                         Debug(string.Empty);
                         foreach (Binding binding in site.Bindings)
                         {
-                            Info($"BINDING: {binding.Protocol} {binding}");
+                            Debug($"BINDING: {binding.Protocol} {binding}");
                             if (binding.Protocol == "https" || binding.Protocol == "http")
                             {
-                                Debug($"This site can be accessed if,");
-                                Debug($" * TCP port {binding.EndPoint.Port} must be opened on Windows Firewall (or any other equivalent products) so as to receive requests from other machines.");
+                                Info($"This site can take external traffic if,");
+                                Info($" * TCP port {binding.EndPoint.Port} must be opened on Windows Firewall (or any other equivalent products).");
 
                                 if (binding.EndPoint.Address == IPAddress.Any)
                                 {
-                                    Debug($" * Requests from web browsers must be routed to following end points on this machine,");
-                                    foreach (IPAddress address in Dns.GetHostEntry(string.Empty).AddressList.Where(address => !address.IsIPv6LinkLocal))
+                                    Info($" * Requests from web browsers must be routed to following end points on this machine,");
+                                    foreach (IPAddress address in addresses)
                                     {
-                                        Debug($"   * {address}:{binding.EndPoint.Port}.");
+                                        Info($"   * {address}:{binding.EndPoint.Port}.");
                                     }
 
-                                    Debug($"   * 127.0.0.1:{binding.EndPoint.Port}.");
+                                    Debug($"   * (Note that this site can take local traffic at 127.0.0.1:{binding.EndPoint.Port}.)");
                                 }
                                 else
                                 {
-                                    Debug($" * The networking must be properly set up to forward requests from web browsers to {binding.EndPoint} on this machine.");
+                                    Info($" * The networking must be properly set up to forward requests from web browsers to {binding.EndPoint} on this machine.");
                                 }
 
                                 if (binding.Host == "*" || binding.Host == string.Empty)
                                 {
                                     if (binding.EndPoint.Address == IPAddress.Any)
                                     {
-                                        Debug($" * Web browsers can use several URLs, such as");
-                                        Debug($"   * {binding.Protocol}://localhost:{binding.EndPoint.Port}.");
-                                        foreach (IPAddress address in Dns.GetHostEntry(string.Empty).AddressList.Where(address => !address.IsIPv6LinkLocal))
+                                        Info($" * Web browsers can use several URLs, such as");
+                                        Info($"   * {binding.Protocol}://localhost:{binding.EndPoint.Port}.");
+                                        foreach (IPAddress address in addresses)
                                         {
                                             Debug($"   * {binding.Protocol}://{address}:{binding.EndPoint.Port}.");
                                         }
                                     }
                                     else
                                     {
-                                        Debug($" * Web browsers should use URL {binding.Protocol}://{binding.EndPoint.Address}:{binding.EndPoint.Port}.");
+                                        Info($" * Web browsers should use URL {binding.Protocol}://{binding.EndPoint.Address}:{binding.EndPoint.Port}.");
                                     }
                                 }
                                 else
                                 {
-                                    Debug($" * Requests must have Host header {binding.Host}.");
-                                    Debug($" * Web browsers should use URL {binding.Protocol}://{binding.Host}:{binding.EndPoint.Port}.");
+                                    Info($" * Requests must have Host header {binding.Host}.");
+                                    Info($" * Web browsers should use URL {binding.Protocol}://{binding.Host}:{binding.EndPoint.Port}.");
                                 }
 
                                 if (binding.Protocol == "https")
                                 {
-                                    Warn($"Please run SSL Diagnostics to analyze SSL configuration at server level.");
+                                    Warn($"Please run SSL Diagnostics at server level to analyze SSL configuration. More information can be found at https://www.jexusmanager.com/en/latest/tutorials/ssl-diagnostics.html.");
                                 }
                             }
 

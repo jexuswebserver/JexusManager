@@ -49,7 +49,7 @@ namespace JexusManager.Features.Main
                         Debug($"Processor Architecture: {Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE")}");
                         Debug($"OS: {Environment.OSVersion}");
                         Debug($"{server.Type}");
-                        Debug(Environment.NewLine);
+                        Debug(string.Empty);
 
                         var handlers = new HandlersFeature((Module)provider);
                         handlers.Load();
@@ -70,7 +70,7 @@ namespace JexusManager.Features.Main
                             return;
                         }
 
-                        Debug(Environment.NewLine);
+                        Debug(string.Empty);
                         var fastCgiFeature = new FastCgiFeature((Module)provider);
                         fastCgiFeature.Load();
                         Debug($"Scan {fastCgiFeature.Items.Count} registered FastCGI application(s).");
@@ -131,10 +131,10 @@ namespace JexusManager.Features.Main
                             }
                         }
 
-                        Debug(Environment.NewLine);
+                        Debug(string.Empty);
                         var systemPath = Environment.GetEnvironmentVariable("Path");
                         Debug($"Windows Path: {systemPath}.");
-                        Debug(Environment.NewLine);
+                        Debug(string.Empty);
                         string[] paths = systemPath.Split(new char[1] { Path.PathSeparator });
                         foreach (var path in foundPhp)
                         {
@@ -205,10 +205,8 @@ namespace JexusManager.Features.Main
                                 Error($"PHP installation is not yet added to Windows Path environment. Please refer to https://docs.microsoft.com/en-us/iis/application-frameworks/scenario-build-a-php-website-on-iis/configuring-step-1-install-iis-and-php#13-download-and-install-php-manually for more details.");
                             }
 
-                            Debug(Environment.NewLine);
+                            Debug(string.Empty);
                         }
-
-                        // TODO: verify extensions in php.ini, and extensions in C:\PHP\ext.
 
                         // TODO: verify other configurations in php.info.
                     }

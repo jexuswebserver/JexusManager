@@ -59,7 +59,7 @@ namespace JexusManager.Features.Main
                         Debug($"Processor Architecture: {Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE")}");
                         Debug($"OS: {Environment.OSVersion}");
                         Debug($"{server.Type}");
-                        Debug(Environment.NewLine);
+                        Debug(string.Empty);
                         Debug($"SERVER SSL PROTOCOLS{Environment.NewLine}");
                         bool ssl10Enabled = GetProtocol("PCT 1.0");
                         Debug($"PCT 1.0: {ssl10Enabled}");
