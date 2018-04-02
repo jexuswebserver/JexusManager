@@ -299,6 +299,11 @@ namespace Microsoft.Web.Administration
                 return null;
             }
 
+            if (portNumber < 1 || portNumber > 65535)
+            {
+                return null;
+            }
+
             if (protocol != "https")
             {
                 return false;
