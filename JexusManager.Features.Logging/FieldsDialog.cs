@@ -6,7 +6,6 @@ namespace JexusManager.Features.Logging
 {
     using System;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Reflection;
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
@@ -164,15 +163,16 @@ namespace JexusManager.Features.Logging
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    logFile.LogExtFileFlags = 0;
+                    LogExtFileFlags flags = 0;
                     foreach (StandardListViewItem item in lvStandard.Items)
                     {
                         if (item.Checked)
                         {
-                            logFile.LogExtFileFlags |= item.Flag;
+                            flags |= item.Flag;
                         }
                     }
 
+                    logFile.LogExtFileFlags = flags;
                     DialogResult = DialogResult.OK;
                 }));
         }

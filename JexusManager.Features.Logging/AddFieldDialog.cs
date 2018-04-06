@@ -23,19 +23,26 @@ namespace JexusManager.Features.Logging
         {
             Custom = custom;
             InitializeComponent();
-            if (custom != null)
-            {
-                txtName.Text = custom.LogFieldName;
-                cbType.SelectedIndex = (int)custom.SourceType;
-                cbSource.Text = custom.SourceName;
-            }
-            else
-            {
-                cbType.SelectedIndex = 0;
-            }
 
             var container = new CompositeDisposable();
             FormClosed += (sender, args) => container.Dispose();
+
+            container.Add(
+                Observable.FromEventPattern<EventArgs>(this, "Load")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(evt => 
+                {
+                    if (custom != null)
+                    {
+                        txtName.Text = custom.LogFieldName;
+                        cbType.SelectedIndex = (int)custom.SourceType;
+                        cbSource.Text = custom.SourceName;
+                    }
+                    else
+                    {
+                        cbType.SelectedIndex = 0;
+                    }
+                }));
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(txtName, "TextChanged")
@@ -169,12 +176,16 @@ namespace JexusManager.Features.Logging
                     if (Custom == null)
                     {
                         Custom = logFile.CustomLogFields.CreateElement();
-                        logFile.CustomLogFields.Add(Custom);
                     }
 
                     Custom.LogFieldName = txtName.Text;
                     Custom.SourceType = (CustomLogFieldSourceType)Enum.ToObject(typeof(CustomLogFieldSourceType), cbType.SelectedIndex);
                     Custom.SourceName = cbSource.Text;
+                    if (Custom == null)
+                    {
+                        logFile.CustomLogFields.Add(Custom);
+                    }
+
                     DialogResult = DialogResult.OK;
                 }));
         }

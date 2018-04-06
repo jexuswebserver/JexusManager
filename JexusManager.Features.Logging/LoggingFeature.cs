@@ -272,7 +272,7 @@ namespace JexusManager.Features.Logging
                 }
 
                 element.Attributes["localTimeRollover"].Value = LocalTimeRollover;
-                element.Attributes["truncateSize"].Value = TruncateSizeString;
+                element.Attributes["truncateSize"].Value = Int64.Parse(TruncateSizeString);
                 element.Attributes["period"].Value = Period;
             }
             else
