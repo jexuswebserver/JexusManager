@@ -309,7 +309,7 @@ namespace Microsoft.Web.Administration
                 }
             }
 
-            throw new InvalidCastException();
+            throw new InvalidCastException($"Cannot convert {value} of {value.GetType()} to {Type}.");
         }
     }
 }
