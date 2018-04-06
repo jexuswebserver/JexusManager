@@ -87,13 +87,13 @@ namespace Microsoft.Web.Administration
 
         private void Initialize()
         {
+            if (Initialized)
+            {
+                return;
+            }
+
             lock (locker)
             {
-                if (Initialized)
-                {
-                    return;
-                }
-
                 Initialized = true;
                 PreInitialize();
                 var machineConfig = Helper.IsRunningOnMono()
@@ -237,7 +237,10 @@ namespace Microsoft.Web.Administration
                 }
 
                 Initialize();
-                return _applicationDefaults;
+                lock (locker)
+                {
+                    return _applicationDefaults;
+                }
             }
         }
 
@@ -251,7 +254,10 @@ namespace Microsoft.Web.Administration
                 }
 
                 Initialize();
-                return _applicationPoolDefaults;
+                lock (locker)
+                {
+                    return _applicationPoolDefaults;
+                }
             }
         }
 
@@ -265,7 +271,10 @@ namespace Microsoft.Web.Administration
                 }
 
                 Initialize();
-                return ApplicationPoolCollection;
+                lock (locker)
+                {
+                    return ApplicationPoolCollection;
+                }
             }
         }
 
@@ -279,7 +288,10 @@ namespace Microsoft.Web.Administration
                 }
 
                 Initialize();
-                return _siteDefaults;
+                lock (locker)
+                {
+                    return _siteDefaults;
+                }
             }
         }
 
@@ -293,7 +305,10 @@ namespace Microsoft.Web.Administration
                 }
 
                 Initialize();
-                return SiteCollection;
+                lock (locker)
+                {
+                    return SiteCollection;
+                }
             }
         }
 
@@ -307,7 +322,10 @@ namespace Microsoft.Web.Administration
                 }
 
                 Initialize();
-                return _virtualDirectoryDefaults;
+                lock (locker)
+                {
+                    return _virtualDirectoryDefaults;
+                }
             }
         }
 
@@ -316,7 +334,10 @@ namespace Microsoft.Web.Administration
             get
             {
                 Initialize();
-                return _workerProcessCollection;
+                lock (locker)
+                {
+                    return _workerProcessCollection;
+                }
             }
         }
 
@@ -355,13 +376,19 @@ namespace Microsoft.Web.Administration
         public Configuration GetApplicationHostConfiguration()
         {
             Initialize();
-            return _applicationHost;
+            lock (locker)
+            {
+                return _applicationHost;
+            }
         }
 
         internal Configuration GetConfigurationCache()
         {
             Initialize();
-            return _cleanHost;
+            lock (locker)
+            {
+                return _cleanHost;
+            }
         }
 
         public object GetMetadata(string metadataType)
