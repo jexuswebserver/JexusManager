@@ -272,7 +272,7 @@ namespace JexusManager.Features.Rewrite.Outbound
         {
             _initialized = false;
             _hasChanges = false;
-            Rule.CancelChanges();
+            Rule?.CancelChanges();
             ClearChanges();
         }
 
