@@ -133,7 +133,7 @@ namespace JexusManager.Features.Main
 
                         Debug(string.Empty);
                         var systemPath = Environment.GetEnvironmentVariable("Path");
-                        Debug($"Windows Path: {systemPath}.");
+                        Debug($"Windows Path environment variable: {systemPath}.");
                         Debug(string.Empty);
                         string[] paths = systemPath.Split(new char[1] { Path.PathSeparator });
                         foreach (var path in foundPhp)
@@ -198,11 +198,12 @@ namespace JexusManager.Features.Main
 
                             if (matched)
                             {
-                                Debug($"PHP installation has been added to Windows Path environment.");
+                                Debug($"PHP installation has been added to Windows Path environment variable.");
                             }
                             else
                             {
-                                Error($"PHP installation is not yet added to Windows Path environment. Please refer to https://docs.microsoft.com/en-us/iis/application-frameworks/scenario-build-a-php-website-on-iis/configuring-step-1-install-iis-and-php#13-download-and-install-php-manually for more details.");
+                                Error($"PHP installation is not yet added to Windows Path environment variable. Please refer to https://docs.microsoft.com/en-us/iis/application-frameworks/scenario-build-a-php-website-on-iis/configuring-step-1-install-iis-and-php#13-download-and-install-php-manually for more details.");
+                                Warn($"Restart Jexus Manager and rerun PHP Diagnostics after changing Windows Path environment variable.");
                             }
 
                             Debug(string.Empty);
