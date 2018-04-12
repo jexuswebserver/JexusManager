@@ -24,15 +24,36 @@ namespace JexusManager.Features.Main
     using JexusManager.Features.FastCgi;
     using JexusManager.Features.Handlers;
     using System.Diagnostics;
-    using IniParser;
     using IniParser.Parser;
 
     public partial class PhpDiagDialog : DialogForm
     {
+        private struct PhpVersion
+        {
+            public PhpVersion(string version, bool recommended, Version cppVersion)
+            {
+                Version = version;
+                Recommended = recommended;
+                CppVersion = cppVersion;
+            }
+
+            public string Version { get; set; }
+            public bool Recommended { get; set; }
+            public Version CppVersion { get; set; }
+        }
+
         public PhpDiagDialog(IServiceProvider provider, ServerManager server)
             : base(provider)
         {
             InitializeComponent();
+
+            var knownPhpVersions = new Dictionary<string, PhpVersion>
+            {
+                { "5.6", new PhpVersion("5.6", false, new Version(11, 0)) },
+                { "7.0", new PhpVersion("7.0", false, new Version(14, 0)) },
+                { "7.1", new PhpVersion("7.1", true, new Version(14, 0)) },
+                { "7.2", new PhpVersion("7.2", true, new Version(14, 11)) }
+            };
 
             var container = new CompositeDisposable();
             FormClosed += (sender, args) => container.Dispose();
@@ -95,39 +116,40 @@ namespace JexusManager.Features.Main
                         foreach (var path in foundPhp)
                         {
                             var info = FileVersionInfo.GetVersionInfo(path);
-                            if (info.FileMajorPart < 5)
+                            var version = $"{info.FileMajorPart}.{info.FileMinorPart}";
+                            if (knownPhpVersions.ContainsKey(version))
                             {
-                                Error($"* PHP {info.FileVersion} ({path}) is obsolete. Please refer to http://php.net/supported-versions.php for more details.");
-                            }
-                            else if (info.FileMajorPart == 5)
-                            {
-                                if (info.FileMinorPart < 6)
+                                var php = knownPhpVersions[version];
+                                if (php.Recommended)
                                 {
-                                    Error($"* PHP {info.FileVersion} ({path}) is obsolete. Please refer to http://php.net/supported-versions.php for more details.");
-                                }
-                                else if (info.FileMinorPart == 6)
-                                {
-                                    Warn($"* PHP {info.FileVersion} ({path}) will soon be obsolete. Please refer to http://php.net/supported-versions.php for more details.");
+                                    Debug($"* PHP {version} ({path}) is supported.");
                                 }
                                 else
                                 {
-                                    Error($"* PHP {info.FileVersion} ({path}) is unknown. Please refer to http://php.net/supported-versions.php for more details.");
+                                    Warn($"* PHP {version} ({path}) will soon be obsolete. Please refer to http://php.net/supported-versions.php for more details.");
                                 }
-                            }
-                            else if (info.FileMajorPart == 7)
-                            {
-                                if (info.FileMinorPart == 0)
+
+                                var cppFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), $"msvcp{php.CppVersion.Major}0.dll");
+                                if (File.Exists(cppFile))
                                 {
-                                    Warn($"* PHP {info.FileVersion} ({path}) will soon be obsolete. Please refer to http://php.net/supported-versions.php for more details.");
+                                    var cpp = FileVersionInfo.GetVersionInfo(cppFile);
+                                    if (cpp.FileMinorPart >= php.CppVersion.Minor)
+                                    {
+                                        Debug($"  Visual C++ runtime is detected (expected: {php.CppVersion}, detected: {cpp.FileVersion}).");
+                                    }
+                                    else
+                                    {
+                                        Error($"  Visual C++ runtime {php.CppVersion} is not detected. Please install it following the tips on https://windows.php.net/download/.");
+                                    }
                                 }
                                 else
                                 {
-                                    Debug($"* PHP {info.FileVersion} ({path}) is supported.");
+                                    Error($"  Visual C++ {php.CppVersion} runtime is not detected. Please install it following the tips on https://windows.php.net/download/.");
                                 }
                             }
                             else
                             {
-                                Error($"* PHP {info.FileVersion} ({path}) is unknown. Please refer to http://php.net/supported-versions.php for more details.");
+                                Error($"* PHP {info.FileVersion} ({path}) is unknown or obsolete. Please refer to http://php.net/supported-versions.php for more details.");
                             }
                         }
 

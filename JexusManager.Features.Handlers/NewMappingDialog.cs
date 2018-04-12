@@ -6,7 +6,6 @@ namespace JexusManager.Features.Handlers
 {
     using System;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Reactive.Disposables;
@@ -99,6 +98,7 @@ namespace JexusManager.Features.Handlers
 
                         if (txtModule.Text == "FastCgiModule")
                         {
+                            // IMPORTANT: it is IIS Manager behavior to prompt before verifying duplicate items.
                             var result = ShowMessage(
                                 "Do you want to create a FastCGI application for this executable? Click \"Yes\" to add the entry to the FastCGI collection and to enable this executable to run as a FastCGI application.",
                                 MessageBoxButtons.YesNoCancel,
