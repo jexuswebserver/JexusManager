@@ -18,6 +18,10 @@ namespace JexusManager.Features.Main
     using System.Reactive.Linq;
     using System.Collections.Generic;
     using System.Net;
+    using System.Net.Sockets;
+    using EnumsNET;
+    using JexusManager.Features.HttpApi;
+    using Microsoft.Web.Management.Client;
 
     public partial class LinkDiagDialog : DialogForm
     {
@@ -40,18 +44,18 @@ namespace JexusManager.Features.Main
                         Debug($"System Time: {DateTime.Now}");
                         Debug($"Processor Architecture: {Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE")}");
                         Debug($"OS: {Environment.OSVersion}");
-                        Debug($"{site.Server.Type}");
+                        Debug($"Server Type: {site.Server.Mode.AsString(EnumFormat.Description)}");
                         Debug("-----");
 
-                        var addresses = Dns.GetHostEntry(string.Empty).AddressList.Where(address => !address.IsIPv6LinkLocal).ToList();
-                        if (addresses.Count == 0)
+                        var adapters = Dns.GetHostEntry(string.Empty).AddressList.Where(address => !address.IsIPv6LinkLocal).ToList();
+                        if (adapters.Count == 0)
                         {
                             Warn("This machine has no suitable IP address to accept external traffic.");
                         }
                         else
                         {
-                            Info($"This machine has {addresses.Count} IP addresses to take external traffic.");
-                            foreach (IPAddress address in addresses)
+                            Info($"This machine has {adapters.Count} IP addresses to take external traffic.");
+                            foreach (IPAddress address in adapters)
                             {
                                 Info($"* {address}.");
                             }
@@ -69,18 +73,40 @@ namespace JexusManager.Features.Main
                             Debug($"BINDING: {binding.Protocol} {binding}");
                             if (binding.Protocol == "https" || binding.Protocol == "http")
                             {
-                                Info($"This site can take external traffic if,");
-                                Info($" * TCP port {binding.EndPoint.Port} must be opened on Windows Firewall (or any other equivalent products).");
-
-                                if (binding.EndPoint.Address == IPAddress.Any)
+                                if (binding.Host != "localhost")
                                 {
-                                    Info($" * Requests from web browsers must be routed to following end points on this machine,");
-                                    foreach (IPAddress address in addresses)
+                                    Info($"This site can take external traffic if,");
+                                    Info($" * TCP port {binding.EndPoint.Port} must be opened on Windows Firewall (or any other equivalent products).");
+                                }
+
+                                if (binding.EndPoint.Address.Equals(IPAddress.Any))
+                                {
+                                    if (binding.Host != "localhost")
                                     {
-                                        Info($"   * {address}:{binding.EndPoint.Port}.");
+                                        Info($" * Requests from web browsers must be routed to following end points on this machine,");
+                                        foreach (IPAddress address in adapters)
+                                        {
+                                            Info($"   * {address}:{binding.EndPoint.Port}.");
+                                        }
+
+                                        var reservation = binding.ToUrlPrefix();
+                                        var feature = new ReservedUrlsFeature((Module)provider);
+                                        feature.Load();
+                                        if (!feature.Items.Any(item => item.UrlPrefix == reservation))
+                                        {
+                                            Error($"   URL reservation {reservation} is missing.");
+                                        }
                                     }
 
-                                    Debug($"   * (Note that this site can take local traffic at 127.0.0.1:{binding.EndPoint.Port}.)");
+                                    if (Socket.OSSupportsIPv4)
+                                    {
+                                        Debug($"This site can take local traffic at {IPAddress.Loopback}:{binding.EndPoint.Port}.");
+                                    }
+
+                                    if (Socket.OSSupportsIPv6)
+                                    {
+                                        Debug($"This site can take local traffic at [{IPAddress.IPv6Loopback}]:{binding.EndPoint.Port}.");
+                                    }
                                 }
                                 else
                                 {
@@ -92,11 +118,14 @@ namespace JexusManager.Features.Main
                                     if (binding.EndPoint.Address == IPAddress.Any)
                                     {
                                         Info($" * Web browsers can use several URLs, such as");
-                                        Info($"   * {binding.Protocol}://localhost:{binding.EndPoint.Port}.");
-                                        foreach (IPAddress address in addresses)
+                                        foreach (IPAddress address in adapters)
                                         {
                                             Debug($"   * {binding.Protocol}://{address}:{binding.EndPoint.Port}.");
                                         }
+
+                                        Info($"   * {binding.Protocol}://localhost:{binding.EndPoint.Port}.");
+                                        Info($"   * {binding.Protocol}://{IPAddress.Loopback}:{binding.EndPoint.Port}.");
+                                        Info($"   * {binding.Protocol}://[{IPAddress.IPv6Loopback}]:{binding.EndPoint.Port}.");
                                     }
                                     else
                                     {
@@ -105,8 +134,28 @@ namespace JexusManager.Features.Main
                                 }
                                 else
                                 {
-                                    Info($" * Requests must have Host header {binding.Host}.");
-                                    Info($" * Web browsers should use URL {binding.Protocol}://{binding.Host}:{binding.EndPoint.Port}.");
+                                    Info($" * Web browsers should use URL {binding.Protocol}://{binding.Host}:{binding.EndPoint.Port}. Requests must have Host header {binding.Host}.");
+                                    var entry = Dns.GetHostEntry(binding.Host);
+                                    var list = entry.AddressList;
+                                    var found = false;
+                                    foreach (var address in list)
+                                    {
+                                        if (adapters.Any(item => address.Equals(item)))
+                                        {
+                                            found = true;
+                                            break;
+                                        }
+
+                                        if (address.Equals(IPAddress.Loopback))
+                                        {
+                                            found = true;
+                                        }
+                                    }
+
+                                    if (!found)
+                                    {
+                                        Warn($"   DNS query does not return a known IP address for any network adapter of this machine. Please make sure the packets are forwarded properly.");
+                                    }
                                 }
 
                                 if (binding.Protocol == "https")

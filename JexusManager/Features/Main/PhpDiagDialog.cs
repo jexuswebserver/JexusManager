@@ -25,6 +25,7 @@ namespace JexusManager.Features.Main
     using JexusManager.Features.Handlers;
     using System.Diagnostics;
     using IniParser.Parser;
+    using EnumsNET;
 
     public partial class PhpDiagDialog : DialogForm
     {
@@ -69,7 +70,7 @@ namespace JexusManager.Features.Main
                         Debug($"System Time: {DateTime.Now}");
                         Debug($"Processor Architecture: {Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE")}");
                         Debug($"OS: {Environment.OSVersion}");
-                        Debug($"{server.Type}");
+                        Debug($"Server Type: {server.Mode.AsString(EnumFormat.Description)}");
                         Debug(string.Empty);
 
                         var handlers = new HandlersFeature((Module)provider);

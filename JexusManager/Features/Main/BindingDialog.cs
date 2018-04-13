@@ -18,6 +18,8 @@ namespace JexusManager.Features.Main
     using Binding = Microsoft.Web.Administration.Binding;
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
+    using JexusManager.Features.HttpApi;
+    using Microsoft.Web.Management.Client;
 
     public sealed partial class BindingDialog : DialogForm
     {
@@ -67,7 +69,7 @@ namespace JexusManager.Features.Main
                     }
                     catch (Exception)
                     {
-                        MessageBox.Show("The specified IP address is invalid. Specify a valid IP address.", Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        ShowMessage("The specified IP address is invalid. Specify a valid IP address.", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                         return;
                     }
 
@@ -78,13 +80,13 @@ namespace JexusManager.Features.Main
                     }
                     catch (Exception)
                     {
-                        MessageBox.Show("The server port number must be a positive integer between 1 and 65535", Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        ShowMessage("The server port number must be a positive integer between 1 and 65535", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                         return;
                     }
 
                     if (port < 1 || port > 65535)
                     {
-                        MessageBox.Show("The server port number must be a positive integer between 1 and 65535", Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        ShowMessage("The server port number must be a positive integer between 1 and 65535", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                         return;
                     }
 
@@ -93,20 +95,8 @@ namespace JexusManager.Features.Main
                     {
                         if (txtHost.Text.Contains(ch))
                         {
-                            MessageBox.Show("The specified host name is incorrect. The host name must use a valid host name format and cannot contain the following characters: \"/\\[]:|<>+=;,?*$%#@{}^`. Example: www.contoso.com.", Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            ShowMessage("The specified host name is incorrect. The host name must use a valid host name format and cannot contain the following characters: \"/\\[]:|<>+=;,?*$%#@{}^`. Example: www.contoso.com.", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                             return;
-                        }
-                    }
-
-                    if (site.Server.Mode == WorkingMode.IisExpress)
-                    {
-                        if (txtHost.Text != "localhost")
-                        {
-                            MessageBox.Show(
-                                "The specific host name is not recommended for IIS Express. The host name should be localhost.",
-                                Text,
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Warning);
                         }
                     }
 
@@ -171,8 +161,29 @@ namespace JexusManager.Features.Main
                         var result = Binding.FixCertificateMapping(certificate?.Certificate);
                         if (!string.IsNullOrEmpty(result))
                         {
-                            MessageBox.Show($"The binding '{Binding}' is invalid: {result}", Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            ShowMessage($"The binding '{Binding}' is invalid: {result}.", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                             return;
+                        }
+                    }
+
+                    if (site.Server.Mode == WorkingMode.IisExpress)
+                    {
+                        if (Binding.Host != "localhost")
+                        {
+                            ShowMessage(
+                                "The specific host name is not recommended for IIS Express. The host name should be localhost.",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Warning,
+                                MessageBoxDefaultButton.Button1);
+
+                            var reservation = binding.ToUrlPrefix();
+                            var feature = new ReservedUrlsFeature((Module)serviceProvider);
+                            feature.Load();
+                            if (!feature.Items.Any(item => item.UrlPrefix == reservation) && !BindingUtility.AddReservedUrl(reservation))
+                            {
+                                ShowMessage($"Reserved URL {reservation} cannot be added.", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                                return;
+                            }
                         }
                     }
 

@@ -20,6 +20,7 @@ namespace JexusManager.Features.Main
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
     using System.Collections.Generic;
+    using EnumsNET;
 
     public partial class SslDiagDialog : DialogForm
     {
@@ -58,7 +59,7 @@ namespace JexusManager.Features.Main
                         Debug($"System Time: {DateTime.Now}");
                         Debug($"Processor Architecture: {Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE")}");
                         Debug($"OS: {Environment.OSVersion}");
-                        Debug($"{server.Type}");
+                        Debug($"Server Type: {server.Mode.AsString(EnumFormat.Description)}");
                         Debug(string.Empty);
                         Debug($"SERVER SSL PROTOCOLS{Environment.NewLine}");
                         bool ssl10Enabled = GetProtocol("PCT 1.0");

@@ -151,44 +151,15 @@ namespace JexusManager.Features.HttpApi
                 return;
             }
 
-            try
+            if (BindingUtility.AddReservedUrl(dialog.Item.UrlPrefix))
             {
-                // add reserved URL
-                using (var process = new Process())
-                {
-                    var start = process.StartInfo;
-                    start.Verb = "runas";
-                    start.FileName = "cmd";
-                    start.Arguments = $"/c \"\"{Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe")}\" /u:\"{dialog.Item.UrlPrefix}\"";
-                    start.CreateNoWindow = true;
-                    start.WindowStyle = ProcessWindowStyle.Hidden;
-                    process.Start();
-                    process.WaitForExit();
-
-                    if (process.ExitCode == 0)
-                    {
-                        Items.Add(dialog.Item);
-                        OnHttpApiSettingsSaved();
-                    }
-                    else
-                    {
-                        var service = (IManagementUIService)GetService(typeof(IManagementUIService));
-                        service.ShowMessage("Invalid URL prefix input is detected.", Name, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
-                }
+                Items.Add(dialog.Item);
+                OnHttpApiSettingsSaved();
             }
-            catch (Win32Exception ex)
+            else
             {
-                // elevation is cancelled.
-                if (ex.NativeErrorCode != Microsoft.Web.Administration.NativeMethods.ErrorCancelled)
-                {
-                    Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> {{ "native", ex.NativeErrorCode } });
-                    // throw;
-                }
-            }
-            catch (Exception ex)
-            {
-                Rollbar.Report(ex, ErrorLevel.Error);
+                var service = (IManagementUIService)GetService(typeof(IManagementUIService));
+                service.ShowMessage("Invalid URL prefix input is detected.", Name, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 

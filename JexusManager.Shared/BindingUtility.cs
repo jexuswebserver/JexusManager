@@ -401,5 +401,46 @@ namespace Microsoft.Web.Administration
                 return $"Remove SNI certificate failed: unknown ({ex.Message})";
             }
         }
+
+        public static bool AddReservedUrl(string url)
+        {
+            try
+            {
+                // add reserved URL
+                using (var process = new Process())
+                {
+                    var start = process.StartInfo;
+                    start.Verb = "runas";
+                    start.FileName = "cmd";
+                    start.Arguments = $"/c \"\"{Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe")}\" /u:\"{url}\"";
+                    start.CreateNoWindow = true;
+                    start.WindowStyle = ProcessWindowStyle.Hidden;
+                    process.Start();
+                    process.WaitForExit();
+                    return process.ExitCode == 0;
+                }
+            }
+            catch (Win32Exception ex)
+            {
+                // elevation is cancelled.
+                if (ex.NativeErrorCode != Microsoft.Web.Administration.NativeMethods.ErrorCancelled)
+                {
+                    Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> { { "native", ex.NativeErrorCode } });
+                    // throw;
+                }
+            }
+            catch (Exception ex)
+            {
+                Rollbar.Report(ex, ErrorLevel.Error);
+            }
+
+            return false;
+        }
+
+        public static string ToUrlPrefix(this Binding binding)
+        {
+            var name = binding.Host == "*" || binding.Host == string.Empty ? "*" : binding.Host;
+            return $"{binding.Protocol}://{name}:{binding.EndPoint.Port}/";
+        }
     }
 }

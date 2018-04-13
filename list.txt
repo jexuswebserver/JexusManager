@@ -4,6 +4,7 @@ CertificateInstaller.exe.config
 CertificateInstaller.pdb
 CheckBoxComboBox.dll
 Crad.Windows.Forms.Actions.dll
+Enums.NET.dll
 INIFileParser.dll
 JexusManager.exe 
 JexusManager.exe.config
