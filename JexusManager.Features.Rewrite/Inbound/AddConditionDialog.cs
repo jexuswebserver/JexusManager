@@ -11,7 +11,6 @@ namespace JexusManager.Features.Rewrite.Inbound
 {
     using System;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
     using System.Windows.Forms;
@@ -36,9 +35,10 @@ namespace JexusManager.Features.Rewrite.Inbound
             var check = Observable.FromEventPattern<EventArgs>(cbCheck, "SelectedIndexChanged");
             container.Add(
                 check.ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Merge(Observable.FromEventPattern<EventArgs>(this, "Load"))
                 .Subscribe(evt =>
                 {
-                    txtPattern.Enabled = btnTest.Enabled = cbCheck.SelectedIndex > 3;
+                    txtPattern.Enabled = btnTest.Enabled = cbIgnore.Enabled = cbCheck.SelectedIndex > 3;
                     if (!txtPattern.Enabled)
                     {
                         txtPattern.Text = string.Empty;
@@ -48,6 +48,7 @@ namespace JexusManager.Features.Rewrite.Inbound
             container.Add(
                 Observable.FromEventPattern<EventArgs>(txtPattern, "TextChanged")
                 .Merge(check)
+                .Merge(Observable.FromEventPattern<EventArgs>(txtInput, "TextChanged"))
                 .Sample(TimeSpan.FromSeconds(1))
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>

@@ -139,12 +139,14 @@ namespace JexusManager.Features.Rewrite.Inbound
             TrackAllCaptures = (bool)conditions["trackAllCaptures"];
             LogicalGrouping = (long)conditions["logicalGrouping"];
 
+            Conditions.Clear();
             foreach (ConfigurationElement condition in conditions.GetCollection())
             {
                 var item = new ConditionItem(condition);
                 Conditions.Add(item);
             }
 
+            ServerVariables.Clear();
             var variables = Element.ChildElements["serverVariables"];
             foreach (ConfigurationElement variable in variables.GetCollection())
             {

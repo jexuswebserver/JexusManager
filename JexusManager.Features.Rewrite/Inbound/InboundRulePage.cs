@@ -11,10 +11,9 @@ namespace JexusManager.Features.Rewrite.Inbound
 {
     using System;
     using System.Collections;
-    using System.Diagnostics;
     using System.Reflection;
     using System.Windows.Forms;
-
+    using JexusManager.Services;
     using Microsoft.Web.Management.Client;
     using Microsoft.Web.Management.Client.Win32;
 
@@ -94,7 +93,9 @@ namespace JexusManager.Features.Rewrite.Inbound
         protected override void Initialize(object navigationData)
         {
             base.Initialize(navigationData);
-            // TODO: pictureBox1.Image
+            var service = (IConfigurationService)ServiceProvider.GetService(typeof(IConfigurationService));
+            pictureBox1.Image = service.Scope.GetImage();
+
             var info = (Tuple<InboundFeature, InboundRule>)navigationData;
             _feature = info.Item1;
             Rule = info.Item2;
@@ -260,8 +261,11 @@ namespace JexusManager.Features.Rewrite.Inbound
         {
             get
             {
-                return !string.IsNullOrWhiteSpace(txtName.Text) && !string.IsNullOrWhiteSpace(txtPattern.Text)
-                       && !string.IsNullOrWhiteSpace(txtUrl.Text);
+                return !string.IsNullOrWhiteSpace(txtName.Text) && !string.IsNullOrWhiteSpace(txtPattern.Text) &&
+                    (
+                        (cbAction.SelectedIndex == 1 && !string.IsNullOrWhiteSpace(txtUrl.Text)) ||
+                        (cbAction.SelectedIndex == 2 && !string.IsNullOrWhiteSpace(txtRedirect.Text)) ||
+                        (cbAction.SelectedIndex == 3 && !string.IsNullOrWhiteSpace(txtReason.Text) && !string.IsNullOrWhiteSpace(txtError.Text) && !string.IsNullOrWhiteSpace(txtStatus.Text) && !string.IsNullOrWhiteSpace(txtSubstatus.Text)));
             }
         }
 
@@ -546,6 +550,16 @@ namespace JexusManager.Features.Rewrite.Inbound
             btnVarDown.Enabled = hasSelection
                                       && lvVariables.SelectedItems[0].Index < lvVariables.Items.Count - 1;
             btnVarUp.Enabled = hasSelection && lvVariables.SelectedItems[0].Index > 0;
+        }
+
+        private void lvConditions_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+            UpdateConditionsButtons();
+        }
+
+        private void lvVariables_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+            UpdateVariablesButtons();
         }
     }
 }

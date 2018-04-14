@@ -12,22 +12,23 @@ namespace JexusManager.Features.Rewrite
 
         public ConditionItem(ConfigurationElement element)
         {
-            this.Element = element;
+            Element = element;
             if (element == null)
             {
-                this.Input = "{QUERY_STRING}";
-                this.MatchType = 4;
-                this.IgnoreCase = true;
+                Input = "{QUERY_STRING}";
+                MatchType = 4;
+                IgnoreCase = true;
                 return;
             }
 
-            this.Input = (string)element["input"];
-            this.Pattern = (string)element["pattern"];
-            this.IgnoreCase = (bool)element["ignoreCase"];
+            Input = (string)element["input"];
+            Pattern = (string)element["pattern"];
+            IgnoreCase = (bool)element["ignoreCase"];
 
             var root = (long)element["matchType"];
             var negate = (bool)element["negate"];
-            this.MatchType = (int)root * 2 + (negate ? 1 : 0);
+            var value = root == 0 ? 2 : root - 1;
+            MatchType = (int)value * 2 + (negate ? 1 : 0);
         }
 
         public bool IgnoreCase { get; set; }
@@ -44,7 +45,8 @@ namespace JexusManager.Features.Rewrite
             Element["pattern"] = Pattern;
             Element["ignoreCase"] = IgnoreCase;
             Element["negate"] = MatchType % 2 == 1;
-            Element["matchType"] = MatchType / 2;
+            var value = MatchType / 2;
+            Element["matchType"] = value == 2 ? 0 : value + 1;
         }
 
         public void AppendTo(ConfigurationElementCollection conditionsCollection)

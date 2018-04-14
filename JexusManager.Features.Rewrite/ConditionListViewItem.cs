@@ -17,7 +17,7 @@ namespace JexusManager.Features.Rewrite
         {
             _matchType = new ListViewSubItem(this, GetText(condition.MatchType));
             this.SubItems.Add(_matchType);
-            _pattern = new ListViewSubItem(this, condition.Pattern);
+            _pattern = new ListViewSubItem(this, condition.MatchType > 3 ? condition.Pattern : "N/A");
             this.SubItems.Add(_pattern);
             this.Item = condition;
         }

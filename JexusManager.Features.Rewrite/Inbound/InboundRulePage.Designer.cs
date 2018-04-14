@@ -385,6 +385,7 @@
             this.lvConditions.TabIndex = 8;
             this.lvConditions.UseCompatibleStateImageBehavior = false;
             this.lvConditions.View = System.Windows.Forms.View.Details;
+            this.lvConditions.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.lvConditions_ItemSelectionChanged);
             // 
             // chInput
             // 
@@ -545,6 +546,7 @@
             this.lvVariables.TabIndex = 9;
             this.lvVariables.UseCompatibleStateImageBehavior = false;
             this.lvVariables.View = System.Windows.Forms.View.Details;
+            this.lvVariables.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.lvVariables_ItemSelectionChanged);
             // 
             // chName
             // 
