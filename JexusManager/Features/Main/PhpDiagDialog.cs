@@ -26,6 +26,7 @@ namespace JexusManager.Features.Main
     using System.Diagnostics;
     using IniParser.Parser;
     using EnumsNET;
+    using JexusManager.Features.Modules;
 
     public partial class PhpDiagDialog : DialogForm
     {
@@ -73,6 +74,20 @@ namespace JexusManager.Features.Main
                         Debug($"Server Type: {server.Mode.AsString(EnumFormat.Description)}");
                         Debug(string.Empty);
 
+                        var modules = new ModulesFeature((Module)provider);
+                        modules.Load();
+                        Debug($"Scan {modules.Items.Count} installed module(s).");
+                        if (modules.Items.All(item => item.Name != "FastCgiModule"))
+                        {
+                            Error($"FastCGI module is not installed as part of IIS. Please refer to https://docs.microsoft.com/en-us/iis/application-frameworks/scenario-build-a-php-website-on-iis/configuring-step-1-install-iis-and-php#13-download-and-install-php-manually for more details.");
+                            return;
+                        }
+                        else
+                        {
+                            Debug("FastCGI module is installed.");
+                        }
+
+                        Debug(string.Empty);
                         var handlers = new HandlersFeature((Module)provider);
                         handlers.Load();
                         var foundPhpHandler = false;
