@@ -113,7 +113,7 @@ namespace Microsoft.Web.Administration
 
         internal static string LocationPath(this Application application)
         {
-            return application.Site.Name + application.Path;
+            return application.IsRoot() ? application.Site.Name : application.Site.Name + application.Path;
         }
 
         internal static bool IsJexus(ServerManager server, Application application)
