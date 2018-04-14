@@ -513,7 +513,11 @@ namespace Tests
 
                 var error = errorsCollection.CreateElement();
                 var cast = Assert.Throws<InvalidCastException>(() => error.SetAttributeValue("statusCode", "500"));
+#if IIS
                 Assert.Equal(Helper.IsRunningOnMono() ? "Cannot cast from source type to destination type." : "Specified cast is not valid.", cast.Message);
+#else
+                Assert.Equal(Helper.IsRunningOnMono() ? "Cannot cast from source type to destination type." : "Cannot convert 500 of System.String to uint.", cast.Message);
+#endif
 
                 var ex2 = Assert.Throws<COMException>(() => error["statusCode"] = 90000);
                 Assert.Equal("Integer value must be between 400 and 999 inclusive\r\n", ex2.Message);
