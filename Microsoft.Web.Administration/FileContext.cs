@@ -399,9 +399,21 @@ namespace Microsoft.Web.Administration
             else
             {
                 var found = RootSectionGroup.GetSectionDefinition(path);
-                if (found != null && found.Ignore && path != "system.webServer")
+                if (found != null && found.Ignore)
                 {
-                    return true;
+                    if (path == "system.webServer")
+                    {
+                        if (!element.HasElements)
+                        {
+                            // like empty tag in web.config.
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        // examples: <runtime> in machine.config.
+                        return true;
+                    }
                 }
             }
 
