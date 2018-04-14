@@ -6,22 +6,22 @@ namespace JexusManager.Features.Rewrite.Inbound
 {
     using Microsoft.Web.Administration;
 
-    public class ServerVariableItem
+    public class ServerVariableItem : IItem<ServerVariableItem>
     {
         public ConfigurationElement Element { get; set; }
 
         public ServerVariableItem(ConfigurationElement element)
         {
-            this.Element = element;
+            Element = element;
             if (element == null)
             {
-                this.Replace = true;
+                Replace = true;
                 return;
             }
 
-            this.Name = (string)element["name"];
-            this.Value = (string)element["value"];
-            this.Replace = (bool)element["replace"];
+            Name = (string)element["name"];
+            Value = (string)element["value"];
+            Replace = (bool)element["replace"];
         }
 
         public bool Replace { get; set; }
@@ -29,6 +29,7 @@ namespace JexusManager.Features.Rewrite.Inbound
         public string Value { get; set; }
 
         public string Name { get; set; }
+        public string Flag { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
         public void Apply()
         {
@@ -37,11 +38,14 @@ namespace JexusManager.Features.Rewrite.Inbound
             Element["replace"] = Replace;
         }
 
-        public void AppendTo(ConfigurationElementCollection variableCollection)
+        public bool Match(ServerVariableItem other)
         {
-            Element = variableCollection.CreateElement();
-            Apply();
-            variableCollection.Add(Element);
+            return other != null && Name == other.Name;
+        }
+
+        public bool Equals(ServerVariableItem other)
+        {
+            return Match(other) && Value == other.Value && Replace == other.Replace;
         }
     }
 }

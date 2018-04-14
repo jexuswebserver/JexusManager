@@ -10,7 +10,6 @@
 namespace JexusManager.Features.Rewrite.Inbound
 {
     using System.Collections.Generic;
-    using System.Diagnostics;
 
     using Microsoft.Web.Administration;
 
@@ -217,13 +216,6 @@ namespace JexusManager.Features.Rewrite.Inbound
             {
                 variable.AppendTo(variableCollection);
             }
-        }
-
-        public void AppendTo(ConfigurationElementCollection rulesCollection)
-        {
-            Element = rulesCollection.CreateElement();
-            Apply();
-            rulesCollection.Add(Element);
         }
     }
 }

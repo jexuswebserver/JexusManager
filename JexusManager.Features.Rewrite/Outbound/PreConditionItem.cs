@@ -8,28 +8,28 @@ namespace JexusManager.Features.Rewrite.Outbound
 
     using Microsoft.Web.Administration;
 
-    public class PreConditionItem
+    public class PreConditionItem : IItem<PreConditionItem>
     {
         public ConfigurationElement Element { get; set; }
 
         public PreConditionItem(ConfigurationElement element)
         {
-            this.Element = element;
-            this.Conditions = new List<ConditionItem>();
-            this.Flag = element == null || element.IsLocallyStored ? "Local" : "Inherited";
+            Element = element;
+            Conditions = new List<ConditionItem>();
+            Flag = element == null || element.IsLocallyStored ? "Local" : "Inherited";
             if (element == null)
             {
                 return;
             }
 
-            this.Name = (string)element["name"];
-            this.LogicalGrouping = (long)element["logicalGrouping"];
-            this.PatternSyntax = (long)element["patternSyntax"];
+            Name = (string)element["name"];
+            LogicalGrouping = (long)element["logicalGrouping"];
+            PatternSyntax = (long)element["patternSyntax"];
             var items = element.GetCollection();
             foreach (ConfigurationElement item in items)
             {
                 var subElement = new ConditionItem(item);
-                this.Conditions.Add(subElement);
+                Conditions.Add(subElement);
             }
         }
 
@@ -57,11 +57,14 @@ namespace JexusManager.Features.Rewrite.Outbound
             }
         }
 
-        public void AppendTo(ConfigurationElementCollection rulesCollection)
+        public bool Match(PreConditionItem other)
         {
-            Element = rulesCollection.CreateElement();
-            Apply();
-            rulesCollection.Add(Element);
+            return other != null && Name == other.Name;
+        }
+
+        public bool Equals(PreConditionItem other)
+        {
+            return Match(other) && LogicalGrouping == other.LogicalGrouping && PatternSyntax == other.PatternSyntax; // TODO: compare children.
         }
     }
 }

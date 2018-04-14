@@ -18,12 +18,12 @@ namespace JexusManager.Features.Rewrite.Outbound
     {
         public OutboundRule(ConfigurationElement element)
         {
-            this.Flag = element == null || element.IsLocallyStored ? "Local" : "Inherited";
-            this.Element = element;
-            this.Conditions = new List<ConditionItem>();
+            Flag = element == null || element.IsLocallyStored ? "Local" : "Inherited";
+            Element = element;
+            Conditions = new List<ConditionItem>();
             if (element == null)
             {
-                this.Input = "URL path after '/'";
+                Input = "URL path after '/'";
                 return;
             }
 
@@ -63,7 +63,7 @@ namespace JexusManager.Features.Rewrite.Outbound
 
         public bool Match(OutboundRule other)
         {
-            return other != null && other.Name == this.Name;
+            return other != null && other.Name == Name;
         }
 
         public bool ShowHelp()
@@ -74,32 +74,32 @@ namespace JexusManager.Features.Rewrite.Outbound
 
         public void CancelChanges()
         {
-            this.Name = (string)this.Element["name"];
-            this.PreCondition = (string)this.Element["preCondition"];
-            this.Enabled = (bool)this.Element["enabled"];
-            this.Syntax = (long)this.Element["patternSyntax"];
-            this.Stopping = (bool)this.Element["stopProcessing"];
-            ConfigurationElement matchElement = this.Element.ChildElements["match"];
-            this.Filter = (long)matchElement["filterByTags"];
+            Name = (string)Element["name"];
+            PreCondition = (string)Element["preCondition"];
+            Enabled = (bool)Element["enabled"];
+            Syntax = (long)Element["patternSyntax"];
+            Stopping = (bool)Element["stopProcessing"];
+            ConfigurationElement matchElement = Element.ChildElements["match"];
+            Filter = (long)matchElement["filterByTags"];
             CustomTags = (string)matchElement["customTags"];
-            this.ServerVariable = (string)matchElement["serverVariable"];
-            this.Pattern = (string)matchElement["pattern"];
-            this.IgnoreCase = (bool)matchElement["ignoreCase"];
-            this.Negate = (bool)matchElement["negate"];
+            ServerVariable = (string)matchElement["serverVariable"];
+            Pattern = (string)matchElement["pattern"];
+            IgnoreCase = (bool)matchElement["ignoreCase"];
+            Negate = (bool)matchElement["negate"];
 
-            var conditions = this.Element.ChildElements["conditions"];
-            this.TrackAllCaptures = (bool)conditions["trackAllCaptures"];
-            this.LogicalGrouping = (long)conditions["logicalGrouping"];
+            var conditions = Element.ChildElements["conditions"];
+            TrackAllCaptures = (bool)conditions["trackAllCaptures"];
+            LogicalGrouping = (long)conditions["logicalGrouping"];
             foreach (ConfigurationElement condition in conditions.GetCollection())
             {
                 var item = new ConditionItem(condition);
-                this.Conditions.Add(item);
+                Conditions.Add(item);
             }
 
-            ConfigurationElement actionElement = this.Element.ChildElements["action"];
-            this.Action = (long)actionElement["type"];
-            this.Value = (string)actionElement["value"];
-            this.Replace = (bool)actionElement["replace"];
+            ConfigurationElement actionElement = Element.ChildElements["action"];
+            Action = (long)actionElement["type"];
+            Value = (string)actionElement["value"];
+            Replace = (bool)actionElement["replace"];
         }
 
         public bool Negate { get; set; }
@@ -122,7 +122,7 @@ namespace JexusManager.Features.Rewrite.Outbound
 
         public bool ApplyChanges()
         {
-            this.Apply();
+            Apply();
             return true;
         }
 
@@ -154,13 +154,6 @@ namespace JexusManager.Features.Rewrite.Outbound
             {
                 condition.AppendTo(conditionsCollection);
             }
-        }
-
-        public void AppendTo(ConfigurationElementCollection rulesCollection)
-        {
-            Element = rulesCollection.CreateElement();
-            Apply();
-            rulesCollection.Add(Element);
         }
     }
 }

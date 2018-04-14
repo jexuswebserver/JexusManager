@@ -8,25 +8,25 @@ namespace JexusManager.Features.Rewrite.Outbound
 
     using Microsoft.Web.Administration;
 
-    public class CustomTagsItem
+    public class CustomTagsItem : IItem<CustomTagsItem>
     {
         public ConfigurationElement Element { get; set; }
 
         public CustomTagsItem(ConfigurationElement element)
         {
-            this.Element = element;
-            this.Tags = new List<CustomTagItem>();
-            this.Flag = element == null || element.IsLocallyStored ? "Local" : "Inherited";
+            Element = element;
+            Tags = new List<CustomTagItem>();
+            Flag = element == null || element.IsLocallyStored ? "Local" : "Inherited";
             if (element == null)
             {
                 return;
             }
 
-            this.Name = (string)element["name"];
+            Name = (string)element["name"];
             var collection = element.GetCollection();
             foreach (ConfigurationElement item in collection)
             {
-                this.Tags.Add(new CustomTagItem(item));
+                Tags.Add(new CustomTagItem(item));
             }
         }
 
@@ -54,11 +54,14 @@ namespace JexusManager.Features.Rewrite.Outbound
             // TODO: add
         }
 
-        public void AppendTo(ConfigurationElementCollection rulesCollection)
+        public bool Match(CustomTagsItem other)
         {
-            Element = rulesCollection.CreateElement();
-            Apply();
-            rulesCollection.Add(Element);
+            return other != null && Name == other.Name;
+        }
+
+        public bool Equals(CustomTagsItem other)
+        {
+            return Match(other) && TagString == other.TagString;
         }
     }
 }

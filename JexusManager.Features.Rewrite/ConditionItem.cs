@@ -6,7 +6,7 @@ namespace JexusManager.Features.Rewrite
 {
     using Microsoft.Web.Administration;
 
-    public class ConditionItem
+    public class ConditionItem : IItem<ConditionItem>
     {
         public ConfigurationElement Element { get; set; }
 
@@ -38,6 +38,7 @@ namespace JexusManager.Features.Rewrite
         public string Input { get; set; }
 
         public int MatchType { get; set; }
+        public string Flag { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
         public void Apply()
         {
@@ -49,11 +50,14 @@ namespace JexusManager.Features.Rewrite
             Element["matchType"] = value == 2 ? 0 : value + 1;
         }
 
-        public void AppendTo(ConfigurationElementCollection conditionsCollection)
+        public bool Match(ConditionItem other)
         {
-            Element = conditionsCollection.CreateElement();
-            Apply();
-            conditionsCollection.Add(Element);
+            return other != null && Input == other.Input && MatchType == other.MatchType && Pattern == other.Pattern && IgnoreCase == other.IgnoreCase;
+        }
+
+        public bool Equals(ConditionItem other)
+        {
+            return Match(other);
         }
     }
 }
