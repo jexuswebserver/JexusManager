@@ -47,6 +47,10 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.cbHashing = new System.Windows.Forms.ComboBox();
+            this.dtpFrom = new System.Windows.Forms.DateTimePicker();
+            this.dtpTo = new System.Windows.Forms.DateTimePicker();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -65,7 +69,7 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = Properties.Resources.certificates_48;
+            this.pictureBox1.Image = global::JexusManager.Features.Certificates.Properties.Resources.certificates_48;
             this.pictureBox1.Location = new System.Drawing.Point(10, 10);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(48, 48);
@@ -212,6 +216,38 @@
             this.cbHashing.Size = new System.Drawing.Size(238, 21);
             this.cbHashing.TabIndex = 24;
             // 
+            // dtpFrom
+            // 
+            this.dtpFrom.Location = new System.Drawing.Point(351, 332);
+            this.dtpFrom.Name = "dtpFrom";
+            this.dtpFrom.Size = new System.Drawing.Size(200, 20);
+            this.dtpFrom.TabIndex = 25;
+            // 
+            // dtpTo
+            // 
+            this.dtpTo.Location = new System.Drawing.Point(351, 388);
+            this.dtpTo.Name = "dtpTo";
+            this.dtpTo.Size = new System.Drawing.Size(200, 20);
+            this.dtpTo.TabIndex = 26;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(351, 372);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(45, 13);
+            this.label7.TabIndex = 27;
+            this.label7.Text = "Valid to:";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(351, 315);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(56, 13);
+            this.label8.TabIndex = 28;
+            this.label8.Text = "Valid from:";
+            // 
             // SelfCertificateDialog
             // 
             this.AcceptButton = this.btnOK;
@@ -219,6 +255,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(654, 476);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.dtpTo);
+            this.Controls.Add(this.dtpFrom);
             this.Controls.Add(this.cbHashing);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.cbLength);
@@ -262,5 +302,9 @@
         private Label label5;
         private Label label6;
         private ComboBox cbHashing;
+        private DateTimePicker dtpFrom;
+        private DateTimePicker dtpTo;
+        private Label label7;
+        private Label label8;
     }
 }

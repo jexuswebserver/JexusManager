@@ -41,6 +41,8 @@ namespace JexusManager.Features.Certificates
             cbLength.SelectedIndex = 3;
             cbHashing.SelectedIndex = 1;
             txtCommonName.Text = Environment.MachineName;
+            dtpFrom.Value = DateTime.Now;
+            dtpTo.Value = dtpFrom.Value.AddYears(1);
 
             if (Environment.OSVersion.Version < Version.Parse("6.2"))
             {
@@ -76,8 +78,8 @@ namespace JexusManager.Features.Certificates
                     byte[] sn = Guid.NewGuid().ToByteArray();
                     string subject = defaultSubject;
                     string issuer = defaultIssuer;
-                    DateTime notBefore = DateTime.Now;
-                    DateTime notAfter = new DateTime(643445675990000000); // 12/31/2039 23:59:59Z
+                    DateTime notBefore = dtpFrom.Value;
+                    DateTime notAfter = dtpTo.Value;
 
                     RSA issuerKey = new RSACryptoServiceProvider(int.Parse(cbLength.Text));
                     RSA subjectKey = null;
