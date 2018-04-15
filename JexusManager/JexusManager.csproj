@@ -209,11 +209,11 @@
     <Compile Include="Features\Main\SslDiagDialog.Designer.cs">
       <DependentUpon>SslDiagDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Features\Main\LinkDiagDialog.cs">
+    <Compile Include="Features\Main\BindingDiagDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Features\Main\LinkDiagDialog.Designer.cs">
-      <DependentUpon>LinkDiagDialog.cs</DependentUpon>
+    <Compile Include="Features\Main\BindingDiagDialog.Designer.cs">
+      <DependentUpon>BindingDiagDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Features\Main\VirtualDirectoryFeature.cs" />
     <Compile Include="Features\Main\VirtualDirectoryPage.cs">
@@ -389,8 +389,8 @@
     <EmbeddedResource Include="Features\Main\SslDiagDialog.resx">
       <DependentUpon>SslDiagDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Features\Main\LinkDiagDialog.resx">
-      <DependentUpon>LinkDiagDialog.cs</DependentUpon>
+    <EmbeddedResource Include="Features\Main\BindingDiagDialog.resx">
+      <DependentUpon>BindingDiagDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Features\Main\VirtualDirectoryPage.resx">
       <DependentUpon>VirtualDirectoryPage.cs</DependentUpon>

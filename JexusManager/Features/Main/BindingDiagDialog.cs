@@ -23,9 +23,9 @@ namespace JexusManager.Features.Main
     using JexusManager.Features.HttpApi;
     using Microsoft.Web.Management.Client;
 
-    public partial class LinkDiagDialog : DialogForm
+    public partial class BindingDiagDialog : DialogForm
     {
-        public LinkDiagDialog(IServiceProvider provider, Site site)
+        public BindingDiagDialog(IServiceProvider provider, Site site)
             : base(provider)
         {
             InitializeComponent();
@@ -154,7 +154,7 @@ namespace JexusManager.Features.Main
 
                                     if (!found)
                                     {
-                                        Warn($"   DNS query does not return a known IP address for any network adapter of this machine. Please make sure the packets are forwarded properly.");
+                                        Warn($"   DNS query does not return a known IP address for any network adapter of this machine. Please review your DNS settings or modify the hosts file.");
                                     }
                                 }
 

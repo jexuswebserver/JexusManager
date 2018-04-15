@@ -1,6 +1,6 @@
 ﻿namespace JexusManager.Features.Main
 {
-    partial class LinkDiagDialog
+    partial class BindingDiagDialog
     {
         /// <summary>
         /// Required designer variable.

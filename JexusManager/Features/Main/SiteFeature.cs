@@ -94,6 +94,7 @@ namespace JexusManager.Features.Main
                     manageGroup.Items.Add(new MethodTaskItem("Limits", "Limits...", string.Empty).SetUsage());
                     manageGroup.Items.Add(new MethodTaskItem(string.Empty, "-", string.Empty).SetUsage());
                     manageGroup.Items.Add(new TextTaskItem("Troubleshooting", string.Empty, true));
+                    manageGroup.Items.Add(new MethodTaskItem("FixBinding", "Binding Diagnostics", string.Empty).SetUsage());
                     manageGroup.Items.Add(new MethodTaskItem("FixProject", "Project Diagnostics", string.Empty).SetUsage());
                     manageGroup.Items.Add(new MethodTaskItem("FixPhp", "PHP Diagnostics", string.Empty).SetUsage());
                 }
@@ -183,6 +184,12 @@ namespace JexusManager.Features.Main
             public void FixProject()
             {
                 _owner.FixProject();
+            }
+
+            [Obfuscation(Exclude = true)]
+            public void FixBinding()
+            {
+                _owner.FixBinding();
             }
 
             [Obfuscation(Exclude = true)]
@@ -387,6 +394,13 @@ namespace JexusManager.Features.Main
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var dialog = new VsDiagDialog(Module, service.Site);
+            dialog.ShowDialog();
+        }
+
+        private void FixBinding()
+        {
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+            var dialog = new BindingDiagDialog(Module, service.Site);
             dialog.ShowDialog();
         }
 
