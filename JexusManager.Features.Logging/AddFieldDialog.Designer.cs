@@ -90,6 +90,7 @@
             // 
             // cbSource
             // 
+            this.cbSource.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.cbSource.FormattingEnabled = true;
             this.cbSource.Location = new System.Drawing.Point(25, 153);
             this.cbSource.Name = "cbSource";

@@ -28,6 +28,14 @@ namespace JexusManager.Features.Rewrite.Inbound
             txtPattern.Text = Item.Pattern;
             cbIgnore.Checked = Item.IgnoreCase;
             cbCheck.SelectedIndex = Item.MatchType;
+            txtInput.AutoCompleteSource = AutoCompleteSource.CustomSource;
+            var source = new AutoCompleteStringCollection();
+            foreach (var item in DialogHelper.Conditions)
+            {
+                source.Add($"{{{item}}}");
+            }
+
+            txtInput.AutoCompleteCustomSource = source;
 
             var container = new CompositeDisposable();
             FormClosed += (sender, args) => container.Dispose();

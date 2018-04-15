@@ -74,6 +74,7 @@
             // 
             // txtInput
             // 
+            this.txtInput.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.txtInput.Location = new System.Drawing.Point(12, 25);
             this.txtInput.Name = "txtInput";
             this.txtInput.Size = new System.Drawing.Size(435, 20);
