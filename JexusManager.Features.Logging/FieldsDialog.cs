@@ -71,6 +71,8 @@ namespace JexusManager.Features.Logging
             }
         }
 
+        private bool enabled;
+
         public FieldsDialog(IServiceProvider serviceProvider, SiteLogFile logFile)
             : base(serviceProvider)
         {
@@ -110,7 +112,10 @@ namespace JexusManager.Features.Logging
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    btnOK.Enabled = true;
+                    if (enabled)
+                    {
+                        btnOK.Enabled = true;
+                    }
                 }));
 
             container.Add(
@@ -180,6 +185,11 @@ namespace JexusManager.Features.Logging
         private void FieldsDialog_HelpButtonClicked(object sender, CancelEventArgs e)
         {
             DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210517#W3CLoggingFields");
+        }
+
+        private void FieldsDialog_Shown(object sender, EventArgs e)
+        {
+            enabled = true;
         }
     }
 }

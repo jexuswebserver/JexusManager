@@ -180,6 +180,7 @@
             this.Name = "FieldsDialog";
             this.Text = "W3C Logging Fields";
             this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.FieldsDialog_HelpButtonClicked);
+            this.Shown += new System.EventHandler(this.FieldsDialog_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();
 
