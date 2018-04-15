@@ -6,7 +6,6 @@ namespace JexusManager.Features.Logging
 {
     using System;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
     using System.Windows.Forms;
@@ -14,11 +13,11 @@ namespace JexusManager.Features.Logging
     using Microsoft.Web.Administration;
     using Microsoft.Web.Management.Client.Win32;
 
-    public partial class AddFieldDialog : DialogForm
+    internal partial class AddFieldDialog : DialogForm
     {
         public CustomLogField Custom { get; private set; }
 
-        public AddFieldDialog(IServiceProvider serviceProvider, CustomLogField custom, SiteLogFile logFile)
+        public AddFieldDialog(IServiceProvider serviceProvider, CustomLogField custom, Fields logFile)
             : base(serviceProvider)
         {
             Custom = custom;
@@ -173,18 +172,16 @@ namespace JexusManager.Features.Logging
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
+                    var type = (CustomLogFieldSourceType)Enum.ToObject(typeof(CustomLogFieldSourceType), cbType.SelectedIndex);
                     if (Custom == null)
                     {
-                        Custom = logFile.CustomLogFields.CreateElement();
+                        Custom = logFile.Element.CustomLogFields.CreateElement();
+                        logFile.CustomLogFields.Add(Custom);
                     }
 
                     Custom.LogFieldName = txtName.Text;
-                    Custom.SourceType = (CustomLogFieldSourceType)Enum.ToObject(typeof(CustomLogFieldSourceType), cbType.SelectedIndex);
+                    Custom.SourceType = type;
                     Custom.SourceName = cbSource.Text;
-                    if (Custom == null)
-                    {
-                        logFile.CustomLogFields.Add(Custom);
-                    }
 
                     DialogResult = DialogResult.OK;
                 }));

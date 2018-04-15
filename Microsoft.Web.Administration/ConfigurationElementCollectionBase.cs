@@ -40,23 +40,23 @@ namespace Microsoft.Web.Administration
 
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
-            return this.Exposed.GetEnumerator();
+            return Exposed.GetEnumerator();
         }
 
         public IEnumerator GetEnumerator()
         {
-            return this.Exposed.GetEnumerator();
+            return Exposed.GetEnumerator();
         }
 
         public void CopyTo(Array array, int index)
         {
             // TODO: how to fix real here.
-            this.Exposed.CopyTo(array.Cast<T>().ToArray(), index);
+            Exposed.CopyTo(array.Cast<T>().ToArray(), index);
         }
 
         public int Count
         {
-            get { return this.Exposed.Count; }
+            get { return Exposed.Count; }
         }
 
         public bool IsSynchronized
@@ -79,7 +79,7 @@ namespace Microsoft.Web.Administration
 
         protected virtual T CreateNewElement(string elementTagName)
         {
-            var schema = this.Schema.CollectionSchema.GetElementSchema(elementTagName);
+            var schema = Schema.CollectionSchema.GetElementSchema(elementTagName);
             if (schema == null)
             {
                 return null;
@@ -90,9 +90,9 @@ namespace Microsoft.Web.Administration
 
         internal void InternalAdd(T element)
         {
-            this.SkipCheck = true;
+            SkipCheck = true;
             Add(element);
-            this.SkipCheck = false;
+            SkipCheck = false;
         }
 
         public T Add(T element)
@@ -102,36 +102,36 @@ namespace Microsoft.Web.Administration
 
         public T AddAt(int index, T element)
         {
-            if (!this.SkipCheck)
+            if (!SkipCheck)
             {
-                this.FileContext.SetDirty();
+                FileContext.SetDirty();
             }
 
             element.Validate(false);
             element.ForceCreateEntity();
-            this.CheckMatched(element);
+            CheckMatched(element);
 
-            if (this.HasParent)
+            if (HasParent)
             {
-                if (this.Count > 0)
+                if (Count > 0)
                 {
-                    var left = index == 0 ? this.Exposed[0].IsLocallyStored : this.Exposed[index - 1].IsLocallyStored;
+                    var left = index == 0 ? Exposed[0].IsLocallyStored : Exposed[index - 1].IsLocallyStored;
                     var right = index == Count
-                                    ? this.Schema.Path != "system.webServer/defaultDocument/files"
-                                    : this.Exposed[index].IsLocallyStored;
+                                    ? Schema.Path != "system.webServer/defaultDocument/files"
+                                    : Exposed[index].IsLocallyStored;
                     if (!left && !right)
                     {
-                        foreach (var item in this.Real.ToList())
+                        foreach (var item in Real.ToList())
                         {
-                            if (this.Schema.CollectionSchema.RemoveElementName == item.ElementTagName)
+                            if (Schema.CollectionSchema.RemoveElementName == item.ElementTagName)
                             {
-                                this.Real.Remove(item);
+                                Real.Remove(item);
                                 item.Entity.Remove();
                             }
                         }
 
                         var clear1 = CreateElement(Schema.CollectionSchema.ClearElementName);
-                        this.Real.Insert(0, clear1);
+                        Real.Insert(0, clear1);
                         clear1.ForceCreateEntity();
                         clear1.AppendToParentElement(clear1.Entity, true);
                         foreach (var item in Exposed)
@@ -143,7 +143,7 @@ namespace Microsoft.Web.Administration
 
                             item.IsLocallyStored = true;
                             item.AppendToParentElement(item.Entity, false);
-                            this.Real.Add(item);
+                            Real.Add(item);
                         }
                     }
                 }
@@ -153,15 +153,15 @@ namespace Microsoft.Web.Administration
 
             if (Count == index)
             {
-                this.Real.Add(element);
-                this.Exposed.Add(element);
+                Real.Add(element);
+                Exposed.Add(element);
                 element.AppendToParentElement(element.Entity, false);
                 return element;
             }
 
-            this.Real.Insert(index, element);
-            var previous = this.Exposed[index];
-            this.Exposed.Insert(index, element);
+            Real.Insert(index, element);
+            var previous = Exposed[index];
+            Exposed.Insert(index, element);
 
             if (previous.IsLocallyStored)
             {
@@ -174,7 +174,7 @@ namespace Microsoft.Web.Administration
 
         private void CheckMatched(T element)
         {
-            foreach (var item in this.Exposed)
+            foreach (var item in Exposed)
             {
                 CheckItem(element, item);
             }
@@ -225,8 +225,8 @@ namespace Microsoft.Web.Administration
 
         public void Clear()
         {
-            this.FileContext.SetDirty();
-            foreach (T element in this.Exposed)
+            FileContext.SetDirty();
+            foreach (T element in Exposed)
             {
                 if (element.IsLocallyStored)
                 {
@@ -234,18 +234,18 @@ namespace Microsoft.Web.Administration
                 }
             }
 
-            this.Exposed.Clear();
-            this.Real.Clear();
-            if (this.HasParent && this.AllowsClear)
+            Exposed.Clear();
+            Real.Clear();
+            if (HasParent && AllowsClear)
             {
                 var clear1 = CreateElement(Schema.CollectionSchema.ClearElementName);
-                this.Real.Add(clear1);
+                Real.Add(clear1);
                 clear1.ForceCreateEntity();
                 clear1.AppendToParentElement(clear1.Entity, true);
             }
             else
             {
-                this.CleanEntity();
+                CleanEntity();
             }
         }
 
@@ -261,38 +261,57 @@ namespace Microsoft.Web.Administration
 
         public int IndexOf(T element)
         {
-            return this.Exposed.IndexOf(element);
+            return Exposed.IndexOf(element);
         }
 
         public void Remove(T element)
         {
-            if (this.FileContext.ReadOnly)
+            if (FileContext.ReadOnly)
             {
                 throw new FileLoadException(
                     "Filename: \r\nError: This configuration section cannot be modified because it has been opened for read only access\r\n\r\n");
             }
 
-            this.Exposed.Remove(element);
+            var addSchema =
+                Schema.CollectionSchema.AddSchemas.FirstOrDefault(item => item.Name == element.ElementTagName);
+            if (addSchema == null)
+            {
+                throw new InvalidOperationException();
+            }
+
+            foreach (var item in Exposed.ToList())
+            {
+                var notMatched = false;
+                foreach (ConfigurationAttributeSchema child in addSchema.AttributeSchemas)
+                {
+                    if (item[child.Name] != element[child.Name])
+                    {
+                        notMatched = true;
+                        break;
+                    }
+                }
+
+                if (notMatched)
+                {
+                    continue;
+                }
+
+                Exposed.Remove(item);
+            }
+
             if (element.IsLocallyStored)
             {
-                this.Real.Remove(element);
+                Real.Remove(element);
                 element.Delete();
-                if (this.Real.Count == 0)
+                if (Real.Count == 0)
                 {
-                    this.CleanEntity();
+                    CleanEntity();
                 }
             }
             else
             {
-                var addSchema =
-                    Schema.CollectionSchema.AddSchemas.FirstOrDefault(item => item.Name == element.ElementTagName);
-                if (addSchema == null)
-                {
-                    throw new InvalidOperationException();
-                }
-
                 var removal = CreateElement(Schema.CollectionSchema.RemoveElementName);
-                this.Real.Insert(0, removal);
+                Real.Insert(0, removal);
                 removal.ForceCreateEntity();
                 removal.AppendToParentElement(removal.Entity, true);
 
@@ -308,12 +327,12 @@ namespace Microsoft.Web.Administration
 
         public void RemoveAt(int index)
         {
-            if (index < 0 || index >= this.Exposed.Count)
+            if (index < 0 || index >= Exposed.Count)
             {
                 throw new ArgumentOutOfRangeException(nameof(index));
             }
 
-            var item = this.Exposed[index];
+            var item = Exposed[index];
             Remove(item);
         }
 
@@ -325,7 +344,7 @@ namespace Microsoft.Web.Administration
 
         public T this[int index]
         {
-            get { return this.Exposed[index]; }
+            get { return Exposed[index]; }
         }
 
         internal void Clone(ConfigurationElement item, ConfigurationElement newItem)

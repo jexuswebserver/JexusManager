@@ -20,7 +20,12 @@ namespace Microsoft.Web.Administration
 
         public CustomLogField Add(string logFieldName, string sourceName, CustomLogFieldSourceType sourceType)
         {
-            return null;
+            var result = CreateNewElement(null);
+            result.LogFieldName = logFieldName;
+            result.SourceName = sourceName;
+            result.SourceType = sourceType;
+            Add(result);
+            return result;
         }
 
         protected override CustomLogField CreateNewElement(string elementTagName)

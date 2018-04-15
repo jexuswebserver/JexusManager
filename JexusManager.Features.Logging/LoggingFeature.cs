@@ -104,6 +104,8 @@ namespace JexusManager.Features.Logging
             {
                 var section2 = service.GetSection("system.applicationHost/sites");
                 var element = section2.ChildElements["siteDefaults"].ChildElements["logFile"];
+                var parent = section2.ChildElements["siteDefaults"];
+                Fields = new Fields(new SiteLogFile(element, parent));
                 LogFormat = (long)element.Attributes["logFormat"].Value;
                 Directory = element.Attributes["directory"].Value.ToString();
                 if (element.Schema.AttributeSchemas["logTargetW3C"] != null)
@@ -122,6 +124,7 @@ namespace JexusManager.Features.Logging
             else
             {
                 var logFile = service.Application.GetSite().LogFile;
+                Fields = new Fields(logFile);
                 LogFormat = (long)logFile.LogFormat;
                 Directory = logFile.Directory;
                 if (logFile.Schema.AttributeSchemas["logTargetW3C"] != null)
@@ -164,6 +167,8 @@ namespace JexusManager.Features.Logging
 
         public long Mode { get; set; }
 
+        public Fields Fields { get; set; }
+
         private void Enable()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
@@ -195,20 +200,7 @@ namespace JexusManager.Features.Logging
 
         internal bool SelectFields()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            SiteLogFile element;
-            if (service.Server != null)
-            {
-                var section2 = service.GetSection("system.applicationHost/sites");
-                var parent = section2.ChildElements["siteDefaults"];
-                element = new SiteLogFile(parent.ChildElements["logFile"], parent);
-            }
-            else
-            {
-                element = service.Application.GetSite().LogFile;
-            }
-
-            var dialog = new FieldsDialog(Module, element);
+            var dialog = new FieldsDialog(Module, Fields);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return false;
@@ -274,6 +266,15 @@ namespace JexusManager.Features.Logging
                 element.Attributes["localTimeRollover"].Value = LocalTimeRollover;
                 element.Attributes["truncateSize"].Value = Int64.Parse(TruncateSizeString);
                 element.Attributes["period"].Value = Period;
+
+                var collection = element.GetCollection("customFields");
+                collection.Clear();
+                foreach (var item in Fields.CustomLogFields)
+                {
+                    collection.Add(item);
+                }
+
+                element.Attributes["logExtFileFlags"].Value = (long)Fields.LogExtFileFlags;
             }
             else
             {
@@ -302,6 +303,13 @@ namespace JexusManager.Features.Logging
 
                 logFile.TruncateSize = size;
                 logFile.Period = (LoggingRolloverPeriod)Period;
+                logFile.CustomLogFields.Clear();
+                foreach (var item in Fields.CustomLogFields)
+                {
+                    logFile.CustomLogFields.Add(item);
+                }
+
+                logFile.LogExtFileFlags = Fields.LogExtFileFlags;
             }
 
             service.ServerManager.CommitChanges();

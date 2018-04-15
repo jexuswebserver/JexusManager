@@ -14,7 +14,7 @@ namespace JexusManager.Features.Logging
     using Microsoft.Web.Administration;
     using Microsoft.Web.Management.Client.Win32;
 
-    public partial class FieldsDialog : DialogForm
+    internal partial class FieldsDialog : DialogForm
     {
         private class StandardListViewItem : ListViewItem
         {
@@ -73,7 +73,7 @@ namespace JexusManager.Features.Logging
 
         private bool enabled;
 
-        public FieldsDialog(IServiceProvider serviceProvider, SiteLogFile logFile)
+        public FieldsDialog(IServiceProvider serviceProvider, Fields logFile)
             : base(serviceProvider)
         {
             InitializeComponent();
@@ -158,6 +158,7 @@ namespace JexusManager.Features.Logging
                     {
                         item.Remove();
                         item.Custom.Delete();
+                        logFile.CustomLogFields.Remove(item.Custom);
                     }
 
                     btnOK.Enabled = true;

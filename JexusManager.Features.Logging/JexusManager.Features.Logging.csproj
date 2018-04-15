@@ -54,6 +54,7 @@
     <Compile Include="AddFieldDialog.Designer.cs">
       <DependentUpon>AddFieldDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Fields.cs" />
     <Compile Include="FieldsDialog.cs">
       <SubType>Form</SubType>
     </Compile>
