@@ -115,7 +115,7 @@ namespace JexusManager.Features.Main
 
                                 if (binding.Host == "*" || binding.Host == string.Empty)
                                 {
-                                    if (binding.EndPoint.Address == IPAddress.Any)
+                                    if (binding.EndPoint.Address.Equals(IPAddress.Any))
                                     {
                                         Info($" * Web browsers can use several URLs, such as");
                                         foreach (IPAddress address in adapters)
