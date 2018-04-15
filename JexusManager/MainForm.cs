@@ -68,7 +68,7 @@ namespace JexusManager
 
         public ManagementUIService UIService { get; }
 
-        public MainForm()
+        public MainForm(List<string> files)
         {
             InitializeComponent();
 
@@ -133,9 +133,16 @@ namespace JexusManager
             _serviceContainer.AddService(typeof(INavigationService), _navigationService);
             _serviceContainer.AddService(typeof(IManagementUIService), UIService);
 
-            LoadIisExpress();
-            LoadIis();
-            LoadJexus();
+            if (files.Count == 0)
+            {
+                LoadIisExpress();
+                LoadIis();
+                LoadJexus();
+            }
+            else
+            {
+                LoadIisExpressQuick(files);
+            }
 
             Text = PublicNativeMethods.IsProcessElevated ? string.Format("{0} (Administrator)", Text) : Text;
         }
@@ -185,6 +192,11 @@ namespace JexusManager
 
         private void LoadIisExpress()
         {
+            if (!File.Exists(DialogHelper.ListIisExpress))
+            {
+                return;
+            }
+
             // TODO: load if only on Windows.
             var globalFile = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
@@ -202,11 +214,6 @@ namespace JexusManager
                 RegisterServer(global);
             }
 
-            if (!File.Exists(DialogHelper.ListIisExpress))
-            {
-                return;
-            }
-
             var lines = File.ReadAllLines(DialogHelper.ListIisExpress);
             foreach (var item in lines)
             {
@@ -220,6 +227,26 @@ namespace JexusManager
                     _serviceContainer,
                     name: parts[0],
                     hostName: parts[1], 
+                    server: null,
+                    ignoreInCache: true);
+                RegisterServer(data);
+            }
+        }
+
+        private void LoadIisExpressQuick(List<string> files)
+        {
+            if (!File.Exists(DialogHelper.ListIisExpress))
+            {
+                return;
+            }
+
+            var number = 1;
+            foreach (var file in files)
+            {
+                var data = ServerTreeNode.CreateIisExpressNode(
+                    _serviceContainer,
+                    name: $"IIS Express {number++}",
+                    hostName: file,
                     server: null,
                     ignoreInCache: true);
                 RegisterServer(data);

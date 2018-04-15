@@ -10,7 +10,10 @@ using RollbarDotNet;
 namespace JexusManager
 {
     using JexusManager.Dialogs;
+    using Mono.Options;
     using System;
+    using System.Collections.Generic;
+    using System.IO;
     using System.Windows.Forms;
 
     internal static class Program
@@ -22,12 +25,27 @@ namespace JexusManager
         private static void Main(string[] args)
         {
             var suppress = false;
-            foreach (var arg in args)
+            var help = false;
+            OptionSet p =
+                new OptionSet()
+                    .Add("s|suppress", "Suppress Rollbar reports", delegate (string v) { if (v != null) suppress = true; })
+                    .Add("h|help|?", "Display help", delegate (string v) { if (v != null) help = true; });
+
+            List<string> extra;
+            try
             {
-                if (arg == "-s")
-                {
-                    suppress = true;
-                }
+                extra = p.Parse(args);
+            }
+            catch (OptionException)
+            {
+                ShowHelp(p);
+                return;
+            }
+
+            if (help)
+            {
+                ShowHelp(p);
+                return;
             }
 
             if (!suppress)
@@ -61,9 +79,20 @@ namespace JexusManager
             // TODO: set encryption support
             // ProtectedConfigurationProvider.Provider = new WorkingEncryptionServiceProvider();
 
-            Application.Run(new MainForm());
+            Application.Run(new MainForm(extra));
         }
-        
+
+        private static void ShowHelp(OptionSet optionSet)
+        {
+            var textWriter = new StringWriter();
+            textWriter.WriteLine("Jexus Manager is available at https://www.jexusmanager.com");
+            textWriter.WriteLine("JexusManager.exe [Options] [file name] [file name]");
+            textWriter.WriteLine("Options:");
+            optionSet.WriteOptionDescriptions(textWriter);
+
+            MessageBox.Show(textWriter.ToString(), "Jexus Manager", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
         private static void SetupRollbar()
         {
             Rollbar.Init(new RollbarConfig
