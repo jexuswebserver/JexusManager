@@ -216,8 +216,10 @@ namespace JexusManager.Features.Logging
 
         private void btnSelect_Click(object sender, EventArgs e)
         {
-            _feature.SelectFields();
-            InformChanges();
+            if (_feature.SelectFields())
+            {
+                InformChanges();
+            }
         }
 
         private void rbFile_CheckedChanged(object sender, EventArgs e)

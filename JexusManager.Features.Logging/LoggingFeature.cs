@@ -193,7 +193,7 @@ namespace JexusManager.Features.Logging
             service.ShowMessage("The specific log directory is invalid.", Name, MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
-        internal void SelectFields()
+        internal bool SelectFields()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             SiteLogFile element;
@@ -211,10 +211,11 @@ namespace JexusManager.Features.Logging
             var dialog = new FieldsDialog(Module, element);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
-                return;
+                return false;
             }
 
             service.ServerManager.CommitChanges();
+            return true;
         }
 
         protected void OnLoggingSettingsSaved()
