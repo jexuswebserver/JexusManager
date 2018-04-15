@@ -214,7 +214,6 @@ namespace JexusManager.Features.Logging
                 return false;
             }
 
-            service.ServerManager.CommitChanges();
             return true;
         }
 
@@ -305,6 +304,7 @@ namespace JexusManager.Features.Logging
                 logFile.Period = (LoggingRolloverPeriod)Period;
             }
 
+            service.ServerManager.CommitChanges();
             return true;
         }
     }
