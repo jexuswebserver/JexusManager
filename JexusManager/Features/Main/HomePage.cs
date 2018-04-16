@@ -16,21 +16,16 @@ namespace JexusManager.Features.Main
             InitializeComponent();
         }
 
-        private void txtHomepage_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void txtHome_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             DialogHelper.ProcessStart("https://www.jexusmanager.com");
         }
 
-        private void txtHomepageChinese_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            DialogHelper.ProcessStart("http://linuxdot.net");
-        }
-
-        private void txtLeXtudio_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            DialogHelper.ProcessStart("https://www.lextudio.com");
-        }
-
         protected override bool ShowTaskList => false;
+
+        private void txtStudio_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            DialogHelper.ProcessStart("https://blog.lextudio.com");
+        }
     }
 }

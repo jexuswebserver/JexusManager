@@ -38,9 +38,8 @@
             this.label3 = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.txtLeXtudio = new System.Windows.Forms.LinkLabel();
-            this.txtHomepageChinese = new System.Windows.Forms.LinkLabel();
-            this.txtHomepage = new System.Windows.Forms.LinkLabel();
+            this.txtStudio = new System.Windows.Forms.LinkLabel();
+            this.txtHome = new System.Windows.Forms.LinkLabel();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -109,9 +108,8 @@
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.groupBox1.Controls.Add(this.txtLeXtudio);
-            this.groupBox1.Controls.Add(this.txtHomepageChinese);
-            this.groupBox1.Controls.Add(this.txtHomepage);
+            this.groupBox1.Controls.Add(this.txtStudio);
+            this.groupBox1.Controls.Add(this.txtHome);
             this.groupBox1.Location = new System.Drawing.Point(19, 28);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(253, 374);
@@ -119,38 +117,27 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Online Resources";
             // 
-            // txtLeXtudio
+            // txtStudio
             // 
-            this.txtLeXtudio.AutoSize = true;
-            this.txtLeXtudio.Location = new System.Drawing.Point(21, 74);
-            this.txtLeXtudio.Name = "txtLeXtudio";
-            this.txtLeXtudio.Size = new System.Drawing.Size(104, 13);
-            this.txtLeXtudio.TabIndex = 3;
-            this.txtLeXtudio.TabStop = true;
-            this.txtLeXtudio.Text = "LeXtudio Homepage";
-            this.txtLeXtudio.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.txtLeXtudio_LinkClicked);
+            this.txtStudio.AutoSize = true;
+            this.txtStudio.Location = new System.Drawing.Point(21, 66);
+            this.txtStudio.Name = "txtStudio";
+            this.txtStudio.Size = new System.Drawing.Size(104, 13);
+            this.txtStudio.TabIndex = 4;
+            this.txtStudio.TabStop = true;
+            this.txtStudio.Text = "LeXtudio Homepage";
+            this.txtStudio.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.txtStudio_LinkClicked);
             // 
-            // txtHomepageChinese
+            // txtHome
             // 
-            this.txtHomepageChinese.AutoSize = true;
-            this.txtHomepageChinese.Location = new System.Drawing.Point(21, 50);
-            this.txtHomepageChinese.Name = "txtHomepageChinese";
-            this.txtHomepageChinese.Size = new System.Drawing.Size(136, 13);
-            this.txtHomepageChinese.TabIndex = 2;
-            this.txtHomepageChinese.TabStop = true;
-            this.txtHomepageChinese.Text = "Jexus Homepage (Chinese)";
-            this.txtHomepageChinese.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.txtHomepageChinese_LinkClicked);
-            // 
-            // txtHomepage
-            // 
-            this.txtHomepage.AutoSize = true;
-            this.txtHomepage.Location = new System.Drawing.Point(21, 27);
-            this.txtHomepage.Name = "txtHomepage";
-            this.txtHomepage.Size = new System.Drawing.Size(89, 13);
-            this.txtHomepage.TabIndex = 1;
-            this.txtHomepage.TabStop = true;
-            this.txtHomepage.Text = "Jexus Homepage";
-            this.txtHomepage.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.txtHomepage_LinkClicked);
+            this.txtHome.AutoSize = true;
+            this.txtHome.Location = new System.Drawing.Point(21, 29);
+            this.txtHome.Name = "txtHome";
+            this.txtHome.Size = new System.Drawing.Size(134, 13);
+            this.txtHome.TabIndex = 3;
+            this.txtHome.TabStop = true;
+            this.txtHome.Text = "Jexus Manager Homepage";
+            this.txtHome.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.txtHome_LinkClicked);
             // 
             // HomePage
             // 
@@ -177,10 +164,9 @@
         private Label label1;
         private Panel panel2;
         private GroupBox groupBox1;
-        private LinkLabel txtLeXtudio;
-        private LinkLabel txtHomepageChinese;
-        private LinkLabel txtHomepage;
+        private LinkLabel txtHome;
         private Panel panel3;
         private Label label3;
+        private LinkLabel txtStudio;
     }
 }
