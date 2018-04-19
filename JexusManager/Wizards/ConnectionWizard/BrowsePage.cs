@@ -70,7 +70,12 @@ namespace JexusManager.Wizards.ConnectionWizard
             {
                 var iisExpress = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "IIS Express", "AppServer", "applicationhost.config");
                 var iisExpressX86 = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "IIS Express", "AppServer", "applicationhost.config");
-                if (string.Equals(iisExpress, data.FileName, StringComparison.OrdinalIgnoreCase) || string.Equals(iisExpressX86, data.FileName, StringComparison.OrdinalIgnoreCase))
+                var iisExpress2 = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "IIS Express", "config", "templates", "PersonalWebServer", "applicationhost.config");
+                var iisExpress2X86 = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "IIS Express", "config", "templates", "PersonalWebServer", "applicationhost.config");
+                if (string.Equals(iisExpress, data.FileName, StringComparison.OrdinalIgnoreCase) 
+                    || string.Equals(iisExpressX86, data.FileName, StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(iisExpress2, data.FileName, StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(iisExpress2X86, data.FileName, StringComparison.OrdinalIgnoreCase))
                 {
                     var service = (IManagementUIService)GetService(typeof(IManagementUIService));
                     service.ShowMessage("This file coming from IIS Express installation cannot be used. Please select another file.", Caption, MessageBoxButtons.OK, MessageBoxIcon.Error);
