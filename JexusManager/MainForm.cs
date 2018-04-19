@@ -393,7 +393,9 @@ namespace JexusManager
                 return;
             }
 
-            var dialog = new BindingsDialog(_serviceContainer, node);
+            var module = new MainModule();
+            module.Initialize(_serviceContainer, null);
+            var dialog = new BindingsDialog(module, node);
             dialog.ShowDialog(this);
         }
 
