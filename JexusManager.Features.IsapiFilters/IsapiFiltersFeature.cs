@@ -279,7 +279,7 @@ namespace JexusManager.Features.IsapiFilters
 
         public virtual bool ShowHelp()
         {
-            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210462");
+            DialogHelper.ProcessStart("https://go.microsoft.com/fwlink/?LinkId=210516");
             return false;
         }
 

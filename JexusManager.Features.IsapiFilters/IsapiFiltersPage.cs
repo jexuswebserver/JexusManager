@@ -5,11 +5,9 @@
 namespace JexusManager.Features.IsapiFilters
 {
     using System;
-    using System.Collections;
     using System.Reflection;
     using System.Windows.Forms;
 
-    using JexusManager.Properties;
     using JexusManager.Services;
 
     using Microsoft.Web.Management.Client;
