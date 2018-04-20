@@ -401,7 +401,12 @@ namespace Microsoft.Web.Administration
                 var found = RootSectionGroup.GetSectionDefinition(path);
                 if (found != null && found.Ignore)
                 {
-                    if (path == "system.webServer")
+                    if (path == "runtime")
+                    {
+                        // examples: <runtime> in machine.config.
+                        return true;
+                    }
+                    else
                     {
                         if (!element.HasElements)
                         {
@@ -409,9 +414,13 @@ namespace Microsoft.Web.Administration
                             return true;
                         }
                     }
-                    else
+                }
+                else
+                {
+                    // TODO: improve performance.
+                    var foundChild = RootSectionGroup.GetChildSectionDefinition(path);
+                    if (foundChild != null && !element.HasElements)
                     {
-                        // examples: <runtime> in machine.config.
                         return true;
                     }
                 }

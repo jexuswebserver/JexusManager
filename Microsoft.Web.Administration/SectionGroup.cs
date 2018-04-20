@@ -267,6 +267,34 @@ namespace Microsoft.Web.Administration
             }
         }
 
+        internal SectionDefinition GetChildSectionDefinition(string path)
+        {
+            var index = path.IndexOf(Path, StringComparison.Ordinal);
+            if (index != 0)
+            {
+                return null;
+            }
+
+            foreach (var definition in Sections)
+            {
+                if (definition.Path.StartsWith(path + "/"))
+                {
+                    return definition;
+                }
+            }
+
+            foreach (var child in SectionGroups)
+            {
+                var result = child.GetChildSectionDefinition(path);
+                if (result != null)
+                {
+                    return result;
+                }
+            }
+
+            return null;
+        }
+
         internal SectionDefinition GetSectionDefinition(string path)
         {
             var index = path.IndexOf(Path, StringComparison.Ordinal);
