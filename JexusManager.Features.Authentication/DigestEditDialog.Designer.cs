@@ -85,7 +85,6 @@
             this.Controls.Add(this.btnCancel);
             this.Name = "DigestEditDialog";
             this.Text = "Edit Digest Authentication Settings";
-            this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.BasicEditDialogHelpButtonClicked);
             this.ResumeLayout(false);
             this.PerformLayout();
 

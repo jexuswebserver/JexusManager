@@ -125,7 +125,6 @@
             this.Controls.Add(this.label1);
             this.Name = "AnonymousEditDialog";
             this.Text = "Edit Anonymous Authentication Credentials";
-            this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.AnonymousEditDialogHelpButtonClicked);
             this.ResumeLayout(false);
             this.PerformLayout();
 

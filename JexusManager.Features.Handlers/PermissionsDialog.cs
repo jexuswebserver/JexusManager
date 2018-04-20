@@ -6,7 +6,6 @@ namespace JexusManager.Features.Handlers
 {
     using System;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
     using System.Windows.Forms;
@@ -60,11 +59,14 @@ namespace JexusManager.Features.Handlers
 
                     DialogResult = DialogResult.OK;
                 }));
-        }
 
-        private void PermissionsDialogHelpButtonClicked(object sender, CancelEventArgs e)
-        {
-            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210505");
+            container.Add(
+                Observable.FromEventPattern<CancelEventArgs>(this, "HelpButtonClicked")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(EnvironmentVariableTarget =>
+                {
+                    feature.ShowHelp();
+                }));
         }
     }
 }

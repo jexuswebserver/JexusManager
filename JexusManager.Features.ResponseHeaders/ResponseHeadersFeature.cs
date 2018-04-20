@@ -148,7 +148,7 @@ namespace JexusManager.Features.ResponseHeaders
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var staticContent = service.GetSection("system.webServer/staticContent");
-            var dialog = new SetCommonHeadersDialog(Module, service.GetSection("system.webServer/httpProtocol"), staticContent.ChildElements["clientCache"]);
+            var dialog = new SetCommonHeadersDialog(Module, service.GetSection("system.webServer/httpProtocol"), staticContent.ChildElements["clientCache"], this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;

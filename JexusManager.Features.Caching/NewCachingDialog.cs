@@ -16,14 +16,11 @@ namespace JexusManager.Features.Caching
 
     internal sealed partial class NewCachingDialog : DialogForm
     {
-        private readonly CachingFeature _feature;
-
         public NewCachingDialog(IServiceProvider serviceProvider, CachingItem existing, CachingFeature feature)
             : base(serviceProvider)
         {
             InitializeComponent();
             Text = existing == null ? "Add Cache Rule" : "Edit Cache Rule";
-            _feature = feature;
             Item = existing ?? new CachingItem(null);
             if (existing == null)
             {
@@ -87,7 +84,7 @@ namespace JexusManager.Features.Caching
                         Item.KernelCachePolicy = 3L;
                     }
 
-                    if (_feature.Items.Any(item => item.Match(Item)))
+                    if (feature.Items.Any(item => item.Match(Item)))
                     {
                         ShowMessage(
                             "This rule already exists.",
@@ -105,7 +102,7 @@ namespace JexusManager.Features.Caching
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    var dialog = new CachingAdvancedDialog(ServiceProvider, Item);
+                    var dialog = new CachingAdvancedDialog(ServiceProvider, Item, feature);
                     dialog.ShowDialog();
                 }));
 
@@ -116,13 +113,16 @@ namespace JexusManager.Features.Caching
                 {
                     btnOK.Enabled = !string.IsNullOrWhiteSpace(txtExtension.Text);
                 }));
+
+            container.Add(
+                Observable.FromEventPattern<CancelEventArgs>(this, "HelpButtonClicked")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(EnvironmentVariableTarget =>
+                {
+                    feature.ShowHelp();
+                }));
         }
 
         public CachingItem Item { get; set; }
-
-        private void NewRestrictionDialogHelpButtonClicked(object sender, CancelEventArgs e)
-        {
-            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210522");
-        }
     }
 }

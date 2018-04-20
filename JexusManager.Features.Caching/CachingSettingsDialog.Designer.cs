@@ -133,7 +133,6 @@
             this.Controls.Add(this.cbUser);
             this.Name = "CachingSettingsDialog";
             this.Text = "Edit Output Cache Settings";
-            this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.PermissionsDialogHelpButtonClicked);
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -118,7 +118,6 @@
             this.Controls.Add(this.btnCancel);
             this.Name = "NewModuleDialog";
             this.Text = "Add Managed Module";
-            this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.NewRestrictionDialogHelpButtonClicked);
             this.ResumeLayout(false);
             this.PerformLayout();
 

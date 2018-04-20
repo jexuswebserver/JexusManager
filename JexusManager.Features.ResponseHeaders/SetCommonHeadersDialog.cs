@@ -6,18 +6,19 @@ namespace JexusManager.Features.ResponseHeaders
 {
     using System;
     using System.ComponentModel;
-    using System.Diagnostics;
+    using System.Reactive.Disposables;
+    using System.Reactive.Linq;
     using System.Windows.Forms;
 
     using Microsoft.Web.Administration;
     using Microsoft.Web.Management.Client.Win32;
 
-    public partial class SetCommonHeadersDialog : DialogForm
+    internal partial class SetCommonHeadersDialog : DialogForm
     {
         private readonly ConfigurationSection _httpProtocolSection;
         private readonly ConfigurationElement _staticContent;
 
-        public SetCommonHeadersDialog(IServiceProvider serviceProvider, ConfigurationSection httpProtocolSection, ConfigurationElement staticContent)
+        public SetCommonHeadersDialog(IServiceProvider serviceProvider, ConfigurationSection httpProtocolSection, ConfigurationElement staticContent, ResponseHeadersFeature feature)
             : base(serviceProvider)
         {
             InitializeComponent();
@@ -64,6 +65,17 @@ namespace JexusManager.Features.ResponseHeaders
                 cbUnit.SelectedIndex = 0;
                 txtAfter.Text = (span.Seconds + (span.Minutes + (span.Hours + span.Days * 24) * 60) * 60).ToString();
             }
+
+            var container = new CompositeDisposable();
+            FormClosed += (sender, args) => container.Dispose();
+
+            container.Add(
+                Observable.FromEventPattern<CancelEventArgs>(this, "HelpButtonClicked")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(EnvironmentVariableTarget =>
+                {
+                    feature.ShowHelp();
+                }));
         }
 
         private void btnOK_Click(object sender, EventArgs e)
@@ -172,11 +184,6 @@ namespace JexusManager.Features.ResponseHeaders
         private long GetMax(int index)
         {
             return _max[index];
-        }
-
-        private void SetCommonHeadersDialog_HelpButtonClicked(object sender, CancelEventArgs e)
-        {
-            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210509");
         }
 
         private void cbExpired_CheckedChanged(object sender, EventArgs e)

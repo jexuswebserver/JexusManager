@@ -119,7 +119,6 @@
             this.Controls.Add(this.btnCancel);
             this.Name = "NewFilterDialog";
             this.Text = "Add ISAPI Filter";
-            this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.NewRestrictionDialogHelpButtonClicked);
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -13,8 +13,8 @@ namespace JexusManager.Features.IsapiFilters
     {
         public IsapiFiltersItem(ConfigurationElement element)
         {
-            this.Element = element;
-            this.Flag = element == null || element.IsLocallyStored ? "Local" : "Inherited";
+            Element = element;
+            Flag = element == null || element.IsLocallyStored ? "Local" : "Inherited";
             if (element == null)
             {
                 Path = string.Empty;
@@ -22,10 +22,10 @@ namespace JexusManager.Features.IsapiFilters
                 return;
             }
 
-            this.Name = (string)element["name"];
-            this.Path = (string)element["path"];
+            Name = (string)element["name"];
+            Path = (string)element["path"];
             var content = (string)element["preCondition"];
-            this.PreConditions = content.Split(',').ToList();
+            PreConditions = content.Split(',').ToList();
             EnableCache = (bool)element["enableCache"];
         }
 
@@ -44,7 +44,7 @@ namespace JexusManager.Features.IsapiFilters
         public bool Equals(IsapiFiltersItem other)
         {
             // all properties
-            return this.Match(other) && other.Path == this.Path;
+            return Match(other) && other.Path == Path;
         }
 
         public void Apply()
@@ -58,7 +58,7 @@ namespace JexusManager.Features.IsapiFilters
         public bool Match(IsapiFiltersItem other)
         {
             // match combined keys.
-            return other != null && other.Name == this.Name;
+            return other != null && other.Name == Name;
         }
     }
 }

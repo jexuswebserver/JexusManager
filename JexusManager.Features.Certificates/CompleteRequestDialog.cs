@@ -20,9 +20,9 @@ namespace JexusManager.Features.Certificates
     using Microsoft.Web.Management.Client.Win32;
     using Mono.Security.Authenticode;
 
-    public partial class CompleteRequestDialog : DialogForm
+    internal partial class CompleteRequestDialog : DialogForm
     {
-        public CompleteRequestDialog(IServiceProvider serviceProvider)
+        public CompleteRequestDialog(IServiceProvider serviceProvider, CertificatesFeature feature)
             : base(serviceProvider)
         {
             InitializeComponent();
@@ -153,15 +153,18 @@ namespace JexusManager.Features.Certificates
                 {
                     DialogHelper.ShowOpenFileDialog(txtPath, "*.cer|*.cer|*.*|*.*");
                 }));
+
+            container.Add(
+                Observable.FromEventPattern<CancelEventArgs>(this, "HelpButtonClicked")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(EnvironmentVariableTarget =>
+                {
+                    feature.ShowHelp();
+                }));
         }
 
         public string Store { get; set; }
 
         public X509Certificate2 Item { get; set; }
-
-        private void SelfCertificateDialogHelpButtonClicked(object sender, CancelEventArgs e)
-        {
-            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210528");
-        }
     }
 }

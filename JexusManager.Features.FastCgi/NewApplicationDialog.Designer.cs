@@ -142,7 +142,6 @@
             this.Controls.Add(this.btnCancel);
             this.Name = "NewApplicationDialog";
             this.Text = "Add FastCGI Application";
-            this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.NewRestrictionDialogHelpButtonClicked);
             this.ResumeLayout(false);
             this.PerformLayout();
 

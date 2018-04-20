@@ -12,7 +12,7 @@ namespace JexusManager.Features.Authentication
 
         public DigestItem(ConfigurationElement element)
         {
-            this.Element = element;
+            Element = element;
             Realm = (string)element["realm"];
         }
 

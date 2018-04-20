@@ -6,7 +6,6 @@ namespace JexusManager.Features.IsapiCgiRestriction
 {
     using System;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
     using System.Windows.Forms;
@@ -16,7 +15,7 @@ namespace JexusManager.Features.IsapiCgiRestriction
 
     internal partial class SettingsDialog : DialogForm
     {
-        public SettingsDialog(IServiceProvider serviceProvider, ConfigurationElement element)
+        public SettingsDialog(IServiceProvider serviceProvider, ConfigurationElement element, IsapiCgiRestrictionFeature feature)
             : base(serviceProvider)
         {
             InitializeComponent();
@@ -35,11 +34,14 @@ namespace JexusManager.Features.IsapiCgiRestriction
                     element["notListedCgisAllowed"] = cbCgi.Checked;
                     DialogResult = DialogResult.OK;
                 }));
-        }
 
-        private void PermissionsDialogHelpButtonClicked(object sender, CancelEventArgs e)
-        {
-            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210515");
+            container.Add(
+                Observable.FromEventPattern<CancelEventArgs>(this, "HelpButtonClicked")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(EnvironmentVariableTarget =>
+                {
+                    feature.ShowHelp();
+                }));
         }
     }
 }

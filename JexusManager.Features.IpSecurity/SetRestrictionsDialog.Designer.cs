@@ -141,7 +141,6 @@
             this.Controls.Add(this.btnCancel);
             this.Name = "SetRestrictionsDialog";
             this.Text = "Edit IP and Domain Restrictions Settings";
-            this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.SetRestrictionsDialogHelpButtonClicked);
             this.ResumeLayout(false);
             this.PerformLayout();
 

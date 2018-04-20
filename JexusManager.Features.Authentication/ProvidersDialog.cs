@@ -10,11 +10,14 @@ namespace JexusManager.Features.Authentication
 
     using Microsoft.Web.Management.Client.Win32;
     using System.Reactive.Disposables;
+    using System.ComponentModel;
+    using Microsoft.Web.Management.Client.Extensions;
+
     public partial class ProvidersDialog : DialogForm
     {
         private readonly string[] _allProviders = { "Negotiate", "NTLM", "Negotiate:Kerberos" };
 
-        public ProvidersDialog(IServiceProvider serviceProvider, WindowsItem item)
+        public ProvidersDialog(IServiceProvider serviceProvider, WindowsItem item, AuthenticationFeature feature)
             : base(serviceProvider)
         {
             InitializeComponent();
@@ -124,6 +127,14 @@ namespace JexusManager.Features.Authentication
                     lbProviders.Items.Insert(down, current);
                     lbProviders.SelectedIndex = down;
                     btnOK.Enabled = true;
+                }));
+
+            container.Add(
+                Observable.FromEventPattern<CancelEventArgs>(this, "HelpButtonClicked")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(EnvironmentVariableTarget =>
+                {
+                    feature.ShowHelp();
                 }));
         }
     }

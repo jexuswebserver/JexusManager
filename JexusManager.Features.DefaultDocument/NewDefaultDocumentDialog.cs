@@ -6,7 +6,6 @@ namespace JexusManager.Features.DefaultDocument
 {
     using System;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Linq;
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
@@ -14,9 +13,9 @@ namespace JexusManager.Features.DefaultDocument
 
     using Microsoft.Web.Management.Client.Win32;
 
-    public partial class NewDefaultDocumentDialog : DialogForm
+    internal partial class NewDefaultDocumentDialog : DialogForm
     {
-        public NewDefaultDocumentDialog(IServiceProvider serviceProvider)
+        public NewDefaultDocumentDialog(IServiceProvider serviceProvider, DefaultDocumentFeature feature)
             : base(serviceProvider)
         {
             InitializeComponent();
@@ -52,13 +51,16 @@ namespace JexusManager.Features.DefaultDocument
                 {
                     btnOK.Enabled = !string.IsNullOrWhiteSpace(txtName.Text);
                 }));
+
+            container.Add(
+                Observable.FromEventPattern<CancelEventArgs>(this, "HelpButtonClicked")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(EnvironmentVariableTarget =>
+                {
+                    feature.ShowHelp();
+                }));
         }
 
         public DocumentItem Item { get; set; }
-
-        private void NewDefaultDocumentDialogHelpButtonClicked(object sender, CancelEventArgs e)
-        {
-            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210478");
-        }
     }
 }

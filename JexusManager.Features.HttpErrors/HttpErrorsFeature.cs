@@ -110,18 +110,18 @@ namespace JexusManager.Features.HttpErrors
 
         public void Add()
         {
-            var dialog = new NewErrorDialog(this.Module, null, this);
+            var dialog = new NewErrorDialog(Module, null, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
-            this.AddItem(dialog.Item);
+            AddItem(dialog.Item);
         }
 
         public void Remove()
         {
-            var dialog = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+            var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
             if (
                 dialog.ShowMessage("Are you sure that you want to remove the selected custom error page?", "Confirm Remove",
                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) !=
@@ -135,20 +135,20 @@ namespace JexusManager.Features.HttpErrors
 
         public void Edit()
         {
-            var dialog = new NewErrorDialog(this.Module, this.SelectedItem, this);
+            var dialog = new NewErrorDialog(Module, SelectedItem, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
-            this.EditItem(this.SelectedItem);
+            EditItem(SelectedItem);
         }
 
         public void Set()
         {
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var section = service.GetSection("system.webServer/httpErrors");
-            var dialog = new EditDialog(this.Module, section);
+            var dialog = new EditDialog(Module, section, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
@@ -165,7 +165,7 @@ namespace JexusManager.Features.HttpErrors
 
         protected override void OnSettingsSaved()
         {
-            this.HttpErrorsSettingsUpdated?.Invoke();
+            HttpErrorsSettingsUpdated?.Invoke();
         }
 
         public virtual bool ShowHelp()

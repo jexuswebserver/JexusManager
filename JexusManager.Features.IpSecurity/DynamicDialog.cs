@@ -6,7 +6,6 @@ namespace JexusManager.Features.IpSecurity
 {
     using System;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
     using System.Windows.Forms;
@@ -14,9 +13,9 @@ namespace JexusManager.Features.IpSecurity
     using Microsoft.Web.Administration;
     using Microsoft.Web.Management.Client.Win32;
 
-    public partial class DynamicDialog : DialogForm
+    internal partial class DynamicDialog : DialogForm
     {
-        public DynamicDialog(IServiceProvider serviceProvider, ConfigurationSection section)
+        public DynamicDialog(IServiceProvider serviceProvider, ConfigurationSection section, IpSecurityFeature feature)
             : base(serviceProvider)
         {
             InitializeComponent();
@@ -100,11 +99,14 @@ namespace JexusManager.Features.IpSecurity
                     section["enableLoggingOnlyMode"] = cbLogging.Checked;
                     DialogResult = DialogResult.OK;
                 }));
-        }
 
-        private void DynamicDialog_HelpButtonClicked(object sender, CancelEventArgs e)
-        {
-            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210513");
+            container.Add(
+                Observable.FromEventPattern<CancelEventArgs>(this, "HelpButtonClicked")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(EnvironmentVariableTarget =>
+                {
+                    feature.ShowHelp();
+                }));
         }
     }
 }

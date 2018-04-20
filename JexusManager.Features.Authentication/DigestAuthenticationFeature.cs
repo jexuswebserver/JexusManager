@@ -106,7 +106,7 @@ namespace JexusManager.Features.Authentication
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var digestSection = service.GetSection("system.webServer/security/authentication/digestAuthentication", null, false);
-            var dialog = new DigestEditDialog(this.Module, new DigestItem(digestSection));
+            var dialog = new DigestEditDialog(Module, new DigestItem(digestSection), this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;

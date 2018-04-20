@@ -6,7 +6,6 @@ namespace JexusManager.Features.Certificates
 {
     using System;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.IO;
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
@@ -15,9 +14,9 @@ namespace JexusManager.Features.Certificates
 
     using Microsoft.Web.Management.Client.Win32;
 
-    public partial class ExportCertificateDialog : DialogForm
+    internal partial class ExportCertificateDialog : DialogForm
     {
-        public ExportCertificateDialog(X509Certificate certificate2, IServiceProvider serviceProvider)
+        public ExportCertificateDialog(X509Certificate certificate2, IServiceProvider serviceProvider, CertificatesFeature feature)
             : base(serviceProvider)
         {
             InitializeComponent();
@@ -55,11 +54,14 @@ namespace JexusManager.Features.Certificates
                     File.WriteAllBytes(txtPath.Text, certificate2.Export(X509ContentType.Pfx, txtPassword.Text));
                     DialogResult = DialogResult.OK;
                 }));
-        }
 
-        private void ExportCertificateDialogHelpButtonClicked(object sender, CancelEventArgs e)
-        {
-            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210528");
+            container.Add(
+                Observable.FromEventPattern<CancelEventArgs>(this, "HelpButtonClicked")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(EnvironmentVariableTarget =>
+                {
+                    feature.ShowHelp();
+                }));
         }
     }
 }

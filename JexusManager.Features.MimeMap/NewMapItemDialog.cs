@@ -6,7 +6,6 @@ namespace JexusManager.Features.MimeMap
 {
     using System;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Linq;
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
@@ -61,13 +60,16 @@ namespace JexusManager.Features.MimeMap
                     btnOK.Enabled = !string.IsNullOrWhiteSpace(txtExtension.Text)
                         && !string.IsNullOrWhiteSpace(txtType.Text);
                 }));
+
+            container.Add(
+                Observable.FromEventPattern<CancelEventArgs>(this, "HelpButtonClicked")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(EnvironmentVariableTarget =>
+                {
+                    feature.ShowHelp();
+                }));
         }
 
         public MimeMapItem Item { get; set; }
-
-        private void NewRestrictionDialogHelpButtonClicked(object sender, CancelEventArgs e)
-        {
-            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210520");
-        }
     }
 }

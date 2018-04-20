@@ -12,7 +12,7 @@ namespace JexusManager.Features.Authentication
 
         public BasicItem(ConfigurationElement element)
         {
-            this.Element = element;
+            Element = element;
             Domain = (string)element["defaultLogonDomain"];
             Realm = (string)element["realm"];
         }

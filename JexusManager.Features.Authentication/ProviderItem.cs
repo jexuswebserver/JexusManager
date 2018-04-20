@@ -12,13 +12,13 @@ namespace JexusManager.Features.Authentication
 
         public ProviderItem(ConfigurationElement element)
         {
-            this.Element = element;
+            Element = element;
             if (element == null)
             {
                 return;
             }
 
-            this.Value = (string)element["value"];
+            Value = (string)element["value"];
         }
 
         public string Value { get; set; }

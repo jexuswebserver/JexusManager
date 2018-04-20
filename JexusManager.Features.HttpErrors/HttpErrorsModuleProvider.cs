@@ -17,7 +17,7 @@ namespace JexusManager.Features.HttpErrors
 
         public override ModuleDefinition GetModuleDefinition(IManagementContext context)
         {
-            return new ModuleDefinition(this.Name, typeof(HttpErrorsModule).AssemblyQualifiedName);
+            return new ModuleDefinition(Name, typeof(HttpErrorsModule).AssemblyQualifiedName);
         }
 
         public override bool SupportsScope(ManagementScope scope)

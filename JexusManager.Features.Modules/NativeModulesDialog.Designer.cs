@@ -135,7 +135,6 @@
             this.Controls.Add(this.lvModules);
             this.Name = "NativeModulesDialog";
             this.Text = "Configure Native Modules";
-            this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.NativeModulesDialogHelpButtonClicked);
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -15,10 +15,10 @@ namespace JexusManager.Features.Authentication
 
         public WindowsItem(ConfigurationElement element)
         {
-            this.Element = element;
+            Element = element;
             var extended = element.ChildElements["extendedProtection"];
-            this.TokenChecking = Convert.ToInt32((long)extended["tokenChecking"]);
-            this.UseKernelMode = (bool)element["useKernelMode"];
+            TokenChecking = Convert.ToInt32((long)extended["tokenChecking"]);
+            UseKernelMode = (bool)element["useKernelMode"];
 
             var providers = element.GetCollection("providers");
             Providers = new List<ProviderItem>(providers.Count);
@@ -35,9 +35,9 @@ namespace JexusManager.Features.Authentication
 
         public void Apply()
         {
-            this.Element["useKernelMode"] = this.UseKernelMode;
-            var extended = this.Element.ChildElements["extendedProtection"];
-            extended["tokenChecking"] = (long)this.TokenChecking;
+            Element["useKernelMode"] = UseKernelMode;
+            var extended = Element.ChildElements["extendedProtection"];
+            extended["tokenChecking"] = (long)TokenChecking;
 
             var providers = Element.GetCollection("providers");
             providers.Clear();

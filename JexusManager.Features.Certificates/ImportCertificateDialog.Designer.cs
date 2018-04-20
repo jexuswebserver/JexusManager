@@ -158,7 +158,6 @@
             this.Controls.Add(this.btnCancel);
             this.Name = "ImportCertificateDialog";
             this.Text = "Import Certificate";
-            this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.ImportCertificateDialogHelpButtonClicked);
             this.ResumeLayout(false);
             this.PerformLayout();
 

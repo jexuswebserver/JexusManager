@@ -42,10 +42,10 @@ namespace JexusManager.Features.IsapiCgiRestriction
             public IsapiCgiRestrictionListViewItem(IsapiCgiRestrictionItem item, IsapiCgiRestrictionPage page)
                 : base(item.Description)
             {
-                this.Item = item;
+                Item = item;
                 _page = page;
-                this.SubItems.Add(new ListViewSubItem(this, item.Allowed ? "Allowed" : "Not Allowed"));
-                this.SubItems.Add(new ListViewSubItem(this, item.Path));
+                SubItems.Add(new ListViewSubItem(this, item.Allowed ? "Allowed" : "Not Allowed"));
+                SubItems.Add(new ListViewSubItem(this, item.Path));
             }
         }
 
@@ -54,17 +54,17 @@ namespace JexusManager.Features.IsapiCgiRestriction
 
         public IsapiCgiRestrictionPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         protected override void Initialize(object navigationData)
         {
             base.Initialize(navigationData);
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             pictureBox1.Image = service.Scope.GetImage();
 
-            _feature = new IsapiCgiRestrictionFeature(this.Module);
-            _feature.IsapiCgiRestrictionSettingsUpdated = this.InitializeListPage;
+            _feature = new IsapiCgiRestrictionFeature(Module);
+            _feature.IsapiCgiRestrictionSettingsUpdated = InitializeListPage;
             _feature.Load();
         }
 
@@ -78,7 +78,7 @@ namespace JexusManager.Features.IsapiCgiRestriction
 
             if (_feature.SelectedItem == null)
             {
-                this.Refresh();
+                Refresh();
                 return;
             }
 
@@ -93,7 +93,7 @@ namespace JexusManager.Features.IsapiCgiRestriction
 
         protected override void Refresh()
         {
-            this.Tasks.Fill(tsActionPanel, cmsActionPanel);
+            Tasks.Fill(tsActionPanel, cmsActionPanel);
             base.Refresh();
         }
 
@@ -103,7 +103,7 @@ namespace JexusManager.Features.IsapiCgiRestriction
                 ? ((IsapiCgiRestrictionListViewItem)listView1.SelectedItems[0]).Item
                 : null;
             // TODO: optimize refresh when null to not null (vice versa)
-            this.Refresh();
+            Refresh();
         }
 
         protected override bool ShowHelp()

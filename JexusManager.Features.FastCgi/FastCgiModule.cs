@@ -15,7 +15,7 @@ namespace JexusManager.Features.FastCgi
         protected override void Initialize(IServiceProvider serviceProvider, ModuleInfo moduleInfo)
         {
             base.Initialize(serviceProvider, moduleInfo);
-            var controlPanel = (IControlPanel)this.GetService(typeof(IControlPanel));
+            var controlPanel = (IControlPanel)GetService(typeof(IControlPanel));
             var modulePage = new ModulePageInfo(this, typeof(FastCgiPage), "FastCGI Settings",
                 "Configure FastCGI process application pools", Resources.response_header_36,
                 Resources.response_header_36);

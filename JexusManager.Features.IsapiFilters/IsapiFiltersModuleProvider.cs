@@ -17,7 +17,7 @@ namespace JexusManager.Features.IsapiFilters
 
         public override ModuleDefinition GetModuleDefinition(IManagementContext context)
         {
-            return new ModuleDefinition(this.Name, typeof(IsapiFiltersModule).AssemblyQualifiedName);
+            return new ModuleDefinition(Name, typeof(IsapiFiltersModule).AssemblyQualifiedName);
         }
 
         public override bool SupportsScope(ManagementScope scope)

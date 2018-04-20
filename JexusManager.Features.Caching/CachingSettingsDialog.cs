@@ -6,7 +6,6 @@ namespace JexusManager.Features.Caching
 {
     using System;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
     using System.Windows.Forms;
@@ -16,7 +15,7 @@ namespace JexusManager.Features.Caching
 
     internal partial class CachingSettingsDialog : DialogForm
     {
-        public CachingSettingsDialog(IServiceProvider serviceProvider, ConfigurationElement element)
+        public CachingSettingsDialog(IServiceProvider serviceProvider, ConfigurationElement element, CachingFeature feature)
             : base(serviceProvider)
         {
             InitializeComponent();
@@ -51,11 +50,14 @@ namespace JexusManager.Features.Caching
 
                     DialogResult = DialogResult.OK;
                 }));
-        }
 
-        private void PermissionsDialogHelpButtonClicked(object sender, CancelEventArgs e)
-        {
-            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210522");
+            container.Add(
+                Observable.FromEventPattern<CancelEventArgs>(this, "HelpButtonClicked")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(EnvironmentVariableTarget =>
+                {
+                    feature.ShowHelp();
+                }));
         }
     }
 }

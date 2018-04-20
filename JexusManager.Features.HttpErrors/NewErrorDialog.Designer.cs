@@ -254,7 +254,6 @@
             this.Controls.Add(this.label1);
             this.Name = "NewErrorDialog";
             this.Text = "Add Custom Error Page";
-            this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.NewCustomErrorDialogHelpButtonClicked);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);

@@ -50,13 +50,16 @@ namespace JexusManager.Features.HttpApi
 
                     DialogResult = DialogResult.OK;
                 }));
+
+            container.Add(
+                Observable.FromEventPattern<CancelEventArgs>(this, "HelpButtonClicked")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(EnvironmentVariableTarget =>
+                {
+                    feature.ShowHelp();
+                }));
         }
 
         public ReservedUrlsItem Item { get; set; }
-
-        private void NewRestrictionDialogHelpButtonClicked(object sender, CancelEventArgs e)
-        {
-            DialogHelper.ProcessStart("https://msdn.microsoft.com/en-us/library/windows/desktop/aa364698(v=vs.85).aspx");
-        }
     }
 }

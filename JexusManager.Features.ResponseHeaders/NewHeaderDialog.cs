@@ -56,11 +56,14 @@ namespace JexusManager.Features.ResponseHeaders
 
                     DialogResult = DialogResult.OK;
                 }));
-        }
 
-        private void NewHeaderDialogHelpButtonClicked(object sender, CancelEventArgs e)
-        {
-            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210509");
+            container.Add(
+                Observable.FromEventPattern<CancelEventArgs>(this, "HelpButtonClicked")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(EnvironmentVariableTarget =>
+                {
+                    feature.ShowHelp();
+                }));
         }
 
         public ResponseHeadersItem Item { get; set; }

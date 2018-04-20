@@ -151,7 +151,6 @@
             this.Controls.Add(this.label1);
             this.Name = "LocalErrorDialog";
             this.Text = "Set Localized Custom Error Path";
-            this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.LocalErrorDialog_HelpButtonClicked);
             this.ResumeLayout(false);
             this.PerformLayout();
 

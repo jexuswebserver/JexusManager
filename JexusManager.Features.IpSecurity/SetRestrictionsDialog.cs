@@ -6,7 +6,6 @@ namespace JexusManager.Features.IpSecurity
 {
     using System;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
     using System.Windows.Forms;
@@ -14,9 +13,9 @@ namespace JexusManager.Features.IpSecurity
     using Microsoft.Web.Administration;
     using Microsoft.Web.Management.Client.Win32;
 
-    public partial class SetRestrictionsDialog : DialogForm
+    internal partial class SetRestrictionsDialog : DialogForm
     {
-        public SetRestrictionsDialog(IServiceProvider serviceProvider, ConfigurationSection section)
+        public SetRestrictionsDialog(IServiceProvider serviceProvider, ConfigurationSection section, IpSecurityFeature feature)
             : base(serviceProvider)
         {
             InitializeComponent();
@@ -87,11 +86,14 @@ namespace JexusManager.Features.IpSecurity
 
                     DialogResult = DialogResult.OK;
                 }));
-        }
 
-        private void SetRestrictionsDialogHelpButtonClicked(object sender, CancelEventArgs e)
-        {
-            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210513");
+            container.Add(
+                Observable.FromEventPattern<CancelEventArgs>(this, "HelpButtonClicked")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(EnvironmentVariableTarget =>
+                {
+                    feature.ShowHelp();
+                }));
         }
     }
 }

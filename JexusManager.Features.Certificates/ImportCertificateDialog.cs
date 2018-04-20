@@ -27,9 +27,9 @@ namespace JexusManager.Features.Certificates
     using Org.BouncyCastle.OpenSsl;
     using Org.BouncyCastle.Security;
 
-    public partial class ImportCertificateDialog : DialogForm
+    internal partial class ImportCertificateDialog : DialogForm
     {
-        public ImportCertificateDialog(IServiceProvider serviceProvider)
+        public ImportCertificateDialog(IServiceProvider serviceProvider, CertificatesFeature feature)
             : base(serviceProvider)
         {
             InitializeComponent();
@@ -154,11 +154,14 @@ namespace JexusManager.Features.Certificates
                         ShowError(ex, string.Empty, false);
                     }
                 }));
-        }
 
-        private void ImportCertificateDialogHelpButtonClicked(object sender, CancelEventArgs e)
-        {
-            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210528");
+            container.Add(
+                Observable.FromEventPattern<CancelEventArgs>(this, "HelpButtonClicked")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(EnvironmentVariableTarget =>
+                {
+                    feature.ShowHelp();
+                }));
         }
 
         public string Store { get; set; }

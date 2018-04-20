@@ -106,7 +106,7 @@ namespace JexusManager.Features.Authentication
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var anonymousSection = service.GetSection("system.webServer/security/authentication/anonymousAuthentication", null, false);
-            var dialog = new AnonymousEditDialog(this.Module, new AnonymousItem(anonymousSection));
+            var dialog = new AnonymousEditDialog(Module, new AnonymousItem(anonymousSection), this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;

@@ -6,6 +6,7 @@ using System.ComponentModel;
 
 namespace JexusManager.Features.Authentication
 {
+    using Microsoft.Web.Management.Client.Extensions;
     using Microsoft.Web.Management.Client.Win32;
     using System;
     using System.Reactive.Disposables;
@@ -14,7 +15,7 @@ namespace JexusManager.Features.Authentication
 
     public partial class FormsEditDialog : DialogForm
     {
-        public FormsEditDialog(IServiceProvider serviceProvider, FormsItem existing, bool readOnly)
+        public FormsEditDialog(IServiceProvider serviceProvider, FormsItem existing, bool readOnly, AuthenticationFeature feature)
             : base(serviceProvider)
         {
             InitializeComponent();
@@ -93,11 +94,14 @@ namespace JexusManager.Features.Authentication
                 {
                     btnOK.Enabled = true;
                 }));
-        }
 
-        private void FormsEditDialogHelpButtonClicked(object sender, CancelEventArgs e)
-        {
-            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210461#Forms");
+            container.Add(
+                Observable.FromEventPattern<CancelEventArgs>(this, "HelpButtonClicked")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(EnvironmentVariableTarget =>
+                {
+                    feature.ShowHelp();
+                }));
         }
     }
 }

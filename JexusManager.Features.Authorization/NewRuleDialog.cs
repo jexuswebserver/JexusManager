@@ -6,7 +6,6 @@ namespace JexusManager.Features.Authorization
 {
     using System;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Linq;
     using System.Reactive.Linq;
     using System.Reactive.Disposables;
@@ -16,19 +15,15 @@ namespace JexusManager.Features.Authorization
 
     internal sealed partial class NewRuleDialog : DialogForm
     {
-        private readonly bool _allowed;
-        private readonly AuthorizationFeature _feature;
-
         public NewRuleDialog(IServiceProvider serviceProvider, AuthorizationRule existing, bool allowed, AuthorizationFeature feature)
             : base(serviceProvider)
         {
-            this.InitializeComponent();
-            _allowed = existing == null ? allowed : existing.AccessType == 0L;
+            InitializeComponent();
+            var _allowed = existing == null ? allowed : existing.AccessType == 0L;
             Text = string.Format("{0} {1} Authorization Rule", existing == null ? "Add" : "Edit", _allowed ? "Allow" : "Deny");
             txtDescription.Text = _allowed
                 ? "Allow access to this Web content to:"
                 : "Deny access to this Web content to:";
-            _feature = feature;
             Item = existing ?? new AuthorizationRule(null);
             if (existing != null)
             {
@@ -83,7 +78,7 @@ namespace JexusManager.Features.Authorization
                         Item.Verbs = txtVerbs.Text;
                     }
 
-                    if (_feature.Items.Any(item => item.Match(this.Item)))
+                    if (feature.Items.Any(item => item.Match(Item)))
                     {
                         ShowMessage(
                             "This authorization rule already exists.",
@@ -125,13 +120,16 @@ namespace JexusManager.Features.Authorization
                 {
                     btnOK.Enabled = true;
                 }));
+
+            container.Add(
+                Observable.FromEventPattern<CancelEventArgs>(this, "HelpButtonClicked")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(EnvironmentVariableTarget =>
+                {
+                    feature.ShowHelp();
+                }));
         }
 
-        public AuthorizationRule Item { get; set; }
-
-        private void NewRestrictionDialogHelpButtonClicked(object sender, CancelEventArgs e)
-        {
-            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210462");
-        }
+        public AuthorizationRule Item { get; private set; }
     }
 }

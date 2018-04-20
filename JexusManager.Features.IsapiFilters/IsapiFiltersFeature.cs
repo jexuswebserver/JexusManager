@@ -14,12 +14,10 @@ namespace JexusManager.Features.IsapiFilters
 {
     using System;
     using System.Collections;
-    using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
     using System.Windows.Forms;
 
-    using JexusManager.Properties;
     using JexusManager.Services;
 
     using Microsoft.Web.Administration;
@@ -149,9 +147,9 @@ namespace JexusManager.Features.IsapiFilters
 
         public void Load()
         {
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
-            this.CanRevert = service.Scope != ManagementScope.Server;
-            this.IsInOrder = false;
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+            CanRevert = service.Scope != ManagementScope.Server;
+            IsInOrder = false;
             LoadItems();
         }
 
@@ -163,18 +161,18 @@ namespace JexusManager.Features.IsapiFilters
 
         public void Add()
         {
-            var dialog = new NewFilterDialog(this.Module, null, this);
+            var dialog = new NewFilterDialog(Module, null, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
-            this.AddItem(dialog.Item);
+            AddItem(dialog.Item);
         }
 
         public void Remove()
         {
-            var dialog = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+            var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
             if (
                 dialog.ShowMessage("Are you sure that you want to remove the selected authorization rule?", "Confirm Remove",
                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) !=
@@ -188,13 +186,13 @@ namespace JexusManager.Features.IsapiFilters
 
         public void Edit()
         {
-            var dialog = new NewFilterDialog(this.Module, this.SelectedItem, this);
+            var dialog = new NewFilterDialog(Module, SelectedItem, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
-            this.EditItem(dialog.Item);
+            EditItem(dialog.Item);
         }
 
         public void Rename()
@@ -203,13 +201,13 @@ namespace JexusManager.Features.IsapiFilters
 
         public void MoveUp()
         {
-            if (this.Items.Any(item => item.Flag != "Local"))
+            if (Items.Any(item => item.Flag != "Local"))
             {
-                var dialog = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+                var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
                 var result =
                     dialog.ShowMessage(
                         "The list order will be changed for this feature. If you continue, changes made to this feature at a parent level will no longer be inherited at this level. Do you want to continue?",
-                        this.Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question,
+                        Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question,
                         MessageBoxDefaultButton.Button1);
                 if (result != DialogResult.Yes)
                 {
@@ -222,13 +220,13 @@ namespace JexusManager.Features.IsapiFilters
 
         public void MoveDown()
         {
-            if (this.Items.Any(item => item.Flag != "Local"))
+            if (Items.Any(item => item.Flag != "Local"))
             {
-                var dialog = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+                var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
                 var result =
                     dialog.ShowMessage(
                         "The list order will be changed for this feature. If you continue, changes made to this feature at a parent level will no longer be inherited at this level. Do you want to continue?",
-                        this.Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question,
+                        Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question,
                         MessageBoxDefaultButton.Button1);
                 if (result != DialogResult.Yes)
                 {
@@ -241,14 +239,14 @@ namespace JexusManager.Features.IsapiFilters
 
         public void InOrder()
         {
-            this.IsInOrder = true;
-            this.OnSettingsSaved();
+            IsInOrder = true;
+            OnSettingsSaved();
         }
 
         public void Unorder()
         {
-            this.IsInOrder = false;
-            this.OnSettingsSaved();
+            IsInOrder = false;
+            OnSettingsSaved();
         }
 
         public void Revert()
@@ -274,7 +272,7 @@ namespace JexusManager.Features.IsapiFilters
 
         protected override void OnSettingsSaved()
         {
-            this.IsapiFiltersSettingsUpdated?.Invoke();
+            IsapiFiltersSettingsUpdated?.Invoke();
         }
 
         public virtual bool ShowHelp()

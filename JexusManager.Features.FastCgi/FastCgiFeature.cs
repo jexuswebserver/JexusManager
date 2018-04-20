@@ -97,23 +97,23 @@ namespace JexusManager.Features.FastCgi
 
         public void Load()
         {
-            this.LoadItems();
+            LoadItems();
         }
 
         public void AddAllow()
         {
-            var dialog = new NewApplicationDialog(this.Module, null, this);
+            var dialog = new NewApplicationDialog(Module, null, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
-            this.AddItem(dialog.Item);
+            AddItem(dialog.Item);
         }
 
         public void Remove()
         {
-            var dialog = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+            var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
             if (
                 dialog.ShowMessage("Are you sure that you want to remove the selected FastCGI Application?", "Confirm Remove",
                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) !=
@@ -122,23 +122,23 @@ namespace JexusManager.Features.FastCgi
                 return;
             }
 
-            this.RemoveItem();
+            RemoveItem();
         }
 
         public void Edit()
         {
-            var dialog = new NewApplicationDialog(this.Module, this.SelectedItem, this);
+            var dialog = new NewApplicationDialog(Module, SelectedItem, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
-            this.EditItem(dialog.Item);
+            EditItem(dialog.Item);
         }
 
         protected override void OnSettingsSaved()
         {
-            this.FastCgiSettingsUpdated?.Invoke();
+            FastCgiSettingsUpdated?.Invoke();
         }
 
         public virtual bool ShowHelp()

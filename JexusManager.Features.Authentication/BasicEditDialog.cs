@@ -6,15 +6,16 @@ namespace JexusManager.Features.Authentication
 {
     using System;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Windows.Forms;
 
     using Microsoft.Web.Management.Client.Win32;
     using System.Reactive.Linq;
     using System.Reactive.Disposables;
+    using Microsoft.Web.Management.Client.Extensions;
+
     public partial class BasicEditDialog : DialogForm
     {
-        public BasicEditDialog(IServiceProvider serviceProvider, BasicItem existing)
+        public BasicEditDialog(IServiceProvider serviceProvider, BasicItem existing, AuthenticationFeature feature)
             : base(serviceProvider)
         {
             InitializeComponent();
@@ -34,11 +35,14 @@ namespace JexusManager.Features.Authentication
                     existing.Apply();
                     DialogResult = DialogResult.OK;
                 }));
-        }
 
-        private void BasicEditDialogHelpButtonClicked(object sender, CancelEventArgs e)
-        {
-            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210461#Basic");
+            container.Add(
+                Observable.FromEventPattern<CancelEventArgs>(this, "HelpButtonClicked")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(EnvironmentVariableTarget =>
+                {
+                    feature.ShowHelp();
+                }));
         }
     }
 }

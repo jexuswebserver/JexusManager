@@ -268,7 +268,7 @@ namespace JexusManager.Features.Certificates
 
         public void Import()
         {
-            var dialog = new ImportCertificateDialog(Module);
+            var dialog = new ImportCertificateDialog(Module, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
@@ -348,7 +348,7 @@ namespace JexusManager.Features.Certificates
 
         private void CreateSelf()
         {
-            var dialog = new SelfCertificateDialog(Module);
+            var dialog = new SelfCertificateDialog(Module, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
@@ -364,7 +364,7 @@ namespace JexusManager.Features.Certificates
 
         private void Complete()
         {
-            var dialog = new CompleteRequestDialog(Module);
+            var dialog = new CompleteRequestDialog(Module, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
@@ -376,19 +376,19 @@ namespace JexusManager.Features.Certificates
 
         private void CreateRequest()
         {
-            var wizard = new CertificateRequestWizard(Module);
+            var wizard = new CertificateRequestWizard(Module, this);
             wizard.ShowDialog();
         }
 
         private void Export()
         {
-            var dialog = new ExportCertificateDialog(SelectedItem.Certificate, Module);
+            var dialog = new ExportCertificateDialog(SelectedItem.Certificate, Module, this);
             dialog.ShowDialog();
         }
 
         private void Renew()
         {
-            var wizard = new CertificateRenewWizard(SelectedItem.Certificate, Module);
+            var wizard = new CertificateRenewWizard(SelectedItem.Certificate, Module, this);
             wizard.ShowDialog();
         }
 

@@ -14,7 +14,7 @@ namespace JexusManager.Features.Caching
         protected override void Initialize(IServiceProvider serviceProvider, ModuleInfo moduleInfo)
         {
             base.Initialize(serviceProvider, moduleInfo);
-            var controlPanel = (IControlPanel)this.GetService(typeof(IControlPanel));
+            var controlPanel = (IControlPanel)GetService(typeof(IControlPanel));
             var modulePage = new ModulePageInfo(
                 this,
                 typeof(CachingPage),

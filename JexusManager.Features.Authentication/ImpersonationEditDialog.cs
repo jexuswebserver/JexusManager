@@ -6,16 +6,16 @@ namespace JexusManager.Features.Authentication
 {
     using System;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Reactive.Linq;
     using System.Windows.Forms;
 
     using Microsoft.Web.Management.Client.Win32;
     using System.Reactive.Disposables;
+    using Microsoft.Web.Management.Client.Extensions;
 
     public partial class ImpersonationEditDialog : DialogForm
     {
-        public ImpersonationEditDialog(IServiceProvider serviceProvider, ImpersonationItem existing)
+        public ImpersonationEditDialog(IServiceProvider serviceProvider, ImpersonationItem existing, AuthenticationFeature feature)
             : base(serviceProvider)
         {
             InitializeComponent();
@@ -37,7 +37,7 @@ namespace JexusManager.Features.Authentication
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    var dialog = new CredentialsDialog(ServiceProvider, existing.Name);
+                    var dialog = new CredentialsDialog(ServiceProvider, existing.Name, feature);
                     if (dialog.ShowDialog() != DialogResult.OK)
                     {
                         return;
@@ -85,6 +85,14 @@ namespace JexusManager.Features.Authentication
                     }
                 }));
 
+            container.Add(
+                Observable.FromEventPattern<CancelEventArgs>(this, "HelpButtonClicked")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(EnvironmentVariableTarget =>
+                {
+                    feature.ShowHelp();
+                }));
+
             txtName.Text = "test"; // IMPORTANT: trigger a change event.
             txtName.Text = existing.Name;
         }
@@ -93,11 +101,6 @@ namespace JexusManager.Features.Authentication
         {
             // TODO: disable if not elevated. Need to find an in-place elevation approach.
             btnOK.Enabled = rbPool.Checked || (txtName.Text.Length != 0 && Microsoft.Web.Administration.PublicNativeMethods.IsProcessElevated);
-        }
-
-        private void AnonymousEditDialogHelpButtonClicked(object sender, CancelEventArgs e)
-        {
-            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210461#Impersonation");
         }
     }
 }

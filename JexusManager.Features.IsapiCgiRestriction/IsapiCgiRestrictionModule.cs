@@ -16,7 +16,7 @@ namespace JexusManager.Features.IsapiCgiRestriction
         protected override void Initialize(IServiceProvider serviceProvider, ModuleInfo moduleInfo)
         {
             base.Initialize(serviceProvider, moduleInfo);
-            var controlPanel = (IControlPanel)this.GetService(typeof(IControlPanel));
+            var controlPanel = (IControlPanel)GetService(typeof(IControlPanel));
             var modulePage = new ModulePageInfo(this, typeof(IsapiCgiRestrictionPage), "ISAPI and CGI Restrictions",
                 "Restrict or enable ISAPI and CGI extensions on the Web server", Resources.isapi_cgi_restriction_36,
                 Resources.isapi_cgi_restriction_36);

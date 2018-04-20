@@ -139,7 +139,7 @@ namespace JexusManager.Features.IpSecurity
                 return;
             }
 
-            this.AddItem(dialog.Item);
+            AddItem(dialog.Item);
         }
 
         public void AddDeny()
@@ -150,7 +150,7 @@ namespace JexusManager.Features.IpSecurity
                 return;
             }
 
-            this.AddItem(dialog.Item);
+            AddItem(dialog.Item);
         }
 
         public void Remove()
@@ -192,7 +192,7 @@ namespace JexusManager.Features.IpSecurity
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var section = service.GetSection("system.webServer/security/ipSecurity", null, false);
-            var dialog = new SetRestrictionsDialog(Module, section);
+            var dialog = new SetRestrictionsDialog(Module, section, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
@@ -215,7 +215,7 @@ namespace JexusManager.Features.IpSecurity
                 return;
             }
 
-            var dialog = new DynamicDialog(Module, section);
+            var dialog = new DynamicDialog(Module, section, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;

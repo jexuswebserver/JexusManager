@@ -139,7 +139,6 @@
             this.Controls.Add(this.label1);
             this.Name = "ExportCertificateDialog";
             this.Text = "Export Certificate";
-            this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.ExportCertificateDialogHelpButtonClicked);
             this.ResumeLayout(false);
             this.PerformLayout();
 

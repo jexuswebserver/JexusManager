@@ -17,7 +17,7 @@ namespace JexusManager.Features.IsapiCgiRestriction
 
         public override ModuleDefinition GetModuleDefinition(IManagementContext context)
         {
-            return new ModuleDefinition(this.Name, typeof(IsapiCgiRestrictionModule).AssemblyQualifiedName);
+            return new ModuleDefinition(Name, typeof(IsapiCgiRestrictionModule).AssemblyQualifiedName);
         }
 
         public override bool SupportsScope(ManagementScope scope)

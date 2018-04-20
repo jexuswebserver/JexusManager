@@ -41,11 +41,11 @@ namespace JexusManager.Features.HttpErrors
             public CustomErrorsListViewItem(HttpErrorsItem item, HttpErrorsPage page)
                 : base(item.Code)
             {
-                this.Item = item;
+                Item = item;
                 _page = page;
-                this.SubItems.Add(new ListViewSubItem(this, item.FullPath));
-                this.SubItems.Add(new ListViewSubItem(this, item.Response));
-                this.SubItems.Add(new ListViewSubItem(this, item.Flag));
+                SubItems.Add(new ListViewSubItem(this, item.FullPath));
+                SubItems.Add(new ListViewSubItem(this, item.Response));
+                SubItems.Add(new ListViewSubItem(this, item.Flag));
             }
         }
 
@@ -54,17 +54,17 @@ namespace JexusManager.Features.HttpErrors
 
         public HttpErrorsPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         protected override void Initialize(object navigationData)
         {
             base.Initialize(navigationData);
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             pictureBox1.Image = service.Scope.GetImage();
 
-            _feature = new HttpErrorsFeature(this.Module);
-            _feature.HttpErrorsSettingsUpdated = this.InitializeListPage;
+            _feature = new HttpErrorsFeature(Module);
+            _feature.HttpErrorsSettingsUpdated = InitializeListPage;
             _feature.Load();
         }
 
@@ -87,12 +87,12 @@ namespace JexusManager.Features.HttpErrors
                 }
             }
 
-            this.Refresh();
+            Refresh();
         }
 
         protected override void Refresh()
         {
-            this.Tasks.Fill(tsActionPanel, cmsActionPanel);
+            Tasks.Fill(tsActionPanel, cmsActionPanel);
             base.Refresh();
         }
 
@@ -102,7 +102,7 @@ namespace JexusManager.Features.HttpErrors
                 ? ((CustomErrorsListViewItem)listView1.SelectedItems[0]).Item
                 : null;
             // TODO: optimize refresh when null to not null (vice versa)
-            this.Refresh();
+            Refresh();
         }
 
         protected override bool ShowHelp()

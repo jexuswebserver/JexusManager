@@ -92,7 +92,6 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Add Default Document";
-            this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.NewDefaultDocumentDialogHelpButtonClicked);
             this.ResumeLayout(false);
             this.PerformLayout();
 

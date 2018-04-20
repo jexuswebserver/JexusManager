@@ -70,13 +70,16 @@ namespace JexusManager.Features.IsapiFilters
                 {
                     DialogHelper.ShowOpenFileDialog(txtPath, "(*.dll)|*.dll|All Files (*.*)|*.*");
                 }));
+
+            container.Add(
+                Observable.FromEventPattern<CancelEventArgs>(this, "HelpButtonClicked")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(EnvironmentVariableTarget =>
+                {
+                    feature.ShowHelp();
+                }));
         }
 
         public IsapiFiltersItem Item { get; set; }
-
-        private void NewRestrictionDialogHelpButtonClicked(object sender, CancelEventArgs e)
-        {
-            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210516");
-        }
     }
 }

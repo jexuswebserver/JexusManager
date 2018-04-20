@@ -31,9 +31,9 @@ namespace JexusManager.Features.Certificates
 
     using X509Certificate = Mono.Security.X509.X509Certificate;
 
-    public partial class SelfCertificateDialog : DialogForm
+    internal partial class SelfCertificateDialog : DialogForm
     {
-        public SelfCertificateDialog(IServiceProvider serviceProvider)
+        public SelfCertificateDialog(IServiceProvider serviceProvider, CertificatesFeature feature)
             : base(serviceProvider)
         {
             InitializeComponent();
@@ -213,15 +213,18 @@ namespace JexusManager.Features.Certificates
                         Rollbar.Report(ex, ErrorLevel.Error);
                     }
                 }));
+
+            container.Add(
+                Observable.FromEventPattern<CancelEventArgs>(this, "HelpButtonClicked")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(EnvironmentVariableTarget =>
+                {
+                    feature.ShowHelp();
+                }));
         }
 
         public string Store { get; set; }
 
         public X509Certificate2 Item { get; set; }
-
-        private void SelfCertificateDialogHelpButtonClicked(object sender, CancelEventArgs e)
-        {
-            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210528");
-        }
     }
 }

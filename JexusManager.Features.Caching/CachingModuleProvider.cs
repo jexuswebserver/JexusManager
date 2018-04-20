@@ -17,7 +17,7 @@ namespace JexusManager.Features.Caching
 
         public override ModuleDefinition GetModuleDefinition(IManagementContext context)
         {
-            return new ModuleDefinition(this.Name, typeof(CachingModule).AssemblyQualifiedName);
+            return new ModuleDefinition(Name, typeof(CachingModule).AssemblyQualifiedName);
         }
 
         public override bool SupportsScope(ManagementScope scope)

@@ -127,7 +127,6 @@
             this.Controls.Add(this.btnCancel);
             this.Name = "CredentialsDialog";
             this.Text = "Set Credentials";
-            this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.CredentialsDialogHelpButtonClicked);
             this.ResumeLayout(false);
             this.PerformLayout();
 

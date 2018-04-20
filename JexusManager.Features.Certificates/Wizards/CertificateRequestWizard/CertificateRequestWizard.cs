@@ -22,15 +22,18 @@ namespace JexusManager.Features.Certificates.Wizards.CertificateRequestWizard
     using Properties;
     using Mono.Security.Authenticode;
     using Org.BouncyCastle.Crypto.Operators;
-    public partial class CertificateRequestWizard : DefaultWizardForm
+
+    internal partial class CertificateRequestWizard : DefaultWizardForm
     {
         private CertificateRequestWizardData _wizardData;
+        private CertificatesFeature _feature;
 
-        public CertificateRequestWizard(IServiceProvider serviceProvider)
+        public CertificateRequestWizard(IServiceProvider serviceProvider, CertificatesFeature feature)
             : base(serviceProvider)
         {
             InitializeComponent();
             TaskGlyph = Resources.certificates_48;
+            _feature = feature;
         }
 
         protected override object WizardData
@@ -184,7 +187,7 @@ namespace JexusManager.Features.Certificates.Wizards.CertificateRequestWizard
 
         protected override void ShowHelp()
         {
-            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210528");
+            _feature.ShowHelp();
         }
     }
 }

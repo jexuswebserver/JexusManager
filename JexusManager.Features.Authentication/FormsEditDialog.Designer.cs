@@ -216,7 +216,6 @@
             this.Controls.Add(this.btnCancel);
             this.Name = "FormsEditDialog";
             this.Text = "Edit Forms Authentication Settings";
-            this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.FormsEditDialogHelpButtonClicked);
             this.gbCookie.ResumeLayout(false);
             this.gbCookie.PerformLayout();
             this.ResumeLayout(false);

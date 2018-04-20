@@ -120,13 +120,16 @@ namespace JexusManager.Features.Modules
                     feature.RemoveGlobal(item);
                     lvModules.SelectedItems[0].Remove();
                 }));
+
+            container.Add(
+                Observable.FromEventPattern<CancelEventArgs>(this, "HelpButtonClicked")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(EnvironmentVariableTarget =>
+                {
+                    feature.ShowHelp();
+                }));
         }
 
         public List<ModulesItem> Items { get; set; }
-
-        private void NativeModulesDialogHelpButtonClicked(object sender, CancelEventArgs e)
-        {
-            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210521");
-        }
     }
 }

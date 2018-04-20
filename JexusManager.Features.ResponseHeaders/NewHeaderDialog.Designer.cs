@@ -104,7 +104,6 @@
             this.Controls.Add(this.btnCancel);
             this.Name = "NewHeaderDialog";
             this.Text = "Add Custom HTTP Response Header";
-            this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.NewHeaderDialogHelpButtonClicked);
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -40,11 +40,11 @@ namespace JexusManager.Features.FastCgi
             public FastCgiListViewItem(FastCgiItem item, FastCgiPage page)
                 : base(item.Path)
             {
-                this.Item = item;
+                Item = item;
                 _page = page;
-                this.SubItems.Add(new ListViewSubItem(this, item.Arguments));
-                this.SubItems.Add(new ListViewSubItem(this, item.MaxInstances.ToString()));
-                this.SubItems.Add(new ListViewSubItem(this, item.InstanceMaxRequests.ToString()));
+                SubItems.Add(new ListViewSubItem(this, item.Arguments));
+                SubItems.Add(new ListViewSubItem(this, item.MaxInstances.ToString()));
+                SubItems.Add(new ListViewSubItem(this, item.InstanceMaxRequests.ToString()));
             }
         }
 
@@ -53,17 +53,17 @@ namespace JexusManager.Features.FastCgi
 
         public FastCgiPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         protected override void Initialize(object navigationData)
         {
             base.Initialize(navigationData);
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             pictureBox1.Image = service.Scope.GetImage();
 
-            _feature = new FastCgiFeature(this.Module);
-            _feature.FastCgiSettingsUpdated = this.InitializeListPage;
+            _feature = new FastCgiFeature(Module);
+            _feature.FastCgiSettingsUpdated = InitializeListPage;
             _feature.Load();
         }
 
@@ -77,7 +77,7 @@ namespace JexusManager.Features.FastCgi
 
             if (_feature.SelectedItem == null)
             {
-                this.Refresh();
+                Refresh();
                 return;
             }
 
@@ -92,7 +92,7 @@ namespace JexusManager.Features.FastCgi
 
         protected override void Refresh()
         {
-            this.Tasks.Fill(tsActionPanel, cmsActionPanel);
+            Tasks.Fill(tsActionPanel, cmsActionPanel);
             base.Refresh();
         }
 
@@ -102,7 +102,7 @@ namespace JexusManager.Features.FastCgi
                 ? ((FastCgiListViewItem)listView1.SelectedItems[0]).Item
                 : null;
             // TODO: optimize refresh when null to not null (vice versa)
-            this.Refresh();
+            Refresh();
         }
 
         protected override bool ShowHelp()

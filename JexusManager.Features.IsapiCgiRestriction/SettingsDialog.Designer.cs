@@ -89,7 +89,6 @@
             this.Controls.Add(this.cbCgi);
             this.Name = "SettingsDialog";
             this.Text = "Edit ISAPI and CGI Restrictions Settings";
-            this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.PermissionsDialogHelpButtonClicked);
             this.ResumeLayout(false);
             this.PerformLayout();
 

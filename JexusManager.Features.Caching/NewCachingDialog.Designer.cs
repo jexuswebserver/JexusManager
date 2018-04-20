@@ -252,7 +252,6 @@
             this.Controls.Add(this.btnCancel);
             this.Name = "NewCachingDialog";
             this.Text = "Add Cache Rule";
-            this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.NewRestrictionDialogHelpButtonClicked);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);

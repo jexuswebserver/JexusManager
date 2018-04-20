@@ -154,7 +154,6 @@
             this.Controls.Add(this.btnCancel);
             this.Name = "CachingAdvancedDialog";
             this.Text = "Advanced Output Cache Rule Settings";
-            this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.CachingAdvancedDialogHelpButtonClicked);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);

@@ -131,7 +131,6 @@
             this.Controls.Add(this.btnCancel);
             this.Name = "NewRestrictionDialog";
             this.Text = "Add ISAPI or CGI Restriction";
-            this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.NewRestrictionDialogHelpButtonClicked);
             this.ResumeLayout(false);
             this.PerformLayout();
 

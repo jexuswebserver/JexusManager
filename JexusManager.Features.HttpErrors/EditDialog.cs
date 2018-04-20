@@ -6,15 +6,14 @@ namespace JexusManager.Features.HttpErrors
 {
     using System;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
     using Microsoft.Web.Administration;
     using Microsoft.Web.Management.Client.Win32;
 
-    public partial class EditDialog : DialogForm
+    internal partial class EditDialog : DialogForm
     {
-        public EditDialog(IServiceProvider serviceProvider, ConfigurationElement element)
+        public EditDialog(IServiceProvider serviceProvider, ConfigurationElement element, HttpErrorsFeature feature)
             : base(serviceProvider)
         {
             InitializeComponent();
@@ -60,11 +59,14 @@ namespace JexusManager.Features.HttpErrors
                     element["defaultResponseMode"] = (long)cbType.SelectedIndex;
                     element["defaultPath"] = txtPath.Text;
                 }));
-        }
 
-        private void EditDialog_HelpButtonClicked(object sender, CancelEventArgs e)
-        {
-            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210481");
+            container.Add(
+                Observable.FromEventPattern<CancelEventArgs>(this, "HelpButtonClicked")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(EnvironmentVariableTarget =>
+                {
+                    feature.ShowHelp();
+                }));
         }
     }
 }

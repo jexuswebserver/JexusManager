@@ -12,13 +12,13 @@ namespace JexusManager.Features.FastCgi
     {
         public FastCgiItem(ConfigurationElement element)
         {
-            this.Element = element;
-            this.Flag = element == null || element.IsLocallyStored ? "Local" : "Inhertied";
+            Element = element;
+            Flag = element == null || element.IsLocallyStored ? "Local" : "Inhertied";
             EnvironmentVariables = new EnvironmentVariablesCollection();
             AdvancedSettings = new AdvancedSettings();
             if (element == null)
             {
-                this.Path = this.Arguments = MonitorChangesTo = string.Empty;
+                Path = Arguments = MonitorChangesTo = string.Empty;
                 MaxInstances = 4U;
                 InstanceMaxRequests = 200U;
                 ActivityTimeout = 30U;
@@ -29,21 +29,21 @@ namespace JexusManager.Features.FastCgi
                 return;
             }
 
-            this.Path = (string)element["fullPath"];
-            this.Arguments = (string)element["arguments"];
+            Path = (string)element["fullPath"];
+            Arguments = (string)element["arguments"];
 
-            this.MonitorChangesTo = (string)element["monitorChangesTo"];
+            MonitorChangesTo = (string)element["monitorChangesTo"];
             ErrorMode = (ErrorMode)element["stderrMode"];
             MaxInstances = (uint)element["maxInstances"];
             IdleTimeout = (uint)element["idleTimeout"];
             ActivityTimeout = (uint)element["activityTimeout"];
             RequestTimeout = (uint)element["requestTimeout"];
-            this.InstanceMaxRequests = (uint)element["instanceMaxRequests"];
-            this.SignalBeforeTerminateSeconds = (uint)element["signalBeforeTerminateSeconds"];
+            InstanceMaxRequests = (uint)element["instanceMaxRequests"];
+            SignalBeforeTerminateSeconds = (uint)element["signalBeforeTerminateSeconds"];
             AdvancedSettings.Protocol = (Protocol)element["protocol"];
             QueueLength = (uint)element["queueLength"];
             AdvancedSettings.FlushNamedPipe = (bool)element["flushNamedPipe"];
-            this.RapidFailsPerMinute = (uint)element["rapidFailsPerMinute"];
+            RapidFailsPerMinute = (uint)element["rapidFailsPerMinute"];
 
             foreach (ConfigurationElement child in element.GetCollection("environmentVariables"))
             {
@@ -67,26 +67,26 @@ namespace JexusManager.Features.FastCgi
         public bool Equals(FastCgiItem other)
         {
             // all properties
-            return this.Match(other);
+            return Match(other);
         }
 
         public void Apply()
         {
-            this.Element["fullPath"] = this.Path;
-            this.Element["arguments"] = this.Arguments;
+            Element["fullPath"] = Path;
+            Element["arguments"] = Arguments;
 
-            this.Element["monitorChangesTo"] = this.MonitorChangesTo;
-            this.Element["stderrMode"] = this.ErrorMode;
-            this.Element["maxInstances"] = this.MaxInstances;
-            this.Element["idleTimeout"] = this.IdleTimeout;
-            this.Element["activityTimeout"] = this.ActivityTimeout;
-            this.Element["requestTimeout"] = this.RequestTimeout;
-            this.Element["instanceMaxRequests"] = this.InstanceMaxRequests;
-            this.Element["signalBeforeTerminateSeconds"] = this.SignalBeforeTerminateSeconds;
-            this.Element["protocol"] = this.AdvancedSettings.Protocol;
-            this.Element["queueLength"] = this.QueueLength;
-            this.Element["flushNamedPipe"] = this.AdvancedSettings.FlushNamedPipe;
-            this.Element["rapidFailsPerMinute"] = this.RapidFailsPerMinute;
+            Element["monitorChangesTo"] = MonitorChangesTo;
+            Element["stderrMode"] = ErrorMode;
+            Element["maxInstances"] = MaxInstances;
+            Element["idleTimeout"] = IdleTimeout;
+            Element["activityTimeout"] = ActivityTimeout;
+            Element["requestTimeout"] = RequestTimeout;
+            Element["instanceMaxRequests"] = InstanceMaxRequests;
+            Element["signalBeforeTerminateSeconds"] = SignalBeforeTerminateSeconds;
+            Element["protocol"] = AdvancedSettings.Protocol;
+            Element["queueLength"] = QueueLength;
+            Element["flushNamedPipe"] = AdvancedSettings.FlushNamedPipe;
+            Element["rapidFailsPerMinute"] = RapidFailsPerMinute;
 
             var collection = Element.GetCollection("environmentVariables");
             collection.Clear();
@@ -102,7 +102,7 @@ namespace JexusManager.Features.FastCgi
         public bool Match(FastCgiItem other)
         {
             // match combined keys.
-            return other != null && other.Arguments == this.Arguments && other.Path == this.Path;
+            return other != null && other.Arguments == Arguments && other.Path == Path;
         }
 
         [Browsable(true)]

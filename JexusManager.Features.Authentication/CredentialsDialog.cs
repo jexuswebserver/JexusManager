@@ -6,15 +6,16 @@ namespace JexusManager.Features.Authentication
 {
     using System;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Windows.Forms;
 
     using Microsoft.Web.Management.Client.Win32;
     using System.Reactive.Linq;
     using System.Reactive.Disposables;
+    using Microsoft.Web.Management.Client.Extensions;
+
     public partial class CredentialsDialog : DialogForm
     {
-        public CredentialsDialog(IServiceProvider serviceProvider, string name)
+        public CredentialsDialog(IServiceProvider serviceProvider, string name, AuthenticationFeature feature)
             : base(serviceProvider)
         {
             InitializeComponent();
@@ -48,11 +49,14 @@ namespace JexusManager.Features.Authentication
                     // DialogResult = DialogResult.Cancel;
                     DialogResult = DialogResult.OK;
                 }));
-        }
 
-        private void CredentialsDialogHelpButtonClicked(object sender, CancelEventArgs e)
-        {
-            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210461#Anonymous");
+            container.Add(
+                Observable.FromEventPattern<CancelEventArgs>(this, "HelpButtonClicked")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(EnvironmentVariableTarget =>
+                {
+                    feature.ShowHelp();
+                }));
         }
 
         public string Password { get; set; }

@@ -15,7 +15,7 @@ namespace JexusManager.Features.Authentication
 
         public FormsItem(ConfigurationElement element)
         {
-            this.Element = element;
+            Element = element;
             LoginUrl = (string)element["loginUrl"];
             Timeout = (TimeSpan)element["timeout"];
             Mode = (long)element["cookieless"];

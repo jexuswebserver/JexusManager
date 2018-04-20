@@ -105,32 +105,32 @@ namespace JexusManager.Features.Caching
 
         public void Add()
         {
-            var dialog = new NewCachingDialog(this.Module, null, this);
+            var dialog = new NewCachingDialog(Module, null, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
-            this.AddItem(dialog.Item);
+            AddItem(dialog.Item);
         }
 
         public void Set()
         {
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var section = service.GetSection("system.webServer/caching");
-            var dialog = new CachingSettingsDialog(this.Module, section);
+            var dialog = new CachingSettingsDialog(Module, section, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
             service.ServerManager.CommitChanges();
-            this.OnSettingsSaved();
+            OnSettingsSaved();
         }
 
         public void Remove()
         {
-            var dialog = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+            var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
             if (
                 dialog.ShowMessage("Are you sure that you want to remove the selected restriction?", "Confirm Remove",
                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) !=
@@ -144,13 +144,13 @@ namespace JexusManager.Features.Caching
 
         public void Edit()
         {
-            var dialog = new NewCachingDialog(this.Module, this.SelectedItem, this);
+            var dialog = new NewCachingDialog(Module, SelectedItem, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
-            this.EditItem(dialog.Item);
+            EditItem(dialog.Item);
         }
 
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
@@ -161,7 +161,7 @@ namespace JexusManager.Features.Caching
 
         protected override void OnSettingsSaved()
         {
-            this.CachingSettingsUpdated?.Invoke();
+            CachingSettingsUpdated?.Invoke();
         }
 
         public virtual bool ShowHelp()

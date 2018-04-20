@@ -12,20 +12,20 @@ namespace JexusManager.Features.Caching
     {
         public CachingItem(ConfigurationElement element)
         {
-            this.Element = element;
-            this.Flag = element == null || element.IsLocallyStored ? "Local" : "Inhertied";
+            Element = element;
+            Flag = element == null || element.IsLocallyStored ? "Local" : "Inhertied";
             if (element == null)
             {
                 Extension = VaryByQueryString = VaryByHeaders = string.Empty;
                 return;
             }
 
-            this.Extension = (string)element["extension"];
-            this.Policy = (long)element["policy"];
-            this.KernelCachePolicy = (long)element["kernelCachePolicy"];
-            this.Duration = (TimeSpan)element["duration"];
-            this.VaryByQueryString = (string)element["varyByQueryString"];
-            this.VaryByHeaders = (string)element["varyByHeaders"];
+            Extension = (string)element["extension"];
+            Policy = (long)element["policy"];
+            KernelCachePolicy = (long)element["kernelCachePolicy"];
+            Duration = (TimeSpan)element["duration"];
+            VaryByQueryString = (string)element["varyByQueryString"];
+            VaryByHeaders = (string)element["varyByHeaders"];
         }
 
         public string VaryByHeaders { get; set; }
@@ -47,7 +47,7 @@ namespace JexusManager.Features.Caching
         public bool Equals(CachingItem other)
         {
             // all properties
-            return this.Match(other);
+            return Match(other);
         }
 
         public void Apply()
@@ -63,7 +63,7 @@ namespace JexusManager.Features.Caching
         public bool Match(CachingItem other)
         {
             // match combined keys.
-            return other != null && other.Extension == this.Extension;
+            return other != null && other.Extension == Extension;
         }
     }
 }

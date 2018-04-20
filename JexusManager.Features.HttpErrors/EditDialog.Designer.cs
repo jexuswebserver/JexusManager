@@ -198,7 +198,6 @@
             this.Controls.Add(this.groupBox1);
             this.Name = "EditDialog";
             this.Text = "Edit Error Pages Settings";
-            this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.EditDialog_HelpButtonClicked);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);

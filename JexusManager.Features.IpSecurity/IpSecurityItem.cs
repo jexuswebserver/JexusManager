@@ -20,7 +20,7 @@ namespace JexusManager.Features.IpSecurity
 
             Address = (string)element["ipAddress"];
             Mask = (string)element["subnetMask"];
-            this.Allowed = (bool)element["allowed"];
+            Allowed = (bool)element["allowed"];
         }
 
         public ConfigurationElement Element { get; set; }
@@ -33,12 +33,12 @@ namespace JexusManager.Features.IpSecurity
         {
             Element["ipAddress"] = Address;
             Element["subnetMask"] = Mask;
-            Element["allowed"] = this.Allowed;
+            Element["allowed"] = Allowed;
         }
 
         public bool Equals(IpSecurityItem other)
         {
-            return other != null && other.Address == Address && other.Mask == Mask && other.Allowed == this.Allowed;
+            return other != null && other.Address == Address && other.Mask == Mask && other.Allowed == Allowed;
         }
 
         public bool Match(IpSecurityItem other)

@@ -69,13 +69,16 @@ namespace JexusManager.Features.IsapiCgiRestriction
                 {
                     DialogHelper.ShowOpenFileDialog(txtPath, "(*.dll)|*.dll|(*.exe)|*.exe|All files (*.*)|*.*");
                 }));
+
+            container.Add(
+                Observable.FromEventPattern<CancelEventArgs>(this, "HelpButtonClicked")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(EnvironmentVariableTarget =>
+                {
+                    feature.ShowHelp();
+                }));
         }
 
         public IsapiCgiRestrictionItem Item { get; set; }
-
-        private void NewRestrictionDialogHelpButtonClicked(object sender, CancelEventArgs e)
-        {
-            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210515");
-        }
     }
 }

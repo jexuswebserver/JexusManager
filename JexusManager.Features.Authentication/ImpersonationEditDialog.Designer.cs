@@ -125,7 +125,6 @@
             this.Controls.Add(this.label1);
             this.Name = "ImpersonationEditDialog";
             this.Text = "Edit ASP.NET Impersonation Settings";
-            this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.AnonymousEditDialogHelpButtonClicked);
             this.ResumeLayout(false);
             this.PerformLayout();
 

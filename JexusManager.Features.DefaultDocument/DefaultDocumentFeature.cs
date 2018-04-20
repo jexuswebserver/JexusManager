@@ -19,7 +19,6 @@ namespace JexusManager.Features.DefaultDocument
     using System.Reflection;
     using System.Windows.Forms;
 
-    using JexusManager.Properties;
     using JexusManager.Services;
 
     using Microsoft.Web.Administration;
@@ -31,7 +30,7 @@ namespace JexusManager.Features.DefaultDocument
     /// <summary>
     /// Description of DefaultDocumentFeature.
     /// </summary>
-    public class DefaultDocumentFeature : FeatureBase<DocumentItem>
+    internal class DefaultDocumentFeature : FeatureBase<DocumentItem>
     {
         private sealed class FeatureTaskList : DefaultTaskList
         {
@@ -145,7 +144,7 @@ namespace JexusManager.Features.DefaultDocument
 
         public void Add()
         {
-            var dialog = new NewDefaultDocumentDialog(Module);
+            var dialog = new NewDefaultDocumentDialog(Module, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;

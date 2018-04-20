@@ -119,7 +119,6 @@
             this.Controls.Add(this.label1);
             this.Name = "WindowsAdvancedDialog";
             this.Text = "Advanced Settings";
-            this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.WindowsAdvancedDialogHelpButtonClicked);
             this.ResumeLayout(false);
             this.PerformLayout();
 

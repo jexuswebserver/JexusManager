@@ -6,7 +6,6 @@ namespace JexusManager.Features.HttpErrors
 {
     using System;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
     using System.Windows.Forms;
@@ -156,7 +155,7 @@ namespace JexusManager.Features.HttpErrors
                 {
                     if (cbLocalize.Checked)
                     {
-                        var dialog = new LocalErrorDialog(ServiceProvider, Item);
+                        var dialog = new LocalErrorDialog(ServiceProvider, Item, feature);
                         if (dialog.ShowDialog() != DialogResult.OK)
                         {
                             return;
@@ -178,6 +177,14 @@ namespace JexusManager.Features.HttpErrors
                     btnSet.Text = cbLocalize.Checked ? "Set..." : "Browse...";
                     txtStatic.Text = string.Empty;
                     txtStatic.ReadOnly = cbLocalize.Checked;
+                }));
+
+            container.Add(
+                Observable.FromEventPattern<CancelEventArgs>(this, "HelpButtonClicked")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(EnvironmentVariableTarget =>
+                {
+                    feature.ShowHelp();
                 }));
         }
 
@@ -211,10 +218,5 @@ namespace JexusManager.Features.HttpErrors
         }
 
         public HttpErrorsItem Item { get; set; }
-
-        private void NewCustomErrorDialogHelpButtonClicked(object sender, CancelEventArgs e)
-        {
-            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210481");
-        }
     }
 }

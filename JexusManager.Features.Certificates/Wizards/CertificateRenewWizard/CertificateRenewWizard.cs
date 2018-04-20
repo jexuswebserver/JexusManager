@@ -5,7 +5,6 @@
 namespace JexusManager.Features.Certificates.Wizards.CertificateRenewWizard
 {
     using System;
-    using System.Diagnostics;
     using System.IO;
     using System.Security.Cryptography;
     using System.Security.Cryptography.X509Certificates;
@@ -21,16 +20,20 @@ namespace JexusManager.Features.Certificates.Wizards.CertificateRenewWizard
     using Org.BouncyCastle.Security;
     using Properties;
     using Org.BouncyCastle.Crypto.Operators;
+    using System.Reactive.Linq;
+    using System.ComponentModel;
 
-    public partial class CertificateRenewWizard : DefaultWizardForm
+    internal partial class CertificateRenewWizard : DefaultWizardForm
     {
         private readonly X509Certificate2 _existing;
+        private readonly CertificatesFeature _feature;
         private CertificateRenewWizardData _wizardData;
 
-        public CertificateRenewWizard(X509Certificate2 existing, IServiceProvider serviceProvider)
+        public CertificateRenewWizard(X509Certificate2 existing, IServiceProvider serviceProvider, CertificatesFeature feature)
             : base(serviceProvider)
         {
             _existing = existing;
+            _feature = feature;
             InitializeComponent();
             TaskGlyph = Resources.certificates_48;
         }
@@ -169,7 +172,7 @@ namespace JexusManager.Features.Certificates.Wizards.CertificateRenewWizard
 
         protected override void ShowHelp()
         {
-            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210528");
+            _feature.ShowHelp();
         }
     }
 }

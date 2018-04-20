@@ -182,7 +182,6 @@
             this.Controls.Add(this.cbKeepAlive);
             this.Name = "SetCommonHeadersDialog";
             this.Text = "Set Common HTTP Response Headers";
-            this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.SetCommonHeadersDialog_HelpButtonClicked);
             this.ResumeLayout(false);
             this.PerformLayout();
 

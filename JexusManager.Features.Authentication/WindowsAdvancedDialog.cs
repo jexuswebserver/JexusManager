@@ -4,17 +4,17 @@
 
 namespace JexusManager.Features.Authentication
 {
+    using Microsoft.Web.Management.Client.Extensions;
     using Microsoft.Web.Management.Client.Win32;
     using System;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
     using System.Windows.Forms;
 
     public partial class WindowsAdvancedDialog : DialogForm
     {
-        public WindowsAdvancedDialog(IServiceProvider serviceProvider, WindowsItem item)
+        public WindowsAdvancedDialog(IServiceProvider serviceProvider, WindowsItem item, AuthenticationFeature feature)
             : base(serviceProvider)
         {
             InitializeComponent();
@@ -51,11 +51,14 @@ namespace JexusManager.Features.Authentication
                     item.Apply();
                     DialogResult = DialogResult.OK;
                 }));
-        }
 
-        private void WindowsAdvancedDialogHelpButtonClicked(object sender, CancelEventArgs e)
-        {
-            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210461#Advanced_Windows");
+            container.Add(
+                Observable.FromEventPattern<CancelEventArgs>(this, "HelpButtonClicked")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(EnvironmentVariableTarget =>
+                {
+                    feature.ShowHelp();
+                }));
         }
     }
 }

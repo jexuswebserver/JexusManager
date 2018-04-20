@@ -16,7 +16,7 @@ namespace JexusManager.Features.HttpErrors
         protected override void Initialize(IServiceProvider serviceProvider, ModuleInfo moduleInfo)
         {
             base.Initialize(serviceProvider, moduleInfo);
-            var controlPanel = (IControlPanel)this.GetService(typeof(IControlPanel));
+            var controlPanel = (IControlPanel)GetService(typeof(IControlPanel));
             var modulePage = new ModulePageInfo(this, typeof(HttpErrorsPage), "Error Pages",
                 "Configure pages to return when errors occur", Resources.custom_error_36,
                 Resources.custom_error_36);

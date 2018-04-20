@@ -10,16 +10,16 @@ namespace JexusManager.Features.IsapiCgiRestriction
     {
         public IsapiCgiRestrictionItem(ConfigurationElement element)
         {
-            this.Element = element;
-            this.Flag = element == null || element.IsLocallyStored ? "Local" : "Inhertied";
+            Element = element;
+            Flag = element == null || element.IsLocallyStored ? "Local" : "Inhertied";
             if (element == null)
             {
                 return;
             }
 
-            this.Description = (string)element["description"];
-            this.Path = (string)element["path"];
-            this.Allowed = (bool)element["allowed"];
+            Description = (string)element["description"];
+            Path = (string)element["path"];
+            Allowed = (bool)element["allowed"];
         }
 
         public bool Allowed { get; set; }
@@ -35,7 +35,7 @@ namespace JexusManager.Features.IsapiCgiRestriction
         public bool Equals(IsapiCgiRestrictionItem other)
         {
             // all properties
-            return this.Match(other) && other.Description == this.Description;
+            return Match(other) && other.Description == Description;
         }
 
         public void Apply()
@@ -48,7 +48,7 @@ namespace JexusManager.Features.IsapiCgiRestriction
         public bool Match(IsapiCgiRestrictionItem other)
         {
             // match combined keys.
-            return other != null && other.Path == this.Path;
+            return other != null && other.Path == Path;
         }
     }
 }

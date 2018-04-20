@@ -112,7 +112,6 @@
             this.Controls.Add(this.label1);
             this.Name = "PermissionsDialog";
             this.Text = "Edit Feature Permissions";
-            this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.PermissionsDialogHelpButtonClicked);
             this.ResumeLayout(false);
             this.PerformLayout();
 

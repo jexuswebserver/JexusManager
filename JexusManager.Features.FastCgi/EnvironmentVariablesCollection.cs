@@ -12,18 +12,18 @@ namespace JexusManager.Features.FastCgi
         {
             get
             {
-                return (EnvironmentVariables)this.List[index];
+                return (EnvironmentVariables)List[index];
             }
         }
 
         public void Add(EnvironmentVariables variable)
         {
-            this.List.Add(variable);
+            List.Add(variable);
         }
 
         public void Remove(EnvironmentVariables variable)
         {
-            this.List.Remove(variable);
+            List.Remove(variable);
         }
     }
 }

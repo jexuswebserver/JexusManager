@@ -12,7 +12,7 @@ namespace JexusManager.Features.Authentication
 
         public ImpersonationItem(ConfigurationElement element)
         {
-            this.Element = element;
+            Element = element;
             Name = (string)element["userName"];
             Password = (string)element["password"];
         }
@@ -22,8 +22,8 @@ namespace JexusManager.Features.Authentication
 
         public void Apply()
         {
-            Element["userName"] = this.Name;
-            Element["password"] = this.Password;
+            Element["userName"] = Name;
+            Element["password"] = Password;
         }
     }
 }

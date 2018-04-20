@@ -105,7 +105,6 @@
             this.Controls.Add(this.btnCancel);
             this.Name = "BasicEditDialog";
             this.Text = "Edit Basic Authentication Settings";
-            this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.BasicEditDialogHelpButtonClicked);
             this.ResumeLayout(false);
             this.PerformLayout();
 

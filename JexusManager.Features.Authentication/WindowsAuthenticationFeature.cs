@@ -113,7 +113,7 @@ namespace JexusManager.Features.Authentication
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var windowsSection = service.GetSection("system.webServer/security/authentication/windowsAuthentication", null, false);
-            var dialog = new WindowsAdvancedDialog(Module, new WindowsItem(windowsSection));
+            var dialog = new WindowsAdvancedDialog(Module, new WindowsItem(windowsSection), this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
@@ -127,7 +127,7 @@ namespace JexusManager.Features.Authentication
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var windowsSection = service.GetSection("system.webServer/security/authentication/windowsAuthentication", null, false);
-            var dialog = new ProvidersDialog(Module, new WindowsItem(windowsSection));
+            var dialog = new ProvidersDialog(Module, new WindowsItem(windowsSection), this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;

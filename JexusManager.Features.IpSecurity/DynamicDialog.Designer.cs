@@ -164,7 +164,6 @@
             this.Controls.Add(this.cbConcurrent);
             this.Name = "DynamicDialog";
             this.Text = "Dynamic IP Restriction Settings";
-            this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.DynamicDialog_HelpButtonClicked);
             this.ResumeLayout(false);
             this.PerformLayout();
 

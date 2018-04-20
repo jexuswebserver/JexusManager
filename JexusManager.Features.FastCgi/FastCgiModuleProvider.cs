@@ -17,7 +17,7 @@ namespace JexusManager.Features.FastCgi
 
         public override ModuleDefinition GetModuleDefinition(IManagementContext context)
         {
-            return new ModuleDefinition(this.Name, typeof(FastCgiModule).AssemblyQualifiedName);
+            return new ModuleDefinition(Name, typeof(FastCgiModule).AssemblyQualifiedName);
         }
 
         public override bool SupportsScope(ManagementScope scope)

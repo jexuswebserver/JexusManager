@@ -10,8 +10,8 @@ namespace JexusManager.Features.HttpErrors
     {
         public HttpErrorsItem(ConfigurationElement element)
         {
-            this.Flag = element == null || element.IsLocallyStored ? "Local" : "Inherited";
-            this.Element = element;
+            Flag = element == null || element.IsLocallyStored ? "Local" : "Inherited";
+            Element = element;
             if (element == null)
             {
                 Prefix = Path = string.Empty;
@@ -20,11 +20,11 @@ namespace JexusManager.Features.HttpErrors
                 return;
             }
 
-            this.Status = (uint)element["statusCode"];
-            this.Substatus = (int)element["subStatusCode"];
-            this.Path = (string)element["path"];
-            this.Prefix = (string)element["prefixLanguageFilePath"];
-            this.Response = element.Schema.AttributeSchemas["responseMode"].Format(element["responseMode"]);
+            Status = (uint)element["statusCode"];
+            Substatus = (int)element["subStatusCode"];
+            Path = (string)element["path"];
+            Prefix = (string)element["prefixLanguageFilePath"];
+            Response = element.Schema.AttributeSchemas["responseMode"].Format(element["responseMode"]);
         }
 
         public string Prefix { get; set; }
@@ -38,12 +38,12 @@ namespace JexusManager.Features.HttpErrors
 
         public string FullPath
         {
-            get { return string.IsNullOrEmpty(this.Prefix) ? this.Path : string.Format("{0}\\<LANGUAGE-TAG>\\{1}", this.Prefix, this.Path); }
+            get { return string.IsNullOrEmpty(Prefix) ? Path : string.Format("{0}\\<LANGUAGE-TAG>\\{1}", Prefix, Path); }
         }
 
         public string Code
         {
-            get { return this.Substatus == -1 || this.Substatus == 0 ? this.Status.ToString() : string.Format("{0}.{1}", this.Status, this.Substatus); }
+            get { return Substatus == -1 || Substatus == 0 ? Status.ToString() : string.Format("{0}.{1}", Status, Substatus); }
         }
 
         public bool Equals(HttpErrorsItem other)
@@ -53,16 +53,16 @@ namespace JexusManager.Features.HttpErrors
 
         public bool Match(HttpErrorsItem other)
         {
-            return other != null && other.Status == this.Status && other.Substatus == this.Substatus;
+            return other != null && other.Status == Status && other.Substatus == Substatus;
         }
 
         public void Apply()
         {
-            this.Element["statusCode"] = this.Status;
-            this.Element["subStatusCode"] = this.Substatus;
-            this.Element["prefixLanguageFilePath"] = this.Prefix;
-            this.Element["path"] = this.Path;
-            this.Element["responseMode"] = this.Response;
+            Element["statusCode"] = Status;
+            Element["subStatusCode"] = Substatus;
+            Element["prefixLanguageFilePath"] = Prefix;
+            Element["path"] = Path;
+            Element["responseMode"] = Response;
         }
     }
 }

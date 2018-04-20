@@ -107,7 +107,6 @@
             this.Controls.Add(this.btnCancel);
             this.Name = "NewMapItemDialog";
             this.Text = "Add MIME Type";
-            this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.NewRestrictionDialogHelpButtonClicked);
             this.ResumeLayout(false);
             this.PerformLayout();
 

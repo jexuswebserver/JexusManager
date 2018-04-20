@@ -6,7 +6,6 @@ namespace JexusManager.Features.HttpErrors
 {
     using System;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
     using System.Windows.Forms;
@@ -15,7 +14,7 @@ namespace JexusManager.Features.HttpErrors
 
     internal partial class LocalErrorDialog : DialogForm
     {
-        public LocalErrorDialog(IServiceProvider serviceProvider, HttpErrorsItem item)
+        public LocalErrorDialog(IServiceProvider serviceProvider, HttpErrorsItem item, HttpErrorsFeature feature)
             : base(serviceProvider)
         {
             InitializeComponent();
@@ -42,11 +41,14 @@ namespace JexusManager.Features.HttpErrors
                     item.Path = txtPath.Text;
                     DialogResult = DialogResult.OK;
                 }));
-        }
 
-        private void LocalErrorDialog_HelpButtonClicked(object sender, CancelEventArgs e)
-        {
-            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210481");
+            container.Add(
+                Observable.FromEventPattern<CancelEventArgs>(this, "HelpButtonClicked")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(EnvironmentVariableTarget =>
+                {
+                    feature.ShowHelp();
+                }));
         }
     }
 }
