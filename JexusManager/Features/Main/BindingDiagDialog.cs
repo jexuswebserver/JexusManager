@@ -68,6 +68,8 @@ namespace JexusManager.Features.Main
                         Debug($"ServerAutoStart: {site.ServerAutoStart}");
                         Debug($"ServerState    : {site.State}");
                         Debug(string.Empty);
+                        var feature = new ReservedUrlsFeature((Module)provider);
+                        feature.Load();
                         foreach (Binding binding in site.Bindings)
                         {
                             Debug($"BINDING: {binding.Protocol} {binding}");
@@ -75,6 +77,15 @@ namespace JexusManager.Features.Main
                             {
                                 if (binding.Host != "localhost")
                                 {
+                                    if (site.Server.Mode == WorkingMode.IisExpress)
+                                    {
+                                        var reservation = binding.ToUrlPrefix();
+                                        if (!feature.Items.Any(item => item.UrlPrefix == reservation))
+                                        {
+                                            Warn($"URL reservation {reservation} is missing. So this binding only works if IIS Express runs as administrator.");
+                                        }
+                                    }
+
                                     Info($"This site can take external traffic if,");
                                     Info($" * TCP port {binding.EndPoint.Port} must be opened on Windows Firewall (or any other equivalent products).");
                                 }
@@ -87,14 +98,6 @@ namespace JexusManager.Features.Main
                                         foreach (IPAddress address in adapters)
                                         {
                                             Info($"   * {address}:{binding.EndPoint.Port}.");
-                                        }
-
-                                        var reservation = binding.ToUrlPrefix();
-                                        var feature = new ReservedUrlsFeature((Module)provider);
-                                        feature.Load();
-                                        if (!feature.Items.Any(item => item.UrlPrefix == reservation))
-                                        {
-                                            Error($"   URL reservation {reservation} is missing.");
                                         }
                                     }
 
