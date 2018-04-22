@@ -567,7 +567,7 @@ namespace JexusManager
             var node = e.Node as ManagerTreeNode;
             if (node == null)
             {
-                RollbarDotNet.Rollbar.Report($"wrong node {e.Node.GetType().FullName}");
+                RollbarDotNet.Rollbar.Report($"wrong node {e.Node.GetType().FullName} {e.Node.Text}");
                 return;
             }
 
