@@ -160,7 +160,7 @@ namespace JexusManager.Features.Main
         private void SslDiag()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var dialog = new SslDiagDialog(Module, service.Server);
+            var dialog = new SslDiagDialog(Module, service.ServerManager);
             dialog.ShowDialog();
         }
 
