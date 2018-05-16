@@ -141,13 +141,17 @@ namespace JexusManager.Features.Certificates
 
                     cb.Extensions.Add(new SubjectKeyIdentifierExtension { Identifier = resBuf });
                     cb.Extensions.Add(new AuthorityKeyIdentifierExtension { Identifier = resBuf });
-                    SubjectAltNameExtension subjectAltNameExtension = new SubjectAltNameExtension(
-                        new string[0],
-                        new string[1] { name },
-                        new string[0],
-                        new string[0])
-                    { Critical = false };
-                    cb.Extensions.Add(subjectAltNameExtension);
+                    if (cbGenerate.Checked)
+                    {
+                        SubjectAltNameExtension subjectAltNameExtension = new SubjectAltNameExtension(
+                            new string[0],
+                            new string[1] { name },
+                            new string[0],
+                            new string[0])
+                        { Critical = false };
+                        cb.Extensions.Add(subjectAltNameExtension);
+                    }
+
                     // signature
                     string hashName = cbHashing.SelectedIndex == 0 ? "SHA1" : "SHA256";
                     cb.Hash = hashName;

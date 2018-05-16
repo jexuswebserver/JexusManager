@@ -51,6 +51,7 @@
             this.dtpTo = new System.Windows.Forms.DateTimePicker();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
+            this.cbGenerate = new System.Windows.Forms.CheckBox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -248,6 +249,18 @@
             this.label8.TabIndex = 28;
             this.label8.Text = "Valid from:";
             // 
+            // cbGenerate
+            // 
+            this.cbGenerate.AutoSize = true;
+            this.cbGenerate.Checked = true;
+            this.cbGenerate.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbGenerate.Location = new System.Drawing.Point(26, 416);
+            this.cbGenerate.Name = "cbGenerate";
+            this.cbGenerate.Size = new System.Drawing.Size(198, 17);
+            this.cbGenerate.TabIndex = 29;
+            this.cbGenerate.Text = "Generate Subject Alternative Names";
+            this.cbGenerate.UseVisualStyleBackColor = true;
+            // 
             // SelfCertificateDialog
             // 
             this.AcceptButton = this.btnOK;
@@ -255,6 +268,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(654, 476);
+            this.Controls.Add(this.cbGenerate);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.dtpTo);
@@ -305,5 +319,6 @@
         private DateTimePicker dtpTo;
         private Label label7;
         private Label label8;
+        private CheckBox cbGenerate;
     }
 }
