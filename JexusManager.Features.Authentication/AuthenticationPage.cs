@@ -53,9 +53,6 @@ namespace JexusManager.Features.Authentication
 
             private void AuthenticationSettingsUpdated()
             {
-                var service = _page.GetService(typeof(IConfigurationService)) as IConfigurationService;
-                service?.ServerManager.CommitChanges();
-
                 _status.Text = Feature.IsEnabled ? "Enabled" : "Disabled";
                 _page.ListView1SelectedIndexChanged(ListView, EventArgs.Empty);
             }
