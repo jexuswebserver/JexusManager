@@ -190,10 +190,15 @@ namespace Microsoft.Web.Administration
             }
         }
 
+        internal bool ContainsAttribute(string attributeName)
+        {
+            return Schema == null || Schema.AllowUnrecognizedAttributes 
+                || Schema.AttributeSchemas.Any(schema => schema.Name == attributeName);
+        }
+
         public ConfigurationAttribute GetAttribute(string attributeName)
         {
-            if (this.Schema != null && !this.Schema.AllowUnrecognizedAttributes
-                && this.Schema.AttributeSchemas.All(schema => schema.Name != attributeName))
+            if (!ContainsAttribute(attributeName))
             {
                 throw new COMException(
                     string.Format(

@@ -14,6 +14,11 @@ namespace Microsoft.Web.Administration
     {
         internal static bool GetIsSni(this Binding binding)
         {
+            if (!binding.ContainsAttribute("sslFlags"))
+            {
+                return false;
+            }
+
             var value = binding["sslFlags"];
             return ((uint)value & 1U) == 1U;
         }
