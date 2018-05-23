@@ -4,11 +4,9 @@
 
 namespace JexusManager.Features.Asp
 {
-    using System.Collections;
     using System.Reflection;
+    using System.Runtime.InteropServices;
     using System.Windows.Forms;
-
-    using JexusManager.Properties;
     using JexusManager.Services;
 
     using Microsoft.Web.Management.Client;
@@ -69,9 +67,17 @@ namespace JexusManager.Features.Asp
 
         protected override bool ApplyChanges()
         {
-            if (!_feature.ApplyChanges())
+            try
             {
-                return false;
+                if (!_feature.ApplyChanges())
+                {
+                    return false;
+                }
+            }
+            catch (COMException ex)
+            {
+                ShowError(ex, false);
+                return true;
             }
 
             ClearChanges();
