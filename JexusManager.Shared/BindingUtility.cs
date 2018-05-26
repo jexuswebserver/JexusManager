@@ -423,7 +423,7 @@ namespace Microsoft.Web.Administration
             catch (Win32Exception ex)
             {
                 // elevation is cancelled.
-                if (ex.NativeErrorCode != Microsoft.Web.Administration.NativeMethods.ErrorCancelled)
+                if (ex.NativeErrorCode != NativeMethods.ErrorCancelled)
                 {
                     Rollbar.Report(ex, ErrorLevel.Error, new Dictionary<string, object> { { "native", ex.NativeErrorCode } });
                     // throw;

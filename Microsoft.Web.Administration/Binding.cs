@@ -154,13 +154,21 @@ namespace Microsoft.Web.Administration
             get
             {
                 Initialize();
-                return (SslFlags)Enum.ToObject(typeof(SslFlags), this["sslFlags"]);
+                if (ContainsAttribute("sslFlags"))
+                {
+                    return (SslFlags)Enum.ToObject(typeof(SslFlags), this["sslFlags"]);
+                }
+
+                return SslFlags.None;
             }
 
             set
             {
-                this["sslFlags"] = (uint)value;
-                _initialized = false;
+                if (ContainsAttribute("sslFlags"))
+                {
+                    this["sslFlags"] = (uint)value;
+                    _initialized = false;
+                }
             }
         }
 
@@ -217,11 +225,22 @@ namespace Microsoft.Web.Administration
             return certificate != null; // true if detect existing IP mapping.
         }
 
+        internal bool GetIsSni()
+        {
+            if (!ContainsAttribute("sslFlags"))
+            {
+                return false;
+            }
+
+            var value = this["sslFlags"];
+            return ((uint)value & 1U) == 1U;
+        }
+
         public void RefreshCertificate()
         {
             if (Parent.Parent.Server.SupportsSni)
             {
-                if (this.GetIsSni())
+                if (GetIsSni())
                 {
                     try
                     {
