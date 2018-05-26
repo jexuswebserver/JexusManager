@@ -15,12 +15,9 @@ namespace JexusManager.Features.Modules
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
     using System.Windows.Forms;
-
-    using JexusManager.Properties;
     using JexusManager.Services;
 
     using Microsoft.Web.Administration;

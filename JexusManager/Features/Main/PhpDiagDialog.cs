@@ -6,16 +6,11 @@ using Microsoft.Web.Administration;
 using Microsoft.Web.Management.Client.Win32;
 using System;
 using System.Linq;
-using System.Security.Cryptography;
 
 namespace JexusManager.Features.Main
 {
     using System.Drawing;
     using System.IO;
-    using System.Security.Cryptography.X509Certificates;
-    using Microsoft.Win32;
-
-    using Org.BouncyCastle.Utilities.Encoders;
 
     using System.Reactive.Disposables;
     using System.Reactive.Linq;

@@ -11,7 +11,6 @@ namespace JexusManager.Tree
     using System.Net;
     using System.Net.Security;
     using System.Text;
-    using System.Threading.Tasks;
     using System.Windows.Forms;
 
     using JexusManager.Dialogs;
@@ -46,6 +45,14 @@ namespace JexusManager.Tree
         public bool IsLocalhost;
         public WorkingMode Mode;
         private NodeStatus _status;
+        private bool readOnly;
+
+        private static string[] RestrictedPaths = new[]
+                {
+                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles)) + Path.DirectorySeparatorChar,
+                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)) + Path.DirectorySeparatorChar,
+                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows)) + Path.DirectorySeparatorChar
+                };
 
         private ServerTreeNode(IServiceProvider serviceProvider, string name, string hostName, string credentials, string hash, ServerManager server, bool isLocalhost, WorkingMode mode, bool ignoreInCache)
             : base(GetNodeName(name, credentials, isLocalhost), serviceProvider)
@@ -56,15 +63,44 @@ namespace JexusManager.Tree
             HostName = hostName;
             Credentials = credentials;
             Mode = mode;
+            var elevated = PublicNativeMethods.IsProcessElevated;
             if (Mode == WorkingMode.Iis)
             {
-                ImageIndex = 8;
-                SelectedImageIndex = 8;
+                if (elevated)
+                {
+                    ImageIndex = 8;
+                    SelectedImageIndex = 8;
+                }
+                else
+                {
+                    ImageIndex = 12;
+                    SelectedImageIndex = 12;
+                    readOnly = true;
+                }
             }
             else
             {
-                ImageIndex = 1;
-                SelectedImageIndex = 1;
+                var restricted = false;
+                foreach (var restrictedPath in RestrictedPaths)
+                {
+                    if (hostName.StartsWith(restrictedPath, StringComparison.OrdinalIgnoreCase))
+                    {
+                        restricted = true;
+                        break;
+                    }
+                }
+
+                if (restricted && !elevated)
+                {
+                    ImageIndex = 11;
+                    SelectedImageIndex = 11;
+                    readOnly = true;
+                }
+                else
+                {
+                    ImageIndex = 1;
+                    SelectedImageIndex = 1;
+                }
             }
 
             IsLocalhost = isLocalhost;
@@ -100,6 +136,12 @@ namespace JexusManager.Tree
 
         public override void HandleDoubleClick(MainForm mainForm)
         {
+            if (readOnly)
+            {
+                MessageBox.Show("Elevation is required. Please run Jexus Manager as administrator.");
+                return;
+            }
+
             if (ServerManager != null)
             {
                 return;
@@ -218,6 +260,12 @@ namespace JexusManager.Tree
 
         public override void LoadPanels(MainForm mainForm, ServiceContainer serviceContainer, List<ModuleProvider> moduleProviders)
         {
+            if (readOnly)
+            {
+                MessageBox.Show("Elevation is required. Please run Jexus Manager as administrator.");
+                return;
+            }
+
             if (ServerManager == null && _status != NodeStatus.Loaded)
             {
                 return;
@@ -287,6 +335,12 @@ namespace JexusManager.Tree
 
         public bool LoadServer(ContextMenuStrip poolsMenu, ContextMenuStrip sitesMenu, ContextMenuStrip siteMenu)
         {
+            if (readOnly)
+            {
+                MessageBox.Show("Elevation is required. Please run Jexus Manager as administrator.");
+                return false;
+            }
+
             PoolsNode = new ApplicationPoolsTreeNode(ServiceProvider, ServerManager.ApplicationPools, this)
             {
                 ContextMenuStrip = poolsMenu
@@ -325,14 +379,14 @@ namespace JexusManager.Tree
             return new ServerTreeNode(serviceProvider, name, hostName, credentials, hash, server, isLocalhost, WorkingMode.Jexus, false);
         }
 
-        public static ServerTreeNode CreateIisExpressNode(IServiceProvider serviceProvider, string name, string hostName, ServerManager server, bool ignoreInCache)
+        public static ServerTreeNode CreateIisExpressNode(IServiceProvider serviceProvider, string name, string fileName, ServerManager server, bool ignoreInCache)
         {
-            return new ServerTreeNode(serviceProvider, name, hostName, string.Empty, string.Empty, server, true, WorkingMode.IisExpress, ignoreInCache);
+            return new ServerTreeNode(serviceProvider, name, fileName, string.Empty, string.Empty, server, true, WorkingMode.IisExpress, ignoreInCache);
         }
-        
-        public static ServerTreeNode CreateIisNode(IServiceProvider serviceProvider, string name, string hostName)
+
+        public static ServerTreeNode CreateIisNode(IServiceProvider serviceProvider, string name, string fileName)
         {
-            return new ServerTreeNode(serviceProvider, name, hostName, string.Empty, string.Empty, null, true, WorkingMode.Iis, true);
+            return new ServerTreeNode(serviceProvider, name, fileName, string.Empty, string.Empty, null, true, WorkingMode.Iis, true);
         }
     }
 }

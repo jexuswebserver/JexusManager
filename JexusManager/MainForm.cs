@@ -78,17 +78,19 @@ namespace JexusManager
             toolStripMenuItem44.Image = DefaultTaskList.RemoveImage;
 
             Icon = Resources.iis;
-            imageList1.Images.Add(Resources.iis_16);
-            imageList1.Images.Add(Resources.server_16);
-            imageList1.Images.Add(Resources.application_pools_16);
-            imageList1.Images.Add(Resources.sites_16);
-            imageList1.Images.Add(Resources.site_16);
-            imageList1.Images.Add(Resources.application_16);
-            imageList1.Images.Add(Resources.physical_directory_16);
-            imageList1.Images.Add(Resources.virtual_directory_16);
-            imageList1.Images.Add(Resources.farm_16);
-            imageList1.Images.Add(Resources.farm_server_16);
-            imageList1.Images.Add(Resources.servers_16);
+            imageList1.Images.Add(Resources.iis_16); // 0
+            imageList1.Images.Add(Resources.server_16); // 1
+            imageList1.Images.Add(Resources.application_pools_16); // 2
+            imageList1.Images.Add(Resources.sites_16); // 3
+            imageList1.Images.Add(Resources.site_16); // 4
+            imageList1.Images.Add(Resources.application_16); // 5
+            imageList1.Images.Add(Resources.physical_directory_16); // 6
+            imageList1.Images.Add(Resources.virtual_directory_16); // 7
+            imageList1.Images.Add(Resources.farm_16); // 8
+            imageList1.Images.Add(Resources.farm_server_16); // 9
+            imageList1.Images.Add(Resources.servers_16); // 10
+            imageList1.Images.Add(Resources.server_disabled_16); // 11
+            imageList1.Images.Add(Resources.farm_disabled_16); // 12
             btnAbout.Text = string.Format("About Jexus Manager {0}", Assembly.GetExecutingAssembly().GetName().Version);
             treeView1.Nodes.Add(new HomePageTreeNode { ContextMenuStrip = cmsIis });
 
@@ -226,7 +228,7 @@ namespace JexusManager
                 var data = ServerTreeNode.CreateIisExpressNode(
                     _serviceContainer,
                     name: parts[0],
-                    hostName: parts[1], 
+                    fileName: parts[1], 
                     server: null,
                     ignoreInCache: true);
                 RegisterServer(data);
@@ -246,7 +248,7 @@ namespace JexusManager
                 var data = ServerTreeNode.CreateIisExpressNode(
                     _serviceContainer,
                     name: $"IIS Express {number++}",
-                    hostName: file,
+                    fileName: file,
                     server: null,
                     ignoreInCache: true);
                 RegisterServer(data);
@@ -255,12 +257,6 @@ namespace JexusManager
 
         private void LoadIis()
         {
-            if (!PublicNativeMethods.IsProcessElevated)
-            {
-                // IMPORTANT: only elevated can manipulate IIS.
-                return;
-            }
-
             // TODO: load if only on Windows.
             var config = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.System),
