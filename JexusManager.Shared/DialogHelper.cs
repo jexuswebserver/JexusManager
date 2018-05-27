@@ -331,5 +331,10 @@ namespace JexusManager
                 Help.ShowHelp(null, url);
             }
         }
+
+        public static void BrowseFile(string file)
+        {
+            Process.Start("explorer.exe", $"/select,\"{file}\"");
+        }
     }
 }

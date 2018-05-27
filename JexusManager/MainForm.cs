@@ -1128,7 +1128,7 @@ namespace JexusManager
 
             if (server.Mode == WorkingMode.Iis || server.Mode == WorkingMode.IisExpress)
             {
-                DialogHelper.Explore(server.ServerManager.FileName);
+                DialogHelper.BrowseFile(server.ServerManager.FileName);
                 return;
             }
         }
