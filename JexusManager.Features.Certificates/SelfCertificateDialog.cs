@@ -72,6 +72,12 @@ namespace JexusManager.Features.Certificates
                 .Subscribe(evt =>
                 {
                     var name = txtCommonName.Text;
+                    if (string.IsNullOrWhiteSpace(name))
+                    {
+                        ShowMessage("Custom common name cannot be empty.", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                        return;
+                    }
+
                     // Generate certificate
                     string defaultIssuer = string.Format("CN={0}", name);
                     string defaultSubject = defaultIssuer;
@@ -199,7 +205,7 @@ namespace JexusManager.Features.Certificates
                             }
                             else
                             {
-                                MessageBox.Show(process.ExitCode.ToString());
+                                ShowMessage(process.ExitCode.ToString(), MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                             }
                         }
                     }
