@@ -161,7 +161,17 @@ namespace JexusManager.Features.Certificates
                     // signature
                     string hashName = cbHashing.SelectedIndex == 0 ? "SHA1" : "SHA256";
                     cb.Hash = hashName;
-                    byte[] rawcert = cb.Sign(issuerKey);
+                    byte[] rawcert = null;
+                    try
+                    {
+                        rawcert = cb.Sign(issuerKey);
+                    }
+                    catch (Exception ex)
+                    {
+                        Rollbar.Report(ex, ErrorLevel.Error);
+                        ShowError(ex, "Certificate generation error", false);
+                        return;
+                    }
 
                     PKCS12 p12 = new PKCS12();
                     p12.Password = p12pwd;
