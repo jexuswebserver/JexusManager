@@ -861,6 +861,35 @@ $"Filename: \\\\?\\{config.FileContext.FileName}\r\nLine number: 0\r\nError: Can
             server.CommitChanges();
         }
 
+        public static void TestIisExpressHandlers(ServerManager server)
+        {
+            var site = server.Sites[0];
+
+            {
+                // server config "Website1"
+                var config = server.GetApplicationHostConfiguration();
+
+                // enable Windows authentication
+                var handlersSection = config.GetSection("system.webServer/handlers", "WebSite1");
+                Assert.Equal(OverrideMode.Inherit, handlersSection.OverrideMode);
+                Assert.Equal(OverrideMode.Allow, handlersSection.OverrideModeEffective);
+                Assert.False(handlersSection.IsLocked);
+                Assert.True(handlersSection.IsLocallyStored);
+            }
+
+            {
+                // site config "Website1"
+                var config = server.Sites[0].Applications[0].GetWebConfiguration();
+
+                // enable Windows authentication
+                var handlersSection = config.GetSection("system.webServer/handlers");
+                Assert.Equal(OverrideMode.Inherit, handlersSection.OverrideMode);
+                Assert.Equal(OverrideMode.Allow, handlersSection.OverrideModeEffective);
+                Assert.False(handlersSection.IsLocked);
+                Assert.False(handlersSection.IsLocallyStored);
+            }
+        }
+
         private enum ResponseMode
         {
             File = 0,

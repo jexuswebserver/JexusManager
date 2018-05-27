@@ -127,8 +127,16 @@ namespace Microsoft.Web.Administration
                 var section = new ConfigurationSection(sectionPath, definition.Schema.Root, locationPath,
                     top, null);
                 section.OverrideMode = OverrideMode.Inherit;
-                section.OverrideModeEffective =
-                    (OverrideMode)Enum.Parse(typeof(OverrideMode), definition.OverrideModeDefault);
+                if (locationPath == null)
+                {
+                    section.OverrideModeEffective = (OverrideMode)Enum.Parse(typeof(OverrideMode), definition.OverrideModeDefault);
+                }
+                else
+                {
+                    var parent = FindSection(sectionPath, locationPath.GetParentLocation(), core);
+                    section.OverrideModeEffective = parent.OverrideModeEffective;
+                }
+
                 section.IsLocked = section.FileContext.FileName != definition.FileContext.FileName && section.OverrideModeEffective != OverrideMode.Allow;
                 section.IsLocallyStored = section.FileContext.FileName == definition.FileContext.FileName;
                 ConfigurationSections.Add(section);
@@ -215,9 +223,12 @@ namespace Microsoft.Web.Administration
                     throw new ServerManagerException("Section is not allowed in location tag");
                 }
 
-                section.OverrideMode = OverrideMode.Inherit;
-                section.OverrideModeEffective =
-                    (OverrideMode)Enum.Parse(typeof(OverrideMode), definition.OverrideModeDefault);
+                section.OverrideMode = location == null || location.OverrideMode == null 
+                    ? OverrideMode.Inherit
+                    : (OverrideMode)Enum.Parse(typeof(OverrideMode), location.OverrideMode);
+                section.OverrideModeEffective = section.OverrideMode == OverrideMode.Inherit
+                    ? (OverrideMode)Enum.Parse(typeof(OverrideMode), definition.OverrideModeDefault)
+                    : section.OverrideMode;
 
                 section.IsLocked = section.FileContext.FileName != definition.FileContext.FileName
                                    && section.OverrideModeEffective != OverrideMode.Allow;

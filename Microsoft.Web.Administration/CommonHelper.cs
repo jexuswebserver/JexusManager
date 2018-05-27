@@ -142,6 +142,23 @@ namespace Microsoft.Web.Administration
             return parentPath;
         }
 
+        internal static string GetParentLocation(this string location)
+        {
+            if (location == null)
+            {
+                throw new InvalidOperationException("location");
+            }
+
+            var parentEnd = location.LastIndexOf('/');
+            if (parentEnd == -1)
+            {
+                return location.Length == 0 ? null : string.Empty;
+            }
+
+            var parentPath = parentEnd == 0 ? Application.RootPath : location.Substring(0, parentEnd);
+            return parentPath;
+        }
+
         internal static string ToString(ObjectState state)
         {
             switch (state)
