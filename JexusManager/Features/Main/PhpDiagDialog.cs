@@ -85,20 +85,28 @@ namespace JexusManager.Features.Main
                         Debug(string.Empty);
                         var handlers = new HandlersFeature((Module)provider);
                         handlers.Load();
-                        var foundPhpHandler = false;
+                        var foundPhpHandler = new List<HandlersItem>();
                         Debug($"Scan {handlers.Items.Count} registered handler(s).");
                         foreach (var item in handlers.Items)
                         {
-                            if (string.Equals(item.Path, "*.php", StringComparison.OrdinalIgnoreCase))
+                            if (item.Modules == "FastCgiModule")
                             {
-                                Debug($"* Found PHP handler as {{ Name: {item.Name}, Path: {item.Path}, State: {item.GetState(handlers.AccessPolicy)}, Handler: {item.TypeString}, Entry Type: {item.Flag} }}.");
-                                foundPhpHandler = true;
+                                Debug($"* Found FastCGI handler as {{ Name: {item.Name}, Path: {item.Path}, State: {item.GetState(handlers.AccessPolicy)}, Handler: {item.TypeString}, Entry Type: {item.Flag} }}.");
+                                foundPhpHandler.Add(item);
                             }
+
+                            //if (string.Equals(item.Path, "*.php", StringComparison.OrdinalIgnoreCase))
+                            //{
+                            //    Debug($"* Found PHP handler as {{ Name: {item.Name}, Path: {item.Path}, State: {item.GetState(handlers.AccessPolicy)}, Handler: {item.TypeString}, Entry Type: {item.Flag} }}.");
+                            //    foundPhpHandler = true;
+                            //}
                         }
 
-                        if (!foundPhpHandler)
+                        if (foundPhpHandler.Count == 0)
                         {
-                            Error($"No PHP handler is registered for this web site. Please refer to https://docs.microsoft.com/en-us/iis/application-frameworks/scenario-build-a-php-website-on-iis/configuring-step-1-install-iis-and-php#13-download-and-install-php-manually for more details.");
+                            Error($"No FastCGI handler is registered for this web site.");
+                            Error($" * To run PHP on IIS, please refer to https://docs.microsoft.com/en-us/iis/application-frameworks/scenario-build-a-php-website-on-iis/configuring-step-1-install-iis-and-php#13-download-and-install-php-manually for more details.");
+                            Error($" * To run Python on IIS, please refer to https://pypi.org/project/wfastcgi/ or use HttpPlatformHandler https://docs.microsoft.com/en-us/iis/extensions/httpplatformhandler/httpplatformhandler-configuration-reference.");
                             return;
                         }
 
@@ -106,61 +114,77 @@ namespace JexusManager.Features.Main
                         var fastCgiFeature = new FastCgiFeature((Module)provider);
                         fastCgiFeature.Load();
                         Debug($"Scan {fastCgiFeature.Items.Count} registered FastCGI application(s).");
-                        var foundPhp = new List<string>();
+                        var foundPhp = new List<FastCgiItem>();
                         foreach (var item in fastCgiFeature.Items)
                         {
-                            if (item.Path.TrimEnd('"').EndsWith("php-cgi.exe", StringComparison.OrdinalIgnoreCase))
+                            var combination = string.IsNullOrWhiteSpace(item.Arguments) ? item.Path : item.Path + '|' + item.Arguments;
+                            foreach (var handler in foundPhpHandler)
                             {
-                                Debug($"* Found PHP FastCGI application registered as {{ Full path: {item.Path}, Arguments: {item.Arguments} }}.");
-                                foundPhp.Add(item.Path);
+                                if (string.Equals(combination, handler.ScriptProcessor, StringComparison.OrdinalIgnoreCase))
+                                {
+                                    Debug($"* Found FastCGI application registered as {{ Full path: {item.Path}, Arguments: {item.Arguments} }}.");
+                                    foundPhp.Add(item);
+                                    break;
+                                }
                             }
                         }
 
                         if (foundPhp.Count == 0)
                         {
-                            Error($"No PHP FastCGI appilcation is registered on this server. Please refer to https://docs.microsoft.com/en-us/iis/application-frameworks/scenario-build-a-php-website-on-iis/configuring-step-1-install-iis-and-php#13-download-and-install-php-manually for more details.");
+                            Error($"No suitable FastCGI appilcation is registered on this server.");
+                            Error($" * To run PHP on IIS, please refer to https://docs.microsoft.com/en-us/iis/application-frameworks/scenario-build-a-php-website-on-iis/configuring-step-1-install-iis-and-php#13-download-and-install-php-manually for more details.");
+                            Error($" * To run Python on IIS, please refer to https://pypi.org/project/wfastcgi/ or use HttpPlatformHandler https://docs.microsoft.com/en-us/iis/extensions/httpplatformhandler/httpplatformhandler-configuration-reference.");
                             return;
                         }
 
                         Debug(Environment.NewLine);
-                        Debug($"Verify PHP installation versions.");
-                        foreach (var path in foundPhp)
+                        Debug($"Verify web stack installation versions.");
+                        foreach (var item in foundPhp)
                         {
-                            var info = FileVersionInfo.GetVersionInfo(path);
-                            var version = $"{info.FileMajorPart}.{info.FileMinorPart}";
-                            if (knownPhpVersions.ContainsKey(version))
+                            var path = item.Path;
+                            if (path.TrimEnd('"').EndsWith("php-cgi.exe", StringComparison.OrdinalIgnoreCase))
                             {
-                                var php = knownPhpVersions[version];
-                                if (php.Recommended)
+                                // PHP
+                                var info = FileVersionInfo.GetVersionInfo(path);
+                                var version = $"{info.FileMajorPart}.{info.FileMinorPart}";
+                                if (knownPhpVersions.ContainsKey(version))
                                 {
-                                    Debug($"* PHP {version} ({path}) is supported.");
-                                }
-                                else
-                                {
-                                    Warn($"* PHP {version} ({path}) will soon be obsolete. Please refer to http://php.net/supported-versions.php for more details.");
-                                }
-
-                                var cppFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), $"msvcp{php.CppVersion.Major}0.dll");
-                                if (File.Exists(cppFile))
-                                {
-                                    var cpp = FileVersionInfo.GetVersionInfo(cppFile);
-                                    if (cpp.FileMinorPart >= php.CppVersion.Minor)
+                                    var php = knownPhpVersions[version];
+                                    if (php.Recommended)
                                     {
-                                        Debug($"  Visual C++ runtime is detected (expected: {php.CppVersion}, detected: {cpp.FileVersion}).");
+                                        Debug($"* PHP {version} ({path}) is supported.");
                                     }
                                     else
                                     {
-                                        Error($"  Visual C++ runtime {php.CppVersion} is not detected. Please install it following the tips on https://windows.php.net/download/.");
+                                        Warn($"* PHP {version} ({path}) will soon be obsolete. Please refer to http://php.net/supported-versions.php for more details.");
+                                    }
+
+                                    var cppFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), $"msvcp{php.CppVersion.Major}0.dll");
+                                    if (File.Exists(cppFile))
+                                    {
+                                        var cpp = FileVersionInfo.GetVersionInfo(cppFile);
+                                        if (cpp.FileMinorPart >= php.CppVersion.Minor)
+                                        {
+                                            Debug($"  Visual C++ runtime is detected (expected: {php.CppVersion}, detected: {cpp.FileVersion}).");
+                                        }
+                                        else
+                                        {
+                                            Error($"  Visual C++ runtime {php.CppVersion} is not detected. Please install it following the tips on https://windows.php.net/download/.");
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Error($"  Visual C++ {php.CppVersion} runtime is not detected. Please install it following the tips on https://windows.php.net/download/.");
                                     }
                                 }
                                 else
                                 {
-                                    Error($"  Visual C++ {php.CppVersion} runtime is not detected. Please install it following the tips on https://windows.php.net/download/.");
+                                    Error($"* PHP {info.FileVersion} ({path}) is unknown or obsolete. Please refer to http://php.net/supported-versions.php for more details.");
                                 }
                             }
-                            else
+                            else if (path.TrimEnd('"').EndsWith("python.exe", StringComparison.OrdinalIgnoreCase))
                             {
-                                Error($"* PHP {info.FileVersion} ({path}) is unknown or obsolete. Please refer to http://php.net/supported-versions.php for more details.");
+                                // Python
                             }
                         }
 
@@ -169,80 +193,88 @@ namespace JexusManager.Features.Main
                         Debug($"Windows Path environment variable: {systemPath}.");
                         Debug(string.Empty);
                         string[] paths = systemPath.Split(new char[1] { Path.PathSeparator });
-                        foreach (var path in foundPhp)
+                        foreach (var item in foundPhp)
                         {
-                            var rootFolder = Path.GetDirectoryName(path);
-                            Debug($"[{rootFolder}]");
-                            var config = Path.Combine(rootFolder, "php.ini");
-                            if (File.Exists(config))
+                            var path = item.Path;
+                            if (path.TrimEnd('"').EndsWith("php-cgi.exe", StringComparison.OrdinalIgnoreCase))
                             {
-                                Info($"Found PHP config file {config}.");
-                                var parser = new ConcatenateDuplicatedKeysIniDataParser();
-                                parser.Configuration.ConcatenateSeparator = " ";
-                                var data = parser.Parse(File.ReadAllText(config));
-                                var extensionFolder = data["PHP"]["extension_dir"];
-                                if (extensionFolder == null)
+                                var rootFolder = Path.GetDirectoryName(path);
+                                Debug($"[{rootFolder}]");
+                                var config = Path.Combine(rootFolder, "php.ini");
+                                if (File.Exists(config))
                                 {
-                                    extensionFolder = "ext";
-                                }
+                                    Info($"Found PHP config file {config}.");
+                                    var parser = new ConcatenateDuplicatedKeysIniDataParser();
+                                    parser.Configuration.ConcatenateSeparator = " ";
+                                    var data = parser.Parse(File.ReadAllText(config));
+                                    var extensionFolder = data["PHP"]["extension_dir"];
+                                    if (extensionFolder == null)
+                                    {
+                                        extensionFolder = "ext";
+                                    }
 
-                                var fullPath = Path.Combine(rootFolder, extensionFolder);
-                                Info($"PHP loadable extension folder: {fullPath}");
-                                var extesionNames = data["PHP"]["extension"];
-                                if (extesionNames == null)
-                                {
-                                    Info("No extension to verify.");
+                                    var fullPath = Path.Combine(rootFolder, extensionFolder);
+                                    Info($"PHP loadable extension folder: {fullPath}");
+                                    var extesionNames = data["PHP"]["extension"];
+                                    if (extesionNames == null)
+                                    {
+                                        Info("No extension to verify.");
+                                    }
+                                    else
+                                    {
+                                        var extensions = extesionNames.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                                        Info($"Found {extensions.Length} extension(s) to verify.");
+                                        var noError = true;
+                                        foreach (var name in extensions)
+                                        {
+                                            var fileName = Path.Combine(fullPath, $"php_{name}.dll");
+                                            if (!File.Exists(fileName))
+                                            {
+                                                Error($"* Extension {name} is listed, but on disk the file cannot be found {fileName}");
+                                                noError = false;
+                                            }
+                                        }
+
+                                        if (noError)
+                                        {
+                                            Info("All extension(s) listed can be found on disk.");
+                                        }
+                                    }
                                 }
                                 else
                                 {
-                                    var extensions = extesionNames.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                                    Info($"Found {extensions.Length} extension(s) to verify.");
-                                    var noError = true;
-                                    foreach (var name in extensions)
-                                    {
-                                        var fileName = Path.Combine(fullPath, $"php_{name}.dll");
-                                        if (!File.Exists(fileName))
-                                        {
-                                            Error($"* Extension {name} is listed, but on disk the file cannot be found {fileName}");
-                                            noError = false;
-                                        }
-                                    }
-
-                                    if (noError)
-                                    {
-                                        Info("All extension(s) listed can be found on disk.");
-                                    }
+                                    Warn($"Cannot find PHP config file {config}. Default settings are used.");
                                 }
-                            }
-                            else
-                            {
-                                Warn($"Cannot find PHP config file {config}. Default settings are used.");
-                            }
 
-                            var matched = false;
-                            foreach (var system in paths)
-                            {
-                                if (string.Equals(rootFolder, system, StringComparison.OrdinalIgnoreCase))
+                                var matched = false;
+                                foreach (var system in paths)
                                 {
-                                    matched = true;
-                                    break;
+                                    if (string.Equals(rootFolder, system, StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        matched = true;
+                                        break;
+                                    }
                                 }
-                            }
 
-                            if (matched)
-                            {
-                                Debug($"PHP installation has been added to Windows Path environment variable.");
-                            }
-                            else
-                            {
-                                Error($"PHP installation is not yet added to Windows Path environment variable. Please refer to https://docs.microsoft.com/en-us/iis/application-frameworks/scenario-build-a-php-website-on-iis/configuring-step-1-install-iis-and-php#13-download-and-install-php-manually for more details.");
-                                Warn($"Restart Jexus Manager and rerun PHP Diagnostics after changing Windows Path environment variable.");
-                            }
+                                if (matched)
+                                {
+                                    Debug($"PHP installation has been added to Windows Path environment variable.");
+                                }
+                                else
+                                {
+                                    Error($"PHP installation is not yet added to Windows Path environment variable. Please refer to https://docs.microsoft.com/en-us/iis/application-frameworks/scenario-build-a-php-website-on-iis/configuring-step-1-install-iis-and-php#13-download-and-install-php-manually for more details.");
+                                    Warn($"Restart Jexus Manager and rerun PHP Diagnostics after changing Windows Path environment variable.");
+                                }
 
-                            Debug(string.Empty);
+                                Debug(string.Empty);
+
+                                // TODO: verify other configuration in php.info.
+                            }
+                            else if (path.TrimEnd('"').EndsWith("python.exe", StringComparison.OrdinalIgnoreCase))
+                            {
+
+                            }
                         }
-
-                        // TODO: verify other configurations in php.info.
                     }
                     catch (Exception ex)
                     {
