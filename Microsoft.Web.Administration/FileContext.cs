@@ -457,6 +457,11 @@ namespace Microsoft.Web.Administration
                     oob = "Application Request Routing Module (system.webServer/webFarms/)";
                     link = "https://docs.microsoft.com/en-us/iis/extensions/configuring-application-request-routing-arr/define-and-configure-an-application-request-routing-server-farm#prerequisites";
                 }
+                else if (path.StartsWith("system.webServer/httpPlatform/"))
+                {
+                    oob = "HttpPlatformHandler Module (system.webServer/httpPlatform/)";
+                    link = "https://docs.microsoft.com/en-us/iis/extensions/httpplatformhandler/httpplatformhandler-configuration-reference";
+                }
 
                 var exception = new COMException(
                     string.Format(
