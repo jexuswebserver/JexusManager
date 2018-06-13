@@ -97,7 +97,7 @@ namespace JexusManager
         {
             Rollbar.Init(new RollbarConfig
             {
-                AccessToken = "5525758f15504199b7125d35d2058cfe",
+                AccessToken = "5b11a2cb773f42d8afb4265951208c24",
                 Environment = "production"
             });
             var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
