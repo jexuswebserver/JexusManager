@@ -74,31 +74,31 @@ namespace Microsoft.Web.Administration
 
         internal XElement Entity
         {
-            get { return this.InnerEntity ?? (this.InnerEntity = CreateEntity()); }
-            set { this.InnerEntity = value; }
+            get { return InnerEntity ?? (InnerEntity = CreateEntity()); }
+            set { InnerEntity = value; }
         }
 
         internal void ForceCreateEntity()
         {
-            if (this.InnerEntity != null)
+            if (InnerEntity != null)
             {
                 return;
             }
 
-            this.InnerEntity = CreateEntity();
+            InnerEntity = CreateEntity();
         }
 
         internal void Validate(bool loading)
         {
             List<string> missing = null;
-            foreach (ConfigurationAttributeSchema attribute in this.Schema.AttributeSchemas)
+            foreach (ConfigurationAttributeSchema attribute in Schema.AttributeSchemas)
             {
                 if (!attribute.IsRequired)
                 {
                     continue;
                 }
 
-                if (!this.RawAttributes.ContainsKey(attribute.Name))
+                if (!RawAttributes.ContainsKey(attribute.Name))
                 {
                     if (missing == null)
                     {
@@ -127,7 +127,7 @@ namespace Microsoft.Web.Administration
 
                 if (loading)
                 {
-                    var line = (this.Entity as IXmlLineInfo).LineNumber;
+                    var line = (Entity as IXmlLineInfo).LineNumber;
                     throw new COMException(
                         string.Format("Line number: {0}\r\nError: Missing {1}\r\n", line, error));
                 }
@@ -140,12 +140,12 @@ namespace Microsoft.Web.Administration
         {
             if (ElementTagName.Contains('/'))
             {
-                return this.FileContext.CreateElement(ElementTagName, Section.Location);
+                return FileContext.CreateElement(ElementTagName, Section.Location);
             }
 
             var result = new XElement(ElementTagName);
-            if (this.ParentElement is ConfigurationElementCollection
-                && this.ParentElement.Schema.CollectionSchema.GetElementSchema(this.ElementTagName) != null)
+            if (ParentElement is ConfigurationElementCollection
+                && ParentElement.Schema.CollectionSchema.GetElementSchema(ElementTagName) != null)
             {
                 // IMPORTANT: avoid appending to parent element.
                 return result;
@@ -182,11 +182,11 @@ namespace Microsoft.Web.Administration
 
         public void Delete()
         {
-            this.FileContext.SetDirty();
+            FileContext.SetDirty();
             ParentElement?.ChildElements?.Remove(this);
-            if (this.InnerEntity?.Parent != null) // for removing items in collection
+            if (InnerEntity?.Parent != null) // for removing items in collection
             {
-                this.InnerEntity?.Remove();
+                InnerEntity?.Remove();
             }
         }
 
@@ -203,8 +203,8 @@ namespace Microsoft.Web.Administration
                 throw new COMException(
                     string.Format(
                         "Filename: \\\\?\\{0}\r\nLine number: {1}\r\nError: Unrecognized attribute '{2}'\r\n\r\n",
-                        this.FileContext.FileName,
-                        (this.Entity as IXmlLineInfo).LineNumber,
+                        FileContext.FileName,
+                        (Entity as IXmlLineInfo).LineNumber,
                         attributeName));
             }
 
@@ -246,7 +246,7 @@ namespace Microsoft.Web.Administration
                 return null;
             }
 
-            var result = new ConfigurationElementCollection(collectionName, schema, this, this.InnerEntity, null);
+            var result = new ConfigurationElementCollection(collectionName, schema, this, InnerEntity, null);
             ChildElements.Add(result);
             return result.GetCollection();
         }
@@ -370,9 +370,9 @@ namespace Microsoft.Web.Administration
                 return null;
             }
 
-            if (this.Schema.Path.Length != 0)
+            if (Schema.Path.Length != 0)
             {
-                if (path.Length != this.Schema.Path.Length && path[this.Schema.Path.Length] != '/')
+                if (path.Length != Schema.Path.Length && path[Schema.Path.Length] != '/')
                 {
                     return null;
                 }
@@ -397,12 +397,12 @@ namespace Microsoft.Web.Administration
 
         private void ParseAttributes()
         {
-            if (this.InnerEntity == null)
+            if (InnerEntity == null)
             {
                 return;
             }
 
-            foreach (var attribute in this.InnerEntity.Attributes())
+            foreach (var attribute in InnerEntity.Attributes())
             {
                 try
                 {
@@ -413,7 +413,7 @@ namespace Microsoft.Web.Administration
                     throw new COMException(
                         string.Format(
                             "Line number: {0}\r\nError: The '{1}' attribute is invalid.  {2}\r\n",
-                            (this.InnerEntity as IXmlLineInfo).LineNumber,
+                            (InnerEntity as IXmlLineInfo).LineNumber,
                             attribute.Name,
                             ex.Message));
                 }
@@ -422,7 +422,7 @@ namespace Microsoft.Web.Administration
                     throw new COMException(
                         string.Format(
                             "Line number: {0}\r\nError: {1}\r\n",
-                            (this.InnerEntity as IXmlLineInfo).LineNumber,
+                            (InnerEntity as IXmlLineInfo).LineNumber,
                             ex.Message));
                 }
             }
@@ -470,6 +470,11 @@ namespace Microsoft.Web.Administration
 
         internal ConfigurationElement GetElementAtParentLocationInFileContext(FileContext core)
         {
+            return GetElementAtParentLocationInFileContext(core, core);
+        }
+
+            internal ConfigurationElement GetElementAtParentLocationInFileContext(FileContext core, FileContext top)
+        {
             if (Section == null)
             {
                 return null;
@@ -489,6 +494,22 @@ namespace Microsoft.Web.Administration
             if (core == null)
             {
                 return null;
+            }
+
+            if (core.Location != null)
+            {
+                // IMPORTANT: web.config should not check parent path.
+                return null;
+            }
+
+            if (core != top)
+            {
+                var exact = core.GetSection(Section.SectionPath, Section.Location);
+                var exactElement = exact?.GetElementByPath(Schema.Path);
+                if (exactElement != null)
+                {
+                    return exactElement;
+                }
             }
 
             string parentLocation = Section.Location.GetParentPath();
@@ -513,7 +534,7 @@ namespace Microsoft.Web.Administration
 
         internal ConfigurationElement GetParentElement()
         {
-            var core = this.FileContext;
+            var core = FileContext;
             if (core == null)
             {
                 return null;
@@ -522,7 +543,7 @@ namespace Microsoft.Web.Administration
             while (true)
             {
                 // first check same file.
-                var parentElement = this.GetElementAtParentLocationInFileContext(core);
+                var parentElement = GetElementAtParentLocationInFileContext(core, FileContext);
                 if (parentElement != null)
                 {
                     return parentElement;
@@ -538,27 +559,27 @@ namespace Microsoft.Web.Administration
 
         protected internal void CleanEntity()
         {
-            if (this.InnerEntity == null || this.InnerEntity.HasElements || this.InnerEntity.HasAttributes)
+            if (InnerEntity == null || InnerEntity.HasElements || InnerEntity.HasAttributes)
             {
                 return;
             }
 
-            var parent = this.InnerEntity?.Parent;
+            var parent = InnerEntity?.Parent;
             if (parent == null)
             {
-                this.InnerEntity = null;
+                InnerEntity = null;
                 return;
             }
 
-            this.InnerEntity?.Remove();
-            this.InnerEntity = null;
-            if (this.ParentElement == null)
+            InnerEntity?.Remove();
+            InnerEntity = null;
+            if (ParentElement == null)
             {
                 Clean(parent);
             }
             else
             {
-                this.ParentElement.CleanEntity();
+                ParentElement.CleanEntity();
             }
         }
 
@@ -586,17 +607,17 @@ namespace Microsoft.Web.Administration
                 throw new FileLoadException("This configuration section cannot be used at this path. This happens when the section is locked at a parent level. Locking is either by default (overrideModeDefault=\"Deny\"), or set explicitly by a location tag with overrideMode=\"Deny\" or the legacy allowOverride=\"false\".\r\n");
             }
 
-            if (!this.SkipCheck)
+            if (!SkipCheck)
             {
-                this.FileContext.SetDirty();
+                FileContext.SetDirty();
             }
 
-            var attribute = this.GetAttribute(name);
+            var attribute = GetAttribute(name);
             var result = attribute.TypeMatch(value);
             attribute.IsInheritedFromDefaultValue = (attribute.Schema == null || !attribute.Schema.IsRequired)
                                                     && result.Equals(attribute.ExtractDefaultValue());
             // IMPORTANT: remove attribute if value is equal to default.
-            this.Entity.SetAttributeValue(
+            Entity.SetAttributeValue(
                 name, attribute.IsInheritedFromDefaultValue
                     ? null
                     : attribute.Format(result));
@@ -604,10 +625,10 @@ namespace Microsoft.Web.Administration
             // IMPORTANT: IIS seems to use the following
             // this.Entity.SetAttributeValue(name, attribute.Format(_value));
 
-            this.CleanEntity();
+            CleanEntity();
             if (attribute.IsInheritedFromDefaultValue)
             {
-                this.RawAttributes.Remove(name);
+                RawAttributes.Remove(name);
             }
             else
             {

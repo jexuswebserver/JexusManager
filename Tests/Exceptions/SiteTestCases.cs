@@ -507,5 +507,105 @@ namespace Tests.Exceptions
             XmlAssert.Equal(Expected, Current);
             TestHelper.AssertSiteConfig(directoryName, Expected);
         }
+
+        [Fact]
+        public void TestIisExpressInheritance()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string Current = Path.Combine(directoryName, @"applicationHost.config");
+            string Original = Path.Combine(directoryName, @"original2.config");
+            var siteConfig = TestHelper.CopySiteConfig(directoryName, "original.config");
+            File.Copy(Original, Current, true);
+            TestHelper.FixPhysicalPathMono(Current);
+
+            {
+                // modify the path
+                var file = XDocument.Load(Current);
+                var root = file.Root;
+                if (root == null)
+                {
+                    return;
+                }
+
+                var location = root.XPathSelectElement("/configuration/location[@path='WebSite2']");
+                var newLocation = new XElement("location");
+                location.AddAfterSelf(newLocation);
+                newLocation.SetAttributeValue("path", "WebSite1");
+                var webServer = new XElement("system.webServer");
+                newLocation.Add(webServer);
+                var document = new XElement("defaultDocument");
+                document.SetAttributeValue("enabled", false);
+                webServer.Add(document);
+                var files = new XElement("files");
+                document.Add(files);
+                var add = new XElement("add");
+                add.SetAttributeValue("value", "home1.html");
+                files.Add(add);
+
+                file.Save(Current);
+            }
+
+            {
+                // Add the section.
+                var file = XDocument.Load(siteConfig);
+                var root = file.Root;
+                if (root == null)
+                {
+                    return;
+                }
+
+                var doc = root.XPathSelectElement("/configuration/system.webServer/defaultDocument");
+                doc.SetAttributeValue("enabled", true);
+                var add = root.XPathSelectElement("/configuration/system.webServer/defaultDocument/files/add");
+                add.SetAttributeValue("value", "home2.html");
+                file.Save(siteConfig);
+            }
+#if IIS
+            var server = new ServerManager(Current);
+#else
+            var server = new IisExpressServerManager(Current);
+#endif
+            var config = server.Sites[0].Applications[0].GetWebConfiguration();
+            var section =
+                config.GetSection("system.webServer/defaultDocument");
+            Assert.Equal("system.webServer/defaultDocument", section.SectionPath);
+#if !IIS
+            Assert.Equal("WebSite1", section.Location);
+            Assert.EndsWith("web.config", section.FileContext.FileName);
+
+            var handlersInWebSite = section.GetParentElement().Section;
+            Assert.Equal("system.webServer/defaultDocument", handlersInWebSite.SectionPath);
+            Assert.Equal("WebSite1", handlersInWebSite.Location);
+            Assert.EndsWith("applicationHost.config", handlersInWebSite.FileContext.FileName);
+
+            var handlersInEmpty = handlersInWebSite.GetParentElement().Section;
+            Assert.Equal("system.webServer/defaultDocument", handlersInEmpty.SectionPath);
+            Assert.Equal("", handlersInEmpty.Location);
+            Assert.EndsWith("applicationHost.config", handlersInEmpty.FileContext.FileName);
+
+            var handlersInNull = handlersInEmpty.GetParentElement().Section;
+            Assert.Equal("system.webServer/defaultDocument", handlersInNull.SectionPath);
+            Assert.Null(handlersInNull.Location);
+            Assert.EndsWith("applicationHost.config", handlersInNull.FileContext.FileName);
+
+            Assert.Null(handlersInNull.GetParentElement());
+
+            var handlers2 = handlersInNull.GetCollection("files");
+            Assert.Equal(6, handlers2.Count);
+            var handlers1 = handlersInEmpty.GetCollection("files");
+            Assert.Equal(6, handlers1.Count);
+            var handlers3 = handlersInWebSite.GetCollection("files");
+            Assert.Equal(7, handlers3.Count);
+#endif
+            var handlers = section.GetCollection("files");
+            Assert.Equal(8, handlers.Count);
+        }
     }
 }

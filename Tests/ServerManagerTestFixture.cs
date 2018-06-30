@@ -216,6 +216,28 @@ namespace Tests
         }
 
         [Fact]
+        public void TestIisExpressInheritance()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string Current = Path.Combine(directoryName, @"applicationHost.config");
+            string Original = Path.Combine(directoryName, @"original2.config");
+            string Expected = Path.Combine(directoryName, @"expected.config");
+            File.Copy(Original, Current, true);
+            TestHelper.FixPhysicalPathMono(Current);
+            TestHelper.CopySiteConfig(directoryName, "original.config");
+
+            var server = new IisExpressServerManager(Current);
+            TestCases.TestIisExpressInheritance(server);
+        }
+
+        [Fact]
         public void TestIisExpressLocation()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);

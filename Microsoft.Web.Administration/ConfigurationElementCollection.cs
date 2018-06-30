@@ -93,6 +93,24 @@ namespace Microsoft.Web.Administration
 
             _initialized = true;
 
+            var duplicateElement = GetParentElement();
+            var duplicateCollection = duplicateElement?.GetCollection();
+            if (duplicateCollection != null)
+            {
+                HasParent = true;
+
+                // IMPORTANT: load duplicate element.
+                foreach (ConfigurationElement element in duplicateCollection.Exposed)
+                {
+                    var newItem = CreateNewElement(element.ElementTagName);
+                    Clone(element, newItem);
+                    newItem.IsLocallyStored = false;
+                    Exposed.Add(newItem);
+                }
+
+                return this;
+            }
+
             var parentElement = FileContext.AppHost ? GetParentElement() : GetElementAtParentLocationInFileContext(FileContext.Parent);
             var parentCollection = parentElement?.GetCollection();
             if (parentCollection == null)
@@ -110,22 +128,6 @@ namespace Microsoft.Web.Administration
             }
 
             return this;
-        }
-
-        private ConfigurationElement GetElementInFileContext(FileContext core)
-        {
-            if (Section.Location == null)
-            {
-                return null;
-            }
-
-            if (core == null)
-            {
-                return null;
-            }
-
-            var section = core.GetSection(Section.SectionPath, Section.Location);
-            return section?.GetElementByPath(Schema.Path);
         }
 
         internal void Revert()

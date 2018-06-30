@@ -180,9 +180,12 @@ namespace Microsoft.Web.Administration
 
             foreach (ConfigurationSection section in ConfigurationSections)
             {
-                if (section.ElementTagName == sectionPath && section.Location == locationPath && !section.IsLocked)
+                if (section.FileContext == core)
                 {
-                    return section;
+                    if (section.ElementTagName == sectionPath && section.Location == locationPath && !section.IsLocked)
+                    {
+                        return section;
+                    }
                 }
             }
 

@@ -10,7 +10,7 @@ namespace Microsoft.Web.Administration
     {
         internal Configuration(FileContext fileContext)
         {
-            this.FileContext = fileContext;
+            FileContext = fileContext;
         }
 
         internal FileContext FileContext { get; }
@@ -22,7 +22,7 @@ namespace Microsoft.Web.Administration
 
         public string[] GetLocationPaths()
         {
-            return this.FileContext.GetLocationPaths();
+            return FileContext.GetLocationPaths();
         }
 
         public object GetMetadata(string metadataType)
@@ -32,12 +32,12 @@ namespace Microsoft.Web.Administration
 
         public ConfigurationSection GetSection(string sectionPath)
         {
-            return this.FileContext.GetSection(sectionPath);
+            return FileContext.GetSection(sectionPath);
         }
 
         public ConfigurationSection GetSection(string sectionPath, string locationPath)
         {
-            return this.FileContext.GetSection(sectionPath, locationPath);
+            return FileContext.GetSection(sectionPath, locationPath);
         }
 
         public ConfigurationSection GetSection(string sectionPath, Type type)
@@ -67,14 +67,14 @@ namespace Microsoft.Web.Administration
 
         public SectionGroup RootSectionGroup
         {
-            get { return this.FileContext.RootSectionGroup; }
+            get { return FileContext.RootSectionGroup; }
         }
 
         public event EventHandler CacheInvalidated;
 
         internal virtual void OnCacheInvalidated()
         {
-            this.CacheInvalidated?.Invoke(this, EventArgs.Empty);
+            CacheInvalidated?.Invoke(this, EventArgs.Empty);
         }
     }
 }

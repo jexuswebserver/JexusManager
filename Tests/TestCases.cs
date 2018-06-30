@@ -900,6 +900,7 @@ $"Filename: \\\\?\\{config.FileContext.FileName}\r\nLine number: 0\r\nError: Can
 
                 // enable Windows authentication
                 var handlersSection = config.GetSection("system.webServer/handlers", "WebSite1");
+
                 Assert.Equal(OverrideMode.Inherit, handlersSection.OverrideMode);
                 Assert.Equal(OverrideMode.Allow, handlersSection.OverrideModeEffective);
                 Assert.False(handlersSection.IsLocked);
@@ -947,6 +948,127 @@ $"Filename: \\\\?\\{config.FileContext.FileName}\r\nLine number: 0\r\nError: Can
                 Assert.False(handlersSection.IsLocked);
                 Assert.True(handlersSection.IsLocallyStored);
 
+                var handlers = handlersSection.GetCollection();
+                Assert.Equal(83, handlers.Count);
+            }
+        }
+
+        public static void TestIisExpressInheritance(ServerManager server)
+        {
+            var site = server.Sites[0];
+
+            {
+                // server config "Website1"
+                var config = server.GetApplicationHostConfiguration();
+
+                // enable Windows authentication
+                var handlersSection = config.GetSection("system.webServer/handlers", "WebSite1");
+                Assert.Equal("system.webServer/handlers", handlersSection.SectionPath);
+#if !IIS
+                Assert.Equal("WebSite1", handlersSection.Location);
+                Assert.EndsWith("applicationHost.config", handlersSection.FileContext.FileName);
+
+                var handlersInEmpty = handlersSection.GetParentElement().Section;
+                Assert.Equal("system.webServer/handlers", handlersInEmpty.SectionPath);
+                Assert.Equal("", handlersInEmpty.Location);
+                Assert.EndsWith("applicationHost.config", handlersInEmpty.FileContext.FileName);
+
+                var handlersInNull = handlersInEmpty.GetParentElement().Section;
+                Assert.Equal("system.webServer/handlers", handlersInNull.SectionPath);
+                Assert.Null(handlersInNull.Location);
+                Assert.EndsWith("applicationHost.config", handlersInNull.FileContext.FileName);
+
+                Assert.Null(handlersInNull.GetParentElement());
+
+                var handlers2 = handlersInNull.GetCollection();
+                Assert.Empty(handlers2);
+                var handlers1 = handlersInEmpty.GetCollection();
+                Assert.Equal(82, handlers1.Count);
+#endif
+                var handlers = handlersSection.GetCollection();
+                Assert.Equal(82, handlers.Count);
+
+                var newHandler = handlers.CreateElement();
+                newHandler["name"] = "WebDAV";
+                newHandler["path"] = "*";
+                newHandler["verb"] = "PROPFIND,PROPPATCH,MKCOL,PUT,COPY,DELETE,MOVE,LOCK,UNLOCK";
+                newHandler["modules"] = "WedDAVModule";
+                newHandler["resourceType"] = "Unspecified";
+                handlers.Add(newHandler);
+
+                Assert.Equal(83, handlers.Count);
+            }
+
+            {
+                // site config "Website1"
+                var config = server.Sites[0].Applications[0].GetWebConfiguration();
+
+                // enable Windows authentication
+                var handlersSection = config.GetSection("system.webServer/handlers");
+                Assert.Equal("system.webServer/handlers", handlersSection.SectionPath);
+#if !IIS
+                Assert.Equal("WebSite1", handlersSection.Location);
+                Assert.EndsWith("web.config", handlersSection.FileContext.FileName);
+
+                var handlersInWebSite = handlersSection.GetParentElement().Section;
+                Assert.Equal("system.webServer/handlers", handlersInWebSite.SectionPath);
+                Assert.Equal("WebSite1", handlersInWebSite.Location);
+                Assert.EndsWith("applicationHost.config", handlersInWebSite.FileContext.FileName);
+
+                var handlersInEmpty = handlersInWebSite.GetParentElement().Section;
+                Assert.Equal("system.webServer/handlers", handlersInEmpty.SectionPath);
+                Assert.Equal("", handlersInEmpty.Location);
+                Assert.EndsWith("applicationHost.config", handlersInEmpty.FileContext.FileName);
+
+                var handlersInNull = handlersInEmpty.GetParentElement().Section;
+                Assert.Equal("system.webServer/handlers", handlersInNull.SectionPath);
+                Assert.Null(handlersInNull.Location);
+                Assert.EndsWith("applicationHost.config", handlersInNull.FileContext.FileName);
+
+                Assert.Null(handlersInNull.GetParentElement());
+
+                var handlers2 = handlersInNull.GetCollection();
+                Assert.Empty(handlers2);
+                var handlers1 = handlersInEmpty.GetCollection();
+                Assert.Equal(82, handlers1.Count);
+                var handlers3 = handlersInWebSite.GetCollection();
+                Assert.Equal(82, handlers3.Count);
+#endif
+                var handlers = handlersSection.GetCollection();
+                Assert.Equal(82, handlers.Count);
+            }
+
+            // IMPORTANT: changes go to <location path="WebSites1"> in applicationHost.config.
+            server.CommitChanges();
+
+            {
+                // site config "Website1"
+                var config = server.Sites[0].Applications[0].GetWebConfiguration();
+
+                // enable Windows authentication
+                var handlersSection = config.GetSection("system.webServer/handlers");
+                Assert.Equal("system.webServer/handlers", handlersSection.SectionPath);
+#if !IIS
+                Assert.Equal("WebSite1", handlersSection.Location);
+                Assert.EndsWith("applicationHost.config", handlersSection.FileContext.FileName);
+
+                var handlersInEmpty = handlersSection.GetParentElement().Section;
+                Assert.Equal("system.webServer/handlers", handlersInEmpty.SectionPath);
+                Assert.Equal("", handlersInEmpty.Location);
+                Assert.EndsWith("applicationHost.config", handlersInEmpty.FileContext.FileName);
+
+                var handlersInNull = handlersInEmpty.GetParentElement().Section;
+                Assert.Equal("system.webServer/handlers", handlersInNull.SectionPath);
+                Assert.Null(handlersInNull.Location);
+                Assert.EndsWith("applicationHost.config", handlersInNull.FileContext.FileName);
+
+                Assert.Null(handlersInNull.GetParentElement());
+
+                var handlers2 = handlersInNull.GetCollection();
+                Assert.Empty(handlers2);
+                var handlers1 = handlersInEmpty.GetCollection();
+                Assert.Equal(82, handlers1.Count);
+#endif
                 var handlers = handlersSection.GetCollection();
                 Assert.Equal(83, handlers.Count);
             }
