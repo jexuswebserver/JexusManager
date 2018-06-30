@@ -890,6 +890,130 @@ $"Filename: \\\\?\\{config.FileContext.FileName}\r\nLine number: 0\r\nError: Can
             }
         }
 
+        public static void TestIisExpressLocation(ServerManager server)
+        {
+            var site = server.Sites[0];
+
+            {
+                // server config "Website1"
+                var config = server.GetApplicationHostConfiguration();
+
+                // enable Windows authentication
+                var handlersSection = config.GetSection("system.webServer/handlers", "WebSite1");
+                Assert.Equal(OverrideMode.Inherit, handlersSection.OverrideMode);
+                Assert.Equal(OverrideMode.Allow, handlersSection.OverrideModeEffective);
+                Assert.False(handlersSection.IsLocked);
+                Assert.True(handlersSection.IsLocallyStored);
+
+                var handlers = handlersSection.GetCollection();
+                Assert.Equal(82, handlers.Count);
+                var newHandler = handlers.CreateElement();
+                newHandler["name"] = "WebDAV";
+                newHandler["path"] = "*";
+                newHandler["verb"] = "PROPFIND,PROPPATCH,MKCOL,PUT,COPY,DELETE,MOVE,LOCK,UNLOCK";
+                newHandler["modules"] = "WedDAVModule";
+                newHandler["resourceType"] = "Unspecified";
+                handlers.Add(newHandler);
+
+                Assert.Equal(83, handlers.Count);
+            }
+
+            {
+                // site config "Website1"
+                var config = server.Sites[0].Applications[0].GetWebConfiguration();
+
+                // enable Windows authentication
+                var handlersSection = config.GetSection("system.webServer/handlers");
+                Assert.Equal(OverrideMode.Inherit, handlersSection.OverrideMode);
+                Assert.Equal(OverrideMode.Allow, handlersSection.OverrideModeEffective);
+                Assert.False(handlersSection.IsLocked);
+                Assert.False(handlersSection.IsLocallyStored);
+
+                var handlers = handlersSection.GetCollection();
+                Assert.Equal(82, handlers.Count);
+            }
+
+            // IMPORTANT: changes go to <location path="WebSites1"> in applicationHost.config.
+            server.CommitChanges();
+
+            {
+                // site config "Website1"
+                var config = server.Sites[0].Applications[0].GetWebConfiguration();
+
+                // enable Windows authentication
+                var handlersSection = config.GetSection("system.webServer/handlers");
+                Assert.Equal(OverrideMode.Inherit, handlersSection.OverrideMode);
+                Assert.Equal(OverrideMode.Allow, handlersSection.OverrideModeEffective);
+                Assert.False(handlersSection.IsLocked);
+                Assert.True(handlersSection.IsLocallyStored);
+
+                var handlers = handlersSection.GetCollection();
+                Assert.Equal(83, handlers.Count);
+            }
+        }
+
+        public static void TestIisExpressLocation2(ServerManager server)
+        {
+            var site = server.Sites[0];
+
+            {
+                // site config "Website1"
+                var config = server.Sites[0].Applications[0].GetWebConfiguration();
+
+                // enable Windows authentication
+                var handlersSection = config.GetSection("system.webServer/handlers");
+                Assert.Equal(OverrideMode.Inherit, handlersSection.OverrideMode);
+                Assert.Equal(OverrideMode.Allow, handlersSection.OverrideModeEffective);
+                Assert.False(handlersSection.IsLocked);
+                Assert.False(handlersSection.IsLocallyStored);
+
+                var handlers = handlersSection.GetCollection();
+                Assert.Equal(82, handlers.Count);
+                var newHandler = handlers.CreateElement();
+                newHandler["name"] = "WebDAV";
+                newHandler["path"] = "*";
+                newHandler["verb"] = "PROPFIND,PROPPATCH,MKCOL,PUT,COPY,DELETE,MOVE,LOCK,UNLOCK";
+                newHandler["modules"] = "WedDAVModule";
+                newHandler["resourceType"] = "Unspecified";
+                handlers.Add(newHandler);
+
+                Assert.Equal(83, handlers.Count);
+            }
+
+            {
+                // server config "Website1"
+                var config = server.GetApplicationHostConfiguration();
+
+                // enable Windows authentication
+                var handlersSection = config.GetSection("system.webServer/handlers", "WebSite1");
+                Assert.Equal(OverrideMode.Inherit, handlersSection.OverrideMode);
+                Assert.Equal(OverrideMode.Allow, handlersSection.OverrideModeEffective);
+                Assert.False(handlersSection.IsLocked);
+                Assert.True(handlersSection.IsLocallyStored);
+
+                var handlers = handlersSection.GetCollection();
+                Assert.Equal(82, handlers.Count);
+            }
+
+            // IMPORTANT: changes go to web.config.
+            server.CommitChanges();
+
+            {
+                // server config "Website1"
+                var config = server.GetApplicationHostConfiguration();
+
+                // enable Windows authentication
+                var handlersSection = config.GetSection("system.webServer/handlers", "WebSite1");
+                Assert.Equal(OverrideMode.Inherit, handlersSection.OverrideMode);
+                Assert.Equal(OverrideMode.Allow, handlersSection.OverrideModeEffective);
+                Assert.False(handlersSection.IsLocked);
+                Assert.True(handlersSection.IsLocallyStored);
+
+                var handlers = handlersSection.GetCollection();
+                Assert.Equal(82, handlers.Count);
+            }
+        }
+
         private enum ResponseMode
         {
             File = 0,
