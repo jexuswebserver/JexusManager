@@ -54,33 +54,33 @@ namespace Microsoft.Web.Administration
 
         private void ResetValue()
         {
-            var clear = this.Decrypt(this.ExtractDefaultValue());
+            var clear = Decrypt(ExtractDefaultValue());
             IsInheritedFromDefaultValue = true;
             SetValue(clear);
         }
 
         internal object ExtractDefaultValue()
         {
-            object result;
+            object defaultValue;
             if (_element.FileContext.Parent != null)
             {
                 // web.config
                 var parentElementInFile = _element.GetParentElement();
-                result = parentElementInFile == null ? Schema?.DefaultValue : parentElementInFile.Attributes[Name].Value;
+                defaultValue = parentElementInFile == null ? Schema?.DefaultValue : parentElementInFile.Attributes[Name].Value;
             }
             else if (_element.Section?.Location == null)
             {
                 // root config
-                result = Decrypt(Schema?.DefaultValue);
+                defaultValue = Decrypt(Schema?.DefaultValue);
             }
             else
             {
                 // location tags in applicationHost.config.
                 var parentElement = _element.GetElementAtParentLocationInFileContext(_element.FileContext);
-                result = parentElement == null ? Schema?.DefaultValue : parentElement.Attributes[Name].Value;
+                defaultValue = parentElement == null ? Schema?.DefaultValue : parentElement.Attributes[Name].Value;
             }
 
-            if (result == null)
+            if (defaultValue == null)
             {
                 // IMPORTANT: to set default values so that in configuration files they do not appear.
                 if (Schema != null)
@@ -94,15 +94,15 @@ namespace Microsoft.Web.Administration
                         catch (COMException)
                         {
                             // IMPORTANT: If validators do not like default value, simply ignore.
-                            return Schema.DefaultValueByType;
+                            return defaultValue = Schema.DefaultValueByType;
                         }
 
-                        result = Schema.DefaultValue;
+                        defaultValue = Schema.DefaultValue;
                     }
                 }
             }
 
-            return result;
+            return defaultValue;
         }
 
         public void Delete()

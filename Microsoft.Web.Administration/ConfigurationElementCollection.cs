@@ -93,24 +93,6 @@ namespace Microsoft.Web.Administration
 
             _initialized = true;
 
-            var duplicateElement = GetElementInFileContext(FileContext.Parent);
-            var duplicateCollection = duplicateElement?.GetCollection();
-            if (duplicateCollection != null)
-            {
-                HasParent = true;
-
-                // IMPORTANT: load duplicate element.
-                foreach (ConfigurationElement element in duplicateCollection.Exposed)
-                {
-                    var newItem = CreateNewElement(element.ElementTagName);
-                    Clone(element, newItem);
-                    newItem.IsLocallyStored = false;
-                    Exposed.Add(newItem);
-                }
-
-                return this;
-            }
-
             var parentElement = FileContext.AppHost ? GetParentElement() : GetElementAtParentLocationInFileContext(FileContext.Parent);
             var parentCollection = parentElement?.GetCollection();
             if (parentCollection == null)

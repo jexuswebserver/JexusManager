@@ -72,7 +72,7 @@ namespace Microsoft.Web.Administration
         {
             if (_configuration != null)
             {
-                return _configuration;
+                // TODO: return _configuration;
             }
 
             string root = null;

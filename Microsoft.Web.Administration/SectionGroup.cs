@@ -97,6 +97,12 @@ namespace Microsoft.Web.Administration
             var temp = DetectSection(sectionPath, locationPath, core);
             if (temp != null)
             {
+                var duplicate = core.Parent?.RootSectionGroup.DetectSection(sectionPath, locationPath, core.Parent);
+                if (duplicate != null && !temp.IsLocallyStored)
+                {
+                    temp.IsLocallyStored = true;
+                }
+
                 return temp;
             }
 
@@ -226,9 +232,23 @@ namespace Microsoft.Web.Administration
                 section.OverrideMode = location == null || location.OverrideMode == null 
                     ? OverrideMode.Inherit
                     : (OverrideMode)Enum.Parse(typeof(OverrideMode), location.OverrideMode);
-                section.OverrideModeEffective = section.OverrideMode == OverrideMode.Inherit
-                    ? (OverrideMode)Enum.Parse(typeof(OverrideMode), definition.OverrideModeDefault)
-                    : section.OverrideMode;
+
+                if (section.OverrideMode == OverrideMode.Inherit)
+                {
+                    var parent = location == null || location.Path == null ? null : FindSection(section.SectionPath, location.Path.GetParentLocation(), section.FileContext);
+                    if (parent == null)
+                    {
+                        section.OverrideModeEffective = (OverrideMode)Enum.Parse(typeof(OverrideMode), definition.OverrideModeDefault);
+                    }
+                    else
+                    {
+                        section.OverrideModeEffective = parent.OverrideModeEffective;
+                    }
+                }
+                else
+                {
+                    section.OverrideModeEffective = section.OverrideMode;
+                }
 
                 section.IsLocked = section.FileContext.FileName != definition.FileContext.FileName
                                    && section.OverrideModeEffective != OverrideMode.Allow;
