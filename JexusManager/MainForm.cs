@@ -563,7 +563,11 @@ namespace JexusManager
             var node = e.Node as ManagerTreeNode;
             if (node == null)
             {
-                RollbarDotNet.Rollbar.Report($"wrong node {e.Node.GetType().FullName} {e.Node.Text}");
+                if (e.Node.Text != ManagerTreeNode.TempNodeName)
+                {
+                    RollbarDotNet.Rollbar.Report($"wrong node {e.Node.GetType().FullName} {e.Node.Text}");
+                }
+
                 return;
             }
 

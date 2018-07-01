@@ -7,7 +7,6 @@ namespace JexusManager.Tree
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.Design;
-    using System.Diagnostics;
     using System.IO;
     using System.Windows.Forms;
 
@@ -18,6 +17,8 @@ namespace JexusManager.Tree
 
     internal abstract class ManagerTreeNode : TreeNode
     {
+        public const string TempNodeName = "ManagerTreeNodeTemp";
+
         public IServiceProvider ServiceProvider { get; set; }
 
         protected ManagerTreeNode(string text, IServiceProvider serviceProvider) : base(text)

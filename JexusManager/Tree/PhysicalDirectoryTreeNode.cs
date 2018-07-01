@@ -28,7 +28,7 @@ namespace JexusManager.Tree
             ImageIndex = 6;
             SelectedImageIndex = 6;
             PhysicalDirectory = physicalDirectory;
-            Nodes.Add("temp");
+            Nodes.Add(TempNodeName);
             ServerManager = physicalDirectory.Application.Server;
             ServerNode = server;
         }

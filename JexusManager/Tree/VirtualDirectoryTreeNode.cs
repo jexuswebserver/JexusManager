@@ -29,7 +29,7 @@ namespace JexusManager.Tree
             SelectedImageIndex = 7;
             Tag = virtualDirectory;
             VirtualDirectory = virtualDirectory;
-            Nodes.Add("temp");
+            Nodes.Add(TempNodeName);
             ServerManager = virtualDirectory.Application.Server;
             ServerNode = server;
         }

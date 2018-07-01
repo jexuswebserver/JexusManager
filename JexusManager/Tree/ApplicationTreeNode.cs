@@ -31,7 +31,7 @@ namespace JexusManager.Tree
             SelectedImageIndex = 5;
             Tag = application;
             Application = application;
-            Nodes.Add("temp");
+            Nodes.Add(TempNodeName);
             ServerManager = application.Server;
             ServerNode = server;
         }

@@ -29,7 +29,7 @@ namespace JexusManager.Tree
             SelectedImageIndex = 4;
             Tag = site;
             Site = site;
-            Nodes.Add("temp");
+            Nodes.Add(TempNodeName);
             ServerManager = site.Server;
             ServerNode = server;
         }
