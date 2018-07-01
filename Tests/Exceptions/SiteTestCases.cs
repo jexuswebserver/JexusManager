@@ -579,10 +579,6 @@ namespace Tests.Exceptions
                 var rootGroup = config.RootSectionGroup;
                 Assert.Empty(rootGroup.Sections);
                 Assert.Empty(rootGroup.SectionGroups);
-
-                var list = new List<SectionDefinition>();
-                GetAllDefinitions(rootGroup, list);
-                Assert.Empty(list);
             }
 
             var serverConfig = server.GetApplicationHostConfiguration();
@@ -592,7 +588,7 @@ namespace Tests.Exceptions
                 Assert.Equal(2, rootGroup.SectionGroups.Count);
 
                 var list = new List<SectionDefinition>();
-                GetAllDefinitions(rootGroup, list);
+                rootGroup.GetAllDefinitions(list);
                 Assert.Equal(56, list.Count);
             }
 
@@ -634,8 +630,8 @@ namespace Tests.Exceptions
             Assert.EndsWith("web.config", webRoot.FileName);
             {
                 var rootGroup = webRoot.RootSectionGroup;
-                Assert.Equal(20, rootGroup.Sections.Count);
-                Assert.Equal(10, rootGroup.SectionGroups.Count);
+                Assert.Empty(rootGroup.Sections);
+                Assert.Empty(rootGroup.SectionGroups);
             }
 
             var machine = webRoot.Parent;
@@ -646,8 +642,8 @@ namespace Tests.Exceptions
                 Assert.Equal(10, rootGroup.SectionGroups.Count);
 
                 var list = new List<SectionDefinition>();
-                GetAllDefinitions(rootGroup, list);
-                Assert.Equal(56, list.Count);
+                rootGroup.GetAllDefinitions(list);
+                Assert.Equal(99, list.Count);
             }
 #endif
             var handlers = section.GetCollection("files");
@@ -706,19 +702,6 @@ namespace Tests.Exceptions
             {
                 var files = section.GetCollection("files");
                 Assert.Equal(7, files.Count);
-            }
-        }
-
-        internal static void GetAllDefinitions(SectionGroup group, IList<SectionDefinition> result)
-        {
-            foreach (SectionDefinition item in group.Sections)
-            {
-                result.Add(item);
-            }
-
-            foreach (SectionGroup child in group.SectionGroups)
-            {
-                GetAllDefinitions(child, result);
             }
         }
     }

@@ -39,7 +39,10 @@ namespace Microsoft.Web.Administration
 
         public ProtectedConfigurationProvider this[string name]
         {
-            get { return _providers[name]; }
+            get
+            {
+                return _providers.ContainsKey(name) ? _providers[name] : null;
+            }
         }
 
         public void Add(ProtectedConfigurationProvider provider)

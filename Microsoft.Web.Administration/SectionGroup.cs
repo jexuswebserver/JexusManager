@@ -2,13 +2,9 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Xml.Linq;
-using System.IO;
-using System.Xml;
 
 namespace Microsoft.Web.Administration
 {
@@ -42,7 +38,6 @@ namespace Microsoft.Web.Administration
             _core = core;
             SectionGroups = new SectionGroupCollection(core, this);
             Sections = new SectionDefinitionCollection(core);
-            ConfigurationSections = new List<ConfigurationSection>();
             Name = string.Empty;
             Type = string.Empty;
             Path = string.Empty;
@@ -90,193 +85,6 @@ namespace Microsoft.Web.Administration
 
         internal string Path { get; set; }
 
-        internal List<ConfigurationSection> ConfigurationSections { get; }
-
-        internal ConfigurationSection FindSection(string sectionPath, string locationPath, FileContext core)
-        {
-            var temp = DetectSection(sectionPath, locationPath, core);
-            if (temp != null)
-            {
-                var duplicate = core.Parent?.RootSectionGroup.DetectSection(sectionPath, locationPath, core.Parent);
-                if (duplicate != null && !temp.IsLocallyStored)
-                {
-                    temp.IsLocallyStored = true;
-                }
-
-                return temp;
-            }
-
-            // IMPORTANT: force system.web to go to root web.config.
-            var top = locationPath == null && sectionPath.StartsWith("system.web/") && core.AppHost ? core.Parent : core;
-            return CreateSection(sectionPath, locationPath, top, top);
-        }
-
-        private ConfigurationSection CreateSection(string sectionPath, string locationPath, FileContext core, FileContext top)
-        {
-            var index = sectionPath.IndexOf(Path, StringComparison.Ordinal);
-            if (index != 0)
-            {
-                return null;
-            }
-
-            if (Path.Length != 0)
-            {
-                if (sectionPath.Length != Path.Length && sectionPath[Path.Length] != '/')
-                {
-                    return null;
-                }
-            }
-
-            var definition = Sections.FirstOrDefault(item => item.Path == sectionPath);
-            if (definition?.Schema != null)
-            {
-                var section = new ConfigurationSection(sectionPath, definition.Schema.Root, locationPath,
-                    top, null);
-                section.OverrideMode = OverrideMode.Inherit;
-                if (locationPath == null)
-                {
-                    section.OverrideModeEffective = (OverrideMode)Enum.Parse(typeof(OverrideMode), definition.OverrideModeDefault);
-                }
-                else
-                {
-                    var parent = FindSection(sectionPath, locationPath.GetParentLocation(), core);
-                    section.OverrideModeEffective = parent.OverrideModeEffective;
-                }
-
-                section.IsLocked = section.FileContext.FileName != definition.FileContext.FileName && section.OverrideModeEffective != OverrideMode.Allow;
-                section.IsLocallyStored = section.FileContext.FileName == definition.FileContext.FileName;
-                ConfigurationSections.Add(section);
-                return section;
-            }
-
-            foreach (SectionGroup group in SectionGroups)
-            {
-                var created = group.CreateSection(sectionPath, locationPath, core, top);
-                if (created != null)
-                {
-                    return created;
-                }
-            }
-
-            var sectionBasedOnParent = core.Parent?.RootSectionGroup.CreateSection(sectionPath, locationPath, core.Parent, top);
-            return sectionBasedOnParent;
-        }
-
-        private ConfigurationSection DetectSection(string sectionPath, string locationPath, FileContext core)
-        {
-            var index = sectionPath.IndexOf(Path, StringComparison.Ordinal);
-            if (index != 0)
-            {
-                return null;
-            }
-
-            if (Path.Length != 0)
-            {
-                if (sectionPath.Length != Path.Length && sectionPath[Path.Length] != '/')
-                {
-                    return null;
-                }
-            }
-
-            foreach (ConfigurationSection section in ConfigurationSections)
-            {
-                if (section.FileContext == core)
-                {
-                    if (section.ElementTagName == sectionPath && section.Location == locationPath && !section.IsLocked)
-                    {
-                        return section;
-                    }
-                }
-            }
-
-            foreach (SectionGroup group in SectionGroups)
-            {
-                var found = group.DetectSection(sectionPath, locationPath, core);
-                if (found != null)
-                {
-                    return found;
-                }
-            }
-
-            var definition = Sections.FirstOrDefault(item => item.Path == sectionPath);
-            if (definition?.Schema == null)
-            {
-                var sectionInParent = core.Parent?.RootSectionGroup.DetectSection(sectionPath, locationPath, core.Parent);
-                return sectionInParent;
-            }
-
-            return null;
-        }
-
-        internal bool Add(ConfigurationSection section, Location location)
-        {
-            var index = section.ElementTagName.IndexOf(Path, StringComparison.Ordinal);
-            if (index != 0)
-            {
-                return false;
-            }
-
-            if (Path.Length != 0)
-            {
-                if (section.ElementTagName.Length != Path.Length && section.ElementTagName[Path.Length] != '/')
-                {
-                    return false;
-                }
-            }
-
-            var definition = Sections.FirstOrDefault(item => item.Path == section.ElementTagName);
-            if (definition != null)
-            {
-                if (definition.AllowLocation == KEYWORD_FALSE && location != null && location.FromTag)
-                {
-                    throw new ServerManagerException("Section is not allowed in location tag");
-                }
-
-                section.OverrideMode = location == null || location.OverrideMode == null 
-                    ? OverrideMode.Inherit
-                    : (OverrideMode)Enum.Parse(typeof(OverrideMode), location.OverrideMode);
-
-                if (section.OverrideMode == OverrideMode.Inherit)
-                {
-                    var parent = location == null || location.Path == null ? null : FindSection(section.SectionPath, location.Path.GetParentLocation(), section.FileContext);
-                    if (parent == null)
-                    {
-                        section.OverrideModeEffective = (OverrideMode)Enum.Parse(typeof(OverrideMode), definition.OverrideModeDefault);
-                    }
-                    else
-                    {
-                        section.OverrideModeEffective = parent.OverrideModeEffective;
-                    }
-                }
-                else
-                {
-                    section.OverrideModeEffective = section.OverrideMode;
-                }
-
-                section.IsLocked = section.FileContext.FileName != definition.FileContext.FileName
-                                   && section.OverrideModeEffective != OverrideMode.Allow;
-                section.IsLocallyStored = section.FileContext.FileName == definition.FileContext.FileName;
-                ConfigurationSections.Add(section);
-                return true;
-            }
-
-            if (SectionGroups.Select(@group => @group.Add(section, location)).Any(result => result))
-            {
-                return true;
-            }
-
-            if (section.SectionPath == "configProtectedData")
-            {
-                ConfigurationSections.Add(section);
-                return true;
-            }
-
-            throw new FileLoadException(string.Format(
-                "Filename: \\\\?\\{0}\r\nLine number: {1}\r\nError: This configuration section cannot be used at this path. This happens when the section is locked at a parent level. Locking is either by default (overrideModeDefault=\"Deny\"), or set explicitly by a location tag with overrideMode=\"Deny\" or the legacy allowOverride=\"false\".\r\n\r\n",
-                section.FileContext.FileName,
-                (section.Entity as IXmlLineInfo).LineNumber));
-        }
-
         internal static ConfigurationAllowDefinition AllowDefinitionToEnum(string allowDefinition)
         {
             switch (allowDefinition)
@@ -301,60 +109,17 @@ namespace Microsoft.Web.Administration
             }
         }
 
-        internal SectionDefinition GetChildSectionDefinition(string path)
+        internal void GetAllDefinitions(IList<SectionDefinition> result)
         {
-            var index = path.IndexOf(Path, StringComparison.Ordinal);
-            if (index != 0)
+            foreach (SectionDefinition item in Sections)
             {
-                return null;
+                result.Add(item);
             }
 
-            foreach (var definition in Sections)
+            foreach (SectionGroup child in SectionGroups)
             {
-                if (definition.Path.StartsWith(path + "/"))
-                {
-                    return definition;
-                }
+                child.GetAllDefinitions(result);
             }
-
-            foreach (var child in SectionGroups)
-            {
-                var result = child.GetChildSectionDefinition(path);
-                if (result != null)
-                {
-                    return result;
-                }
-            }
-
-            return null;
-        }
-
-        internal SectionDefinition GetSectionDefinition(string path)
-        {
-            var index = path.IndexOf(Path, StringComparison.Ordinal);
-            if (index != 0)
-            {
-                return null;
-            }
-
-            foreach (var definition in Sections)
-            {
-                if (definition.Path == path)
-                {
-                    return definition;
-                }
-            }
-
-            foreach (var child in SectionGroups)
-            {
-                var result = child.GetSectionDefinition(path);
-                if (result != null)
-                {
-                    return result;
-                }
-            }
-
-            return null;
         }
     }
 }

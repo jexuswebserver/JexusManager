@@ -21,6 +21,7 @@ namespace Microsoft.Web.Administration
         private readonly ServerManager _server;
         private readonly object locker = new object();
         private readonly bool _dontThrow;
+        internal List<SectionDefinition> DefinitionCache = new List<SectionDefinition>();
 
         internal bool AppHost { get; }
         public bool ReadOnly { get; }
@@ -49,9 +50,13 @@ namespace Microsoft.Web.Administration
             }
 
             _initialized = true;
+            if (Parent != null)
+            {
+                DefinitionCache.AddRange(Parent.DefinitionCache);
+            }
+
             LoadSchemas();
             _rootSectionGroup = new SectionGroup(this);
-            CloneParentSectionGroups(Parent);
             if (FileName == null)
             {
                 // TODO: merge with the other exception later.
@@ -64,7 +69,6 @@ namespace Microsoft.Web.Administration
             }
 
             var file = FileName.ExpandIisExpressEnvironmentVariables();
-
             if (!File.Exists(file))
             {
                 if (AppHost)
@@ -178,25 +182,10 @@ namespace Microsoft.Web.Administration
 
         public string FileName { get; set; }
 
-        private static void CloneSectionGroups(SectionGroup source, SectionGroup destination)
-        {
-            foreach (var child in source.SectionGroups)
-            {
-                var newChild = destination.SectionGroups.Add(child.Name);
-                CloneSectionGroups(child, newChild);
-            }
-
-            foreach (var define in source.Sections)
-            {
-                if (define.OverrideModeDefault == SectionGroup.KEYWORD_OVERRIDEMODE_ALLOW)
-                {
-                    destination.Sections.Add(define);
-                }
-            }
-        }
-
         public FileContext Parent { get; }
         public string Location { get; }
+
+        internal List<ConfigurationSection> ConfigurationSections { get; } = new List<ConfigurationSection>();
 
         public SectionGroup GetEffectiveSectionGroup()
         {
@@ -227,7 +216,7 @@ namespace Microsoft.Web.Administration
                 _server.VerifyLocation(locationPath);
             }
 
-            return RootSectionGroup.FindSection(sectionPath, locationPath, this);
+            return FindSection(sectionPath, locationPath, this);
         }
 
         public ConfigurationSection GetSection(string sectionPath, Type type)
@@ -378,7 +367,7 @@ namespace Microsoft.Web.Administration
                 if (sec != null)
                 {
                     var section = new ConfigurationSection(path, sec.Root, location?.Path, this, element);
-                    RootSectionGroup.Add(section, location);
+                    Add(section, location, this);
                     node = section;
                 }
                 else
@@ -398,27 +387,30 @@ namespace Microsoft.Web.Administration
             }
             else
             {
-                var found = RootSectionGroup.GetSectionDefinition(path);
-                if (found != null && found.Ignore)
+                var found = DefinitionCache.FirstOrDefault(item => item.Path == path);
+                if (found != null)
                 {
-                    if (path == "runtime")
+                    if (found.Ignore)
                     {
-                        // examples: <runtime> in machine.config.
-                        return true;
-                    }
-                    else
-                    {
-                        if (!element.HasElements)
+                        if (path == "runtime")
                         {
-                            // like empty tag in web.config.
+                            // examples: <runtime> in machine.config.
                             return true;
+                        }
+                        else
+                        {
+                            if (!element.HasElements)
+                            {
+                                // like empty tag in web.config.
+                                return true;
+                            }
                         }
                     }
                 }
                 else
                 {
                     // TODO: improve performance.
-                    var foundChild = RootSectionGroup.GetChildSectionDefinition(path);
+                    var foundChild = DefinitionCache.FirstOrDefault(item => item.Path.StartsWith(path + '/'));
                     if (foundChild != null && !element.HasElements)
                     {
                         return true;
@@ -507,6 +499,8 @@ namespace Microsoft.Web.Administration
                     if (tag == "configSections")
                     {
                         RootSectionGroup.ParseSectionDefinitions(element, _sectionSchemas);
+                        // TODO: can we use _sectionSchemas.
+                        RootSectionGroup.GetAllDefinitions(DefinitionCache);
                         continue;
                     }
 
@@ -542,23 +536,6 @@ namespace Microsoft.Web.Administration
                         ParseSections(element, null, found);
                     }
                 }
-            }
-        }
-
-        private void CloneParentSectionGroups(FileContext level)
-        {
-            if (level == null)
-            {
-                return;
-            }
-
-            if (level.RootSectionGroup != null)
-            {
-                CloneSectionGroups(level.RootSectionGroup, RootSectionGroup);
-            }
-            else
-            {
-                CloneParentSectionGroups(level.Parent);
             }
         }
 
@@ -643,6 +620,137 @@ namespace Microsoft.Web.Administration
             }
 
             _dirty = true;
+        }
+
+        internal ConfigurationSection FindSection(string sectionPath, string locationPath, FileContext core)
+        {
+            var temp = DetectExistingSection(sectionPath, locationPath, core);
+            if (temp != null)
+            {
+                var duplicate = core.Parent?.DetectExistingSection(sectionPath, locationPath, core.Parent);
+                if (duplicate != null && !temp.IsLocallyStored)
+                {
+                    temp.IsLocallyStored = true;
+                }
+
+                return temp;
+            }
+
+            // IMPORTANT: force system.web to go to root web.config.
+            var top = locationPath == null && sectionPath.StartsWith("system.web/") && core.AppHost ? core.Parent : core;
+            return CreateSection(sectionPath, locationPath, top, top);
+        }
+
+        private ConfigurationSection CreateSection(string sectionPath, string locationPath, FileContext core, FileContext top)
+        {
+            if (Location == null || Location == locationPath || locationPath.StartsWith(Location + '/'))
+            {
+                var definition = DefinitionCache.FirstOrDefault(item => item.Path == sectionPath);
+                if (definition?.Schema != null)
+                {
+                    var section = new ConfigurationSection(sectionPath, definition.Schema.Root, locationPath,
+                        core, null);
+                    section.OverrideMode = OverrideMode.Inherit;
+                    if (locationPath == null)
+                    {
+                        section.OverrideModeEffective = (OverrideMode)Enum.Parse(typeof(OverrideMode), definition.OverrideModeDefault);
+                    }
+                    else
+                    {
+                        var parent = FindSection(sectionPath, locationPath.GetParentLocation(), core);
+                        section.OverrideModeEffective = parent.OverrideModeEffective;
+                    }
+
+                    section.IsLocked = section.FileContext.FileName != definition.FileContext.FileName && section.OverrideModeEffective != OverrideMode.Allow;
+                    section.IsLocallyStored = section.FileContext.FileName == definition.FileContext.FileName;
+                    ConfigurationSections.Add(section);
+                    return section;
+                }
+            }
+
+            var sectionBasedOnParent = core.Parent?.CreateSection(sectionPath, locationPath, core.Parent, top);
+            return sectionBasedOnParent;
+        }
+
+        private ConfigurationSection DetectExistingSection(string sectionPath, string locationPath, FileContext top)
+        {
+            foreach (ConfigurationSection section in ConfigurationSections)
+            {
+                if (section.ElementTagName == sectionPath && section.Location == locationPath && !section.IsLocked)
+                {
+                    return section;
+                }
+            }
+
+            var fromParent = Parent?.DetectExistingSection(sectionPath, locationPath, top);
+            return fromParent ?? null;
+        }
+
+        internal bool Add(ConfigurationSection section, Location location, FileContext top)
+        {
+            var definition = DefinitionCache.FirstOrDefault(item => item.Path == section.ElementTagName);
+            if (definition != null)
+            {
+                if (definition.AllowLocation == SectionGroup.KEYWORD_FALSE && location != null && location.FromTag)
+                {
+                    throw new ServerManagerException("Section is not allowed in location tag");
+                }
+
+                section.OverrideMode = location == null || location.OverrideMode == null
+                    ? OverrideMode.Inherit
+                    : (OverrideMode)Enum.Parse(typeof(OverrideMode), location.OverrideMode);
+
+                if (section.OverrideMode == OverrideMode.Inherit)
+                {
+                    var parent = location == null || location.Path == null ? null : section.FileContext.FindSection(section.SectionPath, location.Path.GetParentLocation(), section.FileContext);
+                    if (parent == null)
+                    {
+                        section.OverrideModeEffective = (OverrideMode)Enum.Parse(typeof(OverrideMode), definition.OverrideModeDefault);
+                    }
+                    else
+                    {
+                        if (parent.OverrideModeEffective == OverrideMode.Deny && parent.FileContext != this)
+                        {
+                            throw new FileLoadException(string.Format(
+                                "Filename: \\\\?\\{0}\r\nLine number: {1}\r\nError: This configuration section cannot be used at this path. This happens when the section is locked at a parent level. Locking is either by default (overrideModeDefault=\"Deny\"), or set explicitly by a location tag with overrideMode=\"Deny\" or the legacy allowOverride=\"false\".\r\n\r\n",
+                                section.FileContext.FileName,
+                                (section.Entity as IXmlLineInfo).LineNumber));
+                        }
+
+                        section.OverrideModeEffective = parent.OverrideModeEffective;
+                    }
+                }
+                else
+                {
+                    section.OverrideModeEffective = section.OverrideMode;
+                }
+
+                section.IsLocked = section.FileContext.FileName != definition.FileContext.FileName
+                                   && section.OverrideModeEffective != OverrideMode.Allow;
+                section.IsLocallyStored = section.FileContext.FileName == definition.FileContext.FileName;
+                top.ConfigurationSections.Add(section);
+                return true;
+            }
+
+            if (section.SectionPath == "configProtectedData")
+            {
+                top.ConfigurationSections.Add(section);
+                return true;
+            }
+
+            if (Parent != null)
+            {
+                var parentContext = Parent.Add(section, location, top);
+                if (parentContext)
+                {
+                    return true;
+                }
+            }
+
+            throw new FileLoadException(string.Format(
+                "Filename: \\\\?\\{0}\r\nLine number: {1}\r\nError: This configuration section cannot be used at this path. This happens when the section is locked at a parent level. Locking is either by default (overrideModeDefault=\"Deny\"), or set explicitly by a location tag with overrideMode=\"Deny\" or the legacy allowOverride=\"false\".\r\n\r\n",
+                section.FileContext.FileName,
+                (section.Entity as IXmlLineInfo).LineNumber));
         }
     }
 }
