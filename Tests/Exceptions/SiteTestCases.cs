@@ -14,6 +14,7 @@ namespace Tests.Exceptions
     using Xunit;
     using System.Xml.Linq;
     using System.Xml.XPath;
+    using System.Collections.Generic;
 
     public class SiteTestCases
     {
@@ -573,6 +574,28 @@ namespace Tests.Exceptions
             var server = new IisExpressServerManager(Current);
 #endif
             var config = server.Sites[0].Applications[0].GetWebConfiguration();
+
+            {
+                var rootGroup = config.RootSectionGroup;
+                Assert.Empty(rootGroup.Sections);
+                Assert.Empty(rootGroup.SectionGroups);
+
+                var list = new List<SectionDefinition>();
+                GetAllDefinitions(rootGroup, list);
+                Assert.Empty(list);
+            }
+
+            var serverConfig = server.GetApplicationHostConfiguration();
+            {
+                var rootGroup = serverConfig.RootSectionGroup;
+                Assert.Empty(rootGroup.Sections);
+                Assert.Equal(2, rootGroup.SectionGroups.Count);
+
+                var list = new List<SectionDefinition>();
+                GetAllDefinitions(rootGroup, list);
+                Assert.Equal(56, list.Count);
+            }
+
             var section =
                 config.GetSection("system.webServer/defaultDocument");
             Assert.Equal("system.webServer/defaultDocument", section.SectionPath);
@@ -603,9 +626,100 @@ namespace Tests.Exceptions
             Assert.Equal(6, handlers1.Count);
             var handlers3 = handlersInWebSite.GetCollection("files");
             Assert.Equal(7, handlers3.Count);
+
+            var appHost = section.FileContext.Parent;
+            Assert.EndsWith("applicationHost.config", appHost.FileName);
+
+            var webRoot = appHost.Parent;
+            Assert.EndsWith("web.config", webRoot.FileName);
+            {
+                var rootGroup = webRoot.RootSectionGroup;
+                Assert.Equal(20, rootGroup.Sections.Count);
+                Assert.Equal(10, rootGroup.SectionGroups.Count);
+            }
+
+            var machine = webRoot.Parent;
+            Assert.EndsWith("machine.config", machine.FileName);
+            {
+                var rootGroup = machine.RootSectionGroup;
+                Assert.Equal(20, rootGroup.Sections.Count);
+                Assert.Equal(10, rootGroup.SectionGroups.Count);
+
+                var list = new List<SectionDefinition>();
+                GetAllDefinitions(rootGroup, list);
+                Assert.Equal(56, list.Count);
+            }
 #endif
             var handlers = section.GetCollection("files");
             Assert.Equal(8, handlers.Count);
+        }
+
+        [Fact]
+        public void TestIisExpressUnlockedSection()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string Current = Path.Combine(directoryName, @"applicationHost.config");
+            string Original = Path.Combine(directoryName, @"original2.config");
+            var siteConfig = TestHelper.CopySiteConfig(directoryName, "original.config");
+            File.Copy(Original, Current, true);
+            TestHelper.FixPhysicalPathMono(Current);
+
+            {
+                // Add the section.
+                var file = XDocument.Load(siteConfig);
+                var root = file.Root;
+                if (root == null)
+                {
+                    return;
+                }
+
+                var webServer = root.XPathSelectElement("/configuration/system.webServer");
+                var handlers = new XElement("handlers");
+                webServer.Add(handlers);
+                var add = new XElement("add",
+                    new XAttribute("name", "Python FastCGI"),
+                    new XAttribute("path", "*"),
+                    new XAttribute("verb", "*"),
+                    new XAttribute("modules", "FastCgiModule"),
+                    new XAttribute("scriptProcessor", @"C:\Python36\python.exe|C:\Python36\Lib\site-packages\wfastcgi.py"),
+                    new XAttribute("resourceType", "Unspecified"),
+                    new XAttribute("requireAccess", "Script"));
+                handlers.Add(add);
+                file.Save(siteConfig);
+            }
+#if IIS
+            var server = new ServerManager(Current);
+#else
+            var server = new IisExpressServerManager(Current);
+#endif
+            var config = server.Sites[0].Applications[0].GetWebConfiguration();
+            var section =
+                config.GetSection("system.webServer/defaultDocument");
+            Assert.Equal(true, section["enabled"]);
+            {
+                var files = section.GetCollection("files");
+                Assert.Equal(7, files.Count);
+            }
+        }
+
+        internal static void GetAllDefinitions(SectionGroup group, IList<SectionDefinition> result)
+        {
+            foreach (SectionDefinition item in group.Sections)
+            {
+                result.Add(item);
+            }
+
+            foreach (SectionGroup child in group.SectionGroups)
+            {
+                GetAllDefinitions(child, result);
+            }
         }
     }
 }
