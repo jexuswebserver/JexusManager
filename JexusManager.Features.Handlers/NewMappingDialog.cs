@@ -71,6 +71,14 @@ namespace JexusManager.Features.Handlers
                         }
 
                         var path = txtExecutable.Text;
+                        string arguments = string.Empty;
+                        var index = path.IndexOf('|');
+                        if (index > -1)
+                        {
+                            path = path.Substring(0, index);
+                            arguments = path.Substring(index + 1);
+                        }
+
                         if (!string.IsNullOrWhiteSpace(path))
                         {
                             var ext = Path.GetExtension(path);
@@ -108,9 +116,9 @@ namespace JexusManager.Features.Handlers
                             {
                                 var fastCgi = new FastCgiFeature((Module)ServiceProvider);
                                 fastCgi.Load();
-                                if (fastCgi.Items.All(item => item.Path != txtExecutable.Text))
+                                if (fastCgi.Items.All(item => item.Path != path && item.Arguments != arguments))
                                 {
-                                    fastCgi.AddItem(new FastCgiItem(null) { Path = txtExecutable.Text });
+                                    fastCgi.AddItem(new FastCgiItem(null) { Path = path, Arguments = arguments });
                                 }
                             }
                         }
