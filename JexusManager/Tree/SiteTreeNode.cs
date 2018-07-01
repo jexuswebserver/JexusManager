@@ -63,6 +63,11 @@ namespace JexusManager.Tree
 
         public override void LoadPanels(MainForm mainForm, ServiceContainer serviceContainer, List<ModuleProvider> moduleProviders)
         {
+            if (Site.Applications.Count == 0)
+            {
+                return;
+            }
+
             serviceContainer.RemoveService(typeof(IConfigurationService));
             serviceContainer.RemoveService(typeof(IControlPanel));
             var panel = new SitePage(Site, mainForm);
@@ -111,6 +116,11 @@ namespace JexusManager.Tree
 
             _loaded = true;
             Nodes.Clear();
+            if (Site.Applications.Count == 0)
+            {
+                return;
+            }
+
             var rootApp = Site.Applications[0];
             var rootFolder = rootApp.PhysicalPath.ExpandIisExpressEnvironmentVariables();
             LoadChildren(rootApp, 0, rootFolder, PathToSite, mainForm.PhysicalDirectoryMenu,
