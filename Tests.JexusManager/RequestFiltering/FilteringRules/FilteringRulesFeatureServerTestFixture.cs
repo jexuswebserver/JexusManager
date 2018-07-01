@@ -135,8 +135,8 @@ namespace Tests.RequestFiltering.FilteringRules
             const string Expected = @"expected_add.config";
             var document = XDocument.Load(Current);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer/security/requestFiltering/filteringRules");
-            var element = new XElement("filteringRule");
-            element.SetAttributeValue("name", "test1");
+            var element = new XElement("filteringRule",
+                    new XAttribute("name", "test1"));
             node?.Add(element);
             document.Save(Expected);
 

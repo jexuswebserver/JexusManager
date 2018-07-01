@@ -42,24 +42,24 @@ namespace Tests.Main
             const string Expected = @"expected_site_add.config";
             var document = XDocument.Load(Current);
             var node = document.Root.XPathSelectElement("/configuration/system.applicationHost/sites");
-            var siteNode = new XElement("site");
-            siteNode.SetAttributeValue("name", "Contoso");
-            siteNode.SetAttributeValue("id", "2");
+            var siteNode = new XElement("site",
+                new XAttribute("name", "Contoso"),
+                new XAttribute("id", "2"));
             var bindingsNode = new XElement("bindings");
             siteNode.Add(bindingsNode);
             node?.Add(siteNode);
 
-            var bindingNode = new XElement("binding");
-            bindingNode.SetAttributeValue("protocol", "http");
-            bindingNode.SetAttributeValue("bindingInformation", @"*:80:www.contoso.com");
+            var bindingNode = new XElement("binding",
+                new XAttribute("protocol", "http"),
+                new XAttribute("bindingInformation", @"*:80:www.contoso.com"));
             bindingsNode.Add(bindingNode);
 
-            var appNode = new XElement("application");
-            appNode.SetAttributeValue("path", "/");
+            var appNode = new XElement("application",
+                new XAttribute("path", "/"));
             siteNode.Add(appNode);
-            var vDirNode = new XElement("virtualDirectory");
-            vDirNode.SetAttributeValue("path", "/");
-            vDirNode.SetAttributeValue("physicalPath", @"C:\Inetpub\www.contoso.com\wwwroot");
+            var vDirNode = new XElement("virtualDirectory",
+                new XAttribute("path", "/"),
+                new XAttribute("physicalPath", @"C:\Inetpub\www.contoso.com\wwwroot"));
             appNode.Add(vDirNode);
 
             document.Save(Expected);
@@ -121,24 +121,24 @@ namespace Tests.Main
             const string Expected = @"expected_site_add.config";
             var document = XDocument.Load(Current);
             var node = document.Root.XPathSelectElement("/configuration/system.applicationHost/sites");
-            var siteNode = new XElement("site");
-            siteNode.SetAttributeValue("name", "Contoso");
-            siteNode.SetAttributeValue("id", "2");
+            var siteNode = new XElement("site",
+                new XAttribute("name", "Contoso"),
+                new XAttribute("id", "2"));
             var bindingsNode = new XElement("bindings");
             siteNode.Add(bindingsNode);
             node?.Add(siteNode);
 
-            var bindingNode = new XElement("binding");
-            bindingNode.SetAttributeValue("protocol", "http");
-            bindingNode.SetAttributeValue("bindingInformation", @"*:80:www.contoso.com");
+            var bindingNode = new XElement("binding",
+                new XAttribute("protocol", "http"),
+                new XAttribute("bindingInformation", @"*:80:www.contoso.com"));
             bindingsNode.Add(bindingNode);
 
-            var appNode = new XElement("application");
-            appNode.SetAttributeValue("path", "/");
+            var appNode = new XElement("application",
+                new XAttribute("path", "/"));
             siteNode.Add(appNode);
-            var vDirNode = new XElement("virtualDirectory");
-            vDirNode.SetAttributeValue("path", "/");
-            vDirNode.SetAttributeValue("physicalPath", @"C:\Inetpub\www.contoso.com\wwwroot");
+            var vDirNode = new XElement("virtualDirectory",
+                new XAttribute("path", "/"),
+                new XAttribute("physicalPath", @"C:\Inetpub\www.contoso.com\wwwroot"));
             appNode.Add(vDirNode);
 
             document.Save(Expected);

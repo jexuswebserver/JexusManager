@@ -138,10 +138,10 @@ namespace Tests.HttpErrors
             const string Expected = @"expected_add.config";
             var document = XDocument.Load(Current);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer/httpErrors");
-            var element = new XElement("error");
-            element.SetAttributeValue("statusCode", "455");
-            element.SetAttributeValue("subStatusCode", "1");
-            element.SetAttributeValue("path", "c:\\test.htm");
+            var element = new XElement("error",
+                    new XAttribute("statusCode", "455"),
+                    new XAttribute("subStatusCode", "1"),
+                    new XAttribute("path", "c:\\test.htm"));
             node?.Add(element);
             document.Save(Expected);
 

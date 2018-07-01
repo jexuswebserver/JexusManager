@@ -135,9 +135,9 @@ namespace Tests.Caching
             const string Expected = @"expected_add.config";
             var document = XDocument.Load(Current);
             var node = document.Root.XPathSelectElement("/configuration/system.webServer/caching/profiles/add");
-            var newNode = new XElement("add");
-            newNode.SetAttributeValue("duration", "00:00:00");
-            newNode.SetAttributeValue("extension", ".txt");
+            var newNode = new XElement("add",
+                new XAttribute("duration", "00:00:00"),
+                new XAttribute("extension", ".txt"));
             node?.AddAfterSelf(newNode);
             document.Save(Expected);
 

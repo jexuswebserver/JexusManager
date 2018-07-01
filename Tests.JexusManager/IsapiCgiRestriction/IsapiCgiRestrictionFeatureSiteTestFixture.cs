@@ -104,8 +104,8 @@ namespace Tests.IsapiCgiRestriction
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location");
-            node.SetAttributeValue("path", "WebSite1");
+            var node = new XElement("location",
+                new XAttribute("path", "WebSite1"));
             document.Root?.Add(node);
             var web = new XElement("system.webServer");
             node.Add(web);
@@ -113,8 +113,8 @@ namespace Tests.IsapiCgiRestriction
             web.Add(security);
             var ip = new XElement("isapiCgiRestriction");
             security.Add(ip);
-            var remove = new XElement("remove");
-            remove.SetAttributeValue("path", @"%windir%\Microsoft.NET\Framework64\v4.0.30319\webengine4.dll");
+            var remove = new XElement("remove",
+                new XAttribute("path", @"%windir%\Microsoft.NET\Framework64\v4.0.30319\webengine4.dll"));
             ip.Add(remove);
             document.Save(Expected);
 
@@ -135,8 +135,8 @@ namespace Tests.IsapiCgiRestriction
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location");
-            node.SetAttributeValue("path", "WebSite1");
+            var node = new XElement("location",
+                new XAttribute("path", "WebSite1"));
             document.Root?.Add(node);
             document.Save(Expected);
 
@@ -162,8 +162,8 @@ namespace Tests.IsapiCgiRestriction
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location");
-            node.SetAttributeValue("path", "WebSite1");
+            var node = new XElement("location",
+                new XAttribute("path", "WebSite1"));
             document.Root?.Add(node);
             var web = new XElement("system.webServer");
             node.Add(web);
@@ -171,13 +171,13 @@ namespace Tests.IsapiCgiRestriction
             web.Add(security);
             var ip = new XElement("isapiCgiRestriction");
             security.Add(ip);
-            var remove = new XElement("remove");
-            remove.SetAttributeValue("path", @"%windir%\Microsoft.NET\Framework64\v4.0.30319\webengine4.dll");
+            var remove = new XElement("remove",
+                new XAttribute("path", @"%windir%\Microsoft.NET\Framework64\v4.0.30319\webengine4.dll"));
             ip.Add(remove);
-            var add = new XElement("add");
-            add.SetAttributeValue("allowed", "true");
-            add.SetAttributeValue("path", "c:\\test.dll");
-            add.SetAttributeValue("description", "ASP.NET_v4.0");
+            var add = new XElement("add",
+                new XAttribute("allowed", "true"),
+                new XAttribute("path", "c:\\test.dll"),
+                new XAttribute("description", "ASP.NET_v4.0"));
             ip.Add(add);
             document.Save(Expected);
 
@@ -200,8 +200,8 @@ namespace Tests.IsapiCgiRestriction
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location");
-            node.SetAttributeValue("path", "WebSite1");
+            var node = new XElement("location",
+                new XAttribute("path", "WebSite1"));
             document.Root?.Add(node);
             var web = new XElement("system.webServer");
             node.Add(web);
@@ -209,10 +209,10 @@ namespace Tests.IsapiCgiRestriction
             web.Add(security);
             var ip = new XElement("isapiCgiRestriction");
             security.Add(ip);
-            var add = new XElement("add");
-            add.SetAttributeValue("allowed", "false");
-            add.SetAttributeValue("path", "c:\\test.exe");
-            add.SetAttributeValue("description", "test");
+            var add = new XElement("add",
+                new XAttribute("allowed", "false"),
+                new XAttribute("path", "c:\\test.exe"),
+                new XAttribute("description", "test"));
             ip.Add(add);
             document.Save(Expected);
 
@@ -240,8 +240,8 @@ namespace Tests.IsapiCgiRestriction
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location");
-            node.SetAttributeValue("path", "WebSite1");
+            var node = new XElement("location",
+                new XAttribute("path", "WebSite1"));
             document.Root?.Add(node);
             var web = new XElement("system.webServer");
             node.Add(web);
@@ -249,10 +249,10 @@ namespace Tests.IsapiCgiRestriction
             web.Add(security);
             var ip = new XElement("isapiCgiRestriction");
             security.Add(ip);
-            var add = new XElement("add");
-            add.SetAttributeValue("allowed", "false");
-            add.SetAttributeValue("path", "c:\\test.dll");
-            add.SetAttributeValue("description", "test");
+            var add = new XElement("add",
+                new XAttribute("allowed", "false"),
+                new XAttribute("path", "c:\\test.dll"),
+                new XAttribute("description", "test"));
             ip.Add(add);
             document.Save(Expected);
 

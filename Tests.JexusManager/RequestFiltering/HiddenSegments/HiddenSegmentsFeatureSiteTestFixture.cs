@@ -110,8 +110,8 @@ namespace Tests.RequestFiltering.HiddenSegments
             var security = new XElement("security");
             var request = new XElement("requestFiltering");
             var file = new XElement("hiddenSegments");
-            var add = new XElement("remove");
-            add.SetAttributeValue("segment", "web.config");
+            var add = new XElement("remove",
+                    new XAttribute("segment", "web.config"));
             node?.Add(security);
             security.Add(request);
             request.Add(file);
@@ -170,8 +170,8 @@ namespace Tests.RequestFiltering.HiddenSegments
             var security = new XElement("security");
             var request = new XElement("requestFiltering");
             var file = new XElement("hiddenSegments");
-            var add = new XElement("add");
-            add.SetAttributeValue("segment", "test");
+            var add = new XElement("add",
+                    new XAttribute("segment", "test"));
             node?.Add(security);
             security.Add(request);
             request.Add(file);

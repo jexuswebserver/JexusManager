@@ -116,9 +116,9 @@ namespace Tests.RequestFiltering.Verbs
             const string Expected = @"expected_add.config";
             var document = XDocument.Load(Current);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer/security/requestFiltering/verbs");
-            var element = new XElement("add");
-            element.SetAttributeValue("verb", "GET");
-            element.SetAttributeValue("allowed", "false");
+            var element = new XElement("add",
+                new XAttribute("verb", "GET"),
+                new XAttribute("allowed", "false"));
             node?.Add(element);
             document.Save(Expected);
 

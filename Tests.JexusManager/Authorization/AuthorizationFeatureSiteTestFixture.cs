@@ -101,8 +101,8 @@ namespace Tests.Authorization
             var node = document.Root.XPathSelectElement("/configuration/system.webServer");
             var security = new XElement("security");
             var authorization = new XElement("authorization");
-            var remove = new XElement("remove");
-            remove.SetAttributeValue("users", "*");
+            var remove = new XElement("remove",
+                    new XAttribute("users", "*"));
             node?.Add(security);
             security.Add(authorization);
             authorization.Add(remove);
@@ -160,12 +160,12 @@ namespace Tests.Authorization
             var node = document.Root.XPathSelectElement("/configuration/system.webServer");
             var security = new XElement("security");
             var authorization = new XElement("authorization");
-            var remove = new XElement("remove");
-            remove.SetAttributeValue("users", "*");
-            var add = new XElement("add");
-            add.SetAttributeValue("accessType", "Allow");
-            add.SetAttributeValue("roles", "testers");
-            add.SetAttributeValue("users", "*");
+            var remove = new XElement("remove",
+                    new XAttribute("users", "*"));
+            var add = new XElement("add",
+                    new XAttribute("accessType", "Allow"),
+                    new XAttribute("roles", "testers"),
+                    new XAttribute("users", "*"));
             node?.Add(security);
             security.Add(authorization);
             authorization.Add(remove);
@@ -199,9 +199,9 @@ namespace Tests.Authorization
             var node = document.Root.XPathSelectElement("/configuration/system.webServer");
             var security = new XElement("security");
             var authorization = new XElement("authorization");
-            var add = new XElement("add");
-            add.SetAttributeValue("accessType", "Allow");
-            add.SetAttributeValue("roles", "defenders");
+            var add = new XElement("add",
+                new XAttribute("accessType", "Allow"),
+                new XAttribute("roles", "defenders"));
             node?.Add(security);
             security.Add(authorization);
             authorization.Add(add);
@@ -240,9 +240,9 @@ namespace Tests.Authorization
             var node = document.Root.XPathSelectElement("/configuration/system.webServer");
             var security = new XElement("security");
             var authorization = new XElement("authorization");
-            var add = new XElement("add");
-            add.SetAttributeValue("roles", "test");
-            add.SetAttributeValue("accessType", "Allow");
+            var add = new XElement("add",
+                new XAttribute("roles", "test"),
+                new XAttribute("accessType", "Allow"));
             node?.Add(security);
             security.Add(authorization);
             authorization.Add(add);

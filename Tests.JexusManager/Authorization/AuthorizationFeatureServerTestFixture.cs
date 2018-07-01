@@ -135,9 +135,9 @@ namespace Tests.Authorization
             const string Expected = @"expected_add.config";
             var document = XDocument.Load(Current);
             var node = document.Root.XPathSelectElement("/configuration/system.webServer/security/authorization/add");
-            var newNode = new XElement("add");
-            newNode.SetAttributeValue("accessType", "Allow");
-            newNode.SetAttributeValue("roles", "Administration");
+            var newNode = new XElement("add",
+                    new XAttribute("accessType", "Allow"),
+                    new XAttribute("roles", "Administration"));
             node?.AddAfterSelf(newNode);
             document.Save(Expected);
 

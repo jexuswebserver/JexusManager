@@ -110,8 +110,8 @@ namespace Tests.RequestFiltering.Verbs
             var security = new XElement("security");
             var request = new XElement("requestFiltering");
             var file = new XElement("verbs");
-            var remove = new XElement("remove");
-            remove.SetAttributeValue("verb", "PUT");
+            var remove = new XElement("remove",
+                new XAttribute("verb", "PUT"));
             node?.Add(security);
             security.Add(request);
             request.Add(file);
@@ -170,9 +170,9 @@ namespace Tests.RequestFiltering.Verbs
             var security = new XElement("security");
             var request = new XElement("requestFiltering");
             var file = new XElement("verbs");
-            var remove = new XElement("add");
-            remove.SetAttributeValue("allowed", "false");
-            remove.SetAttributeValue("verb", "GET");
+            var remove = new XElement("add",
+                new XAttribute("allowed", "false"),
+                new XAttribute("verb", "GET"));
             node?.Add(security);
             security.Add(request);
             request.Add(file);

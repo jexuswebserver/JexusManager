@@ -548,8 +548,8 @@ namespace Microsoft.Web.Administration
                 var elements = Root.XPathSelectElements(String.Format("//location[@path='{0}']", locationPath)).ToList();
                 if (!elements.Any())
                 {
-                    var location = new XElement("location");
-                    location.SetAttributeValue("path", locationPath);
+                    var location = new XElement("location",
+                        new XAttribute("path", locationPath));
                     top.Add(location);
                     top = location;
                 }

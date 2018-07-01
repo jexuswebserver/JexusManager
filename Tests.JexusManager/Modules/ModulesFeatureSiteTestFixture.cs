@@ -105,15 +105,15 @@ namespace Tests.Modules
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location");
-            node.SetAttributeValue("path", "WebSite1");
+            var node = new XElement("location",
+                new XAttribute("path", "WebSite1"));
             document.Root?.Add(node);
             var web = new XElement("system.webServer");
             node.Add(web);
             var content = new XElement("modules");
             web.Add(content);
-            var remove = new XElement("remove");
-            remove.SetAttributeValue("name", "DynamicCompressionModule");
+            var remove = new XElement("remove",
+                new XAttribute("name", "DynamicCompressionModule"));
             content.Add(remove);
             document.Save(Expected);
 
@@ -134,8 +134,8 @@ namespace Tests.Modules
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location");
-            node.SetAttributeValue("path", "WebSite1");
+            var node = new XElement("location",
+                new XAttribute("path", "WebSite1"));
             document.Root?.Add(node);
             document.Save(Expected);
 
@@ -160,20 +160,20 @@ namespace Tests.Modules
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location");
-            node.SetAttributeValue("path", "WebSite1");
+            var node = new XElement("location",
+                new XAttribute("path", "WebSite1"));
             document.Root?.Add(node);
             var web = new XElement("system.webServer");
             node.Add(web);
             var content = new XElement("modules");
             web.Add(content);
-            var remove = new XElement("remove");
-            remove.SetAttributeValue("name", "ScriptModule-4.0");
+            var remove = new XElement("remove",
+                new XAttribute("name", "ScriptModule-4.0"));
             content.Add(remove);
-            var add = new XElement("add");
-            add.SetAttributeValue("preCondition", "managedHandler,runtimeVersionv4.0");
-            add.SetAttributeValue("name", "ScriptModule-4.0");
-            add.SetAttributeValue("type", "test");
+            var add = new XElement("add",
+                new XAttribute("preCondition", "managedHandler,runtimeVersionv4.0"),
+                new XAttribute("name", "ScriptModule-4.0"),
+                new XAttribute("type", "test"));
             content.Add(add);
             document.Save(Expected);
 
@@ -196,16 +196,16 @@ namespace Tests.Modules
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location");
-            node.SetAttributeValue("path", "WebSite1");
+            var node = new XElement("location",
+                new XAttribute("path", "WebSite1"));
             document.Root?.Add(node);
             var web = new XElement("system.webServer");
             node.Add(web);
             var content = new XElement("modules");
             web.Add(content);
-            var add = new XElement("add");
-            add.SetAttributeValue("name", "test");
-            add.SetAttributeValue("type", "test");
+            var add = new XElement("add",
+                new XAttribute("name", "test"),
+                new XAttribute("type", "test"));
             content.Add(add);
             document.Save(Expected);
 
@@ -234,16 +234,16 @@ namespace Tests.Modules
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location");
-            node.SetAttributeValue("path", "WebSite1");
+            var node = new XElement("location",
+                new XAttribute("path", "WebSite1"));
             document.Root?.Add(node);
             var web = new XElement("system.webServer");
             node.Add(web);
             var content = new XElement("modules");
             web.Add(content);
-            var add = new XElement("add");
-            add.SetAttributeValue("name", "test");
-            add.SetAttributeValue("type", "test1");
+            var add = new XElement("add",
+                new XAttribute("name", "test"),
+                new XAttribute("type", "test1"));
             content.Add(add);
             document.Save(Expected);
 
@@ -266,8 +266,8 @@ namespace Tests.Modules
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location");
-            node.SetAttributeValue("path", "WebSite1");
+            var node = new XElement("location",
+                new XAttribute("path", "WebSite1"));
             document.Root?.Add(node);
             var web = new XElement("system.webServer");
             node.Add(web);
@@ -294,8 +294,8 @@ namespace Tests.Modules
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location");
-            node.SetAttributeValue("path", "WebSite1");
+            var node = new XElement("location",
+                new XAttribute("path", "WebSite1"));
             document.Root.Add(node);
             var web = new XElement("system.webServer");
             node.Add(web);
@@ -311,14 +311,14 @@ namespace Tests.Modules
 
             content.LastNode.Remove();
 
-            var add = new XElement("add");
-            add.SetAttributeValue("name", "test");
-            add.SetAttributeValue("type", "test1");
+            var add = new XElement("add",
+                new XAttribute("name", "test"),
+                new XAttribute("type", "test1"));
             content.Add(add);
-            var one = new XElement("add");
-            one.SetAttributeValue("preCondition", "managedHandler,runtimeVersionv4.0");
-            one.SetAttributeValue("name", "ScriptModule-4.0");
-            one.SetAttributeValue("type", "System.Web.Handlers.ScriptModule, System.Web.Extensions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35");
+            var one = new XElement("add",
+                new XAttribute("preCondition", "managedHandler,runtimeVersionv4.0"),
+                new XAttribute("name", "ScriptModule-4.0"),
+                new XAttribute("type", "System.Web.Handlers.ScriptModule, System.Web.Extensions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"));
             content.Add(one);
             document.Save(Expected);
 
@@ -352,24 +352,24 @@ namespace Tests.Modules
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location");
-            node.SetAttributeValue("path", "WebSite1");
+            var node = new XElement("location",
+                new XAttribute("path", "WebSite1"));
             document.Root.Add(node);
             var web = new XElement("system.webServer");
             node.Add(web);
             var content = new XElement("modules");
             web.Add(content);
-            var clear = new XElement("remove");
-            clear.SetAttributeValue("name", "ScriptModule-4.0");
+            var clear = new XElement("remove",
+                new XAttribute("name", "ScriptModule-4.0"));
             content.Add(clear);
-            var add = new XElement("add");
-            add.SetAttributeValue("name", "test");
-            add.SetAttributeValue("type", "test1");
+            var add = new XElement("add",
+                new XAttribute("name", "test"),
+                new XAttribute("type", "test1"));
             content.Add(add);
-            var one = new XElement("add");
-            one.SetAttributeValue("preCondition", "managedHandler,runtimeVersionv4.0");
-            one.SetAttributeValue("name", "ScriptModule-4.0");
-            one.SetAttributeValue("type", "System.Web.Handlers.ScriptModule, System.Web.Extensions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35");
+            var one = new XElement("add",
+                new XAttribute("preCondition", "managedHandler,runtimeVersionv4.0"),
+                new XAttribute("name", "ScriptModule-4.0"),
+                new XAttribute("type", "System.Web.Handlers.ScriptModule, System.Web.Extensions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"));
             content.Add(one);
             document.Save(Expected);
 

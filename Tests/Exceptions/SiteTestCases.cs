@@ -49,9 +49,9 @@ namespace Tests.Exceptions
                 pool.Add(security);
                 var authentication = new XElement("authentication");
                 security.Add(authentication);
-                var windows = new XElement("windowsAuthentication");
+                var windows = new XElement("windowsAuthentication",
+                    new XAttribute("enabled", true));
                 authentication.Add(windows);
-                windows.SetAttributeValue("enabled", true);
                 file.Save(siteConfig);
             }
 
@@ -187,7 +187,7 @@ namespace Tests.Exceptions
                 }
 
                 var windows = root.XPathSelectElement("/configuration/configSections/sectionGroup[@name='system.webServer']/sectionGroup[@name='security']/sectionGroup[@name='authentication']/section[@name='windowsAuthentication']");
-                windows.SetAttributeValue("overrideModeDefault", "Allow");
+                windows?.SetAttributeValue("overrideModeDefault", "Allow");
                 file.Save(Current);
             }
 
@@ -205,9 +205,9 @@ namespace Tests.Exceptions
                 pool.Add(security);
                 var authentication = new XElement("authentication");
                 security.Add(authentication);
-                var windows = new XElement("windowsAuthentication");
+                var windows = new XElement("windowsAuthentication",
+                    new XAttribute("enabled", true));
                 authentication.Add(windows);
-                windows.SetAttributeValue("enabled", true);
                 file.Save(siteConfig);
             }
 
@@ -252,7 +252,7 @@ namespace Tests.Exceptions
 
                 var windows = root.XPathSelectElement(
                     "/configuration/configSections/sectionGroup[@name='system.webServer']/sectionGroup[@name='security']/sectionGroup[@name='authentication']/section[@name='windowsAuthentication']");
-                windows.SetAttributeValue("overrideModeDefault", "Allow");
+                windows?.SetAttributeValue("overrideModeDefault", "Allow");
                 file.Save(Current);
             }
 
@@ -270,9 +270,9 @@ namespace Tests.Exceptions
                 pool.Add(security);
                 var authentication = new XElement("authentication");
                 security.Add(authentication);
-                var windows = new XElement("windowsAuthentication");
+                var windows = new XElement("windowsAuthentication",
+                    new XAttribute("enabled", true));
                 authentication.Add(windows);
-                windows.SetAttributeValue("enabled", true);
 
                 var tag = "<runtime>" +
                           "<asm:assemblyBinding xmlns:asm=\"urn:schemas-microsoft-com:asm.v1\">" +
@@ -338,9 +338,9 @@ namespace Tests.Exceptions
                 var pool = root.XPathSelectElement("/configuration/system.webServer");
                 var unknown = new XElement("unknown");
                 pool.Add(unknown);
-                var test = new XElement("test");
+                var test = new XElement("test",
+                    new XAttribute("test", "test"));
                 unknown.Add(test);
-                test.SetAttributeValue("test", "test");
                 file.Save(siteConfig);
             }
 
@@ -394,9 +394,9 @@ namespace Tests.Exceptions
                 var pool = root.XPathSelectElement("/configuration/system.webServer");
                 var unknown = new XElement("webFarms");
                 pool.Add(unknown);
-                var test = new XElement("test");
+                var test = new XElement("test",
+                    new XAttribute("test", "test"));
                 unknown.Add(test);
-                test.SetAttributeValue("test", "test");
                 file.Save(siteConfig);
             }
 
@@ -449,18 +449,18 @@ namespace Tests.Exceptions
                 }
 
                 var location = root.XPathSelectElement("/configuration/location[@path='WebSite2']");
-                var newLocation = new XElement("location");
+                var newLocation = new XElement("location",
+                    new XAttribute("path", "WebSite1"));
                 location.AddAfterSelf(newLocation);
-                newLocation.SetAttributeValue("path", "WebSite1");
                 var webServer = new XElement("system.webServer");
                 newLocation.Add(webServer);
-                var document = new XElement("defaultDocument");
-                document.SetAttributeValue("enabled", false);
+                var document = new XElement("defaultDocument",
+                    new XAttribute("enabled", false));
                 webServer.Add(document);
                 var files = new XElement("files");
                 document.Add(files);
-                var add = new XElement("add");
-                add.SetAttributeValue("value", "home1.html");
+                var add = new XElement("add",
+                    new XAttribute("value", "home1.html"));
                 files.Add(add);
 
                 file.Save(Current);
@@ -476,9 +476,9 @@ namespace Tests.Exceptions
                 }
 
                 var doc = root.XPathSelectElement("/configuration/system.webServer/defaultDocument");
-                doc.SetAttributeValue("enabled", true);
+                doc?.SetAttributeValue("enabled", true);
                 var add = root.XPathSelectElement("/configuration/system.webServer/defaultDocument/files/add");
-                add.SetAttributeValue("value", "home2.html");
+                add?.SetAttributeValue("value", "home2.html");
                 file.Save(siteConfig);
             }
 #if IIS
@@ -536,18 +536,18 @@ namespace Tests.Exceptions
                 }
 
                 var location = root.XPathSelectElement("/configuration/location[@path='WebSite2']");
-                var newLocation = new XElement("location");
+                var newLocation = new XElement("location",
+                   new XAttribute("path", "WebSite1"));
                 location.AddAfterSelf(newLocation);
-                newLocation.SetAttributeValue("path", "WebSite1");
                 var webServer = new XElement("system.webServer");
                 newLocation.Add(webServer);
-                var document = new XElement("defaultDocument");
-                document.SetAttributeValue("enabled", false);
+                var document = new XElement("defaultDocument",
+                    new XAttribute("enabled", false));
                 webServer.Add(document);
                 var files = new XElement("files");
                 document.Add(files);
-                var add = new XElement("add");
-                add.SetAttributeValue("value", "home1.html");
+                var add = new XElement("add",
+                    new XAttribute("value", "home1.html"));
                 files.Add(add);
 
                 file.Save(Current);
@@ -563,9 +563,18 @@ namespace Tests.Exceptions
                 }
 
                 var doc = root.XPathSelectElement("/configuration/system.webServer/defaultDocument");
-                doc.SetAttributeValue("enabled", true);
+                doc?.SetAttributeValue("enabled", true);
                 var add = root.XPathSelectElement("/configuration/system.webServer/defaultDocument/files/add");
-                add.SetAttributeValue("value", "home2.html");
+                add?.SetAttributeValue("value", "home2.html");
+
+                var location = new XElement("location",
+                    new XAttribute("path", "WebSite1/test"),
+                    new XElement("system.webServer",
+                        new XElement("defaultDocument",
+                            new XElement("files",
+                                new XElement("add",
+                                    new XAttribute("value", "home3.html"))))));
+                root.Add(location);
                 file.Save(siteConfig);
             }
 #if IIS
@@ -595,9 +604,20 @@ namespace Tests.Exceptions
             var section =
                 config.GetSection("system.webServer/defaultDocument");
             Assert.Equal("system.webServer/defaultDocument", section.SectionPath);
+
+            var childSection = config.GetSection("system.webServer/defaultDocument", "WebSite1/test");
+            Assert.Equal("system.webServer/defaultDocument", childSection.SectionPath);
 #if !IIS
             Assert.Equal("WebSite1", section.Location);
             Assert.EndsWith("web.config", section.FileContext.FileName);
+
+            Assert.Equal("WebSite1/test", childSection.Location);
+            Assert.EndsWith("web.config", childSection.FileContext.FileName);
+
+            var handlersInWebConfig = childSection.GetParentElement().Section;
+            Assert.Equal("system.webServer/defaultDocument", handlersInWebConfig.SectionPath);
+            Assert.Equal("WebSite1", handlersInWebConfig.Location);
+            Assert.EndsWith("web.config", handlersInWebConfig.FileContext.FileName);
 
             var handlersInWebSite = section.GetParentElement().Section;
             Assert.Equal("system.webServer/defaultDocument", handlersInWebSite.SectionPath);
@@ -648,6 +668,9 @@ namespace Tests.Exceptions
 #endif
             var handlers = section.GetCollection("files");
             Assert.Equal(8, handlers.Count);
+
+            var childHandlers = childSection.GetCollection("files");
+            Assert.Equal(9, childHandlers.Count);
         }
 
         [Fact]

@@ -116,9 +116,9 @@ namespace Tests.IpSecurity
             const string Expected = @"expected_add.config";
             var document = XDocument.Load(Current);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer/security/ipSecurity");
-            var element = new XElement("add");
-            element.SetAttributeValue("ipAddress", "12.0.0.0");
-            element.SetAttributeValue("allowed", "true");
+            var element = new XElement("add",
+                    new XAttribute("ipAddress", "12.0.0.0"),
+                    new XAttribute("allowed", "true"));
             node?.Add(element);
             document.Save(Expected);
 

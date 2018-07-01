@@ -119,9 +119,9 @@ namespace Tests.Authentication
             var document = XDocument.Load(site);
             var web = new XElement("system.web");
             document.Root?.Add(web);
-            var authen = new XElement("authentication");
+            var authen = new XElement("authentication",
+                    new XAttribute("mode", "Forms"));
             web.Add(authen);
-            authen.SetAttributeValue("mode", "Forms");
             document.Save(expected);
 
             _feature.Enable();

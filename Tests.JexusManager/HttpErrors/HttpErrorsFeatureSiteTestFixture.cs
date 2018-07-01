@@ -108,8 +108,8 @@ namespace Tests.HttpErrors
             var document = XDocument.Load(site);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
             var errors = new XElement("httpErrors");
-            var remove = new XElement("remove");
-            remove.SetAttributeValue("statusCode", "401");
+            var remove = new XElement("remove",
+                new XAttribute("statusCode", "401"));
             node?.Add(errors);
             errors.Add(remove);
             document.Save(expected);
@@ -165,12 +165,12 @@ namespace Tests.HttpErrors
             var document = XDocument.Load(site);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
             var errors = new XElement("httpErrors");
-            var remove = new XElement("remove");
-            remove.SetAttributeValue("statusCode", "401");
-            var add = new XElement("error");
-            add.SetAttributeValue("prefixLanguageFilePath", "%IIS_BIN%\\custerr");
-            add.SetAttributeValue("statusCode", "401");
-            add.SetAttributeValue("path", "c:\\test.htm");
+            var remove = new XElement("remove",
+                new XAttribute("statusCode", "401"));
+            var add = new XElement("error",
+                new XAttribute("prefixLanguageFilePath", "%IIS_BIN%\\custerr"),
+                new XAttribute("statusCode", "401"),
+                new XAttribute("path", "c:\\test.htm"));
             node?.Add(errors);
             errors.Add(remove);
             errors.Add(add);
@@ -202,9 +202,9 @@ namespace Tests.HttpErrors
             var document = XDocument.Load(site);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
             var errors = new XElement("httpErrors");
-            var add = new XElement("error");
-            add.SetAttributeValue("statusCode", "455");
-            add.SetAttributeValue("path", "c:\\test1.htm");
+            var add = new XElement("error",
+                new XAttribute("statusCode", "455"),
+                new XAttribute("path", "c:\\test1.htm"));
             node?.Add(errors);
             errors.Add(add);
             document.Save(expected);
@@ -241,9 +241,9 @@ namespace Tests.HttpErrors
             var document = XDocument.Load(site);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
             var errors = new XElement("httpErrors");
-            var add = new XElement("error");
-            add.SetAttributeValue("statusCode", "455");
-            add.SetAttributeValue("path", "c:\\test.htm");
+            var add = new XElement("error",
+                new XAttribute("statusCode", "455"),
+                new XAttribute("path", "c:\\test.htm"));
             node?.Add(errors);
             errors.Add(add);
             document.Save(expected);

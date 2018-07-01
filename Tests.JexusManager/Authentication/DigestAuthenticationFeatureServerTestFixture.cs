@@ -113,9 +113,9 @@ namespace Tests.Authentication
             const string Expected = @"expected_remove.config";
             var document = XDocument.Load(Current);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer/security/authentication");
-            var basic = new XElement("digestAuthentication");
+            var basic = new XElement("digestAuthentication",
+                    new XAttribute("enabled", true));
             node?.Add(basic);
-            basic.SetAttributeValue("enabled", true);
             document.Save(Expected);
 
             _feature.Enable();

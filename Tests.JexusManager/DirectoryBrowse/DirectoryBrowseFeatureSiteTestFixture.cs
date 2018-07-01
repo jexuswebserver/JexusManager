@@ -107,9 +107,9 @@ namespace Tests.DirectoryBrowse
             var expected = "expected_edit1.site.config";
             var document = XDocument.Load(site);
             var node = document.Root.XPathSelectElement("/configuration/system.webServer");
-            var directory = new XElement("directoryBrowse");
-            directory.SetAttributeValue("enabled", "true");
-            directory.SetAttributeValue("showFlags", "LongDate");
+            var directory = new XElement("directoryBrowse",
+                new XAttribute("enabled", "true"),
+                new XAttribute("showFlags", "LongDate"));
             node?.Add(directory);
             document.Save(expected);
 

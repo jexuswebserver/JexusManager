@@ -473,7 +473,7 @@ namespace Microsoft.Web.Administration
             return GetElementAtParentLocationInFileContext(core, core);
         }
 
-            internal ConfigurationElement GetElementAtParentLocationInFileContext(FileContext core, FileContext top)
+        internal ConfigurationElement GetElementAtParentLocationInFileContext(FileContext core, FileContext top)
         {
             if (Section == null)
             {
@@ -496,7 +496,7 @@ namespace Microsoft.Web.Administration
                 return null;
             }
 
-            if (core.Location != null)
+            if (core.Location != null && !Section.Location.StartsWith(core.Location + '/'))
             {
                 // IMPORTANT: web.config should not check parent path.
                 return null;

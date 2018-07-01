@@ -109,8 +109,8 @@ namespace Tests.Caching
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
             var security = new XElement("caching");
             var authorization = new XElement("profiles");
-            var remove = new XElement("remove");
-            remove.SetAttributeValue("extension", ".cs");
+            var remove = new XElement("remove",
+                    new XAttribute("extension", ".cs"));
             node?.Add(security);
             security.Add(authorization);
             authorization.Add(remove);
@@ -167,11 +167,11 @@ namespace Tests.Caching
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
             var security = new XElement("caching");
             var authorization = new XElement("profiles");
-            var remove = new XElement("remove");
-            remove.SetAttributeValue("extension", ".cs");
-            var add = new XElement("add");
-            add.SetAttributeValue("duration", "00:00:00");
-            add.SetAttributeValue("extension", ".vb");
+            var remove = new XElement("remove",
+                    new XAttribute("extension", ".cs"));
+            var add = new XElement("add",
+                    new XAttribute("duration", "00:00:00"),
+                    new XAttribute("extension", ".vb"));
             node?.Add(security);
             security.Add(authorization);
             authorization.Add(remove);
@@ -204,9 +204,9 @@ namespace Tests.Caching
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
             var security = new XElement("caching");
             var authorization = new XElement("profiles");
-            var add = new XElement("add");
-            add.SetAttributeValue("duration", "00:00:00");
-            add.SetAttributeValue("extension", ".xslt");
+            var add = new XElement("add",
+                new XAttribute("duration", "00:00:00"),
+                new XAttribute("extension", ".xslt"));
             node?.Add(security);
             security.Add(authorization);
             authorization.Add(add);
@@ -242,9 +242,9 @@ namespace Tests.Caching
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
             var security = new XElement("caching");
             var authorization = new XElement("profiles");
-            var add = new XElement("add");
-            add.SetAttributeValue("extension", ".ppt");
-            add.SetAttributeValue("duration", "00:00:00");
+            var add = new XElement("add",
+                new XAttribute("extension", ".ppt"),
+                new XAttribute("duration", "00:00:00"));
             node?.Add(security);
             security.Add(authorization);
             authorization.Add(add);

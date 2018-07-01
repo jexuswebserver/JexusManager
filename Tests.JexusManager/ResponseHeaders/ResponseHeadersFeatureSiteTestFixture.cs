@@ -110,8 +110,8 @@ namespace Tests.ResponseHeaders
             node?.Add(http);
             var headers = new XElement("customHeaders");
             http.Add(headers);
-            var remove = new XElement("remove");
-            remove.SetAttributeValue("name", "X-Powered-By");
+            var remove = new XElement("remove",
+                new XAttribute("name", "X-Powered-By"));
             headers.Add(remove);
             document.Save(expected);
 
@@ -170,12 +170,12 @@ namespace Tests.ResponseHeaders
             node?.Add(http);
             var headers = new XElement("customHeaders");
             http.Add(headers);
-            var remove = new XElement("remove");
-            remove.SetAttributeValue("name", "X-Powered-By");
+            var remove = new XElement("remove",
+                new XAttribute("name", "X-Powered-By"));
             headers.Add(remove);
-            var add = new XElement("add");
-            add.SetAttributeValue("name", "X-Powered-By");
-            add.SetAttributeValue("value", "XSP");
+            var add = new XElement("add",
+                new XAttribute("name", "X-Powered-By"),
+                new XAttribute("value", "XSP"));
             headers.Add(add);
             document.Save(expected);
 
@@ -207,9 +207,9 @@ namespace Tests.ResponseHeaders
             node?.Add(http);
             var headers = new XElement("customHeaders");
             http.Add(headers);
-            var add = new XElement("add");
-            add.SetAttributeValue("name", "Server");
-            add.SetAttributeValue("value", "Jexus2");
+            var add = new XElement("add",
+                new XAttribute("name", "Server"),
+                new XAttribute("value", "Jexus2"));
             headers.Add(add);
             document.Save(expected);
 
@@ -246,9 +246,9 @@ namespace Tests.ResponseHeaders
             node?.Add(http);
             var headers = new XElement("customHeaders");
             http.Add(headers);
-            var add = new XElement("add");
-            add.SetAttributeValue("name", "Server");
-            add.SetAttributeValue("value", "Jexus");
+            var add = new XElement("add",
+                new XAttribute("name", "Server"),
+                new XAttribute("value", "Jexus"));
             headers.Add(add);
             document.Save(expected);
 

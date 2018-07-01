@@ -110,8 +110,8 @@ namespace Tests.RequestFiltering.FileExtensions
             var security = new XElement("security");
             var request = new XElement("requestFiltering");
             var file = new XElement("fileExtensions");
-            var remove = new XElement("remove");
-            remove.SetAttributeValue("fileExtension", ".asa");
+            var remove = new XElement("remove",
+                new XAttribute("fileExtension", ".asa"));
             node?.Add(security);
             security.Add(request);
             request.Add(file);
@@ -170,9 +170,9 @@ namespace Tests.RequestFiltering.FileExtensions
             var security = new XElement("security");
             var request = new XElement("requestFiltering");
             var file = new XElement("fileExtensions");
-            var add = new XElement("add");
-            add.SetAttributeValue("allowed", "false");
-            add.SetAttributeValue("fileExtension", ".csv");
+            var add = new XElement("add",
+                    new XAttribute("allowed", "false"),
+                    new XAttribute("fileExtension", ".csv"));
             node?.Add(security);
             security.Add(request);
             request.Add(file);

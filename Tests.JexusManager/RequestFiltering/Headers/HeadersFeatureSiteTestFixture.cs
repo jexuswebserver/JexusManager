@@ -111,8 +111,8 @@ namespace Tests.RequestFiltering.Headers
             var request = new XElement("requestFiltering");
             var limits = new XElement("requestLimits");
             var header = new XElement("headerLimits");
-            var add = new XElement("remove");
-            add.SetAttributeValue("header", "test");
+            var add = new XElement("remove",
+                    new XAttribute("header", "test"));
             node?.Add(security);
             security.Add(request);
             request.Add(limits);
@@ -173,9 +173,9 @@ namespace Tests.RequestFiltering.Headers
             var request = new XElement("requestFiltering");
             var limits = new XElement("requestLimits");
             var header = new XElement("headerLimits");
-            var add = new XElement("add");
-            add.SetAttributeValue("header", "test1");
-            add.SetAttributeValue("sizeLimit", "200");
+            var add = new XElement("add",
+                    new XAttribute("header", "test1"),
+                    new XAttribute("sizeLimit", "200"));
             node?.Add(security);
             security.Add(request);
             request.Add(limits);

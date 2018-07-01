@@ -127,8 +127,8 @@ namespace Tests.DefaultDocument
             var expected = "expected_remove.site.config";
             var document = XDocument.Load(site);
             var node = document.Root.XPathSelectElement("/configuration/system.webServer/defaultDocument/files");
-            var remove = new XElement("remove");
-            remove.SetAttributeValue("value", "Default.asp");
+            var remove = new XElement("remove",
+                new XAttribute("value", "Default.asp"));
             node?.AddFirst(remove);
             document.Save(expected);
 
@@ -178,8 +178,8 @@ namespace Tests.DefaultDocument
             var expected = "expected_add.site.config";
             var document = XDocument.Load(site);
             var node = document.Root.XPathSelectElement("/configuration/system.webServer/defaultDocument/files");
-            var add = new XElement("add");
-            add.SetAttributeValue("value", "default.my");
+            var add = new XElement("add",
+                    new XAttribute("value", "default.my"));
             node?.AddFirst(add);
             document.Save(expected);
 
@@ -228,11 +228,11 @@ namespace Tests.DefaultDocument
             var expected = "expected_up.site.config";
             var document = XDocument.Load(site);
             var node = document.Root.XPathSelectElement("/configuration/system.webServer/defaultDocument/files");
-            var add = new XElement("add");
-            add.SetAttributeValue("value", "Default.htm");
+            var add = new XElement("add",
+                new XAttribute("value", "Default.htm"));
             node?.AddFirst(add);
-            var remove = new XElement("remove");
-            remove.SetAttributeValue("value", "Default.htm");
+            var remove = new XElement("remove",
+                new XAttribute("value", "Default.htm"));
             node?.AddFirst(remove);
             document.Save(expected);
 
@@ -260,24 +260,24 @@ namespace Tests.DefaultDocument
             var expected = "expected_up.site.config";
             var document = XDocument.Load(site);
             var node = document.Root.XPathSelectElement("/configuration/system.webServer/defaultDocument/files");
-            var htm = new XElement("add");
-            htm.SetAttributeValue("value", "Default.htm");
+            var htm = new XElement("add",
+                new XAttribute("value", "Default.htm"));
             node?.AddFirst(htm);
             node?.AddFirst(new XElement("clear"));
-            var asp = new XElement("add");
-            asp.SetAttributeValue("value", "Default.asp");
+            var asp = new XElement("add",
+                new XAttribute("value", "Default.asp"));
             node?.Add(asp);
-            var index = new XElement("add");
-            index.SetAttributeValue("value", "index.htm");
+            var index = new XElement("add",
+                new XAttribute("value", "index.htm"));
             node?.Add(index);
-            var index1 = new XElement("add");
-            index1.SetAttributeValue("value", "index.html");
+            var index1 = new XElement("add",
+                new XAttribute("value", "index.html"));
             node?.Add(index1);
-            var iis = new XElement("add");
-            iis.SetAttributeValue("value", "iisstart.htm");
+            var iis = new XElement("add",
+                new XAttribute("value", "iisstart.htm"));
             node?.Add(iis);
-            var aspx = new XElement("add");
-            aspx.SetAttributeValue("value", "default.aspx");
+            var aspx = new XElement("add",
+                new XAttribute("value", "default.aspx"));
             node?.Add(aspx);
             document.Save(expected);
 

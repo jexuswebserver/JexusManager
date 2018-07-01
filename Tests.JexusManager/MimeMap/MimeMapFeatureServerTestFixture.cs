@@ -137,9 +137,9 @@ namespace Tests.MimeMap
             const string Expected = @"expected_add.config";
             var document = XDocument.Load(Current);
             var node = document.Root.XPathSelectElement("/configuration/system.webServer/staticContent");
-            var element = new XElement("mimeMap");
-            element.SetAttributeValue("fileExtension", ".tx1");
-            element.SetAttributeValue("mimeType", "text/test");
+            var element = new XElement("mimeMap",
+                    new XAttribute("fileExtension", ".tx1"),
+                    new XAttribute("mimeType", "text/test"));
             node?.Add(element);
             document.Save(Expected);
 

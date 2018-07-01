@@ -137,7 +137,7 @@ namespace Tests.Exceptions
                 }
 
                 var pool = root.XPathSelectElement("/configuration/system.applicationHost/applicationPools/add[@name='UnmanagedClassicAppPool']");
-                pool.SetAttributeValue("name", null);
+                pool?.SetAttributeValue("name", null);
                 file.Save(Current);
             }
 
@@ -185,7 +185,7 @@ namespace Tests.Exceptions
                 }
 
                 var pool = root.XPathSelectElement("/configuration/system.applicationHost/applicationPools/add[@name='UnmanagedClassicAppPool']");
-                pool.SetAttributeValue("name", string.Empty);
+                pool?.SetAttributeValue("name", string.Empty);
                 file.Save(Current);
             }
 
@@ -233,7 +233,7 @@ namespace Tests.Exceptions
                 }
 
                 var pool = root.XPathSelectElement("/configuration/system.applicationHost/applicationPools/add[@name='UnmanagedClassicAppPool']");
-                pool.SetAttributeValue("testAuto", true);
+                pool?.SetAttributeValue("testAuto", true);
                 file.Save(Current);
             }
 
@@ -430,7 +430,7 @@ namespace Tests.Exceptions
                 }
 
                 var app = root.XPathSelectElement("/configuration/system.applicationHost/sites/site[@id='1']/application");
-                app.SetAttributeValue("path", "/xxx");
+                app?.SetAttributeValue("path", "/xxx");
                 file.Save(Current);
             }
 #if IIS
@@ -479,13 +479,13 @@ namespace Tests.Exceptions
                 }
 
                 var app = root.XPathSelectElement("/configuration/system.applicationHost/sites/site[@id='1']/application");
-                var newApp = new XElement("application");
+                var newApp = new XElement("application",
+                    new XAttribute("path", "/xxx"));
                 app.AddBeforeSelf(newApp);
-                newApp.SetAttributeValue("path", "/xxx");
-                var vDir = new XElement("virtualDirectory");
+                var vDir = new XElement("virtualDirectory",
+                    new XAttribute("path", "/"),
+                    new XAttribute("physicalPath", @"%JEXUS_TEST_HOME%\WebSite1"));
                 newApp.Add(vDir);
-                vDir.SetAttributeValue("path", "/");
-                vDir.SetAttributeValue("physicalPath", @"%JEXUS_TEST_HOME%\WebSite1");
                 file.Save(Current);
             }
 
@@ -536,7 +536,7 @@ namespace Tests.Exceptions
                 }
 
                 var vDir = root.XPathSelectElement("/configuration/system.applicationHost/sites/site[@id='1']/application/virtualDirectory");
-                vDir.SetAttributeValue("path", "/xxx");
+                vDir?.SetAttributeValue("path", "/xxx");
                 file.Save(Current);
             }
 
@@ -590,11 +590,10 @@ namespace Tests.Exceptions
                 }
 
                 var vDir = root.XPathSelectElement("/configuration/system.applicationHost/sites/site[@id='1']/application/virtualDirectory");
-                var newDir = new XElement("virtualDirectory");
+                var newDir = new XElement("virtualDirectory",
+                    new XAttribute("path", "/xxx"),
+                    new XAttribute("physicalPath", @"%JEXUS_TEST_HOME%\WebSite1"));
                 vDir.AddBeforeSelf(newDir);
-                newDir.SetAttributeValue("path", "/xxx");
-                newDir.SetAttributeValue("physicalPath", @"%JEXUS_TEST_HOME%\WebSite1");
-
                 file.Save(Current);
             }
 
@@ -645,14 +644,14 @@ namespace Tests.Exceptions
                 }
 
                 var site1 = root.XPathSelectElement("/configuration/system.applicationHost/sites/site[@id='2']");
-                var log = new XElement("logFile");
+                var log = new XElement("logFile",
+                    new XAttribute("logFormat", "IIS"));
                 site1.Add(log);
-                log.SetAttributeValue("logFormat", "IIS");
 
                 var site2 = root.XPathSelectElement("/configuration/system.applicationHost/sites/site[@id='3']");
-                var log2 = new XElement("logFile");
+                var log2 = new XElement("logFile",
+                    new XAttribute("directory", @"%IIS_USER_HOME%\Logs\1"));
                 site2.Add(log2);
-                log2.SetAttributeValue("directory", @"%IIS_USER_HOME%\Logs\1");
 
                 file.Save(Current);
             }

@@ -143,9 +143,9 @@ namespace Tests.Modules
             var document = XDocument.Load(Current);
             var node = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/modules");
             node?.FirstNode?.Remove(); // remove comment
-            var element = new XElement("add");
-            element.SetAttributeValue("name", "test");
-            element.SetAttributeValue("type", "test");
+            var element = new XElement("add",
+                new XAttribute("name", "test"),
+                new XAttribute("type", "test"));
             node?.Add(element);
             document.Save(Expected);
 
@@ -167,9 +167,9 @@ namespace Tests.Modules
             const string Expected = @"expected_addglobal.config";
             var document = XDocument.Load(Current);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer/globalModules");
-            var element = new XElement("add");
-            element.SetAttributeValue("name", "test");
-            element.SetAttributeValue("image", "test");
+            var element = new XElement("add",
+                new XAttribute("name", "test"),
+                new XAttribute("image", "test"));
             node?.Add(element);
             document.Save(Expected);
 

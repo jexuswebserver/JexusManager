@@ -136,9 +136,9 @@ namespace Tests.ResponseHeaders
             const string Expected = @"expected_add.config";
             var document = XDocument.Load(Current);
             var node = document.Root.XPathSelectElement("/configuration/system.webServer/httpProtocol/customHeaders/add");
-            var add = new XElement("add");
-            add.SetAttributeValue("name", "Server");
-            add.SetAttributeValue("value", "Jexus");
+            var add = new XElement("add",
+                new XAttribute("name", "Server"),
+                new XAttribute("value", "Jexus"));
             node?.AddAfterSelf(add);
             document.Save(Expected);
 

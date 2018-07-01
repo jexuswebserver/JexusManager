@@ -109,8 +109,8 @@ namespace Tests.RequestFiltering.FilteringRules
             var security = new XElement("security");
             var request = new XElement("requestFiltering");
             var file = new XElement("filteringRules");
-            var remove = new XElement("remove");
-            remove.SetAttributeValue("name", "test");
+            var remove = new XElement("remove",
+                    new XAttribute("name", "test"));
             node?.Add(security);
             security.Add(request);
             request.Add(file);
@@ -169,12 +169,12 @@ namespace Tests.RequestFiltering.FilteringRules
             var security = new XElement("security");
             var request = new XElement("requestFiltering");
             var file = new XElement("filteringRules");
-            var remove = new XElement("remove");
-            remove.SetAttributeValue("name", "test");
+            var remove = new XElement("remove",
+                new XAttribute("name", "test"));
             file?.Add(remove);
-            var add = new XElement("filteringRule");
-            add.SetAttributeValue("name", "test");
-            add.SetAttributeValue("scanQueryString", "true");
+            var add = new XElement("filteringRule",
+                new XAttribute("name", "test"),
+                new XAttribute("scanQueryString", "true"));
             node?.Add(security);
             security.Add(request);
             request.Add(file);
@@ -208,9 +208,9 @@ namespace Tests.RequestFiltering.FilteringRules
             var security = new XElement("security");
             var request = new XElement("requestFiltering");
             var file = new XElement("filteringRules");
-            var add = new XElement("filteringRule");
-            add.SetAttributeValue("name", "test1");
-            add.SetAttributeValue("scanQueryString", "true");
+            var add = new XElement("filteringRule",
+                new XAttribute("name", "test1"),
+                new XAttribute("scanQueryString", "true"));
             node?.Add(security);
             security.Add(request);
             request.Add(file);
@@ -248,8 +248,8 @@ namespace Tests.RequestFiltering.FilteringRules
             var security = new XElement("security");
             var request = new XElement("requestFiltering");
             var file = new XElement("filteringRules");
-            var add = new XElement("filteringRule");
-            add.SetAttributeValue("name", "test1");
+            var add = new XElement("filteringRule",
+                new XAttribute("name", "test1"));
             node?.Add(security);
             security.Add(request);
             request.Add(file);

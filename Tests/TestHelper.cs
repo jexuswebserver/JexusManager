@@ -29,7 +29,7 @@ namespace Tests
             var pool =
                 root.XPathSelectElement(
                     "/configuration/system.applicationHost/sites/site[@id='1']/application/virtualDirectory");
-            pool.SetAttributeValue("physicalPath", "%JEXUS_TEST_HOME%/WebSite1");
+            pool?.SetAttributeValue("physicalPath", "%JEXUS_TEST_HOME%/WebSite1");
             file.Save(fileName, SaveOptions.DisableFormatting);
         }
 

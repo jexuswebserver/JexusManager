@@ -136,8 +136,8 @@ namespace Tests.RequestFiltering.QueryStrings
             const string Expected = @"expected_add.config";
             var document = XDocument.Load(Current);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer/security/requestFiltering/alwaysAllowedQueryStrings");
-            var element = new XElement("add");
-            element.SetAttributeValue("queryString", "test1");
+            var element = new XElement("add",
+                    new XAttribute("queryString", "test1"));
             node?.Add(element);
             document.Save(Expected);
 
@@ -157,8 +157,8 @@ namespace Tests.RequestFiltering.QueryStrings
             const string Expected = @"expected_add_deny.config";
             var document = XDocument.Load(Current);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer/security/requestFiltering/denyQueryStringSequences");
-            var element = new XElement("add");
-            element.SetAttributeValue("sequence", "test1");
+            var element = new XElement("add",
+                    new XAttribute("sequence", "test1"));
             node?.Add(element);
             document.Save(Expected);
 

@@ -49,10 +49,10 @@ namespace Tests
                 }
 
                 var pool = root.XPathSelectElement("/configuration/system.applicationHost/applicationPools/add[@name='Clr4IntegratedAppPool']");
-                pool.SetAttributeValue("managedPipelineMode", "Integrated");
+                pool?.SetAttributeValue("managedPipelineMode", "Integrated");
 
                 var windows = root.XPathSelectElement("/configuration/location[@path='WebSite2']/system.webServer/security/authentication/windowsAuthentication");
-                windows.SetAttributeValue("enabled", true);
+                windows?.SetAttributeValue("enabled", true);
 
                 var security = root.XPathSelectElement("/configuration/location[@path='WebSite1']/system.webServer/security");
                 security.Remove();
@@ -91,13 +91,13 @@ namespace Tests
 
                 // IMPORTANT: workaround an IIS issue.
                 var document = root.XPathSelectElement("/configuration/system.webServer/defaultDocument/files/add[@value='index.htm']");
-                var item = new XElement("add");
-                item.SetAttributeValue("value", "index.html");
+                var item = new XElement("add",
+                    new XAttribute("value", "index.html"));
                 document?.AddAfterSelf(item);
 
                 var clear = root.XPathSelectElement("/configuration/system.webServer/defaultDocument/files/clear");
-                var remove = new XElement("remove");
-                remove.SetAttributeValue("value", "index.html");
+                var remove = new XElement("remove",
+                    new XAttribute("value", "index.html"));
                 clear?.AddAfterSelf(remove);
 
                 file.Save(TestHelper.GetSiteConfig(directoryName));
@@ -139,10 +139,10 @@ namespace Tests
                 }
 
                 var pool = root.XPathSelectElement("/configuration/system.applicationHost/applicationPools/add[@name='Clr4IntegratedAppPool']");
-                pool.SetAttributeValue("managedPipelineMode", "Integrated");
+                pool?.SetAttributeValue("managedPipelineMode", "Integrated");
 
                 var windows = root.XPathSelectElement("/configuration/location[@path='WebSite2']/system.webServer/security/authentication/windowsAuthentication");
-                windows.SetAttributeValue("enabled", true);
+                windows?.SetAttributeValue("enabled", true);
 
                 var security = root.XPathSelectElement("/configuration/location[@path='WebSite1']/system.webServer/security");
                 security.Remove();
@@ -176,13 +176,13 @@ namespace Tests
 
                 // IMPORTANT: workaround an IIS issue.
                 var document = root.XPathSelectElement("/configuration/system.webServer/defaultDocument/files/add[@value='Default.asp']");
-                var item = new XElement("add");
-                item.SetAttributeValue("value", "index.htm");
+                var item = new XElement("add",
+                    new XAttribute("value", "index.htm"));
                 document?.AddAfterSelf(item);
 
                 var clear = root.XPathSelectElement("/configuration/system.webServer/defaultDocument/files/clear");
-                var remove = new XElement("remove");
-                remove.SetAttributeValue("value", "index.htm");
+                var remove = new XElement("remove",
+                    new XAttribute("value", "index.htm"));
                 clear?.AddAfterSelf(remove);
 
                 file.Save(TestHelper.GetSiteConfig(directoryName));

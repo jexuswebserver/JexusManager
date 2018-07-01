@@ -96,8 +96,8 @@ namespace Tests.Authentication
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location");
-            node.SetAttributeValue("path", "WebSite1");
+            var node = new XElement("location",
+                new XAttribute("path", "WebSite1"));
             document.Root?.Add(node);
             var web = new XElement("system.webServer");
             node.Add(web);
@@ -105,8 +105,8 @@ namespace Tests.Authentication
             web.Add(security);
             var authen = new XElement("authentication");
             security.Add(authen);
-            var windows = new XElement("anonymousAuthentication");
-            windows.SetAttributeValue("enabled", false);
+            var windows = new XElement("anonymousAuthentication",
+                new XAttribute("enabled", false));
             authen.Add(windows);
             document.Save(Expected);
 
@@ -124,8 +124,8 @@ namespace Tests.Authentication
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location");
-            node.SetAttributeValue("path", "WebSite1");
+            var node = new XElement("location",
+                new XAttribute("path", "WebSite1"));
             document.Root?.Add(node);
             document.Save(Expected);
 

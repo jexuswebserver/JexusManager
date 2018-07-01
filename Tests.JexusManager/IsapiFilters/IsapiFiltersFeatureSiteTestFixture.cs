@@ -104,15 +104,15 @@ namespace Tests.IsapiFilters
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location");
-            node.SetAttributeValue("path", "WebSite1");
+            var node = new XElement("location",
+                new XAttribute("path", "WebSite1"));
             document.Root.Add(node);
             var web = new XElement("system.webServer");
             node.Add(web);
             var content = new XElement("isapiFilters");
             web.Add(content);
-            var remove = new XElement("remove");
-            remove.SetAttributeValue("name", "ASP.Net_2.0.50727-64");
+            var remove = new XElement("remove",
+                new XAttribute("name", "ASP.Net_2.0.50727-64"));
             content.Add(remove);
             document.Save(Expected);
 
@@ -133,8 +133,8 @@ namespace Tests.IsapiFilters
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location");
-            node.SetAttributeValue("path", "WebSite1");
+            var node = new XElement("location",
+                new XAttribute("path", "WebSite1"));
             document.Root.Add(node);
             document.Save(Expected);
 
@@ -160,21 +160,21 @@ namespace Tests.IsapiFilters
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location");
-            node.SetAttributeValue("path", "WebSite1");
+            var node = new XElement("location",
+                new XAttribute("path", "WebSite1"));
             document.Root.Add(node);
             var web = new XElement("system.webServer");
             node.Add(web);
             var content = new XElement("isapiFilters");
             web.Add(content);
-            var remove = new XElement("remove");
-            remove.SetAttributeValue("name", "ASP.Net_2.0.50727-64");
+            var remove = new XElement("remove",
+                new XAttribute("name", "ASP.Net_2.0.50727-64"));
             content.Add(remove);
-            var add = new XElement("filter");
-            add.SetAttributeValue("enableCache", "true");
-            add.SetAttributeValue("preCondition", "bitness64,runtimeVersionv2.0");
-            add.SetAttributeValue("name", "ASP.Net_2.0.50727-64");
-            add.SetAttributeValue("path", "c:\\test.dll");
+            var add = new XElement("filter",
+                new XAttribute("enableCache", "true"),
+                new XAttribute("preCondition", "bitness64,runtimeVersionv2.0"),
+                new XAttribute("name", "ASP.Net_2.0.50727-64"),
+                new XAttribute("path", "c:\\test.dll"));
             content.Add(add);
             document.Save(Expected);
 
@@ -197,16 +197,16 @@ namespace Tests.IsapiFilters
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location");
-            node.SetAttributeValue("path", "WebSite1");
+            var node = new XElement("location",
+                new XAttribute("path", "WebSite1"));
             document.Root.Add(node);
             var web = new XElement("system.webServer");
             node.Add(web);
             var content = new XElement("isapiFilters");
             web.Add(content);
-            var add = new XElement("filter");
-            add.SetAttributeValue("name", "test");
-            add.SetAttributeValue("path", "c:\\test.exe");
+            var add = new XElement("filter",
+                new XAttribute("name", "test"),
+                new XAttribute("path", "c:\\test.exe"));
             content.Add(add);
             document.Save(Expected);
 
@@ -234,16 +234,16 @@ namespace Tests.IsapiFilters
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location");
-            node.SetAttributeValue("path", "WebSite1");
+            var node = new XElement("location",
+                new XAttribute("path", "WebSite1"));
             document.Root.Add(node);
             var web = new XElement("system.webServer");
             node.Add(web);
             var content = new XElement("isapiFilters");
             web.Add(content);
-            var add = new XElement("filter");
-            add.SetAttributeValue("name", "test");
-            add.SetAttributeValue("path", "c:\\test.dll");
+            var add = new XElement("filter",
+                new XAttribute("name", "test"),
+                new XAttribute("path", "c:\\test.dll"));
             content.Add(add);
             document.Save(Expected);
 
@@ -265,8 +265,8 @@ namespace Tests.IsapiFilters
 
             const string Expected = @"expected_revert.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location");
-            node.SetAttributeValue("path", "WebSite1");
+            var node = new XElement("location",
+                new XAttribute("path", "WebSite1"));
             document.Root.Add(node);
             var web = new XElement("system.webServer");
             node.Add(web);
@@ -294,8 +294,8 @@ namespace Tests.IsapiFilters
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location");
-            node.SetAttributeValue("path", "WebSite1");
+            var node = new XElement("location",
+                new XAttribute("path", "WebSite1"));
             document.Root.Add(node);
             var web = new XElement("system.webServer");
             node.Add(web);
@@ -303,44 +303,44 @@ namespace Tests.IsapiFilters
             web.Add(content);
             var clear = new XElement("clear");
             content.Add(clear);
-            var one = new XElement("filter");
-            one.SetAttributeValue("enableCache", "true");
-            one.SetAttributeValue("name", "ASP.Net_2.0.50727-64");
-            one.SetAttributeValue("path", @"%windir%\Microsoft.NET\Framework64\v2.0.50727\aspnet_filter.dll");
-            one.SetAttributeValue("preCondition", "bitness64,runtimeVersionv2.0");
+            var one = new XElement("filter",
+                new XAttribute("enableCache", "true"),
+                new XAttribute("name", "ASP.Net_2.0.50727-64"),
+                new XAttribute("path", @"%windir%\Microsoft.NET\Framework64\v2.0.50727\aspnet_filter.dll"),
+                new XAttribute("preCondition", "bitness64,runtimeVersionv2.0"));
             content.Add(one);
 
-            var two = new XElement("filter");
-            two.SetAttributeValue("enableCache", "true");
-            two.SetAttributeValue("name", "ASP.Net_2.0.50727.0");
-            two.SetAttributeValue("path", @"%windir%\Microsoft.NET\Framework\v2.0.50727\aspnet_filter.dll");
-            two.SetAttributeValue("preCondition", "bitness32,runtimeVersionv2.0");
+            var two = new XElement("filter",
+                new XAttribute("enableCache", "true"),
+                new XAttribute("name", "ASP.Net_2.0.50727.0"),
+                new XAttribute("path", @"%windir%\Microsoft.NET\Framework\v2.0.50727\aspnet_filter.dll"),
+                new XAttribute("preCondition", "bitness32,runtimeVersionv2.0"));
             content.Add(two);
 
-            var three = new XElement("filter");
-            three.SetAttributeValue("enableCache", "true");
-            three.SetAttributeValue("name", "ASP.Net_2.0_for_v1.1");
-            three.SetAttributeValue("path", @"%windir%\Microsoft.NET\Framework\v2.0.50727\aspnet_filter.dll");
-            three.SetAttributeValue("preCondition", "runtimeVersionv1.1");
+            var three = new XElement("filter",
+                new XAttribute("enableCache", "true"),
+                new XAttribute("name", "ASP.Net_2.0_for_v1.1"),
+                new XAttribute("path", @"%windir%\Microsoft.NET\Framework\v2.0.50727\aspnet_filter.dll"),
+                new XAttribute("preCondition", "runtimeVersionv1.1"));
             content.Add(three);
 
-            var four = new XElement("filter");
-            four.SetAttributeValue("enableCache", "true");
-            four.SetAttributeValue("name", "ASP.Net_4.0_32bit");
-            four.SetAttributeValue("path", @"%windir%\Microsoft.NET\Framework\v4.0.30319\aspnet_filter.dll");
-            four.SetAttributeValue("preCondition", "bitness32,runtimeVersionv4.0");
+            var four = new XElement("filter",
+                new XAttribute("enableCache", "true"),
+                new XAttribute("name", "ASP.Net_4.0_32bit"),
+                new XAttribute("path", @"%windir%\Microsoft.NET\Framework\v4.0.30319\aspnet_filter.dll"),
+                new XAttribute("preCondition", "bitness32,runtimeVersionv4.0"));
             content.Add(four);
 
-            var add = new XElement("filter");
-            add.SetAttributeValue("name", "test");
-            add.SetAttributeValue("path", "c:\\test.dll");
+            var add = new XElement("filter",
+                new XAttribute("name", "test"),
+                new XAttribute("path", "c:\\test.dll"));
             content.Add(add);
 
-            var six = new XElement("filter");
-            six.SetAttributeValue("enableCache", "true");
-            six.SetAttributeValue("name", "ASP.Net_4.0_64bit");
-            six.SetAttributeValue("path", @"%windir%\Microsoft.NET\Framework64\v4.0.30319\aspnet_filter.dll");
-            six.SetAttributeValue("preCondition", "bitness64,runtimeVersionv4.0");
+            var six = new XElement("filter",
+                new XAttribute("enableCache", "true"),
+                new XAttribute("name", "ASP.Net_4.0_64bit"),
+                new XAttribute("path", @"%windir%\Microsoft.NET\Framework64\v4.0.30319\aspnet_filter.dll"),
+                new XAttribute("preCondition", "bitness64,runtimeVersionv4.0"));
             content.Add(six);
 
             document.Save(Expected);
@@ -374,27 +374,27 @@ namespace Tests.IsapiFilters
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location");
-            node.SetAttributeValue("path", "WebSite1");
+            var node = new XElement("location",
+                new XAttribute("path", "WebSite1"));
             document.Root.Add(node);
             var web = new XElement("system.webServer");
             node.Add(web);
             var content = new XElement("isapiFilters");
             web.Add(content);
-            var remove = new XElement("remove");
-            remove.SetAttributeValue("name", "ASP.Net_4.0_64bit");
+            var remove = new XElement("remove",
+                new XAttribute("name", "ASP.Net_4.0_64bit"));
             content.Add(remove);
 
-            var add = new XElement("filter");
-            add.SetAttributeValue("name", "test");
-            add.SetAttributeValue("path", "c:\\test.dll");
+            var add = new XElement("filter",
+                new XAttribute("name", "test"),
+                new XAttribute("path", "c:\\test.dll"));
             content.Add(add);
 
-            var six = new XElement("filter");
-            six.SetAttributeValue("enableCache", "true");
-            six.SetAttributeValue("name", "ASP.Net_4.0_64bit");
-            six.SetAttributeValue("path", @"%windir%\Microsoft.NET\Framework64\v4.0.30319\aspnet_filter.dll");
-            six.SetAttributeValue("preCondition", "bitness64,runtimeVersionv4.0");
+            var six = new XElement("filter",
+                new XAttribute("enableCache", "true"),
+                new XAttribute("name", "ASP.Net_4.0_64bit"),
+                new XAttribute("path", @"%windir%\Microsoft.NET\Framework64\v4.0.30319\aspnet_filter.dll"),
+                new XAttribute("preCondition", "bitness64,runtimeVersionv4.0"));
             content.Add(six);
 
             document.Save(Expected);

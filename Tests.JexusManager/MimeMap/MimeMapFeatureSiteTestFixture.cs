@@ -108,8 +108,8 @@ namespace Tests.MimeMap
             var node = document.Root.XPathSelectElement("/configuration/system.webServer");
             var content = new XElement("staticContent");
             node?.Add(content);
-            var remove = new XElement("remove");
-            remove.SetAttributeValue("fileExtension", ".323");
+            var remove = new XElement("remove",
+                    new XAttribute("fileExtension", ".323"));
             content.Add(remove);
             document.Save(expected);
 
@@ -165,12 +165,12 @@ namespace Tests.MimeMap
             var node = document.Root.XPathSelectElement("/configuration/system.webServer");
             var content = new XElement("staticContent");
             node?.Add(content);
-            var remove = new XElement("remove");
-            remove.SetAttributeValue("fileExtension", ".323");
+            var remove = new XElement("remove",
+                    new XAttribute("fileExtension", ".323"));
             content.Add(remove);
-            var add = new XElement("mimeMap");
-            add.SetAttributeValue("fileExtension", ".323");
-            add.SetAttributeValue("mimeType", "text/test");
+            var add = new XElement("mimeMap",
+                    new XAttribute("fileExtension", ".323"),
+                    new XAttribute("mimeType", "text/test"));
             content.Add(add);
             document.Save(expected);
 
@@ -200,9 +200,9 @@ namespace Tests.MimeMap
             var node = document.Root.XPathSelectElement("/configuration/system.webServer");
             var content = new XElement("staticContent");
             node?.Add(content);
-            var add = new XElement("mimeMap");
-            add.SetAttributeValue("fileExtension", ".xl1");
-            add.SetAttributeValue("mimeType", "text/test2");
+            var add = new XElement("mimeMap",
+                new XAttribute("fileExtension", ".xl1"),
+                new XAttribute("mimeType", "text/test2"));
             content.Add(add);
             document.Save(expected);
 
@@ -237,9 +237,9 @@ namespace Tests.MimeMap
             var node = document.Root.XPathSelectElement("/configuration/system.webServer");
             var content = new XElement("staticContent");
             node?.Add(content);
-            var add = new XElement("mimeMap");
-            add.SetAttributeValue("fileExtension", ".pp1");
-            add.SetAttributeValue("mimeType", "text/test");
+            var add = new XElement("mimeMap",
+                new XAttribute("fileExtension", ".pp1"),
+                new XAttribute("mimeType", "text/test"));
             content.Add(add);
             document.Save(expected);
 

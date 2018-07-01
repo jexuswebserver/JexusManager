@@ -1127,7 +1127,6 @@ $"Filename: \\\\?\\{config.FileContext.FileName}\r\nLine number: 0\r\nError: Can
                 // server config "Website1"
                 var config = server.GetApplicationHostConfiguration();
 
-                // enable Windows authentication
                 var handlersSection = config.GetSection("system.webServer/handlers", "WebSite1");
                 Assert.Equal(OverrideMode.Inherit, handlersSection.OverrideMode);
                 Assert.Equal(OverrideMode.Allow, handlersSection.OverrideModeEffective);

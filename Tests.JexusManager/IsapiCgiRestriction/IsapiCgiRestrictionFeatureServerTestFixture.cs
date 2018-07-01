@@ -137,10 +137,10 @@ namespace Tests.IsapiCgiRestriction
             const string Expected = @"expected_remove.config";
             var document = XDocument.Load(Current);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer/security/isapiCgiRestriction");
-            var element = new XElement("add");
-            element.SetAttributeValue("description", "my cgi");
-            element.SetAttributeValue("path", "c:\\test.dll");
-            element.SetAttributeValue("allowed", "true");
+            var element = new XElement("add",
+                new XAttribute("description", "my cgi"),
+                new XAttribute("path", "c:\\test.dll"),
+                new XAttribute("allowed", "true"));
             node?.Add(element);
             document.Save(Expected);
 

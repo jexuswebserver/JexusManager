@@ -143,8 +143,8 @@ namespace Tests.DefaultDocument
             const string Expected = @"expected_add.config";
             var document = XDocument.Load(Current);
             var node = document.Root.XPathSelectElement("/configuration/system.webServer/defaultDocument/files");
-            var add = new XElement("add");
-            add.SetAttributeValue("value", "default.my");
+            var add = new XElement("add",
+                    new XAttribute("value", "default.my"));
             node?.AddFirst(add);
             document.Save(Expected);
 

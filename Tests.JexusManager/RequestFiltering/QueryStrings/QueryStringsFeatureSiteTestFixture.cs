@@ -110,8 +110,8 @@ namespace Tests.RequestFiltering.QueryStrings
             var security = new XElement("security");
             var request = new XElement("requestFiltering");
             var file = new XElement("alwaysAllowedQueryStrings");
-            var remove = new XElement("remove");
-            remove.SetAttributeValue("queryString", "test");
+            var remove = new XElement("remove",
+                new XAttribute("queryString", "test"));
             node?.Add(security);
             security.Add(request);
             request.Add(file);
@@ -143,8 +143,8 @@ namespace Tests.RequestFiltering.QueryStrings
             var security = new XElement("security");
             var request = new XElement("requestFiltering");
             var file = new XElement("denyQueryStringSequences");
-            var remove = new XElement("remove");
-            remove.SetAttributeValue("sequence", "test");
+            var remove = new XElement("remove",
+                new XAttribute("sequence", "test"));
             node?.Add(security);
             security.Add(request);
             request.Add(file);
@@ -230,8 +230,8 @@ namespace Tests.RequestFiltering.QueryStrings
             var security = new XElement("security");
             var request = new XElement("requestFiltering");
             var file = new XElement("alwaysAllowedQueryStrings");
-            var remove = new XElement("add");
-            remove.SetAttributeValue("queryString", "test1");
+            var remove = new XElement("add",
+                new XAttribute("queryString", "test1"));
             node?.Add(security);
             security.Add(request);
             request.Add(file);
@@ -263,8 +263,8 @@ namespace Tests.RequestFiltering.QueryStrings
             var security = new XElement("security");
             var request = new XElement("requestFiltering");
             var file = new XElement("denyQueryStringSequences");
-            var remove = new XElement("add");
-            remove.SetAttributeValue("sequence", "test1");
+            var remove = new XElement("add",
+                new XAttribute("sequence", "test1"));
             node?.Add(security);
             security.Add(request);
             request.Add(file);
