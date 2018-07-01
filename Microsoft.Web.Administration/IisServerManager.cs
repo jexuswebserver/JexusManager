@@ -105,6 +105,11 @@ namespace Microsoft.Web.Administration
                     return false;
                 }
 
+                if (PSOutput.Count < 2)
+                {
+                    return false;
+                }
+
                 dynamic site = PSOutput[1];
                 return site.State?.ToString() == "Started";
             }
