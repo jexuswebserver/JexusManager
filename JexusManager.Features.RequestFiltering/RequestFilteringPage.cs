@@ -520,8 +520,14 @@ namespace JexusManager.Features.RequestFiltering
 
         private void TabControl1SelectedIndexChanged(object sender, EventArgs e)
         {
-            var feature = (IRequestFilteringFeature)tabControl1.SelectedTab.Tag;
-            feature.RequestFilteringSettingsUpdate.Invoke();
+            var item = tabControl1.SelectedTab;
+            if (item == null)
+            {
+                return;
+            }
+
+            var feature = (IRequestFilteringFeature)item.Tag;
+            feature?.RequestFilteringSettingsUpdate?.Invoke();
             Refresh();
         }
 
