@@ -28,18 +28,28 @@ namespace JexusManager.Features.DefaultDocument
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
+                    var name = txtName.Text.Trim();
                     var invalid = "*".ToCharArray();
                     foreach (var ch in invalid)
                     {
-                        if (txtName.Text.Contains(ch))
+                        if (name.Contains(ch))
                         {
-                            MessageBox.Show(string.Format("The specific default document contains the following invalid character: {0}.", ch), Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            MessageBox.Show($"The specific default document contains the following invalid character: {ch}.", Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            return;
+                        }
+                    }
+
+                    foreach (var item in feature.Items)
+                    {
+                        if (string.Equals(item.Name, name, StringComparison.OrdinalIgnoreCase))
+                        {
+                            MessageBox.Show("The specific default document already exists in the default documents list.", Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                             return;
                         }
                     }
 
                     Item = new DocumentItem(null);
-                    Item.Name = txtName.Text;
+                    Item.Name = name;
                     DialogResult = DialogResult.OK;
                 }));
 
