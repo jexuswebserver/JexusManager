@@ -13,19 +13,20 @@ namespace Microsoft.Web.Administration
         public override void Validate(object value)
         {
             var data = (string)value;
+            string message = $"Invalid application path {data}\r\n";
             if (string.IsNullOrWhiteSpace(data))
             {
-                throw new COMException("Invalid application path\r\n");
+                throw new COMException(message);
             }
 
             if (data[0] != '/')
             {
-                throw new COMException("Invalid application path\r\n");
+                throw new COMException(message);
             }
 
             if (data.Length > 1 && data[data.Length - 1] == '/')
             {
-                throw new COMException("Invalid application path\r\n");
+                throw new COMException(message);
             }
 
             var items = data.Split('/');
@@ -33,7 +34,7 @@ namespace Microsoft.Web.Administration
             {
                 if (item == "." || item == "..")
                 {
-                    throw new COMException("Invalid application path\r\n");
+                    throw new COMException(message);
                 }
             }
         }

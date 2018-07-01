@@ -399,8 +399,11 @@ namespace Tests
             Assert.Equal("Integer value must not be between 0 and 1023 inclusive\r\n", limit.Message);
 
             var appPath = Assert.Throws<COMException>(() => server.Sites[0].Applications[0].Path = "");
+#if IIS
             Assert.Equal("Invalid application path\r\n", appPath.Message);
-
+#else
+            Assert.Equal("Invalid application path \r\n", appPath.Message);
+#endif
             var vDirPath =
                 Assert.Throws<COMException>(() => server.Sites[0].Applications[0].VirtualDirectories[0].Path = "");
             Assert.Equal("Invalid virtual directory path\r\n", vDirPath.Message);
