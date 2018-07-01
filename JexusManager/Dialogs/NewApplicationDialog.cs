@@ -6,7 +6,6 @@ namespace JexusManager.Dialogs
 {
     using System;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Globalization;
     using System.Windows.Forms;
 
@@ -105,7 +104,26 @@ namespace JexusManager.Dialogs
 
                     if (Application == null)
                     {
-                        Application = _site.Applications.Add(string.Format("{0}/{1}", _parentPath.TrimEnd('/'), txtAlias.Text), txtPhysicalPath.Text);
+                        string path = string.Format("{0}/{1}", _parentPath.TrimEnd('/'), txtAlias.Text);
+                        foreach (VirtualDirectory virtualDirectory in _site.Applications[0].VirtualDirectories)
+                        {
+                            if (string.Equals(virtualDirectory.Path, path, StringComparison.OrdinalIgnoreCase))
+                            {
+                                ShowMessage("This virtual directory already exists.", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+                                return;
+                            }
+                        }
+
+                        foreach (Application application in _site.Applications)
+                        {
+                            if (string.Equals(path, application.Path))
+                            {
+                                ShowMessage("An application with this virtual path already exists.", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+                                return;
+                            }
+                        }
+
+                        Application = _site.Applications.Add(path, txtPhysicalPath.Text);
                         Application.Name = txtAlias.Text;
                         Application.ApplicationPoolName = txtPool.Text;
                     }

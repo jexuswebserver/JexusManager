@@ -91,12 +91,31 @@ namespace JexusManager.Dialogs
 
                     if (VirtualDirectory == null)
                     {
-                        // TODO: fix this
+                        string path = "/" + txtAlias.Text;
+                        foreach (VirtualDirectory virtualDirectory in application.VirtualDirectories)
+                        {
+                            if (string.Equals(virtualDirectory.Path, path, StringComparison.OrdinalIgnoreCase))
+                            {
+                                ShowMessage("This virtual directory already exists.", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+                                return;
+                            }
+                        }
+
+                        var fullPath = $"{txtPath.Text}{path}";
+                        foreach (Application app in application.Site.Applications)
+                        {
+                            if (string.Equals(fullPath, app.Path))
+                            {
+                                ShowMessage("An application with this virtual path already exists.", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+                                return;
+                            }
+                        }
+
                         try
                         {
                             VirtualDirectory = new VirtualDirectory(null, application.VirtualDirectories)
                             {
-                                Path = "/" + txtAlias.Text
+                                Path = path
                             };
                         }
                         catch (COMException ex)
