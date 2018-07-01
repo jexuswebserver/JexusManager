@@ -130,6 +130,7 @@ namespace JexusManager.Features.Main
                             MessageBoxButtons.OK,
                             MessageBoxIcon.Warning,
                             MessageBoxDefaultButton.Button1);
+                        binding.Delete();
                         return;
                     }
 
