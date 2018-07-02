@@ -20,11 +20,11 @@ namespace Microsoft.Web.Administration
             return ((uint)value & 1U) == 1U;
         }
 
-        internal static void GetAllDefinitions(this SectionGroup group, IList<SectionDefinition> result)
+        internal static void GetAllDefinitions(this SectionGroup group, IDictionary<string, SectionDefinition> result)
         {
             foreach (SectionDefinition item in group.Sections)
             {
-                result.Add(item);
+                result.Add(Guid.NewGuid().ToString(), item);
             }
 
             foreach (SectionGroup child in group.SectionGroups)
