@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -37,21 +38,15 @@ namespace Microsoft.Web.Administration
 
         internal string Name { get; set; }
 
-        internal string Title
-        {
-            get
-            {
-                return string.IsNullOrEmpty(HostName)
-                           ? (string.IsNullOrEmpty(Name) ? "UNKNOWN" : Name)
-                           : HostName.ExtractName();
-            }
-        }
+        internal string Title => string.IsNullOrEmpty(HostName)
+            ? (string.IsNullOrEmpty(Name) ? "UNKNOWN" : Name)
+            : HostName.ExtractName();
 
         public abstract bool SupportsSni { get; }
 
         public WorkingMode Mode { get; protected set; }
 
-        private object locker = new object();
+        private readonly object _locker = new object();
 
         public ServerManager()
             : this(null, true)
@@ -92,7 +87,7 @@ namespace Microsoft.Web.Administration
                 return;
             }
 
-            lock (locker)
+            lock (_locker)
             {
                 Initialized = true;
                 PreInitialize();
@@ -238,7 +233,7 @@ namespace Microsoft.Web.Administration
                 }
 
                 Initialize();
-                lock (locker)
+                lock (_locker)
                 {
                     return _applicationDefaults;
                 }
@@ -255,7 +250,7 @@ namespace Microsoft.Web.Administration
                 }
 
                 Initialize();
-                lock (locker)
+                lock (_locker)
                 {
                     return _applicationPoolDefaults;
                 }
@@ -272,7 +267,7 @@ namespace Microsoft.Web.Administration
                 }
 
                 Initialize();
-                lock (locker)
+                lock (_locker)
                 {
                     return ApplicationPoolCollection;
                 }
@@ -289,7 +284,7 @@ namespace Microsoft.Web.Administration
                 }
 
                 Initialize();
-                lock (locker)
+                lock (_locker)
                 {
                     return _siteDefaults;
                 }
@@ -306,7 +301,7 @@ namespace Microsoft.Web.Administration
                 }
 
                 Initialize();
-                lock (locker)
+                lock (_locker)
                 {
                     return SiteCollection;
                 }
@@ -323,7 +318,7 @@ namespace Microsoft.Web.Administration
                 }
 
                 Initialize();
-                lock (locker)
+                lock (_locker)
                 {
                     return _virtualDirectoryDefaults;
                 }
@@ -335,7 +330,7 @@ namespace Microsoft.Web.Administration
             get
             {
                 Initialize();
-                lock (locker)
+                lock (_locker)
                 {
                     return _workerProcessCollection;
                 }
@@ -368,8 +363,10 @@ namespace Microsoft.Web.Administration
 
         internal virtual IEnumerable<string> GetSchemaFiles()
         {
+            var directoryName = Path.GetDirectoryName(typeof(FileContext).Assembly.Location);
+            Debug.Assert(directoryName != null, nameof(directoryName) + " != null");
             var local = Path.Combine(
-                Path.GetDirectoryName(typeof(FileContext).Assembly.Location),
+                directoryName,
                 "schema");
             return Directory.Exists(local) ? Directory.GetFiles(local) : Enumerable.Empty<string>();
         }
@@ -377,7 +374,7 @@ namespace Microsoft.Web.Administration
         public Configuration GetApplicationHostConfiguration()
         {
             Initialize();
-            lock (locker)
+            lock (_locker)
             {
                 return _applicationHost;
             }
@@ -386,7 +383,7 @@ namespace Microsoft.Web.Administration
         internal Configuration GetConfigurationCache()
         {
             Initialize();
-            lock (locker)
+            lock (_locker)
             {
                 return _cleanHost;
             }
@@ -438,12 +435,8 @@ namespace Microsoft.Web.Administration
             if (parts[0] != string.Empty && Sites.All(site => site.Name != parts[0]))
             {
                 throw new FileNotFoundException(
-                    string.Format(
-                        "Filename: \r\nError: Unrecognized configuration path 'MACHINE/WEBROOT/APPHOST/{0}'\r\n\r\n",
-                        parts[0]));
+                    $"Filename: \r\nError: Unrecognized configuration path 'MACHINE/WEBROOT/APPHOST/{parts[0]}'\r\n\r\n");
             }
         }
-
-        internal string Type { get; private set; }
     }
 }

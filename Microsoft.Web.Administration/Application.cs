@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Xml;
 
 namespace Microsoft.Web.Administration
@@ -43,7 +42,7 @@ namespace Microsoft.Web.Administration
                 _collection.InternalAdd(new VirtualDirectory(node, _collection));
             }
 
-            Location = this.Site.Name + this.Path;
+            Location = Site.Name + Path;
             foreach (ApplicationPool pool in Server.ApplicationPools)
             {
                 if (pool.Name == ApplicationPoolName)
@@ -71,7 +70,6 @@ namespace Microsoft.Web.Administration
         {
             if (_configuration != null)
             {
-                // TODO:
                 return _configuration;
             }
 

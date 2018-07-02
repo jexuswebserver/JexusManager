@@ -12,40 +12,44 @@ namespace Microsoft.Web.Administration
         ISerializable
     {
         public ServerManagerException()
-        { }
+        {
+        }
 
         public ServerManagerException(
-    string errorMessage
-) : base(errorMessage)
-        { }
+            string errorMessage
+        ) : base(errorMessage)
+        {
+        }
 
         public ServerManagerException(
-    string errorMessage,
-    Exception exception
-) : base(errorMessage, exception)
-        { }
+            string errorMessage,
+            Exception exception
+        ) : base(errorMessage, exception)
+        {
+        }
+
         public ServerManagerException(
-    string errorMessage,
-    int errorCode
-) : base(errorMessage)
+            string errorMessage,
+            int errorCode
+        ) : base(errorMessage)
         {
             ErrorCode = errorCode;
         }
 
         public ServerManagerException(
-    string errorMessage,
-    Exception exception,
-    int errorCode
-) : base(errorMessage, exception)
+            string errorMessage,
+            Exception exception,
+            int errorCode
+        ) : base(errorMessage, exception)
         {
             ErrorCode = errorCode;
         }
 
         public override string ToString()
         {
-            return null;
+            return Message;
         }
 
-        public int ErrorCode { get; private set; }
+        public int ErrorCode { get; }
     }
 }

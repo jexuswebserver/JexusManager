@@ -87,8 +87,7 @@ namespace Microsoft.Web.Administration
 
         internal HttpClient GetClient()
         {
-            var client = new HttpClient();
-            client.BaseAddress = new Uri(string.Format("{0}://{1}/", s_protocol, HostName));
+            var client = new HttpClient {BaseAddress = new Uri($"{s_protocol}://{HostName}/")};
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             client.DefaultRequestHeaders.Add("X-HTTP-Authorization", Credentials);
@@ -217,9 +216,11 @@ namespace Microsoft.Web.Administration
                 }
             }
 
-            var newPool = new ApplicationPool(null, ApplicationPools);
-            newPool.Name = "DefaultAppPool";
-            newPool.ManagedRuntimeVersion = variables.Load(new List<string> { "v2.0" }, "runtime")[0];
+            var newPool = new ApplicationPool(null, ApplicationPools)
+            {
+                Name = "DefaultAppPool",
+                ManagedRuntimeVersion = variables.Load(new List<string> {"v2.0"}, "runtime")[0]
+            };
             newPool.ProcessModel.MaxProcesses = long.Parse(variables.Load(new List<string> { "1" }, "httpd.processes")[0]);
             newPool.ProcessModel.UserName = variables.Load(new List<string> { string.Empty }, "httpd.user")[0];
             newPool.ProcessModel.IdentityType = ProcessModelIdentityType.SpecificUser;
@@ -284,7 +285,7 @@ namespace Microsoft.Web.Administration
                 {
                     foreach (var line in item.Value)
                     {
-                        lines.Add(string.Format("{0}={1}", item.Key, line));
+                        lines.Add($"{item.Key}={line}");
                     }
                 }
 
@@ -380,7 +381,7 @@ namespace Microsoft.Web.Administration
             {
                 using (var client = GetClient())
                 {
-                    HttpResponseMessage response = await client.GetAsync(string.Format("api/site/{0}", file));
+                    HttpResponseMessage response = await client.GetAsync($"api/site/{file}");
                     if (response.IsSuccessStatusCode)
                     {
                         siteVariables = (SortedDictionary<string, List<string>>)await response.Content.ReadAsAsync(typeof(SortedDictionary<string, List<string>>));
@@ -409,10 +410,12 @@ namespace Microsoft.Web.Administration
             }
 
             site.Bindings.Add(binding);
-            var app = new Application(site.Applications);
-            app.Path = Application.RootPath;
-            app.Name = string.Empty;
-            app.ApplicationPoolName = "DefaultAppPool";
+            var app = new Application(site.Applications)
+            {
+                Path = Application.RootPath,
+                Name = string.Empty,
+                ApplicationPoolName = "DefaultAppPool"
+            };
             site.Applications.Add(app);
             await LoadAsync(app, null, null, siteVariables);
 
@@ -426,7 +429,7 @@ namespace Microsoft.Web.Administration
             {
                 using (var client = GetClient())
                 {
-                    HttpResponseMessage response = await client.GetAsync(string.Format("api/app/{0}", site.Name));
+                    HttpResponseMessage response = await client.GetAsync($"api/app/{site.Name}");
                     if (response.IsSuccessStatusCode)
                     {
                         appNames = (IEnumerable<string>)await response.Content.ReadAsAsync(typeof(IEnumerable<string>));
@@ -438,11 +441,12 @@ namespace Microsoft.Web.Administration
 
             foreach (var appName in appNames)
             {
-                var application = new Application(site.Applications);
-                application.ApplicationPoolName = "DefaultAppPool";
-                string applicationName;
-                application.Path = appName.ToPath(out applicationName);
-                application.Name = applicationName;
+                var application = new Application(site.Applications)
+                {
+                    ApplicationPoolName = "DefaultAppPool",
+                    Path = appName.ToPath(out var applicationName),
+                    Name = applicationName
+                };
                 site.Applications.Add(application);
                 await LoadAsync(application, file, appName, null);
             }
@@ -483,7 +487,7 @@ namespace Microsoft.Web.Administration
                 {
                     using (var client = GetClient())
                     {
-                        HttpResponseMessage response = await client.GetAsync(string.Format("api/app/get/{0}", appName));
+                        HttpResponseMessage response = await client.GetAsync($"api/app/get/{appName}");
                         if (response.IsSuccessStatusCode)
                         {
                             variables = (SortedDictionary<string, List<string>>)await response.Content.ReadAsAsync(typeof(SortedDictionary<string, List<string>>));
@@ -503,9 +507,12 @@ namespace Microsoft.Web.Administration
                 throw new ServerManagerException("invalid root mapping");
             }
 
-            var virtualDirectory = new VirtualDirectory(null, application.VirtualDirectories);
-            virtualDirectory.Path = root.Substring(0, split);
-            virtualDirectory.PhysicalPath = root.Substring(split + 1);
+            var virtualDirectory =
+                new VirtualDirectory(null, application.VirtualDirectories)
+                {
+                    Path = root.Substring(0, split),
+                    PhysicalPath = root.Substring(split + 1)
+                };
             application.VirtualDirectories.Add(virtualDirectory);
             var configuration = application.GetWebConfiguration();
             var defaultDocument = configuration.GetSection("system.webServer/defaultDocument");
@@ -681,7 +688,7 @@ namespace Microsoft.Web.Administration
             variables.Add("addr", new List<string> { application.Site.Bindings[0].EndPoint.Address.ToString() });
             variables.Add("port", new List<string> { application.Site.Bindings[0].EndPoint.Port.ToString() });
             variables.Add("hosts", new List<string> { application.Site.Bindings[0].Host });
-            variables.Add("root", new List<string> { string.Format("{0} {1}", vDir.Path, vDir.PhysicalPath) });
+            variables.Add("root", new List<string> {$"{vDir.Path} {vDir.PhysicalPath}"});
             variables.Add("nolog", new List<string> { httpLoggingSection["dontLog"].ToString() });
             variables.Add("keep_alive", new List<string> { httpProtocolSection["allowKeepAlive"].ToString() });
 
@@ -694,7 +701,7 @@ namespace Microsoft.Web.Administration
             {
                 string element = string.IsNullOrEmpty((string)item["subnetMask"])
                     ? (string)item["ipAddress"]
-                    : string.Format("{0}/{1}", item["ipAddress"], item["subnetMask"]);
+                    : $"{item["ipAddress"]}/{item["subnetMask"]}";
                 if ((bool)item["allowed"])
                 {
                     allows.Add(element);
@@ -743,7 +750,7 @@ namespace Microsoft.Web.Administration
                 {
                     foreach (var line in item.Value)
                     {
-                        rows.Add(string.Format("{0}={1}", item.Key, line));
+                        rows.Add($"{item.Key}={line}");
                     }
                 }
 
@@ -754,7 +761,7 @@ namespace Microsoft.Web.Administration
             {
                 using (var client = GetClient())
                 {
-                    HttpResponseMessage response = await client.PutAsJsonAsync(string.Format("api/site/{0}", application.ToFileName()), variables);
+                    HttpResponseMessage response = await client.PutAsJsonAsync($"api/site/{application.ToFileName()}", variables);
                     if (response.IsSuccessStatusCode)
                     {
                     }

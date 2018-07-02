@@ -7,19 +7,18 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
 
 namespace Microsoft.Web.Administration
 {
-    using System.Runtime.InteropServices;
-    using System.Xml;
-
     [DebuggerDisplay("{FileName}[{Location}]")]
     internal sealed class FileContext : IEquatable<FileContext>
     {
         private readonly ServerManager _server;
-        private readonly object locker = new object();
+        private readonly object _locker = new object();
         private readonly bool _dontThrow;
         internal List<SectionDefinition> DefinitionCache = new List<SectionDefinition>();
 
@@ -61,11 +60,7 @@ namespace Microsoft.Web.Administration
             {
                 // TODO: merge with the other exception later.
                 throw new FileNotFoundException(
-                    string.Format(
-                        "Filename: \\\\?\\{0}\r\nLine number: {1}\r\nError: Unrecognized configuration path 'MACHINE/WEBROOT/APPHOST/{2}'\r\n\r\n",
-                        _server.FileName,
-                        _lineNumber,
-                        Location));
+                    $"Filename: \\\\?\\{_server.FileName}\r\nLine number: {_lineNumber}\r\nError: Unrecognized configuration path 'MACHINE/WEBROOT/APPHOST/{Location}'\r\n\r\n");
             }
 
             var file = FileName.ExpandIisExpressEnvironmentVariables();
@@ -75,7 +70,7 @@ namespace Microsoft.Web.Administration
                 {
                     _initialized = false;
                     throw new FileNotFoundException(
-                        string.Format("Filename: \\\\?\\{0}\r\nError: Cannot read configuration file\r\n\r\n", FileName),
+                        $"Filename: \\\\?\\{FileName}\r\nError: Cannot read configuration file\r\n\r\n",
                         FileName);
                 }
 
@@ -90,15 +85,12 @@ namespace Microsoft.Web.Administration
             {
                 _initialized = false;
                 throw new COMException(
-                    string.Format(
-                        "Filename: \\\\?\\{0}\r\nLine number: {1}\r\nError: Configuration file is not well-formed XML\r\n\r\n",
-                        file,
-                        ex.LineNumber));
+                    $"Filename: \\\\?\\{file}\r\nLine number: {ex.LineNumber}\r\nError: Configuration file is not well-formed XML\r\n\r\n");
             }
             catch (COMException ex)
             {
                 _initialized = false;
-                var exception = new COMException(string.Format("Filename: \\\\?\\{0}\r\n{1}\r\n", file, ex.Message));
+                var exception = new COMException($"Filename: \\\\?\\{file}\r\n{ex.Message}\r\n");
                 foreach (object key in ex.Data.Keys)
                 {
                     exception.Data.Add(key, ex.Data[key]);
@@ -131,7 +123,7 @@ namespace Microsoft.Web.Administration
                 return;
             }
 
-            lock (locker)
+            lock (_locker)
             {
                 if (AppHost)
                 {
@@ -277,12 +269,9 @@ namespace Microsoft.Web.Administration
         private SectionGroup _rootSectionGroup;
 
         private bool _dirty;
-        private int _lineNumber;
+        private readonly int _lineNumber;
 
-        private XElement Root
-        {
-            get { return _document?.Root; }
-        }
+        private XElement Root => _document?.Root;
 
         public ProtectedConfiguration ProtectedConfiguration
         {
@@ -302,8 +291,7 @@ namespace Microsoft.Web.Administration
 
         private SectionSchema FindSectionSchema(string path)
         {
-            SectionSchema result;
-            _sectionSchemas.TryGetValue(path, out result);
+            _sectionSchemas.TryGetValue(path, out SectionSchema result);
             return result;
         }
 
@@ -331,8 +319,7 @@ namespace Microsoft.Web.Administration
                     continue;
                 }
 
-                var element = node as XElement;
-                if (element == null)
+                if (!(node is XElement element))
                 {
                     continue;
                 }
@@ -342,11 +329,12 @@ namespace Microsoft.Web.Administration
                     continue;
                 }
 
-                var name = element.Attribute("name").Value;
+                var name = element.Attribute("name")?.Value;
                 var found = FindSectionSchema(name);
                 if (found == null)
                 {
                     found = new SectionSchema(name, element);
+                    Debug.Assert(name != null, nameof(name) + " != null");
                     _sectionSchemas.Add(name, found);
                 }
 
@@ -420,8 +408,7 @@ namespace Microsoft.Web.Administration
 
             foreach (var item in element.Nodes())
             {
-                var child = item as XElement;
-                if (child == null)
+                if (!(item is XElement child))
                 {
                     continue;
                 }
@@ -456,10 +443,7 @@ namespace Microsoft.Web.Administration
                 }
 
                 var exception = new COMException(
-                    string.Format(
-                        "Line number: {0}\r\nError: Unrecognized element '{1}'\r\n",
-                        (element as IXmlLineInfo).LineNumber,
-                        name));
+                    $"Line number: {(element as IXmlLineInfo).LineNumber}\r\nError: Unrecognized element '{name}'\r\n");
                 if (oob != null)
                 {
                     exception.Data.Add("oob", oob);
@@ -492,8 +476,7 @@ namespace Microsoft.Web.Administration
                     continue;
                 }
 
-                var element = node as XElement;
-                if (element != null)
+                if (node is XElement element)
                 {
                     var tag = element.Name.LocalName;
                     if (tag == "configSections")
@@ -545,7 +528,7 @@ namespace Microsoft.Web.Administration
             var top = EnsureDocumentExists();
             if (locationPath != null && locationPath != Location)
             {
-                var elements = Root.XPathSelectElements(String.Format("//location[@path='{0}']", locationPath)).ToList();
+                var elements = Root.XPathSelectElements($"//location[@path='{locationPath}']").ToList();
                 if (!elements.Any())
                 {
                     var location = new XElement("location",
@@ -585,10 +568,11 @@ namespace Microsoft.Web.Administration
             var directory = Path.GetDirectoryName(file);
             if (!Directory.Exists(directory))
             {
+                Debug.Assert(directory != null, nameof(directory) + " != null");
                 Directory.CreateDirectory(directory);
             }
 
-            File.WriteAllText(file, "<?xml version=\"1.0\" encoding=\"utf-8\"?><configuration></configuration>");
+            File.WriteAllText(file, @"<?xml version=""1.0"" encoding=""utf-8""?><configuration></configuration>");
             using (var stream = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 _document = XDocument.Load(stream, LoadOptions.SetLineInfo);
@@ -624,10 +608,10 @@ namespace Microsoft.Web.Administration
 
         internal ConfigurationSection FindSection(string sectionPath, string locationPath, FileContext core)
         {
-            var temp = DetectExistingSection(sectionPath, locationPath, core);
+            var temp = DetectExistingSection(sectionPath, locationPath);
             if (temp != null)
             {
-                var duplicate = core.Parent?.DetectExistingSection(sectionPath, locationPath, core.Parent);
+                var duplicate = core.Parent?.DetectExistingSection(sectionPath, locationPath);
                 if (duplicate != null && !temp.IsLocallyStored)
                 {
                     temp.IsLocallyStored = true;
@@ -638,19 +622,23 @@ namespace Microsoft.Web.Administration
 
             // IMPORTANT: force system.web to go to root web.config.
             var top = locationPath == null && sectionPath.StartsWith("system.web/") && core.AppHost ? core.Parent : core;
-            return CreateSection(sectionPath, locationPath, top, top);
+            return CreateSection(sectionPath, locationPath, top);
         }
 
-        private ConfigurationSection CreateSection(string sectionPath, string locationPath, FileContext core, FileContext top)
+        private ConfigurationSection CreateSection(string sectionPath, string locationPath, FileContext core)
         {
             if (Location == null || Location == locationPath || locationPath.StartsWith(Location + '/'))
             {
                 var definition = DefinitionCache.FirstOrDefault(item => item.Path == sectionPath);
                 if (definition?.Schema != null)
                 {
-                    var section = new ConfigurationSection(sectionPath, definition.Schema.Root, locationPath,
-                        core, null);
-                    section.OverrideMode = OverrideMode.Inherit;
+                    var section = new ConfigurationSection(
+                            sectionPath,
+                            definition.Schema.Root,
+                            locationPath,
+                            core,
+                            null)
+                        {OverrideMode = OverrideMode.Inherit};
                     if (locationPath == null)
                     {
                         section.OverrideModeEffective = (OverrideMode)Enum.Parse(typeof(OverrideMode), definition.OverrideModeDefault);
@@ -668,11 +656,11 @@ namespace Microsoft.Web.Administration
                 }
             }
 
-            var sectionBasedOnParent = core.Parent?.CreateSection(sectionPath, locationPath, core.Parent, top);
+            var sectionBasedOnParent = core.Parent?.CreateSection(sectionPath, locationPath, core.Parent);
             return sectionBasedOnParent;
         }
 
-        private ConfigurationSection DetectExistingSection(string sectionPath, string locationPath, FileContext top)
+        private ConfigurationSection DetectExistingSection(string sectionPath, string locationPath)
         {
             foreach (ConfigurationSection section in ConfigurationSections)
             {
@@ -682,8 +670,7 @@ namespace Microsoft.Web.Administration
                 }
             }
 
-            var fromParent = Parent?.DetectExistingSection(sectionPath, locationPath, top);
-            return fromParent ?? null;
+            return Parent?.DetectExistingSection(sectionPath, locationPath);
         }
 
         internal bool Add(ConfigurationSection section, Location location, FileContext top)
@@ -696,13 +683,13 @@ namespace Microsoft.Web.Administration
                     throw new ServerManagerException("Section is not allowed in location tag");
                 }
 
-                section.OverrideMode = location == null || location.OverrideMode == null
+                section.OverrideMode = location?.OverrideMode == null
                     ? OverrideMode.Inherit
                     : (OverrideMode)Enum.Parse(typeof(OverrideMode), location.OverrideMode);
 
                 if (section.OverrideMode == OverrideMode.Inherit)
                 {
-                    var parent = location == null || location.Path == null ? null : section.FileContext.FindSection(section.SectionPath, location.Path.GetParentLocation(), section.FileContext);
+                    var parent = location?.Path == null ? null : section.FileContext.FindSection(section.SectionPath, location.Path.GetParentLocation(), section.FileContext);
                     if (parent == null)
                     {
                         section.OverrideModeEffective = (OverrideMode)Enum.Parse(typeof(OverrideMode), definition.OverrideModeDefault);
@@ -711,10 +698,8 @@ namespace Microsoft.Web.Administration
                     {
                         if (parent.OverrideModeEffective == OverrideMode.Deny && parent.FileContext != this)
                         {
-                            throw new FileLoadException(string.Format(
-                                "Filename: \\\\?\\{0}\r\nLine number: {1}\r\nError: This configuration section cannot be used at this path. This happens when the section is locked at a parent level. Locking is either by default (overrideModeDefault=\"Deny\"), or set explicitly by a location tag with overrideMode=\"Deny\" or the legacy allowOverride=\"false\".\r\n\r\n",
-                                section.FileContext.FileName,
-                                (section.Entity as IXmlLineInfo).LineNumber));
+                            throw new FileLoadException(
+                                $"Filename: \\\\?\\{section.FileContext.FileName}\r\nLine number: {(section.Entity as IXmlLineInfo).LineNumber}\r\nError: This configuration section cannot be used at this path. This happens when the section is locked at a parent level. Locking is either by default (overrideModeDefault=\"Deny\"), or set explicitly by a location tag with overrideMode=\"Deny\" or the legacy allowOverride=\"false\".\r\n\r\n");
                         }
 
                         section.OverrideModeEffective = parent.OverrideModeEffective;
@@ -747,10 +732,8 @@ namespace Microsoft.Web.Administration
                 }
             }
 
-            throw new FileLoadException(string.Format(
-                "Filename: \\\\?\\{0}\r\nLine number: {1}\r\nError: This configuration section cannot be used at this path. This happens when the section is locked at a parent level. Locking is either by default (overrideModeDefault=\"Deny\"), or set explicitly by a location tag with overrideMode=\"Deny\" or the legacy allowOverride=\"false\".\r\n\r\n",
-                section.FileContext.FileName,
-                (section.Entity as IXmlLineInfo).LineNumber));
+            throw new FileLoadException(
+                $"Filename: \\\\?\\{section.FileContext.FileName}\r\nLine number: {(section.Entity as IXmlLineInfo).LineNumber}\r\nError: This configuration section cannot be used at this path. This happens when the section is locked at a parent level. Locking is either by default (overrideModeDefault=\"Deny\"), or set explicitly by a location tag with overrideMode=\"Deny\" or the legacy allowOverride=\"false\".\r\n\r\n");
         }
     }
 }

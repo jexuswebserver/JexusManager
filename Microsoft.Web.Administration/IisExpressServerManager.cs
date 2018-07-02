@@ -205,6 +205,7 @@ namespace Microsoft.Web.Administration
 
             var project = projects[0];
             var xml = XDocument.Load(project);
+            Debug.Assert(xml.Root != null, "xml.Root != null");
             if (xml.Root.Attribute("Sdk")?.Value != "Microsoft.NET.Sdk.Web")
             {
                 // Not web project
@@ -226,6 +227,7 @@ namespace Microsoft.Web.Administration
                 RedirectStandardOutput = true,
                 UseShellExecute = false
             });
+            Debug.Assert(vswhere != null, nameof(vswhere) + " != null");
             var folder = vswhere.StandardOutput.ReadToEnd().TrimEnd();
             var dotnet = Environment.ExpandEnvironmentVariables(@"%ProgramFiles%\dotnet\dotnet.exe");
             var restore = Process.Start(new ProcessStartInfo
@@ -234,6 +236,7 @@ namespace Microsoft.Web.Administration
                 Arguments = "restore",
                 WorkingDirectory = root
             });
+            Debug.Assert(restore != null, nameof(restore) + " != null");
             restore.WaitForExit();
             var build = Process.Start(new ProcessStartInfo
             {
@@ -241,8 +244,11 @@ namespace Microsoft.Web.Administration
                 Arguments = "build",
                 WorkingDirectory = root
             });
+            Debug.Assert(build != null, nameof(build) + " != null");
             build.WaitForExit();
-            var files = Directory.GetFiles(Path.Combine(root, "bin", "Debug", xml.Root.XPathSelectElement("/Project/PropertyGroup/TargetFramework").Value), "*.dll");
+            XElement framework = xml.Root.XPathSelectElement("/Project/PropertyGroup/TargetFramework");
+            Debug.Assert(framework != null, nameof(framework) + " != null");
+            var files = Directory.GetFiles(Path.Combine(root, "bin", "Debug", framework.Value), "*.dll");
             if (files.Length == 1)
             {
                 var rootAssembly = files[0].Replace(@"\", @"\\");

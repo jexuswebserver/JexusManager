@@ -14,7 +14,6 @@ namespace Microsoft.Web.Administration
         private readonly FileContext _core;
 
         private readonly List<SectionDefinition> _list = new List<SectionDefinition>();
-        private readonly object _root = new object();
 
         internal SectionDefinitionCollection(FileContext core)
         {
@@ -77,9 +76,6 @@ namespace Microsoft.Web.Administration
             get { return false; }
         }
 
-        public object SyncRoot
-        {
-            get { return _root; }
-        }
+        public object SyncRoot { get; } = new object();
     }
 }

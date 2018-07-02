@@ -53,31 +53,33 @@ namespace Microsoft.Web.Administration
         {
             foreach (var node in root.Nodes())
             {
-                var element = node as XElement;
-                if (element == null)
+                if (!(node is XElement element))
                 {
                     continue;
                 }
 
                 if (element.Name.LocalName == KEYWORD_SECTIONGROUP)
                 {
-                    var group = SectionGroups.Add(element.Attribute(KEYWORD_SECTIONGROUP_NAME).Value);
-                    group.Path = Name == string.Empty ? group.Name : string.Format("{0}/{1}", Path, @group.Name);
+                    XAttribute groupName = element.Attribute(KEYWORD_SECTIONGROUP_NAME);
+                    Debug.Assert(groupName != null, nameof(groupName) + " != null");
+                    var group = SectionGroups.Add(groupName.Value);
+                    group.Path = Name == string.Empty ? group.Name : $"{Path}/{@group.Name}";
                     group.ParseSectionDefinitions(element, sectionSchemas);
                     continue;
                 }
 
                 if (element.Name.LocalName == KEYWORD_SECTION)
                 {
-                    var sectionDefinition = Sections.Add(element.Attribute(KEYWORD_SECTION_NAME).Value);
+                    XAttribute sectionName = element.Attribute(KEYWORD_SECTION_NAME);
+                    Debug.Assert(sectionName != null, nameof(sectionName) + " != null");
+                    var sectionDefinition = Sections.Add(sectionName.Value);
                     sectionDefinition.OverrideModeDefault = element.Attribute(KEYWORD_SECTION_OVERRIDEMODEDEFAULT).LoadString(KEYWORD_OVERRIDEMODE_ALLOW);
                     sectionDefinition.AllowLocation = element.Attribute(KEYWORD_SECTION_ALLOWLOCATION).LoadString(KEYWORD_TRUE);
                     sectionDefinition.AllowDefinition = element.Attribute(KEYWORD_SECTION_ALLOWDEFINITION).LoadString(KEYWORD_SECTION_ALLOWDEFINITION_EVERYWHERE);
                     sectionDefinition.Path = Name == string.Empty ? sectionDefinition.Name : $"{Path}/{sectionDefinition.Name}";
                     sectionDefinition.Type = element.Attribute(KEYWORD_SECTION_TYPE).LoadString(string.Empty);
 
-                    SectionSchema schema;
-                    sectionSchemas.TryGetValue(sectionDefinition.Path, out schema);
+                    sectionSchemas.TryGetValue(sectionDefinition.Path, out SectionSchema schema);
                     sectionDefinition.Schema = schema;
                 }
             }

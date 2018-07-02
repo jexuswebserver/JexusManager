@@ -11,10 +11,9 @@ namespace Microsoft.Web.Administration
 {
     public sealed class SectionGroupCollection : ICollection, IEnumerable<SectionGroup>
     {
-        private SectionGroup Parent { get; set; }
+        private SectionGroup Parent { get; }
         private readonly FileContext _core;
         private readonly List<SectionGroup> _list = new List<SectionGroup>();
-        private readonly object _lock = new object();
 
         internal SectionGroupCollection(FileContext core, SectionGroup parent)
         {
@@ -30,7 +29,7 @@ namespace Microsoft.Web.Administration
                 found = new SectionGroup(_core)
                 {
                     Name = sectionGroupName,
-                    Path = Parent.Path == string.Empty ? sectionGroupName : string.Format("{0}/{1}", Parent.Path, sectionGroupName)
+                    Path = Parent.Path == string.Empty ? sectionGroupName : $"{Parent.Path}/{sectionGroupName}"
                 };
                 _list.Add(found);
             }
@@ -78,10 +77,7 @@ namespace Microsoft.Web.Administration
             get { return false; }
         }
 
-        public object SyncRoot
-        {
-            get { return _lock; }
-        }
+        public object SyncRoot { get; } = new object();
 
         IEnumerator IEnumerable.GetEnumerator()
         {

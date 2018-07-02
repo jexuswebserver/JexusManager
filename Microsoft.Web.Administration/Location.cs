@@ -8,10 +8,10 @@ namespace Microsoft.Web.Administration
 {
     internal class Location
     {
-        public string OverrideMode { get; private set; }
+        public string OverrideMode { get; }
         public XElement Entity { get; set; }
         public string Path { get; internal set; }
-        public bool FromTag { get; private set; }
+        public bool FromTag { get; }
 
         public Location(string path, string overrideMode, XElement entity, bool fromTag = false)
         {
