@@ -38,7 +38,8 @@ namespace JexusManager.Features.Rewrite
         public string Input { get; set; }
 
         public int MatchType { get; set; }
-        public string Flag { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+
+        public string Flag { get; set; }
 
         public void Apply()
         {

@@ -39,10 +39,7 @@ namespace Microsoft.Web.Administration
             get { throw new NotImplementedException(); }
         }
 
-        public object SyncRoot
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public object SyncRoot { get; } = new object();
 
         public ConfigurationMethod this[int index]
         {

@@ -52,7 +52,11 @@ namespace Microsoft.Web.Administration
 
         public void Remove(Binding element, bool removeConfigOnly)
         {
-            throw new NotImplementedException();
+            element.Delete();
+            if (!removeConfigOnly)
+            {
+                Remove(element);
+            }
         }
 
         internal Site Parent { get; set; }

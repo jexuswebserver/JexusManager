@@ -71,10 +71,7 @@ namespace Microsoft.Web.Administration
             get { return false; }
         }
 
-        public object SyncRoot
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public object SyncRoot { get; } = new object();
 
         internal void Add(ConfigurationAttribute item)
         {

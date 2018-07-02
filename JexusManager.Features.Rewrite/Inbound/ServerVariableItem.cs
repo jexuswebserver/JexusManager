@@ -29,7 +29,8 @@ namespace JexusManager.Features.Rewrite.Inbound
         public string Value { get; set; }
 
         public string Name { get; set; }
-        public string Flag { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+
+        public string Flag { get; set; }
 
         public void Apply()
         {

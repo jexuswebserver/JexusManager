@@ -37,10 +37,7 @@ namespace Microsoft.Web.Administration
             get { throw new NotImplementedException(); }
         }
 
-        public object SyncRoot
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public object SyncRoot { get; } = new object();
 
         public IEnumerator GetEnumerator()
         {

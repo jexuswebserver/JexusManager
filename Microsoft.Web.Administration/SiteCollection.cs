@@ -34,27 +34,39 @@ namespace Microsoft.Web.Administration
 
         public Site Add(string name, string physicalPath, int port)
         {
-            throw new NotImplementedException();
+            var site = new Site(this);
+            site.Name = name;
+            site.Bindings.Add($"*:{port}:", "http");
+            site.Applications.Add(Application.RootPath, physicalPath);
+            return Add(site);
         }
 
         public Site Add(string name, string bindingInformation, string physicalPath, byte[] certificateHash)
         {
-            throw new NotImplementedException();
+            return Add(name, bindingInformation, physicalPath, certificateHash, "MY");
         }
 
         public Site Add(string name, string bindingProtocol, string bindingInformation, string physicalPath)
         {
-            throw new NotImplementedException();
+            var site = new Site(this);
+            site.Name = name;
+            site.Bindings.Add(bindingInformation, bindingProtocol);
+            site.Applications.Add(Application.RootPath, physicalPath);
+            return Add(site);
         }
 
         public Site Add(string name, string bindingInformation, string physicalPath, byte[] certificateHash, string certificateStore)
         {
-            throw new NotImplementedException();
+            return Add(name, bindingInformation, physicalPath, certificateHash, certificateStore, SslFlags.None);
         }
 
         public Site Add(string name, string bindingInformation, string physicalPath, byte[] certificateHash, string certificateStore, SslFlags sslFlags)
         {
-            throw new NotImplementedException();
+            var site = new Site(this);
+            site.Name = name;
+            site.Bindings.Add(bindingInformation, certificateHash, certificateStore, sslFlags);
+            site.Applications.Add(Application.RootPath, physicalPath);
+            return Add(site);
         }
 
         protected override Site CreateNewElement(string elementTagName)
