@@ -20,7 +20,7 @@ namespace Microsoft.Web.Administration
         private readonly ServerManager _server;
         private readonly object _locker = new object();
         private readonly bool _dontThrow;
-        internal List<SectionDefinition> DefinitionCache = new List<SectionDefinition>();
+        internal Dictionary<string, SectionDefinition> DefinitionCache = new Dictionary<string, SectionDefinition>();
 
         internal bool AppHost { get; }
         public bool ReadOnly { get; }
@@ -51,7 +51,10 @@ namespace Microsoft.Web.Administration
             _initialized = true;
             if (Parent != null)
             {
-                DefinitionCache.AddRange(Parent.DefinitionCache);
+                foreach(var item in Parent.DefinitionCache)
+                {
+                    DefinitionCache.Add(item.Key, item.Value);
+                }
             }
 
             LoadSchemas();
@@ -179,27 +182,34 @@ namespace Microsoft.Web.Administration
 
         internal List<ConfigurationSection> ConfigurationSections { get; } = new List<ConfigurationSection>();
 
+        private SectionGroup _effective;
+
         public SectionGroup GetEffectiveSectionGroup()
         {
-            var result = new SectionGroup(this);
+            if (_effective != null)
+            {
+                return _effective;
+            }
+
+            _effective = new SectionGroup(this);
             FileContext core = this;
             while (core != null)
             {
                 SectionGroup root = core.RootSectionGroup;
                 foreach (SectionGroup item in root.SectionGroups)
                 {
-                    result.SectionGroups.Add(item);
+                    _effective.SectionGroups.Add(item);
                 }
 
                 foreach (SectionDefinition item in root.Sections)
                 {
-                    result.Sections.Add(item);
+                    _effective.Sections.Add(item);
                 }
                 
                 core = core.Parent;
             }
 
-            return result;
+            return _effective;
         }
 
         public string[] GetLocationPaths()
@@ -393,7 +403,7 @@ namespace Microsoft.Web.Administration
             }
             else
             {
-                var found = DefinitionCache.FirstOrDefault(item => item.Path == path);
+                var found = DefinitionCache.ContainsKey(path) ? DefinitionCache[path] : null;
                 if (found != null)
                 {
                     if (found.Ignore)
@@ -416,7 +426,7 @@ namespace Microsoft.Web.Administration
                 else
                 {
                     // TODO: improve performance.
-                    var foundChild = DefinitionCache.FirstOrDefault(item => item.Path.StartsWith(path + '/'));
+                    var foundChild = DefinitionCache.Keys.FirstOrDefault(item => item.StartsWith(path + '/'));
                     if (foundChild != null && !element.HasElements)
                     {
                         return true;
@@ -653,7 +663,7 @@ namespace Microsoft.Web.Administration
         {
             if (Location == null || Location == locationPath || locationPath.StartsWith(Location + '/'))
             {
-                var definition = DefinitionCache.FirstOrDefault(item => item.Path == sectionPath);
+                var definition = DefinitionCache.ContainsKey(sectionPath) ? DefinitionCache[sectionPath] : null;
                 if (definition?.Schema != null)
                 {
                     var section = new ConfigurationSection(
@@ -699,7 +709,7 @@ namespace Microsoft.Web.Administration
 
         internal bool Add(ConfigurationSection section, Location location, FileContext top)
         {
-            var definition = DefinitionCache.FirstOrDefault(item => item.Path == section.ElementTagName);
+            var definition = DefinitionCache.ContainsKey(section.ElementTagName) ? DefinitionCache[section.ElementTagName] : null; ;
             if (definition != null)
             {
                 if (definition.AllowLocation == SectionGroup.KEYWORD_FALSE && location != null && location.FromTag)
