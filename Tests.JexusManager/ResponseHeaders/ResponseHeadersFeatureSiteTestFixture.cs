@@ -106,13 +106,11 @@ namespace Tests.ResponseHeaders
             var expected = "expected_remove.site.config";
             var document = XDocument.Load(site);
             var node = document.Root.XPathSelectElement("/configuration/system.webServer");
-            var http = new XElement("httpProtocol");
-            node?.Add(http);
-            var headers = new XElement("customHeaders");
-            http.Add(headers);
-            var remove = new XElement("remove",
-                new XAttribute("name", "X-Powered-By"));
-            headers.Add(remove);
+            node?.Add(
+                new XElement("httpProtocol",
+                    new XElement("customHeaders",
+                        new XElement("remove",
+                            new XAttribute("name", "X-Powered-By")))));
             document.Save(expected);
 
             _feature.SelectedItem = _feature.Items[0];
@@ -166,17 +164,14 @@ namespace Tests.ResponseHeaders
             var expected = "expected_edit.site.config";
             var document = XDocument.Load(site);
             var node = document.Root.XPathSelectElement("/configuration/system.webServer");
-            var http = new XElement("httpProtocol");
-            node?.Add(http);
-            var headers = new XElement("customHeaders");
-            http.Add(headers);
-            var remove = new XElement("remove",
-                new XAttribute("name", "X-Powered-By"));
-            headers.Add(remove);
-            var add = new XElement("add",
-                new XAttribute("name", "X-Powered-By"),
-                new XAttribute("value", "XSP"));
-            headers.Add(add);
+            node?.Add(
+                new XElement("httpProtocol",
+                    new XElement("customHeaders",
+                        new XElement("remove",
+                            new XAttribute("name", "X-Powered-By")),
+                        new XElement("add",
+                            new XAttribute("name", "X-Powered-By"),
+                            new XAttribute("value", "XSP")))));
             document.Save(expected);
 
             _feature.SelectedItem = _feature.Items[0];
@@ -203,14 +198,12 @@ namespace Tests.ResponseHeaders
             var expected = "expected_edit1.site.config";
             var document = XDocument.Load(site);
             var node = document.Root.XPathSelectElement("/configuration/system.webServer");
-            var http = new XElement("httpProtocol");
-            node?.Add(http);
-            var headers = new XElement("customHeaders");
-            http.Add(headers);
-            var add = new XElement("add",
-                new XAttribute("name", "Server"),
-                new XAttribute("value", "Jexus2"));
-            headers.Add(add);
+            node?.Add(
+                new XElement("httpProtocol",
+                    new XElement("customHeaders",
+                        new XElement("add",
+                            new XAttribute("name", "Server"),
+                            new XAttribute("value", "Jexus2")))));
             document.Save(expected);
 
             var item = new ResponseHeadersItem(null);
@@ -242,14 +235,12 @@ namespace Tests.ResponseHeaders
             var expected = "expected_edit.site.config";
             var document = XDocument.Load(site);
             var node = document.Root.XPathSelectElement("/configuration/system.webServer");
-            var http = new XElement("httpProtocol");
-            node?.Add(http);
-            var headers = new XElement("customHeaders");
-            http.Add(headers);
-            var add = new XElement("add",
-                new XAttribute("name", "Server"),
-                new XAttribute("value", "Jexus"));
-            headers.Add(add);
+            node?.Add(
+                new XElement("httpProtocol",
+                    new XElement("customHeaders",
+                        new XElement("add",
+                            new XAttribute("name", "Server"),
+                            new XAttribute("value", "Jexus")))));
             document.Save(expected);
 
             var item = new ResponseHeadersItem(null);

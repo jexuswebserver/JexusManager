@@ -102,10 +102,10 @@ namespace Tests.DirectoryBrowse
             const string Expected = @"expected_edit.config";
             var document = XDocument.Load(Current);
             var node = document.Root.XPathSelectElement("/configuration/system.webServer");
-            var directory = new XElement("directoryBrowse",
-                new XAttribute("enabled", "true"),
-                new XAttribute("showFlags", "None"));
-            node?.Add(directory);
+            node?.Add(
+                new XElement("directoryBrowse",
+                    new XAttribute("enabled", "true"),
+                    new XAttribute("showFlags", "None")));
             document.Save(Expected);
 
             _feature.IsEnabled = true;

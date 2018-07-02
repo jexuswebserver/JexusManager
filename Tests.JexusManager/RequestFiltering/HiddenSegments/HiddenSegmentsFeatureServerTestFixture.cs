@@ -117,9 +117,9 @@ namespace Tests.RequestFiltering.HiddenSegments
             const string Expected = @"expected_add.config";
             var document = XDocument.Load(Current);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer/security/requestFiltering/hiddenSegments");
-            var element = new XElement("add",
-                    new XAttribute("segment", "test"));
-            node?.Add(element);
+            node?.Add(
+                new XElement("add",
+                    new XAttribute("segment", "test")));
             document.Save(Expected);
 
             var item = new HiddenSegmentsItem(null);

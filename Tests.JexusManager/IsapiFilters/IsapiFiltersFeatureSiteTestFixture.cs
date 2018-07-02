@@ -104,16 +104,13 @@ namespace Tests.IsapiFilters
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location",
-                new XAttribute("path", "WebSite1"));
-            document.Root.Add(node);
-            var web = new XElement("system.webServer");
-            node.Add(web);
-            var content = new XElement("isapiFilters");
-            web.Add(content);
-            var remove = new XElement("remove",
-                new XAttribute("name", "ASP.Net_2.0.50727-64"));
-            content.Add(remove);
+            document.Root?.Add(
+                new XElement("location",
+                    new XAttribute("path", "WebSite1"),
+                    new XElement("system.webServer",
+                        new XElement("isapiFilters",
+                            new XElement("remove",
+                                new XAttribute("name", "ASP.Net_2.0.50727-64"))))));
             document.Save(Expected);
 
             _feature.SelectedItem = _feature.Items[0];
@@ -133,9 +130,9 @@ namespace Tests.IsapiFilters
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location",
-                new XAttribute("path", "WebSite1"));
-            document.Root.Add(node);
+            document.Root.Add(
+                new XElement("location",
+                    new XAttribute("path", "WebSite1")));
             document.Save(Expected);
 
             var item = new IsapiFiltersItem(null);
@@ -160,22 +157,18 @@ namespace Tests.IsapiFilters
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location",
-                new XAttribute("path", "WebSite1"));
-            document.Root.Add(node);
-            var web = new XElement("system.webServer");
-            node.Add(web);
-            var content = new XElement("isapiFilters");
-            web.Add(content);
-            var remove = new XElement("remove",
-                new XAttribute("name", "ASP.Net_2.0.50727-64"));
-            content.Add(remove);
-            var add = new XElement("filter",
-                new XAttribute("enableCache", "true"),
-                new XAttribute("preCondition", "bitness64,runtimeVersionv2.0"),
-                new XAttribute("name", "ASP.Net_2.0.50727-64"),
-                new XAttribute("path", "c:\\test.dll"));
-            content.Add(add);
+            document.Root?.Add(
+                new XElement("location",
+                    new XAttribute("path", "WebSite1"),
+                    new XElement("system.webServer",
+                        new XElement("isapiFilters",
+                            new XElement("remove",
+                                new XAttribute("name", "ASP.Net_2.0.50727-64")),
+                            new XElement("filter",
+                                new XAttribute("enableCache", "true"),
+                                new XAttribute("preCondition", "bitness64,runtimeVersionv2.0"),
+                                new XAttribute("name", "ASP.Net_2.0.50727-64"),
+                                new XAttribute("path", "c:\\test.dll"))))));
             document.Save(Expected);
 
             _feature.SelectedItem = _feature.Items[0];
@@ -197,17 +190,14 @@ namespace Tests.IsapiFilters
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location",
-                new XAttribute("path", "WebSite1"));
-            document.Root.Add(node);
-            var web = new XElement("system.webServer");
-            node.Add(web);
-            var content = new XElement("isapiFilters");
-            web.Add(content);
-            var add = new XElement("filter",
-                new XAttribute("name", "test"),
-                new XAttribute("path", "c:\\test.exe"));
-            content.Add(add);
+            document.Root?.Add(
+                new XElement("location",
+                    new XAttribute("path", "WebSite1"),
+                    new XElement("system.webServer",
+                        new XElement("isapiFilters",
+                            new XElement("filter",
+                                new XAttribute("name", "test"),
+                                new XAttribute("path", "c:\\test.exe"))))));
             document.Save(Expected);
 
             var item = new IsapiFiltersItem(null);
@@ -234,17 +224,14 @@ namespace Tests.IsapiFilters
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location",
-                new XAttribute("path", "WebSite1"));
-            document.Root.Add(node);
-            var web = new XElement("system.webServer");
-            node.Add(web);
-            var content = new XElement("isapiFilters");
-            web.Add(content);
-            var add = new XElement("filter",
-                new XAttribute("name", "test"),
-                new XAttribute("path", "c:\\test.dll"));
-            content.Add(add);
+            document.Root.Add(
+                new XElement("location",
+                    new XAttribute("path", "WebSite1"),
+                    new XElement("system.webServer",
+                        new XElement("isapiFilters",
+                            new XElement("filter",
+                                new XAttribute("name", "test"),
+                                new XAttribute("path", "c:\\test.dll"))))));
             document.Save(Expected);
 
             var item = new IsapiFiltersItem(null);
@@ -265,11 +252,10 @@ namespace Tests.IsapiFilters
 
             const string Expected = @"expected_revert.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location",
-                new XAttribute("path", "WebSite1"));
-            document.Root.Add(node);
-            var web = new XElement("system.webServer");
-            node.Add(web);
+            document.Root?.Add(
+                new XElement("location",
+                    new XAttribute("path", "WebSite1"),
+                    new XElement("system.webServer")));
             document.Save(Expected);
 
             var item = new IsapiFiltersItem(null);
@@ -294,55 +280,40 @@ namespace Tests.IsapiFilters
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location",
-                new XAttribute("path", "WebSite1"));
-            document.Root.Add(node);
-            var web = new XElement("system.webServer");
-            node.Add(web);
-            var content = new XElement("isapiFilters");
-            web.Add(content);
-            var clear = new XElement("clear");
-            content.Add(clear);
-            var one = new XElement("filter",
-                new XAttribute("enableCache", "true"),
-                new XAttribute("name", "ASP.Net_2.0.50727-64"),
-                new XAttribute("path", @"%windir%\Microsoft.NET\Framework64\v2.0.50727\aspnet_filter.dll"),
-                new XAttribute("preCondition", "bitness64,runtimeVersionv2.0"));
-            content.Add(one);
-
-            var two = new XElement("filter",
-                new XAttribute("enableCache", "true"),
-                new XAttribute("name", "ASP.Net_2.0.50727.0"),
-                new XAttribute("path", @"%windir%\Microsoft.NET\Framework\v2.0.50727\aspnet_filter.dll"),
-                new XAttribute("preCondition", "bitness32,runtimeVersionv2.0"));
-            content.Add(two);
-
-            var three = new XElement("filter",
-                new XAttribute("enableCache", "true"),
-                new XAttribute("name", "ASP.Net_2.0_for_v1.1"),
-                new XAttribute("path", @"%windir%\Microsoft.NET\Framework\v2.0.50727\aspnet_filter.dll"),
-                new XAttribute("preCondition", "runtimeVersionv1.1"));
-            content.Add(three);
-
-            var four = new XElement("filter",
-                new XAttribute("enableCache", "true"),
-                new XAttribute("name", "ASP.Net_4.0_32bit"),
-                new XAttribute("path", @"%windir%\Microsoft.NET\Framework\v4.0.30319\aspnet_filter.dll"),
-                new XAttribute("preCondition", "bitness32,runtimeVersionv4.0"));
-            content.Add(four);
-
-            var add = new XElement("filter",
-                new XAttribute("name", "test"),
-                new XAttribute("path", "c:\\test.dll"));
-            content.Add(add);
-
-            var six = new XElement("filter",
-                new XAttribute("enableCache", "true"),
-                new XAttribute("name", "ASP.Net_4.0_64bit"),
-                new XAttribute("path", @"%windir%\Microsoft.NET\Framework64\v4.0.30319\aspnet_filter.dll"),
-                new XAttribute("preCondition", "bitness64,runtimeVersionv4.0"));
-            content.Add(six);
-
+            document.Root?.Add(
+                new XElement("location",
+                    new XAttribute("path", "WebSite1"),
+                    new XElement("system.webServer",
+                        new XElement("isapiFilters",
+                            new XElement("clear"),
+                            new XElement("filter",
+                                new XAttribute("enableCache", "true"),
+                                new XAttribute("name", "ASP.Net_2.0.50727-64"),
+                                new XAttribute("path", @"%windir%\Microsoft.NET\Framework64\v2.0.50727\aspnet_filter.dll"),
+                                new XAttribute("preCondition", "bitness64,runtimeVersionv2.0")),
+                            new XElement("filter",
+                                new XAttribute("enableCache", "true"),
+                                new XAttribute("name", "ASP.Net_2.0.50727.0"),
+                                new XAttribute("path", @"%windir%\Microsoft.NET\Framework\v2.0.50727\aspnet_filter.dll"),
+                                new XAttribute("preCondition", "bitness32,runtimeVersionv2.0")),
+                            new XElement("filter",
+                                new XAttribute("enableCache", "true"),
+                                new XAttribute("name", "ASP.Net_2.0_for_v1.1"),
+                                new XAttribute("path", @"%windir%\Microsoft.NET\Framework\v2.0.50727\aspnet_filter.dll"),
+                                new XAttribute("preCondition", "runtimeVersionv1.1")),
+                            new XElement("filter",
+                                new XAttribute("enableCache", "true"),
+                                new XAttribute("name", "ASP.Net_4.0_32bit"),
+                                new XAttribute("path", @"%windir%\Microsoft.NET\Framework\v4.0.30319\aspnet_filter.dll"),
+                                new XAttribute("preCondition", "bitness32,runtimeVersionv4.0")),
+                            new XElement("filter",
+                                new XAttribute("name", "test"),
+                                new XAttribute("path", "c:\\test.dll")),
+                            new XElement("filter",
+                                new XAttribute("enableCache", "true"),
+                                new XAttribute("name", "ASP.Net_4.0_64bit"),
+                                new XAttribute("path", @"%windir%\Microsoft.NET\Framework64\v4.0.30319\aspnet_filter.dll"),
+                                new XAttribute("preCondition", "bitness64,runtimeVersionv4.0"))))));
             document.Save(Expected);
 
             var item = new IsapiFiltersItem(null);
@@ -374,29 +345,21 @@ namespace Tests.IsapiFilters
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location",
-                new XAttribute("path", "WebSite1"));
-            document.Root.Add(node);
-            var web = new XElement("system.webServer");
-            node.Add(web);
-            var content = new XElement("isapiFilters");
-            web.Add(content);
-            var remove = new XElement("remove",
-                new XAttribute("name", "ASP.Net_4.0_64bit"));
-            content.Add(remove);
-
-            var add = new XElement("filter",
-                new XAttribute("name", "test"),
-                new XAttribute("path", "c:\\test.dll"));
-            content.Add(add);
-
-            var six = new XElement("filter",
-                new XAttribute("enableCache", "true"),
-                new XAttribute("name", "ASP.Net_4.0_64bit"),
-                new XAttribute("path", @"%windir%\Microsoft.NET\Framework64\v4.0.30319\aspnet_filter.dll"),
-                new XAttribute("preCondition", "bitness64,runtimeVersionv4.0"));
-            content.Add(six);
-
+            document.Root?.Add(
+                new XElement("location",
+                 new XAttribute("path", "WebSite1"),
+                 new XElement("system.webServer",
+                    new XElement("isapiFilters",
+                        new XElement("remove",
+                            new XAttribute("name", "ASP.Net_4.0_64bit")),
+                        new XElement("filter",
+                            new XAttribute("name", "test"),
+                            new XAttribute("path", "c:\\test.dll")),
+                        new XElement("filter",
+                            new XAttribute("enableCache", "true"),
+                            new XAttribute("name", "ASP.Net_4.0_64bit"),
+                            new XAttribute("path", @"%windir%\Microsoft.NET\Framework64\v4.0.30319\aspnet_filter.dll"),
+                            new XAttribute("preCondition", "bitness64,runtimeVersionv4.0"))))));
             document.Save(Expected);
 
             var item = new IsapiFiltersItem(null);

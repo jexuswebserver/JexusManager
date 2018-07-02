@@ -133,9 +133,9 @@ namespace Tests.RequestFiltering.Urls
             const string Expected = @"expected_add.config";
             var document = XDocument.Load(Current);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer/security/requestFiltering/alwaysAllowedUrls");
-            var element = new XElement("add",
-                new XAttribute("url", "test1"));
-            node?.Add(element);
+            node?.Add(
+                new XElement("add",
+                    new XAttribute("url", "test1")));
             document.Save(Expected);
 
             var item = new UrlsItem(null, true);
@@ -154,9 +154,9 @@ namespace Tests.RequestFiltering.Urls
             const string Expected = @"expected_add_deny.config";
             var document = XDocument.Load(Current);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer/security/requestFiltering/denyUrlSequences");
-            var element = new XElement("add",
-                new XAttribute("sequence", "test1"));
-            node?.Add(element);
+            node?.Add(
+                new XElement("add",
+                    new XAttribute("sequence", "test1")));
             document.Save(Expected);
 
             var item = new UrlsItem(null, false);

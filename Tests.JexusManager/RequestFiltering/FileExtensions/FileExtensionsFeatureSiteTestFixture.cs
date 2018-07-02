@@ -107,15 +107,12 @@ namespace Tests.RequestFiltering.FileExtensions
             var expected = "expected_remove.site.config";
             var document = XDocument.Load(site);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
-            var security = new XElement("security");
-            var request = new XElement("requestFiltering");
-            var file = new XElement("fileExtensions");
-            var remove = new XElement("remove",
-                new XAttribute("fileExtension", ".asa"));
-            node?.Add(security);
-            security.Add(request);
-            request.Add(file);
-            file.Add(remove);
+            node?.Add(
+                new XElement("security",
+                    new XElement("requestFiltering",
+                        new XElement("fileExtensions",
+                            new XElement("remove",
+                                new XAttribute("fileExtension", ".asa"))))));
             document.Save(expected);
 
             _feature.SelectedItem = _feature.Items[0];
@@ -167,16 +164,13 @@ namespace Tests.RequestFiltering.FileExtensions
             var expected = "expected_remove.site.config";
             var document = XDocument.Load(site);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
-            var security = new XElement("security");
-            var request = new XElement("requestFiltering");
-            var file = new XElement("fileExtensions");
-            var add = new XElement("add",
-                    new XAttribute("allowed", "false"),
-                    new XAttribute("fileExtension", ".csv"));
-            node?.Add(security);
-            security.Add(request);
-            request.Add(file);
-            file.Add(add);
+            node?.Add(
+                new XElement("security",
+                    new XElement("requestFiltering",
+                        new XElement("fileExtensions",
+                            new XElement("add",
+                                new XAttribute("allowed", "false"),
+                                new XAttribute("fileExtension", ".csv"))))));
             document.Save(expected);
 
             var item = new FileExtensionsItem(null);

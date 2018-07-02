@@ -143,10 +143,10 @@ namespace Tests.Modules
             var document = XDocument.Load(Current);
             var node = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/modules");
             node?.FirstNode?.Remove(); // remove comment
-            var element = new XElement("add",
-                new XAttribute("name", "test"),
-                new XAttribute("type", "test"));
-            node?.Add(element);
+            node?.Add(
+                new XElement("add",
+                    new XAttribute("name", "test"),
+                    new XAttribute("type", "test")));
             document.Save(Expected);
 
             var item = new ModulesItem(null);
@@ -167,10 +167,10 @@ namespace Tests.Modules
             const string Expected = @"expected_addglobal.config";
             var document = XDocument.Load(Current);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer/globalModules");
-            var element = new XElement("add",
-                new XAttribute("name", "test"),
-                new XAttribute("image", "test"));
-            node?.Add(element);
+            node?.Add(
+                new XElement("add",
+                    new XAttribute("name", "test"),
+                    new XAttribute("image", "test")));
             document.Save(Expected);
 
             Assert.Equal(37, _feature.GlobalModules.Count);

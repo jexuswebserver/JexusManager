@@ -264,21 +264,21 @@ namespace Tests.DefaultDocument
                 new XAttribute("value", "Default.htm"));
             node?.AddFirst(htm);
             node?.AddFirst(new XElement("clear"));
-            var asp = new XElement("add",
-                new XAttribute("value", "Default.asp"));
-            node?.Add(asp);
-            var index = new XElement("add",
-                new XAttribute("value", "index.htm"));
-            node?.Add(index);
-            var index1 = new XElement("add",
-                new XAttribute("value", "index.html"));
-            node?.Add(index1);
-            var iis = new XElement("add",
-                new XAttribute("value", "iisstart.htm"));
-            node?.Add(iis);
-            var aspx = new XElement("add",
-                new XAttribute("value", "default.aspx"));
-            node?.Add(aspx);
+            node?.Add(
+                new XElement("add",
+                    new XAttribute("value", "Default.asp")));
+            node?.Add(
+                new XElement("add",
+                    new XAttribute("value", "index.htm")));
+            node?.Add(
+                new XElement("add",
+                    new XAttribute("value", "index.html")));
+            node?.Add(
+                new XElement("add",
+                    new XAttribute("value", "iisstart.htm")));
+            node?.Add(
+                new XElement("add",
+                    new XAttribute("value", "default.aspx")));
             document.Save(expected);
 
             _feature.SelectedItem = _feature.Items[0];

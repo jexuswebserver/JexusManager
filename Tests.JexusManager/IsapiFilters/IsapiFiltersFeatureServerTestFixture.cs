@@ -137,10 +137,10 @@ namespace Tests.IsapiFilters
             const string Expected = @"expected_add.config";
             var document = XDocument.Load(Current);
             var node = document.Root.XPathSelectElement("/configuration/system.webServer/isapiFilters");
-            var element = new XElement("filter",
-                new XAttribute("name", "my cgi"),
-                new XAttribute("path", "c:\\test.dll"));
-            node?.Add(element);
+            node?.Add(
+                new XElement("filter",
+                    new XAttribute("name", "my cgi"),
+                    new XAttribute("path", "c:\\test.dll")));
             document.Save(Expected);
 
             var item = new IsapiFiltersItem(null);

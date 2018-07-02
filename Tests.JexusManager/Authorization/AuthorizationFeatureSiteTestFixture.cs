@@ -99,13 +99,11 @@ namespace Tests.Authorization
             var expected = "expected_remove.site.config";
             var document = XDocument.Load(site);
             var node = document.Root.XPathSelectElement("/configuration/system.webServer");
-            var security = new XElement("security");
-            var authorization = new XElement("authorization");
-            var remove = new XElement("remove",
-                    new XAttribute("users", "*"));
-            node?.Add(security);
-            security.Add(authorization);
-            authorization.Add(remove);
+            node?.Add(
+                new XElement("security",
+                    new XElement("authorization",
+                        new XElement("remove",
+                            new XAttribute("users", "*")))));
             document.Save(expected);
 
             _feature.SelectedItem = _feature.Items[0];
@@ -158,18 +156,15 @@ namespace Tests.Authorization
             var expected = "expected_edit.site.config";
             var document = XDocument.Load(site);
             var node = document.Root.XPathSelectElement("/configuration/system.webServer");
-            var security = new XElement("security");
-            var authorization = new XElement("authorization");
-            var remove = new XElement("remove",
-                    new XAttribute("users", "*"));
-            var add = new XElement("add",
-                    new XAttribute("accessType", "Allow"),
-                    new XAttribute("roles", "testers"),
-                    new XAttribute("users", "*"));
-            node?.Add(security);
-            security.Add(authorization);
-            authorization.Add(remove);
-            authorization.Add(add);
+            node?.Add(
+                new XElement("security",
+                    new XElement("authorization",
+                        new XElement("remove",
+                            new XAttribute("users", "*")),
+                        new XElement("add",
+                            new XAttribute("accessType", "Allow"),
+                            new XAttribute("roles", "testers"),
+                            new XAttribute("users", "*")))));
             document.Save(expected);
 
             _feature.SelectedItem = _feature.Items[0];
@@ -236,14 +231,12 @@ namespace Tests.Authorization
             var expected = "expected_add.site.config";
             var document = XDocument.Load(site);
             var node = document.Root.XPathSelectElement("/configuration/system.webServer");
-            var security = new XElement("security");
-            var authorization = new XElement("authorization");
-            var add = new XElement("add",
-                new XAttribute("roles", "test"),
-                new XAttribute("accessType", "Allow"));
-            node?.Add(security);
-            security.Add(authorization);
-            authorization.Add(add);
+            node?.Add(
+                new XElement("security",
+                    new XElement("authorization",
+                        new XElement("add",
+                            new XAttribute("roles", "test"),
+                            new XAttribute("accessType", "Allow")))));
             document.Save(expected);
 
             var item = new AuthorizationRule(null);

@@ -141,13 +141,13 @@ namespace Tests.Handlers
             const string Expected = @"expected_add.config";
             var document = XDocument.Load(Current);
             var node = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/handlers");
-            var element = new XElement("add",
-                new XAttribute("modules", ""),
-                new XAttribute("resourceType", "File"),
-                new XAttribute("verb", "*"),
-                new XAttribute("name", "test"),
-                new XAttribute("path", "*"));
-            node?.Add(element);
+            node?.Add(
+                new XElement("add",
+                    new XAttribute("modules", ""),
+                    new XAttribute("resourceType", "File"),
+                    new XAttribute("verb", "*"),
+                    new XAttribute("name", "test"),
+                    new XAttribute("path", "*")));
             document.Save(Expected);
 
             var item = new HandlersItem(null);

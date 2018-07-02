@@ -116,10 +116,10 @@ namespace Tests.RequestFiltering.Headers
             const string Expected = @"expected_add.config";
             var document = XDocument.Load(Current);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer/security/requestFiltering/requestLimits/headerLimits");
-            var element = new XElement("add",
-                new XAttribute("header", "test1"),
-                new XAttribute("sizeLimit", "200"));
-            node?.Add(element);
+            node?.Add(
+                new XElement("add",
+                    new XAttribute("header", "test1"),
+                    new XAttribute("sizeLimit", "200")));
             document.Save(Expected);
 
             var item = new HeadersItem(null);

@@ -117,11 +117,10 @@ namespace Tests.Authentication
             var site = Path.Combine("Website1", "web.config");
             var expected = "expected_edit.site.config";
             var document = XDocument.Load(site);
-            var web = new XElement("system.web");
-            document.Root?.Add(web);
-            var authen = new XElement("authentication",
-                    new XAttribute("mode", "Forms"));
-            web.Add(authen);
+            document.Root?.Add(
+                new XElement("system.web",
+                    new XElement("authentication",
+                        new XAttribute("mode", "Forms"))));
             document.Save(expected);
 
             _feature.Enable();

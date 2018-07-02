@@ -116,10 +116,10 @@ namespace Tests.RequestFiltering.FileExtensions
             const string Expected = @"expected_add.config";
             var document = XDocument.Load(Current);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer/security/requestFiltering/fileExtensions");
-            var element = new XElement("add",
+            node?.Add(
+                new XElement("add",
                     new XAttribute("fileExtension", ".csv"),
-                    new XAttribute("allowed", "false"));
-            node?.Add(element);
+                    new XAttribute("allowed", "false")));
             document.Save(Expected);
 
             var item = new FileExtensionsItem(null);

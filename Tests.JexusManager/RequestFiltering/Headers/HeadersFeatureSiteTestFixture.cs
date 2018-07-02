@@ -107,17 +107,13 @@ namespace Tests.RequestFiltering.Headers
             var expected = "expected_remove.site.config";
             var document = XDocument.Load(site);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
-            var security = new XElement("security");
-            var request = new XElement("requestFiltering");
-            var limits = new XElement("requestLimits");
-            var header = new XElement("headerLimits");
-            var add = new XElement("remove",
-                    new XAttribute("header", "test"));
-            node?.Add(security);
-            security.Add(request);
-            request.Add(limits);
-            limits.Add(header);
-            header.Add(add);
+            node?.Add(
+                new XElement("security",
+                    new XElement("requestFiltering",
+                        new XElement("requestLimits",
+                            new XElement("headerLimits",
+                                new XElement("remove",
+                                    new XAttribute("header", "test")))))));
             document.Save(expected);
 
             _feature.SelectedItem = _feature.Items[0];
@@ -169,18 +165,14 @@ namespace Tests.RequestFiltering.Headers
             var expected = "expected_remove.site.config";
             var document = XDocument.Load(site);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
-            var security = new XElement("security");
-            var request = new XElement("requestFiltering");
-            var limits = new XElement("requestLimits");
-            var header = new XElement("headerLimits");
-            var add = new XElement("add",
-                    new XAttribute("header", "test1"),
-                    new XAttribute("sizeLimit", "200"));
-            node?.Add(security);
-            security.Add(request);
-            request.Add(limits);
-            limits.Add(header);
-            header.Add(add);
+            node?.Add(
+                new XElement("security",
+                    new XElement("requestFiltering",
+                        new XElement("requestLimits",
+                            new XElement("headerLimits",
+                                new XElement("add",
+                                    new XAttribute("header", "test1"),
+                                    new XAttribute("sizeLimit", "200")))))));
             document.Save(expected);
 
             var item = new HeadersItem(null);

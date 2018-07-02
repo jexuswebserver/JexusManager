@@ -42,26 +42,19 @@ namespace Tests.Main
             const string Expected = @"expected_site_add.config";
             var document = XDocument.Load(Current);
             var node = document.Root.XPathSelectElement("/configuration/system.applicationHost/sites");
-            var siteNode = new XElement("site",
-                new XAttribute("name", "Contoso"),
-                new XAttribute("id", "2"));
-            var bindingsNode = new XElement("bindings");
-            siteNode.Add(bindingsNode);
-            node?.Add(siteNode);
-
-            var bindingNode = new XElement("binding",
-                new XAttribute("protocol", "http"),
-                new XAttribute("bindingInformation", @"*:80:www.contoso.com"));
-            bindingsNode.Add(bindingNode);
-
-            var appNode = new XElement("application",
-                new XAttribute("path", "/"));
-            siteNode.Add(appNode);
-            var vDirNode = new XElement("virtualDirectory",
-                new XAttribute("path", "/"),
-                new XAttribute("physicalPath", @"C:\Inetpub\www.contoso.com\wwwroot"));
-            appNode.Add(vDirNode);
-
+            node?.Add(
+                new XElement("site",
+                    new XAttribute("name", "Contoso"),
+                    new XAttribute("id", "2"),
+                        new XElement("bindings",
+                            new XElement("binding",
+                                new XAttribute("protocol", "http"),
+                                new XAttribute("bindingInformation", @"*:80:www.contoso.com"))),
+                        new XElement("application",
+                            new XAttribute("path", "/"),
+                            new XElement("virtualDirectory",
+                                new XAttribute("path", "/"),
+                                new XAttribute("physicalPath", @"C:\Inetpub\www.contoso.com\wwwroot")))));
             document.Save(Expected);
 
             Configuration config = serverManager.GetApplicationHostConfiguration();
@@ -121,26 +114,19 @@ namespace Tests.Main
             const string Expected = @"expected_site_add.config";
             var document = XDocument.Load(Current);
             var node = document.Root.XPathSelectElement("/configuration/system.applicationHost/sites");
-            var siteNode = new XElement("site",
-                new XAttribute("name", "Contoso"),
-                new XAttribute("id", "2"));
-            var bindingsNode = new XElement("bindings");
-            siteNode.Add(bindingsNode);
-            node?.Add(siteNode);
-
-            var bindingNode = new XElement("binding",
-                new XAttribute("protocol", "http"),
-                new XAttribute("bindingInformation", @"*:80:www.contoso.com"));
-            bindingsNode.Add(bindingNode);
-
-            var appNode = new XElement("application",
-                new XAttribute("path", "/"));
-            siteNode.Add(appNode);
-            var vDirNode = new XElement("virtualDirectory",
+            node?.Add(
+                new XElement("site",
+                    new XAttribute("name", "Contoso"),
+                    new XAttribute("id", "2"),
+                        new XElement("bindings",
+                            new XElement("binding",
+                                new XAttribute("protocol", "http"),
+                                new XAttribute("bindingInformation", @"*:80:www.contoso.com"))),
+                        new XElement("application",
                 new XAttribute("path", "/"),
-                new XAttribute("physicalPath", @"C:\Inetpub\www.contoso.com\wwwroot"));
-            appNode.Add(vDirNode);
-
+                    new XElement("virtualDirectory",
+                        new XAttribute("path", "/"),
+                        new XAttribute("physicalPath", @"C:\Inetpub\www.contoso.com\wwwroot")))));
             document.Save(Expected);
 
             var sites = serverManager.Sites;

@@ -107,15 +107,12 @@ namespace Tests.RequestFiltering.Urls
             var expected = "expected_remove.site.config";
             var document = XDocument.Load(site);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
-            var security = new XElement("security");
-            var request = new XElement("requestFiltering");
-            var file = new XElement("alwaysAllowedUrls");
-            var remove = new XElement("remove",
-                new XAttribute("url", "test"));
-            node?.Add(security);
-            security.Add(request);
-            request.Add(file);
-            file.Add(remove);
+            node?.Add(
+                new XElement("security",
+                    new XElement("requestFiltering",
+                        new XElement("alwaysAllowedUrls",
+                            new XElement("remove",
+                                new XAttribute("url", "test"))))));
             document.Save(expected);
 
             _feature.SelectedItem = _feature.Items[0];
@@ -140,15 +137,12 @@ namespace Tests.RequestFiltering.Urls
             var expected = "expected_remove.site.config";
             var document = XDocument.Load(site);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
-            var security = new XElement("security");
-            var request = new XElement("requestFiltering");
-            var file = new XElement("denyUrlSequences");
-            var remove = new XElement("remove",
-                new XAttribute("sequence", "test"));
-            node?.Add(security);
-            security.Add(request);
-            request.Add(file);
-            file.Add(remove);
+            node?.Add(
+                new XElement("security",
+                    new XElement("requestFiltering",
+                        new XElement("denyUrlSequences",
+                            new XElement("remove",
+                                new XAttribute("sequence", "test"))))));
             document.Save(expected);
 
             _feature.SelectedItem = _feature.Items[1];
@@ -227,15 +221,12 @@ namespace Tests.RequestFiltering.Urls
             var expected = "expected_remove.site.config";
             var document = XDocument.Load(site);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
-            var security = new XElement("security");
-            var request = new XElement("requestFiltering");
-            var file = new XElement("alwaysAllowedUrls");
-            var remove = new XElement("add",
-                new XAttribute("url", "test1"));
-            node?.Add(security);
-            security.Add(request);
-            request.Add(file);
-            file.Add(remove);
+            node?.Add(
+                new XElement("security",
+                    new XElement("requestFiltering",
+                        new XElement("alwaysAllowedUrls",
+                            new XElement("add",
+                                new XAttribute("url", "test1"))))));
             document.Save(expected);
 
             var item = new UrlsItem(null, true);
@@ -260,15 +251,12 @@ namespace Tests.RequestFiltering.Urls
             var expected = "expected_remove.site.config";
             var document = XDocument.Load(site);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
-            var security = new XElement("security");
-            var request = new XElement("requestFiltering");
-            var file = new XElement("denyUrlSequences");
-            var remove = new XElement("add",
-                new XAttribute("sequence", "test1"));
-            node?.Add(security);
-            security.Add(request);
-            request.Add(file);
-            file.Add(remove);
+            node?.Add(
+                new XElement("security",
+                    new XElement("requestFiltering",
+                        new XElement("denyUrlSequences",
+                            new XElement("add",
+                                new XAttribute("sequence", "test1"))))));
             document.Save(expected);
 
             var item = new UrlsItem(null, false);

@@ -105,16 +105,13 @@ namespace Tests.Handlers
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location",
-                new XAttribute("path", "WebSite1"));
-            document.Root?.Add(node);
-            var web = new XElement("system.webServer");
-            node.Add(web);
-            var content = new XElement("handlers");
-            web.Add(content);
-            var remove = new XElement("remove",
-                new XAttribute("name", "AXD-ISAPI-4.0_64bit"));
-            content.Add(remove);
+            document.Root?.Add(
+                new XElement("location",
+                    new XAttribute("path", "WebSite1"),
+                    new XElement("system.webServer",
+                        new XElement("handlers",
+                            new XElement("remove",
+                                new XAttribute("name", "AXD-ISAPI-4.0_64bit"))))));
             document.Save(Expected);
 
             _feature.SelectedItem = _feature.Items[0];
@@ -134,9 +131,9 @@ namespace Tests.Handlers
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location",
-                new XAttribute("path", "WebSite1"));
-            document.Root?.Add(node);
+            document.Root?.Add(
+                new XElement("location",
+                    new XAttribute("path", "WebSite1")));
             document.Save(Expected);
 
             var item = new HandlersItem(null);
@@ -161,26 +158,22 @@ namespace Tests.Handlers
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location",
-                new XAttribute("path", "WebSite1"));
-            document.Root?.Add(node);
-            var web = new XElement("system.webServer");
-            node.Add(web);
-            var content = new XElement("handlers");
-            web.Add(content);
-            var remove = new XElement("remove",
-                new XAttribute("name", "AXD-ISAPI-4.0_64bit"));
-            content.Add(remove);
-            var add = new XElement("add",
-                new XAttribute("allowPathInfo", "true"),
-                new XAttribute("modules", "IsapiModule"),
-                new XAttribute("name", "AXD-ISAPI-4.0_64bit"),
-                new XAttribute("path", "*.axd"),
-                new XAttribute("preCondition", "classicMode,runtimeVersionv4.0,bitness64"),
-                new XAttribute("responseBufferLimit", "0"),
-                new XAttribute("scriptProcessor", @"%windir%\Microsoft.NET\Framework64\v4.0.30319\aspnet_isapi.dll"),
-                new XAttribute("verb", "GET,HEAD,POST,DEBUG"));
-            content.Add(add);
+            document.Root?.Add(
+                new XElement("location",
+                    new XAttribute("path", "WebSite1"),
+                    new XElement("system.webServer",
+                        new XElement("handlers",
+                            new XElement("remove",
+                                new XAttribute("name", "AXD-ISAPI-4.0_64bit")),
+                            new XElement("add",
+                                new XAttribute("allowPathInfo", "true"),
+                                new XAttribute("modules", "IsapiModule"),
+                                new XAttribute("name", "AXD-ISAPI-4.0_64bit"),
+                                new XAttribute("path", "*.axd"),
+                                new XAttribute("preCondition", "classicMode,runtimeVersionv4.0,bitness64"),
+                                new XAttribute("responseBufferLimit", "0"),
+                                new XAttribute("scriptProcessor", @"%windir%\Microsoft.NET\Framework64\v4.0.30319\aspnet_isapi.dll"),
+                                new XAttribute("verb", "GET,HEAD,POST,DEBUG"))))));
             document.Save(Expected);
 
             _feature.SelectedItem = _feature.Items[0];
@@ -202,21 +195,18 @@ namespace Tests.Handlers
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location",
-                new XAttribute("path", "WebSite1"));
-            document.Root?.Add(node);
-            var web = new XElement("system.webServer");
-            node.Add(web);
-            var content = new XElement("handlers");
-            web.Add(content);
-            var add = new XElement("add",
-                new XAttribute("resourceType", "File"),
-                new XAttribute("allowPathInfo", "true"),
-                new XAttribute("modules", ""),
-                new XAttribute("name", "test"),
-                new XAttribute("path", "*"),
-                new XAttribute("verb", "*"));
-            content.Add(add);
+            document.Root?.Add(
+                new XElement("location",
+                    new XAttribute("path", "WebSite1"),
+                    new XElement("system.webServer",
+                        new XElement("handlers",
+                            new XElement("add",
+                                new XAttribute("resourceType", "File"),
+                                new XAttribute("allowPathInfo", "true"),
+                                new XAttribute("modules", ""),
+                                new XAttribute("name", "test"),
+                                new XAttribute("path", "*"),
+                                new XAttribute("verb", "*"))))));
             document.Save(Expected);
 
             var item = new HandlersItem(null);
@@ -244,20 +234,17 @@ namespace Tests.Handlers
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location",
-                new XAttribute("path", "WebSite1"));
-            document.Root?.Add(node);
-            var web = new XElement("system.webServer");
-            node.Add(web);
-            var content = new XElement("handlers");
-            web.Add(content);
-            var add = new XElement("add",
-                new XAttribute("resourceType", "File"),
-                new XAttribute("modules", ""),
-                new XAttribute("name", "test"),
-                new XAttribute("path", "*"),
-                new XAttribute("verb", "*"));
-            content.Add(add);
+            document.Root?.Add(
+                new XElement("location",
+                    new XAttribute("path", "WebSite1"),
+                    new XElement("system.webServer",
+                        new XElement("handlers",
+                            new XElement("add",
+                                new XAttribute("resourceType", "File"),
+                                new XAttribute("modules", ""),
+                                new XAttribute("name", "test"),
+                                new XAttribute("path", "*"),
+                                new XAttribute("verb", "*"))))));
             document.Save(Expected);
 
             var item = new HandlersItem(null);
@@ -278,11 +265,10 @@ namespace Tests.Handlers
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location",
-                new XAttribute("path", "WebSite1"));
-            document.Root?.Add(node);
-            var web = new XElement("system.webServer");
-            node.Add(web);
+            document.Root?.Add(
+                new XElement("location",
+                    new XAttribute("path", "WebSite1"),
+                    new XElement("system.webServer")));
             document.Save(Expected);
 
             var item = new HandlersItem(null);
@@ -310,10 +296,9 @@ namespace Tests.Handlers
             document.Root?.Add(node);
             var web = new XElement("system.webServer");
             node.Add(web);
-            var content = new XElement("handlers");
+            var content = new XElement("handlers",
+                new XElement("clear"));
             web.Add(content);
-            var clear = new XElement("clear");
-            content.Add(clear);
             var all = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/handlers");
             if (all != null)
             {
@@ -371,31 +356,26 @@ namespace Tests.Handlers
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location",
-                new XAttribute("path", "WebSite1"));
-            document.Root.Add(node);
-            var web = new XElement("system.webServer");
-            node.Add(web);
-            var content = new XElement("handlers");
-            web.Add(content);
-            var remove = new XElement("remove",
-                new XAttribute("name", "StaticFile"));
-            content.Add(remove);
-            var add = new XElement("add",
-                new XAttribute("resourceType", "File"),
-                new XAttribute("modules", ""),
-                new XAttribute("name", "test"),
-                new XAttribute("path", "*"),
-                new XAttribute("verb", "*"));
-            content.Add(add);
-            var one = new XElement("add",
-                new XAttribute("modules", "StaticFileModule,DefaultDocumentModule,DirectoryListingModule"),
-                new XAttribute("name", "StaticFile"),
-                new XAttribute("path", "*"),
-                new XAttribute("requireAccess", "Read"),
-                new XAttribute("resourceType", "Either"),
-                new XAttribute("verb", "*"));
-            content.Add(one);
+            document.Root?.Add(
+                new XElement("location",
+                    new XAttribute("path", "WebSite1"),
+                    new XElement("system.webServer",
+                        new XElement("handlers",
+                            new XElement("remove",
+                                new XAttribute("name", "StaticFile")),
+                            new XElement("add",
+                                new XAttribute("resourceType", "File"),
+                                new XAttribute("modules", ""),
+                                new XAttribute("name", "test"),
+                                new XAttribute("path", "*"),
+                                new XAttribute("verb", "*")),
+                            new XElement("add",
+                                new XAttribute("modules", "StaticFileModule,DefaultDocumentModule,DirectoryListingModule"),
+                                new XAttribute("name", "StaticFile"),
+                                new XAttribute("path", "*"),
+                                new XAttribute("requireAccess", "Read"),
+                                new XAttribute("resourceType", "Either"),
+                                new XAttribute("verb", "*"))))));
             document.Save(Expected);
 
             var item = new HandlersItem(null);

@@ -106,11 +106,10 @@ namespace Tests.MimeMap
             var expected = "expected_remove.site.config";
             var document = XDocument.Load(site);
             var node = document.Root.XPathSelectElement("/configuration/system.webServer");
-            var content = new XElement("staticContent");
-            node?.Add(content);
-            var remove = new XElement("remove",
-                    new XAttribute("fileExtension", ".323"));
-            content.Add(remove);
+            node?.Add(
+                new XElement("staticContent",
+                    new XElement("remove",
+                        new XAttribute("fileExtension", ".323"))));
             document.Save(expected);
 
             _feature.SelectedItem = _feature.Items[0];
@@ -163,15 +162,13 @@ namespace Tests.MimeMap
             var expected = "expected_edit.site.config";
             var document = XDocument.Load(site);
             var node = document.Root.XPathSelectElement("/configuration/system.webServer");
-            var content = new XElement("staticContent");
-            node?.Add(content);
-            var remove = new XElement("remove",
-                    new XAttribute("fileExtension", ".323"));
-            content.Add(remove);
-            var add = new XElement("mimeMap",
-                    new XAttribute("fileExtension", ".323"),
-                    new XAttribute("mimeType", "text/test"));
-            content.Add(add);
+            node?.Add(
+                new XElement("staticContent",
+                    new XElement("remove",
+                        new XAttribute("fileExtension", ".323")),
+                    new XElement("mimeMap",
+                        new XAttribute("fileExtension", ".323"),
+                        new XAttribute("mimeType", "text/test"))));
             document.Save(expected);
 
             _feature.SelectedItem = _feature.Items[0];
@@ -234,12 +231,11 @@ namespace Tests.MimeMap
             var expected = "expected_edit.site.config";
             var document = XDocument.Load(site);
             var node = document.Root.XPathSelectElement("/configuration/system.webServer");
-            var content = new XElement("staticContent");
-            node?.Add(content);
-            var add = new XElement("mimeMap",
-                new XAttribute("fileExtension", ".pp1"),
-                new XAttribute("mimeType", "text/test"));
-            content.Add(add);
+            node?.Add(
+                new XElement("staticContent",
+                    new XElement("mimeMap",
+                        new XAttribute("fileExtension", ".pp1"),
+                        new XAttribute("mimeType", "text/test"))));
             document.Save(expected);
 
             var item = new MimeMapItem(null);

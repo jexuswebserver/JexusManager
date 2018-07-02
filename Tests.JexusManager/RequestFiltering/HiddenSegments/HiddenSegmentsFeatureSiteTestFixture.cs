@@ -107,15 +107,12 @@ namespace Tests.RequestFiltering.HiddenSegments
             var expected = "expected_remove.site.config";
             var document = XDocument.Load(site);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
-            var security = new XElement("security");
-            var request = new XElement("requestFiltering");
-            var file = new XElement("hiddenSegments");
-            var add = new XElement("remove",
-                    new XAttribute("segment", "web.config"));
-            node?.Add(security);
-            security.Add(request);
-            request.Add(file);
-            file.Add(add);
+            node?.Add(
+                new XElement("security",
+                    new XElement("requestFiltering",
+                        new XElement("hiddenSegments",
+                            new XElement("remove",
+                                new XAttribute("segment", "web.config"))))));
             document.Save(expected);
 
             _feature.SelectedItem = _feature.Items[0];
@@ -167,15 +164,12 @@ namespace Tests.RequestFiltering.HiddenSegments
             var expected = "expected_remove.site.config";
             var document = XDocument.Load(site);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
-            var security = new XElement("security");
-            var request = new XElement("requestFiltering");
-            var file = new XElement("hiddenSegments");
-            var add = new XElement("add",
-                    new XAttribute("segment", "test"));
-            node?.Add(security);
-            security.Add(request);
-            request.Add(file);
-            file.Add(add);
+            node?.Add(
+                new XElement("security",
+                    new XElement("requestFiltering",
+                        new XElement("hiddenSegments",
+                            new XElement("add",
+                                new XAttribute("segment", "test"))))));
             document.Save(expected);
 
             var item = new HiddenSegmentsItem(null);

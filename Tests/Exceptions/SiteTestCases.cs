@@ -503,14 +503,14 @@ namespace Tests.Exceptions
                 var add = root.XPathSelectElement("/configuration/system.webServer/defaultDocument/files/add");
                 add?.SetAttributeValue("value", "home2.html");
 
-                var location = new XElement("location",
-                    new XAttribute("path", "WebSite1/test"),
-                    new XElement("system.webServer",
-                        new XElement("defaultDocument",
-                            new XElement("files",
-                                new XElement("add",
-                                    new XAttribute("value", "home3.html"))))));
-                root.Add(location);
+                root?.Add(
+                    new XElement("location",
+                        new XAttribute("path", "WebSite1/test"),
+                        new XElement("system.webServer",
+                            new XElement("defaultDocument",
+                                new XElement("files",
+                                    new XElement("add",
+                                        new XAttribute("value", "home3.html")))))));
                 file.Save(siteConfig);
             }
 #if IIS

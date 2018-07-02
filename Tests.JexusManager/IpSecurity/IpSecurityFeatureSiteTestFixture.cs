@@ -104,18 +104,14 @@ namespace Tests.IpSecurity
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location",
-                new XAttribute("path", "WebSite1"));
-            document.Root?.Add(node);
-            var web = new XElement("system.webServer");
-            node.Add(web);
-            var security = new XElement("security");
-            web.Add(security);
-            var ip = new XElement("ipSecurity");
-            security.Add(ip);
-            var remove = new XElement("remove",
-                new XAttribute("ipAddress", "10.0.0.0"));
-            ip.Add(remove);
+            document.Root?.Add(
+                new XElement("location",
+                    new XAttribute("path", "WebSite1"),
+                    new XElement("system.webServer",
+                        new XElement("security",
+                            new XElement("ipSecurity",
+                                new XElement("remove",
+                                    new XAttribute("ipAddress", "10.0.0.0")))))));
             document.Save(Expected);
 
             _feature.SelectedItem = _feature.Items[0];
@@ -135,9 +131,9 @@ namespace Tests.IpSecurity
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location",
-                new XAttribute("path", "WebSite1"));
-            document.Root?.Add(node);
+            document.Root?.Add(
+                new XElement("location",
+                    new XAttribute("path", "WebSite1")));
             document.Save(Expected);
 
             var item = new IpSecurityItem(null);
@@ -161,18 +157,14 @@ namespace Tests.IpSecurity
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location",
-                new XAttribute("path", "WebSite1"));
-            document.Root?.Add(node);
-            var web = new XElement("system.webServer");
-            node.Add(web);
-            var security = new XElement("security");
-            web.Add(security);
-            var ip = new XElement("ipSecurity");
-            security.Add(ip);
-            var add = new XElement("add",
-                new XAttribute("ipAddress", "12.0.0.0"));
-            ip.Add(add);
+            document.Root?.Add(
+                new XElement("location",
+                    new XAttribute("path", "WebSite1"),
+                    new XElement("system.webServer",
+                        new XElement("security",
+                            new XElement("ipSecurity",
+                                new XElement("add",
+                                    new XAttribute("ipAddress", "12.0.0.0")))))));
             document.Save(Expected);
 
             var item = new IpSecurityItem(null);
@@ -192,13 +184,11 @@ namespace Tests.IpSecurity
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location",
-                new XAttribute("path", "WebSite1"));
-            document.Root?.Add(node);
-            var web = new XElement("system.webServer");
-            node.Add(web);
-            var security = new XElement("security");
-            web.Add(security);
+            document.Root?.Add(
+                new XElement("location",
+                    new XAttribute("path", "WebSite1"),
+                    new XElement("system.webServer",
+                        new XElement("security"))));
             document.Save(Expected);
 
             var item = new IpSecurityItem(null);

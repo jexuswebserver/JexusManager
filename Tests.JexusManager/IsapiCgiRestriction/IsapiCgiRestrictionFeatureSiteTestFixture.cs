@@ -104,18 +104,14 @@ namespace Tests.IsapiCgiRestriction
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location",
-                new XAttribute("path", "WebSite1"));
-            document.Root?.Add(node);
-            var web = new XElement("system.webServer");
-            node.Add(web);
-            var security = new XElement("security");
-            web.Add(security);
-            var ip = new XElement("isapiCgiRestriction");
-            security.Add(ip);
-            var remove = new XElement("remove",
-                new XAttribute("path", @"%windir%\Microsoft.NET\Framework64\v4.0.30319\webengine4.dll"));
-            ip.Add(remove);
+            document.Root?.Add(
+                new XElement("location",
+                    new XAttribute("path", "WebSite1"),
+                    new XElement("system.webServer",
+                        new XElement("security",
+                            new XElement("isapiCgiRestriction",
+                                new XElement("remove",
+                                    new XAttribute("path", @"%windir%\Microsoft.NET\Framework64\v4.0.30319\webengine4.dll")))))));
             document.Save(Expected);
 
             _feature.SelectedItem = _feature.Items[0];
@@ -135,9 +131,9 @@ namespace Tests.IsapiCgiRestriction
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location",
-                new XAttribute("path", "WebSite1"));
-            document.Root?.Add(node);
+            document.Root?.Add(
+                new XElement("location",
+                    new XAttribute("path", "WebSite1")));
             document.Save(Expected);
 
             var item = new IsapiCgiRestrictionItem(null);
@@ -162,23 +158,18 @@ namespace Tests.IsapiCgiRestriction
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location",
-                new XAttribute("path", "WebSite1"));
-            document.Root?.Add(node);
-            var web = new XElement("system.webServer");
-            node.Add(web);
-            var security = new XElement("security");
-            web.Add(security);
-            var ip = new XElement("isapiCgiRestriction");
-            security.Add(ip);
-            var remove = new XElement("remove",
-                new XAttribute("path", @"%windir%\Microsoft.NET\Framework64\v4.0.30319\webengine4.dll"));
-            ip.Add(remove);
-            var add = new XElement("add",
-                new XAttribute("allowed", "true"),
-                new XAttribute("path", "c:\\test.dll"),
-                new XAttribute("description", "ASP.NET_v4.0"));
-            ip.Add(add);
+            document.Root?.Add(
+                new XElement("location",
+                    new XAttribute("path", "WebSite1"),
+                    new XElement("system.webServer",
+                        new XElement("security",
+                            new XElement("isapiCgiRestriction",
+                                new XElement("remove",
+                                    new XAttribute("path", @"%windir%\Microsoft.NET\Framework64\v4.0.30319\webengine4.dll")),
+                                new XElement("add",
+                                    new XAttribute("allowed", "true"),
+                                    new XAttribute("path", "c:\\test.dll"),
+                                    new XAttribute("description", "ASP.NET_v4.0")))))));
             document.Save(Expected);
 
             _feature.SelectedItem = _feature.Items[0];
@@ -200,20 +191,16 @@ namespace Tests.IsapiCgiRestriction
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location",
-                new XAttribute("path", "WebSite1"));
-            document.Root?.Add(node);
-            var web = new XElement("system.webServer");
-            node.Add(web);
-            var security = new XElement("security");
-            web.Add(security);
-            var ip = new XElement("isapiCgiRestriction");
-            security.Add(ip);
-            var add = new XElement("add",
-                new XAttribute("allowed", "false"),
-                new XAttribute("path", "c:\\test.exe"),
-                new XAttribute("description", "test"));
-            ip.Add(add);
+            document.Root?.Add(
+                new XElement("location",
+                    new XAttribute("path", "WebSite1"),
+                    new XElement("system.webServer",
+                        new XElement("security",
+                            new XElement("isapiCgiRestriction",
+                                new XElement("add",
+                                    new XAttribute("allowed", "false"),
+                                    new XAttribute("path", "c:\\test.exe"),
+                                    new XAttribute("description", "test")))))));
             document.Save(Expected);
 
             var item = new IsapiCgiRestrictionItem(null);
@@ -240,20 +227,16 @@ namespace Tests.IsapiCgiRestriction
 
             const string Expected = @"expected_add.site.config";
             var document = XDocument.Load(Current);
-            var node = new XElement("location",
-                new XAttribute("path", "WebSite1"));
-            document.Root?.Add(node);
-            var web = new XElement("system.webServer");
-            node.Add(web);
-            var security = new XElement("security");
-            web.Add(security);
-            var ip = new XElement("isapiCgiRestriction");
-            security.Add(ip);
-            var add = new XElement("add",
-                new XAttribute("allowed", "false"),
-                new XAttribute("path", "c:\\test.dll"),
-                new XAttribute("description", "test"));
-            ip.Add(add);
+            document.Root?.Add(
+                new XElement("location",
+                    new XAttribute("path", "WebSite1"),
+                    new XElement("system.webServer",
+                        new XElement("security",
+                            new XElement("isapiCgiRestriction",
+                                new XElement("add",
+                                    new XAttribute("allowed", "false"),
+                                    new XAttribute("path", "c:\\test.dll"),
+                                    new XAttribute("description", "test")))))));
             document.Save(Expected);
 
             var item = new IsapiCgiRestrictionItem(null);

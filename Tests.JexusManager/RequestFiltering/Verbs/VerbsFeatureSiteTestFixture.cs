@@ -107,15 +107,12 @@ namespace Tests.RequestFiltering.Verbs
             var expected = "expected_remove.site.config";
             var document = XDocument.Load(site);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
-            var security = new XElement("security");
-            var request = new XElement("requestFiltering");
-            var file = new XElement("verbs");
-            var remove = new XElement("remove",
-                new XAttribute("verb", "PUT"));
-            node?.Add(security);
-            security.Add(request);
-            request.Add(file);
-            file.Add(remove);
+            node?.Add(
+                new XElement("security",
+                    new XElement("requestFiltering",
+                        new XElement("verbs",
+                            new XElement("remove",
+                                new XAttribute("verb", "PUT"))))));
             document.Save(expected);
 
             _feature.SelectedItem = _feature.Items[0];
@@ -167,16 +164,13 @@ namespace Tests.RequestFiltering.Verbs
             var expected = "expected_remove.site.config";
             var document = XDocument.Load(site);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
-            var security = new XElement("security");
-            var request = new XElement("requestFiltering");
-            var file = new XElement("verbs");
-            var remove = new XElement("add",
-                new XAttribute("allowed", "false"),
-                new XAttribute("verb", "GET"));
-            node?.Add(security);
-            security.Add(request);
-            request.Add(file);
-            file.Add(remove);
+            node?.Add(
+                new XElement("security",
+                    new XElement("requestFiltering",
+                        new XElement("verbs",
+                            new XElement("add",
+                                new XAttribute("allowed", "false"),
+                                new XAttribute("verb", "GET"))))));
             document.Save(expected);
 
             var item = new VerbsItem(null);

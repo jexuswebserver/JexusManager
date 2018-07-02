@@ -471,13 +471,12 @@ namespace Tests.Exceptions
                 }
 
                 var app = root.XPathSelectElement("/configuration/system.applicationHost/sites/site[@id='1']/application");
-                var newApp = new XElement("application",
-                    new XAttribute("path", "/xxx"));
-                app.AddBeforeSelf(newApp);
-                var vDir = new XElement("virtualDirectory",
-                    new XAttribute("path", "/"),
-                    new XAttribute("physicalPath", @"%JEXUS_TEST_HOME%\WebSite1"));
-                newApp.Add(vDir);
+                app.AddBeforeSelf(
+                    new XElement("application",
+                        new XAttribute("path", "/xxx"),
+                        new XElement("virtualDirectory",
+                            new XAttribute("path", "/"),
+                            new XAttribute("physicalPath", @"%JEXUS_TEST_HOME%\WebSite1"))));
                 file.Save(current);
             }
 
@@ -639,12 +638,12 @@ namespace Tests.Exceptions
                 var site1 = root.XPathSelectElement("/configuration/system.applicationHost/sites/site[@id='2']");
                 var log = new XElement("logFile",
                     new XAttribute("logFormat", "IIS"));
-                site1.Add(log);
+                site1?.Add(log);
 
                 var site2 = root.XPathSelectElement("/configuration/system.applicationHost/sites/site[@id='3']");
                 var log2 = new XElement("logFile",
                     new XAttribute("directory", @"%IIS_USER_HOME%\Logs\1"));
-                site2.Add(log2);
+                site2?.Add(log2);
 
                 file.Save(current);
             }
@@ -699,10 +698,10 @@ namespace Tests.Exceptions
                 }
 
                 var site1 = root.XPathSelectElement("/configuration/system.applicationHost/sites/site[@id='2']/bindings");
-                var binding = new XElement("binding",
-                    new XAttribute("protocol", "http"),
-                    new XAttribute("bindingInformation", "*:61902:localhost"));
-                site1.Add(binding);
+                site1?.Add(
+                    new XElement("binding",
+                        new XAttribute("protocol", "http"),
+                        new XAttribute("bindingInformation", "*:61902:localhost")));
                 file.Save(current);
             }
 #if IIS
@@ -743,10 +742,10 @@ namespace Tests.Exceptions
                 }
 
                 var site1 = root.XPathSelectElement("/configuration/system.applicationHost/sites/site[@id='2']/bindings");
-                var binding = new XElement("binding",
-                    new XAttribute("protocol", "http"),
-                    new XAttribute("bindingInformation", "*:161902:localhost"));
-                site1.Add(binding);
+                site1?.Add(
+                    new XElement("binding",
+                        new XAttribute("protocol", "http"),
+                        new XAttribute("bindingInformation", "*:161902:localhost")));
                 file.Save(current);
             }
 #if IIS
@@ -787,10 +786,10 @@ namespace Tests.Exceptions
                 }
 
                 var site1 = root.XPathSelectElement("/configuration/system.applicationHost/sites/site[@id='2']/bindings");
-                var binding = new XElement("binding",
-                    new XAttribute("protocol", "http"),
-                    new XAttribute("bindingInformation", "1.1.1.1.1:61902:localhost"));
-                site1.Add(binding);
+                site1?.Add(
+                    new XElement("binding",
+                        new XAttribute("protocol", "http"),
+                        new XAttribute("bindingInformation", "1.1.1.1.1:61902:localhost")));
                 file.Save(current);
             }
 #if IIS
@@ -831,10 +830,10 @@ namespace Tests.Exceptions
                 }
 
                 var site1 = root.XPathSelectElement("/configuration/system.applicationHost/sites/site[@id='2']/bindings");
-                var binding = new XElement("binding",
-                    new XAttribute("protocol", "http"),
-                    new XAttribute("bindingInformation", "1.1.1:61902:localhost"));
-                site1.Add(binding);
+                site1?.Add(
+                    new XElement("binding",
+                        new XAttribute("protocol", "http"),
+                        new XAttribute("bindingInformation", "1.1.1:61902:localhost")));
                 file.Save(current);
             }
 #if IIS
@@ -875,9 +874,9 @@ namespace Tests.Exceptions
                 }
 
                 var pools = root.XPathSelectElement("/configuration/system.applicationHost/applicationPools");
-                var pool = new XElement("add",
-                    new XAttribute("name", "Clr4IntegratedAppPool"));
-                pools.Add(pool);
+                pools?.Add(
+                    new XElement("add",
+                        new XAttribute("name", "Clr4IntegratedAppPool")));
                 file.Save(current);
             }
 #if IIS

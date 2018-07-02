@@ -106,15 +106,12 @@ namespace Tests.RequestFiltering.FilteringRules
             var expected = "expected_remove.site.config";
             var document = XDocument.Load(site);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
-            var security = new XElement("security");
-            var request = new XElement("requestFiltering");
-            var file = new XElement("filteringRules");
-            var remove = new XElement("remove",
-                    new XAttribute("name", "test"));
-            node?.Add(security);
-            security.Add(request);
-            request.Add(file);
-            file.Add(remove);
+            node?.Add(
+                new XElement("security",
+                    new XElement("requestFiltering",
+                        new XElement("filteringRules",
+                            new XElement("remove",
+                                new XAttribute("name", "test"))))));
             document.Save(expected);
 
             _feature.SelectedItem = _feature.Items[0];
@@ -166,19 +163,15 @@ namespace Tests.RequestFiltering.FilteringRules
             var expected = "expected_remove.site.config";
             var document = XDocument.Load(site);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
-            var security = new XElement("security");
-            var request = new XElement("requestFiltering");
-            var file = new XElement("filteringRules");
-            var remove = new XElement("remove",
-                new XAttribute("name", "test"));
-            file?.Add(remove);
-            var add = new XElement("filteringRule",
-                new XAttribute("name", "test"),
-                new XAttribute("scanQueryString", "true"));
-            node?.Add(security);
-            security.Add(request);
-            request.Add(file);
-            file.Add(add);
+            node?.Add(
+                new XElement("security",
+                    new XElement("requestFiltering",
+                        new XElement("filteringRules",
+                            new XElement("remove",
+                                new XAttribute("name", "test")),
+                            new XElement("filteringRule",
+                                new XAttribute("name", "test"),
+                                new XAttribute("scanQueryString", "true"))))));
             document.Save(expected);
 
             _feature.SelectedItem = _feature.Items[0];
@@ -205,16 +198,13 @@ namespace Tests.RequestFiltering.FilteringRules
             var expected = "expected_remove.site.config";
             var document = XDocument.Load(site);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
-            var security = new XElement("security");
-            var request = new XElement("requestFiltering");
-            var file = new XElement("filteringRules");
-            var add = new XElement("filteringRule",
-                new XAttribute("name", "test1"),
-                new XAttribute("scanQueryString", "true"));
-            node?.Add(security);
-            security.Add(request);
-            request.Add(file);
-            file.Add(add);
+            node?.Add(
+                new XElement("security",
+                    new XElement("requestFiltering",
+                        new XElement("filteringRules",
+                            new XElement("filteringRule",
+                                new XAttribute("name", "test1"),
+                                new XAttribute("scanQueryString", "true"))))));
             document.Save(expected);
 
             var item = new FilteringRulesItem(null);
@@ -245,15 +235,12 @@ namespace Tests.RequestFiltering.FilteringRules
             var expected = "expected_remove.site.config";
             var document = XDocument.Load(site);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
-            var security = new XElement("security");
-            var request = new XElement("requestFiltering");
-            var file = new XElement("filteringRules");
-            var add = new XElement("filteringRule",
-                new XAttribute("name", "test1"));
-            node?.Add(security);
-            security.Add(request);
-            request.Add(file);
-            file.Add(add);
+            node?.Add(
+                new XElement("security",
+                    new XElement("requestFiltering",
+                        new XElement("filteringRules",
+                            new XElement("filteringRule",
+                                new XAttribute("name", "test1"))))));
             document.Save(expected);
 
             var item = new FilteringRulesItem(null);

@@ -107,11 +107,10 @@ namespace Tests.HttpErrors
             var expected = "expected_remove.site.config";
             var document = XDocument.Load(site);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
-            var errors = new XElement("httpErrors");
-            var remove = new XElement("remove",
-                new XAttribute("statusCode", "401"));
-            node?.Add(errors);
-            errors.Add(remove);
+            node?.Add(
+                new XElement("httpErrors",
+                    new XElement("remove",
+                        new XAttribute("statusCode", "401"))));
             document.Save(expected);
 
             _feature.SelectedItem = _feature.Items[0];
@@ -164,16 +163,14 @@ namespace Tests.HttpErrors
             var expected = "expected_edit.site.config";
             var document = XDocument.Load(site);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
-            var errors = new XElement("httpErrors");
-            var remove = new XElement("remove",
-                new XAttribute("statusCode", "401"));
-            var add = new XElement("error",
-                new XAttribute("prefixLanguageFilePath", "%IIS_BIN%\\custerr"),
-                new XAttribute("statusCode", "401"),
-                new XAttribute("path", "c:\\test.htm"));
-            node?.Add(errors);
-            errors.Add(remove);
-            errors.Add(add);
+            node?.Add(
+                new XElement("httpErrors",
+                    new XElement("remove",
+                        new XAttribute("statusCode", "401")),
+                    new XElement("error",
+                        new XAttribute("prefixLanguageFilePath", "%IIS_BIN%\\custerr"),
+                        new XAttribute("statusCode", "401"),
+                        new XAttribute("path", "c:\\test.htm"))));
             document.Save(expected);
 
             _feature.SelectedItem = _feature.Items[0];
@@ -201,12 +198,11 @@ namespace Tests.HttpErrors
             var expected = "expected_edit.site.config";
             var document = XDocument.Load(site);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
-            var errors = new XElement("httpErrors");
-            var add = new XElement("error",
-                new XAttribute("statusCode", "455"),
-                new XAttribute("path", "c:\\test1.htm"));
-            node?.Add(errors);
-            errors.Add(add);
+            node?.Add(
+                new XElement("httpErrors",
+                    new XElement("error",
+                        new XAttribute("statusCode", "455"),
+                        new XAttribute("path", "c:\\test1.htm"))));
             document.Save(expected);
 
             var item = new HttpErrorsItem(null);
@@ -240,12 +236,11 @@ namespace Tests.HttpErrors
             var expected = "expected_edit.site.config";
             var document = XDocument.Load(site);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
-            var errors = new XElement("httpErrors");
-            var add = new XElement("error",
-                new XAttribute("statusCode", "455"),
-                new XAttribute("path", "c:\\test.htm"));
-            node?.Add(errors);
-            errors.Add(add);
+            node?.Add(
+                new XElement("httpErrors",
+                    new XElement("error",
+                        new XAttribute("statusCode", "455"),
+                        new XAttribute("path", "c:\\test.htm"))));
             document.Save(expected);
 
             var item = new HttpErrorsItem(null);

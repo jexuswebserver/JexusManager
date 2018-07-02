@@ -8,7 +8,6 @@ namespace Tests.Caching
     using System.ComponentModel.Design;
     using System.IO;
     using System.Reflection;
-    using System.Threading.Tasks;
     using System.Windows.Forms;
 
     using global::JexusManager.Features.Caching;
@@ -107,13 +106,11 @@ namespace Tests.Caching
             var expected = "expected_remove.site.config";
             var document = XDocument.Load(site);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
-            var security = new XElement("caching");
-            var authorization = new XElement("profiles");
-            var remove = new XElement("remove",
-                    new XAttribute("extension", ".cs"));
-            node?.Add(security);
-            security.Add(authorization);
-            authorization.Add(remove);
+            node?.Add(
+                new XElement("caching",
+                    new XElement("profiles",
+                    new XElement("remove",
+                        new XAttribute("extension", ".cs")))));
             document.Save(expected);
 
             _feature.SelectedItem = _feature.Items[0];
@@ -165,17 +162,14 @@ namespace Tests.Caching
             var expected = "expected_edit.site.config";
             var document = XDocument.Load(site);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
-            var security = new XElement("caching");
-            var authorization = new XElement("profiles");
-            var remove = new XElement("remove",
-                    new XAttribute("extension", ".cs"));
-            var add = new XElement("add",
-                    new XAttribute("duration", "00:00:00"),
-                    new XAttribute("extension", ".vb"));
-            node?.Add(security);
-            security.Add(authorization);
-            authorization.Add(remove);
-            authorization.Add(add);
+            node?.Add(
+                new XElement("caching",
+                    new XElement("profiles",
+                        new XElement("remove",
+                            new XAttribute("extension", ".cs")),
+                        new XElement("add",
+                            new XAttribute("duration", "00:00:00"),
+                            new XAttribute("extension", ".vb")))));
             document.Save(expected);
 
             _feature.SelectedItem = _feature.Items[0];
@@ -238,14 +232,12 @@ namespace Tests.Caching
             var expected = "expected_add.site.config";
             var document = XDocument.Load(site);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
-            var security = new XElement("caching");
-            var authorization = new XElement("profiles");
-            var add = new XElement("add",
-                new XAttribute("extension", ".ppt"),
-                new XAttribute("duration", "00:00:00"));
-            node?.Add(security);
-            security.Add(authorization);
-            authorization.Add(add);
+            node?.Add(
+                new XElement("caching",
+                    new XElement("profiles",
+                        new XElement("add",
+                            new XAttribute("extension", ".ppt"),
+                            new XAttribute("duration", "00:00:00")))));
             document.Save(expected);
 
             var item = new CachingItem(null);
