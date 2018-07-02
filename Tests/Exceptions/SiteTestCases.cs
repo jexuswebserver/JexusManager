@@ -620,11 +620,24 @@ namespace Tests.Exceptions
                 Assert.Equal(100, list.Count);
             }
 #endif
-            var handlers = section.GetCollection("files");
-            Assert.Equal(8, handlers.Count);
+            {
+                var handlers = section.GetCollection("files");
+                Assert.Equal(8, handlers.Count);
 
-            var childHandlers = childSection.GetCollection("files");
-            Assert.Equal(9, childHandlers.Count);
+                var childHandlers = childSection.GetCollection("files");
+                Assert.Equal(9, childHandlers.Count);
+            }
+            
+            var serverSection = serverConfig.GetSection("system.webServer/defaultDocument", "WebSite1");
+            var serverChildSection = serverConfig.GetSection("system.webServer/defaultDocument", "WebSite1/test");
+            
+            {
+                var handlers = serverSection.GetCollection("files");
+                Assert.Equal(7, handlers.Count);
+
+                var childHandlers = serverChildSection.GetCollection("files");
+                Assert.Equal(7, childHandlers.Count);
+            }
         }
 
         [Fact]
