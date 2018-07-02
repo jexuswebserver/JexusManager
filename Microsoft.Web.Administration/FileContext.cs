@@ -751,12 +751,6 @@ namespace Microsoft.Web.Administration
                 return true;
             }
 
-            if (section.SectionPath == "configProtectedData")
-            {
-                top.ConfigurationSections.Add(section);
-                return true;
-            }
-
             if (Parent != null)
             {
                 var parentContext = Parent.Add(section, location, top);
