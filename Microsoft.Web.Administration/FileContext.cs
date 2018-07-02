@@ -181,7 +181,25 @@ namespace Microsoft.Web.Administration
 
         public SectionGroup GetEffectiveSectionGroup()
         {
-            throw new NotImplementedException();
+            var result = new SectionGroup(this);
+            FileContext core = this;
+            while (core != null)
+            {
+                SectionGroup root = core.RootSectionGroup;
+                foreach (SectionGroup item in root.SectionGroups)
+                {
+                    result.SectionGroups.Add(item);
+                }
+
+                foreach (SectionDefinition item in root.Sections)
+                {
+                    result.Sections.Add(item);
+                }
+                
+                core = core.Parent;
+            }
+
+            return result;
         }
 
         public string[] GetLocationPaths()
@@ -482,6 +500,12 @@ namespace Microsoft.Web.Administration
                     if (tag == "configSections")
                     {
                         RootSectionGroup.ParseSectionDefinitions(element, _sectionSchemas);
+                        if (Parent == null)
+                        {
+                            // machine.config
+                            RootSectionGroup.AddSpecial();
+                        }
+
                         // TODO: can we use _sectionSchemas.
                         RootSectionGroup.GetAllDefinitions(DefinitionCache);
                         continue;

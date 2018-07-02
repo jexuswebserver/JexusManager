@@ -43,13 +43,13 @@ namespace Microsoft.Web.Administration
             return result;
         }
 
-        private static readonly char[] s_chars = { '\\', '/', '"', '|', '<', '>', ':', '*', '?', ']', '[', '+', '=', ';', ',', '@', '&' };
+        private static readonly char[] SChars = { '\\', '/', '"', '|', '<', '>', ':', '*', '?', ']', '[', '+', '=', ';', ',', '@', '&' };
 
         public static char[] InvalidApplicationPoolNameCharacters()
         {
-            return s_chars;
+            return SChars;
         }
 
-        internal ServerManager Parent { get; private set; }
+        internal ServerManager Parent { get; }
     }
 }

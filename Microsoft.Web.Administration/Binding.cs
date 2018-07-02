@@ -284,6 +284,7 @@ namespace Microsoft.Web.Administration
 
         internal static bool PortIsValid(string portText, out int port, string text, bool showDialog = true)
         {
+            const string theServerPortNumberMustBeAPositiveIntegerBetweenAnd = "The server port number must be a positive integer between 1 and 65535";
             try
             {
                 port = int.Parse(portText);
@@ -292,7 +293,7 @@ namespace Microsoft.Web.Administration
             {
                 if (showDialog)
                 {
-                    MessageBox.Show("The server port number must be a positive integer between 1 and 65535", text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MessageBox.Show(theServerPortNumberMustBeAPositiveIntegerBetweenAnd, text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
 
                 port = 0;
@@ -303,7 +304,7 @@ namespace Microsoft.Web.Administration
             {
                 if (showDialog)
                 {
-                    MessageBox.Show("The server port number must be a positive integer between 1 and 65535", text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MessageBox.Show(theServerPortNumberMustBeAPositiveIntegerBetweenAnd, text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
 
                 return false;

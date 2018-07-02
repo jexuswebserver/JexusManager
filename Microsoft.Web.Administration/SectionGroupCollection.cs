@@ -37,6 +37,11 @@ namespace Microsoft.Web.Administration
             return found;
         }
 
+        internal void Add(SectionGroup item)
+        {
+            _list.Add(item);
+        }
+
         public IEnumerator<SectionGroup> GetEnumerator()
         {
             return _list.GetEnumerator();

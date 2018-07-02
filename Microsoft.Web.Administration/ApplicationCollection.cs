@@ -16,8 +16,7 @@ namespace Microsoft.Web.Administration
 
         public Application Add(string path, string physicalPath)
         {
-            var result = new Application(this);
-            result.Path = path;
+            var result = new Application(this) {Path = path};
             result.Load(VirtualDirectory.RootPath, physicalPath);
             Add(result);
             return result;
@@ -28,11 +27,11 @@ namespace Microsoft.Web.Administration
             throw new NotImplementedException();
         }
 
-        private static readonly char[] s_chars = { '\\', '?', ';', ':', '@', '&', '=', '+', '$', ',', '|', '"', '<', '>', '*' };
+        private static readonly char[] SChars = { '\\', '?', ';', ':', '@', '&', '=', '+', '$', ',', '|', '"', '<', '>', '*' };
 
         public static char[] InvalidApplicationPathCharacters()
         {
-            return s_chars;
+            return SChars;
         }
 
         internal Site Parent { get; set; }

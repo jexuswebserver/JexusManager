@@ -123,5 +123,20 @@ namespace Microsoft.Web.Administration
                 child.GetAllDefinitions(result);
             }
         }
+
+        internal void AddSpecial()
+        {
+            Sections.Add(new SectionDefinition()
+            {
+                AllowDefinition = KEYWORD_SECTION_ALLOWDEFINITION_EVERYWHERE,
+                AllowLocation = KEYWORD_FALSE,
+                Name = "configProtectedData",
+                OverrideModeDefault = KEYWORD_OVERRIDEMODE_ALLOW,
+                RequirePermission = true,
+                Type = string.Empty,
+                Path = "configProtectedData",
+                FileContext = _core
+            });
+        }
     }
 }

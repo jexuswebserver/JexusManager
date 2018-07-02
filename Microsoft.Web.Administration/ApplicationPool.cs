@@ -6,12 +6,6 @@ using System;
 
 namespace Microsoft.Web.Administration
 {
-    using System.Collections.ObjectModel;
-#if !__MonoCS__
-    using System.Management.Automation;
-#endif
-    using System.Threading.Tasks;
-
     public sealed class ApplicationPool : ConfigurationElement
     {
         private ApplicationPoolProcessModel _processModel;
@@ -27,7 +21,7 @@ namespace Microsoft.Web.Administration
             Parent = parent;
         }
 
-        internal ApplicationPoolCollection Parent { get; private set; }
+        internal ApplicationPoolCollection Parent { get; }
 
         public ObjectState Recycle()
         {
