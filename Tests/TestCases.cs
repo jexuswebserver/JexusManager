@@ -866,8 +866,6 @@ $"Filename: \\\\?\\{config.FileContext.FileName}\r\nLine number: 0\r\nError: Can
 
         public static void TestIisExpressHandlers(ServerManager server)
         {
-            var site = server.Sites[0];
-
             {
                 // server config "Website1"
                 var config = server.GetApplicationHostConfiguration();
@@ -895,8 +893,6 @@ $"Filename: \\\\?\\{config.FileContext.FileName}\r\nLine number: 0\r\nError: Can
 
         public static void TestIisExpressLocation(ServerManager server)
         {
-            var site = server.Sites[0];
-
             {
                 // server config "Website1"
                 var config = server.GetApplicationHostConfiguration();
@@ -958,8 +954,6 @@ $"Filename: \\\\?\\{config.FileContext.FileName}\r\nLine number: 0\r\nError: Can
 
         public static void TestIisExpressInheritance(ServerManager server)
         {
-            var site = server.Sites[0];
-
             {
                 // server config "Website1"
                 var config = server.GetApplicationHostConfiguration();
@@ -1079,8 +1073,6 @@ $"Filename: \\\\?\\{config.FileContext.FileName}\r\nLine number: 0\r\nError: Can
 
         public static void TestIisExpressLocation2(ServerManager server)
         {
-            var site = server.Sites[0];
-
             {
                 // site config "Website1"
                 var config = server.Sites[0].Applications[0].GetWebConfiguration();
@@ -1140,7 +1132,6 @@ $"Filename: \\\\?\\{config.FileContext.FileName}\r\nLine number: 0\r\nError: Can
 
         private enum ResponseMode
         {
-            File = 0,
             Test = 1
         }
     }

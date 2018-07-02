@@ -57,10 +57,9 @@ namespace Microsoft.Web.Administration
 
         internal override void AddChild(ConfigurationElement child)
         {
-            var application = child as VirtualDirectory;
-            if (application != null)
+            if (child is VirtualDirectory virtualDirectory)
             {
-                _collection.Add(application);
+                _collection.Add(virtualDirectory);
             }
             else
             {
@@ -72,7 +71,8 @@ namespace Microsoft.Web.Administration
         {
             if (_configuration != null)
             {
-                // TODO: return _configuration;
+                // TODO:
+                return _configuration;
             }
 
             string root = null;
@@ -273,6 +273,11 @@ namespace Microsoft.Web.Administration
 
                 VirtualDirectories[0].PhysicalPath = value;
             }
+        }
+
+        public void ClearCache()
+        {
+            _configuration = null;
         }
     }
 }

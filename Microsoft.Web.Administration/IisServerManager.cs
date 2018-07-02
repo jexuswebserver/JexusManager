@@ -48,34 +48,34 @@ namespace Microsoft.Web.Administration
         internal override bool GetSiteState(Site site)
         {
 #if !__MonoCS__
-            using (PowerShell PowerShellInstance = PowerShell.Create())
+            using (var powerShellInstance = PowerShell.Create())
             {
                 var path = Environment.ExpandEnvironmentVariables(
                     "%windir%\\system32\\inetsrv\\Microsoft.Web.Administration.dll");
                     // use "AddScript" to add the contents of a script file to the end of the execution pipeline.
                     // use "AddCommand" to add individual commands/cmdlets to the end of the execution pipeline.
-                PowerShellInstance.AddScript($"param($param1) [Reflection.Assembly]::LoadFrom('{path}'); Get-IISsite -Name \"$param1\"");
+                powerShellInstance.AddScript($"param($param1) [Reflection.Assembly]::LoadFrom('{path}'); Get-IISsite -Name \"$param1\"");
 
                 // use "AddParameter" to add a single parameter to the last command/script on the pipeline.
-                PowerShellInstance.AddParameter("param1", site.Name);
+                powerShellInstance.AddParameter("param1", site.Name);
 
-                Collection<PSObject> PSOutput = PowerShellInstance.Invoke();
+                Collection<PSObject> psOutput = powerShellInstance.Invoke();
 
                 // check the other output streams (for example, the error stream)
-                if (PowerShellInstance.Streams.Error.Count > 0)
+                if (powerShellInstance.Streams.Error.Count > 0)
                 {
                     // error records were written to the error stream.
                     // do something with the items found.
                     return false;
                 }
 
-                if (PSOutput.Count < 2)
+                if (psOutput.Count < 2)
                 {
                     // TODO: newly created sites go here. Why?
                     return false;
                 }
 
-                dynamic site1 = PSOutput[1];
+                dynamic site1 = psOutput[1];
                 return site1.State?.ToString() == "Started";
             }
 #else
@@ -86,31 +86,31 @@ namespace Microsoft.Web.Administration
         internal override bool GetPoolState(ApplicationPool pool)
         {
 #if !__MonoCS__
-            using (PowerShell PowerShellInstance = PowerShell.Create())
+            using (var powerShellInstance = PowerShell.Create())
             {
                 // use "AddScript" to add the contents of a script file to the end of the execution pipeline.
                 // use "AddCommand" to add individual commands/cmdlets to the end of the execution pipeline.
-                PowerShellInstance.AddScript("param($param1) [Reflection.Assembly]::LoadFrom('C:\\Windows\\system32\\inetsrv\\Microsoft.Web.Administration.dll'); Get-IISAppPool -Name \"$param1\"");
+                powerShellInstance.AddScript("param($param1) [Reflection.Assembly]::LoadFrom('C:\\Windows\\system32\\inetsrv\\Microsoft.Web.Administration.dll'); Get-IISAppPool -Name \"$param1\"");
 
                 // use "AddParameter" to add a single parameter to the last command/script on the pipeline.
-                PowerShellInstance.AddParameter("param1", pool.Name);
+                powerShellInstance.AddParameter("param1", pool.Name);
 
-                Collection<PSObject> PSOutput = PowerShellInstance.Invoke();
+                Collection<PSObject> psOutput = powerShellInstance.Invoke();
 
                 // check the other output streams (for example, the error stream)
-                if (PowerShellInstance.Streams.Error.Count > 0)
+                if (powerShellInstance.Streams.Error.Count > 0)
                 {
                     // error records were written to the error stream.
                     // do something with the items found.
                     return false;
                 }
 
-                if (PSOutput.Count < 2)
+                if (psOutput.Count < 2)
                 {
                     return false;
                 }
 
-                dynamic site = PSOutput[1];
+                dynamic site = psOutput[1];
                 return site.State?.ToString() == "Started";
             }
 #else
