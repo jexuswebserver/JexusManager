@@ -70,7 +70,7 @@ namespace Microsoft.Web.Administration
         {
             if (_configuration != null)
             {
-                return _configuration;
+                // TODO: return _configuration;
             }
 
             string root = null;
@@ -271,11 +271,6 @@ namespace Microsoft.Web.Administration
 
                 VirtualDirectories[0].PhysicalPath = value;
             }
-        }
-
-        public void ClearCache()
-        {
-            _configuration = null;
         }
     }
 }

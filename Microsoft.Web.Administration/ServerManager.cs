@@ -201,7 +201,6 @@ namespace Microsoft.Web.Administration
                 foreach (Application application in site.Applications)
                 {
                     application.Save();
-                    application.ClearCache();
                 }
             }
 

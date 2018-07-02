@@ -196,15 +196,13 @@ namespace Tests.Authorization
             var site = Path.Combine("Website1", "web.config");
             var expected = "expected_edit1.site.config";
             var document = XDocument.Load(site);
-            var node = document.Root.XPathSelectElement("/configuration/system.webServer");
-            var security = new XElement("security");
-            var authorization = new XElement("authorization");
-            var add = new XElement("add",
-                new XAttribute("accessType", "Allow"),
-                new XAttribute("roles", "defenders"));
-            node?.Add(security);
-            security.Add(authorization);
-            authorization.Add(add);
+            var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
+            node?.Add(
+                new XElement("security",
+                    new XElement("authorization",
+                        new XElement("add",
+                            new XAttribute("accessType", "Allow"),
+                            new XAttribute("roles", "defenders")))));
             document.Save(expected);
 
             var item = new AuthorizationRule(null);

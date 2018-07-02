@@ -100,7 +100,7 @@ namespace Tests.DefaultDocument
             var site = Path.Combine("Website1", "web.config");
             var expected = "expected_disabled.site.config";
             var document = XDocument.Load(site);
-            var node = document.Root.XPathSelectElement("/configuration/system.webServer/defaultDocument");
+            var node = document.Root?.XPathSelectElement("/configuration/system.webServer/defaultDocument");
             node?.SetAttributeValue("enabled", "false");
             document.Save(expected);
 

@@ -202,14 +202,12 @@ namespace Tests.Caching
             var expected = "expected_edit1.site.config";
             var document = XDocument.Load(site);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
-            var security = new XElement("caching");
-            var authorization = new XElement("profiles");
-            var add = new XElement("add",
-                new XAttribute("duration", "00:00:00"),
-                new XAttribute("extension", ".xslt"));
-            node?.Add(security);
-            security.Add(authorization);
-            authorization.Add(add);
+            node?.Add(
+                new XElement("caching",
+                    new XElement("profiles",
+                        new XElement("add",
+                            new XAttribute("duration", "00:00:00"),
+                            new XAttribute("extension", ".xslt")))));
             document.Save(expected);
             
             var item = new CachingItem(null);

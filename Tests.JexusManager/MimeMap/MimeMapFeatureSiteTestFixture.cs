@@ -198,12 +198,11 @@ namespace Tests.MimeMap
             var expected = "expected_edit.site.config";
             var document = XDocument.Load(site);
             var node = document.Root.XPathSelectElement("/configuration/system.webServer");
-            var content = new XElement("staticContent");
-            node?.Add(content);
-            var add = new XElement("mimeMap",
-                new XAttribute("fileExtension", ".xl1"),
-                new XAttribute("mimeType", "text/test2"));
-            content.Add(add);
+            node?.Add(
+                new XElement("staticContent",
+                    new XElement("mimeMap",
+                        new XAttribute("fileExtension", ".xl1"),
+                        new XAttribute("mimeType", "text/test2"))));
             document.Save(expected);
 
             var item = new MimeMapItem(null);
