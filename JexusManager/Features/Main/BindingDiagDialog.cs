@@ -138,26 +138,31 @@ namespace JexusManager.Features.Main
                                 else
                                 {
                                     Info($" * Web browsers should use URL {binding.Protocol}://{binding.Host}:{binding.EndPoint.Port}. Requests must have Host header {binding.Host}.");
-                                    var entry = Dns.GetHostEntry(binding.Host);
-                                    var list = entry.AddressList;
-                                    var found = false;
-                                    foreach (var address in list)
+                                    if (!binding.Host.IsWildcard())
                                     {
-                                        if (adapters.Any(item => address.Equals(item)))
+                                        // IMPORTANT: wildcard host is not supported.
+                                        var entry = Dns.GetHostEntry(binding.Host);
+                                        var list = entry.AddressList;
+                                        var found = false;
+                                        foreach (var address in list)
                                         {
-                                            found = true;
-                                            break;
+                                            if (adapters.Any(item => address.Equals(item)))
+                                            {
+                                                found = true;
+                                                break;
+                                            }
+
+                                            if (address.Equals(IPAddress.Loopback))
+                                            {
+                                                found = true;
+                                            }
                                         }
 
-                                        if (address.Equals(IPAddress.Loopback))
+                                        if (!found)
                                         {
-                                            found = true;
+                                            Warn(
+                                                $"   DNS query does not return a known IP address for any network adapter of this machine. Please review your DNS settings or modify the hosts file.");
                                         }
-                                    }
-
-                                    if (!found)
-                                    {
-                                        Warn($"   DNS query does not return a known IP address for any network adapter of this machine. Please review your DNS settings or modify the hosts file.");
                                     }
                                 }
 

@@ -57,6 +57,7 @@ namespace Microsoft.Web.Administration
             {
                 if (binding.GetIsSni())
                 {
+                    // TODO: should also check SAN.
                     if (certificate2.GetNameInfo(X509NameType.DnsName, false) != binding.Host)
                     {
                         return "SNI mode requires host name matches common name of the certificate";

@@ -22,6 +22,8 @@ namespace Microsoft.Web.Administration
 
         public override bool SupportsSni => Version >=  Version.Parse("8.0") && Environment.OSVersion.Version >= Version.Parse("6.2");
 
+        public override bool SupportsWildcard => Version >=  Version.Parse("10.0") && Environment.OSVersion.Version >= Version.Parse("10.0");
+        
         public static bool ServerInstalled
         {
             get

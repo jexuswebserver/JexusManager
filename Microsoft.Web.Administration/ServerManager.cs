@@ -43,32 +43,29 @@ namespace Microsoft.Web.Administration
             : HostName.ExtractName();
 
         public abstract bool SupportsSni { get; }
+        
+        public abstract bool SupportsWildcard { get; }
 
         public WorkingMode Mode { get; protected set; }
 
         private readonly object _locker = new object();
 
-        public ServerManager()
+        protected ServerManager()
             : this(null, true)
         {
         }
 
-        public ServerManager(string hostName, bool local)
+        protected ServerManager(string hostName, bool local)
             : this(hostName)
         {
         }
 
-        public ServerManager(bool readOnly, string applicationHostConfigurationPath)
+        protected ServerManager(bool readOnly, string applicationHostConfigurationPath)
             : this("localhost", readOnly, applicationHostConfigurationPath)
         {
         }
 
-        internal virtual bool Verify(string path)
-        {
-            return Directory.Exists(path.ExpandIisExpressEnvironmentVariables());
-        }
-
-        public ServerManager(string applicationHostConfigurationPath)
+        protected ServerManager(string applicationHostConfigurationPath)
             : this(false, applicationHostConfigurationPath)
         {
         }
@@ -80,6 +77,11 @@ namespace Microsoft.Web.Administration
             FileName = fileName;
         }
 
+        internal virtual bool Verify(string path)
+        {
+            return Directory.Exists(path.ExpandIisExpressEnvironmentVariables());
+        }
+        
         private void Initialize()
         {
             if (Initialized)

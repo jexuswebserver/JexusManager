@@ -112,6 +112,7 @@
     <Compile Include="ResponseHeaders\ResponseHeadersFeatureServerTestFixture.cs" />
     <Compile Include="ResponseHeaders\ResponseHeadersFeatureSiteTestFixture.cs" />
     <Compile Include="Rewrite\TestFixture.cs" />
+    <Compile Include="StringUtilityTestFixture.cs" />
     <Compile Include="XmlAssert.cs" />
   </ItemGroup>
   <ItemGroup>

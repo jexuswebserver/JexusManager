@@ -26,5 +26,45 @@ namespace JexusManager
 
             return result.ToString();
         }
+
+        public static bool IsWildcard(this string host)
+        {
+            if (string.IsNullOrEmpty(host))
+            {
+                return false;
+            }
+
+            if (host == "*")
+            {
+                return true;
+            }
+            
+            var index = host.IndexOf('.');
+            if (index != 1)
+            {
+                return false;
+            }
+
+            return host[0] == '*' && host.IndexOf('*', 1) == -1;
+        }
+
+        public static bool IsValidHost(this string host, bool supportsWildcard = false)
+        {
+            return supportsWildcard && host.IsWildcard() ? host.TrimStart('*', '.').IsValidBody() : host.IsValidBody();
+        }
+
+        private static bool IsValidBody(this string host)
+        {
+            var invalid = "\"/\\[]:|<>+=;,?*$%#@{}^`".ToCharArray();
+            foreach (var ch in invalid)
+            {
+                if (host.Contains(ch))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
     }
 }

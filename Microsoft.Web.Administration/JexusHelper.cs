@@ -29,6 +29,7 @@ namespace Microsoft.Web.Administration
         internal string Credentials { get; set; }
 
         public override bool SupportsSni => false;
+        public override bool SupportsWildcard => false;
 
         public async Task<string> SaveKeyAsync(string key)
         {

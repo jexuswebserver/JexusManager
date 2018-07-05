@@ -90,14 +90,10 @@ namespace JexusManager.Features.Main
                         return;
                     }
 
-                    var invalid = "\"/\\[]:|<>+=;,?*$%#@{}^`".ToCharArray();
-                    foreach (var ch in invalid)
+                    if (!txtHost.Text.IsValidHost(site.Server.SupportsWildcard))
                     {
-                        if (txtHost.Text.Contains(ch))
-                        {
-                            ShowMessage("The specified host name is incorrect. The host name must use a valid host name format and cannot contain the following characters: \"/\\[]:|<>+=;,?*$%#@{}^`. Example: www.contoso.com.", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
-                            return;
-                        }
+                        ShowMessage("The specified host name is incorrect. The host name must use a valid host name format and cannot contain the following characters: \"/\\[]:|<>+=;,?*$%#@{}^`. Example: www.contoso.com.", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+                        return;
                     }
 
                     var certificate = cbCertificates.SelectedItem as CertificateInfo;
@@ -180,7 +176,7 @@ namespace JexusManager.Features.Main
                             var reservation = binding.ToUrlPrefix();
                             var feature = new ReservedUrlsFeature((Module)serviceProvider);
                             feature.Load();
-                            if (!feature.Items.Any(item => item.UrlPrefix == reservation) && !BindingUtility.AddReservedUrl(reservation))
+                            if (feature.Items.All(item => item.UrlPrefix != reservation) && !BindingUtility.AddReservedUrl(reservation))
                             {
                                 ShowMessage($"Reserved URL {reservation} cannot be added.", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                                 return;
@@ -264,7 +260,7 @@ namespace JexusManager.Features.Main
 
         private void BindingDialogHelpButtonClicked(object sender, CancelEventArgs e)
         {
-            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210531#Site_Bingings");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210531#Site_Bindings");
         }
 
         private void BindingDialogLoad(object sender, EventArgs e)
