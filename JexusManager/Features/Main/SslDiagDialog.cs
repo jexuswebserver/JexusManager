@@ -240,9 +240,7 @@ namespace JexusManager.Features.Main
 
                                                 if (extension.Oid.Value == "2.5.29.17")
                                                 {
-                                                    var data = extension.RawData;
-                                                    AsnEncodedData asndata = new AsnEncodedData(extension.Oid, extension.RawData);
-                                                    var name = asndata.Format(true).TrimEnd();
+                                                    var name = extension.Format(true).TrimEnd();
                                                     Debug($"#Subject Alternative Name: {name}");
                                                     hasSAN = true;
                                                     continue;

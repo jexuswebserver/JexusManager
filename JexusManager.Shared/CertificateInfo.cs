@@ -13,14 +13,14 @@ namespace JexusManager
 
         public CertificateInfo(X509Certificate2 certificate, string store)
         {
-            this.Certificate = certificate;
-            this.Store = store;
+            Certificate = certificate;
+            Store = store;
         }
 
         public override string ToString()
         {
-            var friendlyName = this.Certificate.FriendlyName;
-            var dnsName = this.Certificate.GetNameInfo(X509NameType.DnsName, false);
+            var friendlyName = Certificate.FriendlyName;
+            var dnsName = Certificate.GetNameInfo(X509NameType.SimpleName, false);
             if (!string.IsNullOrWhiteSpace(friendlyName))
             {
                 return friendlyName;

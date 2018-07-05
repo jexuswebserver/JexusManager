@@ -44,8 +44,8 @@ namespace JexusManager.Features.Certificates
             {
                 Item = item;
                 _page = page;
-                SubItems.Add(new ListViewSubItem(this, item.Certificate.GetNameInfo(X509NameType.DnsName, false)));
-                SubItems.Add(new ListViewSubItem(this, item.Certificate.GetNameInfo(X509NameType.DnsName, true)));
+                SubItems.Add(new ListViewSubItem(this, item.Certificate.GetNameInfo(X509NameType.SimpleName, false)));
+                SubItems.Add(new ListViewSubItem(this, item.Certificate.GetNameInfo(X509NameType.SimpleName, true)));
                 SubItems.Add(new ListViewSubItem(this, item.Certificate.GetExpirationDateString()));
                 SubItems.Add(new ListViewSubItem(this, item.Certificate.GetCertHashString()));
                 SubItems.Add(new ListViewSubItem(this, item.Store));

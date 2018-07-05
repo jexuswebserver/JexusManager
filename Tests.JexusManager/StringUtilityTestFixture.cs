@@ -27,5 +27,16 @@ namespace Tests
             Assert.False("test.*.com".IsValidHost());
             Assert.False("*.*.com".IsValidHost());
         }
+
+        [Fact]
+        public void TestMatchHostName()
+        {
+            Assert.True("*.test.com".MatchHostName("www.test.com"));
+            Assert.True("*.test.com".MatchHostName("*.test.com"));
+            Assert.True("localhost".MatchHostName("localhost"));
+
+            Assert.False("*.test.com".MatchHostName("test.com"));
+            Assert.False("www.test.com".MatchHostName("*.test.com"));
+        }
     }
 }

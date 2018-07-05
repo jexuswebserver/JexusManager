@@ -26,6 +26,8 @@ namespace Microsoft.Web.Administration
         private const string AppIdIisExpress = "214124cd-d05b-4309-9af9-9caa44b2b74a";
 
         private const string AppIdIis = "4dc3e181-e14b-4a21-b022-59fc669b0914";
+        private const string SubjectAlternativeNameOid = "2.5.29.17";
+        private const string DnsNamePrefix = "DNS Name=";
 
         internal static void Reinitialize(this Binding original, Binding binding)
         {
@@ -57,8 +59,7 @@ namespace Microsoft.Web.Administration
             {
                 if (binding.GetIsSni())
                 {
-                    // TODO: should also check SAN.
-                    if (certificate2.GetNameInfo(X509NameType.DnsName, false) != binding.Host)
+                    if (!certificate2.MatchHostName(binding.Host))
                     {
                         return "SNI mode requires host name matches common name of the certificate";
                     }
@@ -442,6 +443,26 @@ namespace Microsoft.Web.Administration
         {
             var name = binding.Host == "*" || binding.Host == string.Empty ? "*" : binding.Host;
             return $"{binding.Protocol}://{name}:{binding.EndPoint.Port}/";
+        }
+
+        public static bool MatchHostName(this X509Certificate2 certificate, string host)
+        {
+            var extension = certificate.Extensions[SubjectAlternativeNameOid];
+            if (extension != null)
+            {
+                var names = extension.Format(true);
+                var lines = new StringReader(names);
+                string line;
+                while ((line = lines.ReadLine()) != null)
+                {
+                    if (line.StartsWith(DnsNamePrefix) && line.Substring(DnsNamePrefix.Length).MatchHostName(host))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return certificate.GetNameInfo(X509NameType.SimpleName, false).MatchHostName(host);
         }
     }
 }

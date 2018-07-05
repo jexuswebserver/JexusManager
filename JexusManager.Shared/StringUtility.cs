@@ -2,6 +2,7 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using Microsoft.VisualBasic.CompilerServices;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -65,6 +66,23 @@ namespace JexusManager
             }
 
             return true;
+        }
+
+        public static bool MatchHostName(this string name, string host)
+        {
+            if (host.IsWildcard())
+            {
+                // IMPORTANT: wildcard host name requires wildcard certificate.
+                return name == host;
+            }
+
+            if (name.IsWildcard())
+            {
+                // IMPORTANT: wildcard certificate.
+                return LikeOperator.LikeString(host, name, Microsoft.VisualBasic.CompareMethod.Text);
+            }
+
+            return name == host;
         }
     }
 }
