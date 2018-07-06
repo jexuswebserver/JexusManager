@@ -14,7 +14,6 @@ namespace Tests.Exceptions
     using Xunit;
     using System.Xml.Linq;
     using System.Xml.XPath;
-    using System.Linq;
     using System.Net;
 
     public class ServerTestCases

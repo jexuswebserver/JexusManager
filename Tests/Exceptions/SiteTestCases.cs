@@ -70,6 +70,40 @@ namespace Tests.Exceptions
         }
 
         [Fact]
+        public void TestIisExpressEmptyFile()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string current = Path.Combine(directoryName, @"applicationHost.config");
+            string original = Path.Combine(directoryName, @"original2.config");
+            var siteConfig = TestHelper.CopySiteConfig(directoryName, "original.config");
+            File.Copy(original, current, true);
+            TestHelper.FixPhysicalPathMono(current);
+
+            {
+                File.WriteAllText(siteConfig, string.Empty);
+            }
+
+#if IIS
+            var server = new ServerManager(current);
+#else
+            var server = new IisExpressServerManager(current);
+#endif
+            var config = server.Sites[0].Applications[0].GetWebConfiguration();
+            // enable Windows authentication
+            var exception = Assert.Throws<COMException>(() => config.GetSection("system.webServer/security/authentication/windowsAuthentication"));
+            Assert.Equal(
+                $"Filename: \\\\?\\{siteConfig}\r\nLine number: 1\r\nError: Configuration file is not well-formed XML\r\n\r\n",
+                exception.Message);
+        }
+
+        [Fact]
         public void TestIisExpressEmptyTag()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);

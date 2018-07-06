@@ -88,7 +88,7 @@ namespace Microsoft.Web.Administration
             {
                 _initialized = false;
                 throw new COMException(
-                    $"Filename: \\\\?\\{file}\r\nLine number: {ex.LineNumber}\r\nError: Configuration file is not well-formed XML\r\n\r\n");
+                    $"Filename: \\\\?\\{file}\r\nLine number: {(ex.LineNumber == 0 ? 1 : ex.LineNumber)}\r\nError: Configuration file is not well-formed XML\r\n\r\n");
             }
             catch (COMException ex)
             {
