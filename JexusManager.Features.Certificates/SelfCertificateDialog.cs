@@ -13,6 +13,7 @@ namespace JexusManager.Features.Certificates
     using System.ComponentModel;
     using System.Diagnostics;
     using System.IO;
+    using System.Linq;
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
     using System.Security.Cryptography;
@@ -71,15 +72,22 @@ namespace JexusManager.Features.Certificates
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    var name = txtCommonName.Text;
-                    if (string.IsNullOrWhiteSpace(name))
+                    var names = txtCommonName.Text;
+                    if (string.IsNullOrWhiteSpace(names))
                     {
-                        ShowMessage("Custom common name cannot be empty.", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                        ShowMessage("DNS names cannot be empty.", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                        return;
+                    }
+
+                    var dnsNames = names.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(item => item.Trim()).ToArray();
+                    if (dnsNames.Length == 0)
+                    {
+                        ShowMessage("DNS names cannot be empty.", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return;
                     }
 
                     // Generate certificate
-                    string defaultIssuer = string.Format("CN={0}", name);
+                    string defaultIssuer = string.Format("CN={0}", dnsNames[0]);
                     string defaultSubject = defaultIssuer;
                     byte[] sn = Guid.NewGuid().ToByteArray();
                     string subject = defaultSubject;
@@ -151,7 +159,7 @@ namespace JexusManager.Features.Certificates
                     {
                         SubjectAltNameExtension subjectAltNameExtension = new SubjectAltNameExtension(
                             new string[0],
-                            new string[1] { name },
+                            dnsNames,
                             new string[0],
                             new string[0])
                         { Critical = false };

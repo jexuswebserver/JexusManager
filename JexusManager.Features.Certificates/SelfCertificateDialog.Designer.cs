@@ -52,6 +52,7 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.cbGenerate = new System.Windows.Forms.CheckBox();
+            this.label9 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -116,7 +117,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(23, 192);
+            this.label3.Location = new System.Drawing.Point(23, 179);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(229, 13);
             this.label3.TabIndex = 15;
@@ -129,7 +130,7 @@
             this.cbStore.Items.AddRange(new object[] {
             "Personal",
             "Web Hosting"});
-            this.cbStore.Location = new System.Drawing.Point(26, 208);
+            this.cbStore.Location = new System.Drawing.Point(26, 195);
             this.cbStore.Name = "cbStore";
             this.cbStore.Size = new System.Drawing.Size(238, 21);
             this.cbStore.TabIndex = 16;
@@ -157,15 +158,15 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(23, 260);
+            this.label4.Location = new System.Drawing.Point(23, 235);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(163, 13);
+            this.label4.Size = new System.Drawing.Size(105, 13);
             this.label4.TabIndex = 19;
-            this.label4.Text = "Specify a custom common name:";
+            this.label4.Text = "Specify DNS names:";
             // 
             // txtCommonName
             // 
-            this.txtCommonName.Location = new System.Drawing.Point(26, 276);
+            this.txtCommonName.Location = new System.Drawing.Point(26, 251);
             this.txtCommonName.Name = "txtCommonName";
             this.txtCommonName.Size = new System.Drawing.Size(360, 20);
             this.txtCommonName.TabIndex = 20;
@@ -261,6 +262,15 @@
             this.cbGenerate.Text = "Generate Subject Alternative Names";
             this.cbGenerate.UseVisualStyleBackColor = true;
             // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(26, 278);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(188, 13);
+            this.label9.TabIndex = 30;
+            this.label9.Text = "Example: consoto.com, *.consoto.com";
+            // 
             // SelfCertificateDialog
             // 
             this.AcceptButton = this.btnOK;
@@ -268,6 +278,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(654, 476);
+            this.Controls.Add(this.label9);
             this.Controls.Add(this.cbGenerate);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
@@ -320,5 +331,6 @@
         private Label label7;
         private Label label8;
         private CheckBox cbGenerate;
+        private Label label9;
     }
 }
