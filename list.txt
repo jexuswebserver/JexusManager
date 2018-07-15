@@ -59,6 +59,8 @@ JexusManager.Features.ResponseHeaders.dll
 JexusManager.Features.ResponseHeaders.pdb
 JexusManager.Features.Rewrite.dll
 JexusManager.Features.Rewrite.pdb
+JexusManager.Features.TraceFailedRequests.dll
+JexusManager.Features.TraceFailedRequests.pdb
 JexusManager.Shared.dll
 JexusManager.Shared.pdb
 MakarovDev.ExpandCollapsePanel.dll
