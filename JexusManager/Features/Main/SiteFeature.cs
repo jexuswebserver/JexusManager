@@ -30,6 +30,7 @@ namespace JexusManager.Features.Main
     using Binding = Microsoft.Web.Administration.Binding;
     using Module = Microsoft.Web.Management.Client.Module;
     using System.Linq;
+    using JexusManager.Features.TraceFailedRequests;
 
     /// <summary>
     /// Description of DefaultDocumentFeature.
@@ -251,6 +252,8 @@ namespace JexusManager.Features.Main
 
         private void Tracing()
         {
+            var feature = new TraceFailedRequestsFeature(Module);
+            feature.Set();
         }
 
         private void Advanced()

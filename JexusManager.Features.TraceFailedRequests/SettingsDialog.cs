@@ -51,6 +51,7 @@ namespace JexusManager.Features.TraceFailedRequests
                         return;
                     }
 
+                    // TODO: can this come from validator?
                     ShowMessage(
                         "The 'Maximum Number of Trace Files' property is invalid. The value must be a valid integer between 1 and 10000.",
                         MessageBoxButtons.OK,
