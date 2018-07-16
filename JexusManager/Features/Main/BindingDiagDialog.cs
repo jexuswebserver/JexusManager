@@ -137,7 +137,7 @@ namespace JexusManager.Features.Main
                                 }
                                 else
                                 {
-                                    Info($" * Web browsers should use URL {binding.Protocol}://{binding.Host}:{binding.EndPoint.Port}. Requests must have Host header {binding.Host}.");
+                                    Info($" * Web browsers should use URL {binding.Protocol}://{binding.Host}:{binding.EndPoint.Port}. Requests must have Host header of \"{binding.Host}\".");
                                     if (!binding.Host.IsWildcard())
                                     {
                                         // IMPORTANT: wildcard host is not supported.
@@ -161,7 +161,7 @@ namespace JexusManager.Features.Main
                                         if (!found)
                                         {
                                             Warn(
-                                                $"   DNS query does not return a known IP address for any network adapter of this machine. Please review your DNS settings or modify the hosts file.");
+                                                $"   DNS query of \"{binding.Host}\" does not return a known IP address for any network adapter of this machine. It can be desired, but please review your DNS settings (or modify the hosts file).");
                                         }
                                     }
                                 }
