@@ -111,11 +111,11 @@ namespace Microsoft.Web.Administration
             }
         }
 
-        internal void GetAllDefinitions(IDictionary<string, SectionDefinition> result)
+        internal void GetAllDefinitions(IList<SectionDefinition> result)
         {
             foreach (SectionDefinition item in Sections)
             {
-                result.Add(item.Path, item);
+                result.Add(item);
             }
 
             foreach (SectionGroup child in SectionGroups)

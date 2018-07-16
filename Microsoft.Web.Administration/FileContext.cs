@@ -20,7 +20,7 @@ namespace Microsoft.Web.Administration
         private readonly ServerManager _server;
         private readonly object _locker = new object();
         private readonly bool _dontThrow;
-        internal Dictionary<string, SectionDefinition> DefinitionCache = new Dictionary<string, SectionDefinition>();
+        internal List<SectionDefinition> DefinitionCache = new List<SectionDefinition>();
 
         internal bool AppHost { get; }
         public bool ReadOnly { get; }
@@ -53,7 +53,7 @@ namespace Microsoft.Web.Administration
             {
                 foreach(var item in Parent.DefinitionCache)
                 {
-                    DefinitionCache.Add(item.Key, item.Value);
+                    DefinitionCache.Add(item);
                 }
             }
 
@@ -403,7 +403,7 @@ namespace Microsoft.Web.Administration
             }
             else
             {
-                var found = DefinitionCache.ContainsKey(path) ? DefinitionCache[path] : null;
+                var found = DefinitionCache.FirstOrDefault(item => item.Path == path);
                 if (found != null)
                 {
                     if (found.Ignore)
@@ -426,7 +426,7 @@ namespace Microsoft.Web.Administration
                 else
                 {
                     // TODO: improve performance.
-                    var foundChild = DefinitionCache.Keys.FirstOrDefault(item => item.StartsWith(path + '/'));
+                    var foundChild = DefinitionCache.FirstOrDefault(item => item.Path.StartsWith(path + '/'));
                     if (foundChild != null && !element.HasElements)
                     {
                         return true;
@@ -663,7 +663,7 @@ namespace Microsoft.Web.Administration
         {
             if (Location == null || Location == locationPath || locationPath.StartsWith(Location + '/'))
             {
-                var definition = DefinitionCache.ContainsKey(sectionPath) ? DefinitionCache[sectionPath] : null;
+                var definition = DefinitionCache.FirstOrDefault(item => item.Path == sectionPath);
                 if (definition?.Schema != null)
                 {
                     var section = new ConfigurationSection(
@@ -709,7 +709,7 @@ namespace Microsoft.Web.Administration
 
         internal bool Add(ConfigurationSection section, Location location, FileContext top)
         {
-            var definition = DefinitionCache.ContainsKey(section.ElementTagName) ? DefinitionCache[section.ElementTagName] : null; ;
+            var definition = DefinitionCache.FirstOrDefault(item => item.Path == section.ElementTagName);
             if (definition != null)
             {
                 if (definition.AllowLocation == SectionGroup.KEYWORD_FALSE && location != null && location.FromTag)

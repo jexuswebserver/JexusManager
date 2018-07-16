@@ -569,7 +569,7 @@ namespace Tests.Exceptions
                 Assert.Equal(21, effective.Sections.Count);
                 Assert.Equal(12, effective.SectionGroups.Count);
 
-                var list = new Dictionary<string, SectionDefinition>();
+                var list = new List<SectionDefinition>();
                 effective.GetAllDefinitions(list);
                 Assert.Equal(156, list.Count);
             }
@@ -580,7 +580,7 @@ namespace Tests.Exceptions
                 Assert.Empty(rootGroup.Sections);
                 Assert.Equal(2, rootGroup.SectionGroups.Count);
 
-                var list = new Dictionary<string, SectionDefinition>();
+                var list = new List<SectionDefinition>();
                 rootGroup.GetAllDefinitions(list);
                 Assert.Equal(56, list.Count);
 
@@ -649,7 +649,7 @@ namespace Tests.Exceptions
                 Assert.Equal(21, rootGroup.Sections.Count);
                 Assert.Equal(10, rootGroup.SectionGroups.Count);
 
-                var list = new Dictionary<string, SectionDefinition>();
+                var list = new List<SectionDefinition>();
                 rootGroup.GetAllDefinitions(list);
                 Assert.Equal(100, list.Count);
             }
