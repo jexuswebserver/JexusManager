@@ -497,6 +497,7 @@ namespace Microsoft.Web.Administration
             }
 
             var nodes = Root.Nodes();
+            XElement first = null;
             foreach (var node in nodes)
             {
                 if (node is XComment)
@@ -506,9 +507,16 @@ namespace Microsoft.Web.Administration
 
                 if (node is XElement element)
                 {
+                    first = first ?? element;
                     var tag = element.Name.LocalName;
                     if (tag == "configSections")
                     {
+                        if (first != element)
+                        {
+                            // IMPORTANT: double spaces before It to match IIS.
+                            throw new COMException($"Line number: {(element as IXmlLineInfo).LineNumber}\r\nError: Only one <configSections> element allowed.  It must be the first child element of the root <configuration> element   \r\n");
+                        }
+
                         RootSectionGroup.ParseSectionDefinitions(element, _sectionSchemas);
                         if (Parent == null)
                         {

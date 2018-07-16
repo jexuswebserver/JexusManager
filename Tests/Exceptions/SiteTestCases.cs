@@ -522,21 +522,6 @@ namespace Tests.Exceptions
                 file.Save(current);
             }
 
-            //{
-            //    // Add the section.
-            //    var file = XDocument.Load(siteConfig);
-            //    var root = file.Root;
-            //    if (root == null)
-            //    {
-            //        return;
-            //    }
-
-            //    var doc = root.XPathSelectElement("/configuration/system.webServer/defaultDocument");
-            //    doc?.SetAttributeValue("enabled", true);
-            //    var add = root.XPathSelectElement("/configuration/system.webServer/defaultDocument/files/add");
-            //    add?.SetAttributeValue("value", "home2.html");
-            //    file.Save(siteConfig);
-            //}
 #if IIS
             var server = new ServerManager(current);
 #else
@@ -549,6 +534,91 @@ namespace Tests.Exceptions
             Assert.Equal($"Filename: \\\\?\\{current}\r\nLine number: 118\r\nError: There is a duplicate 'system.webServer/webSocket' section defined\r\n\r\n", exception.Message);
         }
 
+        [Fact]
+        public void TestIisExpressDuplicateSectionDefinition2()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string current = Path.Combine(directoryName, @"applicationHost.config");
+            string original = Path.Combine(directoryName, @"original2.config");
+            var siteConfig = TestHelper.CopySiteConfig(directoryName, "original.config");
+            File.Copy(original, current, true);
+            TestHelper.FixPhysicalPathMono(current);
+
+            {
+                // Add the section.
+                var file = XDocument.Load(siteConfig);
+                var root = file.Root;
+                root?.Add(
+                    new XElement("configSections",
+                        new XElement("sectionGroup",
+                            new XAttribute("name", "system.webServer"),
+                            new XElement("section",
+                                new XAttribute("name", "webSocket"),
+                                new XAttribute("overrideModeDefault", "Allow")))));
+                file.Save(siteConfig);
+            }
+#if IIS
+            var server = new ServerManager(current);
+#else
+            var server = new IisExpressServerManager(current);
+#endif
+            var config = server.Sites[0].Applications[0].GetWebConfiguration();
+            var exception = Assert.Throws<COMException>(() =>
+            {
+                var section = config.GetSection("system.webServer/defaultDocument");
+            });
+            Assert.Equal($"Filename: \\\\?\\{siteConfig}\r\nLine number: 10\r\nError: Only one <configSections> element allowed.  It must be the first child element of the root <configuration> element   \r\n\r\n", exception.Message);
+        }
+
+        [Fact]
+        public void TestIisExpressDuplicateSectionDefinition3()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string current = Path.Combine(directoryName, @"applicationHost.config");
+            string original = Path.Combine(directoryName, @"original2.config");
+            var siteConfig = TestHelper.CopySiteConfig(directoryName, "original.config");
+            File.Copy(original, current, true);
+            TestHelper.FixPhysicalPathMono(current);
+
+            {
+                // Add the section.
+                var file = XDocument.Load(siteConfig);
+                var root = file.Root;
+                root?.AddFirst(
+                    new XElement("configSections",
+                        new XElement("sectionGroup",
+                            new XAttribute("name", "system.webServer"),
+                            new XElement("section",
+                                new XAttribute("name", "webSocket"),
+                                new XAttribute("overrideModeDefault", "Allow")))));
+                file.Save(siteConfig);
+            }
+#if IIS
+            var server = new ServerManager(current);
+#else
+            var server = new IisExpressServerManager(current);
+#endif
+            var config = server.Sites[0].Applications[0].GetWebConfiguration();
+            var exception = Assert.Throws<COMException>(() =>
+            {
+                var section = config.GetSection("system.webServer/defaultDocument");
+            });
+            Assert.Equal($"Filename: \\\\?\\{siteConfig}\r\nLine number: 5\r\nError: There is a duplicate 'system.webServer/webSocket' section defined\r\n\r\n", exception.Message);
+        }
 
         [Fact]
         public void TestIisExpressInheritance()
