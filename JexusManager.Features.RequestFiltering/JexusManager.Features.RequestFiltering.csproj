@@ -205,6 +205,9 @@
     <None Include="Resources\query_16.png" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="StrongNamer">
+      <Version>0.0.7</Version>
+    </PackageReference>
     <PackageReference Include="System.Reactive">
       <Version>3.1.1</Version>
     </PackageReference>
