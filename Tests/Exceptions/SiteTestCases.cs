@@ -494,6 +494,63 @@ namespace Tests.Exceptions
         }
 
         [Fact]
+        public void TestIisExpressDuplicateSectionDefinition()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string current = Path.Combine(directoryName, @"applicationHost.config");
+            string original = Path.Combine(directoryName, @"original2.config");
+            var siteConfig = TestHelper.CopySiteConfig(directoryName, "original.config");
+            File.Copy(original, current, true);
+            TestHelper.FixPhysicalPathMono(current);
+
+            {
+                // modify the path
+                var file = XDocument.Load(current);
+                var root = file.Root;
+                var webSocket = root?.XPathSelectElement("/configuration/configSections/sectionGroup[@name='system.webServer']/section[@name='webSocket']");
+                webSocket?.AddAfterSelf(
+                    new XElement("section",
+                        new XAttribute("name", "webSocket"),
+                        new XAttribute("overrideModeDefault", "Allow")));
+                file.Save(current);
+            }
+
+            //{
+            //    // Add the section.
+            //    var file = XDocument.Load(siteConfig);
+            //    var root = file.Root;
+            //    if (root == null)
+            //    {
+            //        return;
+            //    }
+
+            //    var doc = root.XPathSelectElement("/configuration/system.webServer/defaultDocument");
+            //    doc?.SetAttributeValue("enabled", true);
+            //    var add = root.XPathSelectElement("/configuration/system.webServer/defaultDocument/files/add");
+            //    add?.SetAttributeValue("value", "home2.html");
+            //    file.Save(siteConfig);
+            //}
+#if IIS
+            var server = new ServerManager(current);
+#else
+            var server = new IisExpressServerManager(current);
+#endif
+            var exception = Assert.Throws<COMException>(() =>
+            {
+                var config = server.Sites[0].Applications[0].GetWebConfiguration();
+            });
+            Assert.Equal($"Filename: \\\\?\\{current}\r\nLine number: 118\r\nError: There is a duplicate 'system.webServer/webSocket' section defined\r\n\r\n", exception.Message);
+        }
+
+
+        [Fact]
         public void TestIisExpressInheritance()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);

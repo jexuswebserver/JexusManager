@@ -4,6 +4,9 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Xml;
 using System.Xml.Linq;
 
 namespace Microsoft.Web.Administration
@@ -81,6 +84,7 @@ namespace Microsoft.Web.Administration
 
                     sectionSchemas.TryGetValue(sectionDefinition.Path, out SectionSchema schema);
                     sectionDefinition.Schema = schema;
+                    sectionDefinition.Entity = element;
                 }
             }
         }
@@ -115,6 +119,11 @@ namespace Microsoft.Web.Administration
         {
             foreach (SectionDefinition item in Sections)
             {
+                if (result.Any(_ => _.Path == item.Path))
+                {
+                    throw new COMException($"Line number: {(item.Entity as IXmlLineInfo).LineNumber}\r\nError: There is a duplicate '{item.Path}' section defined\r\n");
+                }
+
                 result.Add(item);
             }
 

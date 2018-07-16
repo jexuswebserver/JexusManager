@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Diagnostics;
+using System.Xml.Linq;
 
 namespace Microsoft.Web.Administration
 {
@@ -13,6 +14,8 @@ namespace Microsoft.Web.Administration
         { }
 
         internal SectionSchema Schema { get; set; }
+
+        internal XElement Entity { get; set; }
 
         public string AllowDefinition { get; set; }
         public string AllowLocation { get; set; }
