@@ -603,6 +603,56 @@ namespace Tests.Exceptions
                         new XElement("sectionGroup",
                             new XAttribute("name", "system.webServer"),
                             new XElement("section",
+                                new XAttribute("name", "test"),
+                                new XAttribute("overrideModeDefault", "Allow")))));
+                root?.AddFirst(
+                    new XElement("configSections",
+                        new XElement("sectionGroup",
+                            new XAttribute("name", "system.webServer"),
+                            new XElement("section",
+                                new XAttribute("name", "test2"),
+                                new XAttribute("overrideModeDefault", "Allow")))));
+                file.Save(siteConfig);
+            }
+#if IIS
+            var server = new ServerManager(current);
+#else
+            var server = new IisExpressServerManager(current);
+#endif
+            var config = server.Sites[0].Applications[0].GetWebConfiguration();
+            var exception = Assert.Throws<COMException>(() =>
+            {
+                var section = config.GetSection("system.webServer/defaultDocument");
+            });
+            Assert.Equal($"Filename: \\\\?\\{siteConfig}\r\nLine number: 8\r\nError: Only one <configSections> element allowed.  It must be the first child element of the root <configuration> element   \r\n\r\n", exception.Message);
+        }
+
+        [Fact]
+        public void TestIisExpressDuplicateSectionDefinition4()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string current = Path.Combine(directoryName, @"applicationHost.config");
+            string original = Path.Combine(directoryName, @"original2.config");
+            var siteConfig = TestHelper.CopySiteConfig(directoryName, "original.config");
+            File.Copy(original, current, true);
+            TestHelper.FixPhysicalPathMono(current);
+
+            {
+                // Add the section.
+                var file = XDocument.Load(siteConfig);
+                var root = file.Root;
+                root?.AddFirst(
+                    new XElement("configSections",
+                        new XElement("sectionGroup",
+                            new XAttribute("name", "system.webServer"),
+                            new XElement("section",
                                 new XAttribute("name", "webSocket"),
                                 new XAttribute("overrideModeDefault", "Allow")))));
                 file.Save(siteConfig);
