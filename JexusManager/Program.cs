@@ -107,7 +107,7 @@ namespace JexusManager
                     {
                         payload.Data.Person = new Person(version)
                         {
-                            UserName = $"{version}"
+                            UserName = userName
                         };
                     }
                 });
