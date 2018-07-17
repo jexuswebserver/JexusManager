@@ -176,7 +176,7 @@ namespace JexusManager.Features.TraceFailedRequests
 
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
         {
-            ConfigurationSection section = service.GetSection("system.webServer/tracing/traceFailedRequests", null, false);
+            ConfigurationSection section = service.GetSection("system.webServer/tracing/traceFailedRequests");
             return section.GetCollection();
         }
 

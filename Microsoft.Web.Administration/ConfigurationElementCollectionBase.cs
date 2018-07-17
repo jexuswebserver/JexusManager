@@ -355,6 +355,22 @@ namespace Microsoft.Web.Administration
                 newItem[attribute.Name] = item[attribute.Name];
             }
 
+            foreach (ConfigurationElement child in item.ChildElements)
+            {
+                var newChild = newItem.ChildElements[child.ElementTagName];
+                Clone(child, newChild);
+            }
+
+            if (item is ConfigurationElementCollection collection)
+            {
+                foreach (ConfigurationElement element in collection)
+                {
+                    var newElement = collection.CreateNewElement(element.ElementTagName);
+                    Clone(element, newElement);
+                    newItem.AddChild(newElement);
+                }
+            }
+
             newItem.IsLocked = item.IsLocked;
             newItem.SkipCheck = false;
         }
