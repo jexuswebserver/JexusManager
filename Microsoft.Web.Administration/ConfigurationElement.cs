@@ -9,9 +9,11 @@ using System.Xml.Linq;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Xml;
+using System.Diagnostics;
 
 namespace Microsoft.Web.Administration
 {
+    [DebuggerDisplay("{ElementTagName}")]
     public class ConfigurationElement
     {
         internal ConfigurationElement(ConfigurationElement element, string name, ConfigurationElementSchema schema, ConfigurationElement parent, XElement entity, FileContext core)

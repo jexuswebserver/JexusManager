@@ -365,7 +365,7 @@ namespace Microsoft.Web.Administration
             {
                 foreach (ConfigurationElement element in collection)
                 {
-                    var newElement = collection.CreateNewElement(element.ElementTagName);
+                    var newElement = ((ConfigurationElementCollection)newItem).CreateNewElement(element.ElementTagName);
                     Clone(element, newElement);
                     newItem.AddChild(newElement);
                 }

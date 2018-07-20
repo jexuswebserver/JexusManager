@@ -103,8 +103,8 @@ namespace Tests.HttpErrors
         {
             SetUp();
 
-            var site = Path.Combine("Website1", "web.config");
             var expected = "expected_remove.site.config";
+            var site = Path.Combine("Website1", "web.config");
             var document = XDocument.Load(site);
             var node = document.Root?.XPathSelectElement("/configuration/system.webServer");
             node?.Add(

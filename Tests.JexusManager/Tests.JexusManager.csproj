@@ -79,6 +79,8 @@
     <Compile Include="DefaultDocument\DefaultDocumentFeatureSiteTestFixture.cs" />
     <Compile Include="DirectoryBrowse\DirectoryBrowseFeatureServerTestFixture.cs" />
     <Compile Include="DirectoryBrowse\DirectoryBrowseFeatureSiteTestFixture.cs" />
+    <Compile Include="TraceFailedRequests\TraceFailedRequestsFeatureServerTestFixture.cs" />
+    <Compile Include="TraceFailedRequests\TraceFailedRequestsFeatureSiteTestFixture.cs" />
     <Compile Include="Handlers\HandlersFeatureServerTestFixture.cs" />
     <Compile Include="Handlers\HandlersFeatureSiteTestFixture.cs" />
     <Compile Include="HttpErrors\HttpErrorsFeatureServerTestFixture.cs" />
@@ -129,6 +131,14 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\JexusManager.Features.Access\JexusManager.Features.Access.csproj">
+      <Project>{b756b3a0-cfc8-4e71-a95a-0e9dc2a8d0c9}</Project>
+      <Name>JexusManager.Features.Access</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JexusManager.Features.Asp\JexusManager.Features.Asp.csproj">
+      <Project>{7faafa3b-a3e7-4339-a69f-102177fd5097}</Project>
+      <Name>JexusManager.Features.Asp</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JexusManager.Features.Authentication\JexusManager.Features.Authentication.csproj">
       <Project>{aa7ccfc5-b695-4773-ba79-77cf6c36908f}</Project>
       <Name>JexusManager.Features.Authentication</Name>
@@ -141,6 +151,18 @@
       <Project>{30a30352-ca83-446e-8af8-598ea7397988}</Project>
       <Name>JexusManager.Features.Caching</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JexusManager.Features.Certificates\JexusManager.Features.Certificates.csproj">
+      <Project>{d37cf28b-10f1-4f28-b933-c5e18d7f09aa}</Project>
+      <Name>JexusManager.Features.Certificates</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JexusManager.Features.Cgi\JexusManager.Features.Cgi.csproj">
+      <Project>{0adf28c5-377f-4aa3-b732-aa8c8aeebb16}</Project>
+      <Name>JexusManager.Features.Cgi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JexusManager.Features.Compression\JexusManager.Features.Compression.csproj">
+      <Project>{cd9a8535-a6b1-46bb-8acb-73d5e393147e}</Project>
+      <Name>JexusManager.Features.Compression</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JexusManager.Features.DefaultDocument\JexusManager.Features.DefaultDocument.csproj">
       <Project>{1e54f67a-3538-4f8d-b2ee-5da6a821a528}</Project>
       <Name>JexusManager.Features.DefaultDocument</Name>
@@ -149,13 +171,25 @@
       <Project>{5fb94cd1-af29-4396-a27f-891243f12e8c}</Project>
       <Name>JexusManager.Features.DirectoryBrowse</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JexusManager.Features.FastCgi\JexusManager.Features.FastCgi.csproj">
+      <Project>{aa816b3f-8b23-4440-a276-898958204a6d}</Project>
+      <Name>JexusManager.Features.FastCgi</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JexusManager.Features.Handlers\JexusManager.Features.Handlers.csproj">
       <Project>{bd450763-248d-4117-9af0-51a625667b61}</Project>
       <Name>JexusManager.Features.Handlers</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JexusManager.Features.HttpApi\JexusManager.Features.HttpApi.csproj">
+      <Project>{2b03e7fe-3dbd-4914-ad8c-4cb7007a9eed}</Project>
+      <Name>JexusManager.Features.HttpApi</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JexusManager.Features.HttpErrors\JexusManager.Features.HttpErrors.csproj">
       <Project>{76f1fa9f-3e56-4d5c-9324-d69db260efa9}</Project>
       <Name>JexusManager.Features.HttpErrors</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JexusManager.Features.HttpRedirect\JexusManager.Features.HttpRedirect.csproj">
+      <Project>{c0c1dde1-6447-4d3e-bc1a-f62cabbdbb53}</Project>
+      <Name>JexusManager.Features.HttpRedirect</Name>
     </ProjectReference>
     <ProjectReference Include="..\JexusManager.Features.IpSecurity\JexusManager.Features.IpSecurity.csproj">
       <Project>{361e2f47-289f-480f-b976-a6e3f7d96edc}</Project>
@@ -168,6 +202,14 @@
     <ProjectReference Include="..\JexusManager.Features.IsapiFilters\JexusManager.Features.IsapiFilters.csproj">
       <Project>{dba682a8-0579-4f41-a852-18235a9a4a93}</Project>
       <Name>JexusManager.Features.IsapiFilters</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JexusManager.Features.Jexus\JexusManager.Features.Jexus.csproj">
+      <Project>{ea333ee8-6551-4b5b-a733-119c5560608d}</Project>
+      <Name>JexusManager.Features.Jexus</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JexusManager.Features.Logging\JexusManager.Features.Logging.csproj">
+      <Project>{5c2ae18d-d829-481b-8fca-8ad0f69e68c8}</Project>
+      <Name>JexusManager.Features.Logging</Name>
     </ProjectReference>
     <ProjectReference Include="..\JexusManager.Features.MimeMap\JexusManager.Features.MimeMap.csproj">
       <Project>{fd1a63c6-458f-496b-9923-80eca082c7ec}</Project>
@@ -188,6 +230,10 @@
     <ProjectReference Include="..\JexusManager.Features.Rewrite\JexusManager.Features.Rewrite.csproj">
       <Project>{425cee66-72b3-42c0-989c-685b28b05230}</Project>
       <Name>JexusManager.Features.Rewrite</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JexusManager.Features.TraceFailedRequests\JexusManager.Features.TraceFailedRequests.csproj">
+      <Project>{eb518eb5-2dfc-430b-90f8-d87124be17de}</Project>
+      <Name>JexusManager.Features.TraceFailedRequests</Name>
     </ProjectReference>
     <ProjectReference Include="..\JexusManager.Shared\JexusManager.Shared.csproj">
       <Project>{e4040a45-b156-4048-b1a4-bd262ba18047}</Project>

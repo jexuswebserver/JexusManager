@@ -49,6 +49,48 @@ namespace JexusManager.Features.TraceFailedRequests
             Element["path"] = Path;
             var collection = Element.GetCollection("traceAreas");
             collection.Clear();
+            if (_providers == null)
+            {
+                _providers = new List<Provider>();
+                _providers.Add(new Provider
+                {
+                    Name = "ASP"
+                });
+                _providers.Add(new Provider
+                {
+                    Name = "ASPNET",
+                    SelectedAreas = new List<string>
+                    {
+                        "Infrastructure",
+                        "Module",
+                        "Page",
+                        "AppServices"
+                    }
+                });
+                _providers.Add(new Provider
+                {
+                    Name = "ISAPI Extension"
+                });
+                _providers.Add(new Provider
+                {
+                    Name = "WWW Server",
+                    SelectedAreas = new List<string>
+                    {
+                        "Authentication",
+                        "Security",
+                        "Filter",
+                        "StaticFile",
+                        "CGI",
+                        "Compression",
+                        "Cache",
+                        "RequestNotifications",
+                        "Module",
+                        "Rewrite",
+                        "WebSocket"
+                    }
+                });
+            }
+
             foreach (Provider provider in _providers)
             {
                 var add = collection.CreateElement("add");
@@ -57,6 +99,8 @@ namespace JexusManager.Features.TraceFailedRequests
                 add["areas"] = provider.SelectedAreas.Combine(",");
                 collection.Add(add);
             }
+
+            Element.ChildElements["failureDefinitions"]["statusCodes"] = Codes;
         }
 
         public bool Match(TraceFailedRequestsItem other)
