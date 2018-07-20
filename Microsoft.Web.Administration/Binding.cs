@@ -178,14 +178,36 @@ namespace Microsoft.Web.Administration
 
         internal string ToUri()
         {
-            var address = EndPoint.Address.Equals(IPAddress.Any)
-                ? Parent.Parent.Parent.Parent.HostName.ExtractName()
-                : EndPoint.AddressFamily == AddressFamily.InterNetwork
-                    ? EndPoint.Address.ToString()
-                    : $"[{EndPoint.Address}]";
+            var value = BindingInformation;
+            var last = value.LastIndexOf(':');
+            string host = null;
+            string address = null;
+            string port = null;
+            if (last > 0)
+            {
+                host = value.Substring(last + 1);
+                var next = value.LastIndexOf(':', last - 1);
+                port = value.Substring(next + 1, last - next - 1);
+                if (next > -1)
+                {
+                    address = value.Substring(0, next);
+                }
+            }
+
+            var domain = EndPoint == null 
+                ? string.IsNullOrWhiteSpace(port)
+                    ? "localhost"
+                    : $"localhost:{port}"
+                : address == "0.0.0.0"
+                    ? Parent.Parent.Parent.Parent.HostName.ExtractName()
+                    : string.IsNullOrWhiteSpace(host)
+                        ? EndPoint.AddressFamily == AddressFamily.InterNetwork
+                            ? address
+                            : $"[{address}]"
+                        : Host;
             return IsDefaultPort
-                ? $"{Protocol}://{address}"
-                : $"{Protocol}://{address}:{EndPoint.Port}";
+                ? $"{Protocol}://{domain}"
+                : $"{Protocol}://{domain}:{EndPoint.Port}";
         }
 
         internal string ToIisUrl()
@@ -197,6 +219,11 @@ namespace Microsoft.Web.Administration
         {
             get
             {
+                if (EndPoint == null)
+                {
+                    return true;
+                }
+
                 if (Protocol == "http")
                 {
                     return EndPoint.Port == 80;

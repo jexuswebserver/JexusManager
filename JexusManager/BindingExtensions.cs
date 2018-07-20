@@ -13,9 +13,32 @@ namespace Microsoft.Web.Administration
                 return $"{binding.BindingInformation} ({binding.Protocol})";
             }
 
-            return string.IsNullOrEmpty(binding.Host)
-                ? $"{binding.EndPoint.Address.AddressToDisplay()}:{binding.EndPoint.Port} ({binding.Protocol})"
-                : $"{binding.Host} on {binding.EndPoint.Address.AddressToDisplay()}:{binding.EndPoint.Port} ({binding.Protocol})";
+            var value = binding.BindingInformation;
+            var last = value.LastIndexOf(':');
+            string host = null;
+            string address = null;
+            string port = null;
+            if (last > 0)
+            {
+                host = value.Substring(last + 1);
+                var next = value.LastIndexOf(':', last - 1);
+                port = value.Substring(next + 1, last - next - 1);
+                if (next > -1)
+                {
+                    address = value.Substring(0, next);
+                }
+            }
+
+            if (string.IsNullOrWhiteSpace(address))
+            {
+                address = "*";
+            }
+
+            return binding.EndPoint == null && string.IsNullOrWhiteSpace(port)
+                ? $": ({binding.Protocol})"
+                : string.IsNullOrEmpty(binding.Host)
+                    ? $"{address}:{port} ({binding.Protocol})"
+                    : $"{host} on {address}:{port} ({binding.Protocol})";
         }
     }
 }

@@ -797,8 +797,13 @@ namespace Tests.Exceptions
             var server = new IisExpressServerManager(current);
 #endif
             {
-                Assert.Null(server.Sites[1].Bindings[2].EndPoint);
-                Assert.Equal("1.1.1.1.1:61902:localhost", server.Sites[1].Bindings[2].BindingInformation);
+                Binding binding = server.Sites[1].Bindings[2];
+                Assert.Null(binding.EndPoint);
+                Assert.Equal("1.1.1.1.1:61902:localhost", binding.BindingInformation);
+#if !IIS
+                Assert.Equal("http://localhost:61902", binding.ToUri());
+                Assert.Equal("localhost on 1.1.1.1.1:61902 (http)", binding.ToShortString());
+#endif
             }
         }
 
@@ -841,8 +846,13 @@ namespace Tests.Exceptions
             var server = new IisExpressServerManager(current);
 #endif
             {
-                Assert.Equal(IPAddress.Parse("1.1.0.1"), server.Sites[1].Bindings[2].EndPoint.Address);
-                Assert.Equal("1.1.1:61902:localhost", server.Sites[1].Bindings[2].BindingInformation);
+                Binding binding = server.Sites[1].Bindings[2];
+                Assert.Equal(IPAddress.Parse("1.1.0.1"), binding.EndPoint.Address);
+                Assert.Equal("1.1.1:61902:localhost", binding.BindingInformation);
+#if !IIS
+                Assert.Equal("http://localhost:61902", binding.ToUri());
+                Assert.Equal("localhost on 1.1.1:61902 (http)", binding.ToShortString());
+#endif
             }
         }
 
@@ -885,8 +895,13 @@ namespace Tests.Exceptions
             var server = new IisExpressServerManager(current);
 #endif
             {
-                Assert.Null(server.Sites[1].Bindings[2].EndPoint);
-                Assert.Equal(":", server.Sites[1].Bindings[2].BindingInformation);
+                Binding binding = server.Sites[1].Bindings[2];
+                Assert.Null(binding.EndPoint);
+                Assert.Equal(":", binding.BindingInformation);
+#if !IIS
+                Assert.Equal("http://localhost", binding.ToUri());
+                Assert.Equal(": (http)", binding.ToShortString());
+#endif
             }
         }
 
@@ -929,8 +944,13 @@ namespace Tests.Exceptions
             var server = new IisExpressServerManager(current);
 #endif
             {
-                Assert.Null(server.Sites[1].Bindings[2].EndPoint);
-                Assert.Equal("::", server.Sites[1].Bindings[2].BindingInformation);
+                Binding binding = server.Sites[1].Bindings[2];
+                Assert.Null(binding.EndPoint);
+                Assert.Equal("::", binding.BindingInformation);
+#if !IIS
+                Assert.Equal("http://localhost", binding.ToUri());
+                Assert.Equal(": (http)", binding.ToShortString());
+#endif
             }
         }
 
