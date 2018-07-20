@@ -75,7 +75,7 @@ namespace Microsoft.Web.Administration
 
             var value = (string)this["bindingInformation"];
             var last = value.LastIndexOf(':');
-            if (last > -1)
+            if (last > 0)
             {
                 _host = value.Substring(last + 1);
                 var next = value.LastIndexOf(':', last - 1);
