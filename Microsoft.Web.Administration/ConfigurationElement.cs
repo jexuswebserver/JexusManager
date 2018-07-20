@@ -604,13 +604,13 @@ namespace Microsoft.Web.Administration
 
         internal object SetAttributeValueInner(string name, object value)
         {
-            if (Section.IsLocked)
-            {
-                throw new FileLoadException("This configuration section cannot be used at this path. This happens when the section is locked at a parent level. Locking is either by default (overrideModeDefault=\"Deny\"), or set explicitly by a location tag with overrideMode=\"Deny\" or the legacy allowOverride=\"false\".\r\n");
-            }
-
             if (!SkipCheck)
             {
+                if (Section.IsLocked)
+                {
+                    throw new FileLoadException("This configuration section cannot be used at this path. This happens when the section is locked at a parent level. Locking is either by default (overrideModeDefault=\"Deny\"), or set explicitly by a location tag with overrideMode=\"Deny\" or the legacy allowOverride=\"false\".\r\n");
+                }
+
                 FileContext.SetDirty();
             }
 
