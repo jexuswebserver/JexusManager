@@ -303,7 +303,13 @@ namespace JexusManager
             var result = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Jexus Manager", name);
             if (!Directory.Exists(result))
             {
-                Directory.CreateDirectory(result);
+                try
+                {
+                    Directory.CreateDirectory(result);
+                }
+                catch (IOException)
+                {
+                }
             }
 
             return Path.Combine(result, file);
