@@ -86,11 +86,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BindingExtensions.cs" />
+    <Compile Include="Dialogs\CredentialsDialog.cs">
+      <SubType>form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\CredentialsDialog.Designer.cs">
+      <DependentUpon>CredentialsDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\ExceptionDialog.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Dialogs\ExceptionDialog.Designer.cs">
       <DependentUpon>ExceptionDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\ConnectAsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\ConnectAsDialog.Designer.cs">
+      <DependentUpon>ConnectAsDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Features\Main\ApplicationFeature.cs" />
     <Compile Include="Features\Main\ApplicationPage.cs">
@@ -326,8 +338,14 @@
     <Compile Include="Wizards\ConnectionWizard\ServerPage.Designer.cs">
       <DependentUpon>ServerPage.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Dialogs\CredentialsDialog.resx">
+      <DependentUpon>CredentialsDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\NewVirtualDirectoryDialog.resx">
       <DependentUpon>NewVirtualDirectoryDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\ConnectAsDialog.resx">
+      <DependentUpon>ConnectAsDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\SelectPoolDialog.resx">
       <DependentUpon>SelectPoolDialog.cs</DependentUpon>

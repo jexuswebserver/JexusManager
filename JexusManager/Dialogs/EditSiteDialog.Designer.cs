@@ -36,7 +36,7 @@
             this.btnBrowse = new System.Windows.Forms.Button();
             this.btnTest = new System.Windows.Forms.Button();
             this.btnConnect = new System.Windows.Forms.Button();
-            this.label7 = new System.Windows.Forms.Label();
+            this.txtConnectAs = new System.Windows.Forms.Label();
             this.txtPhysicalPath = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.btnSelect = new System.Windows.Forms.Button();
@@ -89,7 +89,6 @@
             // 
             // btnConnect
             // 
-            this.btnConnect.Enabled = false;
             this.btnConnect.Location = new System.Drawing.Point(15, 153);
             this.btnConnect.Name = "btnConnect";
             this.btnConnect.Size = new System.Drawing.Size(94, 23);
@@ -97,14 +96,14 @@
             this.btnConnect.Text = "Connect as...";
             this.btnConnect.UseVisualStyleBackColor = true;
             // 
-            // label7
+            // txtConnectAs
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(12, 121);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(139, 13);
-            this.label7.TabIndex = 24;
-            this.label7.Text = "Pass-through authentication";
+            this.txtConnectAs.AutoSize = true;
+            this.txtConnectAs.Location = new System.Drawing.Point(12, 121);
+            this.txtConnectAs.Name = "txtConnectAs";
+            this.txtConnectAs.Size = new System.Drawing.Size(139, 13);
+            this.txtConnectAs.TabIndex = 24;
+            this.txtConnectAs.Text = "Pass-through authentication";
             // 
             // txtPhysicalPath
             // 
@@ -190,7 +189,7 @@
             this.Controls.Add(this.btnBrowse);
             this.Controls.Add(this.btnTest);
             this.Controls.Add(this.btnConnect);
-            this.Controls.Add(this.label7);
+            this.Controls.Add(this.txtConnectAs);
             this.Controls.Add(this.txtPhysicalPath);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.btnSelect);
@@ -214,7 +213,7 @@
         private Button btnBrowse;
         private Button btnTest;
         private Button btnConnect;
-        private Label label7;
+        private Label txtConnectAs;
         private TextBox txtPhysicalPath;
         private Label label6;
         private Button btnSelect;

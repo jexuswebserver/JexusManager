@@ -6,7 +6,6 @@ namespace JexusManager.Dialogs
 {
     using System;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Windows.Forms;
 
     using Microsoft.Web.Administration;
@@ -74,7 +73,6 @@ namespace JexusManager.Dialogs
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-
                     var dialog = new SelectPoolDialog(txtPool.Text, _application.Server);
                     if (dialog.ShowDialog() != DialogResult.OK)
                     {
@@ -83,6 +81,22 @@ namespace JexusManager.Dialogs
 
                     txtPool.Text = dialog.Selected.Name;
                 }));
+
+            container.Add(
+                Observable.FromEventPattern<EventArgs>(btnConnect, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(evt =>
+                {
+                    var dialog = new ConnectAsDialog(_application);
+                    dialog.ShowDialog();
+                    txtConnectAs.Text = string.IsNullOrEmpty(application.VirtualDirectories[0].UserName)
+                        ? "Pass-through authentication"
+                        : $"connect as '{application.VirtualDirectories[0].UserName}'";
+                }));
+
+            txtConnectAs.Text = string.IsNullOrEmpty(application.VirtualDirectories[0].UserName)
+                ? "Pass-through authentication"
+                : $"connect as '{application.VirtualDirectories[0].UserName}'";
         }
 
         private void EditSiteDialog_HelpButtonClicked(object sender, CancelEventArgs e)
