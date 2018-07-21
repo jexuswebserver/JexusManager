@@ -50,7 +50,11 @@ namespace JexusManager.Dialogs
                         txtPhysicalPath.Text = directory.PhysicalPath;
                     }
                 }
+
+                RefreshButton();
             }
+
+            var item = new ConnectAsItem(Application?.VirtualDirectories[0]);
 
             var container = new CompositeDisposable();
             FormClosed += (sender, args) => container.Dispose();
@@ -70,7 +74,7 @@ namespace JexusManager.Dialogs
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    btnOK.Enabled = !string.IsNullOrWhiteSpace(txtAlias.Text) && !string.IsNullOrWhiteSpace(txtPhysicalPath.Text);
+                    RefreshButton();
                 }));
 
             container.Add(
@@ -126,6 +130,9 @@ namespace JexusManager.Dialogs
                         Application = _site.Applications.Add(path, txtPhysicalPath.Text);
                         Application.Name = txtAlias.Text;
                         Application.ApplicationPoolName = txtPool.Text;
+
+                        item.Element = Application.VirtualDirectories[0];
+                        item.Apply();
                     }
                     else
                     {
@@ -158,6 +165,33 @@ namespace JexusManager.Dialogs
                         Application.ApplicationPoolName = dialog.Selected.Name;
                     }
                 }));
+
+            container.Add(
+                Observable.FromEventPattern<EventArgs>(btnConnect, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(evt =>
+                {
+                    var dialog = new ConnectAsDialog(ServiceProvider, item);
+                    if (dialog.ShowDialog() != DialogResult.OK)
+                    {
+                        return;
+                    }
+
+                    item.Apply();
+                    txtConnectAs.Text = string.IsNullOrEmpty(item.UserName)
+                        ? "Pass-through authentication"
+                        : $"connect as '{item.UserName}'";
+                    RefreshButton();
+                }));
+
+            txtConnectAs.Text = string.IsNullOrEmpty(item.UserName)
+                ? "Pass-through authentication"
+                : $"connect as '{item.UserName}'";
+        }
+
+        private void RefreshButton()
+        {
+            btnOK.Enabled = !string.IsNullOrWhiteSpace(txtAlias.Text) && !string.IsNullOrWhiteSpace(txtPhysicalPath.Text);
         }
 
         public Application Application { get; private set; }

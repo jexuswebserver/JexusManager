@@ -37,7 +37,10 @@ namespace JexusManager.Dialogs
             {
                 txtAlias.Text = VirtualDirectory.Path.PathToName();
                 txtPhysicalPath.Text = VirtualDirectory.PhysicalPath;
+                RefreshButton();
             }
+
+            var item = new ConnectAsItem(VirtualDirectory);
 
             var container = new CompositeDisposable();
             FormClosed += (sender, args) => container.Dispose();
@@ -57,7 +60,7 @@ namespace JexusManager.Dialogs
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    btnOK.Enabled = !string.IsNullOrWhiteSpace(txtAlias.Text) && !string.IsNullOrWhiteSpace(txtPhysicalPath.Text);
+                    RefreshButton();
                 }));
 
            container.Add(
@@ -126,6 +129,9 @@ namespace JexusManager.Dialogs
 
                         VirtualDirectory.PhysicalPath = txtPhysicalPath.Text;
                         VirtualDirectory.Parent.Add(VirtualDirectory);
+
+                        item.Element = VirtualDirectory;
+                        item.Apply();
                     }
                     else
                     {
@@ -134,6 +140,33 @@ namespace JexusManager.Dialogs
 
                     DialogResult = DialogResult.OK;
                 }));
+
+            container.Add(
+                Observable.FromEventPattern<EventArgs>(btnConnect, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(evt =>
+                {
+                    var dialog = new ConnectAsDialog(ServiceProvider, item);
+                    if (dialog.ShowDialog() != DialogResult.OK)
+                    {
+                        return;
+                    }
+
+                    item.Apply();
+                    RefreshButton();
+                    txtConnectAs.Text = string.IsNullOrEmpty(item.UserName)
+                        ? "Pass-through authentication"
+                        : $"connect as '{item.UserName}'";
+                }));
+
+            txtConnectAs.Text = string.IsNullOrEmpty(item.UserName)
+                ? "Pass-through authentication"
+                : $"connect as '{item.UserName}'";
+        }
+
+        private void RefreshButton()
+        {
+            btnOK.Enabled = !string.IsNullOrWhiteSpace(txtAlias.Text) && !string.IsNullOrWhiteSpace(txtPhysicalPath.Text);
         }
 
         public VirtualDirectory VirtualDirectory { get; private set; }

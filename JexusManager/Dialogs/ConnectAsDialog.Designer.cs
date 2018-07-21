@@ -51,8 +51,6 @@
             // 
             // btnOK
             // 
-            this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Enabled = false;
             this.btnOK.Location = new System.Drawing.Point(215, 151);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(90, 23);

@@ -86,6 +86,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BindingExtensions.cs" />
+    <Compile Include="Dialogs\ConnectAsItem.cs" />
     <Compile Include="Dialogs\CredentialsDialog.cs">
       <SubType>form</SubType>
     </Compile>
@@ -106,7 +107,7 @@
     </Compile>
     <Compile Include="Features\Main\ApplicationFeature.cs" />
     <Compile Include="Features\Main\ApplicationPage.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Features\Main\ApplicationPage.Designer.cs">
       <DependentUpon>ApplicationPage.cs</DependentUpon>
@@ -133,7 +134,7 @@
     </Compile>
     <Compile Include="Features\Main\ApplicationPoolsFeature.cs" />
     <Compile Include="Features\Main\ApplicationPoolsPage.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Features\Main\ApplicationPoolsPage.Designer.cs">
       <DependentUpon>ApplicationPoolsPage.cs</DependentUpon>
@@ -159,7 +160,7 @@
       <DependentUpon>CredentialsDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Features\Main\HomePage.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Features\Main\HomePage.Designer.cs">
       <DependentUpon>HomePage.cs</DependentUpon>
@@ -175,7 +176,7 @@
     <Compile Include="Features\Main\ModulePageInfoListViewItem.cs" />
     <Compile Include="Features\Main\PhysicalDirectoryFeature.cs" />
     <Compile Include="Features\Main\PhysicalDirectoryPage.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Features\Main\PhysicalDirectoryPage.Designer.cs">
       <DependentUpon>PhysicalDirectoryPage.cs</DependentUpon>
@@ -183,7 +184,7 @@
     <Compile Include="Features\Main\ScheduleCollectionEditor.cs" />
     <Compile Include="Features\Main\ServerFeature.cs" />
     <Compile Include="Features\Main\ServerPage.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Features\Main\ServerPage.Designer.cs">
       <DependentUpon>ServerPage.cs</DependentUpon>
@@ -191,14 +192,14 @@
     <Compile Include="Features\Main\ServerSettingsSavedEventHandler.cs" />
     <Compile Include="Features\Main\SiteFeature.cs" />
     <Compile Include="Features\Main\SitePage.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Features\Main\SitePage.Designer.cs">
       <DependentUpon>SitePage.cs</DependentUpon>
     </Compile>
     <Compile Include="Features\Main\SitesFeature.cs" />
     <Compile Include="Features\Main\SitesPage.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Features\Main\SitesPage.Designer.cs">
       <DependentUpon>SitesPage.cs</DependentUpon>
@@ -229,7 +230,7 @@
     </Compile>
     <Compile Include="Features\Main\VirtualDirectoryFeature.cs" />
     <Compile Include="Features\Main\VirtualDirectoryPage.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Features\Main\VirtualDirectoryPage.Designer.cs">
       <DependentUpon>VirtualDirectoryPage.cs</DependentUpon>

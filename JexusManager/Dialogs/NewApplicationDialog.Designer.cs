@@ -44,7 +44,7 @@
             this.btnSelect = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
             this.txtPhysicalPath = new System.Windows.Forms.TextBox();
-            this.label7 = new System.Windows.Forms.Label();
+            this.txtConnectAs = new System.Windows.Forms.Label();
             this.btnConnect = new System.Windows.Forms.Button();
             this.btnTest = new System.Windows.Forms.Button();
             this.cbPreload = new System.Windows.Forms.CheckBox();
@@ -171,18 +171,17 @@
             this.txtPhysicalPath.Size = new System.Drawing.Size(324, 20);
             this.txtPhysicalPath.TabIndex = 8;
             // 
-            // label7
+            // txtConnectAs
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(12, 235);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(139, 13);
-            this.label7.TabIndex = 9;
-            this.label7.Text = "Pass-through authentication";
+            this.txtConnectAs.AutoSize = true;
+            this.txtConnectAs.Location = new System.Drawing.Point(12, 235);
+            this.txtConnectAs.Name = "txtConnectAs";
+            this.txtConnectAs.Size = new System.Drawing.Size(139, 13);
+            this.txtConnectAs.TabIndex = 9;
+            this.txtConnectAs.Text = "Pass-through authentication";
             // 
             // btnConnect
             // 
-            this.btnConnect.Enabled = false;
             this.btnConnect.Location = new System.Drawing.Point(15, 251);
             this.btnConnect.Name = "btnConnect";
             this.btnConnect.Size = new System.Drawing.Size(94, 23);
@@ -254,7 +253,7 @@
             this.Controls.Add(this.cbPreload);
             this.Controls.Add(this.btnTest);
             this.Controls.Add(this.btnConnect);
-            this.Controls.Add(this.label7);
+            this.Controls.Add(this.txtConnectAs);
             this.Controls.Add(this.txtPhysicalPath);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.btnSelect);
@@ -289,7 +288,7 @@
         private Button btnSelect;
         private Label label6;
         private TextBox txtPhysicalPath;
-        private Label label7;
+        private Label txtConnectAs;
         private Button btnConnect;
         private Button btnTest;
         private CheckBox cbPreload;

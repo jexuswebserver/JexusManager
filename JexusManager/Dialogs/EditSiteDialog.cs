@@ -29,6 +29,7 @@ namespace JexusManager.Dialogs
             txtPhysicalPath.Text = application.PhysicalPath;
             btnBrowse.Visible = application.Server.IsLocalhost;
             btnSelect.Enabled = application.Server.Mode != WorkingMode.Jexus;
+            RefreshButton();
 
             var container = new CompositeDisposable();
             FormClosed += (sender, args) => container.Dispose();
@@ -57,7 +58,7 @@ namespace JexusManager.Dialogs
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    btnOK.Enabled = !string.IsNullOrWhiteSpace(txtPhysicalPath.Text);
+                    RefreshButton();
                 }));
 
             container.Add(
@@ -87,16 +88,28 @@ namespace JexusManager.Dialogs
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    var dialog = new ConnectAsDialog(_application);
-                    dialog.ShowDialog();
+                    var item = new ConnectAsItem(_application.VirtualDirectories[0]);
+                    var dialog = new ConnectAsDialog(ServiceProvider, item);
+                    if (dialog.ShowDialog() != DialogResult.OK)
+                    {
+                        return;
+                    }
+
+                    item.Apply();
                     txtConnectAs.Text = string.IsNullOrEmpty(application.VirtualDirectories[0].UserName)
                         ? "Pass-through authentication"
                         : $"connect as '{application.VirtualDirectories[0].UserName}'";
+                    RefreshButton();
                 }));
 
             txtConnectAs.Text = string.IsNullOrEmpty(application.VirtualDirectories[0].UserName)
                 ? "Pass-through authentication"
                 : $"connect as '{application.VirtualDirectories[0].UserName}'";
+        }
+
+        private void RefreshButton()
+        {
+            btnOK.Enabled = !string.IsNullOrWhiteSpace(txtPhysicalPath.Text);
         }
 
         private void EditSiteDialog_HelpButtonClicked(object sender, CancelEventArgs e)

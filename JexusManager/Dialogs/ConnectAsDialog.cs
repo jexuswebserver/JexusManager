@@ -13,17 +13,16 @@ namespace JexusManager.Dialogs
 
     public partial class ConnectAsDialog : DialogForm
     {
-        public ConnectAsDialog(Microsoft.Web.Administration.Application application)
+        public ConnectAsDialog(IServiceProvider serviceProvider, ConnectAsItem item)
+            : base(serviceProvider)
         {
             InitializeComponent();
-            var existing = application.VirtualDirectories[0];
 
             var container = new CompositeDisposable();
             FormClosed += (sender, args) => container.Dispose();
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(txtName, "TextChanged")
-                .Sample(TimeSpan.FromSeconds(1))
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
@@ -35,15 +34,15 @@ namespace JexusManager.Dialogs
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    var dialog = new CredentialsDialog(ServiceProvider, existing.UserName);
+                    var dialog = new CredentialsDialog(ServiceProvider, item.UserName);
                     if (dialog.ShowDialog() != DialogResult.OK)
                     {
                         return;
                     }
 
                     txtName.Text = dialog.UserName;
-                    existing.UserName = dialog.UserName;
-                    existing.Password = dialog.Password;
+                    item.UserName = dialog.UserName;
+                    item.Password = dialog.Password;
                 }));
 
             container.Add(
@@ -64,20 +63,20 @@ namespace JexusManager.Dialogs
                 }));
 
             container.Add(
-                Observable.FromEventPattern<EventArgs>(btnOK, "Clicked")
+                Observable.FromEventPattern<EventArgs>(btnOK, "Click")
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     DialogResult = DialogResult.OK;
                     if (rbPassThrough.Checked)
                     {
-                        existing.UserName = string.Empty;
-                        existing.Password = string.Empty;
+                        item.UserName = string.Empty;
+                        item.Password = string.Empty;
                     }
                 }));
 
             txtName.Text = "test";
-            txtName.Text = existing.UserName;
+            txtName.Text = item.UserName;
         }
     }
 }
