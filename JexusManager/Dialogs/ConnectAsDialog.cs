@@ -27,6 +27,7 @@ namespace JexusManager.Dialogs
                 .Subscribe(evt =>
                 {
                     rbPassThrough.Checked = txtName.Text.Length == 0;
+                    RefreshButton();
                 }));
 
             container.Add(
@@ -43,6 +44,7 @@ namespace JexusManager.Dialogs
                     txtName.Text = dialog.UserName;
                     item.UserName = dialog.UserName;
                     item.Password = dialog.Password;
+                    RefreshButton();
                 }));
 
             container.Add(
@@ -52,6 +54,7 @@ namespace JexusManager.Dialogs
                 .Subscribe(evt =>
                 {
                     txtName.Enabled = btnSet.Enabled = rbSpecific.Checked;
+                    RefreshButton();
                 }));
 
             container.Add(
@@ -77,6 +80,11 @@ namespace JexusManager.Dialogs
 
             txtName.Text = "test";
             txtName.Text = item.UserName;
+        }
+
+        private void RefreshButton()
+        {
+            btnOK.Enabled = rbPassThrough.Checked || !string.IsNullOrEmpty(txtName.Text);
         }
     }
 }
