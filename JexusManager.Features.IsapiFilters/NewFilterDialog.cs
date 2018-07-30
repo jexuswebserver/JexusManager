@@ -49,6 +49,30 @@ namespace JexusManager.Features.IsapiFilters
                         return;
                     }
 
+                    try
+                    {
+                        var bit32Condition = "bitness32";
+                        var bit64Condition = "bitness64";
+                        var bit32 = DialogHelper.GetImageArchitecture(txtPath.Text) == 0x10;
+                        if (bit32 && !Item.PreConditions.Contains(bit32Condition))
+                        {
+                            Item.PreConditions.Add(bit32Condition);
+                        }
+                        else if (!bit32 && !Item.PreConditions.Contains(bit64Condition))
+                        {
+                            Item.PreConditions.Add(bit64Condition);
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        ShowMessage(
+                            "The specific filter is invalid.",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error,
+                            MessageBoxDefaultButton.Button1);
+                        return;
+                    }
+
                     DialogResult = DialogResult.OK;
                 }));
 

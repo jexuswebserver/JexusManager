@@ -6,7 +6,6 @@ namespace JexusManager.Features.IsapiCgiRestriction
 {
     using System;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Linq;
     using System.Reactive.Disposables;
     using System.Reactive.Linq;

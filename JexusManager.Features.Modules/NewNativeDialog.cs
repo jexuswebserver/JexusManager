@@ -7,6 +7,7 @@ namespace JexusManager.Features.Modules
     using System;
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
+    using System.Windows.Forms;
 
     using Microsoft.Web.Management.Client.Win32;
 
@@ -59,6 +60,31 @@ namespace JexusManager.Features.Modules
 
                     Item.Name = txtName.Text;
                     Item.Image = txtPath.Text;
+
+                    try
+                    {
+                        var bit32Condition = "bitness32";
+                        var bit64Condition = "bitness64";
+                        var bit32 = DialogHelper.GetImageArchitecture(txtPath.Text) == 0x10b;
+                        if (bit32 && !Item.PreConditions.Contains(bit32Condition))
+                        {
+                            Item.PreConditions.Add(bit32Condition);
+                        }
+                        else if (!bit32 && !Item.PreConditions.Contains(bit64Condition))
+                        {
+                            Item.PreConditions.Add(bit64Condition);
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        ShowMessage(
+                            "The specific module is invalid.",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error,
+                            MessageBoxDefaultButton.Button1);
+                        return;
+                    }
+
                     DialogResult = System.Windows.Forms.DialogResult.OK;
                 }));
         }
