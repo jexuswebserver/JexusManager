@@ -128,7 +128,7 @@ namespace JexusManager.Features.Handlers
                     {
                         var bit32Condition = "bitness32";
                         var bit64Condition = "bitness64";
-                        var bit32 = DialogHelper.GetImageArchitecture(txtPath.Text) == 0x10;
+                        var bit32 = DialogHelper.GetImageArchitecture(txtPath.Text);
                         if (bit32 && !Item.PreConditions.Contains(bit32Condition))
                         {
                             Item.PreConditions.Add(bit32Condition);
