@@ -41,6 +41,8 @@ namespace JexusManager.Features.Main
                     txtResult.Clear();
                     try
                     {
+                        Warn("IMPORTANT: This report might contain confidential information. Mask such before sharing to others.");
+                        Warn("-----");
                         Debug($"System Time: {DateTime.Now}");
                         Debug($"Processor Architecture: {Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE")}");
                         Debug($"OS: {Environment.OSVersion}");
@@ -57,7 +59,9 @@ namespace JexusManager.Features.Main
                             Info($"This machine has {adapters.Count} IP addresses to take external traffic.");
                             foreach (IPAddress address in adapters)
                             {
-                                Info($"* {address}.");
+                                Info(address.AddressFamily == AddressFamily.InterNetworkV6
+                                    ? $"* [{address}]."
+                                    : $"* {address}.");
                             }
                         }
 
@@ -97,7 +101,9 @@ namespace JexusManager.Features.Main
                                         Info($" * Requests from web browsers must be routed to following end points on this machine,");
                                         foreach (IPAddress address in adapters)
                                         {
-                                            Info($"   * {address}:{binding.EndPoint.Port}.");
+                                            Info(address.AddressFamily == AddressFamily.InterNetworkV6
+                                                ? $"   * [{address}]:{binding.EndPoint.Port}."
+                                                : $"   * {address}:{binding.EndPoint.Port}.");
                                         }
                                     }
 
@@ -123,7 +129,9 @@ namespace JexusManager.Features.Main
                                         Info($" * Web browsers can use several URLs, such as");
                                         foreach (IPAddress address in adapters)
                                         {
-                                            Debug($"   * {binding.Protocol}://{address}:{binding.EndPoint.Port}.");
+                                            Debug(address.AddressFamily == AddressFamily.InterNetworkV6
+                                                ? $"   * {binding.Protocol}://[{address}]:{binding.EndPoint.Port}."
+                                                : $"   * {binding.Protocol}://{address}:{binding.EndPoint.Port}.");
                                         }
 
                                         Info($"   * {binding.Protocol}://localhost:{binding.EndPoint.Port}.");
@@ -140,12 +148,17 @@ namespace JexusManager.Features.Main
                                     Info($" * Web browsers should use URL {binding.Protocol}://{binding.Host}:{binding.EndPoint.Port}. Requests must have Host header of \"{binding.Host}\".");
                                     if (!binding.Host.IsWildcard())
                                     {
+                                        Info($"   Start DNS query for {binding.Host}.");
                                         // IMPORTANT: wildcard host is not supported.
                                         var entry = Dns.GetHostEntry(binding.Host);
                                         var list = entry.AddressList;
+                                        Info($"   DNS Query returns {list.Length} result(s).");
                                         var found = false;
                                         foreach (var address in list)
                                         {
+                                            Info(address.AddressFamily == AddressFamily.InterNetworkV6
+                                                ? $"    * [{address}]"
+                                                : $"    * {address}");
                                             if (adapters.Any(item => address.Equals(item)))
                                             {
                                                 found = true;
@@ -160,15 +173,18 @@ namespace JexusManager.Features.Main
 
                                         if (!found)
                                         {
-                                            Warn(
-                                                $"   DNS query of \"{binding.Host}\" does not return a known IP address for any network adapter of this machine. It can be desired, but please review your DNS settings (or modify the hosts file).");
+                                            Warn($"   DNS query of \"{binding.Host}\" does not return a known IP address for any network adapter of this machine.");
+                                            Warn("   The server usally uses private IP addresses, and DNS query returns public IP addresses.");
+                                            Warn("   If packets are forwarded from public IP to private IP properly, this warning can be ignored.");
+                                            Warn("   Otherwise, please review DNS settings (or modify the hosts file to emulate DNS).");
                                         }
                                     }
                                 }
 
                                 if (binding.Protocol == "https")
                                 {
-                                    Warn($"Please run SSL Diagnostics at server level to analyze SSL configuration. More information can be found at https://www.jexusmanager.com/en/latest/tutorials/ssl-diagnostics.html.");
+                                    Warn("Binding Diagnostics does not verify certificates and other SSL/TLS related settings.");
+                                    Warn($"Please run SSL Diagnostics at server level to analyze SSL/TLS configuration. More information can be found at https://www.jexusmanager.com/en/latest/tutorials/ssl-diagnostics.html.");
                                 }
                             }
 

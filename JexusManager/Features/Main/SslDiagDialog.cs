@@ -56,6 +56,9 @@ namespace JexusManager.Features.Main
                     txtResult.Clear();
                     try
                     {
+                        Warn("IMPORTANT: This report might contain confidential information. Mask such before sharing to others.");
+                        Warn("-----");
+
                         Debug($"System Time: {DateTime.Now}");
                         Debug($"Processor Architecture: {Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE")}");
                         Debug($"OS: {Environment.OSVersion}");
