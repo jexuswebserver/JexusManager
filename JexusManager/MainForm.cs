@@ -196,11 +196,6 @@ namespace JexusManager
 
         private void LoadIisExpress()
         {
-            if (!File.Exists(DialogHelper.ListIisExpress))
-            {
-                return;
-            }
-
             // TODO: load if only on Windows.
             var globalFile = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
@@ -216,6 +211,11 @@ namespace JexusManager
                     server: null,
                     ignoreInCache: true);
                 RegisterServer(global);
+            }
+
+            if (!File.Exists(DialogHelper.ListIisExpress))
+            {
+                return;
             }
 
             var lines = File.ReadAllLines(DialogHelper.ListIisExpress);
