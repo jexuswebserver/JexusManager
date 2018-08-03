@@ -150,33 +150,41 @@ namespace JexusManager.Features.Main
                                     {
                                         Info($"   Start DNS query for {binding.Host}.");
                                         // IMPORTANT: wildcard host is not supported.
-                                        var entry = Dns.GetHostEntry(binding.Host);
-                                        var list = entry.AddressList;
-                                        Info($"   DNS Query returns {list.Length} result(s).");
-                                        var found = false;
-                                        foreach (var address in list)
+                                        try
                                         {
-                                            Info(address.AddressFamily == AddressFamily.InterNetworkV6
-                                                ? $"    * [{address}]"
-                                                : $"    * {address}");
-                                            if (adapters.Any(item => address.Equals(item)))
+                                            var entry = Dns.GetHostEntry(binding.Host);
+                                            var list = entry.AddressList;
+                                            Info($"   DNS Query returns {list.Length} result(s).");
+                                            var found = false;
+                                            foreach (var address in list)
                                             {
-                                                found = true;
-                                                break;
+                                                Info(address.AddressFamily == AddressFamily.InterNetworkV6
+                                                    ? $"    * [{address}]"
+                                                    : $"    * {address}");
+                                                if (adapters.Any(item => address.Equals(item)))
+                                                {
+                                                    found = true;
+                                                    break;
+                                                }
+
+                                                if (address.Equals(IPAddress.Loopback))
+                                                {
+                                                    found = true;
+                                                }
                                             }
 
-                                            if (address.Equals(IPAddress.Loopback))
+                                            if (!found)
                                             {
-                                                found = true;
+                                                Warn($"   DNS query of \"{binding.Host}\" does not return a known IP address for any network adapter of this machine.");
+                                                Warn("   The server usally uses private IP addresses, and DNS query returns public IP addresses.");
+                                                Warn("   If packets are forwarded from public IP to private IP properly, this warning can be ignored.");
+                                                Warn("   Otherwise, please review DNS settings (or modify the hosts file to emulate DNS).");
                                             }
                                         }
-
-                                        if (!found)
+                                        catch (SocketException ex)
                                         {
-                                            Warn($"   DNS query of \"{binding.Host}\" does not return a known IP address for any network adapter of this machine.");
-                                            Warn("   The server usally uses private IP addresses, and DNS query returns public IP addresses.");
-                                            Warn("   If packets are forwarded from public IP to private IP properly, this warning can be ignored.");
-                                            Warn("   Otherwise, please review DNS settings (or modify the hosts file to emulate DNS).");
+                                            Error($"DNS query failed: {ex.Message}.");
+                                            Error($"Please review the host name {binding.Host}.");
                                         }
                                     }
                                 }
