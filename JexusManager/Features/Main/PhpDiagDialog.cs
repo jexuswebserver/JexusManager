@@ -202,6 +202,12 @@ namespace JexusManager.Features.Main
                             {
                                 var rootFolder = Path.GetDirectoryName(path);
                                 Debug($"[{rootFolder}]");
+                                if (!Directory.Exists(rootFolder))
+                                {
+                                    Error("Invalid root folder is found. Skip.");
+                                    continue;
+                                }
+
                                 var config = Path.Combine(rootFolder, "php.ini");
                                 if (File.Exists(config))
                                 {
