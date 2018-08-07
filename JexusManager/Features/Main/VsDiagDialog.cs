@@ -76,6 +76,8 @@ namespace JexusManager.Features.Main
                         Debug(Environment.NewLine);
                         var project = projects[0];
 
+                        Info($"Project file: {project}.");
+                        Info($"IIS Express configuration file: {site.Server.FileName}.");
                         // TODO: free the resources.
                         var xmlReader = XmlReader.Create(new StringReader(File.ReadAllText(project))); // Or whatever your source is, of course.
                         var xml = XDocument.Load(xmlReader);
@@ -138,12 +140,14 @@ namespace JexusManager.Features.Main
                 return;
             }
 
+            Info($"Visual Studio launchSettings.json: {settingsFile}.");
             Debug($"Extract debugging profiles.");
             JObject o1 = JObject.Parse(File.ReadAllText(settingsFile));
             var profiles = o1["profiles"].Children<JProperty>().ToList();
             if (profiles.Count == 0)
             {
                 Error($"Cannot find mandate profiles.");
+                Error($"Please fix launchSettings.json.");
                 return;
             }
 
@@ -159,6 +163,7 @@ namespace JexusManager.Features.Main
             if (iisSettings == null)
             {
                 Error($"Cannot find 'iisSettings' section.");
+                Error($"Please fix launchSettings.json.");
                 return;
             }
 
@@ -179,6 +184,7 @@ namespace JexusManager.Features.Main
                     if (rawUrl == null)
                     {
                         Error($"Cannot find applicationUrl.");
+                        Error($"Please fix launchSettings.json.");
                         return;
                     }
 
@@ -198,6 +204,7 @@ namespace JexusManager.Features.Main
                     if (!matched)
                     {
                         Error($"No matching binding is found for {iisUrl}");
+                        Error($"Please edit launchSettings.json and IIS Express configuration file to match each other.");
                     }
                 }
             }
@@ -205,6 +212,7 @@ namespace JexusManager.Features.Main
             if (!hasExpress)
             {
                 Error("Cannot find 'iisSettings/iisExpress' section.");
+                Error($"Please fix launchSettings.json.");
             }
         }
 
@@ -305,7 +313,8 @@ namespace JexusManager.Features.Main
 
             if (!matched)
             {
-                Error($"No matching binding is found for {iisUrl}");
+                Error($"No matching binding is found for {iisUrl}.");
+                Error($"Please edit project file and IIS Express configuration file to match each other.");
             }
         }
 
