@@ -24,22 +24,41 @@ namespace JexusManager.Wizards.ConnectionWizard
             if (Helper.IsRunningOnMono())
             {
                 rbIisExpress.Enabled = false;
+                rbVisualStudio.Enabled = false;
                 toolTip1.SetToolTip(rbIisExpress, "IIS Express is not supported when running on Mono.");
+                toolTip1.SetToolTip(rbVisualStudio, "IIS Express is not supported when running on Mono.");
             }
 
             if (Helper.GetIisExpressVersion() == Version.Parse("0.0.0.0"))
             {
                 rbIisExpress.Enabled = false;
+                rbVisualStudio.Enabled = false;
                 toolTip1.SetToolTip(rbIisExpress, "IIS Express is not installed to the default location.");
+                toolTip1.SetToolTip(rbVisualStudio, "IIS Express is not installed to the default location.");
             }
         }
 
         private void RbJexusCheckedChanged(object sender, EventArgs e)
         {
-            var wizardData = ((ConnectionWizardData)WizardData);
-            wizardData.Mode = rbJexus.Checked
-                                  ? WorkingMode.Jexus
-                                  : rbIisExpress.Checked ? WorkingMode.IisExpress : WorkingMode.Iis;
+            var wizardData = (ConnectionWizardData)WizardData;
+            if (rbJexus.Checked)
+            {
+                wizardData.Mode = WorkingMode.Jexus;
+            }
+            else if (rbIisExpress.Checked)
+            {
+                wizardData.Mode = WorkingMode.IisExpress;
+            }
+            else if (rbVisualStudio.Checked)
+            {
+                wizardData.Mode = WorkingMode.IisExpress;
+            }
+            else
+            {
+                wizardData.Mode = WorkingMode.Iis;
+            }
+
+            wizardData.UseVisualStudio = rbVisualStudio.Checked;
             if (wizardData.Mode == WorkingMode.Jexus)
             {
                 SetNextPage(_jexusPage);

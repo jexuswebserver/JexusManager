@@ -127,10 +127,10 @@ namespace Microsoft.Web.Management.Client.Win32
                 return;
             }
 
-            _txtTitle.Text = CurrentPage.Caption;
             _pnlContainer.Controls.Clear();
             _pnlContainer.Controls.Add(CurrentPage);
             CurrentPage.Activate();
+            _txtTitle.Text = CurrentPage.Caption;
         }
 
         protected virtual void OnPageChanging(EventArgs e)

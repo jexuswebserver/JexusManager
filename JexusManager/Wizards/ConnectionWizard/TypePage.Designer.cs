@@ -40,6 +40,8 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.label5 = new System.Windows.Forms.Label();
+            this.rbVisualStudio = new System.Windows.Forms.RadioButton();
             this.SuspendLayout();
             // 
             // label2
@@ -66,7 +68,7 @@
             // rbIisExpress
             // 
             this.rbIisExpress.AutoSize = true;
-            this.rbIisExpress.Location = new System.Drawing.Point(24, 129);
+            this.rbIisExpress.Location = new System.Drawing.Point(24, 126);
             this.rbIisExpress.Name = "rbIisExpress";
             this.rbIisExpress.Size = new System.Drawing.Size(162, 17);
             this.rbIisExpress.TabIndex = 7;
@@ -78,7 +80,7 @@
             // 
             this.rbIis.AutoSize = true;
             this.rbIis.Enabled = false;
-            this.rbIis.Location = new System.Drawing.Point(24, 206);
+            this.rbIis.Location = new System.Drawing.Point(24, 270);
             this.rbIis.Name = "rbIis";
             this.rbIis.Size = new System.Drawing.Size(78, 17);
             this.rbIis.TabIndex = 8;
@@ -98,7 +100,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(39, 149);
+            this.label3.Location = new System.Drawing.Point(39, 146);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(338, 13);
             this.label3.TabIndex = 10;
@@ -107,16 +109,38 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(39, 226);
+            this.label4.Location = new System.Drawing.Point(39, 290);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(183, 13);
             this.label4.TabIndex = 11;
             this.label4.Text = "Remote IIS web servers (unavailable)";
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(39, 218);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(280, 13);
+            this.label5.TabIndex = 13;
+            this.label5.Text = "Open a solution file to locate IIS Express configuration file.";
+            // 
+            // rbVisualStudio
+            // 
+            this.rbVisualStudio.AutoSize = true;
+            this.rbVisualStudio.Location = new System.Drawing.Point(24, 198);
+            this.rbVisualStudio.Name = "rbVisualStudio";
+            this.rbVisualStudio.Size = new System.Drawing.Size(226, 17);
+            this.rbVisualStudio.TabIndex = 12;
+            this.rbVisualStudio.Text = "Visual Studio IIS Express Configuration File";
+            this.rbVisualStudio.UseVisualStyleBackColor = true;
+            this.rbVisualStudio.CheckedChanged += new System.EventHandler(this.RbJexusCheckedChanged);
+            // 
             // TypePage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.rbVisualStudio);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label1);
@@ -141,5 +165,7 @@
         private Label label3;
         private Label label4;
         private ToolTip toolTip1;
+        private Label label5;
+        private RadioButton rbVisualStudio;
     }
 }

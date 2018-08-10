@@ -31,19 +31,19 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label2 = new System.Windows.Forms.Label();
+            this.txtType = new System.Windows.Forms.Label();
             this.txtName = new System.Windows.Forms.TextBox();
             this.btnBrowse = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // label2
+            // txtType
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(34, 75);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(117, 13);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "Configuration file name:";
+            this.txtType.AutoSize = true;
+            this.txtType.Location = new System.Drawing.Point(34, 75);
+            this.txtType.Name = "txtType";
+            this.txtType.Size = new System.Drawing.Size(117, 13);
+            this.txtType.TabIndex = 1;
+            this.txtType.Text = "Configuration file name:";
             // 
             // txtName
             // 
@@ -71,7 +71,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.btnBrowse);
             this.Controls.Add(this.txtName);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.txtType);
             this.Name = "BrowsePage";
             this.Size = new System.Drawing.Size(670, 380);
             this.ResumeLayout(false);
@@ -80,7 +80,7 @@
         }
 
         #endregion
-        private Label label2;
+        private Label txtType;
         private TextBox txtName;
         private Button btnBrowse;
     }

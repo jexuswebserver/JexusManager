@@ -18,7 +18,6 @@ namespace JexusManager.Wizards.ConnectionWizard
         public BrowsePage()
         {
             InitializeComponent();
-            Caption = "Specify a Configuration File";
         }
 
         protected internal override bool CanNavigateNext
@@ -37,7 +36,7 @@ namespace JexusManager.Wizards.ConnectionWizard
             }
 
             ((ConnectionWizardData)WizardData).FileName = txtName.Text;
-            this.UpdateWizard();
+            UpdateWizard();
         }
 
         public override bool OnNext()
@@ -100,7 +99,10 @@ namespace JexusManager.Wizards.ConnectionWizard
         {
             base.Activate();
             _initialized = false;
-            txtName.Text = ((ConnectionWizardData)this.WizardData).FileName;
+            ConnectionWizardData wizardData = (ConnectionWizardData)WizardData;
+            txtName.Text = wizardData.FileName;
+            Caption = wizardData.UseVisualStudio ? "Specify a Visual Studio Solution File" : "Specify a Configuration File";
+            txtType.Text = wizardData.UseVisualStudio ? "Visual Studio solution file name:" : "Configuration file name:";
             _initialized = true;
             txtName.Focus();
             txtName.SelectAll();
@@ -108,7 +110,12 @@ namespace JexusManager.Wizards.ConnectionWizard
 
         private void BtnBrowseClick(object sender, EventArgs e)
         {
-            DialogHelper.ShowOpenFileDialog(txtName, "Common Files|*.config;*.sln|Config Files|*.config|Solution Files|*.sln|All Files|*.*");
+            ConnectionWizardData wizardData = (ConnectionWizardData)WizardData;
+            DialogHelper.ShowOpenFileDialog(
+                txtName,
+                wizardData.UseVisualStudio
+                    ? "Common Files|*.sln;*.config|Solution Files|*.sln|Config Files|*.config|All Files|*.*"
+                    : "Common Files|*.config;*.sln|Config Files|*.config|Solution Files|*.sln|All Files|*.*");
         }
     }
 }
