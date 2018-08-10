@@ -15,7 +15,7 @@ namespace JexusManager.Features.Authentication
     using Microsoft.Web.Management.Client;
     using Microsoft.Web.Management.Client.Extensions;
     using Microsoft.Web.Management.Client.Win32;
-
+    using Microsoft.Win32;
     using Module = Microsoft.Web.Management.Client.Module;
 
     internal class BasicAuthenticationFeature : AuthenticationFeature
