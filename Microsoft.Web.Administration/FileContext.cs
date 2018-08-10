@@ -150,7 +150,11 @@ namespace Microsoft.Web.Administration
 
                     last++;
                     var revisionFolder = Path.Combine(historyFolder, "CFGHISTORY_" + last.ToString("D10"));
-                    Directory.CreateDirectory(revisionFolder);
+                    if (!Directory.Exists(revisionFolder))
+                    {
+                        Directory.CreateDirectory(revisionFolder);
+                    }
+
                     var fileName = Path.GetFileName(FileName);
                     if (fileName != null)
                     {
