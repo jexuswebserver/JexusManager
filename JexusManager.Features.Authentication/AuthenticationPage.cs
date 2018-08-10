@@ -90,37 +90,54 @@ namespace JexusManager.Features.Authentication
             pictureBox1.Image = service.Scope.GetImage();
 
             var certificateFeature = new ClientCertificateAuthenticationFeature(Module);
-            listView1.Items.Add(new AuthenticationListViewItem(certificateFeature, this));
+            if (certificateFeature.IsFeatureEnabled)
+            {
+                listView1.Items.Add(new AuthenticationListViewItem(certificateFeature, this));
+                certificateFeature.Load();
+            }
 
             var anonymousFeature = new AnonymousAuthenticationFeature(Module);
-            listView1.Items.Add(new AuthenticationListViewItem(anonymousFeature, this));
-
-            if (service.Scope == ManagementScope.Server && PublicNativeMethods.IsProcessElevated)
+            if (anonymousFeature.IsFeatureEnabled)
             {
-                // TODO: Elevation is needed to modify root web.config.
-                var impersonationFeature = new ImpersonationFeature(Module);
+                listView1.Items.Add(new AuthenticationListViewItem(anonymousFeature, this));
+                anonymousFeature.Load();
+            }
+
+            // TODO: Elevation is needed to modify root web.config.
+            var impersonationFeature = new ImpersonationFeature(Module);
+            if (impersonationFeature.IsFeatureEnabled)
+            {
                 listView1.Items.Add(new AuthenticationListViewItem(impersonationFeature, this));
                 impersonationFeature.Load();
             }
 
             var basicFeature = new BasicAuthenticationFeature(Module);
-            listView1.Items.Add(new AuthenticationListViewItem(basicFeature, this));
+            if (basicFeature.IsFeatureEnabled)
+            {
+                listView1.Items.Add(new AuthenticationListViewItem(basicFeature, this));
+                basicFeature.Load();
+            }
 
             var digestFeature = new DigestAuthenticationFeature(Module);
-            listView1.Items.Add(new AuthenticationListViewItem(digestFeature, this));
+            if (digestFeature.IsFeatureEnabled)
+            {
+                listView1.Items.Add(new AuthenticationListViewItem(digestFeature, this));
+                digestFeature.Load();
+            }
 
             var formsFeature = new FormsAuthenticationFeature(Module);
-            listView1.Items.Add(new AuthenticationListViewItem(formsFeature, this));
+            if (formsFeature.IsFeatureEnabled)
+            {
+                listView1.Items.Add(new AuthenticationListViewItem(formsFeature, this));
+                formsFeature.Load();
+            }
 
             var windowsFeature = new WindowsAuthenticationFeature(Module);
-            listView1.Items.Add(new AuthenticationListViewItem(windowsFeature, this));
-
-            certificateFeature.Load();
-            anonymousFeature.Load();
-            basicFeature.Load();
-            digestFeature.Load();
-            formsFeature.Load();
-            windowsFeature.Load();
+            if (windowsFeature.IsFeatureEnabled)
+            {
+                listView1.Items.Add(new AuthenticationListViewItem(windowsFeature, this));
+                windowsFeature.Load();
+            }
 
             InitializeListPage();
         }

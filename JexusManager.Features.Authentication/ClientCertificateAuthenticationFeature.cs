@@ -14,7 +14,7 @@ namespace JexusManager.Features.Authentication
     using Microsoft.Web.Management.Client;
     using Microsoft.Web.Management.Client.Extensions;
     using Microsoft.Web.Management.Client.Win32;
-
+    using Microsoft.Win32;
     using Module = Microsoft.Web.Management.Client.Module;
 
     internal class ClientCertificateAuthenticationFeature : AuthenticationFeature
@@ -107,7 +107,27 @@ namespace JexusManager.Features.Authentication
 
         public override bool IsFeatureEnabled
         {
-            get { return true; }
+            get
+            {
+                var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+                if (service.ServerManager.Mode == Microsoft.Web.Administration.WorkingMode.IisExpress)
+                {
+                    return true;
+                }
+
+                if (service.ServerManager.Mode == Microsoft.Web.Administration.WorkingMode.Iis)
+                {
+                    var reg = Registry.LocalMachine.OpenSubKey(@"Software\Microsoft\InetStp\Components");
+                    if (reg == null)
+                    {
+                        return false;
+                    }
+
+                    return (int)reg.GetValue("ClientCertificateMappingAuthentication", 0) == 1;
+                }
+
+                return false;
+            }
         }
 
         public override AuthenticationType AuthenticationType

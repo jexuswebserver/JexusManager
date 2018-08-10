@@ -11,11 +11,11 @@ namespace JexusManager.Features.Authentication
     using System.Windows.Forms;
 
     using JexusManager.Services;
-
+    using Microsoft.Web.Administration;
     using Microsoft.Web.Management.Client;
     using Microsoft.Web.Management.Client.Extensions;
     using Microsoft.Web.Management.Client.Win32;
-
+    using Microsoft.Web.Management.Server;
     using Module = Microsoft.Web.Management.Client.Module;
 
     internal class ImpersonationFeature : AuthenticationFeature
@@ -124,7 +124,14 @@ namespace JexusManager.Features.Authentication
             return true;
         }
 
-        public override bool IsFeatureEnabled => true;
+        public override bool IsFeatureEnabled
+        {
+            get
+            {
+                var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+                return service.Scope == ManagementScope.Server && PublicNativeMethods.IsProcessElevated;
+            }
+        }
 
         public override AuthenticationType AuthenticationType => AuthenticationType.Other;
 
