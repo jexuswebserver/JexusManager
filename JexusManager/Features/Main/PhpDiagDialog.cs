@@ -27,15 +27,15 @@ namespace JexusManager.Features.Main
     {
         private struct PhpVersion
         {
-            public PhpVersion(string version, bool recommended, Version cppVersion)
+            public PhpVersion(string version, DateTime expiringDate, Version cppVersion)
             {
                 Version = version;
-                Recommended = recommended;
+                ExpiringDate = expiringDate;
                 CppVersion = cppVersion;
             }
 
             public string Version { get; set; }
-            public bool Recommended { get; set; }
+            public DateTime ExpiringDate { get; set; }
             public Version CppVersion { get; set; }
         }
 
@@ -46,10 +46,10 @@ namespace JexusManager.Features.Main
 
             var knownPhpVersions = new Dictionary<string, PhpVersion>
             {
-                { "5.6", new PhpVersion("5.6", false, new Version(11, 0)) },
-                { "7.0", new PhpVersion("7.0", false, new Version(14, 0)) },
-                { "7.1", new PhpVersion("7.1", true, new Version(14, 0)) },
-                { "7.2", new PhpVersion("7.2", true, new Version(14, 11)) }
+                { "5.6", new PhpVersion("5.6", new DateTime(2018, 12, 31), new Version(11, 0)) },
+                { "7.0", new PhpVersion("7.0", new DateTime(2018, 12, 3), new Version(14, 0)) },
+                { "7.1", new PhpVersion("7.1", new DateTime(2019, 12, 1), new Version(14, 0)) },
+                { "7.2", new PhpVersion("7.2", new DateTime(2020, 11, 30), new Version(14, 11)) }
             };
 
             var container = new CompositeDisposable();
@@ -96,12 +96,6 @@ namespace JexusManager.Features.Main
                                 Debug($"* Found FastCGI handler as {{ Name: {item.Name}, Path: {item.Path}, State: {item.GetState(handlers.AccessPolicy)}, Handler: {item.TypeString}, Entry Type: {item.Flag} }}.");
                                 foundPhpHandler.Add(item);
                             }
-
-                            //if (string.Equals(item.Path, "*.php", StringComparison.OrdinalIgnoreCase))
-                            //{
-                            //    Debug($"* Found PHP handler as {{ Name: {item.Name}, Path: {item.Path}, State: {item.GetState(handlers.AccessPolicy)}, Handler: {item.TypeString}, Entry Type: {item.Flag} }}.");
-                            //    foundPhpHandler = true;
-                            //}
                         }
 
                         if (foundPhpHandler.Count == 0)
@@ -151,32 +145,39 @@ namespace JexusManager.Features.Main
                                 var version = $"{info.FileMajorPart}.{info.FileMinorPart}";
                                 if (knownPhpVersions.ContainsKey(version))
                                 {
-                                    var php = knownPhpVersions[version];
-                                    if (php.Recommended)
+                                    var matched = knownPhpVersions[version];
+                                    if (matched.ExpiringDate <= DateTime.Now)
                                     {
-                                        Debug($"* PHP {version} ({path}) is supported.");
+                                        Error($"* PHP {info.FileVersion} ({path}) is unknown or obsolete. Please refer to http://php.net/supported-versions.php for more details.");
                                     }
-                                    else
+                                    else if (matched.ExpiringDate > DateTime.Now && (matched.ExpiringDate - DateTime.Now).TotalDays < 180)
                                     {
                                         Warn($"* PHP {version} ({path}) will soon be obsolete. Please refer to http://php.net/supported-versions.php for more details.");
                                     }
+                                    else
+                                    {
+                                        Debug($"* PHP {version} ({path}) is supported.");
+                                    }
 
-                                    var cppFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), $"msvcp{php.CppVersion.Major}0.dll");
+                                    var x86 = new PeNet.PeFile(path).Is32Bit;
+                                    var cppFile = Path.Combine(
+                                        Environment.GetFolderPath(x86 ? Environment.SpecialFolder.SystemX86 : Environment.SpecialFolder.System),
+                                        $"msvcp{matched.CppVersion.Major}0.dll");
                                     if (File.Exists(cppFile))
                                     {
                                         var cpp = FileVersionInfo.GetVersionInfo(cppFile);
-                                        if (cpp.FileMinorPart >= php.CppVersion.Minor)
+                                        if (cpp.FileMinorPart >= matched.CppVersion.Minor)
                                         {
-                                            Debug($"  Visual C++ runtime is detected (expected: {php.CppVersion}, detected: {cpp.FileVersion}).");
+                                            Debug($"  Visual C++ runtime is detected (expected: {matched.CppVersion}, detected: {cpp.FileVersion}).");
                                         }
                                         else
                                         {
-                                            Error($"  Visual C++ runtime {php.CppVersion} is not detected. Please install it following the tips on https://windows.php.net/download/.");
+                                            Error($"  Visual C++ runtime {matched.CppVersion} is not detected. Please install it following the tips on https://windows.php.net/download/.");
                                         }
                                     }
                                     else
                                     {
-                                        Error($"  Visual C++ {php.CppVersion} runtime is not detected. Please install it following the tips on https://windows.php.net/download/.");
+                                        Error($"  Visual C++ {matched.CppVersion} runtime is not detected. Please install it following the tips on https://windows.php.net/download/.");
                                     }
                                 }
                                 else
