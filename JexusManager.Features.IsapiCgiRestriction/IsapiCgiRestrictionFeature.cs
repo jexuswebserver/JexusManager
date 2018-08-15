@@ -155,6 +155,7 @@ namespace JexusManager.Features.IsapiCgiRestriction
         private void SetAllowed(bool allowed)
         {
             SelectedItem.Allowed = allowed;
+            SelectedItem.Apply();
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             service.ServerManager.CommitChanges();
             OnSettingsSaved();
