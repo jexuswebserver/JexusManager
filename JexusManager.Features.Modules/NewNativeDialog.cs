@@ -85,7 +85,7 @@ namespace JexusManager.Features.Modules
                         return;
                     }
 
-                    DialogResult = System.Windows.Forms.DialogResult.OK;
+                    DialogResult = DialogResult.OK;
                 }));
         }
 
