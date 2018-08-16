@@ -327,6 +327,12 @@
     <Compile Include="Wizards\ConnectionWizard\FinishPage.Designer.cs">
       <DependentUpon>FinishPage.cs</DependentUpon>
     </Compile>
+    <Compile Include="Wizards\ConnectionWizard\SolutionTypePage.cs">
+      <SubType>usercontrol</SubType>
+    </Compile>
+    <Compile Include="Wizards\ConnectionWizard\SolutionTypePage.Designer.cs">
+      <DependentUpon>SolutionTypePage.cs</DependentUpon>
+    </Compile>
     <Compile Include="Wizards\ConnectionWizard\TypePage.cs">
       <SubType>usercontrol</SubType>
     </Compile>
@@ -445,6 +451,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Wizards\ConnectionWizard\FinishPage.resx">
       <DependentUpon>FinishPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wizards\ConnectionWizard\SolutionTypePage.resx">
+      <DependentUpon>SolutionTypePage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizards\ConnectionWizard\TypePage.resx">
       <DependentUpon>TypePage.cs</DependentUpon>

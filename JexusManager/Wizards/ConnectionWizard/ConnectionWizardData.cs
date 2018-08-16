@@ -25,6 +25,7 @@ namespace JexusManager.Wizards.ConnectionWizard
         public string CertificateHash { get; set; }
         public WorkingMode Mode { get; set; }
         public bool UseVisualStudio { get; set; }
+        public string SolutionFile { get; set; }
         public string FileName { get; set; }
 
         public bool VerifyName(string text)

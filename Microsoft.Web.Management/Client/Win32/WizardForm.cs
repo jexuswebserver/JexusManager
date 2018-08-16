@@ -85,6 +85,7 @@ namespace Microsoft.Web.Management.Client.Win32
 
             OnPageChanging(EventArgs.Empty);
             var next = CurrentPage.NextPage;
+            next.SetPreviousPage(CurrentPage);
             _index = this.Pages.IndexOf(next);
             OnPageChanged(EventArgs.Empty);
         }

@@ -14,10 +14,14 @@ namespace JexusManager.Wizards.ConnectionWizard
     public partial class BrowsePage : WizardPage
     {
         private bool _initialized;
+        private SolutionTypePage _solutionTypePage;
+        private FinishPage _finishPage;
 
-        public BrowsePage()
+        public BrowsePage(SolutionTypePage solutionTypePage, FinishPage finishPage)
         {
             InitializeComponent();
+            _solutionTypePage = solutionTypePage;
+            _finishPage = finishPage;
         }
 
         protected internal override bool CanNavigateNext
@@ -35,7 +39,16 @@ namespace JexusManager.Wizards.ConnectionWizard
                 return;
             }
 
-            ((ConnectionWizardData)WizardData).FileName = txtName.Text;
+            var data = (ConnectionWizardData)WizardData;
+            if (data.UseVisualStudio)
+            {
+                data.SolutionFile = txtName.Text;
+            }
+            else
+            {
+                data.FileName = txtName.Text;
+            }
+
             UpdateWizard();
         }
 
@@ -48,24 +61,8 @@ namespace JexusManager.Wizards.ConnectionWizard
                 return false;
             }
 
-            var data = ((ConnectionWizardData)WizardData);
-            if (data.FileName.EndsWith(".sln", StringComparison.OrdinalIgnoreCase))
-            {
-                var folder = Path.GetDirectoryName(data.FileName);
-                var config = Path.Combine(folder, ".vs", "config", "applicationHost.config");
-                if (File.Exists(config))
-                {
-                    data.Server = new IisExpressServerManager(config);
-                    data.FileName = config;
-                }
-                else
-                {
-                    var service = (IManagementUIService)GetService(typeof(IManagementUIService));
-                    service.ShowMessage("This solution does not contain IIS Express configuration file. Make sure you run the web project in Visual Studio 2015/2017 once for the configuration file to be generated. If you are using other versions of Visual Studio, you might check the sites under IIS Express server node.", Caption, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
-                }
-            }
-            else
+            var data = (ConnectionWizardData)WizardData;
+            if (!data.UseVisualStudio)
             {
                 var iisExpress = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "IIS Express", "AppServer", "applicationhost.config");
                 var iisExpressX86 = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "IIS Express", "AppServer", "applicationhost.config");
@@ -100,9 +97,18 @@ namespace JexusManager.Wizards.ConnectionWizard
             base.Activate();
             _initialized = false;
             ConnectionWizardData wizardData = (ConnectionWizardData)WizardData;
-            txtName.Text = wizardData.FileName;
+            txtName.Text = wizardData.UseVisualStudio ? wizardData.SolutionFile : wizardData.FileName;
             Caption = wizardData.UseVisualStudio ? "Specify a Visual Studio Solution File" : "Specify a Configuration File";
             txtType.Text = wizardData.UseVisualStudio ? "Visual Studio solution file name:" : "Configuration file name:";
+            if (wizardData.UseVisualStudio)
+            {
+                SetNextPage(_solutionTypePage);
+            }
+            else
+            {
+                SetNextPage(_finishPage);
+            }
+
             _initialized = true;
             txtName.Focus();
             txtName.SelectAll();

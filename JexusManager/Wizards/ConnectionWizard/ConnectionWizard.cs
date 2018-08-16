@@ -36,14 +36,17 @@ namespace JexusManager.Wizards.ConnectionWizard
 
         protected override WizardPage[] GetWizardPages()
         {
-            var browse = new BrowsePage();
+            var solutionType = new SolutionTypePage();
             var server = new ServerPage();
-            var type = new TypePage(server, browse);
             var credentials = new CredentialsPage();
             var finish = new FinishPage();
+            var browse = new BrowsePage(solutionType, finish);
+            var type = new TypePage(server, browse);
             type.SetWizard(this);
+            solutionType.SetWizard(this);
+            solutionType.SetPreviousPage(browse);
+            solutionType.SetNextPage(finish);
             browse.SetPreviousPage(type);
-            browse.SetNextPage(finish);
             browse.SetWizard(this);
             server.SetPreviousPage(type);
             server.SetNextPage(credentials);
@@ -53,7 +56,7 @@ namespace JexusManager.Wizards.ConnectionWizard
             credentials.SetWizard(this);
             finish.SetPreviousPage(credentials);
             finish.SetWizard(this);
-            return new WizardPage[] { type, browse, server, credentials, finish };
+            return new WizardPage[] { type, browse, solutionType, server, credentials, finish };
         }
 
         protected override void ShowHelp()
