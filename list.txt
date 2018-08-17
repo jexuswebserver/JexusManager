@@ -76,6 +76,8 @@ Mono.Security.dll
 Newtonsoft.Json.dll
 Octokit.dll
 Ookii.Dialogs.dll
+PeNet.dll
+PeNet.Asn1.dll
 Rollbar.dll
 System.Net.Http.Formatting.dll
 System.Reactive.Core.dll

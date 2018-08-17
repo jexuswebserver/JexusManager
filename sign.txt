@@ -40,5 +40,7 @@ Mono.Options.dll
 Mono.Security.dll
 Newtonsoft.Json.dll
 Octokit.dll
+PeNet.Asn1.dll
+PeNet.dll
 Rollbar.dll
 Vista.Controls.BreadcrumbBar.dll
