@@ -1,4 +1,4 @@
-Install-Module VSSetup -Scope CurrentUser
+Install-Module VSSetup -Scope CurrentUser -Force
 $instance = Get-VSSetupInstance -All | Select-VSSetupInstance -Require 'Microsoft.Component.MSBuild' -Latest
 $installDir = $instance.installationPath
 $msBuild = $installDir + '\MSBuild\15.0\Bin\MSBuild.exe'
