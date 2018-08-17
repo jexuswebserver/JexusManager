@@ -1,9 +1,9 @@
 rmdir /S /Q bin
-call release.bat
+powershell -file release.ps1
 IF %ERRORLEVEL% NEQ 0 goto failed
 powershell -file sign.ps1
 IF %ERRORLEVEL% NEQ 0 goto failed
-call package.bat
+powershell -file package.ps1
 IF %ERRORLEVEL% NEQ 0 goto failed
 
 echo succeeded.

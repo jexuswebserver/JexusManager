@@ -6,7 +6,7 @@ CheckBoxComboBox.dll
 Crad.Windows.Forms.Actions.dll
 Enums.NET.dll
 INIFileParser.dll
-JexusManager.exe 
+JexusManager.exe
 JexusManager.exe.config
 JexusManager.pdb
 JexusManager.Features.Access.dll
