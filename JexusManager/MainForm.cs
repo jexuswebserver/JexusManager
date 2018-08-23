@@ -59,6 +59,7 @@ namespace JexusManager
     using Features;
     using JexusManager.Features.Asp;
     using JexusManager.Features.TraceFailedRequests;
+    using Rollbar;
 
     public sealed partial class MainForm : Form
     {
@@ -446,6 +447,7 @@ namespace JexusManager
                 }
                 catch (Exception ex)
                 {
+                    RollbarLocator.RollbarInstance.Error(ex);
                     var last = ex;
                     Exception previous = null;
                     while (last.InnerException != null)
@@ -859,6 +861,7 @@ namespace JexusManager
             }
             catch (Exception ex)
             {
+                RollbarLocator.RollbarInstance.Error(ex);
                 File.WriteAllText(DialogHelper.DebugLog, ex.ToString());
                 var last = ex;
                 while (last is AggregateException)

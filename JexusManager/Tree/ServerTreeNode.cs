@@ -20,6 +20,7 @@ namespace JexusManager.Tree
     using Microsoft.Web.Administration;
     using Microsoft.Web.Management.Client;
     using Microsoft.Web.Management.Server;
+    using Rollbar;
 
     internal sealed class ServerTreeNode : ManagerTreeNode
     {
@@ -224,6 +225,7 @@ namespace JexusManager.Tree
             }
             catch (Exception ex)
             {
+                RollbarLocator.RollbarInstance.Error(ex);
                 File.WriteAllText(DialogHelper.DebugLog, ex.ToString());
                 var last = ex;
                 while (last is AggregateException)
