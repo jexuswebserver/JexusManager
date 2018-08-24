@@ -88,12 +88,12 @@ namespace Microsoft.Web.Administration
             {
                 _initialized = false;
                 throw new COMException(
-                    $"Filename: \\\\?\\{file}\r\nLine number: {(ex.LineNumber == 0 ? 1 : ex.LineNumber)}\r\nError: Configuration file is not well-formed XML\r\n\r\n");
+                    $"Filename: \\\\?\\{file}\r\nLine number: {(ex.LineNumber == 0 ? 1 : ex.LineNumber)}\r\nError: Configuration file is not well-formed XML\r\n\r\n", ex);
             }
             catch (COMException ex)
             {
                 _initialized = false;
-                var exception = new COMException($"Filename: \\\\?\\{file}\r\n{ex.Message}\r\n");
+                var exception = new COMException($"Filename: \\\\?\\{file}\r\n{ex.Message}\r\n", ex);
                 foreach (object key in ex.Data.Keys)
                 {
                     exception.Data.Add(key, ex.Data[key]);

@@ -369,7 +369,7 @@ namespace Tests
                 var windowsSection = config.GetSection("system.webServer/security/authentication/windowsAuthentication", "WebSite1");
                 Assert.Equal(OverrideMode.Inherit, windowsSection.OverrideMode);
                 Assert.Equal(OverrideMode.Deny, windowsSection.OverrideModeEffective);
-                Assert.Equal(false, windowsSection.IsLocked);
+                Assert.False(windowsSection.IsLocked);
                 Assert.True(windowsSection.IsLocallyStored);
 
                 var windowsEnabled = (bool)windowsSection["enabled"];
@@ -417,7 +417,7 @@ namespace Tests
                 Assert.Equal(OverrideMode.Inherit, windowsSection.OverrideMode);
                 Assert.Equal(OverrideMode.Deny, windowsSection.OverrideModeEffective);
                 Assert.True(windowsSection.IsLocked);
-                Assert.Equal(false, windowsSection.IsLocallyStored);
+                Assert.False(windowsSection.IsLocallyStored);
 
                 var windowsEnabled = (bool)windowsSection["enabled"];
                 Assert.True(windowsEnabled);
@@ -430,8 +430,8 @@ namespace Tests
                 var compression = config.GetSection("system.webServer/urlCompression");
                 Assert.Equal(OverrideMode.Inherit, compression.OverrideMode);
                 Assert.Equal(OverrideMode.Allow, compression.OverrideModeEffective);
-                Assert.Equal(false, compression.IsLocked);
-                Assert.Equal(false, compression.IsLocallyStored);
+                Assert.False(compression.IsLocked);
+                Assert.False(compression.IsLocallyStored);
 
                 Assert.Equal(true, compression["doDynamicCompression"]);
 
@@ -508,8 +508,8 @@ namespace Tests
                 var errorsSection = config.GetSection("system.webServer/httpErrors");
                 Assert.Equal(OverrideMode.Inherit, errorsSection.OverrideMode);
                 Assert.Equal(OverrideMode.Allow, errorsSection.OverrideModeEffective);
-                Assert.Equal(false, errorsSection.IsLocked);
-                Assert.Equal(false, errorsSection.IsLocallyStored);
+                Assert.False(errorsSection.IsLocked);
+                Assert.False(errorsSection.IsLocallyStored);
 
                 var errorsCollection = errorsSection.GetCollection();
                 Assert.Equal(9, errorsCollection.Count);
@@ -594,7 +594,7 @@ namespace Tests
                 var windowsSection = config.GetSection("system.webServer/security/authentication/windowsAuthentication", "WebSite1");
                 Assert.Equal(OverrideMode.Inherit, windowsSection.OverrideMode);
                 Assert.Equal(OverrideMode.Deny, windowsSection.OverrideModeEffective);
-                Assert.Equal(false, windowsSection.IsLocked);
+                Assert.False(windowsSection.IsLocked);
                 Assert.True(windowsSection.IsLocallyStored);
 
                 var windowsEnabled = (bool)windowsSection["enabled"];
