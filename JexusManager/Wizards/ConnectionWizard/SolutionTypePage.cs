@@ -54,6 +54,8 @@ namespace JexusManager.Wizards.ConnectionWizard
             }
         }
 
+        protected internal override bool CanNavigateNext => rbRider.Checked || rbVisualStudio.Checked;
+
         public override bool OnNext()
         {
             ConnectionWizardData data = (ConnectionWizardData)WizardData;

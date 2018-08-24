@@ -120,8 +120,8 @@ namespace JexusManager.Wizards.ConnectionWizard
             DialogHelper.ShowOpenFileDialog(
                 txtName,
                 wizardData.UseVisualStudio
-                    ? "Common Files|*.sln;*.config|Solution Files|*.sln|Config Files|*.config|All Files|*.*"
-                    : "Common Files|*.config;*.sln|Config Files|*.config|Solution Files|*.sln|All Files|*.*");
+                    ? "Solution Files|*.sln|All Files|*.*"
+                    : "Config Files|*.config|All Files|*.*");
         }
     }
 }
