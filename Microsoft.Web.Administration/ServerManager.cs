@@ -173,6 +173,15 @@ namespace Microsoft.Web.Administration
             Start(site);
         }
 
+        internal virtual void Recycle(ApplicationPool applicationPool)
+        { }
+
+        internal virtual void Start(ApplicationPool applicationPool)
+        { }
+
+        internal virtual void Stop(ApplicationPool applicationPool)
+        { }
+
         protected virtual void PreInitialize()
         {
         }

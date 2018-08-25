@@ -22,22 +22,28 @@ namespace Microsoft.Web.Administration
         }
 
         internal ApplicationPoolCollection Parent { get; }
+        internal ServerManager Server => Parent.Parent;
 
         public ObjectState Recycle()
         {
             State = ObjectState.Started;
+            Server.Recycle(this);
             return State;
         }
 
         public ObjectState Start()
         {
-            State = ObjectState.Started;
+            // TODO: add timeout.
+            State = ObjectState.Starting;
+            Server.Start(this);
             return State;
         }
 
         public ObjectState Stop()
         {
-            State = ObjectState.Stopped;
+            // TODO: add timeout.
+            State = ObjectState.Starting;
+            Server.Stop(this);
             return State;
         }
 
@@ -107,7 +113,7 @@ namespace Microsoft.Web.Administration
         {
             get
             {
-                if (_state == null)
+                if (_state == null || _state == ObjectState.Starting || _state == ObjectState.Stopping)
                 {
                     var result = GetState();
                     _state = result ? ObjectState.Started : ObjectState.Stopped;
@@ -124,7 +130,7 @@ namespace Microsoft.Web.Administration
 
         private bool GetState()
         {
-            return Parent.Parent.GetPoolState(this);
+            return Server.GetPoolState(this);
         }
 
         public WorkerProcessCollection WorkerProcesses

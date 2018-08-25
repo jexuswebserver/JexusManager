@@ -79,7 +79,7 @@ namespace Microsoft.Web.Administration
         {
             get
             {
-                if (_state == null)
+                if (_state == null || _state == ObjectState.Starting || _state == ObjectState.Stopping)
                 {
                     var result = GetState();
                     _state = result ? ObjectState.Started : ObjectState.Stopped;

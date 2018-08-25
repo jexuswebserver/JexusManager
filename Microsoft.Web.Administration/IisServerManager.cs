@@ -7,11 +7,9 @@ using System;
 namespace Microsoft.Web.Administration
 {
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
+    using System.Diagnostics;
     using System.IO;
-#if !__MonoCS__
-    using System.Management.Automation;
-#endif
+
     /// <summary>
     /// Server manager for IIS.
     /// </summary>
@@ -48,83 +46,154 @@ namespace Microsoft.Web.Administration
 
         internal override bool GetSiteState(Site site)
         {
-#if !__MonoCS__
-            using (var powerShellInstance = PowerShell.Create())
+            var appcmd = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "inetsrv", "appcmd.exe");
+            if (!File.Exists(appcmd))
             {
-                var path = Environment.ExpandEnvironmentVariables(
-                    "%windir%\\system32\\inetsrv\\Microsoft.Web.Administration.dll");
-                    // use "AddScript" to add the contents of a script file to the end of the execution pipeline.
-                    // use "AddCommand" to add individual commands/cmdlets to the end of the execution pipeline.
-                powerShellInstance.AddScript($"param($param1) [Reflection.Assembly]::LoadFrom('{path}'); Get-IISsite -Name \"$param1\"");
-
-                // use "AddParameter" to add a single parameter to the last command/script on the pipeline.
-                powerShellInstance.AddParameter("param1", site.Name);
-
-                Collection<PSObject> psOutput = powerShellInstance.Invoke();
-
-                // check the other output streams (for example, the error stream)
-                if (powerShellInstance.Streams.Error.Count > 0)
-                {
-                    // error records were written to the error stream.
-                    // do something with the items found.
-                    return false;
-                }
-
-                if (psOutput.Count < 2)
-                {
-                    // TODO: newly created sites go here. Why?
-                    return false;
-                }
-
-                dynamic site1 = psOutput[1];
-                return site1.State?.ToString() == "Started";
-            }
-#else
                 return false;
-#endif
+            }
+
+            var process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = appcmd,
+                    Arguments = $"list site /state:Started",
+                    CreateNoWindow = true,
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true
+                }
+            };
+            process.Start();
+            var output = process.StandardOutput.ReadToEnd();
+            process.WaitForExit();
+            return output.Contains($"SITE \"{site.Name}\"");
         }
 
         internal override bool GetPoolState(ApplicationPool pool)
         {
-#if !__MonoCS__
-            using (var powerShellInstance = PowerShell.Create())
+            var appcmd = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "inetsrv", "appcmd.exe");
+            if (!File.Exists(appcmd))
             {
-                // use "AddScript" to add the contents of a script file to the end of the execution pipeline.
-                // use "AddCommand" to add individual commands/cmdlets to the end of the execution pipeline.
-                powerShellInstance.AddScript("param($param1) [Reflection.Assembly]::LoadFrom('C:\\Windows\\system32\\inetsrv\\Microsoft.Web.Administration.dll'); Get-IISAppPool -Name \"$param1\"");
-
-                // use "AddParameter" to add a single parameter to the last command/script on the pipeline.
-                powerShellInstance.AddParameter("param1", pool.Name);
-
-                Collection<PSObject> psOutput = powerShellInstance.Invoke();
-
-                // check the other output streams (for example, the error stream)
-                if (powerShellInstance.Streams.Error.Count > 0)
-                {
-                    // error records were written to the error stream.
-                    // do something with the items found.
-                    return false;
-                }
-
-                if (psOutput.Count < 2)
-                {
-                    return false;
-                }
-
-                dynamic site = psOutput[1];
-                return site.State?.ToString() == "Started";
+                return false;
             }
-#else
-            return false;
-#endif
+
+            var process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = appcmd,
+                    Arguments = $"list apppool /state:Started",
+                    CreateNoWindow = true,
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true
+                }
+            };
+            process.Start();
+            var output = process.StandardOutput.ReadToEnd();
+            process.WaitForExit();
+            return output.Contains($"APPPOOL \"{pool.Name}\"");
         }
 
         internal override void Start(Site site)
         {
+            var appcmd = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "inetsrv", "appcmd.exe");
+            if (File.Exists(appcmd))
+            {
+                var process = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = appcmd,
+                        Arguments = $"start site \"{site.Name}\"",
+                        CreateNoWindow = true,
+                        WindowStyle = ProcessWindowStyle.Hidden
+                    }
+                };
+                process.Start();
+                process.WaitForExit();
+            }
         }
 
         internal override void Stop(Site site)
         {
+            var appcmd = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "inetsrv", "appcmd.exe");
+            if (File.Exists(appcmd))
+            {
+                var process = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = appcmd,
+                        Arguments = $"stop site \"{site.Name}\"",
+                        CreateNoWindow = true,
+                        WindowStyle = ProcessWindowStyle.Hidden
+                    }
+                };
+                process.Start();
+                process.WaitForExit();
+            }
+        }
+
+        internal override void Start(ApplicationPool pool)
+        {
+            var appcmd = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "inetsrv", "appcmd.exe");
+            if (File.Exists(appcmd))
+            {
+                var process = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = appcmd,
+                        Arguments = $"start apppool \"{pool.Name}\"",
+                        CreateNoWindow = true,
+                        WindowStyle = ProcessWindowStyle.Hidden
+                    }
+                };
+                process.Start();
+                process.WaitForExit();
+            }
+        }
+
+        internal override void Stop(ApplicationPool pool)
+        {
+            var appcmd = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "inetsrv", "appcmd.exe");
+            if (File.Exists(appcmd))
+            {
+                var process = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = appcmd,
+                        Arguments = $"stop apppool \"{pool.Name}\"",
+                        CreateNoWindow = true,
+                        WindowStyle = ProcessWindowStyle.Hidden
+                    }
+                };
+                process.Start();
+                process.WaitForExit();
+            }
+        }
+
+        internal override void Recycle(ApplicationPool pool)
+        {
+            var appcmd = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "inetsrv", "appcmd.exe");
+            if (File.Exists(appcmd))
+            {
+                var process = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = appcmd,
+                        Arguments = $"recycle apppool \"{pool.Name}\"",
+                        CreateNoWindow = true,
+                        WindowStyle = ProcessWindowStyle.Hidden
+                    }
+                };
+                process.Start();
+                process.WaitForExit();
+            }
         }
 
         internal override IEnumerable<string> GetSchemaFiles()
