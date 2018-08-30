@@ -16,19 +16,23 @@ namespace Microsoft.Web.Administration
     [DebuggerDisplay("{ElementTagName}")]
     public class ConfigurationElement
     {
-        internal ConfigurationElement(ConfigurationElement element, string name, ConfigurationElementSchema schema, ConfigurationElement parent, XElement entity, FileContext core)
+        private ConfigurationElement _configSource;
+        private string _overriddenFileName;
+
+        internal ConfigurationElement(ConfigurationElement element, string name, ConfigurationElementSchema schema, ConfigurationElement parent, XElement entity, FileContext core, string fileName = null)
         {
             Methods = new ConfigurationMethodCollection();
             FileContext = parent?.FileContext ?? element?.FileContext ?? core;
             Section = parent?.Section;
             InnerEntity = entity ?? element?.InnerEntity;
+            _overriddenFileName = fileName;
             if (element == null)
             {
                 ElementTagName = name ?? throw new ArgumentException("empty name");
-                Attributes = new ConfigurationAttributeCollection(this);
+                _attributes = new ConfigurationAttributeCollection(this);
                 ChildElements = new ConfigurationChildElementCollection(this);
                 Collections = new List<ConfigurationElementCollection>();
-                RawAttributes = new Dictionary<string, string>();
+                _rawAttributes = new Dictionary<string, string>();
                 ParentElement = parent;
                 if (parent == null)
                 {
@@ -54,16 +58,16 @@ namespace Microsoft.Web.Administration
                     }
                 }
 
-                ParseAttributes();
+                ParseAttributes(_overriddenFileName ?? FileContext.FileName);
             }
             else
             {
                 IsLocallyStored = element.IsLocallyStored;
                 ElementTagName = element.ElementTagName;
-                Attributes = element.Attributes;
+                _attributes = element.Attributes;
                 ChildElements = element.ChildElements;
                 Collections = element.Collections;
-                RawAttributes = element.RawAttributes;
+                _rawAttributes = element.RawAttributes;
                 Schema = element.Schema;
                 ParentElement = parent ?? element.ParentElement;
                 if (schema != null)
@@ -194,7 +198,7 @@ namespace Microsoft.Web.Administration
 
         internal bool ContainsAttribute(string attributeName)
         {
-            return Schema == null || Schema.AllowUnrecognizedAttributes 
+            return Schema == null || Schema.AllowUnrecognizedAttributes
                 || Schema.AttributeSchemas.Any(schema => schema.Name == attributeName);
         }
 
@@ -278,8 +282,23 @@ namespace Microsoft.Web.Administration
             throw new NotImplementedException();
         }
 
-        public ConfigurationAttributeCollection Attributes { get; }
-        public ConfigurationChildElementCollection ChildElements { get; protected set; }
+        public ConfigurationAttributeCollection Attributes => _configSource == null ? _attributes : _configSource.Attributes;
+        public ConfigurationChildElementCollection ChildElements
+        {
+            get => _configSource == null ? _childElements : _configSource.ChildElements;
+            protected set
+            {
+                if (_configSource == null)
+                {
+                    _childElements = value;
+                }
+                else
+                {
+                    _configSource.ChildElements = value;
+                }
+            }
+        }
+
         public string ElementTagName { get; }
         public bool IsLocallyStored { get; internal set; }
         public object this[string attributeName]
@@ -289,7 +308,7 @@ namespace Microsoft.Web.Administration
         }
 
         public ConfigurationMethodCollection Methods { get; private set; }
-        public IDictionary<string, string> RawAttributes { get; }
+        public IDictionary<string, string> RawAttributes => _configSource == null ? _rawAttributes : _configSource.RawAttributes;
         public ConfigurationElementSchema Schema { get; }
 
         private List<ConfigurationElementCollection> Collections { get; }
@@ -334,6 +353,9 @@ namespace Microsoft.Web.Administration
         protected internal XElement InnerEntity;
 
         private string _isLocked;
+        private ConfigurationChildElementCollection _childElements;
+        private readonly ConfigurationAttributeCollection _attributes;
+        private readonly IDictionary<string, string> _rawAttributes;
 
         public ConfigurationLockCollection LockElements
         {
@@ -397,18 +419,23 @@ namespace Microsoft.Web.Administration
             return null;
         }
 
-        private void ParseAttributes()
+        private void ParseAttributes(string fileName)
         {
             if (InnerEntity == null)
             {
                 return;
             }
 
-            foreach (var attribute in InnerEntity.Attributes())
+            ParseAttributes(InnerEntity, fileName);
+        }
+
+        private void ParseAttributes(XElement entity, string fileName)
+        {
+            foreach (var attribute in entity.Attributes())
             {
                 try
                 {
-                    ParseAttribute(attribute);
+                    ParseAttribute(attribute, fileName);
                 }
                 catch (COMException ex)
                 {
@@ -432,7 +459,7 @@ namespace Microsoft.Web.Administration
             Validate(true);
         }
 
-        private void ParseAttribute(XAttribute attribute)
+        private void ParseAttribute(XAttribute attribute, string fileName)
         {
             if (attribute.Name.NamespaceName == "http://www.w3.org/2000/xmlns/")
             {
@@ -456,6 +483,13 @@ namespace Microsoft.Web.Administration
                     return;
                 case "lockItem":
                     IsLocked = attribute.Value;
+                    return;
+                case "configSource":
+                    var directory = Path.GetDirectoryName(fileName);
+                    var file = Path.Combine(directory, attribute.Value);
+                    var configSource = XDocument.Load(file, LoadOptions.PreserveWhitespace | LoadOptions.SetLineInfo);
+                    var node = configSource.Root;
+                    _configSource = new ConfigurationElement(null, ElementTagName, Schema, ParentElement, node, FileContext, file);
                     return;
             }
 

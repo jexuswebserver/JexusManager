@@ -110,6 +110,9 @@
     <None Include="Website1\expected.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Website1\directorybrowse.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Website1\original.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
