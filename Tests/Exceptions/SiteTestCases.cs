@@ -935,9 +935,9 @@ namespace Tests.Exceptions
             var server = new IisExpressServerManager(current);
 #endif
             var config = server.Sites[0].Applications[0].GetWebConfiguration();
-            var section =
-                config.GetSection("system.webServer/directoryBrowse");
-            Assert.Equal(true, section["enabled"]);
+            var exception = Assert.Throws<COMException>(() => config.GetSection("system.webServer/directoryBrowse"));
+            Assert.Equal($"Filename: \\\\?\\{siteConfig}\r\nLine number: 9\r\nError: Specified configSource cannot be parsed\r\n\r\n",
+                exception.Message);
         }
     }
 }

@@ -485,19 +485,24 @@ namespace Microsoft.Web.Administration
                     IsLocked = attribute.Value;
                     return;
                 case "configSource":
-                    var directory = Path.GetDirectoryName(fileName);
-                    var file = Path.Combine(directory, attribute.Value);
-                    var configSource = XDocument.Load(file, LoadOptions.PreserveWhitespace | LoadOptions.SetLineInfo);
-                    var node = configSource.Root;
-                    _configSource = new ConfigurationElement(null, ElementTagName, Schema, ParentElement, node, FileContext, file);
-                    return;
+                    if (Section.SectionPath.StartsWith("system.web/"))
+                    {
+                        var directory = Path.GetDirectoryName(fileName);
+                        var file = Path.Combine(directory, attribute.Value);
+                        var configSource = XDocument.Load(file, LoadOptions.PreserveWhitespace | LoadOptions.SetLineInfo);
+                        var node = configSource.Root;
+                        _configSource = new ConfigurationElement(null, ElementTagName, Schema, ParentElement, node, FileContext, file);
+                        return;
+                    }
+
+                    throw new ArgumentException("Specified configSource cannot be parsed");
             }
 
             RawAttributes.Add(name, attribute.Value);
             var child = Schema.AttributeSchemas[name];
             if (child == null && !Schema.AllowUnrecognizedAttributes)
             {
-                throw new ArgumentException(String.Format("Unrecognized attribute '{0}'", name));
+                throw new ArgumentException($"Unrecognized attribute '{name}'");
             }
 
             var item = new ConfigurationAttribute(name, child, attribute.Value, this);
