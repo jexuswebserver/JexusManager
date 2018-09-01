@@ -108,6 +108,14 @@
       <Link>original2_missing_closing.config</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="..\Tests\Website1\authorization.config">
+      <Link>Website1\authorization.config</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\Tests\Website1\directorybrowse.config">
+      <Link>Website1\directorybrowse.config</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="..\Tests\Website1\expected.config">
       <Link>Website1\expected.config</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -935,10 +935,10 @@ namespace Tests.Exceptions
             var server = new IisExpressServerManager(current);
 #endif
             var config = server.Sites[0].Applications[0].GetWebConfiguration();
-            var exception = Assert.Throws<COMException>(() => config.GetSection("system.webServer/directoryBrowse"));
-            Assert.Equal($"Filename: \\\\?\\{siteConfig}\r\nLine number: 9\r\nError: Specified configSource cannot be parsed\r\n\r\n",
-                exception.Message);
+            var section = config.GetSection("system.webServer/directoryBrowse");
+            Assert.Equal(true, section["enabled"]);
         }
+
         [Fact]
         public void TestIisExpressConfigSource2()
         {
@@ -974,7 +974,77 @@ namespace Tests.Exceptions
 #endif
             var config = server.Sites[0].Applications[0].GetWebConfiguration();
             var section = config.GetSection("system.web/authorization");
-            Assert.Equal(1, section.GetCollection().Count);
+            var collection = section.GetCollection();
+            Assert.Single(collection);
+
+            var newItem = collection.CreateElement();
+            Assert.Equal("allow", newItem.ElementTagName);
+            newItem["users"] = "test";
+            collection.Add(newItem);
+            server.CommitChanges();
+            /*
+             *     <system.web>
+        <authorization>
+            <allow users="test" />
+        </authorization>
+    </system.web>
+             */
+            var content = File.ReadAllText(Path.Combine(Path.GetDirectoryName(siteConfig), "authorization.config"));
+            {
+                // <authorization configSource="authorization.config" />
+                // Add the section.
+                var file = XDocument.Load(siteConfig);
+                var root = file.Root;
+                var webServer = root?.XPathSelectElement("/configuration/system.web");
+                Assert.NotNull(webServer);
+                var authorization = webServer.Element("authorization");
+                Assert.NotNull(authorization);
+                Assert.Single(authorization.Elements());
+                var allow = authorization.Element("allow");
+                Assert.NotNull(allow);
+                Assert.Equal("test", allow.Attribute("users").Value);
+            }
+
+            Assert.Equal("<authorization>\r\n  <allow users=\"*\" />\r\n  <deny users=\"?\" />\r\n</authorization>\r\n", content);
+        }
+
+        [Fact]
+        public void TestIisExpressConfigSource3()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string current = Path.Combine(directoryName, @"applicationHost.config");
+            string original = Path.Combine(directoryName, @"original2.config");
+            var siteConfig = TestHelper.CopySiteConfig(directoryName, "original.config");
+            File.Copy(original, current, true);
+            TestHelper.FixPhysicalPathMono(current);
+
+            {
+                // <directoryBrowse configSource="directorybrowse.config" />
+                // Add the section.
+                var file = XDocument.Load(siteConfig);
+                var root = file.Root;
+                root.Add(
+                    new XElement("system.web",
+                        new XElement("authentication",
+                            new XAttribute("configSource", "authentication.config"))));
+                file.Save(siteConfig);
+            }
+#if IIS
+            var server = new ServerManager(current);
+#else
+            var server = new IisExpressServerManager(current);
+#endif
+            var config = server.Sites[0].Applications[0].GetWebConfiguration();
+            var exception = Assert.Throws<COMException>(() => config.GetSection("system.web/authentication"));
+            Assert.Equal($"Filename: \\\\?\\{siteConfig}\r\nLine number: 11\r\nError: Specified configSource cannot be parsed\r\n\r\n",
+                exception.Message);
         }
     }
 }

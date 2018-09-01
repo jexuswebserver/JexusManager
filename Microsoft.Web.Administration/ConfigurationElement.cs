@@ -485,10 +485,10 @@ namespace Microsoft.Web.Administration
                     IsLocked = attribute.Value;
                     return;
                 case "configSource":
-                    if (ElementTagName.StartsWith("system.web/"))
+                    var directory = Path.GetDirectoryName(fileName);
+                    var file = Path.Combine(directory, attribute.Value);
+                    if (File.Exists(file))
                     {
-                        var directory = Path.GetDirectoryName(fileName);
-                        var file = Path.Combine(directory, attribute.Value);
                         var configSource = XDocument.Load(file, LoadOptions.PreserveWhitespace | LoadOptions.SetLineInfo);
                         var node = configSource.Root;
                         _configSource = new ConfigurationElement(null, ElementTagName, Schema, ParentElement, node, FileContext, file);
