@@ -485,7 +485,7 @@ namespace Microsoft.Web.Administration
                     IsLocked = attribute.Value;
                     return;
                 case "configSource":
-                    if (Section.SectionPath.StartsWith("system.web/"))
+                    if (ElementTagName.StartsWith("system.web/"))
                     {
                         var directory = Path.GetDirectoryName(fileName);
                         var file = Path.Combine(directory, attribute.Value);

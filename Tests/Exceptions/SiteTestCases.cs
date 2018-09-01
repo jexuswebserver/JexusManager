@@ -939,5 +939,42 @@ namespace Tests.Exceptions
             Assert.Equal($"Filename: \\\\?\\{siteConfig}\r\nLine number: 9\r\nError: Specified configSource cannot be parsed\r\n\r\n",
                 exception.Message);
         }
+        [Fact]
+        public void TestIisExpressConfigSource2()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string current = Path.Combine(directoryName, @"applicationHost.config");
+            string original = Path.Combine(directoryName, @"original2.config");
+            var siteConfig = TestHelper.CopySiteConfig(directoryName, "original.config");
+            File.Copy(original, current, true);
+            TestHelper.FixPhysicalPathMono(current);
+
+            {
+                // <authorization configSource="authorization.config" />
+                // Add the section.
+                var file = XDocument.Load(siteConfig);
+                var root = file.Root;
+                var webServer = root?.XPathSelectElement("/configuration/system.web");
+                webServer?.Add(
+                    new XElement("authorization",
+                        new XAttribute("configSource", "authorization.config")));
+                file.Save(siteConfig);
+            }
+#if IIS
+            var server = new ServerManager(current);
+#else
+            var server = new IisExpressServerManager(current);
+#endif
+            var config = server.Sites[0].Applications[0].GetWebConfiguration();
+            var section = config.GetSection("system.web/authorization");
+            Assert.Equal(1, section.GetCollection().Count);
+        }
     }
 }
