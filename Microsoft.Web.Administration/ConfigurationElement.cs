@@ -16,7 +16,6 @@ namespace Microsoft.Web.Administration
     [DebuggerDisplay("{ElementTagName}")]
     public class ConfigurationElement
     {
-        private ConfigurationElement _configSource;
         private string _overriddenFileName;
 
         internal ConfigurationElement(ConfigurationElement element, string name, ConfigurationElementSchema schema, ConfigurationElement parent, XElement entity, FileContext core, string fileName = null)
@@ -282,19 +281,19 @@ namespace Microsoft.Web.Administration
             throw new NotImplementedException();
         }
 
-        public ConfigurationAttributeCollection Attributes => _configSource == null ? _attributes : _configSource.Attributes;
+        public ConfigurationAttributeCollection Attributes => ConfigSource == null ? _attributes : ConfigSource.Attributes;
         public ConfigurationChildElementCollection ChildElements
         {
-            get => _configSource == null ? _childElements : _configSource.ChildElements;
+            get => ConfigSource == null ? _childElements : ConfigSource.ChildElements;
             protected set
             {
-                if (_configSource == null)
+                if (ConfigSource == null)
                 {
                     _childElements = value;
                 }
                 else
                 {
-                    _configSource.ChildElements = value;
+                    ConfigSource.ChildElements = value;
                 }
             }
         }
@@ -308,7 +307,7 @@ namespace Microsoft.Web.Administration
         }
 
         public ConfigurationMethodCollection Methods { get; private set; }
-        public IDictionary<string, string> RawAttributes => _configSource == null ? _rawAttributes : _configSource.RawAttributes;
+        public IDictionary<string, string> RawAttributes => ConfigSource == null ? _rawAttributes : ConfigSource.RawAttributes;
         public ConfigurationElementSchema Schema { get; }
 
         private List<ConfigurationElementCollection> Collections { get; }
@@ -380,6 +379,7 @@ namespace Microsoft.Web.Administration
         }
 
         internal bool SkipCheck { get; set; }
+        public ConfigurationElement ConfigSource { get; set; }
 
         internal virtual void AddChild(ConfigurationElement child)
         {
@@ -485,13 +485,18 @@ namespace Microsoft.Web.Administration
                     IsLocked = attribute.Value;
                     return;
                 case "configSource":
+                    if (FileContext.AppHost)
+                    {
+                        throw new ArgumentException($"Unrecognized attribute '{name}'");
+                    }
+
                     var directory = Path.GetDirectoryName(fileName);
                     var file = Path.Combine(directory, attribute.Value);
                     if (File.Exists(file))
                     {
                         var configSource = XDocument.Load(file, LoadOptions.PreserveWhitespace | LoadOptions.SetLineInfo);
                         var node = configSource.Root;
-                        _configSource = new ConfigurationElement(null, ElementTagName, Schema, ParentElement, node, FileContext, file);
+                        ConfigSource = new ConfigurationElement(null, ElementTagName, Schema, ParentElement, node, FileContext, file);
                         return;
                     }
 

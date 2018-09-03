@@ -996,5 +996,57 @@ namespace Tests.Exceptions
                 Assert.Equal($"Filename: \\\\?\\{current}\r\nLine number: 144\r\nError: Cannot add duplicate collection entry of type 'add' with unique key attribute 'name' set to 'Clr4IntegratedAppPool'\r\n\r\n", exception.Message);
             }
         }
+
+
+        [Fact]
+        public void TestIisExpressConfigSource()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string current = Path.Combine(directoryName, @"applicationHost.config");
+            string original = Path.Combine(directoryName, @"original2.config");
+            var siteConfig = TestHelper.CopySiteConfig(directoryName, "original.config");
+            File.Copy(original, current, true);
+            TestHelper.FixPhysicalPathMono(current);
+
+            {
+                // add the tags
+                var file = XDocument.Load(current);
+                var root = file.Root;
+                if (root == null)
+                {
+                    return;
+                }
+
+                root.Add(
+                    new XElement("location",
+                        new XAttribute("path", "WebSite1"),
+                        new XElement("system.web",
+                            new XElement("authorization",
+                                new XAttribute("configSource", Path.Combine(Path.GetDirectoryName(siteConfig), "authorization.config"))))));
+                file.Save(current);
+            }
+#if IIS
+            var server = new ServerManager(current);
+#else
+            var server = new IisExpressServerManager(current);
+#endif
+
+#if IIS
+            var config = server.Sites[0].Applications[0].GetWebConfiguration();
+            var exception = Assert.Throws<COMException>(() => config.GetSection("system.web/authorization"));
+#else
+            // TODO: fix where the exception is throwed.
+            var exception = Assert.Throws<COMException>(() => server.Sites[0].Applications[0].GetWebConfiguration());
+#endif
+            Assert.Equal($"Filename: \\\\?\\{current}\r\nLine number: 1121\r\nError: Unrecognized attribute 'configSource'\r\n\r\n",
+                exception.Message);
+        }
     }
 }
