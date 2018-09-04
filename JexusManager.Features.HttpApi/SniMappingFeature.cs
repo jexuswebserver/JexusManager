@@ -166,10 +166,9 @@ namespace JexusManager.Features.HttpApi
             }
             catch (CryptographicException ex)
             {
-                if (ex.HResult != NativeMethods.NonExistingStore)
-                {
-                    throw;
-                }
+                var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
+                dialog.ShowError(ex, $"This mapping might point to an invalid certificate. Thumbprint {SelectedItem.Hash}, Store {SelectedItem.Store}.", Name, false);
+                return;
             }
 
             if (cert != null)
