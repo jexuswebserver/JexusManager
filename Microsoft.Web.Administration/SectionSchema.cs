@@ -14,10 +14,10 @@ namespace Microsoft.Web.Administration
         public string Name { get; }
         internal ConfigurationElementSchema Root;
 
-        public SectionSchema(string name, XElement element)
+        public SectionSchema(string name, XElement element, string fileName)
         {
             Name = name;
-            Root = new ConfigurationElementSchema
+            Root = new ConfigurationElementSchema(fileName)
             {
                 Path = name,
                 AllowUnrecognizedAttributes =
@@ -26,7 +26,7 @@ namespace Microsoft.Web.Administration
             };
         }
 
-        internal void ParseSectionSchema(XElement element, ConfigurationElementSchema schema)
+        internal void ParseSectionSchema(XElement element, ConfigurationElementSchema schema, string fileName)
         {
             foreach (var node in element.Nodes())
             {
@@ -86,7 +86,7 @@ namespace Microsoft.Web.Administration
                     ConfigurationElementSchema child = top.ChildElementSchemas[name];
                     if (child == null)
                     {
-                        child = new ConfigurationElementSchema
+                        child = new ConfigurationElementSchema(fileName)
                         {
                             Name = name,
                             IsCollectionDefault = item.Attribute("isCollectionDefault").LoadBoolean(false),
@@ -109,7 +109,7 @@ namespace Microsoft.Web.Administration
                         }
                     }
 
-                    ParseSectionSchema(item, child);
+                    ParseSectionSchema(item, child, fileName);
                 }
                 else if (item.Name.LocalName == "collection")
                 {
@@ -121,7 +121,7 @@ namespace Microsoft.Web.Administration
                     var allowDuplicates = item.Attribute("allowDuplicates").LoadBoolean(false);
                     var allowUnrecognizedAttributes = item.Attribute("allowUnrecognizedAttributes").LoadBoolean(false);
                     var child = new ConfigurationCollectionSchema(path, addElementNames, removeElementName,
-                        clearElementName, isMergeAppend, allowDuplicates, allowUnrecognizedAttributes);
+                        clearElementName, isMergeAppend, allowDuplicates, allowUnrecognizedAttributes, fileName);
 
                     var top = schema ?? Root;
                     if (top.CollectionSchema == null)
@@ -133,7 +133,7 @@ namespace Microsoft.Web.Administration
                         top.CollectionSchema.Merge(child);
                     }
 
-                    ParseSectionSchema(item, top.CollectionSchema.AddSchemas[0]);
+                    ParseSectionSchema(item, top.CollectionSchema.AddSchemas[0], fileName);
                     top.CollectionSchema.ReplicateAddSchema();
                 }
             }

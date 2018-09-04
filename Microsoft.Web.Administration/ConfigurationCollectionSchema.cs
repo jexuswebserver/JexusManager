@@ -9,7 +9,7 @@ namespace Microsoft.Web.Administration
 {
     public sealed class ConfigurationCollectionSchema
     {
-        internal ConfigurationCollectionSchema(string path, string addElementNames, string removeElementName, string clearElementName, bool isMergeAppend, bool allowDuplicates, bool allowUnrecognizedAttributes)
+        internal ConfigurationCollectionSchema(string path, string addElementNames, string removeElementName, string clearElementName, bool isMergeAppend, bool allowDuplicates, bool allowUnrecognizedAttributes, string fileName)
         {
             IsMergeAppend = isMergeAppend;
             AllowDuplicates = allowDuplicates;
@@ -17,13 +17,13 @@ namespace Microsoft.Web.Administration
             AddSchemas = new List<ConfigurationElementSchema>(_addNames.Length);
             foreach (var name in _addNames)
             {
-                AddSchemas.Add(new ConfigurationElementSchema { Path = path + '/' + name, AllowUnrecognizedAttributes = allowUnrecognizedAttributes, Name = name });
+                AddSchemas.Add(new ConfigurationElementSchema(fileName) { Path = path + '/' + name, AllowUnrecognizedAttributes = allowUnrecognizedAttributes, Name = name });
             }
 
             RemoveElementName = removeElementName;
             RemoveSchema = RemoveElementName == null
                                ? null
-                               : new ConfigurationElementSchema
+                               : new ConfigurationElementSchema(fileName)
                                {
                                    Path = path + '/' + RemoveElementName,
                                    AllowUnrecognizedAttributes =
@@ -33,7 +33,7 @@ namespace Microsoft.Web.Administration
             ClearElementName = clearElementName;
             ClearSchema = ClearElementName == null
                               ? null
-                              : new ConfigurationElementSchema
+                              : new ConfigurationElementSchema(fileName)
                               {
                                   Path = path + '/' + ClearElementName,
                                   AllowUnrecognizedAttributes =

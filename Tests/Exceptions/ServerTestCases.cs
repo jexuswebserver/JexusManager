@@ -102,7 +102,7 @@ namespace Tests.Exceptions
                         TestCases.TestIisExpress(server);
                     });
             Assert.Equal(
-                $"Filename: \\\\?\\{current}\r\nLine number: 1135\r\nError: Configuration file is not well-formed XML\r\n\r\n",
+                $"Filename: \\\\?\\{current}\r\nLine number: 1134\r\nError: Configuration file is not well-formed XML\r\n\r\n",
                 exception.Message);
         }
 
@@ -148,7 +148,7 @@ namespace Tests.Exceptions
                         TestCases.TestIisExpress(server);
                     });
             Assert.Equal(
-                $"Filename: \\\\?\\{current}\r\nLine number: 142\r\nError: Missing required attribute 'name'\r\n\r\n",
+                $"Filename: \\\\?\\{current}\r\nLine number: 141\r\nError: Missing required attribute 'name'\r\n\r\n",
                 exception.Message);
         }
 
@@ -194,7 +194,7 @@ namespace Tests.Exceptions
                         TestCases.TestIisExpress(server);
                     });
             Assert.Equal(
-                $"Filename: \\\\?\\{current}\r\nLine number: 142\r\nError: The 'name' attribute is invalid.  Invalid application pool name\r\n\r\n\r\n",
+                $"Filename: \\\\?\\{current}\r\nLine number: 141\r\nError: The 'name' attribute is invalid.  Invalid application pool name\r\n\r\n\r\n",
                 exception.Message);
         }
 
@@ -240,7 +240,7 @@ namespace Tests.Exceptions
                         TestCases.TestIisExpress(server);
                     });
             Assert.Equal(
-                $"Filename: \\\\?\\{current}\r\nLine number: 142\r\nError: Unrecognized attribute 'testAuto'\r\n\r\n",
+                $"Filename: \\\\?\\{current}\r\nLine number: 141\r\nError: Unrecognized attribute 'testAuto'\r\n\r\n",
                 exception.Message);
         }
 
@@ -439,7 +439,7 @@ namespace Tests.Exceptions
             Assert.Equal(string.Format("Filename: \\\\?\\{0}\r\nError: Unrecognized configuration path 'MACHINE/WEBROOT/APPHOST/WebSite1'\r\n\r\n", current), exception.Message);
 #else
             Assert.Equal(
-                $"Filename: \\\\?\\{current}\r\nLine number: 155\r\nError: Unrecognized configuration path 'MACHINE/WEBROOT/APPHOST/WebSite1'\r\n\r\n", exception.Message);
+                $"Filename: \\\\?\\{current}\r\nLine number: 154\r\nError: Unrecognized configuration path 'MACHINE/WEBROOT/APPHOST/WebSite1'\r\n\r\n", exception.Message);
 #endif
         }
 
@@ -550,7 +550,7 @@ namespace Tests.Exceptions
                     var root = config.RootSectionGroup;
                 });
             Assert.Equal(
-                $"Filename: \\\\?\\{current}\r\nLine number: 156\r\nError: Unrecognized configuration path 'MACHINE/WEBROOT/APPHOST/WebSite1'\r\n\r\n", exception.Message);
+                $"Filename: \\\\?\\{current}\r\nLine number: 155\r\nError: Unrecognized configuration path 'MACHINE/WEBROOT/APPHOST/WebSite1'\r\n\r\n", exception.Message);
 #endif
         }
 
@@ -710,7 +710,7 @@ namespace Tests.Exceptions
 #endif
             {
                 var exception = Assert.Throws<COMException>(() => server.Sites[1]);
-                Assert.Equal($"Filename: \\\\?\\{current}\r\nLine number: 183\r\nError: Cannot add duplicate collection entry of type 'binding' with combined key attributes 'protocol, bindingInformation' respectively set to 'http, *:61902:localhost'\r\n\r\n", exception.Message);
+                Assert.Equal($"Filename: \\\\?\\{current}\r\nLine number: 182\r\nError: Cannot add duplicate collection entry of type 'binding' with combined key attributes 'protocol, bindingInformation' respectively set to 'http, *:61902:localhost'\r\n\r\n", exception.Message);
             }
         }
 
@@ -993,7 +993,7 @@ namespace Tests.Exceptions
 #endif
             {
                 var exception = Assert.Throws<COMException>(() => server.ApplicationPools);
-                Assert.Equal($"Filename: \\\\?\\{current}\r\nLine number: 144\r\nError: Cannot add duplicate collection entry of type 'add' with unique key attribute 'name' set to 'Clr4IntegratedAppPool'\r\n\r\n", exception.Message);
+                Assert.Equal($"Filename: \\\\?\\{current}\r\nLine number: 143\r\nError: Cannot add duplicate collection entry of type 'add' with unique key attribute 'name' set to 'Clr4IntegratedAppPool'\r\n\r\n", exception.Message);
             }
         }
 
@@ -1045,7 +1045,7 @@ namespace Tests.Exceptions
             // TODO: fix where the exception is throwed.
             var exception = Assert.Throws<COMException>(() => server.Sites[0].Applications[0].GetWebConfiguration());
 #endif
-            Assert.Equal($"Filename: \\\\?\\{current}\r\nLine number: 1121\r\nError: Unrecognized attribute 'configSource'\r\n\r\n",
+            Assert.Equal($"Filename: \\\\?\\{current}\r\nLine number: 1120\r\nError: Unrecognized attribute 'configSource'\r\n\r\n",
                 exception.Message);
         }
     }

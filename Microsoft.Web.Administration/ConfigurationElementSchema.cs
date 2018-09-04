@@ -10,8 +10,9 @@ namespace Microsoft.Web.Administration
     [DebuggerDisplay("{Name}[{Path}]")]
     public sealed class ConfigurationElementSchema
     {
-        internal ConfigurationElementSchema()
+        internal ConfigurationElementSchema(string fileName)
         {
+            FileName = fileName;
             AttributeSchemas = new ConfigurationAttributeSchemaCollection();
             ChildElementSchemas = new ConfigurationElementSchemaCollection();
         }
@@ -28,6 +29,7 @@ namespace Microsoft.Web.Administration
         public bool IsCollectionDefault { get; internal set; }
         public string Name { get; internal set; }
         internal string Path { get; set; }
+        internal string FileName { get; }
 
         internal ConfigurationElementSchema FindSchema(string path)
         {
@@ -37,9 +39,9 @@ namespace Microsoft.Web.Administration
                 return null;
             }
 
-            if (this.Path.Length != 0)
+            if (Path.Length != 0)
             {
-                if (path.Length != this.Path.Length && path[this.Path.Length] != '/')
+                if (path.Length != Path.Length && path[Path.Length] != '/')
                 {
                     return null;
                 }
@@ -59,7 +61,7 @@ namespace Microsoft.Web.Administration
                 }
             }
 
-            return this.CollectionSchema?.FindSchema(path);
+            return CollectionSchema?.FindSchema(path);
         }
     }
 }

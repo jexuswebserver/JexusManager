@@ -531,7 +531,7 @@ namespace Tests.Exceptions
             {
                 var config = server.Sites[0].Applications[0].GetWebConfiguration();
             });
-            Assert.Equal($"Filename: \\\\?\\{current}\r\nLine number: 118\r\nError: There is a duplicate 'system.webServer/webSocket' section defined\r\n\r\n", exception.Message);
+            Assert.Equal($"Filename: \\\\?\\{current}\r\nLine number: 117\r\nError: There is a duplicate 'system.webServer/webSocket' section defined\r\n\r\n", exception.Message);
         }
 
         [Fact]
@@ -748,7 +748,7 @@ namespace Tests.Exceptions
 
                 var list = new List<SectionDefinition>();
                 effective.GetAllDefinitions(list);
-                Assert.Equal(156, list.Count);
+                Assert.Equal(155, list.Count);
             }
 
             var serverConfig = server.GetApplicationHostConfiguration();
@@ -759,7 +759,7 @@ namespace Tests.Exceptions
 
                 var list = new List<SectionDefinition>();
                 rootGroup.GetAllDefinitions(list);
-                Assert.Equal(56, list.Count);
+                Assert.Equal(55, list.Count);
 
                 var effective = serverConfig.GetEffectiveSectionGroup();
                 Assert.Equal(21, effective.Sections.Count);
@@ -1045,6 +1045,117 @@ namespace Tests.Exceptions
             var exception = Assert.Throws<COMException>(() => config.GetSection("system.web/authentication"));
             Assert.Equal($"Filename: \\\\?\\{siteConfig}\r\nLine number: 11\r\nError: Specified configSource cannot be parsed\r\n\r\n",
                 exception.Message);
+        }
+
+        [Fact]
+        public void TestIisExpressLog4Net()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string current = Path.Combine(directoryName, @"applicationHost.config");
+            string original = Path.Combine(directoryName, @"original2.config");
+            var siteConfig = TestHelper.CopySiteConfig(directoryName, "original.config");
+            File.Copy(original, current, true);
+            TestHelper.FixPhysicalPathMono(current);
+
+            {
+                // <directoryBrowse configSource="directorybrowse.config" />
+                // Add the section.
+                var file = XDocument.Load(siteConfig);
+                var root = file.Root;
+                root.AddFirst(
+                    new XElement("configSections",
+                        new XElement("section",
+                            new XAttribute("name", "log4net"),
+                            new XAttribute("type", "log4net.Config.Log4NetConfigurationSectionHandler, log4net"))));
+                root.Add(
+                    new XElement("log4net",
+                        new XElement("root",
+                            new XElement("level", 
+                                new XAttribute("value", "INFO")))));
+                file.Save(siteConfig);
+            }
+#if IIS
+            var server = new ServerManager(current);
+#else
+            var server = new IisExpressServerManager(current);
+#endif
+            var config = server.Sites[0].Applications[0].GetWebConfiguration();
+            var exception = Assert.Throws<FileNotFoundException>(() => config.GetSection("log4net"));
+            Assert.Equal($"Filename: \\\\?\\{siteConfig}\r\nError: The configuration section 'log4net' cannot be read because it is missing schema\r\n\r\n",
+                exception.Message);
+            {
+                var section = config.GetSection("system.webServer/defaultDocument");
+                var files = section.GetCollection("files");
+                Assert.Equal(7, files.Count);
+            }
+        }
+
+        [Fact]
+        public void TestIisExpressLog4Net2()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string current = Path.Combine(directoryName, @"applicationHost.config");
+            string original = Path.Combine(directoryName, @"original2.config");
+            var siteConfig = TestHelper.CopySiteConfig(directoryName, "original.config");
+            File.Copy(original, current, true);
+            TestHelper.FixPhysicalPathMono(current);
+
+            {
+                // <directoryBrowse configSource="directorybrowse.config" />
+                // Add the section.
+                var file = XDocument.Load(siteConfig);
+                var root = file.Root;
+                root.AddFirst(
+                    new XElement("configSections",
+                        new XElement("section",
+                            new XAttribute("name", "log4net"),
+                            new XAttribute("type", "log4net.Config.Log4NetConfigurationSectionHandler, log4net"))));
+                root.Add(
+                    new XElement("log4net",
+                        new XElement("root",
+                            new XElement("level",
+                                new XAttribute("value", "INFO")))));
+                file.Save(siteConfig);
+            }
+#if IIS
+            var server = new ServerManager(current);
+#else
+            var server = new IisExpressServerManager(current);
+#endif
+            var config = server.Sites[0].Applications[0].GetWebConfiguration();
+            {
+                var section = config.GetSection("system.webServer/defaultDocument");
+                var files = section.GetCollection("files");
+                Assert.Equal(7, files.Count);
+            }
+
+            var exception = Assert.Throws<FileNotFoundException>(() => config.GetSection("log4net"));
+#if IIS
+            Assert.Equal($"Filename: \r\nError: The configuration section 'log4net' cannot be read because it is missing schema\r\n\r\n",
+                exception.Message);
+#else
+            Assert.Equal($"Filename: \\\\?\\{siteConfig}\r\nError: The configuration section 'log4net' cannot be read because it is missing schema\r\n\r\n",
+                exception.Message);
+#endif
+            {
+                var section = config.GetSection("system.webServer/defaultDocument");
+                var files = section.GetCollection("files");
+                Assert.Equal(7, files.Count);
+            }
         }
     }
 }

@@ -24,6 +24,7 @@ namespace Microsoft.Web.Administration
 
         internal bool AppHost { get; }
         public bool ReadOnly { get; }
+        internal bool IgnoreSchemaCheck { get; set; }
 
         private ProtectedConfiguration _protectedConfiguration;
 
@@ -332,11 +333,11 @@ namespace Microsoft.Web.Administration
             foreach (var file in _server.GetSchemaFiles())
             {
                 var schemaDoc = XDocument.Load(file);
-                LoadSchema(schemaDoc);
+                LoadSchema(schemaDoc, file);
             }
         }
 
-        private void LoadSchema(XDocument document)
+        private void LoadSchema(XDocument document, string fileName)
         {
             if (document.Root == null)
             {
@@ -365,12 +366,12 @@ namespace Microsoft.Web.Administration
                 var found = FindSectionSchema(name);
                 if (found == null)
                 {
-                    found = new SectionSchema(name, element);
+                    found = new SectionSchema(name, element, fileName);
                     Debug.Assert(name != null, nameof(name) + " != null");
                     _sectionSchemas.Add(name, found);
                 }
 
-                found.ParseSectionSchema(element, null);
+                found.ParseSectionSchema(element, null, fileName);
             }
         }
 
@@ -425,6 +426,11 @@ namespace Microsoft.Web.Administration
                                 return true;
                             }
                         }
+                    }
+                    else
+                    {
+                        // log4net
+                        return true;
                     }
                 }
                 else
@@ -676,7 +682,17 @@ namespace Microsoft.Web.Administration
             if (Location == null || Location == locationPath || locationPath.StartsWith(Location + '/'))
             {
                 var definition = DefinitionCache.FirstOrDefault(item => item.Path == sectionPath);
-                if (definition?.Schema != null)
+                if (definition == null)
+                {
+                }
+                else if (definition.Schema == null)
+                {
+                    if (!core.IgnoreSchemaCheck)
+                    {
+                        throw new FileNotFoundException($"Filename: \\\\?\\{core.FileName}\r\nError: The configuration section '{sectionPath}' cannot be read because it is missing schema\r\n\r\n");
+                    }
+                }
+                else
                 {
                     var section = new ConfigurationSection(
                             sectionPath,

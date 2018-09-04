@@ -111,7 +111,8 @@ namespace Microsoft.Web.Administration
                             null,
                             false,
                             true,
-                            true));
+                            true)
+                        { IgnoreSchemaCheck = true });
                 var webConfig = Helper.IsRunningOnMono()
                     ? "/Library/Frameworks/Mono.framework/Versions/Current/etc/mono/4.5/web.config"
                     : Path.Combine(
