@@ -724,6 +724,11 @@ namespace JexusManager
                 return;
             }
 
+            if (server.SitesNode == null)
+            {
+                return;
+            }
+
             ManagerTreeNode.AddToParent(server.SitesNode, new SiteTreeNode(_serviceContainer, site, server) { ContextMenuStrip = cmsSite });
         }
 
