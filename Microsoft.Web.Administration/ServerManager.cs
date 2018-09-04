@@ -84,13 +84,13 @@ namespace Microsoft.Web.Administration
         
         private void Initialize()
         {
-            if (Initialized)
-            {
-                return;
-            }
-
             lock (_locker)
             {
+                if (Initialized)
+                {
+                    return;
+                }
+
                 Initialized = true;
                 PreInitialize();
                 var machineConfig = Helper.IsRunningOnMono()
