@@ -119,7 +119,7 @@
             this.Controls.Add(this.toolStrip1);
             this.Name = "PhpDiagDialog";
             this.Text = "PHP Diagnostics";
-            this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.SslDiagDialogHelpButtonClicked);
+            this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.PhpDiagDialogHelpButtonClicked);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);

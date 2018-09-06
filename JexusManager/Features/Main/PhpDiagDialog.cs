@@ -353,7 +353,7 @@ namespace JexusManager.Features.Main
             DialogHelper.ProcessStart("http://www.jexusmanager.com/en/latest/tutorials/php-diagnostics.html");
         }
 
-        private void SslDiagDialogHelpButtonClicked(object sender, System.ComponentModel.CancelEventArgs e)
+        private void PhpDiagDialogHelpButtonClicked(object sender, System.ComponentModel.CancelEventArgs e)
         {
             BtnHelpClick(null, EventArgs.Empty);
         }

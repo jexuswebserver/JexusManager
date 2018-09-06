@@ -303,7 +303,7 @@ namespace JexusManager.Features.Main
             DialogHelper.ProcessStart("http://www.jexusmanager.com/en/latest/tutorials/binding-diagnostics.html");
         }
 
-        private void SslDiagDialogHelpButtonClicked(object sender, System.ComponentModel.CancelEventArgs e)
+        private void BindingDiagDialogHelpButtonClicked(object sender, System.ComponentModel.CancelEventArgs e)
         {
             BtnHelpClick(null, EventArgs.Empty);
         }
