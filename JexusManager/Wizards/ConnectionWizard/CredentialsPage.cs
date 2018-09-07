@@ -70,35 +70,6 @@ namespace JexusManager.Wizards.ConnectionWizard
 
         private bool OpenConnection(SynchronizationContext context)
         {
-            string accepted = null;
-            var handler = ServicePointManager.ServerCertificateValidationCallback;
-            ServicePointManager.ServerCertificateValidationCallback =
-                (sender1, certificate, chain, sslPolicyErrors)
-                =>
-                {
-                    var hash = certificate.GetCertHashString();
-                    if (accepted == hash)
-                    {
-                        return true;
-                    }
-
-                    if (sslPolicyErrors == SslPolicyErrors.None)
-                    {
-                        accepted = hash;
-                        return true;
-                    }
-
-                    var dialog = new CertificateErrorsDialog(certificate);
-                    var result = dialog.ShowDialog();
-                    if (result != DialogResult.OK)
-                    {
-                        return false;
-                    }
-
-                    accepted = hash;
-                    return true;
-                };
-
             var service = (IManagementUIService)GetService(typeof(IManagementUIService));
 
             try
@@ -106,6 +77,31 @@ namespace JexusManager.Wizards.ConnectionWizard
                 var data = (ConnectionWizardData)WizardData;
                 var server = new JexusServerManager(data.HostName, data.UserName + "|" + data.Password);
                 data.Server = server;
+                server.ServerCertificateValidationCallback =
+                    (sender1, certificate, chain, sslPolicyErrors) =>
+                    {
+                        var hash = certificate.GetCertHashString();
+                        if (server.AcceptedHash == hash)
+                        {
+                            return true;
+                        }
+
+                        if (sslPolicyErrors == SslPolicyErrors.None)
+                        {
+                            server.AcceptedHash = hash;
+                            return true;
+                        }
+
+                        var dialog = new CertificateErrorsDialog(certificate);
+                        var result = dialog.ShowDialog();
+                        if (result != DialogResult.OK)
+                        {
+                            return false;
+                        }
+
+                        server.AcceptedHash = hash;
+                        return true;
+                    };
                 var version = AsyncHelper.RunSync(() => server.GetVersionAsync());
                 if (version == null)
                 {
@@ -136,7 +132,7 @@ namespace JexusManager.Wizards.ConnectionWizard
                     service?.ShowMessage($"The server is also connected to {conflict}. Making changes on multiple clients might corrupt server configuration.", Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
 
-                data.CertificateHash = accepted;
+                data.CertificateHash = server.AcceptedHash;
                 return true;
             }
             catch (Exception ex)
@@ -155,10 +151,6 @@ namespace JexusManager.Wizards.ConnectionWizard
                                     .AppendFormat("Details: {0}", last?.Message);
                 service?.ShowMessage(message.ToString(), Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
-            }
-            finally
-            {
-                ServicePointManager.ServerCertificateValidationCallback = handler;
             }
         }
     }

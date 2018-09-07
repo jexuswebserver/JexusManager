@@ -13,6 +13,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Cryptography.X509Certificates;
+using System.Net.Security;
 
 namespace Microsoft.Web.Administration
 {
@@ -30,6 +31,9 @@ namespace Microsoft.Web.Administration
 
         public override bool SupportsSni => false;
         public override bool SupportsWildcard => false;
+
+        public RemoteCertificateValidationCallback ServerCertificateValidationCallback { get; set; }
+        public string AcceptedHash { get; internal set; }
 
         public async Task<string> SaveKeyAsync(string key)
         {
@@ -88,7 +92,9 @@ namespace Microsoft.Web.Administration
 
         internal HttpClient GetClient()
         {
-            var client = new HttpClient {BaseAddress = new Uri($"{s_protocol}://{HostName}/")};
+            var requestHandler = new WebRequestHandler();
+            requestHandler.ServerCertificateValidationCallback = ServerCertificateValidationCallback;
+            var client = new HttpClient(requestHandler) {BaseAddress = new Uri($"{s_protocol}://{HostName}/")};
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             client.DefaultRequestHeaders.Add("X-HTTP-Authorization", Credentials);

@@ -108,29 +108,32 @@ namespace JexusManager.Tree
             CertificateHash = hash;
             IgnoreInCache = ignoreInCache;
 
-            Handler = (sender1, certificate, chain, sslPolicyErrors) =>
-                {
-                    var remoteHash = certificate.GetCertHashString();
-                    if (remoteHash == CertificateHash)
+            if (mode == WorkingMode.Jexus)
+            {
+                ((JexusServerManager)server).ServerCertificateValidationCallback = (sender1, certificate, chain, sslPolicyErrors) =>
                     {
+                        var remoteHash = certificate.GetCertHashString();
+                        if (remoteHash == CertificateHash)
+                        {
+                            return true;
+                        }
+
+                        var dialog = new CertificateErrorsDialog(certificate);
+                        var result = dialog.ShowDialog();
+                        if (result == DialogResult.OK)
+                        {
+                            MainForm.SaveMenuItem.Enabled = true;
+                        }
+
+                        if (result != DialogResult.OK)
+                        {
+                            return false;
+                        }
+
+                        CertificateHash = remoteHash;
                         return true;
-                    }
-
-                    var dialog = new CertificateErrorsDialog(certificate);
-                    var result = dialog.ShowDialog();
-                    if (result == DialogResult.OK)
-                    {
-                        MainForm.SaveMenuItem.Enabled = true;
-                    }
-
-                    if (result != DialogResult.OK)
-                    {
-                        return false;
-                    }
-
-                    CertificateHash = remoteHash;
-                    return true;
-                };
+                    };
+            }
         }
 
         public bool IsBusy => _status == NodeStatus.Loading;
@@ -176,7 +179,6 @@ namespace JexusManager.Tree
 
                 if (Mode == WorkingMode.Jexus)
                 {
-                    SetHandler();
                     var server = (JexusServerManager)ServerManager;
                     var version = AsyncHelper.RunSync(() => server.GetVersionAsync());
                     if (version == null)
@@ -249,8 +251,6 @@ namespace JexusManager.Tree
         }
 
         public MainForm MainForm { get; set; }
-
-        private static RemoteCertificateValidationCallback Handler { get; set; }
 
         public override string PathToSite => string.Empty;
 
@@ -369,11 +369,6 @@ namespace JexusManager.Tree
             //data.FarmNode.Tag = data.Server;
 
             return true;
-        }
-
-        public void SetHandler()
-        {
-            ServicePointManager.ServerCertificateValidationCallback = Handler;
         }
 
         public static ServerTreeNode CreateJexusNode(IServiceProvider serviceProvider, string name, string hostName, string credentials, string hash, ServerManager server, bool isLocalhost)

@@ -840,7 +840,6 @@ namespace JexusManager
                     data.CertificateHash,
                     data.Server,
                     isLocalhost: true);
-                node.SetHandler();
                 var path = Path.GetTempFileName();
                 var random = Guid.NewGuid().ToString();
                 File.WriteAllText(path, random);
