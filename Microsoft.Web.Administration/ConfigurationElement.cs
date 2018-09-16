@@ -444,7 +444,7 @@ namespace Microsoft.Web.Administration
                             "Line number: {0}\r\nError: The '{1}' attribute is invalid.  {2}\r\n",
                             (InnerEntity as IXmlLineInfo).LineNumber,
                             attribute.Name,
-                            ex.Message));
+                            ex.Message), ex);
                 }
                 catch (ArgumentException ex)
                 {
@@ -452,7 +452,7 @@ namespace Microsoft.Web.Administration
                         string.Format(
                             "Line number: {0}\r\nError: {1}\r\n",
                             (InnerEntity as IXmlLineInfo).LineNumber,
-                            ex.Message));
+                            ex.Message), ex);
                 }
             }
 

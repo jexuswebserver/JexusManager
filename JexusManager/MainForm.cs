@@ -811,8 +811,10 @@ namespace JexusManager
 
         private void actConnectServer_Execute(object sender, EventArgs e)
         {
-            var names = new List<string>();
-            names.Add("Start Page");
+            var names = new List<string>
+            {
+                "Start Page"
+            };
             foreach (var item in treeView1.Nodes)
             {
                 var serverNode = item as ServerTreeNode;
