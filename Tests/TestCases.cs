@@ -14,7 +14,7 @@ namespace Tests
 {
     public static class TestCases
     {
-        public static void TestIisExpress(ServerManager server)
+        public static void TestIisExpress(ServerManager server, string fileName)
         {
             Assert.Equal(5, server.ApplicationPools.Count);
             Assert.True(server.ApplicationPools.AllowsAdd);
@@ -346,11 +346,17 @@ namespace Tests
                         config.GetSection(
                             "system.webServer/security/authentication/anonymousAuthentication",
                             "Default Web Site"));
+#if IIS
                 Assert.Equal(
                     "Filename: \r\nError: Unrecognized configuration path 'MACHINE/WEBROOT/APPHOST/Default Web Site'\r\n\r\n",
                     exception.Message);
                 Assert.Null(exception.FileName);
-
+#else
+                Assert.Equal(
+                    $"Filename: \\\\?\\{fileName}\r\nError: Unrecognized configuration path 'MACHINE/WEBROOT/APPHOST/Default Web Site'\r\n\r\n",
+                    exception.Message);
+                Assert.Equal(fileName, exception.FileName);
+#endif
                 var anonymousSection = config.GetSection(
                     "system.webServer/security/authentication/anonymousAuthentication",
                     "WebSite2");

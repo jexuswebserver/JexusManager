@@ -68,7 +68,7 @@ namespace Tests.Exceptions
             var exception = Assert.Throws<FileNotFoundException>(
                 () =>
                     {
-                        TestCases.TestIisExpress(server);
+                        TestCases.TestIisExpress(server, file);
                     });
             Assert.Equal(
                 $"Filename: \\\\?\\{file}\r\nError: Cannot read configuration file\r\n\r\n",
@@ -99,7 +99,7 @@ namespace Tests.Exceptions
             var exception = Assert.Throws<COMException>(
                 () =>
                     {
-                        TestCases.TestIisExpress(server);
+                        TestCases.TestIisExpress(server, current);
                     });
             Assert.Equal(
                 $"Filename: \\\\?\\{current}\r\nLine number: 1134\r\nError: Configuration file is not well-formed XML\r\n\r\n",
@@ -145,7 +145,7 @@ namespace Tests.Exceptions
             var exception = Assert.Throws<COMException>(
                 () =>
                     {
-                        TestCases.TestIisExpress(server);
+                        TestCases.TestIisExpress(server, current);
                     });
             Assert.Equal(
                 $"Filename: \\\\?\\{current}\r\nLine number: 141\r\nError: Missing required attribute 'name'\r\n\r\n",
@@ -191,7 +191,7 @@ namespace Tests.Exceptions
             var exception = Assert.Throws<COMException>(
                 () =>
                     {
-                        TestCases.TestIisExpress(server);
+                        TestCases.TestIisExpress(server, current);
                     });
             Assert.Equal(
                 $"Filename: \\\\?\\{current}\r\nLine number: 141\r\nError: The 'name' attribute is invalid.  Invalid application pool name\r\n\r\n\r\n",
@@ -237,7 +237,7 @@ namespace Tests.Exceptions
             var exception = Assert.Throws<COMException>(
                 () =>
                     {
-                        TestCases.TestIisExpress(server);
+                        TestCases.TestIisExpress(server, current);
                     });
             Assert.Equal(
                 $"Filename: \\\\?\\{current}\r\nLine number: 141\r\nError: Unrecognized attribute 'testAuto'\r\n\r\n",
@@ -271,7 +271,7 @@ namespace Tests.Exceptions
             var exception1 = Assert.Throws<InvalidOperationException>(
                 () =>
                     {
-                        TestCases.TestIisExpress(server);
+                        TestCases.TestIisExpress(server, current);
                     });
             Assert.Equal(message, exception1.Message);
 
@@ -1086,6 +1086,65 @@ namespace Tests.Exceptions
             var exception = Assert.Throws<COMException>(() => server.Sites[0].Applications[0].GetWebConfiguration());
 #endif
             Assert.Equal($"Filename: \\\\?\\{current}\r\nLine number: 1120\r\nError: Unrecognized attribute 'configSource'\r\n\r\n",
+                exception.Message);
+        }
+
+        [Fact]
+        public void TestIisExpressInvalidLocation()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string current = Path.Combine(directoryName, @"applicationHost.config");
+            string original = Path.Combine(directoryName, @"original2.config");
+            var siteConfig = TestHelper.CopySiteConfig(directoryName, "original.config");
+            File.Copy(original, current, true);
+            TestHelper.FixPhysicalPathMono(current);
+
+            {
+                // add the tags
+                var file = XDocument.Load(current);
+                var root = file.Root;
+                if (root == null)
+                {
+                    return;
+                }
+
+                root.Add(
+                    new XElement("location",
+                        new XAttribute("path", "NotExist"),
+                        new XElement("system.webServer",
+                            new XElement("security",
+                                new XElement("authentication",
+                                    new XElement("windowsAuthentication",
+                                        new XAttribute("enabled", true)))))));
+                file.Save(current);
+            }
+#if IIS
+            var server = new ServerManager(current);
+#else
+            var server = new IisExpressServerManager(current);
+#endif
+
+#if IIS
+            var config = server.GetApplicationHostConfiguration();
+            var exception = Assert.Throws<FileNotFoundException>(() => config.GetSection("system.webServer/security/authentication/windowsAuthentication", "NotExist"));
+            Assert.Equal($"Filename: \\\\?\\{current}\r\nError: Unrecognized configuration path 'MACHINE/WEBROOT/APPHOST/NotExist'\r\n\r\n",
+                exception.Message);
+#else
+            var config = server.GetApplicationHostConfiguration();
+            var exception = Assert.Throws<FileNotFoundException>(() => config.GetSection("system.webServer/security/authentication/windowsAuthentication", "NotExist"));
+            Assert.Equal($"Filename: \\\\?\\{current}\r\nError: Unrecognized configuration path 'MACHINE/WEBROOT/APPHOST/NotExist'\r\n\r\n",
+                exception.Message);
+            // TODO: fix where the exception is throwed.
+            //var exception = Assert.Throws<COMException>(() => server.Sites[0].Applications[0].GetWebConfiguration());
+#endif
+            Assert.Equal($"Filename: \\\\?\\{current}\r\nError: Unrecognized configuration path 'MACHINE/WEBROOT/APPHOST/NotExist'\r\n\r\n",
                 exception.Message);
         }
     }

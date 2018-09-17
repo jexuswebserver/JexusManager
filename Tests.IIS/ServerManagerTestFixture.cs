@@ -95,7 +95,7 @@ namespace Tests
             TestHelper.CopySiteConfig(directoryName, "original.config");
 
             var server = new ServerManager(Current);
-            TestCases.TestIisExpress(server);
+            TestCases.TestIisExpress(server, Current);
 
             {
                 // reorder entities to match IIS result.

@@ -244,10 +244,7 @@ namespace Microsoft.Web.Administration
                 }
 
                 Initialize();
-                lock (_locker)
-                {
-                    return _applicationDefaults;
-                }
+                return _applicationDefaults;
             }
         }
 
@@ -261,10 +258,7 @@ namespace Microsoft.Web.Administration
                 }
 
                 Initialize();
-                lock (_locker)
-                {
-                    return _applicationPoolDefaults;
-                }
+                return _applicationPoolDefaults;
             }
         }
 
@@ -278,10 +272,7 @@ namespace Microsoft.Web.Administration
                 }
 
                 Initialize();
-                lock (_locker)
-                {
-                    return ApplicationPoolCollection;
-                }
+                return ApplicationPoolCollection;
             }
         }
 
@@ -295,10 +286,7 @@ namespace Microsoft.Web.Administration
                 }
 
                 Initialize();
-                lock (_locker)
-                {
-                    return _siteDefaults;
-                }
+                return _siteDefaults;
             }
         }
 
@@ -312,10 +300,7 @@ namespace Microsoft.Web.Administration
                 }
 
                 Initialize();
-                lock (_locker)
-                {
-                    return SiteCollection;
-                }
+                return SiteCollection;
             }
         }
 
@@ -329,10 +314,7 @@ namespace Microsoft.Web.Administration
                 }
 
                 Initialize();
-                lock (_locker)
-                {
-                    return _virtualDirectoryDefaults;
-                }
+                return _virtualDirectoryDefaults;
             }
         }
 
@@ -341,10 +323,7 @@ namespace Microsoft.Web.Administration
             get
             {
                 Initialize();
-                lock (_locker)
-                {
-                    return _workerProcessCollection;
-                }
+                return _workerProcessCollection;
             }
         }
 
@@ -443,10 +422,10 @@ namespace Microsoft.Web.Administration
 
             // TODO: add deeper level check
             var parts = locationPath.Split('/');
-            if (parts[0] != string.Empty && Sites.All(site => site.Name != parts[0]))
+            if (parts[0] != string.Empty && Sites != null && Sites.All(site => site.Name != parts[0]))
             {
                 throw new FileNotFoundException(
-                    $"Filename: \r\nError: Unrecognized configuration path 'MACHINE/WEBROOT/APPHOST/{parts[0]}'\r\n\r\n");
+                    $"Filename: \\\\?\\{FileName}\r\nError: Unrecognized configuration path 'MACHINE/WEBROOT/APPHOST/{parts[0]}'\r\n\r\n", FileName);
             }
         }
     }
