@@ -997,6 +997,46 @@ namespace Tests.Exceptions
             }
         }
 
+        [Fact]
+        public void TestIisExpressNoApplicationPools()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string current = Path.Combine(directoryName, @"applicationHost.config");
+            string original = Path.Combine(directoryName, @"original2.config");
+            TestHelper.CopySiteConfig(directoryName, "original.config");
+            File.Copy(original, current, true);
+            TestHelper.FixPhysicalPathMono(current);
+
+            {
+                // add the tags
+                var file = XDocument.Load(current);
+                var root = file.Root;
+                if (root == null)
+                {
+                    return;
+                }
+
+                var pools = root.XPathSelectElement("/configuration/system.applicationHost/applicationPools");
+                pools?.Remove();
+                file.Save(current);
+            }
+#if IIS
+            var server = new ServerManager(current);
+#else
+            var server = new IisExpressServerManager(current);
+#endif
+            {
+                var pools = server.ApplicationPools;
+                Assert.Empty(pools);
+            }
+        }
 
         [Fact]
         public void TestIisExpressConfigSource()
