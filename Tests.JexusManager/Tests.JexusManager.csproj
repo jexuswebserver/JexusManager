@@ -52,7 +52,7 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="XmlDiffPatch">
-      <HintPath>..\lib\XmlDiffPatch.dll</HintPath>
+      <HintPath>..\lib\xmldiffpatch.dll</HintPath>
     </Reference>
     <Reference Include="XmlDiffPatch.View">
       <HintPath>..\lib\XmlDiffPatch.View.dll</HintPath>

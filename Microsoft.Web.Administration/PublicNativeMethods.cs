@@ -76,6 +76,11 @@ namespace Microsoft.Web.Administration
         {
             get
             {
+                if (Helper.IsRunningOnMono())
+                {
+                    return false;
+                }
+
                 bool bRetVal = false;
                 IntPtr hToken = IntPtr.Zero;
                 IntPtr hProcess = GetCurrentProcess();
