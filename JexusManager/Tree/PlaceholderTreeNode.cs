@@ -8,7 +8,6 @@ namespace JexusManager.Tree
 {
     using System.Collections.Generic;
     using System.ComponentModel.Design;
-    using System.Threading.Tasks;
     using System.Windows.Forms;
 
     using JexusManager.Features.Main;
@@ -16,13 +15,13 @@ namespace JexusManager.Tree
     using Microsoft.Web.Administration;
     using Microsoft.Web.Management.Server;
 
-    internal sealed class HomePageTreeNode : ManagerTreeNode
+    internal sealed class PlaceholderTreeNode : ManagerTreeNode
     {
-        public HomePageTreeNode()
-            : base("Start Page", null)
+        public PlaceholderTreeNode(string name, int image)
+            : base(name, null)
         {
-            SelectedImageIndex = 0;
-            ImageIndex = 0;
+            SelectedImageIndex = image;
+            ImageIndex = image;
         }
 
         public override string PathToSite => string.Empty;

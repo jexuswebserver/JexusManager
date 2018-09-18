@@ -243,9 +243,9 @@
     <Compile Include="Services\NavigationService.cs" />
     <Compile Include="Tree\ApplicationPoolsTreeNode.cs" />
     <Compile Include="Tree\ApplicationTreeNode.cs" />
-    <Compile Include="Tree\HomePageTreeNode.cs" />
     <Compile Include="Tree\ManagerTreeNode.cs" />
     <Compile Include="Tree\PhysicalDirectoryTreeNode.cs" />
+    <Compile Include="Tree\PlaceholderTreeNode.cs" />
     <Compile Include="Tree\ServerTreeNode.cs" />
     <Compile Include="Tree\SitesTreeNode.cs" />
     <Compile Include="Tree\SiteTreeNode.cs" />

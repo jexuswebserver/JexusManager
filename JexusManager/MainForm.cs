@@ -63,10 +63,13 @@ namespace JexusManager
 
     public sealed partial class MainForm : Form
     {
-        private const string expressGlobalInstanceName = "IIS Express";
+        private const string expressGlobalInstanceName = "Global";
         private readonly List<ModuleProvider> _providers;
         private readonly ServiceContainer _serviceContainer;
         private readonly NavigationService _navigationService;
+        private TreeNode IisExpressRoot { get; }
+        private TreeNode IisRoot { get; }
+        private TreeNode JexusRoot { get; }
 
         public ManagementUIService UIService { get; }
 
@@ -94,7 +97,13 @@ namespace JexusManager
             imageList1.Images.Add(Resources.server_disabled_16); // 11
             imageList1.Images.Add(Resources.farm_disabled_16); // 12
             btnAbout.Text = string.Format("About Jexus Manager {0}", Assembly.GetExecutingAssembly().GetName().Version);
-            treeView1.Nodes.Add(new HomePageTreeNode { ContextMenuStrip = cmsIis });
+            treeView1.Nodes.Add(new PlaceholderTreeNode("Start Page", 0) { ContextMenuStrip = cmsIis });
+            IisExpressRoot = new PlaceholderTreeNode("IIS Express", 10) { ContextMenuStrip = cmsIis };
+            treeView1.Nodes.Add(IisExpressRoot);
+            IisRoot = new PlaceholderTreeNode("IIS", 10) { ContextMenuStrip = cmsIis };
+            treeView1.Nodes.Add(IisRoot);
+            JexusRoot = new PlaceholderTreeNode("Jexus", 10) { ContextMenuStrip = cmsIis };
+            treeView1.Nodes.Add(JexusRoot);
 
             _providers = new List<ModuleProvider>
             {
@@ -279,7 +288,18 @@ namespace JexusManager
         private void RegisterServer(ServerTreeNode data)
         {
             data.ContextMenuStrip = cmsServer;
-            treeView1.Nodes.Add(data);
+            if (data.Mode == WorkingMode.IisExpress)
+            {
+                IisExpressRoot.Nodes.Add(data);
+            }
+            else if (data.Mode == WorkingMode.Iis)
+            {
+                IisRoot.Nodes.Add(data);
+            }
+            else if (data.Mode == WorkingMode.Jexus)
+            {
+                JexusRoot.Nodes.Add(data);
+            }
         }
 
         private void LoadJexus()
@@ -576,7 +596,7 @@ namespace JexusManager
             }
 
             var serverNode = node as ServerTreeNode;
-            actUp.Enabled = !(serverNode != null || node is HomePageTreeNode);
+            actUp.Enabled = !(serverNode != null || node is PlaceholderTreeNode);
             if (serverNode != null)
             {
                 if (serverNode.IsBusy)
@@ -956,7 +976,7 @@ namespace JexusManager
             treeView1.SelectedNode = null;
             treeView1.SelectedNode = e.Node;
 
-            if (e.Node is HomePageTreeNode)
+            if (e.Node is PlaceholderTreeNode)
             {
                 return;
             }
