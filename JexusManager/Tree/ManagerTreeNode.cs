@@ -63,44 +63,51 @@ namespace JexusManager.Tree
             var loaded = new HashSet<string>();
             if (Directory.Exists(rootFolder))
             {
-                // IMPORTANT: only create level+1 physical nodes.
-                foreach (var folder in new DirectoryInfo(rootFolder).GetDirectories())
+                try
                 {
-                    var path = folder.Name;
-                    var isApp = false;
-                    foreach (Application app in rootApp.Site.Applications)
+                    // IMPORTANT: only create level+1 physical nodes.
+                    foreach (var folder in new DirectoryInfo(rootFolder).GetDirectories())
                     {
-                        if (!app.Path.StartsWith(pathToSite))
+                        var path = folder.Name;
+                        var isApp = false;
+                        foreach (Application app in rootApp.Site.Applications)
+                        {
+                            if (!app.Path.StartsWith(pathToSite))
+                            {
+                                continue;
+                            }
+
+                            if (app.Path != pathToSite + '/' + path)
+                            {
+                                continue;
+                            }
+
+                            if (app.VirtualDirectories.Count == 0)
+                            {
+                                continue;
+                            }
+
+                            loaded.Add(app.Path);
+                            var appNode = new ApplicationTreeNode(ServiceProvider, app, ServerNode) { ContextMenuStrip = appMenu };
+                            treeNodes.Add(appNode);
+                            isApp = true;
+                        }
+
+                        if (isApp)
                         {
                             continue;
                         }
 
-                        if (app.Path != pathToSite + '/' + path)
+                        var directory = new PhysicalDirectoryTreeNode(ServiceProvider, new PhysicalDirectory(folder, path, rootApp), ServerNode)
                         {
-                            continue;
-                        }
-
-                        if (app.VirtualDirectories.Count == 0)
-                        {
-                            continue;
-                        }
-
-                        loaded.Add(app.Path);
-                        var appNode = new ApplicationTreeNode(ServiceProvider, app, ServerNode) { ContextMenuStrip = appMenu };
-                        treeNodes.Add(appNode);
-                        isApp = true;
+                            ContextMenuStrip = phyMenu
+                        };
+                        treeNodes.Add(directory);
                     }
-
-                    if (isApp)
-                    {
-                        continue;
-                    }
-
-                    var directory = new PhysicalDirectoryTreeNode(ServiceProvider, new PhysicalDirectory(folder, path, rootApp), ServerNode)
-                    {
-                        ContextMenuStrip = phyMenu
-                    };
-                    treeNodes.Add(directory);
+                }
+                catch (IOException ex)
+                {
+                    Rollbar.RollbarLocator.RollbarInstance.Error(ex);
                 }
             }
 

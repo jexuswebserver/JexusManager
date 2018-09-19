@@ -96,7 +96,6 @@ namespace JexusManager
 
         private static void SetupRollbar()
         {
-
             var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             var userName = $"{version} on {GetWindowsVersion()} with {Get45PlusFromRegistry()}";
             RollbarLocator.RollbarInstance.Configure(
