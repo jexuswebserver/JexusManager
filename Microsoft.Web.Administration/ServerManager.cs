@@ -2,7 +2,6 @@
 //  
 // Licensed under the MIT license. See LICENSE file in the project root for full license information. 
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -93,40 +92,24 @@ namespace Microsoft.Web.Administration
 
                 Initialized = true;
                 PreInitialize();
-                var machineConfig = Helper.IsRunningOnMono()
-                    ? "/Library/Frameworks/Mono.framework/Versions/Current/etc/mono/4.5/machine.config"
-                    : Path.Combine(
-                                        Environment.GetFolderPath(Environment.SpecialFolder.Windows),
-                                        "Microsoft.NET",
-                                        IntPtr.Size == 2 ? "Framework" : "Framework64",
-                                        "v4.0.30319",
-                                        "config",
-                                        "machine.config");
+              
                 var machine =
                     new Configuration(
                         new FileContext(
                             this,
-                            machineConfig,
+                            Helper.FileNameMachineConfig,
                             null,
                             null,
                             false,
                             true,
                             true)
                         { IgnoreSchemaCheck = true });
-                var webConfig = Helper.IsRunningOnMono()
-                    ? "/Library/Frameworks/Mono.framework/Versions/Current/etc/mono/4.5/web.config"
-                    : Path.Combine(
-                                    Environment.GetFolderPath(Environment.SpecialFolder.Windows),
-                                    "Microsoft.NET",
-                                    IntPtr.Size == 2 ? "Framework" : "Framework64",
-                                    "v4.0.30319",
-                                    "config",
-                                    "web.config");
+
                 _web =
                     new Configuration(
                         new FileContext(
                             this,
-                            webConfig,
+                            Helper.FileNameWebConfig,
                             machine.FileContext,
                             null,
                             false,

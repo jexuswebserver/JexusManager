@@ -19,7 +19,7 @@ namespace Microsoft.Web.Administration
     {
         private readonly ServerManager _server;
         private readonly object _locker = new object();
-        private readonly bool _dontThrow;
+        private readonly bool _doNotThrow;
         internal List<SectionDefinition> DefinitionCache = new List<SectionDefinition>();
 
         internal bool AppHost { get; }
@@ -28,10 +28,10 @@ namespace Microsoft.Web.Administration
 
         private ProtectedConfiguration _protectedConfiguration;
 
-        internal FileContext(ServerManager server, string fileName, FileContext parent, string location, bool appHost, bool dontThrow, bool readOnly, int lineNumber = 0)
+        internal FileContext(ServerManager server, string fileName, FileContext parent, string location, bool appHost, bool doNotThrow, bool readOnly, int lineNumber = 0)
         {
             _server = server;
-            _dontThrow = dontThrow;
+            _doNotThrow = doNotThrow;
             AppHost = appHost;
             ReadOnly = readOnly;
             Locations = new List<Location>();
@@ -236,7 +236,7 @@ namespace Microsoft.Web.Administration
         public ConfigurationSection GetSection(string sectionPath, string locationPath)
         {
             Initialize();
-            if (!_dontThrow)
+            if (!_doNotThrow)
             {
                 _server.VerifyLocation(locationPath);
             }
@@ -455,7 +455,7 @@ namespace Microsoft.Web.Administration
                 result = result || childAdded;
             }
 
-            if (!result && !_dontThrow && name != "location")
+            if (!result && !_doNotThrow && name != "location")
             {
                 string link = null;
                 string oob = null;

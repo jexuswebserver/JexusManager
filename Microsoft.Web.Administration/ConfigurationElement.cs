@@ -206,11 +206,7 @@ namespace Microsoft.Web.Administration
             if (!ContainsAttribute(attributeName))
             {
                 throw new COMException(
-                    string.Format(
-                        "Filename: \\\\?\\{0}\r\nLine number: {1}\r\nError: Unrecognized attribute '{2}'\r\n\r\n",
-                        FileContext.FileName,
-                        (Entity as IXmlLineInfo).LineNumber,
-                        attributeName));
+                    $"Filename: \\\\?\\{FileContext.FileName}\r\nLine number: {(Entity as IXmlLineInfo).LineNumber}\r\nError: Unrecognized attribute '{attributeName}'\r\n\r\n");
             }
 
             return Attributes[attributeName];
@@ -233,8 +229,9 @@ namespace Microsoft.Web.Administration
 
         public ConfigurationElementCollection GetCollection()
         {
-            var section = this as ConfigurationSection;
-            return section == null ? (this as ConfigurationElementCollection)?.ForceLoad() : section.Root.ForceLoad();
+            return this is ConfigurationSection section 
+                ? section.Root.ForceLoad() 
+                : (this as ConfigurationElementCollection)?.ForceLoad();
         }
 
         public ConfigurationElementCollection GetCollection(string collectionName)
@@ -266,7 +263,7 @@ namespace Microsoft.Web.Administration
             throw new NotImplementedException();
         }
 
-        public Object GetMetadata(string metadataType)
+        public object GetMetadata(string metadataType)
         {
             throw new NotImplementedException();
         }
@@ -306,8 +303,9 @@ namespace Microsoft.Web.Administration
             set { SetAttributeValue(attributeName, value); }
         }
 
-        public ConfigurationMethodCollection Methods { get; private set; }
-        public IDictionary<string, string> RawAttributes => ConfigSource == null ? _rawAttributes : ConfigSource.RawAttributes;
+        public ConfigurationMethodCollection Methods { get; }
+        public IDictionary<string, string> RawAttributes 
+            => ConfigSource == null ? _rawAttributes : ConfigSource.RawAttributes;
         public ConfigurationElementSchema Schema { get; }
 
         private List<ConfigurationElementCollection> Collections { get; }
@@ -315,38 +313,26 @@ namespace Microsoft.Web.Administration
         internal ConfigurationElement ParentElement { get; }
 
         private ConfigurationLockCollection _lockAllAttributesExcept;
+
         public ConfigurationLockCollection LockAllAttributesExcept
-        {
-            get
-            {
-                return _lockAllAttributesExcept ??
-                       (_lockAllAttributesExcept =
-                           new ConfigurationLockCollection(this,
-                               ConfigurationLockType.Attribute | ConfigurationLockType.Exclude));
-            }
-        }
+            => _lockAllAttributesExcept ??
+               (_lockAllAttributesExcept =
+                   new ConfigurationLockCollection(this,
+                       ConfigurationLockType.Attribute | ConfigurationLockType.Exclude));
 
         private ConfigurationLockCollection _lockAllElementsExcept;
+
         public ConfigurationLockCollection LockAllElementsExcept
-        {
-            get
-            {
-                return _lockAllElementsExcept ??
-                       (_lockAllElementsExcept =
-                           new ConfigurationLockCollection(this,
-                               ConfigurationLockType.Element | ConfigurationLockType.Exclude));
-            }
-        }
+            => _lockAllElementsExcept ??
+               (_lockAllElementsExcept =
+                   new ConfigurationLockCollection(this,
+                       ConfigurationLockType.Element | ConfigurationLockType.Exclude));
 
         private ConfigurationLockCollection _lockAttributes;
+
         public ConfigurationLockCollection LockAttributes
-        {
-            get
-            {
-                return _lockAttributes ??
-                       (_lockAttributes = new ConfigurationLockCollection(this, ConfigurationLockType.Attribute));
-            }
-        }
+            => _lockAttributes ??
+               (_lockAttributes = new ConfigurationLockCollection(this, ConfigurationLockType.Attribute));
 
         private ConfigurationLockCollection _lockElements;
         protected internal XElement InnerEntity;
@@ -357,20 +343,12 @@ namespace Microsoft.Web.Administration
         private readonly IDictionary<string, string> _rawAttributes;
 
         public ConfigurationLockCollection LockElements
-        {
-            get
-            {
-                return _lockElements ??
-                       (_lockElements = new ConfigurationLockCollection(this, ConfigurationLockType.Element));
-            }
-        }
+            => _lockElements ??
+               (_lockElements = new ConfigurationLockCollection(this, ConfigurationLockType.Element));
 
         internal string IsLocked
         {
-            get
-            {
-                return _isLocked;
-            }
+            get => _isLocked;
             set
             {
                 _isLocked = value;
@@ -487,7 +465,7 @@ namespace Microsoft.Web.Administration
                 case "configSource":
                     if (FileContext.AppHost)
                     {
-                        throw new ArgumentException($"Unrecognized attribute '{name}'");
+                        throw new ArgumentException($"Unrecognized attribute 'configSource'");
                     }
 
                     var directory = Path.GetDirectoryName(fileName);
@@ -505,8 +483,9 @@ namespace Microsoft.Web.Administration
 
             RawAttributes.Add(name, attribute.Value);
             var child = Schema.AttributeSchemas[name];
-            if (child == null && !Schema.AllowUnrecognizedAttributes)
+            if (child == null && !Schema.AllowUnrecognizedAttributes && FileContext.Parent != null)
             {
+                // IMPORTANT: ignore missing attributes in machine.config.
                 throw new ArgumentException($"Unrecognized attribute '{name}'");
             }
 

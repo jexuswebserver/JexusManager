@@ -12,6 +12,25 @@ namespace Microsoft.Web.Administration
     {
         internal static readonly string RootPath = "/";
 
+        public static readonly string FileNameMachineConfig = IsRunningOnMono()
+            ? "/Library/Frameworks/Mono.framework/Versions/Current/etc/mono/4.5/machine.config"
+            : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows),
+                "Microsoft.NET",
+                IntPtr.Size == 2 ? "Framework" : "Framework64",
+                "v4.0.30319",
+                "CONFIG",
+                "machine.config");
+
+        public static readonly string FileNameWebConfig = IsRunningOnMono()
+            ? "/Library/Frameworks/Mono.framework/Versions/Current/etc/mono/4.5/web.config"
+            : Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.Windows),
+                "Microsoft.NET",
+                IntPtr.Size == 2 ? "Framework" : "Framework64",
+                "v4.0.30319",
+                "CONFIG",
+                "web.config");
+
         public static string ExpandIisExpressEnvironmentVariables(this string path)
         {
             // TODO: IIS_BIN should check pool bitness.

@@ -1147,5 +1147,118 @@ namespace Tests.Exceptions
             Assert.Equal($"Filename: \\\\?\\{current}\r\nError: Unrecognized configuration path 'MACHINE/WEBROOT/APPHOST/NotExist'\r\n\r\n",
                 exception.Message);
         }
+
+        [Fact]
+        public void TestIisExpressMachine()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string current = Path.Combine(directoryName, @"applicationHost.config");
+            string original = Path.Combine(directoryName, @"original2.config");
+            string siteConfig = TestHelper.CopySiteConfig(directoryName, "original.config");
+            File.Copy(original, current, true);
+            TestHelper.FixPhysicalPathMono(current);
+
+            string machine = Helper.FileNameMachineConfig;
+            string backup = Path.GetTempFileName();
+            File.Copy(machine, backup, true);
+            try
+            {
+
+                {
+                    // add the tags
+                    var file = XDocument.Load(machine);
+                    var root = file.Root;
+
+                    var network = root?.XPathSelectElement("/configuration/system.net/mailSettings/smtp/network");
+                    if (network == null)
+                    {
+                        var smtp = root?.XPathSelectElement("/configuration/system.net/mailSettings/smtp");
+                        if (smtp == null)
+                        {
+                            var mailSettings = root?.XPathSelectElement("/configuration/system.net/mailSettings");
+                            if (mailSettings == null)
+                            {
+                                var systemNet = root?.XPathSelectElement("/configuration/system.net");
+                                if (systemNet == null)
+                                {
+                                    systemNet = new XElement("system.net");
+                                    root?.Add(systemNet);
+                                }
+                                
+                                mailSettings = new XElement("mailSettings");
+                                systemNet.Add(mailSettings);
+                            }
+                            
+                            smtp = new XElement("smtp",
+                                new XAttribute("deliveryMethod", "Network"),
+                                new XAttribute("from", "test@test.com"));
+                            mailSettings.Add(smtp);
+                        }
+                        
+                        network = new XElement("network",
+                            new XAttribute("defaultCredentials", true),
+                            new XAttribute("host", "127.0.0.1"),
+                            new XAttribute("port", 25),
+                            new XAttribute("userName", "test"),
+                            new XAttribute("password", "test"));
+                        smtp.Add(network);
+                    }
+                    
+                    network.SetAttributeValue("enableSsl", false);
+                    network.SetAttributeValue("something", "else");
+                    file.Save(machine);
+                }
+#if IIS
+                var server = new ServerManager(current);
+#else
+                var server = new IisExpressServerManager(current);
+#endif
+                var pools = server.ApplicationPools;
+
+                var configuration = server.GetApplicationHostConfiguration();
+#if IIS
+                // TODO: sounds like the schema verification is called during section expansion.
+                var exception = Assert.Throws<COMException>(() => configuration.GetSection("system.net/mailSettings/smtp")); 
+#else
+                var section = configuration.GetSection("system.net/mailSettings/smtp");
+                var element = section.GetChildElement("network");
+                var exception = Assert.Throws<COMException>(() => element["enableSsl"]);
+#endif
+                Assert.Equal(
+                    $"Filename: \\\\?\\{machine}\r\nLine number: 267\r\nError: Unrecognized attribute 'enableSsl'\r\n\r\n",
+                    exception.Message);
+
+//#if IIS
+//            var config = server.GetApplicationHostConfiguration();
+//            var exception =
+// Assert.Throws<FileNotFoundException>(() => config.GetSection("system.webServer/security/authentication/windowsAuthentication", "NotExist"));
+//            Assert.Equal($"Filename: \\\\?\\{current}\r\nError: Unrecognized configuration path 'MACHINE/WEBROOT/APPHOST/NotExist'\r\n\r\n",
+//                exception.Message);
+//#else
+//                var config = server.GetApplicationHostConfiguration();
+//                var exception = Assert.Throws<FileNotFoundException>(() =>
+//                    config.GetSection("system.webServer/security/authentication/windowsAuthentication", "NotExist"));
+//                Assert.Equal(
+//                    $"Filename: \\\\?\\{current}\r\nError: Unrecognized configuration path 'MACHINE/WEBROOT/APPHOST/NotExist'\r\n\r\n",
+//                    exception.Message);
+//                // TODO: fix where the exception is throwed.
+//                //var exception = Assert.Throws<COMException>(() => server.Sites[0].Applications[0].GetWebConfiguration());
+//#endif
+//                Assert.Equal(
+//                    $"Filename: \\\\?\\{current}\r\nError: Unrecognized configuration path 'MACHINE/WEBROOT/APPHOST/NotExist'\r\n\r\n",
+//                    exception.Message);
+            }
+            finally
+            {
+                File.Copy(backup, machine, true);
+            }
+        }
     }
 }

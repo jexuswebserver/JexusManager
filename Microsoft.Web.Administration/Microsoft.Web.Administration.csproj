@@ -181,7 +181,6 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="Jexus.snk" />
-    <None Include="Microsoft.VersionNumber.targets" />
     <None Include="Resources\original.config" />
   </ItemGroup>
   <ItemGroup>

@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.IO;
 using System.Collections.Generic;
 
 namespace Microsoft.Web.Administration
@@ -32,5 +33,24 @@ namespace Microsoft.Web.Administration
                 child.GetAllDefinitions(result);
             }
         }
+        
+        public static readonly string FileNameMachineConfig = IsRunningOnMono()
+            ? "/Library/Frameworks/Mono.framework/Versions/Current/etc/mono/4.5/machine.config"
+            : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows),
+                "Microsoft.NET",
+                IntPtr.Size == 2 ? "Framework" : "Framework64",
+                "v4.0.30319",
+                "CONFIG",
+                "machine.config");
+
+        public static readonly string FileNameWebConfig = IsRunningOnMono()
+            ? "/Library/Frameworks/Mono.framework/Versions/Current/etc/mono/4.5/web.config"
+            : Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.Windows),
+                "Microsoft.NET",
+                IntPtr.Size == 2 ? "Framework" : "Framework64",
+                "v4.0.30319",
+                "CONFIG",
+                "web.config");
     }
 }
