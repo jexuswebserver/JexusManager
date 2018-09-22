@@ -159,7 +159,7 @@ namespace Microsoft.Web.Administration
             Clear();
 
             char[] split = { ',' };
-            string[] attrs = attributeList.Split(split);
+            string[] attrs = attributeList.Split(split, StringSplitOptions.RemoveEmptyEntries);
             foreach (string a in attrs)
             {
                 Add(a.Trim());
@@ -177,7 +177,7 @@ namespace Microsoft.Web.Administration
             {
                 string[] name_arr = new string[_names.Count];
                 _names.CopyTo(name_arr, 0);
-                return String.Join(",", name_arr);
+                return string.Join(",", name_arr);
             }
         }
 
