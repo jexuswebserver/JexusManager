@@ -112,9 +112,19 @@ namespace JexusManager
         public static void ShowOpenFileDialog(TextBox textBox, string filter)
         {
             var initial = textBox.Text.ExpandIisExpressEnvironmentVariables();
+            string initialDirectory;
+            try
+            {
+                initialDirectory = string.IsNullOrEmpty(initial) ? string.Empty : Path.GetDirectoryName(initial);
+            }
+            catch (ArgumentException)
+            {
+                initialDirectory = string.Empty;
+            }
+
             var dialog = new OpenFileDialog
             {
-                InitialDirectory = string.IsNullOrEmpty(initial) ? string.Empty : Path.GetDirectoryName(initial),
+                InitialDirectory = initialDirectory,
                 Filter = filter
             };
             try
@@ -143,9 +153,19 @@ namespace JexusManager
         public static string ShowSaveFileDialog(TextBox textBox, string filter)
         {
             var initial = textBox?.Text.ExpandIisExpressEnvironmentVariables();
+            string initialDirectory;
+            try
+            {
+                initialDirectory = string.IsNullOrEmpty(initial) ? string.Empty : Path.GetDirectoryName(initial);
+            }
+            catch (ArgumentException)
+            {
+                initialDirectory = string.Empty;
+            }
+
             var dialog = new SaveFileDialog
             {
-                InitialDirectory = string.IsNullOrEmpty(initial) ? string.Empty : Path.GetDirectoryName(initial),
+                InitialDirectory = initialDirectory,
                 Filter = filter,
                 FileName = textBox?.Text
             };
