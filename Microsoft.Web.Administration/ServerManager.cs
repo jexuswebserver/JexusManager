@@ -124,15 +124,15 @@ namespace Microsoft.Web.Administration
 
                 var poolSection = _applicationHost.GetSection("system.applicationHost/applicationPools");
                 _applicationPoolDefaults =
-                    new ApplicationPoolDefaults(poolSection.GetChildElement("applicationPoolDefaults"), poolSection);
+                    new ApplicationPoolDefaults(poolSection?.GetChildElement("applicationPoolDefaults"), poolSection);
                 ApplicationPoolCollection = new ApplicationPoolCollection(poolSection, this);
                 var siteSection = _applicationHost.GetSection("system.applicationHost/sites");
-                _siteDefaults = new SiteDefaults(siteSection.GetChildElement("siteDefaults"), siteSection);
+                _siteDefaults = new SiteDefaults(siteSection?.GetChildElement("siteDefaults"), siteSection);
                 _applicationDefaults = new ApplicationDefaults(
-                    siteSection.GetChildElement("applicationDefaults"),
+                    siteSection?.GetChildElement("applicationDefaults"),
                     siteSection);
                 _virtualDirectoryDefaults =
-                    new VirtualDirectoryDefaults(siteSection.GetChildElement("virtualDirectoryDefaults"), siteSection);
+                    new VirtualDirectoryDefaults(siteSection?.GetChildElement("virtualDirectoryDefaults"), siteSection);
                 SiteCollection = new SiteCollection(siteSection, this);
 
                 PostInitialize();
