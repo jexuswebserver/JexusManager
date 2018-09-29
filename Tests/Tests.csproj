@@ -73,6 +73,9 @@
     <Compile Include="XmlAssert.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="administration.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="app.config" />
     <None Include="expected3.config">
       <SubType>Designer</SubType>

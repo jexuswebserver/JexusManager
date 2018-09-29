@@ -92,6 +92,10 @@
     <Compile Include="ServerManagerTestFixture.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\Tests\administration.config">
+      <Link>administration.config</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="..\Tests\expected.config">
       <Link>expected.config</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace Microsoft.Web.Administration
 {
@@ -122,11 +123,24 @@ namespace Microsoft.Web.Administration
 
                 LoadCache();
 
-                var poolSection = _applicationHost.GetSection("system.applicationHost/applicationPools");
+                var poolSectionName = "system.applicationHost/applicationPools";
+                var poolSection = _applicationHost.GetSection(poolSectionName);
+                if (poolSection == null)
+                {
+                    throw new COMException($"Filename: \\\\?\\{FileName}\r\nError: The configuration section '{poolSectionName}' cannot be read because it is missing a section declaration\r\n\r\n");
+                }
+
                 _applicationPoolDefaults =
                     new ApplicationPoolDefaults(poolSection?.GetChildElement("applicationPoolDefaults"), poolSection);
                 ApplicationPoolCollection = new ApplicationPoolCollection(poolSection, this);
-                var siteSection = _applicationHost.GetSection("system.applicationHost/sites");
+
+                var siteSectionName = "system.applicationHost/sites";
+                var siteSection = _applicationHost.GetSection(siteSectionName);
+                if (siteSection == null)
+                {
+                    throw new COMException($"Filename: \\\\?\\{FileName}\r\nError: The configuration section '{siteSectionName}' cannot be read because it is missing a section declaration\r\n\r\n");
+                }
+
                 _siteDefaults = new SiteDefaults(siteSection?.GetChildElement("siteDefaults"), siteSection);
                 _applicationDefaults = new ApplicationDefaults(
                     siteSection?.GetChildElement("applicationDefaults"),

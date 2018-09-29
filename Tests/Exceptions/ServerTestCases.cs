@@ -1234,31 +1234,39 @@ namespace Tests.Exceptions
                 Assert.Equal(
                     $"Filename: \\\\?\\{machine}\r\nLine number: 267\r\nError: Unrecognized attribute 'enableSsl'\r\n\r\n",
                     exception.Message);
-
-//#if IIS
-//            var config = server.GetApplicationHostConfiguration();
-//            var exception =
-// Assert.Throws<FileNotFoundException>(() => config.GetSection("system.webServer/security/authentication/windowsAuthentication", "NotExist"));
-//            Assert.Equal($"Filename: \\\\?\\{current}\r\nError: Unrecognized configuration path 'MACHINE/WEBROOT/APPHOST/NotExist'\r\n\r\n",
-//                exception.Message);
-//#else
-//                var config = server.GetApplicationHostConfiguration();
-//                var exception = Assert.Throws<FileNotFoundException>(() =>
-//                    config.GetSection("system.webServer/security/authentication/windowsAuthentication", "NotExist"));
-//                Assert.Equal(
-//                    $"Filename: \\\\?\\{current}\r\nError: Unrecognized configuration path 'MACHINE/WEBROOT/APPHOST/NotExist'\r\n\r\n",
-//                    exception.Message);
-//                // TODO: fix where the exception is throwed.
-//                //var exception = Assert.Throws<COMException>(() => server.Sites[0].Applications[0].GetWebConfiguration());
-//#endif
-//                Assert.Equal(
-//                    $"Filename: \\\\?\\{current}\r\nError: Unrecognized configuration path 'MACHINE/WEBROOT/APPHOST/NotExist'\r\n\r\n",
-//                    exception.Message);
             }
             finally
             {
                 File.Copy(backup, machine, true);
             }
+        }
+
+        [Fact]
+        public void TestIisExpressAdministration()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string current = Path.Combine(directoryName, @"applicationHost.config");
+            string original = Path.Combine(directoryName, @"administration.config");
+            string siteConfig = TestHelper.CopySiteConfig(directoryName, "original.config");
+            File.Copy(original, current, true);
+            TestHelper.FixPhysicalPathMono(current);
+
+#if IIS
+            var server = new ServerManager(current);
+#else
+            var server = new IisExpressServerManager(current);
+#endif
+            var exception = Assert.Throws<COMException>(() => server.ApplicationPools);
+            Assert.Equal(
+                $"Filename: \\\\?\\{current}\r\nError: The configuration section 'system.applicationHost/applicationPools' cannot be read because it is missing a section declaration\r\n\r\n",
+                exception.Message);
         }
     }
 }
