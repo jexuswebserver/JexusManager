@@ -1223,17 +1223,19 @@ namespace Tests.Exceptions
                 var pools = server.ApplicationPools;
 
                 var configuration = server.GetApplicationHostConfiguration();
-#if IIS
-                // TODO: sounds like the schema verification is called during section expansion.
-                var exception = Assert.Throws<COMException>(() => configuration.GetSection("system.net/mailSettings/smtp")); 
-#else
                 var section = configuration.GetSection("system.net/mailSettings/smtp");
                 var element = section.GetChildElement("network");
                 var exception = Assert.Throws<COMException>(() => element["enableSsl"]);
-#endif
+
+#if IIS
+                Assert.Equal(
+                    $"Invalid index. (Exception from HRESULT: 0x80070585)",
+                    exception.Message);
+#else
                 Assert.Equal(
                     $"Filename: \\\\?\\{machine}\r\nLine number: 267\r\nError: Unrecognized attribute 'enableSsl'\r\n\r\n",
                     exception.Message);
+#endif
             }
             finally
             {
