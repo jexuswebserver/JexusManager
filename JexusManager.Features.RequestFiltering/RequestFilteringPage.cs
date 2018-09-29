@@ -421,8 +421,12 @@ namespace JexusManager.Features.RequestFiltering
         protected override void Refresh()
         {
             var feature = (IRequestFilteringFeature)tabControl1.SelectedTab.Tag;
-            TaskList extra = feature.GetTaskList();
-            Tasks.Fill(tsActionPanel, cmsActionPanel, extra);
+            if (feature != null)
+            {
+                TaskList extra = feature.GetTaskList();
+                Tasks.Fill(tsActionPanel, cmsActionPanel, extra);
+            }
+
             base.Refresh();
         }
 
