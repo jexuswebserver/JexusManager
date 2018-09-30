@@ -831,14 +831,15 @@ namespace JexusManager
 
         private void actConnectServer_Execute(object sender, EventArgs e)
         {
-            var names = new List<string>
-            {
-                "Start Page"
-            };
+            ConnectToServer();
+        }
+
+        internal void ConnectToServer()
+        {
+            var names = new List<string>();
             foreach (var item in treeView1.Nodes)
             {
-                var serverNode = item as ServerTreeNode;
-                if (serverNode != null)
+                if (item is ServerTreeNode serverNode)
                 {
                     names.Add(serverNode.DisplayName);
                 }

@@ -64,7 +64,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Security">
-      <HintPath>..\lib\Mono.Security.dll</HintPath>
+      <HintPath Condition=" '$(OS)' == 'Windows_NT' ">../lib/Mono.Security.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Octokit, Version=0.24.0.0, Culture=neutral, PublicKeyToken=4ea77d40eabcaf2f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -83,6 +84,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="Mono.Options" Condition=" '$(OS)' != 'Windows_NT' " />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BindingExtensions.cs" />
@@ -680,7 +682,7 @@
     <PackageReference Include="ini-parser">
       <Version>2.5.2</Version>
     </PackageReference>
-    <PackageReference Include="Mono.Options">
+    <PackageReference Include="Mono.Options" Condition=" '$(OS)' == 'Windows_NT' ">
       <Version>5.3.0.1</Version>
     </PackageReference>
     <PackageReference Include="Ookii.Dialogs.WindowsForms">
@@ -700,7 +702,7 @@
   </Target>
   -->
   <!-- All the stuff normally found in the project, then in the AfterBuild event... -->
-  <Target Name="AfterBuild">
+  <Target Name="AfterBuild" Condition=" '$(OS)' == 'Windows_NT' ">
     <!-- Here's the call to the custom task to get the list of dependencies -->
     <ScanIndirectDependencies StartFolder="$(MSBuildProjectDirectory)" StartProjectReferences="@(ProjectReference)" Configuration="$(Configuration)">
       <Output TaskParameter="IndirectDependencies" ItemName="IndirectDependenciesToCopy" />

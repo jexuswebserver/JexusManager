@@ -41,6 +41,7 @@ namespace JexusManager.Tree
 
         public override void HandleDoubleClick(MainForm mainForm)
         {
+            mainForm.ConnectToServer();
         }
 
         public override void Expand(MainForm mainForm)

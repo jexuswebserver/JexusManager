@@ -49,6 +49,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="Mono.Options" Condition=" '$(OS)' != 'Windows_NT' "/>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Microsoft.Web.Administration\NativeMethods.cs">
@@ -65,7 +66,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Mono.Options">
+    <PackageReference Include="Mono.Options" Condition=" '$(OS)' == 'Windows_NT' ">
       <Version>5.3.0.1</Version>
     </PackageReference>
     <PackageReference Include="StrongNamer">
