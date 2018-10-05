@@ -86,6 +86,39 @@ namespace JexusManager.Wizards.ConnectionWizard
                     return false;
                 }
 
+                var name = Path.GetFileName(data.FileName);
+                var badNames = new[] { "administration.config", "redirection.config" };
+                foreach (var bad in badNames)
+                {
+                    if (string.Equals(name, bad, StringComparison.OrdinalIgnoreCase))
+                    {
+                        var service = (IManagementUIService)GetService(typeof(IManagementUIService));
+                        var result = service.ShowMessage(
+                            $"This file '{data.FileName}' does not seem to be a valid IIS configuration file. Do you want to continue?",
+                            Caption,
+                            MessageBoxButtons.YesNoCancel,
+                            MessageBoxIcon.Question);
+                        if (result != DialogResult.Yes)
+                        {
+                            return false;
+                        }
+                    }
+                }
+
+                if (name.EndsWith(".exe.config", StringComparison.OrdinalIgnoreCase))
+                {
+                    var service = (IManagementUIService)GetService(typeof(IManagementUIService));
+                    var result = service.ShowMessage(
+                        $"This file '{data.FileName}' does not seem to be a valid IIS configuration file. Do you want to continue?",
+                        Caption,
+                        MessageBoxButtons.YesNoCancel,
+                        MessageBoxIcon.Question);
+                    if (result != DialogResult.Yes)
+                    {
+                        return false;
+                    }
+                }
+
                 data.Server = new IisExpressServerManager(data.FileName);
             }
 
