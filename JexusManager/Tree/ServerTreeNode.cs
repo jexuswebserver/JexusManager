@@ -343,6 +343,11 @@ namespace JexusManager.Tree
                 return false;
             }
 
+            if (ServerManager == null)
+            {
+                return false;
+            }
+
             PoolsNode = new ApplicationPoolsTreeNode(ServiceProvider, ServerManager.ApplicationPools, this)
             {
                 ContextMenuStrip = poolsMenu
