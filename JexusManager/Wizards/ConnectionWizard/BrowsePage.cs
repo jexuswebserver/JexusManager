@@ -97,7 +97,8 @@ namespace JexusManager.Wizards.ConnectionWizard
                             $"This file '{data.FileName}' does not seem to be a valid IIS configuration file. Do you want to continue?",
                             Caption,
                             MessageBoxButtons.YesNoCancel,
-                            MessageBoxIcon.Question);
+                            MessageBoxIcon.Question,
+                            MessageBoxDefaultButton.Button2);
                         if (result != DialogResult.Yes)
                         {
                             return false;
@@ -112,7 +113,8 @@ namespace JexusManager.Wizards.ConnectionWizard
                         $"This file '{data.FileName}' does not seem to be a valid IIS configuration file. Do you want to continue?",
                         Caption,
                         MessageBoxButtons.YesNoCancel,
-                        MessageBoxIcon.Question);
+                        MessageBoxIcon.Question,
+                        MessageBoxDefaultButton.Button2);
                     if (result != DialogResult.Yes)
                     {
                         return false;
