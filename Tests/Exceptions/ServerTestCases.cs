@@ -653,6 +653,102 @@ namespace Tests.Exceptions
         }
 
         [Fact]
+        public void TestIisExpressVirtualDirectoryInvalidPath()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string current = Path.Combine(directoryName, @"applicationHost.config");
+            string original = Path.Combine(directoryName, @"original2.config");
+            TestHelper.CopySiteConfig(directoryName, "original.config");
+            File.Copy(original, current, true);
+            TestHelper.FixPhysicalPathMono(current);
+
+            var folder = @"C:\Windows\*";
+            {
+                // modify the path
+                var file = XDocument.Load(current);
+                var root = file.Root;
+                if (root == null)
+                {
+                    return;
+                }
+
+                var vDir = root.XPathSelectElement("/configuration/system.applicationHost/sites/site[@id='1']/application/virtualDirectory");
+                vDir.SetAttributeValue("physicalPath", folder);
+                file.Save(current);
+            }
+
+#if IIS
+            var server = new ServerManager(current);
+#else
+            var server = new IisExpressServerManager(current);
+#endif
+            var site = server.Sites[0];
+            var config = site.GetWebConfiguration();
+            var fileName = Path.Combine(folder, "web.config");
+#if IIS
+            var exception = Assert.Throws<FileNotFoundException>(() => config.RootSectionGroup);
+#else
+            var exception = Assert.Throws<DirectoryNotFoundException>(() => config.RootSectionGroup);
+#endif
+            Assert.Equal($"Filename: \\\\?\\{fileName}\r\nError: Cannot read configuration file\r\n\r\n", exception.Message);
+        }
+
+        [Fact]
+        public void TestIisExpressVirtualDirectoryInvalidPath2()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string current = Path.Combine(directoryName, @"applicationHost.config");
+            string original = Path.Combine(directoryName, @"original2.config");
+            TestHelper.CopySiteConfig(directoryName, "original.config");
+            File.Copy(original, current, true);
+            TestHelper.FixPhysicalPathMono(current);
+
+            var folder = @"C:\Windows\*t";
+            {
+                // modify the path
+                var file = XDocument.Load(current);
+                var root = file.Root;
+                if (root == null)
+                {
+                    return;
+                }
+
+                var vDir = root.XPathSelectElement("/configuration/system.applicationHost/sites/site[@id='1']/application/virtualDirectory");
+                vDir.SetAttributeValue("physicalPath", folder);
+                file.Save(current);
+            }
+
+#if IIS
+            var server = new ServerManager(current);
+#else
+            var server = new IisExpressServerManager(current);
+#endif
+            var site = server.Sites[0];
+            var config = site.GetWebConfiguration();
+            var fileName = Path.Combine(folder, "web.config");
+#if IIS
+            var exception = Assert.Throws<FileNotFoundException>(() => config.RootSectionGroup);
+#else
+            var exception = Assert.Throws<DirectoryNotFoundException>(() => config.RootSectionGroup);
+#endif
+            Assert.Equal($"Filename: \\\\?\\{fileName}\r\nError: Cannot read configuration file\r\n\r\n", exception.Message);
+        }
+
+        [Fact]
         public void TestIisExpressLogFileInheritance()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
