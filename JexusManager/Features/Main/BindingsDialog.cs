@@ -57,10 +57,10 @@ namespace JexusManager.Features.Main
                 .Subscribe(evt =>
                 {
                     var selected = listView1.SelectedItems.Count > 0;
-                    btnEdit.Enabled = selected && ProtocolMatched(listView1.SelectedItems);
+                    bool matched = ProtocolMatched(listView1.SelectedItems);
+                    btnEdit.Enabled = selected && matched;
                     btnRemove.Enabled = selected && listView1.Items.Count > 1;
-                    btnBrowse.Enabled = selected && ProtocolMatched(listView1.SelectedItems);
-
+                    btnBrowse.Enabled = selected && matched;
                     if (!btnRemove.Enabled)
                     {
                         return;
@@ -108,6 +108,11 @@ namespace JexusManager.Features.Main
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
+                    if (!btnEdit.Enabled)
+                    {
+                        return;
+                    }
+
                     if (listView1.SelectedItems.Count == 0)
                     {
                         return;

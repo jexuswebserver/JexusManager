@@ -44,7 +44,7 @@ namespace JexusManager.Features.Main
             else
             {
                 cbType.Text = Binding.Protocol;
-                cbType.Enabled = Binding == null;
+                cbType.Enabled = false;
                 cbAddress.Text = Binding.EndPoint.Address.AddressToCombo();
                 txtPort.Text = Binding.EndPoint.Port.ToString();
                 txtHost.Text = Binding.Host.HostToDisplay();
