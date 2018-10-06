@@ -98,10 +98,14 @@ namespace JexusManager
             imageList1.Images.Add(Resources.farm_disabled_16); // 12
             btnAbout.Text = string.Format("About Jexus Manager {0}", Assembly.GetExecutingAssembly().GetName().Version);
             treeView1.Nodes.Add(new PlaceholderTreeNode("Start Page", 0) { ContextMenuStrip = cmsIis });
-            IisExpressRoot = new PlaceholderTreeNode("IIS Express", 10) { ContextMenuStrip = cmsIis };
-            treeView1.Nodes.Add(IisExpressRoot);
-            IisRoot = new PlaceholderTreeNode("IIS", 10) { ContextMenuStrip = cmsIis };
-            treeView1.Nodes.Add(IisRoot);
+            if (!Helper.IsRunningOnMono())
+            {
+                IisExpressRoot = new PlaceholderTreeNode("IIS Express", 10) { ContextMenuStrip = cmsIis };
+                treeView1.Nodes.Add(IisExpressRoot);
+                IisRoot = new PlaceholderTreeNode("IIS", 10) { ContextMenuStrip = cmsIis };
+                treeView1.Nodes.Add(IisRoot);
+            }
+
             JexusRoot = new PlaceholderTreeNode("Jexus", 10) { ContextMenuStrip = cmsIis };
             treeView1.Nodes.Add(JexusRoot);
 
