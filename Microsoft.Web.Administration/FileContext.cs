@@ -78,6 +78,12 @@ namespace Microsoft.Web.Administration
                         FileName);
                 }
 
+                var folder = Path.GetDirectoryName(file);
+                if (!Directory.Exists(folder))
+                {
+                    throw new DirectoryNotFoundException($"Filename: \\\\?\\{file}\r\nError: Cannot read configuration file\r\n\r\n");
+                }
+
                 return;
             }
 
