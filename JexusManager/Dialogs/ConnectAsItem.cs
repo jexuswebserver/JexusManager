@@ -11,8 +11,8 @@ namespace JexusManager.Dialogs
 
         public ConnectAsItem(VirtualDirectory virtualDirectory)
         {
-            UserName = virtualDirectory?.UserName;
-            Password = virtualDirectory?.Password;
+            UserName = virtualDirectory?.UserName ?? string.Empty;
+            Password = virtualDirectory?.Password ?? string.Empty;
             Element = virtualDirectory;
         }
 

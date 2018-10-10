@@ -80,6 +80,9 @@ namespace JexusManager.Dialogs
 
             txtName.Text = "test";
             txtName.Text = item.UserName;
+            var passThrough = string.IsNullOrEmpty(item.UserName);
+            rbPassThrough.Checked = passThrough;
+            rbSpecific.Checked = !passThrough;
         }
 
         private void RefreshButton()
