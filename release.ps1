@@ -1,6 +1,10 @@
 $msBuild = "msbuild"
-& $msBuild /version
-if ($LastExitCode -ne 0)
+try
+{
+    & $msBuild /version
+    Write-Host "Likely on Linux/macOS."
+}
+catch
 {
     Write-Host "MSBuild doesn't exist. Use VSSetup instead."
 
@@ -15,10 +19,6 @@ if ($LastExitCode -ne 0)
     }
 
     Write-Host "Likely on Windows."
-}
-else
-{
-    Write-Host "Likely on Linux/macOS."
 }
 
 Write-Host "MSBuild found. Compile the projects."
