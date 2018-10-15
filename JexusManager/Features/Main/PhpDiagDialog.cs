@@ -93,14 +93,21 @@ namespace JexusManager.Features.Main
                         {
                             if (item.Modules == "FastCgiModule")
                             {
-                                Debug($"* Found FastCGI handler as {{ Name: {item.Name}, Path: {item.Path}, State: {item.GetState(handlers.AccessPolicy)}, Handler: {item.TypeString}, Entry Type: {item.Flag} }}.");
-                                foundPhpHandler.Add(item);
+                                if (File.Exists(item.Path))
+                                {
+                                    Debug($"* Found a valid FastCGI handler as {{ Name: {item.Name}, Path: {item.Path}, State: {item.GetState(handlers.AccessPolicy)}, Handler: {item.TypeString}, Entry Type: {item.Flag} }}.");
+                                    foundPhpHandler.Add(item);
+                                }
+                                else
+                                {
+                                    Error($"* Found an invalid FastCGI handler as {{ {item.Name}, Path: {item.Path}, State: {item.GetState(handlers.AccessPolicy)}, Handler: {item.TypeString}, Entry Type: {item.Flag} }}.");
+                                }
                             }
                         }
 
                         if (foundPhpHandler.Count == 0)
                         {
-                            Error($"No FastCGI handler is registered for this web site.");
+                            Error($"No valid FastCGI handler is registered for this web site.");
                             Error($" * To run PHP on IIS, please refer to https://docs.microsoft.com/en-us/iis/application-frameworks/scenario-build-a-php-website-on-iis/configuring-step-1-install-iis-and-php#13-download-and-install-php-manually for more details.");
                             Error($" * To run Python on IIS, please refer to https://pypi.org/project/wfastcgi/ or use HttpPlatformHandler https://docs.microsoft.com/en-us/iis/extensions/httpplatformhandler/httpplatformhandler-configuration-reference.");
                             return;
