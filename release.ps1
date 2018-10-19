@@ -23,8 +23,8 @@ catch
 
 Write-Host "MSBuild found. Compile the projects."
 
-& $msBuild jexusmanager.sln /p:Configuration=Release /t:restore
-& $msBuild jexusmanager.sln /p:Configuration=Release /t:clean
-& $msBuild jexusmanager.sln /p:Configuration=Release
+& $msBuild JexusManager.sln /p:Configuration=Release /t:restore
+& $msBuild JexusManager.sln /p:Configuration=Release /t:clean
+& $msBuild JexusManager.sln /p:Configuration=Release
 
 Write-Host "Compilation finished."
