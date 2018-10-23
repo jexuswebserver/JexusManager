@@ -75,8 +75,8 @@ namespace JexusManager.Features.Handlers
                         var index = path.IndexOf('|');
                         if (index > -1)
                         {
-                            path = path.Substring(0, index);
                             arguments = path.Substring(index + 1);
+                            path = path.Substring(0, index);
                         }
 
                         if (!string.IsNullOrWhiteSpace(path))
