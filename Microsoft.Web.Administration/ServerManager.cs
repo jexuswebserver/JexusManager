@@ -56,7 +56,7 @@ namespace Microsoft.Web.Administration
         }
 
         protected ServerManager(string hostName, bool local)
-            : this(hostName)
+            : this(hostName, false, null)
         {
         }
 
@@ -148,9 +148,10 @@ namespace Microsoft.Web.Administration
                 _virtualDirectoryDefaults =
                     new VirtualDirectoryDefaults(siteSection?.GetChildElement("virtualDirectoryDefaults"), siteSection);
                 SiteCollection = new SiteCollection(siteSection, this);
-
-                PostInitialize();
             }
+
+            // IMPORTANT: out of locking for Jexus web server.
+            PostInitialize();
         }
 
         internal virtual void CleanSiteFile(string file)

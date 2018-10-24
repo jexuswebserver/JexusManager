@@ -37,10 +37,20 @@ namespace Microsoft.Web.Administration
                 Directory.CreateDirectory(CacheFolder);
             }
 
+            SchemaFolder = Path.Combine(CacheFolder, "schema");
+            if (!Directory.Exists(SchemaFolder))
+            {
+                Directory.CreateDirectory(SchemaFolder);
+            }
+
             File.WriteAllText(FileName, Resources.original);
+            File.WriteAllText(Path.Combine(SchemaFolder, "IIS_schema.xml"), Resources.IIS_schema);
+            File.WriteAllText(Path.Combine(SchemaFolder, "FX_schema.xml"), Resources.FX_schema);
+            File.WriteAllText(Path.Combine(SchemaFolder, "rewrite_schema.xml"), Resources.rewrite_schema);
         }
 
         internal string CacheFolder { get; set; }
+        internal string SchemaFolder { get; set; }
 
         protected override void PostInitialize()
         {
@@ -90,13 +100,32 @@ namespace Microsoft.Web.Administration
             var environment = Path.Combine(
                 Environment.ExpandEnvironmentVariables("%JEXUS_CONFIG%"),
                 "schema");
-            return Directory.Exists(environment) ? Directory.GetFiles(environment) : base.GetSchemaFiles();
+            if (Directory.Exists(environment))
+            {
+                return Directory.GetFiles(environment);
+            }
+
+            if (Directory.Exists(SchemaFolder))
+            {
+                return Directory.GetFiles(SchemaFolder);
+            }
+
+            return base.GetSchemaFiles();
         }
 
         internal override void CleanSiteFile(string file)
         {
             base.CleanSiteFile(file);
-            File.Delete(file);
+            if (File.Exists(file))
+            {
+                File.Delete(file);
+            }
+
+            var directory = Path.GetDirectoryName(file);
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
         }
     }
 }

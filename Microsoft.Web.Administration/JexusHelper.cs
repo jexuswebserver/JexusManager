@@ -517,7 +517,7 @@ namespace Microsoft.Web.Administration
             var virtualDirectory =
                 new VirtualDirectory(null, application.VirtualDirectories)
                 {
-                    Path = root.Substring(0, split),
+                    Path = "/",
                     PhysicalPath = root.Substring(split + 1)
                 };
             application.VirtualDirectories.Add(virtualDirectory);
