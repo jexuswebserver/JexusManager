@@ -549,6 +549,11 @@ namespace Microsoft.Web.Administration
                     {
                         // IMPORTANT: allow null path due to root web.config.
                         var path = element.Attribute("path")?.Value;
+                        if (path == ".")
+                        {
+                            path = location;
+                        }
+
                         var mode = element.Attribute("overrideMode").LoadString("Inherit");
                         var found = Locations.FirstOrDefault(item => item.Path == path);
                         if (found == null)
@@ -794,8 +799,16 @@ namespace Microsoft.Web.Administration
                 }
             }
 
-            throw new FileLoadException(
-                $"Filename: \\\\?\\{section.FileContext.FileName}\r\nLine number: {(section.Entity as IXmlLineInfo).LineNumber}\r\nError: This configuration section cannot be used at this path. This happens when the section is locked at a parent level. Locking is either by default (overrideModeDefault=\"Deny\"), or set explicitly by a location tag with overrideMode=\"Deny\" or the legacy allowOverride=\"false\".\r\n\r\n");
+            if (definition == null)
+            {
+                throw new COMException(
+                    $"Line number: {(section.Entity as IXmlLineInfo).LineNumber}\r\nError: The configuration section '{section.ElementTagName}' cannot be read because it is missing section definition\r\n");
+            }
+            else
+            {
+                throw new FileLoadException(
+                    $"Filename: \\\\?\\{section.FileContext.FileName}\r\nLine number: {(section.Entity as IXmlLineInfo).LineNumber}\r\nError: This configuration section cannot be used at this path. This happens when the section is locked at a parent level. Locking is either by default (overrideModeDefault=\"Deny\"), or set explicitly by a location tag with overrideMode=\"Deny\" or the legacy allowOverride=\"false\".\r\n\r\n");
+            }
         }
     }
 }

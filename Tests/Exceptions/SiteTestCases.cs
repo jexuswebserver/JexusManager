@@ -742,13 +742,13 @@ namespace Tests.Exceptions
                 {
                     buffer.AppendLine(item.Name);
                 }
-                
-                Assert.Equal(21, effective.Sections.Count);
+
+                Assert.True(21 <= effective.Sections.Count);
                 Assert.Equal(12, effective.SectionGroups.Count);
 
                 var list = new List<SectionDefinition>();
                 effective.GetAllDefinitions(list);
-                Assert.Equal(155, list.Count);
+                Assert.True(155 <= list.Count);
             }
 
             var serverConfig = server.GetApplicationHostConfiguration();
@@ -762,7 +762,7 @@ namespace Tests.Exceptions
                 Assert.Equal(55, list.Count);
 
                 var effective = serverConfig.GetEffectiveSectionGroup();
-                Assert.Equal(21, effective.Sections.Count);
+                Assert.True(21 <= effective.Sections.Count);
                 Assert.Equal(12, effective.SectionGroups.Count);
             }
 
@@ -823,12 +823,12 @@ namespace Tests.Exceptions
             Assert.EndsWith("machine.config", machine.FileName);
             {
                 var rootGroup = machine.RootSectionGroup;
-                Assert.Equal(21, rootGroup.Sections.Count);
+                Assert.True(21 <= rootGroup.Sections.Count);
                 Assert.Equal(10, rootGroup.SectionGroups.Count);
 
                 var list = new List<SectionDefinition>();
                 rootGroup.GetAllDefinitions(list);
-                Assert.Equal(100, list.Count);
+                Assert.True(100 <= list.Count);
             }
 #endif
             {
@@ -1151,6 +1151,114 @@ namespace Tests.Exceptions
             Assert.Equal($"Filename: \\\\?\\{siteConfig}\r\nError: The configuration section 'log4net' cannot be read because it is missing schema\r\n\r\n",
                 exception.Message);
 #endif
+            {
+                var section = config.GetSection("system.webServer/defaultDocument");
+                var files = section.GetCollection("files");
+                Assert.Equal(7, files.Count);
+            }
+        }
+
+        [Fact]
+        public void TestIisExpressMissingSectionDefinition()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string current = Path.Combine(directoryName, @"applicationHost.config");
+            string original = Path.Combine(directoryName, @"original2.config");
+            var siteConfig = TestHelper.CopySiteConfig(directoryName, "original.config");
+            File.Copy(original, current, true);
+            TestHelper.FixPhysicalPathMono(current);
+
+            {
+                // modify the path
+                var file = XDocument.Load(current);
+                var root = file.Root;
+                var defaultDocument = root?.XPathSelectElement("/configuration/configSections/sectionGroup[@name='system.webServer']/section[@name='defaultDocument']");
+                defaultDocument?.Remove();
+                file.Save(current);
+            }
+
+#if IIS
+            var server = new ServerManager(current);
+#else
+            var server = new IisExpressServerManager(current);
+#endif
+            var exception = Assert.Throws<COMException>(() =>
+            {
+                var config = server.Sites[0].Applications[0].GetWebConfiguration();
+            });
+#if IIS
+            Assert.Equal($"Filename: \\\\?\\{current}\r\nError: \r\n", exception.Message);
+#else
+            Assert.Equal($"Filename: \\\\?\\{current}\r\nLine number: 286\r\nError: The configuration section 'system.webServer/defaultDocument' cannot be read because it is missing section definition\r\n\r\n", exception.Message);
+#endif
+        }
+
+        [Fact]
+        public void TestIisExpressAspNetCore()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string current = Path.Combine(directoryName, @"applicationHost.config");
+            string original = Path.Combine(directoryName, @"original2.config");
+            var siteConfig = TestHelper.CopySiteConfig(directoryName, "original.config");
+            File.Copy(original, current, true);
+            TestHelper.FixPhysicalPathMono(current);
+
+            {
+                // <directoryBrowse configSource="directorybrowse.config" />
+                // Add the section.
+                var file = XDocument.Load(siteConfig);
+                var root = file.Root;
+                root.Add(
+                    new XElement("location",
+                        new XAttribute("path", "."),
+                        new XAttribute("inheritInChildApplications", "false"),
+                        new XElement("system.webServer",
+                            new XElement("handlers",
+                                new XElement("add",
+                                    new XAttribute("name", "aspNetCore"),
+                                    new XAttribute("path", "*"),
+                                    new XAttribute("verb", "*"),
+                                    new XAttribute("modules", "AspNetCoreModule"),
+                                    new XAttribute("resourceType", "Unspecified"))),
+                            new XElement("aspNetCore",
+                                new XAttribute("processPath", "dotnet"),
+                                new XAttribute("arguments", ".\\testmvccore.dll"),
+                                new XAttribute("stdoutLogEnabled", "false"),
+                                new XAttribute("stdoutLogFile", ".\\logs\\stdout")))));
+                file.Save(siteConfig);
+            }
+
+            {
+                // modify the path
+                var file = XDocument.Load(current);
+                var root = file.Root;
+                var webServer = root?.XPathSelectElement("/configuration/configSections/sectionGroup[@name='system.webServer']");
+                webServer?.Add(
+                    new XElement("section",
+                        new XAttribute("name", "aspNetCore"),
+                        new XAttribute("overrideModeDefault", "Allow")));
+                file.Save(current);
+            }
+#if IIS
+            var server = new ServerManager(current);
+#else
+            var server = new IisExpressServerManager(current);
+#endif
+            var config = server.Sites[0].Applications[0].GetWebConfiguration();
             {
                 var section = config.GetSection("system.webServer/defaultDocument");
                 var files = section.GetCollection("files");
