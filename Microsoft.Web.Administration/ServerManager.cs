@@ -351,6 +351,7 @@ namespace Microsoft.Web.Administration
 
         internal virtual IEnumerable<string> GetSchemaFiles()
         {
+            // IMPORTANT: use local schema folder as fallback.
             var directoryName = Path.GetDirectoryName(typeof(FileContext).Assembly.Location);
             Debug.Assert(directoryName != null, nameof(directoryName) + " != null");
             var local = Path.Combine(

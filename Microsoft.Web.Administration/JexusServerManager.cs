@@ -102,14 +102,17 @@ namespace Microsoft.Web.Administration
                 "schema");
             if (Directory.Exists(environment))
             {
+                // IMPORTANT: allow overriding the folder via environment variable.
                 return Directory.GetFiles(environment);
             }
 
             if (Directory.Exists(SchemaFolder))
             {
+                // IMPORANT: default folder for Jexus web server.
                 return Directory.GetFiles(SchemaFolder);
             }
 
+            // IMPORTANT: default fallback.
             return base.GetSchemaFiles();
         }
 
