@@ -219,14 +219,30 @@ namespace JexusManager
             var file = GetTempFileName() + ".crt";
             var bytes = x509Certificate2.Export(X509ContentType.Cert);
             File.WriteAllBytes(file, bytes);
-            Process.Start(file);
+            if (Helper.IsRunningOnMono())
+            {
+                Process.Start(file);
+            }
+            else
+            {
+                Process.Start("explorer.exe", file);
+            }
         }
 
         public static void Explore(string folder)
         {
             try
             {
-                Process.Start(folder);
+                if (Helper.IsRunningOnMono())
+                {
+                    Process.Start(folder);
+                }
+                else
+                {
+                    // IMPORANT: to avoid jumping to another folder with ".com"
+                    // More info can be found in https://forums.iis.net/p/1239773/2144186.aspx?
+                    Process.Start("explorer.exe", folder);
+                }
             }
             catch (Exception ex)
             {
