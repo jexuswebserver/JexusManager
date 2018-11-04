@@ -26,7 +26,7 @@ namespace JexusManager.Wizards.ConnectionWizard
                 toolTip1.SetToolTip(rbRider, "IIS Express is not supported when running on Mono.");
             }
 
-            if (Helper.GetIisExpressVersion() == Version.Parse("0.0.0.0"))
+            if (!IisExpressServerManager.ServerInstalled)
             {
                 rbVisualStudio.Enabled = false;
                 rbRider.Enabled = false;

@@ -210,6 +210,11 @@ namespace JexusManager
 
         private void LoadIisExpress()
         {
+            if (!IisExpressServerManager.ServerInstalled)
+            {
+                return;
+            }
+
             // TODO: load if only on Windows.
             var globalFile = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),

@@ -57,7 +57,33 @@ namespace Microsoft.Web.Administration
             : base(readOnly, applicationHostConfigurationPath)
         {
             Mode = WorkingMode.IisExpress;
-            Version = Helper.GetIisExpressVersion();
+            Version = GetIisExpressVersion();
+        }
+
+        private static Version GetIisExpressVersion()
+        {
+            var fileName =
+                Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
+                    "IIS Express",
+                    "iisexpress.exe");
+            if (!File.Exists(fileName))
+            {
+                fileName = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
+                    "IIS Express",
+                    "iisexpress.exe");
+            }
+
+            if (File.Exists(fileName))
+            {
+                if (Version.TryParse(FileVersionInfo.GetVersionInfo(fileName).ProductVersion, out Version result))
+                {
+                    return result;
+                }
+            }
+
+            return Version.Parse("0.0.0.0");
         }
 
         internal override bool GetSiteState(Site site)
