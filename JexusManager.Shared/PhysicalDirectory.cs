@@ -14,7 +14,7 @@ namespace JexusManager
         {
             Name = physicalDirectory.Name;
             FullName = physicalDirectory.FullName;
-            Application = application;
+            Application = application ?? throw new System.ArgumentNullException(nameof(application));
             PathToSite = Application.IsRoot() ? '/' + path : Application.Path + '/' + path;
             LocationPath = Application.Site.Name + PathToSite;
         }

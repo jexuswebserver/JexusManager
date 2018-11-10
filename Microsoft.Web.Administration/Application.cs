@@ -11,7 +11,6 @@ namespace Microsoft.Web.Administration
     public sealed class Application : ConfigurationElement
     {
         private Configuration _configuration;
-        private VirtualDirectoryCollection _collection;
 
         internal Application(ApplicationCollection parent)
             : this(null, parent)
@@ -22,6 +21,10 @@ namespace Microsoft.Web.Administration
             : base(element, "application", null, parent, null, null)
         {
             Parent = parent;
+            if (Parent.Parent == null)
+            {
+                throw new ArgumentException("Site cannot be null", nameof(parent));
+            }
 
             // IMPORTANT: avoid duplicate application tag.
             ForceCreateEntity();
@@ -31,7 +34,7 @@ namespace Microsoft.Web.Administration
                 Path = "/";
             }
 
-            _collection = new VirtualDirectoryCollection(this);
+            VirtualDirectories = new VirtualDirectoryCollection(this);
             if (element == null)
             {
                 return;
@@ -39,7 +42,7 @@ namespace Microsoft.Web.Administration
 
             foreach (ConfigurationElement node in (ConfigurationElementCollection)element)
             {
-                _collection.InternalAdd(new VirtualDirectory(node, _collection));
+                VirtualDirectories.InternalAdd(new VirtualDirectory(node, VirtualDirectories));
             }
 
             Location = Site.Name + Path;
@@ -58,7 +61,7 @@ namespace Microsoft.Web.Administration
         {
             if (child is VirtualDirectory virtualDirectory)
             {
-                _collection.Add(virtualDirectory);
+                VirtualDirectories.Add(virtualDirectory);
             }
             else
             {
@@ -180,11 +183,7 @@ namespace Microsoft.Web.Administration
             set { this["path"] = value; }
         }
 
-        public VirtualDirectoryCollection VirtualDirectories
-        {
-            get { return _collection; }
-            internal set { _collection = value; }
-        }
+        public VirtualDirectoryCollection VirtualDirectories { get; internal set; }
 
         public VirtualDirectoryDefaults VirtualDirectoryDefaults
         {
