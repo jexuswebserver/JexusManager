@@ -109,8 +109,10 @@ namespace JexusManager.Features.FastCgi
         [Category("General")]
         [Description("Specifies optional environment variables that will be set in the FastCGI executable.")]
         [DisplayName("Environment Variables")]
+#if !NETCOREAPP3_0
         [Editor(typeof(EnvironmentVariablesCollectionEditor),
             typeof(System.Drawing.Design.UITypeEditor))]
+#endif
         public EnvironmentVariablesCollection EnvironmentVariables { get; set; }
 
         [Browsable(true)]

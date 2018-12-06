@@ -32,7 +32,7 @@ namespace Microsoft.Web.Administration
         public override bool SupportsSni => false;
         public override bool SupportsWildcard => false;
 
-        public RemoteCertificateValidationCallback ServerCertificateValidationCallback { get; set; }
+        public Func<HttpRequestMessage, X509Certificate2, X509Chain, SslPolicyErrors, bool> ServerCertificateValidationCallback { get; set; }
         public string AcceptedHash { get; internal set; }
 
         public async Task<string> SaveKeyAsync(string key)
@@ -92,8 +92,8 @@ namespace Microsoft.Web.Administration
 
         internal HttpClient GetClient()
         {
-            var requestHandler = new WebRequestHandler();
-            requestHandler.ServerCertificateValidationCallback = ServerCertificateValidationCallback;
+            var requestHandler = new HttpClientHandler();
+            requestHandler.ServerCertificateCustomValidationCallback = ServerCertificateValidationCallback;
             var client = new HttpClient(requestHandler) {BaseAddress = new Uri($"{s_protocol}://{HostName}/")};
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));

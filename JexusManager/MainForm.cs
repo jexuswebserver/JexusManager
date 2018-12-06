@@ -761,24 +761,6 @@ namespace JexusManager
             ManagerTreeNode.AddToParent(server.SitesNode, new SiteTreeNode(_serviceContainer, site, server) { ContextMenuStrip = cmsSite });
         }
 
-        internal void AddFarmNode(string farmName, List<FarmServerAdvancedSettings> servers)
-        {
-            //var data = GetCurrentData();
-            //var farmNode = new TreeNode(farmName)
-            //{
-            //    ContextMenuStrip = cmsFarmServer,
-            //    ImageIndex = 8,
-            //    SelectedImageIndex = 8
-            //};
-            //var serversNode = farmNode.Nodes.Add("Servers");
-            //serversNode.ContextMenuStrip = cmsServers;
-            //serversNode.ImageIndex = 9;
-            //serversNode.SelectedImageIndex = 9;
-            //serversNode.Tag = servers;
-            //data.FarmNode.Nodes.Add(farmNode);
-            //treeView1.SelectedNode = farmNode;
-        }
-
         internal void LoadSites()
         {
             var selected = treeView1.SelectedNode;

@@ -14,21 +14,22 @@ namespace Microsoft.Web.Administration
             return null;
         }
 
+#if !NETCOREAPP3_0
         public static ConfigurationSection GetSection(HttpContext context, string sectionPath)
         {
             return null;
         }
-
+#endif
         public static ConfigurationSection GetSection(string siteName, string virtualPath, string sectionPath)
         {
             return null;
         }
-
+#if !NETCOREAPP3_0
         public static ConfigurationSection GetSection(HttpContext context, string sectionPath, Type sectionType)
         {
             return null;
         }
-
+#endif
         public static ConfigurationSection GetSection(string siteName, string virtualPath, string sectionPath, Type sectionType)
         {
             return null;

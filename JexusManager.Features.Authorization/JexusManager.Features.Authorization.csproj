@@ -1,122 +1,34 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{FEFD62BE-AA83-42B9-A79D-2DF0150F4F81}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>JexusManager.Features.Authorization</RootNamespace>
-    <AssemblyName>JexusManager.Features.Authorization</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
     <AssemblyOriginatorKeyFile>JexusManager.snk</AssemblyOriginatorKeyFile>
+    <RootNamespace>JexusManager.Features.Authorization</RootNamespace>
   </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
+    <PackageReference Include="System.Reactive" Version="4.1.2" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="AuthorizationFeature.cs" />
-    <Compile Include="AuthorizationModule.cs" />
-    <Compile Include="AuthorizationModuleProvider.cs" />
-    <Compile Include="AuthorizationPage.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="AuthorizationPage.Designer.cs">
-      <DependentUpon>AuthorizationPage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="AuthorizationRule.cs" />
-    <Compile Include="AuthorizationSettingsSavedEventHandler.cs" />
-    <Compile Include="NewRuleDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="NewRuleDialog.Designer.cs">
-      <DependentUpon>NewRuleDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
+    <ProjectReference Include="..\JexusManager.Shared\JexusManager.Shared.csproj" />
+    <ProjectReference Include="..\Microsoft.Web.Management\Microsoft.Web.Management.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
   </ItemGroup>
+
   <ItemGroup>
-    <EmbeddedResource Include="AuthorizationPage.resx">
-      <DependentUpon>AuthorizationPage.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="NewRuleDialog.resx">
-      <DependentUpon>NewRuleDialog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
+    <EmbeddedResource Update="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\JexusManager.Shared\JexusManager.Shared.csproj">
-      <Project>{e4040a45-b156-4048-b1a4-bd262ba18047}</Project>
-      <Name>JexusManager.Shared</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Microsoft.Web.Administration\Microsoft.Web.Administration.csproj">
-      <Project>{BD24AFDA-292F-4F41-BA80-C48F21D4D9F2}</Project>
-      <Name>Microsoft.Web.Administration</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Microsoft.Web.Management\Microsoft.Web.Management.csproj">
-      <Project>{17e994b0-5a31-4f79-9796-83a45e87853d}</Project>
-      <Name>Microsoft.Web.Management</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="JexusManager.snk" />
-    <None Include="Resources\authorization_36.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="StrongNamer">
-      <Version>0.0.7</Version>
-    </PackageReference>
-    <PackageReference Include="System.Reactive">
-      <Version>3.1.1</Version>
-    </PackageReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

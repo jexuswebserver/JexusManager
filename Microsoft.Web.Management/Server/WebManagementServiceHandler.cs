@@ -7,6 +7,7 @@ using System.Web;
 
 namespace Microsoft.Web.Management.Server
 {
+#if !NETCOREAPP3_0
     public sealed class WebManagementServiceHandler : IHttpHandler
     {
         bool IHttpHandler.IsReusable
@@ -22,4 +23,5 @@ namespace Microsoft.Web.Management.Server
             throw new NotImplementedException();
         }
     }
+#endif
 }

@@ -9,11 +9,7 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("JexusManager")]
 [assembly: AssemblyDescription("Management Console for Jexus web server/IIS Express/IIS.")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("LeXtudio")]
-[assembly: AssemblyProduct("JexusManager")]
 [assembly: AssemblyCopyright("Copyright (C) Lex Li 2014-2018. All rights reserved.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -31,6 +27,3 @@ using System.Runtime.InteropServices;
 + "a564e86c4a4cddc9597619a31c060846ebb2e99511a0323ff82b1ebd95d6a4912502945f0e769f"
 + "190a69a439dbfb969ebad72a6f7e2e047907da4a7b9c08c6e98d5f1be8b8cafaf3eb978914059a"
 + "245d4bc1")]
-
-[assembly: AssemblyVersion("12.0.68.0")]
-[assembly: AssemblyFileVersion("12.0.68.0")]
