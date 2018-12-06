@@ -357,7 +357,7 @@ namespace JexusManager.Features.Main
 
         private void BtnHelpClick(object sender, EventArgs e)
         {
-            DialogHelper.ProcessStart("http://www.jexusmanager.com/en/latest/tutorials/php-diagnostics.html");
+            DialogHelper.ProcessStart("https://docs.jexusmanager.com/tutorials/php-diagnostics.html");
         }
 
         private void PhpDiagDialogHelpButtonClicked(object sender, System.ComponentModel.CancelEventArgs e)

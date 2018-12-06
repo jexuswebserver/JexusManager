@@ -192,7 +192,7 @@ namespace JexusManager.Features.Main
                                 if (binding.Protocol == "https")
                                 {
                                     Warn("Binding Diagnostics does not verify certificates and other SSL/TLS related settings.");
-                                    Warn($"Please run SSL Diagnostics at server level to analyze SSL/TLS configuration. More information can be found at https://www.jexusmanager.com/en/latest/tutorials/ssl-diagnostics.html.");
+                                    Warn($"Please run SSL Diagnostics at server level to analyze SSL/TLS configuration. More information can be found at https://docs.jexusmanager.com/tutorials/ssl-diagnostics.html.");
                                 }
                             }
 
@@ -300,7 +300,7 @@ namespace JexusManager.Features.Main
 
         private void BtnHelpClick(object sender, EventArgs e)
         {
-            DialogHelper.ProcessStart("http://www.jexusmanager.com/en/latest/tutorials/binding-diagnostics.html");
+            DialogHelper.ProcessStart("https://docs.jexusmanager.com/tutorials/binding-diagnostics.html");
         }
 
         private void BindingDiagDialogHelpButtonClicked(object sender, System.ComponentModel.CancelEventArgs e)
