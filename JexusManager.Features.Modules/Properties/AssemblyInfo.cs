@@ -9,11 +9,7 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("JexusManager.Features.Modules")]
 [assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("JexusManager.Features.Modules")]
 [assembly: AssemblyCopyright("Copyright \u00A9  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -36,8 +32,6 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
 
 [assembly: InternalsVisibleTo("JexusManager.Features.Handlers, PublicKey=0024000004800000940000000602000000240000525341310004000001000100f7030532c52524"
 + "993841a0d09420340f3814e1b65473851bdcd18815510b035a2ae9ecee69c4cd2d9e4d6e6d5fbf"

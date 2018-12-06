@@ -29,75 +29,34 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
     <AssemblyOriginatorKeyFile>JexusManager.snk</AssemblyOriginatorKeyFile>
+    <RootNamespace>JexusManager.Features.HttpErrors</RootNamespace>
   </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
+    <PackageReference Include="System.Reactive" Version="4.1.2" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="EditDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="EditDialog.Designer.cs">
-      <DependentUpon>EditDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="HttpErrorsFeature.cs" />
-    <Compile Include="HttpErrorsItem.cs" />
-    <Compile Include="HttpErrorsModule.cs" />
-    <Compile Include="HttpErrorsModuleProvider.cs" />
-    <Compile Include="HttpErrorsPage.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="HttpErrorsPage.Designer.cs">
-      <DependentUpon>HttpErrorsPage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="HttpErrorsSettingsSavedEventHandler.cs" />
-    <Compile Include="LocalErrorDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="LocalErrorDialog.Designer.cs">
-      <DependentUpon>LocalErrorDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NewErrorDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="NewErrorDialog.Designer.cs">
-      <DependentUpon>NewErrorDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
+    <ProjectReference Include="..\JexusManager.Shared\JexusManager.Shared.csproj" />
+    <ProjectReference Include="..\Microsoft.Web.Management\Microsoft.Web.Management.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
   </ItemGroup>
+
   <ItemGroup>
-    <EmbeddedResource Include="EditDialog.resx">
-      <DependentUpon>EditDialog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="HttpErrorsPage.resx">
-      <DependentUpon>HttpErrorsPage.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="LocalErrorDialog.resx">
-      <DependentUpon>LocalErrorDialog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="NewErrorDialog.resx">
-      <DependentUpon>NewErrorDialog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
+    <EmbeddedResource Update="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
@@ -137,4 +96,6 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+</Project>
+
 </Project>

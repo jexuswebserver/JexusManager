@@ -32,256 +32,67 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
     <AssemblyOriginatorKeyFile>JexusManager.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Composition" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.IO.Compression" />
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
-    <Reference Include="XmlDiffPatch">
-      <HintPath>..\lib\xmldiffpatch.dll</HintPath>
-    </Reference>
-    <Reference Include="XmlDiffPatch.View">
-      <HintPath>..\lib\XmlDiffPatch.View.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Authentication\AnonymousAuthenticationFeatureServerTestFixture.cs" />
-    <Compile Include="Authentication\FormsAuthenticationFeatureServerTestFixture.cs" />
-    <Compile Include="Authentication\FormsAuthenticationFeatureSiteTestFixture.cs" />
-    <Compile Include="Authentication\ClientCertificateAuthenticationFeatureServerTestFixture.cs" />
-    <Compile Include="Authentication\ClientCertificateAuthenticationFeatureSiteTestFixture.cs" />
-    <Compile Include="Authentication\DigestAuthenticationFeatureServerTestFixture.cs" />
-    <Compile Include="Authentication\BasicAuthenticationFeatureServerTestFixture.cs" />
-    <Compile Include="Authentication\DigestAuthenticationFeatureSiteTestFixture.cs" />
-    <Compile Include="Authentication\WindowsAuthenticationFeatureServerTestFixture.cs" />
-    <Compile Include="Authentication\AnonymousAuthenticationFeatureSiteTestFixture.cs" />
-    <Compile Include="Authentication\BasicAuthenticationFeatureSiteTestFixture.cs" />
-    <Compile Include="Authentication\WindowsAuthenticationFeatureSiteTestFixture.cs" />
-    <Compile Include="Authorization\AuthorizationFeatureServerTestFixture.cs" />
-    <Compile Include="Authorization\AuthorizationFeatureSiteTestFixture.cs" />
-    <Compile Include="Caching\CachingFeatureServerTestFixture.cs" />
-    <Compile Include="Caching\CachingFeatureSiteTestFixture.cs" />
-    <Compile Include="DefaultDocument\DefaultDocumentFeatureServerTestFixture.cs" />
-    <Compile Include="DefaultDocument\DefaultDocumentFeatureSiteTestFixture.cs" />
-    <Compile Include="DirectoryBrowse\DirectoryBrowseFeatureServerTestFixture.cs" />
-    <Compile Include="DirectoryBrowse\DirectoryBrowseFeatureSiteTestFixture.cs" />
-    <Compile Include="TraceFailedRequests\TraceFailedRequestsFeatureServerTestFixture.cs" />
-    <Compile Include="TraceFailedRequests\TraceFailedRequestsFeatureSiteTestFixture.cs" />
-    <Compile Include="Handlers\HandlersFeatureServerTestFixture.cs" />
-    <Compile Include="Handlers\HandlersFeatureSiteTestFixture.cs" />
-    <Compile Include="HttpErrors\HttpErrorsFeatureServerTestFixture.cs" />
-    <Compile Include="HttpErrors\HttpErrorsFeatureSiteTestFixture.cs" />
-    <Compile Include="IpSecurity\IpSecurityFeatureServerTestFixture.cs" />
-    <Compile Include="IpSecurity\IpSecurityFeatureSiteTestFixture.cs" />
-    <Compile Include="IsapiCgiRestriction\IsapiCgiRestrictionFeatureServerTestFixture.cs" />
-    <Compile Include="IsapiCgiRestriction\IsapiCgiRestrictionFeatureSiteTestFixture.cs" />
-    <Compile Include="IsapiFilters\IsapiFiltersFeatureServerTestFixture.cs" />
-    <Compile Include="IsapiFilters\IsapiFiltersFeatureSiteTestFixture.cs" />
-    <Compile Include="Main\SiteTestFixture.cs" />
-    <Compile Include="MimeMap\MimeMapFeatureServerTestFixture.cs" />
-    <Compile Include="MimeMap\MimeMapFeatureSiteTestFixture.cs" />
-    <Compile Include="Modules\ModulesFeatureServerTestFixture.cs" />
-    <Compile Include="Modules\ModulesFeatureSiteTestFixture.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RequestFiltering\FileExtensions\FileExtensionsFeatureServerTestFixture.cs" />
-    <Compile Include="RequestFiltering\FileExtensions\FileExtensionsFeatureSiteTestFixture.cs" />
-    <Compile Include="RequestFiltering\FilteringRules\FilteringRulesFeatureServerTestFixture.cs" />
-    <Compile Include="RequestFiltering\FilteringRules\FilteringRulesFeatureSiteTestFixture.cs" />
-    <Compile Include="RequestFiltering\Headers\HeadersFeatureServerTestFixture.cs" />
-    <Compile Include="RequestFiltering\Headers\HeadersFeatureSiteTestFixture.cs" />
-    <Compile Include="RequestFiltering\HiddenSegments\HiddenSegmentsFeatureServerTestFixture.cs" />
-    <Compile Include="RequestFiltering\HiddenSegments\HiddenSegmentsFeatureSiteTestFixture.cs" />
-    <Compile Include="RequestFiltering\QueryStrings\QueryStringsFeatureServerTestFixture.cs" />
-    <Compile Include="RequestFiltering\QueryStrings\QueryStringsFeatureSiteTestFixture.cs" />
-    <Compile Include="RequestFiltering\Urls\UrlsFeatureServerTestFixture.cs" />
-    <Compile Include="RequestFiltering\Urls\UrlsFeatureSiteTestFixture.cs" />
-    <Compile Include="RequestFiltering\Verbs\VerbsFeatureServerTestFixture.cs" />
-    <Compile Include="RequestFiltering\Verbs\VerbsFeatureSiteTestFixture.cs" />
-    <Compile Include="ResponseHeaders\ResponseHeadersFeatureServerTestFixture.cs" />
-    <Compile Include="ResponseHeaders\ResponseHeadersFeatureSiteTestFixture.cs" />
-    <Compile Include="Rewrite\TestFixture.cs" />
-    <Compile Include="StringUtilityTestFixture.cs" />
-    <Compile Include="XmlAssert.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="JexusManager.snk" />
-    <None Include="original.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Website1\original.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="xunit.runner.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\JexusManager.Features.Access\JexusManager.Features.Access.csproj">
-      <Project>{b756b3a0-cfc8-4e71-a95a-0e9dc2a8d0c9}</Project>
-      <Name>JexusManager.Features.Access</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JexusManager.Features.Asp\JexusManager.Features.Asp.csproj">
-      <Project>{7faafa3b-a3e7-4339-a69f-102177fd5097}</Project>
-      <Name>JexusManager.Features.Asp</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JexusManager.Features.Authentication\JexusManager.Features.Authentication.csproj">
-      <Project>{aa7ccfc5-b695-4773-ba79-77cf6c36908f}</Project>
-      <Name>JexusManager.Features.Authentication</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JexusManager.Features.Authorization\JexusManager.Features.Authorization.csproj">
-      <Project>{fefd62be-aa83-42b9-a79d-2df0150f4f81}</Project>
-      <Name>JexusManager.Features.Authorization</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JexusManager.Features.Caching\JexusManager.Features.Caching.csproj">
-      <Project>{30a30352-ca83-446e-8af8-598ea7397988}</Project>
-      <Name>JexusManager.Features.Caching</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JexusManager.Features.Certificates\JexusManager.Features.Certificates.csproj">
-      <Project>{d37cf28b-10f1-4f28-b933-c5e18d7f09aa}</Project>
-      <Name>JexusManager.Features.Certificates</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JexusManager.Features.Cgi\JexusManager.Features.Cgi.csproj">
-      <Project>{0adf28c5-377f-4aa3-b732-aa8c8aeebb16}</Project>
-      <Name>JexusManager.Features.Cgi</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JexusManager.Features.Compression\JexusManager.Features.Compression.csproj">
-      <Project>{cd9a8535-a6b1-46bb-8acb-73d5e393147e}</Project>
-      <Name>JexusManager.Features.Compression</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JexusManager.Features.DefaultDocument\JexusManager.Features.DefaultDocument.csproj">
-      <Project>{1e54f67a-3538-4f8d-b2ee-5da6a821a528}</Project>
-      <Name>JexusManager.Features.DefaultDocument</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JexusManager.Features.DirectoryBrowse\JexusManager.Features.DirectoryBrowse.csproj">
-      <Project>{5fb94cd1-af29-4396-a27f-891243f12e8c}</Project>
-      <Name>JexusManager.Features.DirectoryBrowse</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JexusManager.Features.FastCgi\JexusManager.Features.FastCgi.csproj">
-      <Project>{aa816b3f-8b23-4440-a276-898958204a6d}</Project>
-      <Name>JexusManager.Features.FastCgi</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JexusManager.Features.Handlers\JexusManager.Features.Handlers.csproj">
-      <Project>{bd450763-248d-4117-9af0-51a625667b61}</Project>
-      <Name>JexusManager.Features.Handlers</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JexusManager.Features.HttpApi\JexusManager.Features.HttpApi.csproj">
-      <Project>{2b03e7fe-3dbd-4914-ad8c-4cb7007a9eed}</Project>
-      <Name>JexusManager.Features.HttpApi</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JexusManager.Features.HttpErrors\JexusManager.Features.HttpErrors.csproj">
-      <Project>{76f1fa9f-3e56-4d5c-9324-d69db260efa9}</Project>
-      <Name>JexusManager.Features.HttpErrors</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JexusManager.Features.HttpRedirect\JexusManager.Features.HttpRedirect.csproj">
-      <Project>{c0c1dde1-6447-4d3e-bc1a-f62cabbdbb53}</Project>
-      <Name>JexusManager.Features.HttpRedirect</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JexusManager.Features.IpSecurity\JexusManager.Features.IpSecurity.csproj">
-      <Project>{361e2f47-289f-480f-b976-a6e3f7d96edc}</Project>
-      <Name>JexusManager.Features.IpSecurity</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JexusManager.Features.IsapiCgiRestriction\JexusManager.Features.IsapiCgiRestriction.csproj">
-      <Project>{1571b862-8cd9-4314-9ccf-b1339d50298b}</Project>
-      <Name>JexusManager.Features.IsapiCgiRestriction</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JexusManager.Features.IsapiFilters\JexusManager.Features.IsapiFilters.csproj">
-      <Project>{dba682a8-0579-4f41-a852-18235a9a4a93}</Project>
-      <Name>JexusManager.Features.IsapiFilters</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JexusManager.Features.Jexus\JexusManager.Features.Jexus.csproj">
-      <Project>{ea333ee8-6551-4b5b-a733-119c5560608d}</Project>
-      <Name>JexusManager.Features.Jexus</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JexusManager.Features.Logging\JexusManager.Features.Logging.csproj">
-      <Project>{5c2ae18d-d829-481b-8fca-8ad0f69e68c8}</Project>
-      <Name>JexusManager.Features.Logging</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JexusManager.Features.MimeMap\JexusManager.Features.MimeMap.csproj">
-      <Project>{fd1a63c6-458f-496b-9923-80eca082c7ec}</Project>
-      <Name>JexusManager.Features.MimeMap</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JexusManager.Features.Modules\JexusManager.Features.Modules.csproj">
-      <Project>{8bfab6bc-57c1-44fc-88e2-b3ce5b75be9f}</Project>
-      <Name>JexusManager.Features.Modules</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JexusManager.Features.RequestFiltering\JexusManager.Features.RequestFiltering.csproj">
-      <Project>{56d44318-5979-4fc5-9f01-4d7f78709a0e}</Project>
-      <Name>JexusManager.Features.RequestFiltering</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JexusManager.Features.ResponseHeaders\JexusManager.Features.ResponseHeaders.csproj">
-      <Project>{7184ae3d-12d2-444d-b75a-2589f66e6b54}</Project>
-      <Name>JexusManager.Features.ResponseHeaders</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JexusManager.Features.Rewrite\JexusManager.Features.Rewrite.csproj">
-      <Project>{425cee66-72b3-42c0-989c-685b28b05230}</Project>
-      <Name>JexusManager.Features.Rewrite</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JexusManager.Features.TraceFailedRequests\JexusManager.Features.TraceFailedRequests.csproj">
-      <Project>{eb518eb5-2dfc-430b-90f8-d87124be17de}</Project>
-      <Name>JexusManager.Features.TraceFailedRequests</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JexusManager.Shared\JexusManager.Shared.csproj">
-      <Project>{e4040a45-b156-4048-b1a4-bd262ba18047}</Project>
-      <Name>JexusManager.Shared</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\lib\CheckBoxComboBox\CheckBoxComboBox.csproj">
-      <Project>{70a25201-8ea4-48f8-a4a6-ed13adf8823c}</Project>
-      <Name>CheckBoxComboBox</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Microsoft.Web.Administration\Microsoft.Web.Administration.csproj">
-      <Project>{BD24AFDA-292F-4F41-BA80-C48F21D4D9F2}</Project>
-      <Name>Microsoft.Web.Administration</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Microsoft.Web.Management\Microsoft.Web.Management.csproj">
-      <Project>{17E994B0-5A31-4F79-9796-83A45E87853D}</Project>
-      <Name>Microsoft.Web.Management</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Moq">
-      <Version>4.10.1</Version>
-    </PackageReference>
-    <PackageReference Include="StrongNamer">
-      <Version>0.0.8</Version>
-    </PackageReference>
-    <PackageReference Include="xunit">
-      <Version>2.4.1</Version>
-    </PackageReference>
-    <PackageReference Include="xunit.runner.visualstudio">
-      <Version>2.4.1</Version>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    <PackageReference Include="Microsoft.WindowsDesktop.App" Version="3.0.0-alpha-27128-4" />
+    <PackageReference Include="Moq" Version="4.10.1" />
+    <PackageReference Include="XMLDiffPatch" Version="1.0.8.28" />
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
       <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-  </Target>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
+  <ItemGroup>
+    <ProjectReference Include="..\JexusManager.Features.Access\JexusManager.Features.Access.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.Asp\JexusManager.Features.Asp.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.Authentication\JexusManager.Features.Authentication.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.Authorization\JexusManager.Features.Authorization.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.Caching\JexusManager.Features.Caching.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.Certificates\JexusManager.Features.Certificates.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.Cgi\JexusManager.Features.Cgi.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.Compression\JexusManager.Features.Compression.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.DefaultDocument\JexusManager.Features.DefaultDocument.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.DirectoryBrowse\JexusManager.Features.DirectoryBrowse.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.FastCgi\JexusManager.Features.FastCgi.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.Handlers\JexusManager.Features.Handlers.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.HttpApi\JexusManager.Features.HttpApi.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.HttpErrors\JexusManager.Features.HttpErrors.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.HttpRedirect\JexusManager.Features.HttpRedirect.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.IpSecurity\JexusManager.Features.IpSecurity.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.IsapiCgiRestriction\JexusManager.Features.IsapiCgiRestriction.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.IsapiFilters\JexusManager.Features.IsapiFilters.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.Jexus\JexusManager.Features.Jexus.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.Logging\JexusManager.Features.Logging.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.MimeMap\JexusManager.Features.MimeMap.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.Modules\JexusManager.Features.Modules.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.RequestFiltering\JexusManager.Features.RequestFiltering.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.ResponseHeaders\JexusManager.Features.ResponseHeaders.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.Rewrite\JexusManager.Features.Rewrite.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.TraceFailedRequests\JexusManager.Features.TraceFailedRequests.csproj" />
+    <ProjectReference Include="..\JexusManager\JexusManager.csproj" />
+    <ProjectReference Include="..\Microsoft.Web.Administration\Microsoft.Web.Administration.csproj" />
+    <ProjectReference Include="..\Microsoft.Web.Configuration.AppHostFileProvider\Microsoft.Web.Configuration.AppHostFileProvider.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="original.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Website1\original.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="xunit.runner.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

@@ -29,61 +29,34 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
     <AssemblyOriginatorKeyFile>JexusManager.snk</AssemblyOriginatorKeyFile>
+    <RootNamespace>JexusManager.Features.Compression</RootNamespace>
   </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
+    <PackageReference Include="System.Reactive" Version="4.1.2" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="CompressionFeature.cs" />
-    <Compile Include="CompressionModule.cs" />
-    <Compile Include="CompressionModuleProvider.cs" />
-    <Compile Include="CompressionPage.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="CompressionPage.Designer.cs">
-      <DependentUpon>CompressionPage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CompressionSettingsSavedEventHandler.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
+    <ProjectReference Include="..\JexusManager.Shared\JexusManager.Shared.csproj" />
+    <ProjectReference Include="..\Microsoft.Web.Management\Microsoft.Web.Management.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
   </ItemGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\JexusManager.Shared\JexusManager.Shared.csproj">
-      <Project>{e4040a45-b156-4048-b1a4-bd262ba18047}</Project>
-      <Name>JexusManager.Shared</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Microsoft.Web.Administration\Microsoft.Web.Administration.csproj">
-      <Project>{BD24AFDA-292F-4F41-BA80-C48F21D4D9F2}</Project>
-      <Name>Microsoft.Web.Administration</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Microsoft.Web.Management\Microsoft.Web.Management.csproj">
-      <Project>{17e994b0-5a31-4f79-9796-83a45e87853d}</Project>
-      <Name>Microsoft.Web.Management</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CompressionPage.resx">
-      <DependentUpon>CompressionPage.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
+    <EmbeddedResource Update="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
@@ -109,4 +82,6 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+</Project>
+
 </Project>

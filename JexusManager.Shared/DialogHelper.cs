@@ -6,7 +6,7 @@ namespace JexusManager
 {
     using JexusManager.Services;
     using Microsoft.Web.Administration;
-    using Ookii.Dialogs;
+    using Ookii.Dialogs.WinForms;
     using System;
     using System.ComponentModel;
     using System.Diagnostics;
@@ -210,12 +210,13 @@ namespace JexusManager
 
         public static void DisplayCertificate(X509Certificate2 x509Certificate2, IntPtr handle)
         {
+#if !NETCOREAPP3_0
             if (!Helper.IsRunningOnMono())
             {
                 X509Certificate2UI.DisplayCertificate(x509Certificate2, handle);
                 return;
             }
-
+#endif
             var file = GetTempFileName() + ".crt";
             var bytes = x509Certificate2.Export(X509ContentType.Cert);
             File.WriteAllBytes(file, bytes);

@@ -5,7 +5,6 @@
 namespace JexusManager.Features.Certificates.Wizards.CertificateRequestWizard
 {
     using System;
-    using System.Diagnostics;
     using System.IO;
     using System.Security.Cryptography;
 
