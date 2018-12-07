@@ -1,9 +1,11 @@
 BouncyCastle.Crypto.dll
+CertificateInstaller.dll
 CertificateInstaller.exe
 CheckBoxComboBox.dll
 Crad.Windows.Forms.Actions.dll
 Enums.NET.dll
 INIFileParser.dll
+JexusManager.dll
 JexusManager.exe
 JexusManager.Features.Access.dll
 JexusManager.Features.Asp.dll
@@ -39,7 +41,9 @@ Microsoft.Web.Management.dll
 Mono.Options.dll
 Mono.Security.dll
 Newtonsoft.Json.dll
+Newtonsoft.Json.Bson.dll
 Octokit.dll
+Ookii.Dialogs.WinForms.dll
 PeNet.Asn1.dll
 PeNet.dll
 Rollbar.dll

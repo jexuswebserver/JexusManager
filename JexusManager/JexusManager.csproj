@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CertificateInstaller\CertificateInstaller.csproj" />
     <ProjectReference Include="..\JexusManager.Features.Access\JexusManager.Features.Access.csproj" />
     <ProjectReference Include="..\JexusManager.Features.Asp\JexusManager.Features.Asp.csproj" />
     <ProjectReference Include="..\JexusManager.Features.Authentication\JexusManager.Features.Authentication.csproj" />

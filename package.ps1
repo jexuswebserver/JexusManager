@@ -1,12 +1,14 @@
-Remove-Item .\JexusManager.zip
+Get-ChildItem * -Include *.zip | Remove-Item
 $files = Get-Content .\list.txt
-if (![System.IO.Directory]::Exists(".\bin"))
+$sourceFolder = Get-Location
+$releaseFolder = ".\JexusManager\bin\Release\netcoreapp3.0"
+if (![System.IO.Directory]::Exists($releaseFolder))
 {
-    New-Item .\bin -ItemType Directory
+    New-Item $releaseFolder -ItemType Directory
 }
 
-Set-Location .\bin
-Compress-Archive $files -CompressionLevel Optimal -DestinationPath ..\JexusManager.zip
-Set-Location ..
+Set-Location $releaseFolder
+Compress-Archive $files -CompressionLevel Optimal -DestinationPath $sourceFolder\JexusManager.zip
+Set-Location $sourceFolder
 
 Write-Host "Package is ready."
