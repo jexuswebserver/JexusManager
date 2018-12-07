@@ -5,7 +5,10 @@ if(!$foundCert)
     exit
 }
 
+$toolFolder = ".\CertificateInstaller\bin\Release\netcoreapp3.0\*.*"
 $releaseFolder = ".\JexusManager\bin\Release\netcoreapp3.0"
+Copy-Item -Path $toolFolder -Destination $releaseFolder
+
 Write-Host "Certificate found. Sign the assemblies."
 $signtool = "C:\Program Files (x86)\Windows Kits\10\bin\10.0.17134.0\x64\signtool.exe"
 foreach ($line in Get-Content .\sign.txt) {

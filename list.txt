@@ -1,9 +1,13 @@
 BouncyCastle.Crypto.dll
+CertificateInstaller.deps.json
 CertificateInstaller.dll
 CertificateInstaller.dll.config
 CertificateInstaller.exe
 CertificateInstaller.pdb
+CertificateInstaller.runtimeconfig.dev.json
+CertificateInstaller.runtimeconfig.json
 CheckBoxComboBox.dll
+CheckBoxComboBox.pdb
 Crad.Windows.Forms.Actions.dll
 Enums.NET.dll
 INIFileParser.dll
