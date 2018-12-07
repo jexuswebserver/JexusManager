@@ -103,7 +103,7 @@ namespace JexusManager.Features.HttpApi
                     var start = process.StartInfo;
                     start.Verb = "runas";
                     start.FileName = "cmd";
-                    start.Arguments = $"/c \"\"{Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe")}\" /u:\"{SelectedItem.UrlPrefix}\" /d:\"{SelectedItem.SecurityDescriptor}\"";
+                    start.Arguments = $"/c \"\"{CertificateInstallerLocator.FileName}\" /u:\"{SelectedItem.UrlPrefix}\" /d:\"{SelectedItem.SecurityDescriptor}\"";
                     start.CreateNoWindow = true;
                     start.WindowStyle = ProcessWindowStyle.Hidden;
                     process.Start();

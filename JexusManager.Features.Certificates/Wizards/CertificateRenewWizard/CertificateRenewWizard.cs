@@ -11,8 +11,6 @@ namespace JexusManager.Features.Certificates.Wizards.CertificateRenewWizard
 
     using Microsoft.Web.Management.Client.Win32;
 
-    using Mono.Security.Authenticode;
-
     using Org.BouncyCastle.Asn1;
     using Org.BouncyCastle.Asn1.X509;
     using Org.BouncyCastle.Crypto.Parameters;
@@ -22,6 +20,7 @@ namespace JexusManager.Features.Certificates.Wizards.CertificateRenewWizard
     using Org.BouncyCastle.Crypto.Operators;
     using System.Reactive.Linq;
     using System.ComponentModel;
+    using Mono.Security.Authenticode;
 
     internal partial class CertificateRenewWizard : DefaultWizardForm
     {
@@ -129,7 +128,7 @@ namespace JexusManager.Features.Certificates.Wizards.CertificateRenewWizard
                                 }))))));
 
             var signing = new Asn1SignatureFactory("SHA256withRSA", keyPair.Private);
-            Pkcs10CertificationRequest kpGen = new Pkcs10CertificationRequest(signing, subjectName, keyPair.Public, attributes, keyPair.Private);
+            Pkcs10CertificationRequest kpGen = new Pkcs10CertificationRequest(signing, subjectName, keyPair.Public, attributes);
             using (var stream = new StreamWriter(_wizardData.FileName))
             {
                 stream.WriteLine(_wizardData.UseIisStyle ? "-----BEGIN NEW CERTIFICATE REQUEST-----" : "-----BEGIN CERTIFICATE REQUEST-----");
