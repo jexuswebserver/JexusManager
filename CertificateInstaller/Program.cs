@@ -19,6 +19,11 @@ namespace CertificateInstaller
     {
         private static int Main(string[] args)
         {
+            if (!PublicNativeMethods.IsProcessElevated)
+            {
+                return -2;
+            }
+
             string p12File = null;
             string p12Pwd = null;
             string friendlyName = null;

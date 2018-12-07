@@ -72,13 +72,26 @@ namespace JexusManager.Features.Certificates
                     {
                         try
                         {
-                            var keyInfo = (RSACryptoServiceProvider)_owner.SelectedItem.Certificate.PrivateKey;
-                            if (keyInfo.CspKeyContainerInfo.Exportable)
+                            if (_owner.SelectedItem.Certificate.PrivateKey is RSACng cng)
                             {
-                                result.Add(new MethodTaskItem("Export", "Export...", string.Empty).SetUsage());
-                                if (_owner.SelectedItem.Certificate.Issuer != LocalhostIssuer && _owner.SelectedItem.Certificate.Issuer != _localMachineIssuer)
+                                if (cng.Key.ExportPolicy.HasFlag(CngExportPolicies.AllowExport))
                                 {
-                                    result.Add(new MethodTaskItem("Renew", "Renew...", string.Empty).SetUsage());
+                                    result.Add(new MethodTaskItem("Export", "Export...", string.Empty).SetUsage());
+                                    if (_owner.SelectedItem.Certificate.Issuer != LocalhostIssuer && _owner.SelectedItem.Certificate.Issuer != _localMachineIssuer)
+                                    {
+                                        result.Add(new MethodTaskItem("Renew", "Renew...", string.Empty).SetUsage());
+                                    }
+                                }
+                            }
+                            else if (_owner.SelectedItem.Certificate.PrivateKey is RSACryptoServiceProvider keyInfo)
+                            {
+                                if (keyInfo.CspKeyContainerInfo.Exportable)
+                                {
+                                    result.Add(new MethodTaskItem("Export", "Export...", string.Empty).SetUsage());
+                                    if (_owner.SelectedItem.Certificate.Issuer != LocalhostIssuer && _owner.SelectedItem.Certificate.Issuer != _localMachineIssuer)
+                                    {
+                                        result.Add(new MethodTaskItem("Renew", "Renew...", string.Empty).SetUsage());
+                                    }
                                 }
                             }
                         }
@@ -298,7 +311,7 @@ namespace JexusManager.Features.Certificates
                     start.Verb = "runas";
                     start.FileName = "cmd";
                     start.Arguments =
-                        $"/c \"\"{Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe")}\" /h:\"{SelectedItem.Certificate.Thumbprint}\" /s:{(SelectedItem.Store == "Personal" ? "MY" : "WebHosting")}\"";
+                        $"/c \"\"{CertificateInstallerLocator.FileName}\" /h:\"{SelectedItem.Certificate.Thumbprint}\" /s:{(SelectedItem.Store == "Personal" ? "MY" : "WebHosting")}\"";
                     start.CreateNoWindow = true;
                     start.WindowStyle = ProcessWindowStyle.Hidden;
                     process.Start();

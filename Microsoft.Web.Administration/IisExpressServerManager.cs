@@ -98,7 +98,7 @@ namespace Microsoft.Web.Administration
                         : null;
                     start.FileName = "cmd";
                     start.Arguments =
-                        $"/c \"\"{Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe")}\" /config:\"{site.FileContext.FileName}\" /siteId:{site.Id}\"";
+                        $"/c \"\"{CertificateInstallerLocator.FileName}\" /config:\"{site.FileContext.FileName}\" /siteId:{site.Id}\"";
                     start.CreateNoWindow = true;
                     start.WindowStyle = ProcessWindowStyle.Hidden;
                     process.Start();
@@ -171,7 +171,7 @@ namespace Microsoft.Web.Administration
                 start.FileName = "cmd";
                 var extra = restart ? "/r" : string.Empty;
                 start.Arguments =
-                    $"/c \"\"{Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe")}\" /launcher:\"{fileName}\" /config:\"{site.FileContext.FileName}\" /siteId:{site.Id} /resultFile:\"{temp}\"\" {extra}";
+                    $"/c \"\"{CertificateInstallerLocator.FileName}\" /launcher:\"{fileName}\" /config:\"{site.FileContext.FileName}\" /siteId:{site.Id} /resultFile:\"{temp}\"\" {extra}";
                 start.CreateNoWindow = true;
                 start.WindowStyle = ProcessWindowStyle.Hidden;
                 InjectEnvironmentVariables(site, start);
@@ -297,7 +297,7 @@ namespace Microsoft.Web.Administration
                         : null;
                     start.FileName = "cmd";
                     start.Arguments =
-                        $"/c \"\"{Path.Combine(Environment.CurrentDirectory, "certificateinstaller.exe")}\" /k /config:\"{site.FileContext.FileName}\" /siteId:{site.Id}\"";
+                        $"/c \"\"{CertificateInstallerLocator.FileName}\" /k /config:\"{site.FileContext.FileName}\" /siteId:{site.Id}\"";
                     start.CreateNoWindow = true;
                     start.WindowStyle = ProcessWindowStyle.Hidden;
                     process.Start();

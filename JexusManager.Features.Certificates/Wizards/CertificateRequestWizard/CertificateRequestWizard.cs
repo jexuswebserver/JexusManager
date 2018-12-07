@@ -20,8 +20,8 @@ namespace JexusManager.Features.Certificates.Wizards.CertificateRequestWizard
     using Org.BouncyCastle.Pkcs;
     using Org.BouncyCastle.Security;
     using Properties;
-    using Mono.Security.Authenticode;
     using Org.BouncyCastle.Crypto.Operators;
+    using Mono.Security.Authenticode;
 
     internal partial class CertificateRequestWizard : DefaultWizardForm
     {
@@ -138,7 +138,7 @@ namespace JexusManager.Features.Certificates.Wizards.CertificateRequestWizard
                                 }))))));
 
             var signing = new Asn1SignatureFactory("SHA256withRSA", keyPair.Private);
-            Pkcs10CertificationRequest kpGen = new Pkcs10CertificationRequest(signing, subjectName, keyPair.Public, attributes, keyPair.Private);
+            Pkcs10CertificationRequest kpGen = new Pkcs10CertificationRequest(signing, subjectName, keyPair.Public, attributes);
             using (var stream = new StreamWriter(_wizardData.FileName))
             {
                 stream.WriteLine(_wizardData.UseIisStyle ? "-----BEGIN NEW CERTIFICATE REQUEST-----" : "-----BEGIN CERTIFICATE REQUEST-----");

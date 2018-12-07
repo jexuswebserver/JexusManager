@@ -46,6 +46,8 @@
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>JexusManager.snk</AssemblyOriginatorKeyFile>
+    <RootNamespace>JexusManager</RootNamespace>
+    <ApplicationIcon>iis.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>iis.ico</ApplicationIcon>
@@ -85,6 +87,36 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Mono.Options" Condition=" '$(OS)' != 'Windows_NT' " />
+    <ProjectReference Include="..\JexusManager.Features.Access\JexusManager.Features.Access.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.Asp\JexusManager.Features.Asp.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.Authentication\JexusManager.Features.Authentication.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.Authorization\JexusManager.Features.Authorization.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.Caching\JexusManager.Features.Caching.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.Certificates\JexusManager.Features.Certificates.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.Cgi\JexusManager.Features.Cgi.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.Compression\JexusManager.Features.Compression.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.DefaultDocument\JexusManager.Features.DefaultDocument.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.DirectoryBrowse\JexusManager.Features.DirectoryBrowse.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.FastCgi\JexusManager.Features.FastCgi.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.Handlers\JexusManager.Features.Handlers.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.HttpApi\JexusManager.Features.HttpApi.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.HttpErrors\JexusManager.Features.HttpErrors.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.HttpRedirect\JexusManager.Features.HttpRedirect.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.IpSecurity\JexusManager.Features.IpSecurity.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.IsapiCgiRestriction\JexusManager.Features.IsapiCgiRestriction.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.IsapiFilters\JexusManager.Features.IsapiFilters.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.Jexus\JexusManager.Features.Jexus.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.Logging\JexusManager.Features.Logging.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.MimeMap\JexusManager.Features.MimeMap.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.Modules\JexusManager.Features.Modules.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.RequestFiltering\JexusManager.Features.RequestFiltering.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.ResponseHeaders\JexusManager.Features.ResponseHeaders.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.Rewrite\JexusManager.Features.Rewrite.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.TraceFailedRequests\JexusManager.Features.TraceFailedRequests.csproj" />
+    <ProjectReference Include="..\JexusManager.Shared\JexusManager.Shared.csproj" />
+    <ProjectReference Include="..\lib\Vista.Controls.BreadcrumbBar\Vista.Controls.BreadcrumbBar.csproj" />
+    <ProjectReference Include="..\Microsoft.Web.Administration\Microsoft.Web.Administration.csproj" />
+    <ProjectReference Include="..\Microsoft.Web.Management\Microsoft.Web.Management.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BindingExtensions.cs" />
