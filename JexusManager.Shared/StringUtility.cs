@@ -80,7 +80,6 @@ namespace JexusManager
             {
                 // IMPORTANT: wildcard certificate.
 #if NETCOREAPP3_0
-
                 return host.IsLike(name);
 #else
                 return LikeOperator.LikeString(host, name, Microsoft.VisualBasic.CompareMethod.Text);

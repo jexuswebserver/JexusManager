@@ -309,6 +309,7 @@ namespace JexusManager.Features.Certificates
                 {
                     var start = process.StartInfo;
                     start.Verb = "runas";
+                    start.UseShellExecute = true;
                     start.FileName = "cmd";
                     start.Arguments =
                         $"/c \"\"{CertificateInstallerLocator.FileName}\" /h:\"{SelectedItem.Certificate.Thumbprint}\" /s:{(SelectedItem.Store == "Personal" ? "MY" : "WebHosting")}\"";
