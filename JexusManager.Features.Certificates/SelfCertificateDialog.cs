@@ -165,6 +165,7 @@ namespace JexusManager.Features.Certificates
                                 // add certificate
                                 var start = process.StartInfo;
                                 start.Verb = "runas";
+                                start.UseShellExecute = true;
                                 start.FileName = "cmd";
                                 start.Arguments = $"/c \"\"{CertificateInstallerLocator.FileName}\" /f:\"{p12File}\" /p:{p12pwd} /n:\"{txtName.Text}\" /s:{(cbStore.SelectedIndex == 0 ? "MY" : "WebHosting")}\"";
                                 start.CreateNoWindow = true;

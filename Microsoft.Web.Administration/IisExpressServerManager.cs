@@ -96,6 +96,7 @@ namespace Microsoft.Web.Administration
                     start.Verb = site.Bindings.ElevationRequired && !PublicNativeMethods.IsProcessElevated
                         ? "runas"
                         : null;
+                    start.UseShellExecute = true;
                     start.FileName = "cmd";
                     start.Arguments =
                         $"/c \"\"{CertificateInstallerLocator.FileName}\" /config:\"{site.FileContext.FileName}\" /siteId:{site.Id}\"";
@@ -168,6 +169,7 @@ namespace Microsoft.Web.Administration
                 start.Verb = site.Bindings.ElevationRequired && !PublicNativeMethods.IsProcessElevated
                     ? "runas"
                     : null;
+                start.UseShellExecute = true;
                 start.FileName = "cmd";
                 var extra = restart ? "/r" : string.Empty;
                 start.Arguments =
@@ -295,6 +297,7 @@ namespace Microsoft.Web.Administration
                     start.Verb = site.Bindings.ElevationRequired && !PublicNativeMethods.IsProcessElevated
                         ? "runas"
                         : null;
+                    start.UseShellExecute = true;
                     start.FileName = "cmd";
                     start.Arguments =
                         $"/c \"\"{CertificateInstallerLocator.FileName}\" /k /config:\"{site.FileContext.FileName}\" /siteId:{site.Id}\"";
