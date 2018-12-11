@@ -219,14 +219,7 @@ namespace JexusManager
             var file = GetTempFileName() + ".crt";
             var bytes = x509Certificate2.Export(X509ContentType.Cert);
             File.WriteAllBytes(file, bytes);
-            if (Helper.IsRunningOnMono())
-            {
-                Process.Start(file);
-            }
-            else
-            {
-                Process.Start("explorer.exe", file);
-            }
+            Process.Start(file);
         }
 
         public static void Explore(string folder)
@@ -376,7 +369,11 @@ namespace JexusManager
         {
             try
             {
-                Process.Start(url);
+                using (var process = new Process())
+                {
+                    process.StartInfo = new ProcessStartInfo { FileName = url, UseShellExecute = true };
+                    process.Start();
+                }
             }
             catch (Win32Exception)
             {
