@@ -191,13 +191,13 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.WebApi.Client">
-      <Version>5.2.6</Version>
+      <Version>5.2.7</Version>
     </PackageReference>
     <PackageReference Include="Rollbar">
-      <Version>1.5.6</Version>
+      <Version>2.0.1</Version>
     </PackageReference>
     <PackageReference Include="StrongNamer">
-      <Version>0.0.7</Version>
+      <Version>0.0.8</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
