@@ -63,7 +63,7 @@ namespace Tests
                 sw1.Close();
                 orig.Close();
                 diffGram.Close();
-                Process.Start("test.htm");
+                Process.Start("explorer.exe", "test.htm");
             }
 
             Assert.True(result);
