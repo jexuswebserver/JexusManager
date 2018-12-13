@@ -366,7 +366,7 @@ namespace JexusManager.Features.Main
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var site = service.Site;
-            var path = site.PhysicalPath.ExpandIisExpressEnvironmentVariables();
+            var path = site.PhysicalPath.ExpandIisExpressEnvironmentVariables(site.Applications[0].GetActualExecutable());
             if (!string.IsNullOrWhiteSpace(path))
             {
                 NativeMethods.ShowFileProperties(path);
@@ -377,7 +377,7 @@ namespace JexusManager.Features.Main
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var site = service.Site;
-            var path = site.PhysicalPath.ExpandIisExpressEnvironmentVariables();
+            var path = site.PhysicalPath.ExpandIisExpressEnvironmentVariables(site.Applications[0].GetActualExecutable());
             if (!string.IsNullOrWhiteSpace(path))
             {
                 DialogHelper.Explore(path);

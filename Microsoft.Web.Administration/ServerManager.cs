@@ -77,9 +77,9 @@ namespace Microsoft.Web.Administration
             FileName = fileName;
         }
 
-        internal virtual bool Verify(string path)
+        internal virtual bool Verify(string path, string executable)
         {
-            return Directory.Exists(path.ExpandIisExpressEnvironmentVariables());
+            return Directory.Exists(path.ExpandIisExpressEnvironmentVariables(executable));
         }
         
         private void Initialize()

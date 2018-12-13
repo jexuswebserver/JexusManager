@@ -65,7 +65,7 @@ namespace JexusManager.Features.TraceFailedRequests
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    DialogHelper.ShowBrowseDialog(txtPath);
+                    DialogHelper.ShowBrowseDialog(txtPath, null);
                 }));
         }
 

@@ -41,7 +41,7 @@ namespace JexusManager.Features.Main
                         Warn("IMPORTANT: This report might contain confidential information. Mask such before sharing to others.");
                         Warn("-----");
 
-                        var root = site.PhysicalPath.ExpandIisExpressEnvironmentVariables();
+                        var root = site.PhysicalPath.ExpandIisExpressEnvironmentVariables(site.Applications[0].GetActualExecutable());
                         if (string.IsNullOrWhiteSpace(root))
                         {
                             Error("Invalid site root directory is detected.");
@@ -111,7 +111,7 @@ namespace JexusManager.Features.Main
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    var fileName = DialogHelper.ShowSaveFileDialog(null, "Text Files|*.txt|All Files|*.*");
+                    var fileName = DialogHelper.ShowSaveFileDialog(null, "Text Files|*.txt|All Files|*.*", site.Applications[0].GetActualExecutable());
                     if (string.IsNullOrEmpty(fileName))
                     {
                         return;

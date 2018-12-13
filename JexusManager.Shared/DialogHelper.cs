@@ -78,11 +78,11 @@ namespace JexusManager
                         "UNMAPPED_REMOTE_USER",
                         "URL"
                             };
-        public static void ShowBrowseDialog(TextBox textBox)
+        public static void ShowBrowseDialog(TextBox textBox, string executable)
         {
             var dialog = new VistaFolderBrowserDialog
             {
-                SelectedPath = textBox.Text.ExpandIisExpressEnvironmentVariables()
+                SelectedPath = textBox.Text.ExpandIisExpressEnvironmentVariables(executable)
             };
             try
             {
@@ -98,7 +98,7 @@ namespace JexusManager
                 if (ex.StackTrace.Contains("Ookii.Dialogs.VistaFolderBrowserDialog.RunDialog(System.IntPtr hwndOwner)"))
                 {
                     // IMPORTANT: use a workaround to suppress failure.
-                    var fallback = new FolderBrowserDialog { SelectedPath = textBox.Text.ExpandIisExpressEnvironmentVariables() };
+                    var fallback = new FolderBrowserDialog { SelectedPath = textBox.Text.ExpandIisExpressEnvironmentVariables(executable) };
                     if (fallback.ShowDialog() == DialogResult.Cancel)
                     {
                         return;
@@ -109,9 +109,9 @@ namespace JexusManager
             }
         }
 
-        public static void ShowOpenFileDialog(TextBox textBox, string filter)
+        public static void ShowOpenFileDialog(TextBox textBox, string filter, string executable)
         {
-            var initial = textBox.Text.ExpandIisExpressEnvironmentVariables();
+            var initial = textBox.Text.ExpandIisExpressEnvironmentVariables(executable);
             string initialDirectory;
             try
             {
@@ -150,9 +150,9 @@ namespace JexusManager
             textBox.Text = dialog.FileName;
         }
 
-        public static string ShowSaveFileDialog(TextBox textBox, string filter)
+        public static string ShowSaveFileDialog(TextBox textBox, string filter, string executable)
         {
-            var initial = textBox?.Text.ExpandIisExpressEnvironmentVariables();
+            var initial = textBox?.Text.ExpandIisExpressEnvironmentVariables(executable);
             string initialDirectory;
             try
             {

@@ -40,7 +40,7 @@ namespace JexusManager.Features.Certificates.Wizards.CertificateRenewWizard
 
         private void btnBrowse_Click(object sender, EventArgs e)
         {
-            DialogHelper.ShowSaveFileDialog(txtPath, "*.txt|*.txt|*.*|*.*");
+            DialogHelper.ShowSaveFileDialog(txtPath, "*.txt|*.txt|*.*|*.*", null);
         }
 
         private void FileStyle_Changed(object sender, EventArgs e)

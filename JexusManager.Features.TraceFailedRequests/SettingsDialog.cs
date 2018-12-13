@@ -70,7 +70,7 @@ namespace JexusManager.Features.TraceFailedRequests
 
         private void btnBrowse_Click(object sender, EventArgs e)
         {
-            DialogHelper.ShowBrowseDialog(txtDirectory);
+            DialogHelper.ShowBrowseDialog(txtDirectory, null);
         }
     }
 }

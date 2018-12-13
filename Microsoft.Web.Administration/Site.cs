@@ -149,7 +149,7 @@ namespace Microsoft.Web.Administration
         {
             if (Server.Mode != WorkingMode.Jexus)
             {
-                var root = PhysicalPath.ExpandIisExpressEnvironmentVariables();
+                var root = PhysicalPath.ExpandIisExpressEnvironmentVariables(this.Applications[0].GetActualExecutable());
                 if (Directory.Exists(root))
                 {
                     var result = new DirectoryInfo(root).GetDirectories();

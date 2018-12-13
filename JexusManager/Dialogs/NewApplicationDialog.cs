@@ -64,7 +64,7 @@ namespace JexusManager.Dialogs
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    DialogHelper.ShowBrowseDialog(txtPhysicalPath);
+                    DialogHelper.ShowBrowseDialog(txtPhysicalPath, null);
                 }));
 
             container.Add(
@@ -100,7 +100,7 @@ namespace JexusManager.Dialogs
                         }
                     }
 
-                    if (!_site.Server.Verify(txtPhysicalPath.Text))
+                    if (!_site.Server.Verify(txtPhysicalPath.Text, site.Applications[0].GetActualExecutable()))
                     {
                         MessageBox.Show("The specified directory does not exist on the server.", Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                         return;

@@ -43,7 +43,7 @@ namespace JexusManager.Features.Certificates
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    DialogHelper.ShowSaveFileDialog(txtPath, "*.pfx|*.pfx|*.*|*.*");
+                    DialogHelper.ShowSaveFileDialog(txtPath, "*.pfx|*.pfx|*.*|*.*", null);
                 }));
 
             container.Add(

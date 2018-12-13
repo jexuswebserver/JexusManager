@@ -80,7 +80,7 @@ namespace JexusManager.Features.Compression
 
         private void btnBrowse_Click(object sender, EventArgs e)
         {
-            DialogHelper.ShowBrowseDialog(txtPath);
+            DialogHelper.ShowBrowseDialog(txtPath, null);
             _feature.Directory = txtPath.Text;
             InformChanges();
         }

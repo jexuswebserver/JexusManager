@@ -156,7 +156,8 @@ namespace JexusManager.Wizards.ConnectionWizard
                 txtName,
                 wizardData.UseVisualStudio
                     ? "Solution Files|*.sln|All Files|*.*"
-                    : "Config Files|*.config|All Files|*.*");
+                    : "Config Files|*.config|All Files|*.*",
+                null);
         }
     }
 }

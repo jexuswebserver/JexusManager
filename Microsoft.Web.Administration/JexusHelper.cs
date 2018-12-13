@@ -162,7 +162,7 @@ namespace Microsoft.Web.Administration
             }
         }
 
-        internal override bool Verify(string path)
+        internal override bool Verify(string path, string executable)
         {
             return AsyncHelper.RunSync(() => VerifyAsync(path));
         }

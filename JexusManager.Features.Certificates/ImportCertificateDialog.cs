@@ -53,7 +53,7 @@ namespace JexusManager.Features.Certificates
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    DialogHelper.ShowOpenFileDialog(txtFile, ".pfx|*.pfx|*.*|*.*");
+                    DialogHelper.ShowOpenFileDialog(txtFile, ".pfx|*.pfx|*.*|*.*", null);
                 }));
 
             container.Add(

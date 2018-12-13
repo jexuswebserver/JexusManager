@@ -67,7 +67,7 @@ namespace Microsoft.Web.Administration
                     $"Filename: \\\\?\\{_server.FileName}\r\nLine number: {_lineNumber}\r\nError: Unrecognized configuration path 'MACHINE/WEBROOT/APPHOST/{Location}'\r\n\r\n");
             }
 
-            var file = FileName.ExpandIisExpressEnvironmentVariables();
+            var file = FileName.ExpandIisExpressEnvironmentVariables(null);
             if (!File.Exists(file))
             {
                 if (AppHost)
@@ -627,7 +627,7 @@ namespace Microsoft.Web.Administration
                 return Root;
             }
 
-            var file = FileName.ExpandIisExpressEnvironmentVariables();
+            var file = FileName.ExpandIisExpressEnvironmentVariables(null);
             var directory = Path.GetDirectoryName(file);
             if (!Directory.Exists(directory))
             {

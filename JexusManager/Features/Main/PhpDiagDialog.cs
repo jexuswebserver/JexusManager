@@ -304,7 +304,7 @@ namespace JexusManager.Features.Main
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    var fileName = DialogHelper.ShowSaveFileDialog(null, "Text Files|*.txt|All Files|*.*");
+                    var fileName = DialogHelper.ShowSaveFileDialog(null, "Text Files|*.txt|All Files|*.*", null);
                     if (string.IsNullOrEmpty(fileName))
                     {
                         return;

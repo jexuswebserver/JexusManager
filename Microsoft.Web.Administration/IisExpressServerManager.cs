@@ -20,6 +20,8 @@ namespace Microsoft.Web.Administration
     {
         public Version Version { get; }
 
+        public string PrimaryExecutable { get; }
+
         public override bool SupportsSni => Version >=  Version.Parse("8.0") && Environment.OSVersion.Version >= Version.Parse("6.2");
 
         public override bool SupportsWildcard => Version >=  Version.Parse("10.0") && Environment.OSVersion.Version >= Version.Parse("10.0");
@@ -28,23 +30,7 @@ namespace Microsoft.Web.Administration
         {
             get
             {
-                var directory = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
-                    "IIS Express",
-                    "config",
-                    "schema");
-                if (Directory.Exists(directory))
-                {
-                    return true;
-                }
-
-                // IMPORTANT: for x86 IIS 7 Express
-                var x86 = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
-                    "IIS Express",
-                    "config",
-                    "schema");
-                return Directory.Exists(x86);
+                return GetPrimaryExecutable() != null;
             }
         }
 
@@ -57,27 +43,36 @@ namespace Microsoft.Web.Administration
             : base(readOnly, applicationHostConfigurationPath)
         {
             Mode = WorkingMode.IisExpress;
+            PrimaryExecutable = GetPrimaryExecutable();
             Version = GetIisExpressVersion();
         }
 
-        private static Version GetIisExpressVersion()
+        private static string GetPrimaryExecutable()
         {
-            var fileName =
-                Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
-                    "IIS Express",
-                    "iisexpress.exe");
-            if (!File.Exists(fileName))
+            var directory = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
+                "IIS Express");
+            if (!Directory.Exists(directory))
             {
-                fileName = Path.Combine(
+                // IMPORTANT: for x86 IIS 7 Express
+                directory = Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
-                    "IIS Express",
-                    "iisexpress.exe");
+                    "IIS Express");
+                if (!Directory.Exists(directory))
+                {
+                    return null;
+                }
             }
 
-            if (File.Exists(fileName))
+            var fileName = Path.Combine(directory, "iisexpress.exe");
+            return File.Exists(fileName) ? fileName : null;
+        }
+
+        private Version GetIisExpressVersion()
+        {
+            if (PrimaryExecutable != null)
             {
-                if (Version.TryParse(FileVersionInfo.GetVersionInfo(fileName).ProductVersion, out Version result))
+                if (Version.TryParse(FileVersionInfo.GetVersionInfo(PrimaryExecutable).ProductVersion, out Version result))
                 {
                     return result;
                 }
@@ -144,24 +139,7 @@ namespace Microsoft.Web.Administration
 
         private void StartInner(Site site, bool restart)
         {
-            var name = site.Applications[0].ApplicationPoolName;
-            var pool = ApplicationPools.FirstOrDefault(item => item.Name == name);
-            var fileName =
-                Path.Combine(
-                    Environment.GetFolderPath(
-                        pool != null && pool.Enable32BitAppOnWin64
-                            ? Environment.SpecialFolder.ProgramFilesX86
-                            : Environment.SpecialFolder.ProgramFiles),
-                    "IIS Express",
-                    "iisexpress.exe");
-            if (!File.Exists(fileName))
-            {
-                fileName = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
-                    "IIS Express",
-                    "iisexpress.exe");
-            }
-
+            var actualExecutable = site.Applications[0].GetActualExecutable();
             var temp = Path.GetTempFileName();
             using (var process = new Process())
             {
@@ -173,10 +151,10 @@ namespace Microsoft.Web.Administration
                 start.FileName = "cmd";
                 var extra = restart ? "/r" : string.Empty;
                 start.Arguments =
-                    $"/c \"\"{CertificateInstallerLocator.FileName}\" /launcher:\"{fileName}\" /config:\"{site.FileContext.FileName}\" /siteId:{site.Id} /resultFile:\"{temp}\"\" {extra}";
+                    $"/c \"\"{CertificateInstallerLocator.FileName}\" /launcher:\"{actualExecutable}\" /config:\"{site.FileContext.FileName}\" /siteId:{site.Id} /resultFile:\"{temp}\"\" {extra}";
                 start.CreateNoWindow = true;
                 start.WindowStyle = ProcessWindowStyle.Hidden;
-                InjectEnvironmentVariables(site, start);
+                InjectEnvironmentVariables(site, start, actualExecutable);
 
                 try
                 {
@@ -215,10 +193,10 @@ namespace Microsoft.Web.Administration
             }
         }
 
-        private static void InjectEnvironmentVariables(Site site, ProcessStartInfo startInfo)
+        private static void InjectEnvironmentVariables(Site site, ProcessStartInfo startInfo, string actualExecutable)
         {
             // TODO: make this site extension method.
-            var root = site.PhysicalPath.ExpandIisExpressEnvironmentVariables();
+            var root = site.PhysicalPath.ExpandIisExpressEnvironmentVariables(actualExecutable);
             string[] projects;
             try
             {

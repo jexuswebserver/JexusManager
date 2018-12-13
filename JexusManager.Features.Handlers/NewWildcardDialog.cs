@@ -79,7 +79,7 @@ namespace JexusManager.Features.Handlers
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    DialogHelper.ShowOpenFileDialog(txtExecutable, "(*.dll)|*.dll|(*.exe)|*.exe");
+                    DialogHelper.ShowOpenFileDialog(txtExecutable, "(*.dll)|*.dll|(*.exe)|*.exe", null);
                 }));
         }
 

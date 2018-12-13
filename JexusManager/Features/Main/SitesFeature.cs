@@ -465,7 +465,7 @@ namespace JexusManager.Features.Main
 
         private void Permissions()
         {
-            var path = SelectedItem.PhysicalPath.ExpandIisExpressEnvironmentVariables();
+            var path = SelectedItem.PhysicalPath.ExpandIisExpressEnvironmentVariables(SelectedItem.Applications[0].GetActualExecutable());
             if (!string.IsNullOrWhiteSpace(path))
             {
                 NativeMethods.ShowFileProperties(path);
@@ -474,7 +474,7 @@ namespace JexusManager.Features.Main
 
         private void Explore()
         {
-            var path = SelectedItem.PhysicalPath.ExpandIisExpressEnvironmentVariables();
+            var path = SelectedItem.PhysicalPath.ExpandIisExpressEnvironmentVariables(SelectedItem.Applications[0].GetActualExecutable());
             if (!string.IsNullOrWhiteSpace(path))
             {
                 DialogHelper.Explore(path);

@@ -187,15 +187,17 @@ namespace JexusManager.Features.Logging
 
         private void View()
         {
-            var path = Directory.ExpandIisExpressEnvironmentVariables();
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+            var path = Directory.ExpandIisExpressEnvironmentVariables(
+                service.Server != null ? null : service.Application.GetActualExecutable());
             if (System.IO.Directory.Exists(path))
             {
                 DialogHelper.ProcessStart(path);
                 return;
             }
 
-            var service = (IManagementUIService)GetService(typeof(IManagementUIService));
-            service.ShowMessage("The specific log directory is invalid.", Name, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            var ui = (IManagementUIService)GetService(typeof(IManagementUIService));
+            ui.ShowMessage("The specific log directory is invalid.", Name, MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
         internal bool SelectFields()
