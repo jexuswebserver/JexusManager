@@ -29,7 +29,7 @@ namespace JexusManager.Features.HttpErrors
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    DialogHelper.ShowBrowseDialog(txtDirectory);
+                    DialogHelper.ShowBrowseDialog(txtDirectory, null);
                 }));
 
             container.Add(

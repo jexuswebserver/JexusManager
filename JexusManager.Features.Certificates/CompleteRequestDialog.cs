@@ -147,7 +147,7 @@ namespace JexusManager.Features.Certificates
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    DialogHelper.ShowOpenFileDialog(txtPath, "*.cer|*.cer|*.*|*.*");
+                    DialogHelper.ShowOpenFileDialog(txtPath, "*.cer|*.cer|*.*|*.*", null);
                 }));
 
             container.Add(

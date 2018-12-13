@@ -220,13 +220,13 @@ namespace JexusManager.Features.Main
         private void Permissions()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            NativeMethods.ShowFileProperties(service.Application.PhysicalPath.ExpandIisExpressEnvironmentVariables());
+            NativeMethods.ShowFileProperties(service.Application.PhysicalPath.ExpandIisExpressEnvironmentVariables(service.Application.GetActualExecutable()));
         }
 
         private void Explore()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            DialogHelper.Explore(service.Application.PhysicalPath.ExpandIisExpressEnvironmentVariables());
+            DialogHelper.Explore(service.Application.PhysicalPath.ExpandIisExpressEnvironmentVariables(service.Application.GetActualExecutable()));
         }
 
         public IEnumerable<Binding> SiteBindings

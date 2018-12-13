@@ -180,7 +180,7 @@ namespace JexusManager.Features.Main
         private void Explore()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            DialogHelper.Explore(service.PhysicalDirectory.FullName.ExpandIisExpressEnvironmentVariables());
+            DialogHelper.Explore(service.PhysicalDirectory.FullName.ExpandIisExpressEnvironmentVariables(service.PhysicalDirectory.Application.GetActualExecutable()));
         }
 
         public IEnumerable<Binding> SiteBindings

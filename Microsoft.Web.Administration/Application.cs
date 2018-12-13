@@ -81,7 +81,7 @@ namespace Microsoft.Web.Administration
             {
                 if (child.Path == VirtualDirectory.RootPath)
                 {
-                    root = child.PhysicalPath.ExpandIisExpressEnvironmentVariables();
+                    root = child.PhysicalPath.ExpandIisExpressEnvironmentVariables(this.GetActualExecutable());
                     break;
                 }
             }
@@ -98,7 +98,7 @@ namespace Microsoft.Web.Administration
                 {
                     var physicalPath = Server.GetPhysicalPath(root);
                     var siteFile = System.IO.Path.Combine(physicalPath,
-                        "web.config").ExpandIisExpressEnvironmentVariables();
+                        "web.config").ExpandIisExpressEnvironmentVariables(this.GetActualExecutable());
                     Server.CleanSiteFile(siteFile);
 
                     // TODO: test ACL to set ReadOnly.

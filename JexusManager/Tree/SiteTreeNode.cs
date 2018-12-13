@@ -122,7 +122,7 @@ namespace JexusManager.Tree
             }
 
             var rootApp = Site.Applications[0];
-            var rootFolder = rootApp.PhysicalPath.ExpandIisExpressEnvironmentVariables();
+            var rootFolder = rootApp.PhysicalPath.ExpandIisExpressEnvironmentVariables(rootApp.GetActualExecutable());
             LoadChildren(rootApp, 0, rootFolder, PathToSite, mainForm.PhysicalDirectoryMenu,
                 mainForm.VirtualDirectoryMenu, mainForm.ApplicationMenu);
         }
@@ -155,7 +155,7 @@ namespace JexusManager.Tree
         {
             get
             {
-                return Site.PhysicalPath.ExpandIisExpressEnvironmentVariables();
+                return Site.PhysicalPath.ExpandIisExpressEnvironmentVariables(Site.Applications[0].GetActualExecutable());
             }
         }
 

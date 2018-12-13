@@ -47,7 +47,7 @@ namespace JexusManager.Tree
         {
             get
             {
-                return Application.PhysicalPath.ExpandIisExpressEnvironmentVariables();
+                return Application.PhysicalPath.ExpandIisExpressEnvironmentVariables(Application.GetActualExecutable());
             }
         }
 
@@ -120,7 +120,7 @@ namespace JexusManager.Tree
 
             _loaded = true;
             Nodes.Clear();
-            var rootFolder = Application.PhysicalPath.ExpandIisExpressEnvironmentVariables();
+            var rootFolder = Application.PhysicalPath.ExpandIisExpressEnvironmentVariables(Application.GetActualExecutable());
             var rootLevel = GetLevel(Application.Path);
             LoadChildren(Application, rootLevel, rootFolder, Application.Path, mainForm.PhysicalDirectoryMenu, mainForm.VirtualDirectoryMenu, mainForm.ApplicationMenu);
         }

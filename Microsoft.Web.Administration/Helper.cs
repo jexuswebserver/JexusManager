@@ -5,6 +5,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 
 namespace Microsoft.Web.Administration
 {
@@ -31,16 +32,43 @@ namespace Microsoft.Web.Administration
                 "CONFIG",
                 "web.config");
 
-        public static string ExpandIisExpressEnvironmentVariables(this string path)
+        public static string ExpandIisExpressEnvironmentVariables(this string path, string executable)
         {
-            // TODO: IIS_BIN should check pool bitness.
+            var binFolder = executable == null
+                ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "IIS Express")
+                : Path.GetDirectoryName(executable);
             return Environment.ExpandEnvironmentVariables(path.Replace("%IIS_SITES_HOME%",
                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "My Web Sites"))
                 .Replace("%IIS_USER_HOME%",
                     Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "IISExpress"))
-                .Replace("%IIS_BIN%",
-                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "IIS Express"))
-                );
+                .Replace("%IIS_BIN%", binFolder));
+        }
+
+        public static string GetActualExecutable(this Application application)
+        {
+            if (application.Server.Mode != WorkingMode.IisExpress)
+            {
+                return null;
+            }
+
+            var name = application.ApplicationPoolName;
+            var pool = application.Server.ApplicationPools.FirstOrDefault(item => item.Name == name);
+            var result = Path.Combine(
+                Environment.GetFolderPath(
+                    pool != null && pool.Enable32BitAppOnWin64
+                        ? Environment.SpecialFolder.ProgramFilesX86
+                        : Environment.SpecialFolder.ProgramFiles),
+                "IIS Express",
+                "iisexpress.exe");
+            if (!File.Exists(result))
+            {
+                result = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
+                    "IIS Express",
+                    "iisexpress.exe");
+            }
+
+            return result;
         }
 
         public static bool IsRoot(this Application application)
