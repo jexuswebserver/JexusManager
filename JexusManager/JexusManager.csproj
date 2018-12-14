@@ -49,6 +49,11 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>iis.ico</ApplicationIcon>
+    <NeutralLanguage>en</NeutralLanguage>
+    <AssemblyVersion>13.0.0.0</AssemblyVersion>
+    <FileVersion>13.0.0.0</FileVersion>
+    <Authors>LeXtudio</Authors>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
