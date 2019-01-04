@@ -2,19 +2,19 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
-using System.IO;
-using System.Reflection;
-using System.Xml.Linq;
-using System.Xml.XPath;
-
 using Microsoft.Web.Administration;
 using Xunit;
 
 namespace Tests
 {
+    using System;
+    using System.IO;
+    using System.Reflection;
+    using System.Xml.Linq;
+    using System.Xml.XPath;
+
     /// <summary>
-    /// Jexus version.
+    /// IIS version.
     /// </summary>
     public class ServerManagerTestFixture
     {
@@ -36,7 +36,11 @@ namespace Tests
             TestHelper.FixPhysicalPathMono(Current);
             File.Delete(TestHelper.GetSiteConfig(directoryName));
 
+#if IIS
+            var server = new ServerManager(Current);
+#else
             var server = new IisExpressServerManager(Current);
+#endif
             TestCases.TestIisExpressMissingWebsiteConfig(server);
 
             {
@@ -49,8 +53,8 @@ namespace Tests
                 }
 
                 var pool = root.XPathSelectElement("/configuration/system.applicationHost/applicationPools/add[@name='Clr4IntegratedAppPool']");
-                pool?.SetAttributeValue("managedPipelineMode", "Integrated");
-
+                pool.SetAttributeValue("managedPipelineMode", "Integrated");
+#if !IIS
                 var windows = root.XPathSelectElement("/configuration/location[@path='WebSite2']/system.webServer/security/authentication/windowsAuthentication");
                 windows?.SetAttributeValue("enabled", true);
 
@@ -61,6 +65,7 @@ namespace Tests
 
                 var extended = windows.Element("extendedProtection");
                 extended?.SetAttributeValue("flags", "None");
+#endif
                 file.Save(Current);
             }
 
@@ -77,7 +82,7 @@ namespace Tests
                 var staticContent = root.XPathSelectElement("/configuration/system.webServer/staticContent");
                 staticContent?.Remove();
                 top.AddBeforeSelf(staticContent);
-
+#if !IIS
                 var rewrite = root.XPathSelectElement("/configuration/system.webServer/rewrite");
                 var urlCompression = root.XPathSelectElement("/configuration/system.webServer/urlCompression");
                 urlCompression.Remove();
@@ -99,7 +104,7 @@ namespace Tests
                 var remove = new XElement("remove",
                     new XAttribute("value", "index.html"));
                 clear?.AddAfterSelf(remove);
-
+#endif
                 file.Save(TestHelper.GetSiteConfig(directoryName));
             }
 
@@ -126,7 +131,11 @@ namespace Tests
             TestHelper.FixPhysicalPathMono(Current);
             TestHelper.CopySiteConfig(directoryName, "original.config");
 
+#if IIS
+            var server = new ServerManager(Current);
+#else
             var server = new IisExpressServerManager(Current);
+#endif
             TestCases.TestIisExpress(server, Current);
 
             {
@@ -139,10 +148,10 @@ namespace Tests
                 }
 
                 var pool = root.XPathSelectElement("/configuration/system.applicationHost/applicationPools/add[@name='Clr4IntegratedAppPool']");
-                pool?.SetAttributeValue("managedPipelineMode", "Integrated");
+                pool.SetAttributeValue("managedPipelineMode", "Integrated");
 
                 var windows = root.XPathSelectElement("/configuration/location[@path='WebSite2']/system.webServer/security/authentication/windowsAuthentication");
-                windows?.SetAttributeValue("enabled", true);
+                windows.SetAttributeValue("enabled", true);
 
                 var security = root.XPathSelectElement("/configuration/location[@path='WebSite1']/system.webServer/security");
                 security.Remove();
@@ -151,6 +160,10 @@ namespace Tests
 
                 var extended = windows.Element("extendedProtection");
                 extended?.SetAttributeValue("flags", "None");
+#if IIS
+                var asp = root.XPathSelectElement("/configuration/system.webServer/asp/comPlus");
+                asp.Remove();
+#endif
                 file.Save(Current);
             }
 
@@ -173,7 +186,7 @@ namespace Tests
                 rewrite.AddAfterSelf(httpErrors, urlCompression, security);
                 httpErrors?.Element("error")?.SetAttributeValue("prefixLanguageFilePath", string.Empty);
                 httpErrors?.Element("error")?.SetAttributeValue("responseMode", "File");
-
+#if !IIS
                 // IMPORTANT: workaround an IIS issue.
                 var document = root.XPathSelectElement("/configuration/system.webServer/defaultDocument/files/add[@value='Default.asp']");
                 var item = new XElement("add",
@@ -184,7 +197,7 @@ namespace Tests
                 var remove = new XElement("remove",
                     new XAttribute("value", "index.htm"));
                 clear?.AddAfterSelf(remove);
-
+#endif
                 file.Save(TestHelper.GetSiteConfig(directoryName));
             }
 
@@ -211,30 +224,12 @@ namespace Tests
             TestHelper.FixPhysicalPathMono(Current);
             TestHelper.CopySiteConfig(directoryName, "original.config");
 
+#if IIS
+            var server = new ServerManager(Current);
+#else
             var server = new IisExpressServerManager(Current);
+#endif
             TestCases.TestIisExpressHandlers(server);
-        }
-
-        [Fact]
-        public void TestIisExpressInheritance()
-        {
-            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
-
-            if (directoryName == null)
-            {
-                return;
-            }
-
-            string Current = Path.Combine(directoryName, @"applicationHost.config");
-            string Original = Path.Combine(directoryName, @"original2.config");
-            string Expected = Path.Combine(directoryName, @"expected.config");
-            File.Copy(Original, Current, true);
-            TestHelper.FixPhysicalPathMono(Current);
-            TestHelper.CopySiteConfig(directoryName, "original.config");
-
-            var server = new IisExpressServerManager(Current);
-            TestCases.TestIisExpressInheritance(server);
         }
 
         [Fact]
@@ -255,7 +250,11 @@ namespace Tests
             TestHelper.FixPhysicalPathMono(Current);
             TestHelper.CopySiteConfig(directoryName, "original.config");
 
+#if IIS
+            var server = new ServerManager(Current);
+#else
             var server = new IisExpressServerManager(Current);
+#endif
             TestCases.TestIisExpressLocation(server);
         }
 
@@ -277,8 +276,64 @@ namespace Tests
             TestHelper.FixPhysicalPathMono(Current);
             TestHelper.CopySiteConfig(directoryName, "original.config");
 
+#if IIS
+            var server = new ServerManager(Current);
+#else
             var server = new IisExpressServerManager(Current);
+#endif
             TestCases.TestIisExpressLocation2(server);
         }
-    } 
+
+        [Fact]
+        public void TestIisExpressInheritance()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string Current = Path.Combine(directoryName, @"applicationHost.config");
+            string Original = Path.Combine(directoryName, @"original2.config");
+            string Expected = Path.Combine(directoryName, @"expected.config");
+            File.Copy(Original, Current, true);
+            TestHelper.FixPhysicalPathMono(Current);
+            TestHelper.CopySiteConfig(directoryName, "original.config");
+
+#if IIS
+            var server = new ServerManager(Current);
+#else
+            var server = new IisExpressServerManager(Current);
+#endif
+            TestCases.TestIisExpressInheritance(server);
+        }
+
+        [Fact]
+        public void TestIisExpressSiteDefaults()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string Current = Path.Combine(directoryName, @"applicationHost.config");
+            string Original = Path.Combine(directoryName, @"original2.config");
+            string Expected = Path.Combine(directoryName, @"expected.config");
+            File.Copy(Original, Current, true);
+            TestHelper.FixPhysicalPathMono(Current);
+            TestHelper.CopySiteConfig(directoryName, "original.config");
+
+#if IIS
+            var server = new ServerManager(Current);
+#else
+            var server = new IisExpressServerManager(Current);
+#endif
+            TestCases.TestIisSiteDefaults(server);
+        }
+    }
 }

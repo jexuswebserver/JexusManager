@@ -42,12 +42,16 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <RuntimeIdentifiers>win-x64;win-x86</RuntimeIdentifiers>
+    <UseWindowsForms>true</UseWindowsForms>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>JexusManager.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
+    <RootNamespace>JexusManager.Main</RootNamespace>
     <ApplicationIcon>iis.ico</ApplicationIcon>
     <NeutralLanguage>en</NeutralLanguage>
     <AssemblyVersion>13.0.0.0</AssemblyVersion>
@@ -67,6 +71,18 @@
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ActionListWinForms" Version="1.3.0" />
+    <PackageReference Include="Enums.NET" Version="2.3.2" />
+    <PackageReference Include="Mono.Options" Version="5.3.0.1" />
+    <PackageReference Include="Octokit" Version="0.32.0" />
+    <PackageReference Include="Rollbar" Version="2.0.1" />
+    <PackageReference Include="System.ComponentModel.Primitives" Version="4.3.0" />
+    <PackageReference Include="System.Reactive" Version="4.1.2" />
+    <PackageReference Include="ini-parser" Version="2.5.2" />
+  </ItemGroup>
+
   <ItemGroup>
     <Reference Include="Mono.Security">
       <HintPath Condition=" '$(OS)' == 'Windows_NT' ">../lib/Mono.Security.dll</HintPath>

@@ -1136,6 +1136,18 @@ $"Filename: \\\\?\\{config.FileContext.FileName}\r\nLine number: 0\r\nError: Can
             }
         }
 
+        public static void TestIisSiteDefaults(ServerManager server)
+        {
+            var siteDefaults = server.SiteDefaults.TraceFailedRequestsLogging;
+            Assert.True(siteDefaults.Enabled);
+
+            var site = server.Sites[0].TraceFailedRequestsLogging;
+            Assert.True(site.Enabled);
+            var attribute = site.GetAttribute("enabled");
+            Assert.Equal(false, attribute.Schema.DefaultValue);
+            Assert.False(attribute.IsInheritedFromDefaultValue);
+        }
+
         private enum ResponseMode
         {
             Test = 1
