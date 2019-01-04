@@ -917,36 +917,39 @@ namespace JexusManager
         {
             var jexusServers = new List<string>();
             var iisExpressFiles = new List<string>();
-            foreach (var item in treeView1.Nodes)
+            foreach (TreeNode node in treeView1.Nodes)
             {
-                var serverNode = item as ServerTreeNode;
-                if (serverNode == null || serverNode.IgnoreInCache)
+                foreach (var item in node.Nodes)
                 {
-                    continue;
-                }
-
-                if (serverNode.Mode == WorkingMode.Jexus)
-                {
-                    jexusServers.Add(
-                        string.Format(
-                            "{0},{1},{2},{3},{4}",
-                            serverNode.DisplayName,
-                            serverNode.HostName,
-                            serverNode.CertificateHash,
-                            serverNode.IsLocalhost,
-                            serverNode.Credentials));
-                    continue;
-                }
-
-                if (serverNode.Mode == WorkingMode.IisExpress)
-                {
-                    if (!string.IsNullOrWhiteSpace(serverNode.HostName))
+                    var serverNode = item as ServerTreeNode;
+                    if (serverNode == null || serverNode.IgnoreInCache)
                     {
-                        iisExpressFiles.Add(
+                        continue;
+                    }
+
+                    if (serverNode.Mode == WorkingMode.Jexus)
+                    {
+                        jexusServers.Add(
                             string.Format(
-                                "{0}|{1}",
+                                "{0},{1},{2},{3},{4}",
                                 serverNode.DisplayName,
-                                serverNode.HostName));
+                                serverNode.HostName,
+                                serverNode.CertificateHash,
+                                serverNode.IsLocalhost,
+                                serverNode.Credentials));
+                        continue;
+                    }
+
+                    if (serverNode.Mode == WorkingMode.IisExpress)
+                    {
+                        if (!string.IsNullOrWhiteSpace(serverNode.HostName))
+                        {
+                            iisExpressFiles.Add(
+                                string.Format(
+                                    "{0}|{1}",
+                                    serverNode.DisplayName,
+                                    serverNode.HostName));
+                        }
                     }
                 }
             }
