@@ -78,6 +78,9 @@
     <Compile Include="..\Tests\Exceptions\SiteTestCases.cs">
       <Link>Exceptions\SiteTestCases.cs</Link>
     </Compile>
+    <Compile Include="..\Tests\ServerManagerTestFixture.cs">
+      <Link>ServerManagerTestFixture.cs</Link>
+    </Compile>
     <Compile Include="..\Tests\TestCases.cs">
       <Link>TestCases.cs</Link>
     </Compile>
@@ -89,7 +92,6 @@
     </Compile>
     <Compile Include="Helper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ServerManagerTestFixture.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Tests\administration.config">
