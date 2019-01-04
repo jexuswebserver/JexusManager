@@ -35,6 +35,8 @@ namespace JexusManager.Features.TraceFailedRequests
                 {
                     btnOK.Enabled = !string.IsNullOrWhiteSpace(txtDirectory.Text)
                         && !string.IsNullOrWhiteSpace(txtNumber.Text);
+                    txtDirectory.Enabled = cbEnabled.Checked;
+                    txtNumber.Enabled = cbEnabled.Checked;
                 }));
 
             container.Add(

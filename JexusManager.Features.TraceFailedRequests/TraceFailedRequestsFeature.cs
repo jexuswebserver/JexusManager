@@ -297,7 +297,16 @@ namespace JexusManager.Features.TraceFailedRequests
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var section = service.Site.TraceFailedRequestsLogging;
-            DialogHelper.Explore(section.Directory);
+            var path = section.Directory.ExpandIisExpressEnvironmentVariables(
+                service.Server != null ? null : service.Application.GetActualExecutable());
+            if (System.IO.Directory.Exists(path))
+            {
+                DialogHelper.ProcessStart(path);
+                return;
+            }
+
+            var ui = (IManagementUIService)GetService(typeof(IManagementUIService));
+            ui.ShowMessage("The specific log directory is invalid.", Name, MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
         public void Set()

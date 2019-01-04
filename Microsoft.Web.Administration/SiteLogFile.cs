@@ -6,10 +6,11 @@ using System;
 
 namespace Microsoft.Web.Administration
 {
+
     public sealed class SiteLogFile : ConfigurationElement
     {
         private CustomLogFieldCollection _collection;
-        private readonly SiteLogFile _defaultLogFile;
+        private readonly SiteDefaultProcessor<SiteLogFile> _processor;
 
         internal SiteLogFile(ConfigurationElement parent)
             : this(null, parent)
@@ -19,55 +20,34 @@ namespace Microsoft.Web.Administration
             : base(element, "logFile", null, parent, null, null)
         {
             var server = (parent as Site)?.Server;
-            _defaultLogFile = server?.SiteDefaults.LogFile;
+            _processor = new SiteDefaultProcessor<SiteLogFile>(server?.SiteDefaults.LogFile);
         }
 
         // TODO: how to read default custom fields?
         public CustomLogFieldCollection CustomLogFields => _collection ?? (_collection = Schema.ChildElementSchemas["customFields"] == null ? null : new CustomLogFieldCollection(ChildElements["customFields"], this));
 
-        private T Get<T>(string name, Func<T> defaultGetter, Func<ConfigurationAttribute, T> mainGetter)
-        {
-            var attribute = GetAttribute(name);
-            if (attribute.IsInheritedFromDefaultValue && _defaultLogFile != null)
-            {
-                return defaultGetter();
-            }
-
-            return mainGetter(attribute);
-        }
-
-        private void Set<T>(string name, T value, Func<T> defaultGetter, Action<ConfigurationAttribute> mainSetter)
-        {
-            var attribute = GetAttribute(name);
-            if (_defaultLogFile != null && value.Equals(defaultGetter()))
-            {
-                attribute.Delete();
-                return;
-            }
-
-            mainSetter(attribute);
-        }
-
         public Guid CustomLogPluginClsid
         {
             get
             {
-                return Get("customLogPluginClsid",
-                    () => _defaultLogFile.CustomLogPluginClsid,
+                return _processor.Get("customLogPluginClsid",
+                    () => _processor.SiteDefault.CustomLogPluginClsid,
                     attribute =>
                     {
                         Guid guid;
                         Guid.TryParse(attribute.Value.ToString(), out guid);
                         return guid;
-                    });
+                    }, 
+                    this);
             }
 
             set
             {
-                Set("customLogPluginClsid", 
+                _processor.Set("customLogPluginClsid", 
                     value,
-                    () => _defaultLogFile.CustomLogPluginClsid,
-                    attribute => attribute.Value = value.ToString());
+                    () => _processor.SiteDefault.CustomLogPluginClsid,
+                    attribute => attribute.Value = value.ToString(),
+                    this);
             }
         }
 
@@ -75,17 +55,19 @@ namespace Microsoft.Web.Administration
         {
             get
             {
-                return Get("directory",
-                    () => _defaultLogFile.Directory,
-                    attribute => (string) attribute.Value);
+                return _processor.Get("directory",
+                    () => _processor.SiteDefault.Directory,
+                    attribute => (string) attribute.Value,
+                    this);
             }
 
             set
             {
-                Set("directory",
+                _processor.Set("directory",
                     value,
-                    () => _defaultLogFile.Directory,
-                    attribute => attribute.Value = value);
+                    () => _processor.SiteDefault.Directory,
+                    attribute => attribute.Value = value,
+                    this);
             }
         }
 
@@ -93,17 +75,19 @@ namespace Microsoft.Web.Administration
         {
             get
             {
-                return Get("enabled",
-                    () => _defaultLogFile.Enabled,
-                    attribute => (bool) attribute.Value);
+                return _processor.Get("enabled",
+                    () => _processor.SiteDefault.Enabled,
+                    attribute => (bool) attribute.Value,
+                    this);
             }
 
             set
             {
-                Set("enabled",
+                _processor.Set("enabled",
                     value,
-                    () => _defaultLogFile.Enabled,
-                    attribute => attribute.Value = value);
+                    () => _processor.SiteDefault.Enabled,
+                    attribute => attribute.Value = value,
+                    this);
             }
         }
 
@@ -111,17 +95,19 @@ namespace Microsoft.Web.Administration
         {
             get
             {
-                return Get("localTimeRollover",
-                    () => _defaultLogFile.LocalTimeRollover,
-                    attribute => (bool)attribute.Value);
+                return _processor.Get("localTimeRollover",
+                    () => _processor.SiteDefault.LocalTimeRollover,
+                    attribute => (bool)attribute.Value,
+                    this);
             }
 
             set
             {
-                Set("localTimeRollover",
+                _processor.Set("localTimeRollover",
                     value,
-                    () => _defaultLogFile.LocalTimeRollover,
-                    attribute => attribute.Value = value);
+                    () => _processor.SiteDefault.LocalTimeRollover,
+                    attribute => attribute.Value = value,
+                    this);
             }
         }
 
@@ -129,17 +115,19 @@ namespace Microsoft.Web.Administration
         {
             get
             {
-                return Get("logExtFileFlags",
-                    () => _defaultLogFile.LogExtFileFlags,
-                    attribute => (LogExtFileFlags)Enum.ToObject(typeof(LogExtFileFlags), attribute.Value));
+                return _processor.Get("logExtFileFlags",
+                    () => _processor.SiteDefault.LogExtFileFlags,
+                    attribute => (LogExtFileFlags)Enum.ToObject(typeof(LogExtFileFlags), attribute.Value),
+                    this);
             }
 
             set
             {
-                Set("logExtFileFlags",
+                _processor.Set("logExtFileFlags",
                     value,
-                    () => _defaultLogFile.LogExtFileFlags,
-                    attribute => attribute.Value = (long)value);
+                    () => _processor.SiteDefault.LogExtFileFlags,
+                    attribute => attribute.Value = (long)value,
+                    this);
             }
         }
 
@@ -147,17 +135,19 @@ namespace Microsoft.Web.Administration
         {
             get
             {
-                return Get("logFormat",
-                    () => _defaultLogFile.LogFormat,
-                    attribute => (LogFormat)Enum.ToObject(typeof(LogFormat), attribute.Value));
+                return _processor.Get("logFormat",
+                    () => _processor.SiteDefault.LogFormat,
+                    attribute => (LogFormat)Enum.ToObject(typeof(LogFormat), attribute.Value),
+                    this);
             }
 
             set
             {
-                Set("logFormat",
+                _processor.Set("logFormat",
                     value,
-                    () => _defaultLogFile.LogFormat,
-                    attribute => attribute.Value = (long)value);
+                    () => _processor.SiteDefault.LogFormat,
+                    attribute => attribute.Value = (long)value,
+                    this);
             }
         }
 
@@ -165,17 +155,19 @@ namespace Microsoft.Web.Administration
         {
             get
             {
-                return Get("logTargetW3C",
-                    () => _defaultLogFile.LogTargetW3C,
-                    attribute => (LogTargetW3C)Enum.ToObject(typeof(LogTargetW3C), attribute.Value));
+                return _processor.Get("logTargetW3C",
+                    () => _processor.SiteDefault.LogTargetW3C,
+                    attribute => (LogTargetW3C)Enum.ToObject(typeof(LogTargetW3C), attribute.Value),
+                    this);
             }
 
             set
             {
-                Set("logTargetW3C",
+                _processor.Set("logTargetW3C",
                     value,
-                    () => _defaultLogFile.LogTargetW3C,
-                    attribute => attribute.Value = (long)value);
+                    () => _processor.SiteDefault.LogTargetW3C,
+                    attribute => attribute.Value = (long)value,
+                    this);
             }
         }
 
@@ -183,17 +175,19 @@ namespace Microsoft.Web.Administration
         {
             get
             {
-                return Get("period",
-                    () => _defaultLogFile.Period,
-                    attribute => (LoggingRolloverPeriod)Enum.ToObject(typeof(LoggingRolloverPeriod), attribute.Value));
+                return _processor.Get("period",
+                    () => _processor.SiteDefault.Period,
+                    attribute => (LoggingRolloverPeriod)Enum.ToObject(typeof(LoggingRolloverPeriod), attribute.Value),
+                    this);
             }
 
             set
             {
-                Set("period",
+                _processor.Set("period",
                     value,
-                    () => _defaultLogFile.Period,
-                    attribute => attribute.Value = (long)value);
+                    () => _processor.SiteDefault.Period,
+                    attribute => attribute.Value = (long)value,
+                    this);
             }
         }
 
@@ -201,17 +195,19 @@ namespace Microsoft.Web.Administration
         {
             get
             {
-                return Get("truncateSize",
-                    () => _defaultLogFile.TruncateSize,
-                    attribute => (long)attribute.Value);
+                return _processor.Get("truncateSize",
+                    () => _processor.SiteDefault.TruncateSize,
+                    attribute => (long)attribute.Value,
+                    this);
             }
 
             set
             {
-                Set("truncateSize",
+                _processor.Set("truncateSize",
                     value,
-                    () => _defaultLogFile.TruncateSize,
-                    attribute => attribute.Value = value);
+                    () => _processor.SiteDefault.TruncateSize,
+                    attribute => attribute.Value = value,
+                    this);
             }
         }
     }
