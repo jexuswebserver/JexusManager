@@ -251,7 +251,7 @@ namespace JexusManager
                     name: parts[0],
                     fileName: parts[1], 
                     server: null,
-                    ignoreInCache: true);
+                    ignoreInCache: false);
                 RegisterServer(data);
             }
         }
