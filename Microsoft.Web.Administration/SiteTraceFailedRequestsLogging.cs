@@ -14,7 +14,10 @@ namespace Microsoft.Web.Administration
             : base(element, "traceFailedRequestsLogging", null, parent, null, null)
         {
             var server = (parent as Site)?.Server;
-            _processor = new SiteDefaultProcessor<SiteTraceFailedRequestsLogging>(server?.SiteDefaults.TraceFailedRequestsLogging);
+            var defaults = server?.SiteDefaults.TraceFailedRequestsLogging;
+            _processor = new SiteDefaultProcessor<SiteTraceFailedRequestsLogging>(defaults);
+            SetSiteDefaults(defaults);
+            element.SetSiteDefaults(defaults);
         }
 
         public string Directory

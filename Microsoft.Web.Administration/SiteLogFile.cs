@@ -20,7 +20,10 @@ namespace Microsoft.Web.Administration
             : base(element, "logFile", null, parent, null, null)
         {
             var server = (parent as Site)?.Server;
-            _processor = new SiteDefaultProcessor<SiteLogFile>(server?.SiteDefaults.LogFile);
+            var defaults = server?.SiteDefaults.LogFile;
+            _processor = new SiteDefaultProcessor<SiteLogFile>(defaults);
+            SetSiteDefaults(defaults);
+            element.SetSiteDefaults(defaults);
         }
 
         // TODO: how to read default custom fields?
