@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>JexusManager.Features.Certificates</RootNamespace>
     <AssemblyName>JexusManager.Features.Certificates</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -36,10 +37,6 @@
     <AssemblyOriginatorKeyFile>JexusManager.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Mono.Security">
-      <HintPath Condition=" '$(OS)' == 'Windows_NT' ">../lib/Mono.Security.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -207,6 +204,9 @@
   <ItemGroup>
     <PackageReference Include="BouncyCastle">
       <Version>1.8.4</Version>
+    </PackageReference>
+    <PackageReference Include="Mono.Security">
+      <Version>5.4.0.201</Version>
     </PackageReference>
     <PackageReference Include="StrongNamer">
       <Version>0.0.8</Version>

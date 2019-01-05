@@ -62,6 +62,7 @@
     <Compile Include="ApplicationPathValidator.cs" />
     <Compile Include="ApplicationPoolNameValidator.cs" />
     <Compile Include="AsyncHelper.cs" />
+    <Compile Include="CertificateInstallerLocator.cs" />
     <Compile Include="IFeatureDetection.cs" />
     <Compile Include="IisExpressServerManager.cs" />
     <Compile Include="Helper.cs" />
