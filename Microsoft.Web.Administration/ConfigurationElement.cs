@@ -77,6 +77,20 @@ namespace Microsoft.Web.Administration
             }
         }
 
+        internal bool HasSiteDefaults => _defaults != null;
+
+        private ConfigurationElement _defaults;
+
+        internal object GetSiteDefaults(string name)
+        {
+            return _defaults == null ? null : _defaults[name];
+        }
+
+        internal void SetSiteDefaults(ConfigurationElement defaults)
+        {
+            _defaults = defaults;
+        }
+
         internal XElement Entity
         {
             get { return InnerEntity ?? (InnerEntity = CreateEntity()); }
@@ -640,10 +654,12 @@ namespace Microsoft.Web.Administration
             var attribute = GetAttribute(name);
             var result = attribute.TypeMatch(value);
             attribute.IsInheritedFromDefaultValue = (attribute.Schema == null || !attribute.Schema.IsRequired)
-                                                    && result.Equals(attribute.ExtractDefaultValue());
+                                                    && result.Equals(attribute.ExtractDefaultValueFromSchema());
+            var isInheritedFromSiteDefaults = _defaults != null && result == GetSiteDefaults(name);
+
             // IMPORTANT: remove attribute if value is equal to default.
             Entity.SetAttributeValue(
-                name, attribute.IsInheritedFromDefaultValue
+                name, isInheritedFromSiteDefaults && attribute.IsInheritedFromDefaultValue
                     ? null
                     : attribute.Format(result));
 

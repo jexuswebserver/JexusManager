@@ -1146,6 +1146,9 @@ $"Filename: \\\\?\\{config.FileContext.FileName}\r\nLine number: 0\r\nError: Can
             var attribute = site.GetAttribute("enabled");
             Assert.Equal(false, attribute.Schema.DefaultValue);
             Assert.False(attribute.IsInheritedFromDefaultValue);
+
+            attribute.Value = false;
+            Assert.Equal(false, attribute.Value);
         }
 
         private enum ResponseMode

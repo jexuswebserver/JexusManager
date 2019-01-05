@@ -32,7 +32,7 @@ namespace Microsoft.Web.Administration
             var raw = Schema == null ? clear : Schema.Parse(clear);
             var result = TypeMatch(raw);
             IsInheritedFromDefaultValue = (Schema == null || !Schema.IsRequired)
-                                                    && result.Equals(ExtractDefaultValue());
+                                                    && result.Equals(ExtractDefaultValueFromSchema());
             SetValue(raw);
             _element.InnerEntity.SetAttributeValue(Name, value);
         }
@@ -54,12 +54,18 @@ namespace Microsoft.Web.Administration
 
         private void ResetValue()
         {
-            var clear = Decrypt(ExtractDefaultValue());
+            if (_element.HasSiteDefaults)
+            {
+                SetValue(_element.GetSiteDefaults(Name));
+                return;
+            }
+
+            var clear = Decrypt(ExtractDefaultValueFromSchema());
             IsInheritedFromDefaultValue = true;
             SetValue(clear);
         }
 
-        internal object ExtractDefaultValue()
+        internal object ExtractDefaultValueFromSchema()
         {
             object defaultValue;
             if (_element.FileContext.Parent != null)
@@ -138,6 +144,7 @@ namespace Microsoft.Web.Administration
         }
 
         public bool IsInheritedFromDefaultValue { get; internal set; }
+
         public bool IsProtected { get; }
         public string Name { get; internal set; }
         public ConfigurationAttributeSchema Schema { get; internal set; }

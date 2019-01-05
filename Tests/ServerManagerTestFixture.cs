@@ -334,6 +334,8 @@ namespace Tests
             var server = new IisExpressServerManager(Current);
 #endif
             TestCases.TestIisSiteDefaults(server);
+
+            // TODO: assert generated XML.
         }
     }
 }
