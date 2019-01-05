@@ -55,7 +55,6 @@ namespace Microsoft.Web.Management.Client.Win32
             Wizard = wizard;
         }
 
-
         protected void ShowError(Exception exception, string message, bool isWarning)
         {
             var service = (IManagementUIService)Wizard.GetService(typeof(IManagementUIService));
