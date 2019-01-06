@@ -27,6 +27,18 @@ namespace Microsoft.Web.Administration
                     return releaseBuild;
                 }
 
+                var debugBuildFx = Path.Combine(Environment.CurrentDirectory, @"..\..\..\CertificateInstaller\bin\Debug\certificateinstaller.exe");
+                if (File.Exists(debugBuildFx))
+                {
+                    return debugBuildFx;
+                }
+
+                var releaseBuildFx = Path.Combine(Environment.CurrentDirectory, @"..\..\..\CertificateInstaller\bin\Release\certificateinstaller.exe");
+                if (File.Exists(releaseBuildFx))
+                {
+                    return releaseBuildFx;
+                }
+
                 throw new ApplicationException("cannot find certificateinstaller.exe");
             }
         }
