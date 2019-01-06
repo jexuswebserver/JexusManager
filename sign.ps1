@@ -5,10 +5,17 @@ if(!$foundCert)
     exit
 }
 
+Copy-Item .\JexusManager.Features.Certificates\bin\Release\Mono.Security.dll .\bin
+
 Write-Host "Certificate found. Sign the assemblies."
 $signtool = "C:\Program Files (x86)\Windows Kits\10\bin\10.0.17134.0\x64\signtool.exe"
 foreach ($line in Get-Content .\sign.txt) {
     & $signtool sign /tr http://timestamp.digicert.com /td sha256 /fd sha256 /a .\bin\$line | Write-Debug
+    if ($LASTEXITCODE -ne 0)
+    {
+        Write-Host ".\bin\$line is not signed. Exit."
+        exit $LASTEXITCODE
+    }
 }
 
 Write-Host "Verify digital signature."
