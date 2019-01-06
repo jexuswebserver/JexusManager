@@ -158,6 +158,7 @@
     <Compile Include="ServerManagerException.cs" />
     <Compile Include="Site.cs" />
     <Compile Include="SiteCollection.cs" />
+    <Compile Include="SiteDefaultProcessor.cs" />
     <Compile Include="SiteDefaults.cs" />
     <Compile Include="SiteLimits.cs" />
     <Compile Include="SiteLogFile.cs" />
