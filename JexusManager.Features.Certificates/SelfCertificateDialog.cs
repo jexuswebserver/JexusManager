@@ -9,14 +9,12 @@ using Rollbar;
 namespace JexusManager.Features.Certificates
 {
     using System;
-    using System.Collections;
     using System.ComponentModel;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
-    using System.Security.Cryptography;
     using System.Security.Cryptography.X509Certificates;
     using System.Windows.Forms;
 
@@ -24,7 +22,6 @@ namespace JexusManager.Features.Certificates
     using Org.BouncyCastle.Asn1;
     using Org.BouncyCastle.Asn1.X509;
     using Org.BouncyCastle.Crypto;
-    using Org.BouncyCastle.Crypto.Digests;
     using Org.BouncyCastle.Crypto.Generators;
     using Org.BouncyCastle.Crypto.Operators;
     using Org.BouncyCastle.Crypto.Prng;

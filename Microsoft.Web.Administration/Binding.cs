@@ -312,6 +312,13 @@ namespace Microsoft.Web.Administration
                 }
             }
 
+            if (_endPoint == null)
+            {
+                CertificateHash = null;
+                CertificateStoreName = string.Empty;
+                return;
+            }
+
             var certificate = NativeMethods.QuerySslCertificateInfo(_endPoint);
             if (certificate == null)
             {
