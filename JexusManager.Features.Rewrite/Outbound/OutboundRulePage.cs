@@ -225,6 +225,11 @@ namespace JexusManager.Features.Rewrite.Outbound
             Rule.Action = cbAction.SelectedIndex;
             Rule.Value = txtValue.Text;
             Rule.Replace = !string.IsNullOrWhiteSpace(txtValue.Text);
+            Rule.Conditions.Clear();
+            foreach (ConditionListViewItem item in lvConditions.Items)
+            {
+                Rule.Conditions.Add(item.Item);
+            }
 
             if (txtName.ReadOnly)
             {
@@ -335,6 +340,7 @@ namespace JexusManager.Features.Rewrite.Outbound
                 cbStop.Checked = false;
                 cbUsing.SelectedIndex = 0;
                 cbContent.SelectedIndex = 0;
+                cbAny.SelectedIndex = 0;
                 if (Rule != null)
                 {
                     SetFilter(Rule.Filter, cbMatch);
@@ -394,7 +400,6 @@ namespace JexusManager.Features.Rewrite.Outbound
             }
 
             var newItem = dialog.Item;
-            Rule.Conditions.Add(newItem);
             var listViewItem = new ConditionListViewItem(newItem);
             lvConditions.Items.Add(listViewItem);
             listViewItem.Selected = true;
@@ -414,8 +419,6 @@ namespace JexusManager.Features.Rewrite.Outbound
 
             var listViewItem = ((ConditionListViewItem)lvConditions.SelectedItems[0]);
             listViewItem.Remove();
-            var item = listViewItem.Item;
-            Rule.Conditions.Remove(item);
             InformChanges();
         }
 
@@ -438,10 +441,7 @@ namespace JexusManager.Features.Rewrite.Outbound
             var index = listViewItem.Index;
 
             var item = listViewItem.Item;
-            Rule.Conditions.RemoveAt(index);
             listViewItem.Remove();
-
-            Rule.Conditions.Insert(index + 1, item);
             lvConditions.Items.Insert(index + 1, listViewItem);
             listViewItem.Selected = true;
             InformChanges();
@@ -453,10 +453,7 @@ namespace JexusManager.Features.Rewrite.Outbound
             var index = listViewItem.Index;
 
             var item = listViewItem.Item;
-            Rule.Conditions.RemoveAt(index);
             listViewItem.Remove();
-
-            Rule.Conditions.Insert(index - 1, item);
             lvConditions.Items.Insert(index - 1, listViewItem);
             listViewItem.Selected = true;
             InformChanges();
