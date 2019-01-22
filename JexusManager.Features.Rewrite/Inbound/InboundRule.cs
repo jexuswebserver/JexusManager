@@ -107,6 +107,7 @@ namespace JexusManager.Features.Rewrite.Inbound
             ConfigurationElement matchElement = Element.ChildElements["match"];
             PatternUrl = (string)matchElement["url"];
             Negate = (bool)matchElement["negate"];
+            IgnoreCase = (bool)matchElement["ignoreCase"];
             ConfigurationElement actionElement = Element.ChildElements["action"];
             Type = (long)actionElement["type"];
             ActionUrl = (string)actionElement["url"];
@@ -173,6 +174,7 @@ namespace JexusManager.Features.Rewrite.Inbound
             ConfigurationElement matchElement = Element.ChildElements["match"];
             matchElement["url"] = PatternUrl;
             matchElement["negate"] = Negate;
+            matchElement["ignoreCase"] = IgnoreCase;
             ConfigurationElement actionElement = Element.ChildElements["action"];
             actionElement["type"] = Type;
             actionElement["url"] = ActionUrl;
