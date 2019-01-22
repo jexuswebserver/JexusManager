@@ -572,10 +572,10 @@
             this.groupBox2.Controls.Add(this.gbRewrite);
             this.groupBox2.Controls.Add(this.cbAction);
             this.groupBox2.Controls.Add(this.label7);
-            this.groupBox2.ExpandedHeight = 261;
+            this.groupBox2.ExpandedHeight = 280;
             this.groupBox2.Location = new System.Drawing.Point(3, 273);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(545, 261);
+            this.groupBox2.Size = new System.Drawing.Size(545, 280);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.Text = "Action";
             this.groupBox2.UseAnimation = true;
