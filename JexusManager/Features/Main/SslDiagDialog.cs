@@ -287,6 +287,7 @@ namespace JexusManager.Features.Main
                                     }
                                     catch (CryptographicException ex)
                                     {
+                                        Error($"Problems detected on certificate store {binding.CertificateStoreName}.");
                                         if (ex.HResult != Microsoft.Web.Administration.NativeMethods.NonExistingStore)
                                         {
                                             throw;
