@@ -123,7 +123,6 @@ namespace JexusManager.Features.Rewrite.Outbound
             var info = (Tuple<OutboundFeature, OutboundRule>)navigationData;
             _feature = info.Item1;
             Rule = info.Item2;
-            txtName.ReadOnly = Rule != null;
             if (Rule != null)
             {
                 foreach (var preCondition in _feature.PreConditions)
@@ -143,6 +142,12 @@ namespace JexusManager.Features.Rewrite.Outbound
             cbPreCondition.Items.Add("<None>");
             cbPreCondition.Items.Add("<Create New Precondition...>");
             cbTags.Items.Add("<Create New Tags Collection...>");
+
+            if (Rule == null)
+            {
+                Rule = new OutboundRule(null);
+            }
+
             Refresh();
         }
 
@@ -172,7 +177,11 @@ namespace JexusManager.Features.Rewrite.Outbound
 
                 if (result == DialogResult.Yes)
                 {
-                    ApplyChanges();
+                    var applied = ApplyChanges();
+                    if (!applied)
+                    {
+                        return;
+                    }
                 }
             }
 
@@ -203,12 +212,13 @@ namespace JexusManager.Features.Rewrite.Outbound
 
         protected override bool ApplyChanges()
         {
-            var filter = GetFilter(cbMatch);
-            if (Rule == null)
+            if (!CanApplyChanges)
             {
-                Rule = new OutboundRule(null);
+                ShowMessage("The data in the page is invalid. Correct the data and try again.");
+                return false;
             }
 
+            var filter = GetFilter(cbMatch);
             Rule.Name = txtName.Text;
             Rule.PreCondition = cbPreCondition.Text == "<None>" ? string.Empty : cbPreCondition.Text;
             Rule.CustomTags = cbTags.Text;
@@ -332,7 +342,7 @@ namespace JexusManager.Features.Rewrite.Outbound
         {
             if (!_hasChanges)
             {
-                txtName.ReadOnly = Rule != null;
+                txtName.ReadOnly = !string.IsNullOrEmpty(Rule.Name);
                 cbPreCondition.SelectedIndex = 0;
                 cbAction.SelectedIndex = 0;
                 cbIgnoreCase.Checked = true;
@@ -345,7 +355,7 @@ namespace JexusManager.Features.Rewrite.Outbound
                 {
                     SetFilter(Rule.Filter, cbMatch);
                     txtName.Text = Rule.Name;
-                    cbPreCondition.Text = Rule.PreCondition == string.Empty ? "<None>" : Rule.PreCondition;
+                    cbPreCondition.Text = string.IsNullOrEmpty(Rule.PreCondition) ? "<None>" : Rule.PreCondition;
                     cbTags.Text = Rule.CustomTags;
                     cbAction.SelectedIndex = (int)Rule.Action;
                     cbIgnoreCase.Checked = Rule.IgnoreCase;
