@@ -52,7 +52,7 @@ namespace JexusManager.Services
                     {
                         if (!dialog.ApplyChanges())
                         {
-                            _host.UIService.ShowMessage("Changes cannot be applied", dialog.Text);
+                            return false;
                         }
                     }
                 }

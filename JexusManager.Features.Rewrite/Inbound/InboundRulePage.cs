@@ -145,7 +145,11 @@ namespace JexusManager.Features.Rewrite.Inbound
 
                 if (result == DialogResult.Yes)
                 {
-                    ApplyChanges();
+                    var applied = ApplyChanges();
+                    if (!applied)
+                    {
+                        return;
+                    }
                 }
             }
 
@@ -176,6 +180,12 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         protected override bool ApplyChanges()
         {
+            if (!CanApplyChanges)
+            {
+                ShowMessage("The data in the page is invalid. Correct the data and try again.");
+                return false;
+            }
+
             uint status = 0;
             uint substatus = 0;
             if (cbAction.SelectedIndex == 3)
