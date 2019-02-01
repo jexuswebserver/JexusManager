@@ -194,17 +194,32 @@ namespace Microsoft.Web.Administration
                 }
             }
 
-            var domain = EndPoint == null 
-                ? string.IsNullOrWhiteSpace(port)
-                    ? "localhost"
-                    : $"localhost:{port}"
-                : address == "0.0.0.0"
-                    ? Parent.Parent.Parent.Parent.HostName.ExtractName()
-                    : string.IsNullOrWhiteSpace(host)
-                        ? EndPoint.AddressFamily == AddressFamily.InterNetwork
-                            ? address
-                            : $"[{address}]"
-                        : Host;
+            string domain;
+            if (EndPoint == null)
+            {
+                if (string.IsNullOrWhiteSpace(port))
+                {
+                    domain = "localhost";
+                }
+                else if (PortIsValid(port, out int validPort, null, false))
+                {
+                    domain = $"localhost:{validPort}";
+                }
+                else
+                {
+                    throw new ArgumentException("Value does not fall within the expected range.");
+                }
+
+                return $"{Protocol}://{domain}";
+            }
+
+            domain = address == "0.0.0.0"
+                ? Parent.Parent.Parent.Parent.HostName.ExtractName()
+                : string.IsNullOrWhiteSpace(host)
+                    ? EndPoint.AddressFamily == AddressFamily.InterNetwork
+                        ? address
+                        : $"[{address}]"
+                    : Host;
             return IsDefaultPort
                 ? $"{Protocol}://{domain}"
                 : $"{Protocol}://{domain}:{EndPoint.Port}";

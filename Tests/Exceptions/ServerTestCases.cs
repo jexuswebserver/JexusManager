@@ -897,6 +897,55 @@ namespace Tests.Exceptions
                 Assert.Equal("*:161902:localhost", server.Sites[1].Bindings[2].BindingInformation);
             }
         }
+        
+        [Fact]
+        public void TestIisExpressBindingInvalidPort2()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string current = Path.Combine(directoryName, @"applicationHost.config");
+            string original = Path.Combine(directoryName, @"original2.config");
+            TestHelper.CopySiteConfig(directoryName, "original.config");
+            File.Copy(original, current, true);
+            TestHelper.FixPhysicalPathMono(current);
+
+            {
+                // add the tags
+                var file = XDocument.Load(current);
+                var root = file.Root;
+                if (root == null)
+                {
+                    return;
+                }
+
+                var site1 = root.XPathSelectElement("/configuration/system.applicationHost/sites/site[@id='2']/bindings");
+                site1?.Add(
+                    new XElement("binding",
+                        new XAttribute("protocol", "http"),
+                        new XAttribute("bindingInformation", "*:localhost:localhost")));
+                file.Save(current);
+            }
+#if IIS
+            var server = new ServerManager(current);
+#else
+            var server = new IisExpressServerManager(current);
+#endif
+            {
+                Binding binding = server.Sites[1].Bindings[2];
+                Assert.Null(binding.EndPoint);
+                Assert.Equal("*:localhost:localhost", binding.BindingInformation);
+#if !IIS
+                var exception = Assert.Throws<ArgumentException>(() => binding.ToUri());
+                Assert.Equal("Value does not fall within the expected range.", exception.Message);
+#endif
+            }
+        }
 
         [Fact]
         public void TestIisExpressBindingInvalidAddress()
@@ -1222,7 +1271,7 @@ namespace Tests.Exceptions
             var config = server.Sites[0].Applications[0].GetWebConfiguration();
             var exception = Assert.Throws<COMException>(() => config.GetSection("system.web/authorization"));
 #else
-            // TODO: fix where the exception is throwed.
+            // TODO: fix where the exception is thrown.
             var exception = Assert.Throws<COMException>(() => server.Sites[0].Applications[0].GetWebConfiguration());
 #endif
             Assert.Equal($"Filename: \\\\?\\{current}\r\nLine number: 1120\r\nError: Unrecognized attribute 'configSource'\r\n\r\n",
@@ -1242,7 +1291,6 @@ namespace Tests.Exceptions
 
             string current = Path.Combine(directoryName, @"applicationHost.config");
             string original = Path.Combine(directoryName, @"original2.config");
-            var siteConfig = TestHelper.CopySiteConfig(directoryName, "original.config");
             File.Copy(original, current, true);
             TestHelper.FixPhysicalPathMono(current);
 
@@ -1301,7 +1349,6 @@ namespace Tests.Exceptions
 
             string current = Path.Combine(directoryName, @"applicationHost.config");
             string original = Path.Combine(directoryName, @"original2.config");
-            string siteConfig = TestHelper.CopySiteConfig(directoryName, "original.config");
             File.Copy(original, current, true);
             TestHelper.FixPhysicalPathMono(current);
 
@@ -1396,7 +1443,6 @@ namespace Tests.Exceptions
 
             string current = Path.Combine(directoryName, @"applicationHost.config");
             string original = Path.Combine(directoryName, @"administration.config");
-            string siteConfig = TestHelper.CopySiteConfig(directoryName, "original.config");
             File.Copy(original, current, true);
             TestHelper.FixPhysicalPathMono(current);
 
