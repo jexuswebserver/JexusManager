@@ -68,10 +68,6 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Mono.Security">
-      <HintPath Condition=" '$(OS)' == 'Windows_NT' ">../lib/Mono.Security.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Octokit, Version=0.24.0.0, Culture=neutral, PublicKeyToken=4ea77d40eabcaf2f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\Octokit.dll</HintPath>
