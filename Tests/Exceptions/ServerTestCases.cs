@@ -1144,6 +1144,55 @@ namespace Tests.Exceptions
         }
 
         [Fact]
+        public void TestIisExpressBindingInvalidAddress5()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string current = Path.Combine(directoryName, @"applicationHost.config");
+            string original = Path.Combine(directoryName, @"original2.config");
+            TestHelper.CopySiteConfig(directoryName, "original.config");
+            File.Copy(original, current, true);
+            TestHelper.FixPhysicalPathMono(current);
+
+            {
+                // add the tags
+                var file = XDocument.Load(current);
+                var root = file.Root;
+                if (root == null)
+                {
+                    return;
+                }
+
+                var site1 = root.XPathSelectElement("/configuration/system.applicationHost/sites/site[@id='2']/bindings");
+                site1?.Add(
+                    new XElement("binding",
+                        new XAttribute("protocol", "http"),
+                        new XAttribute("bindingInformation", "*:80:")));
+                file.Save(current);
+            }
+#if IIS
+            var server = new ServerManager(current);
+#else
+            var server = new IisExpressServerManager(current);
+#endif
+            {
+                Binding binding = server.Sites[1].Bindings[2];
+                Assert.Equal(new IPEndPoint(IPAddress.Any, 80), binding.EndPoint);
+                Assert.Equal("*:80:", binding.BindingInformation);
+#if !IIS
+                Assert.Equal("http://localhost", binding.ToUri());
+                Assert.Equal("*:80 (http)", binding.ToShortString());
+#endif
+            }
+        }
+
+        [Fact]
         public void TestIisExpressDuplicateApplicationPools()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -1419,9 +1468,10 @@ namespace Tests.Exceptions
                     $"Invalid index. (Exception from HRESULT: 0x80070585)",
                     exception.Message);
 #else
-                Assert.Equal(
-                    $"Filename: \\\\?\\{machine}\r\nLine number: 267\r\nError: Unrecognized attribute 'enableSsl'\r\n\r\n",
+                Assert.Contains(
+                    $"Filename: \\\\?\\{machine}\r\nLine number: ",
                     exception.Message);
+                Assert.Contains("\r\nError: Unrecognized attribute 'enableSsl'\r\n\r\n", exception.Message);
 #endif
             }
             finally

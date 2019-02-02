@@ -213,7 +213,7 @@ namespace Microsoft.Web.Administration
                 return $"{Protocol}://{domain}";
             }
 
-            domain = address == "0.0.0.0"
+            domain = address == "*" || address == "0.0.0.0"
                 ? Parent.Parent.Parent.Parent.HostName.ExtractName()
                 : string.IsNullOrWhiteSpace(host)
                     ? EndPoint.AddressFamily == AddressFamily.InterNetwork
