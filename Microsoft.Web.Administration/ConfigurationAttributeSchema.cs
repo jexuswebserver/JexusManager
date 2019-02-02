@@ -9,6 +9,7 @@ using System.Globalization;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
+using Rollbar;
 
 namespace Microsoft.Web.Administration
 {
@@ -203,12 +204,20 @@ namespace Microsoft.Web.Administration
             }
 
             var type = ValidatorRegistry.GetValidator(ValidationType);
-            _validator = (ConfigurationValidatorBase)Activator.CreateInstance(
-                type,
-                BindingFlags.CreateInstance | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public,
-                null,
-                ValidationParameter == null ? null : new object[] { ValidationParameter },
-                CultureInfo.InvariantCulture);
+            try
+            {
+                _validator = (ConfigurationValidatorBase)Activator.CreateInstance(
+                    type,
+                    BindingFlags.CreateInstance | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public,
+                    null,
+                    ValidationParameter == null ? null : new object[] { ValidationParameter },
+                    CultureInfo.InvariantCulture);
+            }
+            catch (MissingMethodException)
+            {
+                RollbarLocator.RollbarInstance.Error($"type: {ValidationType}; parameter: {ValidationParameter}");
+                throw;
+            }
         }
 
         public object CheckType(object value)

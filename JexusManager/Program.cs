@@ -110,7 +110,7 @@ namespace JexusManager
                         };
                     }
                 });
-            RollbarLocator.RollbarInstance.Info($"Jexus Manager started");
+            RollbarLocator.RollbarInstance.Info($"Jexus Manager started from {Assembly.GetExecutingAssembly().Location}");
             
             Application.ThreadException += (sender, args) =>
             {
