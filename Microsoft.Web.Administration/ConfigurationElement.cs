@@ -655,7 +655,7 @@ namespace Microsoft.Web.Administration
             var result = attribute.TypeMatch(value);
             attribute.IsInheritedFromDefaultValue = (attribute.Schema == null || !attribute.Schema.IsRequired)
                                                     && result.Equals(attribute.ExtractDefaultValueFromSchema());
-            var isInheritedFromSiteDefaults = _defaults != null && result == GetSiteDefaults(name);
+            var isInheritedFromSiteDefaults = _defaults == null || result == GetSiteDefaults(name);
 
             // IMPORTANT: remove attribute if value is equal to default.
             Entity.SetAttributeValue(
