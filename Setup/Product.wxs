@@ -70,7 +70,7 @@
             <Directory Id="$(var.PlatformProgramFilesFolder)">
                 <Directory Id="INSTALLDIR" Name="$(var.ProductName)">
                     <Component Id="JexusManager" Guid="{7D7AF5BF-E0D6-4997-9E98-C8BBBFD7A29D}">                       
-                       <File Id="BouncyCastle.Crypto.dll" Name="BouncyCastle.Crypto.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\BouncyCastle.Crypto.dll" />
+                        <File Id="BouncyCastle.Crypto.dll" Name="BouncyCastle.Crypto.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\BouncyCastle.Crypto.dll" />
                         <File Id="CertificateInstaller.exe" Name="CertificateInstaller.exe" Vital="no" DiskId="1" Source="$(var.SourceDir)\CertificateInstaller.exe" />
                         <File Id="CertificateInstaller.exe.config" Name="CertificateInstaller.exe.config" Vital="no" DiskId="1" Source="$(var.SourceDir)\CertificateInstaller.exe.config" />
                         <File Id="CertificateInstaller.pdb" Name="CertificateInstaller.pdb" Vital="no" DiskId="1" Source="$(var.SourceDir)\CertificateInstaller.pdb" />
@@ -78,7 +78,9 @@
                         <File Id="Crad.Windows.Forms.Actions.dll" Name="Crad.Windows.Forms.Actions.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\Crad.Windows.Forms.Actions.dll" />
                         <File Id="Enums.NET.dll" Name="Enums.NET.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\Enums.NET.dll" />
                         <File Id="INIFileParser.dll" Name="INIFileParser.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\INIFileParser.dll" />
-                        <File Id="JexusManager.exe" Name="JexusManager.exe" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.exe" />
+                        <File Id="JexusManager.exe" Name="JexusManager.exe" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.exe">
+                            <netfx:NativeImage Id="SharpDevelopNGenImage" Priority="1" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension" />
+                        </File>
                         <File Id="JexusManager.exe.config" Name="JexusManager.exe.config" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.exe.config" />
                         <File Id="JexusManager.pdb" Name="JexusManager.pdb" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.pdb" />
                         <File Id="JexusManager.Features.Access.dll" Name="JexusManager.Features.Access.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.Access.dll" />
