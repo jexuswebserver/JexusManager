@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?define SourceDir=..\bin\?>
+<?define ProductVersion="!(bind.FileVersion.JexusManager.exe)"?>
+<?define UpgradeCode="F07B4406-6CA1-4BFB-BAF0-3A2675DA5728"?>
+<?define ProductCode="629958AA-14AA-4F7A-8706-F3511D99EA38"?>
+<?define PackageCode="89E25BEF-C13F-4FAF-BD71-6FD060C0BB24"?>
+<?define ProductName="Jexus Manager"?>
+
+<?if $(var.Platform) = x64 ?>
+<?define PlatformProgramFilesFolder="ProgramFiles64Folder" ?>
+<?else ?>
+<?define PlatformProgramFilesFolder="ProgramFilesFolder" ?>
+<?endif ?>
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension"
+     xmlns:iis="http://schemas.microsoft.com/wix/IisExtension">
+    <Product Id="*"
+             Name="$(var.ProductName) $(var.ProductVersion)"
+             Language="1033"
+             Version="$(var.ProductVersion)"
+             Manufacturer="LeXtudio"
+             UpgradeCode="$(var.UpgradeCode)">
+
+        <Package Id="*"
+                 Comments="Jexus Manager is the management console for IIS/IIS Express and Jexus."
+                 InstallerVersion="300"
+                 Languages="1033"
+                 Compressed="yes"
+                 InstallScope="perMachine"
+                 Description="$(var.ProductName) $(var.ProductVersion)" />
+
+        <Icon Id="icon.ico" SourceFile="iis.ico" />
+        <Property Id="ARPPRODUCTICON" Value="icon.ico" />
+
+        <!-- Upgrade information -->
+		<Upgrade Id="$(var.UpgradeCode)">
+			<!-- The UpgradeCode must be changed to allow two versions of SharpDevelop to be installed side-by-side -->
+			
+			<!-- Checks for older versions -->
+			<UpgradeVersion Minimum="12.0.0"
+				IncludeMinimum="yes"
+				Maximum="$(var.ProductVersion)"
+				IncludeMaximum="no" 
+				Property="PREVIOUSVERSIONFOUND"/>
+			<!-- Checks for newer versions -->
+			<UpgradeVersion OnlyDetect="yes"
+				Property="NEWERVERSIONFOUND"
+				Minimum="$(var.ProductVersion)"
+				IncludeMinimum="no"/>
+		</Upgrade>
+
+        <!-- Embed the cab -->
+        <Media Id="1" Cabinet="cab1.cab" EmbedCab="yes" />
+
+        <!-- MainFeature -->
+        <Feature Id="ProductFeature"
+                 Title="$(var.ProductName)"
+                 Level="1"
+                 ConfigurableDirectory="INSTALLDIR">
+
+            <!-- Files installed -->
+            <ComponentRef Id="JexusManager" />
+            <ComponentRef Id="JexusManagerProgramMenuItems" />
+        </Feature>
+
+        <!-- Directories and files -->
+        <Directory Id="TARGETDIR" Name="SourceDir">
+            <Directory Id="$(var.PlatformProgramFilesFolder)">
+                <Directory Id="INSTALLDIR" Name="$(var.ProductName)">
+                    <Component Id="JexusManager" Guid="{7D7AF5BF-E0D6-4997-9E98-C8BBBFD7A29D}">                       
+                       <File Id="BouncyCastle.Crypto.dll" Name="BouncyCastle.Crypto.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\BouncyCastle.Crypto.dll" />
+                        <File Id="CertificateInstaller.exe" Name="CertificateInstaller.exe" Vital="no" DiskId="1" Source="$(var.SourceDir)\CertificateInstaller.exe" />
+                        <File Id="CertificateInstaller.exe.config" Name="CertificateInstaller.exe.config" Vital="no" DiskId="1" Source="$(var.SourceDir)\CertificateInstaller.exe.config" />
+                        <File Id="CertificateInstaller.pdb" Name="CertificateInstaller.pdb" Vital="no" DiskId="1" Source="$(var.SourceDir)\CertificateInstaller.pdb" />
+                        <File Id="CheckBoxComboBox.dll" Name="CheckBoxComboBox.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\CheckBoxComboBox.dll" />
+                        <File Id="Crad.Windows.Forms.Actions.dll" Name="Crad.Windows.Forms.Actions.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\Crad.Windows.Forms.Actions.dll" />
+                        <File Id="Enums.NET.dll" Name="Enums.NET.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\Enums.NET.dll" />
+                        <File Id="INIFileParser.dll" Name="INIFileParser.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\INIFileParser.dll" />
+                        <File Id="JexusManager.exe" Name="JexusManager.exe" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.exe" />
+                        <File Id="JexusManager.exe.config" Name="JexusManager.exe.config" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.exe.config" />
+                        <File Id="JexusManager.pdb" Name="JexusManager.pdb" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.pdb" />
+                        <File Id="JexusManager.Features.Access.dll" Name="JexusManager.Features.Access.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.Access.dll" />
+                        <File Id="JexusManager.Features.Access.pdb" Name="JexusManager.Features.Access.pdb" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.Access.pdb" />
+                        <File Id="JexusManager.Features.Asp.dll" Name="JexusManager.Features.Asp.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.Asp.dll" />
+                        <File Id="JexusManager.Features.Asp.pdb" Name="JexusManager.Features.Asp.pdb" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.Asp.pdb" />
+                        <File Id="JexusManager.Features.Authentication.dll" Name="JexusManager.Features.Authentication.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.Authentication.dll" />
+                        <File Id="JexusManager.Features.Authentication.pdb" Name="JexusManager.Features.Authentication.pdb" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.Authentication.pdb" />
+                        <File Id="JexusManager.Features.Authorization.dll" Name="JexusManager.Features.Authorization.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.Authorization.dll" />
+                        <File Id="JexusManager.Features.Authorization.pdb" Name="JexusManager.Features.Authorization.pdb" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.Authorization.pdb" />
+                        <File Id="JexusManager.Features.Caching.dll" Name="JexusManager.Features.Caching.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.Caching.dll" />
+                        <File Id="JexusManager.Features.Caching.pdb" Name="JexusManager.Features.Caching.pdb" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.Caching.pdb" />
+                        <File Id="JexusManager.Features.Certificates.dll" Name="JexusManager.Features.Certificates.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.Certificates.dll" />
+                        <File Id="JexusManager.Features.Certificates.pdb" Name="JexusManager.Features.Certificates.pdb" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.Certificates.pdb" />
+                        <File Id="JexusManager.Features.Cgi.dll" Name="JexusManager.Features.Cgi.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.Cgi.dll" />
+                        <File Id="JexusManager.Features.Cgi.pdb" Name="JexusManager.Features.Cgi.pdb" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.Cgi.pdb" />
+                        <File Id="JexusManager.Features.Compression.dll" Name="JexusManager.Features.Compression.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.Compression.dll"
+                        />
+                        <File Id="JexusManager.Features.Compression.pdb" Name="JexusManager.Features.Compression.pdb" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.Compression.pdb"
+                        />
+                        <File Id="JexusManager.Features.DefaultDocument.dll" Name="JexusManager.Features.DefaultDocument.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.DefaultDocument.dll" />
+                        <File Id="JexusManager.Features.DefaultDocument.pdb" Name="JexusManager.Features.DefaultDocument.pdb" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.DefaultDocument.pdb" />
+                        <File Id="JexusManager.Features.DirectoryBrowse.dll" Name="JexusManager.Features.DirectoryBrowse.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.DirectoryBrowse.dll" />
+                        <File Id="JexusManager.Features.DirectoryBrowse.pdb" Name="JexusManager.Features.DirectoryBrowse.pdb" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.DirectoryBrowse.pdb" />
+                        <File Id="JexusManager.Features.FastCgi.dll" Name="JexusManager.Features.FastCgi.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.FastCgi.dll" />
+                        <File Id="JexusManager.Features.FastCgi.pdb" Name="JexusManager.Features.FastCgi.pdb" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.FastCgi.pdb" />
+                        <File Id="JexusManager.Features.Handlers.dll" Name="JexusManager.Features.Handlers.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.Handlers.dll" />
+                        <File Id="JexusManager.Features.Handlers.pdb" Name="JexusManager.Features.Handlers.pdb" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.Handlers.pdb" />
+                        <File Id="JexusManager.Features.HttpApi.dll" Name="JexusManager.Features.HttpApi.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.HttpApi.dll" />
+                        <File Id="JexusManager.Features.HttpApi.pdb" Name="JexusManager.Features.HttpApi.pdb" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.HttpApi.pdb" />
+                        <File Id="JexusManager.Features.HttpErrors.dll" Name="JexusManager.Features.HttpErrors.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.HttpErrors.dll" />
+                        <File Id="JexusManager.Features.HttpErrors.pdb" Name="JexusManager.Features.HttpErrors.pdb" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.HttpErrors.pdb" />
+                        <File Id="JexusManager.Features.HttpRedirect.dll" Name="JexusManager.Features.HttpRedirect.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.HttpRedirect.dll" />
+                        <File Id="JexusManager.Features.HttpRedirect.pdb" Name="JexusManager.Features.HttpRedirect.pdb" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.HttpRedirect.pdb" />
+                        <File Id="JexusManager.Features.IpSecurity.dll" Name="JexusManager.Features.IpSecurity.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.IpSecurity.dll" />
+                        <File Id="JexusManager.Features.IpSecurity.pdb" Name="JexusManager.Features.IpSecurity.pdb" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.IpSecurity.pdb" />
+                        <File Id="JexusManager.Features.IsapiCgiRestriction.dll" Name="JexusManager.Features.IsapiCgiRestriction.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.IsapiCgiRestriction.dll" />
+                        <File Id="JexusManager.Features.IsapiCgiRestriction.pdb" Name="JexusManager.Features.IsapiCgiRestriction.pdb" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.IsapiCgiRestriction.pdb" />
+                        <File Id="JexusManager.Features.IsapiFilters.dll" Name="JexusManager.Features.IsapiFilters.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.IsapiFilters.dll" />
+                        <File Id="JexusManager.Features.IsapiFilters.pdb" Name="JexusManager.Features.IsapiFilters.pdb" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.IsapiFilters.pdb" />
+                        <File Id="JexusManager.Features.Jexus.dll" Name="JexusManager.Features.Jexus.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.Jexus.dll" />
+                        <File Id="JexusManager.Features.Jexus.pdb" Name="JexusManager.Features.Jexus.pdb" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.Jexus.pdb" />
+                        <File Id="JexusManager.Features.Logging.dll" Name="JexusManager.Features.Logging.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.Logging.dll" />
+                        <File Id="JexusManager.Features.Logging.pdb" Name="JexusManager.Features.Logging.pdb" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.Logging.pdb" />
+                        <File Id="JexusManager.Features.MimeMap.dll" Name="JexusManager.Features.MimeMap.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.MimeMap.dll" />
+                        <File Id="JexusManager.Features.MimeMap.pdb" Name="JexusManager.Features.MimeMap.pdb" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.MimeMap.pdb" />
+                        <File Id="JexusManager.Features.Modules.dll" Name="JexusManager.Features.Modules.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.Modules.dll" />
+                        <File Id="JexusManager.Features.Modules.pdb" Name="JexusManager.Features.Modules.pdb" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.Modules.pdb" />
+                        <File Id="JexusManager.Features.RequestFiltering.dll" Name="JexusManager.Features.RequestFiltering.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.RequestFiltering.dll" />
+                        <File Id="JexusManager.Features.RequestFiltering.pdb" Name="JexusManager.Features.RequestFiltering.pdb" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.RequestFiltering.pdb" />
+                        <File Id="JexusManager.Features.ResponseHeaders.dll" Name="JexusManager.Features.ResponseHeaders.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.ResponseHeaders.dll" />
+                        <File Id="JexusManager.Features.ResponseHeaders.pdb" Name="JexusManager.Features.ResponseHeaders.pdb" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.ResponseHeaders.pdb" />
+                        <File Id="JexusManager.Features.Rewrite.dll" Name="JexusManager.Features.Rewrite.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.Rewrite.dll" />
+                        <File Id="JexusManager.Features.Rewrite.pdb" Name="JexusManager.Features.Rewrite.pdb" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.Rewrite.pdb" />
+                        <File Id="JexusManager.Features.TraceFailedRequests.dll" Name="JexusManager.Features.TraceFailedRequests.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.TraceFailedRequests.dll" />
+                        <File Id="JexusManager.Features.TraceFailedRequests.pdb" Name="JexusManager.Features.TraceFailedRequests.pdb" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Features.TraceFailedRequests.pdb" />
+                        <File Id="JexusManager.Shared.dll" Name="JexusManager.Shared.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Shared.dll" />
+                        <File Id="JexusManager.Shared.pdb" Name="JexusManager.Shared.pdb" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Shared.pdb" />
+                        <File Id="MakarovDev.ExpandCollapsePanel.dll" Name="MakarovDev.ExpandCollapsePanel.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\MakarovDev.ExpandCollapsePanel.dll" />
+                        <File Id="MakarovDev.ExpandCollapsePanel.pdb" Name="MakarovDev.ExpandCollapsePanel.pdb" Vital="no" DiskId="1" Source="$(var.SourceDir)\MakarovDev.ExpandCollapsePanel.pdb" />
+                        <File Id="Microsoft.Web.Administration.dll" Name="Microsoft.Web.Administration.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\Microsoft.Web.Administration.dll" />
+                        <File Id="Microsoft.Web.Administration.pdb" Name="Microsoft.Web.Administration.pdb" Vital="no" DiskId="1" Source="$(var.SourceDir)\Microsoft.Web.Administration.pdb" />
+                        <File Id="Microsoft.Web.Configuration.AppHostFileProvider.dll" Name="Microsoft.Web.Configuration.AppHostFileProvider.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\Microsoft.Web.Configuration.AppHostFileProvider.dll" />
+                        <File Id="Microsoft.Web.Configuration.AppHostFileProvider.pdb" Name="Microsoft.Web.Configuration.AppHostFileProvider.pdb" Vital="no" DiskId="1" Source="$(var.SourceDir)\Microsoft.Web.Configuration.AppHostFileProvider.pdb" />
+                        <File Id="Microsoft.Web.Management.dll" Name="Microsoft.Web.Management.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\Microsoft.Web.Management.dll" />
+                        <File Id="Microsoft.Web.Management.pdb" Name="Microsoft.Web.Management.pdb" Vital="no" DiskId="1" Source="$(var.SourceDir)\Microsoft.Web.Management.pdb" />
+                        <File Id="Mono.Options.dll" Name="Mono.Options.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\Mono.Options.dll" />
+                        <File Id="Mono.Security.dll" Name="Mono.Security.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\Mono.Security.dll" />
+                        <File Id="Newtonsoft.Json.dll" Name="Newtonsoft.Json.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\Newtonsoft.Json.dll" />
+                        <File Id="Octokit.dll" Name="Octokit.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\Octokit.dll" />
+                        <File Id="Ookii.Dialogs.dll" Name="Ookii.Dialogs.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\Ookii.Dialogs.dll" />
+                        <File Id="PeNet.dll" Name="PeNet.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\PeNet.dll" />
+                        <File Id="PeNet.Asn1.dll" Name="PeNet.Asn1.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\PeNet.Asn1.dll" />
+                        <File Id="Rollbar.dll" Name="Rollbar.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\Rollbar.dll" />
+                        <File Id="System.Net.Http.Formatting.dll" Name="System.Net.Http.Formatting.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\System.Net.Http.Formatting.dll" />
+                        <File Id="System.Reactive.Core.dll" Name="System.Reactive.Core.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\System.Reactive.Core.dll" />
+                        <File Id="System.Reactive.Interfaces.dll" Name="System.Reactive.Interfaces.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\System.Reactive.Interfaces.dll" />
+                        <File Id="System.Reactive.Linq.dll" Name="System.Reactive.Linq.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\System.Reactive.Linq.dll" />
+                        <File Id="System.Reactive.PlatformServices.dll" Name="System.Reactive.PlatformServices.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\System.Reactive.PlatformServices.dll" />
+                        <File Id="System.Reactive.Windows.Threading.dll" Name="System.Reactive.Windows.Threading.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\System.Reactive.Windows.Threading.dll"
+                        />
+                        <File Id="Vista.Controls.BreadcrumbBar.dll" Name="Vista.Controls.BreadcrumbBar.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\Vista.Controls.BreadcrumbBar.dll" />
+                    </Component>
+                </Directory>
+            </Directory>
+            <Directory Id="ProgramMenuFolder" Name="Programs">
+				<Component Id="JexusManagerProgramMenuItems" Guid="BBB6934E-57F3-4E39-A2C8-C6C26A9FE0C6">
+					<!--
+								Fix ICE 38 by adding a dummy registry key that is the key for this shortcut.
+								http://msdn.microsoft.com/library/en-us/msi/setup/ice38.asp
+							-->
+					<RegistryValue Id="JexusManagerExeStartMenuShortcutRegistryKey" Root="HKCU" Type="string" KeyPath="yes" Key="Software\LeXtudio\JexusManager\$(var.ProductVersion)" Name="ProgramFilesShortcut" Value="1" />
+					<Shortcut Name="Jexus Manager $(var.ProductVersion)" Target="[!JexusManager.exe]" Id="JexusManagerExeStartMenuShortcut" WorkingDirectory="INSTALLDIR" Directory="ProgramMenuFolder" />
+                    <RemoveFolder Id="CleanUpShortCut" Directory="ProgramMenuFolder" On="uninstall"/>
+				</Component>
+			</Directory>
+        </Directory>
+
+        <!--Check .NET 4.6 is installed for Windows 7 and above-->
+        <PropertyRef Id="WIX_IS_NETFRAMEWORK_46_OR_LATER_INSTALLED" />
+        <Condition Message="This application requires .NET Framework 4.6. Please install the .NET Framework then run this installer again.">
+            <![CDATA[Installed OR (VersionNT >= 600 AND WIX_IS_NETFRAMEWORK_46_OR_LATER_INSTALLED)]]>
+        </Condition>
+
+        <?if $(var.Platform) = x64 ?>
+        <Condition Message="The 64-bit version of $(var.ProductName) cannot be installed on a 32-bit edition of Microsoft Windows.">
+            <![CDATA[Installed OR VersionNT64]]>
+        </Condition>
+        <?else?>
+        <Condition Message="The 32-bit version of $(var.ProductName) cannot be installed on a 64-bit edition of Microsoft Windows.">
+            <![CDATA[Installed OR not VersionNT64]]>
+        </Condition>
+        <?endif ?>
+
+        <!--
+			If a newer version of SharpDevelop is installed, show an error message.
+	
+			This message is not displayed immediately, the FindRelatedProducts 
+			action occurs well into the installation after the user has
+			configured everything.
+		-->
+		<CustomAction Id="NoDowngrade" Error="A later version of [ProductName] is already installed." />
+
+        <!-- Custom Actions using Install Util -->
+        <InstallExecuteSequence>
+			<!--
+				Display an error message if a newer version found.
+				
+				Since the installer completely removes the existing SharpDevelop installation,
+				downgrades would work without any problems, but for now we 
+				inform the user that a newer version already exists.
+				-> Actually, there's trouble with downgrades because Windows Installer first determines
+					the existing components before removing the old installation; so all versioned
+					libraries will get removed instead of downgraded.
+ 			-->
+			<Custom Action="NoDowngrade" After="FindRelatedProducts">NEWERVERSIONFOUND</Custom>
+			<!--
+				Removes the older version of SharpDevelop, if we are upgrading,
+				before installing the new version.
+				Unfortunately the user is not informed of this upgrade. I think
+				we need a custom dialog showing the old installation located and
+				the fact that it is going to be upgraded.
+				The best place to do this is after InstallFinalize however if we
+				do it then after we have removed a file from an addin, and changed
+				the Component Guid, the modified component is not installed. So
+				we make sure SharpDevelop is completely removed before installing
+				the newer version. This also covers us if we accidentally
+				modify a component but do not change its Guid.
+				http://msdn.microsoft.com/library/en-us/msi/setup/removeexistingproducts_action.asp
+			-->
+			<RemoveExistingProducts Before="InstallInitialize"/>
+
+        </InstallExecuteSequence>
+
+        <!-- Using WixUI -->
+        <Property Id="WIXUI_INSTALLDIR">INSTALLDIR</Property>
+        <UI>
+            <UIRef Id="WixUI_FeatureTree" />
+            <Error Id='1001'>Error [1]. [2]</Error>
+        </UI>
+
+    </Product>
+</Wix>
