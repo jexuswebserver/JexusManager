@@ -634,6 +634,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="iis.ico" />
+    <None Include="ThirdPartyNotices.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\server_disabled_16.png" />
     <None Include="Resources\farm_disabled_16.png" />
     <None Include="Resources\title_48.png" />

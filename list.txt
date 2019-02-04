@@ -86,3 +86,4 @@ System.Reactive.Linq.dll
 System.Reactive.PlatformServices.dll
 System.Reactive.Windows.Threading.dll
 Vista.Controls.BreadcrumbBar.dll
+ThirdPartyNotices.txt

@@ -163,6 +163,7 @@
                         <File Id="System.Reactive.Windows.Threading.dll" Name="System.Reactive.Windows.Threading.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\System.Reactive.Windows.Threading.dll"
                         />
                         <File Id="Vista.Controls.BreadcrumbBar.dll" Name="Vista.Controls.BreadcrumbBar.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\Vista.Controls.BreadcrumbBar.dll" />
+                        <File Id="ThirdPartyNotices.txt" Name="ThirdPartyNotices.txt" Vital="no" DiskId="1" Source="$(var.SourceDir)\ThirdPartyNotices.txt" />
                     </Component>
                 </Directory>
             </Directory>
