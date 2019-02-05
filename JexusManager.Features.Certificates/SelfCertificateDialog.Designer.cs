@@ -176,7 +176,6 @@
             this.cbLength.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbLength.FormattingEnabled = true;
             this.cbLength.Items.AddRange(new object[] {
-            "384",
             "512",
             "1024",
             "2048",

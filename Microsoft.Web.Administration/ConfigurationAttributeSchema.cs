@@ -215,7 +215,7 @@ namespace Microsoft.Web.Administration
             }
             catch (MissingMethodException)
             {
-                RollbarLocator.RollbarInstance.Error($"type: {ValidationType}; parameter: {ValidationParameter}");
+                RollbarLocator.RollbarInstance.Error($"type: {ValidationType}; parameter: {ValidationParameter}; is null ? {ValidationParameter == null}");
                 throw;
             }
         }
