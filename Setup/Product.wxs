@@ -15,7 +15,7 @@
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
      xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension"
-     xmlns:iis="http://schemas.microsoft.com/wix/IisExtension">
+     xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
     <Product Id="*"
              Name="$(var.ProductName) $(var.ProductVersion)"
              Language="1033"
@@ -205,6 +205,14 @@
 		-->
 		<CustomAction Id="NoDowngrade" Error="A later version of [ProductName] is already installed." />
 
+        <util:CloseApplication Id="CloseIisManager"
+                            CloseMessage="yes"
+                            Description="Please close Jexus Manager before continuing."
+                            ElevatedCloseMessage="yes"
+                            RebootPrompt="no"
+                            PromptToContinue="yes"
+                            Target="JexusManager.exe" />
+
         <!-- Custom Actions using Install Util -->
         <InstallExecuteSequence>
 			<!--
@@ -233,7 +241,7 @@
 				http://msdn.microsoft.com/library/en-us/msi/setup/removeexistingproducts_action.asp
 			-->
 			<RemoveExistingProducts Before="InstallInitialize"/>
-
+            <Custom Action="WixCloseApplications" After="InstallInitialize" />
         </InstallExecuteSequence>
 
         <!-- Using WixUI -->
