@@ -1,0 +1,1 @@
+msiexec /i "JexusManager_x64.msi" /L*V "jexusmanager.log"
