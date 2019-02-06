@@ -10,6 +10,16 @@ namespace Microsoft.Web.Administration
     [Obfuscation(Exclude = true, ApplyToMembers = false)]
     internal class NonEmptyStringValidator : ConfigurationValidatorBase
     {
+        public NonEmptyStringValidator()
+        {
+
+        }
+
+        public NonEmptyStringValidator(string parameter)
+        {
+
+        }
+
         public override void Validate(object value)
         {
             var data = (string)value;

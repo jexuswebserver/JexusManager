@@ -15,6 +15,8 @@ namespace Tests.Exceptions
     using System.Xml.Linq;
     using System.Xml.XPath;
     using System.Net;
+    using System.Security.AccessControl;
+    using System.Security.Principal;
 
     public class ServerTestCases
     {
@@ -1506,5 +1508,62 @@ namespace Tests.Exceptions
                 $"Filename: \\\\?\\{current}\r\nError: The configuration section 'system.applicationHost/applicationPools' cannot be read because it is missing a section declaration\r\n\r\n",
                 exception.Message);
         }
+#if !IIS
+        [Fact]
+        public void TestIisExpressSchemaNonEmpty()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string current = Path.Combine(directoryName, @"applicationHost.config");
+            string original = Path.Combine(directoryName, @"original2.config");
+            File.Copy(original, current, true);
+            TestHelper.FixPhysicalPathMono(current);
+
+            string schemaIis = Environment.ExpandEnvironmentVariables(@"%ProgramFiles%\IIS Express\config\schema\IIS_schema.xml");
+
+            string backup = Path.GetTempFileName();
+            File.Copy(schemaIis, backup, true);
+            bool replaced = false;
+            try
+            {
+
+                {
+                    // add the tags
+                    var file = XDocument.Load(schemaIis);
+                    var root = file.Root;
+
+                    var directory = root?.XPathSelectElement("/configSchema/sectionSchema[@name='system.applicationHost/log']/element[@name='centralW3CLogFile']/attribute[@name='directory']");
+                    directory.SetAttributeValue("validationParameter", "");
+                    file.Save(schemaIis);
+                    replaced = true;
+                }
+
+                var server = new IisExpressServerManager(current);
+                var pools = server.ApplicationPools;
+
+                var configuration = server.GetApplicationHostConfiguration();
+                var section = configuration.GetSection("system.applicationHost/log");
+                var element = section.GetChildElement("centralW3CLogFile");
+                var exception = Assert.Throws<COMException>(() => element["directory"] = "");
+
+                Assert.Equal(
+                    $"String must not be empty\r\n",
+                    exception.Message);
+            }
+            finally
+            {
+                if (replaced)
+                {
+                    File.Copy(backup, schemaIis, true);
+                }
+            }
+        }
+#endif
     }
 }
