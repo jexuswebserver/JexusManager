@@ -131,7 +131,7 @@ namespace JexusManager.Features.Certificates
                             subjectAlternativeNames.Add(new GeneralName(GeneralName.DnsName, item));
                         }
                         var subjectAlternativeNamesExtension = new DerSequence(subjectAlternativeNames.ToArray());
-                        certGen.AddExtension(X509Extensions.SubjectAlternativeName, false, subjectAlternativeNamesExtension);
+                        certGen.AddExtension(X509Extensions.SubjectAlternativeName, true, subjectAlternativeNamesExtension);
                     }
 
                     string hashName = cbHashing.SelectedIndex == 0 ? "SHA1WithRSA" : "SHA256WithRSA";
