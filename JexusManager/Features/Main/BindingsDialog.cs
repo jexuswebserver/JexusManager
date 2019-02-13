@@ -6,7 +6,6 @@ namespace JexusManager.Features.Main
 {
     using System;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Globalization;
     using System.Windows.Forms;
 
@@ -28,16 +27,7 @@ namespace JexusManager.Features.Main
             _site = site;
             foreach (Binding binding in site.Bindings)
             {
-                var node = new ListViewItem(new[]
-                {
-                    binding.Protocol,
-                    binding.Host.HostToDisplay(),
-                    binding.EndPoint?.Port.ToString(CultureInfo.InvariantCulture),
-                    binding.EndPoint?.Address.AddressToDisplay(),
-                    binding.CanBrowse ? string.Empty : binding.BindingInformation
-                })
-                { Tag = binding };
-                listView1.Items.Add(node);
+                listView1.Items.Add(binding.ToListViewItem());
             }
 
             var container = new CompositeDisposable();

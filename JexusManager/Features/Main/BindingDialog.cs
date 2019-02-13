@@ -30,6 +30,7 @@ namespace JexusManager.Features.Main
             Binding = binding1;
             Text = Binding == null ? "Create Site Binding" : "Edit Site Binding";
             DialogHelper.LoadAddresses(cbAddress);
+            cbAddress.SelectedIndex = -1;
             txtPort.Text = "80";
             cbType.SelectedIndex = 0;
             if (!site.Server.SupportsSni)
@@ -45,9 +46,25 @@ namespace JexusManager.Features.Main
             {
                 cbType.Text = Binding.Protocol;
                 cbType.Enabled = false;
-                cbAddress.Text = Binding.EndPoint.Address.AddressToCombo();
-                txtPort.Text = Binding.EndPoint.Port.ToString();
+                cbAddress.Text = Binding.EndPoint?.Address.AddressToCombo();
+                txtPort.Text = Binding.EndPoint?.Port.ToString();
                 txtHost.Text = Binding.Host.HostToDisplay();
+                if (Binding.EndPoint == null)
+                {
+                    var value = Binding.BindingInformation;
+                    var last = value.LastIndexOf(':');
+                    if (last > 0)
+                    {
+                        txtHost.Text = value.Substring(last + 1).HostToDisplay();
+                        var next = value.LastIndexOf(':', last - 1);
+                        txtPort.Text = value.Substring(next + 1, last - next - 1);
+                        if (next > -1)
+                        {
+                            cbAddress.Text = value.Substring(0, next);
+                        }
+                    }
+                }
+
                 if (site.Server.SupportsSni)
                 {
                     cbSniRequired.Checked = Binding.GetIsSni();
