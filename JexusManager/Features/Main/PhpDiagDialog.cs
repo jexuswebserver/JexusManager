@@ -108,8 +108,7 @@ namespace JexusManager.Features.Main
                         if (foundPhpHandler.Count == 0)
                         {
                             Error($"No valid FastCGI handler is registered for this web site.");
-                            Error($" * To run PHP on IIS, please refer to https://docs.microsoft.com/en-us/iis/application-frameworks/scenario-build-a-php-website-on-iis/configuring-step-1-install-iis-and-php#13-download-and-install-php-manually for more details.");
-                            Error($" * To run Python on IIS, please refer to https://pypi.org/project/wfastcgi/ or use HttpPlatformHandler https://docs.microsoft.com/en-us/iis/extensions/httpplatformhandler/httpplatformhandler-configuration-reference.");
+                            Error($"To run PHP on IIS, please refer to https://docs.microsoft.com/en-us/iis/application-frameworks/scenario-build-a-php-website-on-iis/configuring-step-1-install-iis-and-php#13-download-and-install-php-manually for more details.");
                             return;
                         }
 
@@ -135,9 +134,8 @@ namespace JexusManager.Features.Main
                         if (foundPhp.Count == 0)
                         {
                             Error($"No suitable FastCGI appilcation is registered on this server.");
-                            Error($" * To run PHP on IIS, please refer to https://docs.microsoft.com/en-us/iis/application-frameworks/scenario-build-a-php-website-on-iis/configuring-step-1-install-iis-and-php#13-download-and-install-php-manually for more details.");
-                            Error($" * To run Python on IIS, please refer to https://pypi.org/project/wfastcgi/ or use HttpPlatformHandler https://docs.microsoft.com/en-us/iis/extensions/httpplatformhandler/httpplatformhandler-configuration-reference.");
-                            return;
+                            Error($"To run PHP on IIS, please refer to https://docs.microsoft.com/en-us/iis/application-frameworks/scenario-build-a-php-website-on-iis/configuring-step-1-install-iis-and-php#13-download-and-install-php-manually for more details.");
+                           return;
                         }
 
                         Debug(Environment.NewLine);
@@ -191,10 +189,6 @@ namespace JexusManager.Features.Main
                                 {
                                     Error($"* PHP {info.FileVersion} ({path}) is unknown or obsolete. Please refer to http://php.net/supported-versions.php for more details.");
                                 }
-                            }
-                            else if (path.TrimEnd('"').EndsWith("python.exe", StringComparison.OrdinalIgnoreCase))
-                            {
-                                // Python
                             }
                         }
 
@@ -285,10 +279,6 @@ namespace JexusManager.Features.Main
                                 Debug(string.Empty);
 
                                 // TODO: verify other configuration in php.info.
-                            }
-                            else if (path.TrimEnd('"').EndsWith("python.exe", StringComparison.OrdinalIgnoreCase))
-                            {
-
                             }
                         }
                     }
