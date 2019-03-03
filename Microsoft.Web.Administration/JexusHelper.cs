@@ -658,7 +658,11 @@ namespace Microsoft.Web.Administration
                 variables.Remove("rewrite");
             }
 
-            application.Extra = variables;
+            application.Extra.Clear();
+            foreach (var item in variables)
+            {
+                application.Extra.Add(item.Key, item.Value);
+            }
         }
 
         public async Task SaveAsync(Application application)

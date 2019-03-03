@@ -43,7 +43,7 @@ namespace Microsoft.Web.Administration
                     ? $"{address}:{port} ({binding.Protocol})"
                     : $"{host} on {address}:{port} ({binding.Protocol})";
         }
-
+#if !IIS
         public static ListViewItem ToListViewItem(this Binding binding)
         {
             string host = binding.Host.HostToDisplay();
@@ -75,5 +75,6 @@ namespace Microsoft.Web.Administration
                 })
                 { Tag = binding };
         }
+#endif
     }
 }

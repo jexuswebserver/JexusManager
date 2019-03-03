@@ -190,7 +190,7 @@ namespace Microsoft.Web.Administration
             get { return (VirtualDirectoryDefaults)ChildElements["virtualDirectoryDefaults"]; }
         }
 
-        internal SortedDictionary<string, List<string>> Extra { get; set; }
+        internal SortedDictionary<string, List<string>> Extra { get; set; } = new SortedDictionary<string, List<string>>();
         internal ApplicationCollection Parent { get; private set; }
 
         internal ServerManager Server
