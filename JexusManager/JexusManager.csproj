@@ -72,7 +72,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\Octokit.dll</HintPath>
     </Reference>
-    <Reference Include="System" />
+    <Reference Include="System">
+      <HintPath>C:\Users\lextm\.nuget\packages\microsoft.windows.compatibility.shims\2.0.0\lib\netcoreapp2.0\System.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Design" />
     <Reference Include="System.Net.Http" />
@@ -175,6 +177,12 @@
       <DependentUpon>IdentityDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Features\Main\IdentityEditor.cs" />
+    <Compile Include="Features\Main\KestrelDiagDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Features\Main\KestrelDiagDialog.Designer.cs">
+      <DependentUpon>KestrelDiagDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Features\Main\MainModule.cs" />
     <Compile Include="Features\Main\ModulePageInfoListViewItem.cs" />
     <Compile Include="Features\Main\PhysicalDirectoryFeature.cs" />
@@ -395,6 +403,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Features\Main\IdentityDialog.resx">
       <DependentUpon>IdentityDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Features\Main\KestrelDiagDialog.resx">
+      <DependentUpon>KestrelDiagDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Features\Main\PhysicalDirectoryPage.resx">
       <DependentUpon>PhysicalDirectoryPage.cs</DependentUpon>

@@ -95,12 +95,12 @@ namespace JexusManager.Features.Main
                             {
                                 if (File.Exists(item.Path))
                                 {
-                                    Debug($"* Found a valid FastCGI handler as {{ Name: {item.Name}, Path: {item.Path}, State: {item.GetState(handlers.AccessPolicy)}, Handler: {item.TypeString}, Entry Type: {item.Flag} }}.");
+                                    Debug($"* Found a valid FastCGI handler as {{ Name: {item.Name}, Path: {item.Path}, State: {item.GetState(handlers.AccessPolicy)}, Module: {item.TypeString}, Entry Type: {item.Flag} }}.");
                                     foundPhpHandler.Add(item);
                                 }
                                 else
                                 {
-                                    Error($"* Found an invalid FastCGI handler as {{ {item.Name}, Path: {item.Path}, State: {item.GetState(handlers.AccessPolicy)}, Handler: {item.TypeString}, Entry Type: {item.Flag} }}.");
+                                    Error($"* Found an invalid FastCGI handler as {{Name: {item.Name}, Path: {item.Path}, State: {item.GetState(handlers.AccessPolicy)}, Module: {item.TypeString}, Entry Type: {item.Flag} }} because the path does not exist.");
                                 }
                             }
                         }

@@ -96,6 +96,7 @@ namespace JexusManager.Features.Main
                     manageGroup.Items.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     manageGroup.Items.Add(new TextTaskItem("Troubleshooting", string.Empty, true));
                     manageGroup.Items.Add(new MethodTaskItem("FixBinding", "Binding Diagnostics", string.Empty).SetUsage());
+                    manageGroup.Items.Add(new MethodTaskItem("FixKestrel", "ASP.NET Core Diagnostics", string.Empty).SetUsage());
                     manageGroup.Items.Add(new MethodTaskItem("FixProject", "Project Diagnostics", string.Empty).SetUsage());
                     manageGroup.Items.Add(new MethodTaskItem("FixPhp", "PHP Diagnostics", string.Empty).SetUsage());
                 }
@@ -197,6 +198,12 @@ namespace JexusManager.Features.Main
             public void FixPhp()
             {
                 _owner.FixPhp();
+            }
+
+            [Obfuscation(Exclude = true)]
+            public void FixKestrel()
+            {
+                _owner.FixKestrel();
             }
         }
 
@@ -411,6 +418,13 @@ namespace JexusManager.Features.Main
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var dialog = new PhpDiagDialog(Module, service.Site.Server);
+            dialog.ShowDialog();
+        }
+
+        private void FixKestrel()
+        {
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+            var dialog = new KestrelDiagDialog(Module, service.Site);
             dialog.ShowDialog();
         }
 

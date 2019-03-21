@@ -61,6 +61,7 @@ namespace Microsoft.Web.Administration
                 "iisexpress.exe");
             if (!File.Exists(result))
             {
+                // fall back to 32 bit (IIS 7.5 Express)
                 result = Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
                     "IIS Express",
