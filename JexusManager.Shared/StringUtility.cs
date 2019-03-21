@@ -76,7 +76,6 @@ namespace JexusManager
                 return name == host;
             }
 
-#if !NETCOREAPP3_0
             if (name.IsWildcard())
             {
                 // IMPORTANT: wildcard certificate.
@@ -86,7 +85,7 @@ namespace JexusManager
                 return LikeOperator.LikeString(host, name, Microsoft.VisualBasic.CompareMethod.Text);
 #endif
             }
-#endif
+
             return name == host;
         }
     }
