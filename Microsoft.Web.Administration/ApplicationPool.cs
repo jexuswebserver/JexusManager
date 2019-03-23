@@ -14,6 +14,9 @@ namespace Microsoft.Web.Administration
         private ApplicationPoolCpu _cpu;
 
         private ObjectState? _state;
+        internal const string ManagedRuntimeVersion40 = "v4.0";
+        internal const string ManagedRuntimeVersion20 = "v2.0";
+        internal readonly static string ManagedRuntimeVersionNone = string.Empty;
 
         internal ApplicationPool(ConfigurationElement element, ApplicationPoolCollection parent)
             : base(element, "add", null, parent, null, null)

@@ -160,7 +160,7 @@ namespace JexusManager.Features.Main
                             }
 
                             // check ASP.NET version.
-                            if (pool.ManagedRuntimeVersion != string.Empty)
+                            if (pool.ManagedRuntimeVersion != ApplicationPool.ManagedRuntimeVersionNone)
                             {
                                 Error($"The application pool '{name}' is using .NET CLR {pool.ManagedRuntimeVersion}. Please set it to 'No Managed Code'.");
                             }

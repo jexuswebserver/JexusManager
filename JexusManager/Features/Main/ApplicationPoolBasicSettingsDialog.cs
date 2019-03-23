@@ -6,7 +6,6 @@ namespace JexusManager.Features.Main
 {
     using System;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Windows.Forms;
 
     using Microsoft.Web.Administration;
@@ -80,15 +79,15 @@ namespace JexusManager.Features.Main
 
                     if (cbVersion.SelectedIndex == 0)
                     {
-                        Pool.ManagedRuntimeVersion = "v4.0";
+                        Pool.ManagedRuntimeVersion = ApplicationPool.ManagedRuntimeVersion40;
                     }
                     else if (cbVersion.SelectedIndex == 1)
                     {
-                        Pool.ManagedRuntimeVersion = "v2.0";
+                        Pool.ManagedRuntimeVersion = ApplicationPool.ManagedRuntimeVersion20;
                     }
                     else
                     {
-                        Pool.ManagedRuntimeVersion = string.Empty;
+                        Pool.ManagedRuntimeVersion = ApplicationPool.ManagedRuntimeVersionNone;
                     }
 
                     if (add && collection.Parent.Mode == WorkingMode.IisExpress)

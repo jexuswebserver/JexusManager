@@ -226,7 +226,7 @@ namespace Microsoft.Web.Administration
             var newPool = new ApplicationPool(null, ApplicationPools)
             {
                 Name = "DefaultAppPool",
-                ManagedRuntimeVersion = variables.Load(new List<string> {"v2.0"}, "runtime")[0]
+                ManagedRuntimeVersion = variables.Load(new List<string> {ApplicationPool.ManagedRuntimeVersion20}, "runtime")[0]
             };
             newPool.ProcessModel.MaxProcesses = long.Parse(variables.Load(new List<string> { "1" }, "httpd.processes")[0]);
             newPool.ProcessModel.UserName = variables.Load(new List<string> { string.Empty }, "httpd.user")[0];

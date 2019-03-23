@@ -16,11 +16,11 @@ namespace JexusManager.Features.Main
     {
         public ApplicationPoolAdvancedSettings(ApplicationPool pool)
         {
-            if (pool.ManagedRuntimeVersion == "v4.0")
+            if (pool.ManagedRuntimeVersion == ApplicationPool.ManagedRuntimeVersion40)
             {
                 CLRVersion = CLRVersion.V40;
             }
-            else if (pool.ManagedRuntimeVersion == "v2.0")
+            else if (pool.ManagedRuntimeVersion == ApplicationPool.ManagedRuntimeVersion20)
             {
                 CLRVersion = CLRVersion.V20;
             }
@@ -117,15 +117,15 @@ namespace JexusManager.Features.Main
         {
             if (CLRVersion == CLRVersion.V40)
             {
-                pool.ManagedRuntimeVersion = "v4.0";
+                pool.ManagedRuntimeVersion = ApplicationPool.ManagedRuntimeVersion40;
             }
             else if (CLRVersion == CLRVersion.V20)
             {
-                pool.ManagedRuntimeVersion = "v2.0";
+                pool.ManagedRuntimeVersion = ApplicationPool.ManagedRuntimeVersion20;
             }
             else if (CLRVersion == CLRVersion.NoManagedCode)
             {
-                pool.ManagedRuntimeVersion = string.Empty;
+                pool.ManagedRuntimeVersion = ApplicationPool.ManagedRuntimeVersionNone;
             }
 
             pool.Enable32BitAppOnWin64 = Enable32Bit;
