@@ -56,7 +56,19 @@ namespace JexusManager.Features.Main
                         {
                             ShowMessage("An application pool with this name already exists.", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                             txtName.Focus();
+                            txtName.SelectAll();
                             return;
+                        }
+
+                        foreach (var ch in ApplicationPoolCollection.InvalidApplicationPoolNameCharacters())
+                        {
+                            if (txtName.Text.Contains(ch))
+                            {
+                                ShowMessage($"The application pool name cannot contain the following characters: {ApplicationPoolCollection.InvalidApplicationPoolNameCharacters().Combine(", ")}.", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                                txtName.Focus();
+                                txtName.SelectAll();
+                                return;
+                            }
                         }
 
                         Pool = collection.Add(txtName.Text);

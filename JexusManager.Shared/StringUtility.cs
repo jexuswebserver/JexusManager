@@ -11,7 +11,7 @@ namespace JexusManager
 {
     public static class StringUtility
     {
-        public static string Combine(this IEnumerable<string> item, string connector)
+        public static string Combine<T>(this IEnumerable<T> item, string connector)
         {
             var preConditions = item.ToList();
             if (preConditions.Count == 0)
@@ -19,7 +19,7 @@ namespace JexusManager
                 return string.Empty;
             }
 
-            var result = new StringBuilder(preConditions[0]);
+            var result = new StringBuilder(preConditions[0].ToString());
             for (int index = 1; index < preConditions.Count; index++)
             {
                 result.Append(connector).Append(preConditions[index]);
