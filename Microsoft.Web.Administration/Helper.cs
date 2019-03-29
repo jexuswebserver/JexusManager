@@ -16,7 +16,7 @@ namespace Microsoft.Web.Administration
             ? "/Library/Frameworks/Mono.framework/Versions/Current/etc/mono/4.5/machine.config"
             : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows),
                 "Microsoft.NET",
-                IntPtr.Size == 2 ? "Framework" : "Framework64",
+                ProcessIs32Bit ? "Framework" : "Framework64",
                 "v4.0.30319",
                 "CONFIG",
                 "machine.config");
@@ -26,10 +26,12 @@ namespace Microsoft.Web.Administration
             : Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.Windows),
                 "Microsoft.NET",
-                IntPtr.Size == 2 ? "Framework" : "Framework64",
+                ProcessIs32Bit ? "Framework" : "Framework64",
                 "v4.0.30319",
                 "CONFIG",
                 "web.config");
+
+        private static bool ProcessIs32Bit = IntPtr.Size == 4;
 
         public static string ExpandIisExpressEnvironmentVariables(this string path, string executable)
         {
