@@ -11,6 +11,7 @@ namespace Microsoft.Web.Administration
     internal static class Helper
     {
         internal static readonly string RootPath = "/";
+        private static bool ProcessIs32Bit = IntPtr.Size == 4;
 
         public static readonly string FileNameMachineConfig = IsRunningOnMono()
             ? "/Library/Frameworks/Mono.framework/Versions/Current/etc/mono/4.5/machine.config"
@@ -30,8 +31,6 @@ namespace Microsoft.Web.Administration
                 "v4.0.30319",
                 "CONFIG",
                 "web.config");
-
-        private static bool ProcessIs32Bit = IntPtr.Size == 4;
 
         public static string ExpandIisExpressEnvironmentVariables(this string path, string executable)
         {
