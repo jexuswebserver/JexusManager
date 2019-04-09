@@ -9,16 +9,16 @@ catch
     Write-Host "MSBuild doesn't exist. Use VSSetup instead."
 
     Install-Module VSSetup -Scope CurrentUser -Force
-    $instance = Get-VSSetupInstance -All
+    $instance = Get-VSSetupInstance -All | Select-VSSetupInstance -Latest
     $installDir = $instance.installationPath
-    $msBuild = $installDir + '\MSBuild\15.0\Bin\MSBuild.exe'
+    $msBuild = $installDir + '\MSBuild\Current\Bin\MSBuild.exe'
     if (![System.IO.File]::Exists($msBuild))
     {
         Write-Host "MSBuild doesn't exist. Exit."
         exit 1
     }
 
-    Write-Host "Likely on Windows."
+    Write-Host "Likely on Windows with VS2019."
 }
 
 Write-Host "MSBuild found. Compile the projects."
