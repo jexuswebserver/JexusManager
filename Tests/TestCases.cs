@@ -47,7 +47,7 @@ namespace Tests
             var model = pool.GetChildElement("processModel");
             var item = model["maxProcesses"];
             Assert.Equal("Clr4IntegratedAppPool", pool.Name);
-            Assert.Equal(ApplicationPool.ManagedRuntimeVersion40, pool.ManagedRuntimeVersion);
+            Assert.Equal("v4.0", pool.ManagedRuntimeVersion);
             Assert.Equal(1, pool.ProcessModel.MaxProcesses);
             Assert.Equal(string.Empty, pool.ProcessModel.UserName);
 #if IIS

@@ -67,9 +67,11 @@ namespace JexusManager.Features.Main
                         }
                         else if (hasV2 != null)
                         {
-                            if (File.Exists(hasV2.GlobalModule.Image.ExpandIisExpressEnvironmentVariables(site.Applications[0].GetActualExecutable())))
+                            var file = hasV2.GlobalModule.Image.ExpandIisExpressEnvironmentVariables(site.Applications[0].GetActualExecutable());
+                            if (File.Exists(file))
                             {
-                                Debug("ASP.NET Core module version 2 is installed for .NET Core 2.2 and above.");
+                                var info = FileVersionInfo.GetVersionInfo(file);
+                                Debug($"ASP.NET Core module version 2 is installed for .NET Core 2.2 and above: {info.FileVersion}.");
                             }
                             else
                             {
@@ -78,9 +80,11 @@ namespace JexusManager.Features.Main
                         }
                         else
                         {
+                            var file = hasV1.GlobalModule.Image.ExpandIisExpressEnvironmentVariables(site.Applications[0].GetActualExecutable());
                             if (File.Exists(hasV1.GlobalModule.Image.ExpandIisExpressEnvironmentVariables(site.Applications[0].GetActualExecutable())))
                             {
-                                Debug("ASP.NET Core module version 1 is installed for .NET Core 1.0-2.1.");
+                                var info = FileVersionInfo.GetVersionInfo(file);
+                                Debug($"ASP.NET Core module version 1 is installed for .NET Core 1.0-2.1: {info.FileVersion}");
                             }
                             else
                             {
