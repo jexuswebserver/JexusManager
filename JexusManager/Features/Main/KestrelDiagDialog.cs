@@ -72,6 +72,7 @@ namespace JexusManager.Features.Main
                             {
                                 var info = FileVersionInfo.GetVersionInfo(file);
                                 Debug($"ASP.NET Core module version 2 is installed for .NET Core 2.2 and above: {info.FileVersion}.");
+                                Warn($"Please refer to pages such as https://dotnet.microsoft.com/download/dotnet-core/2.2 to verify that the version number {info.FileVersion} matches the runtime of the web app.");
                             }
                             else
                             {
@@ -85,6 +86,7 @@ namespace JexusManager.Features.Main
                             {
                                 var info = FileVersionInfo.GetVersionInfo(file);
                                 Debug($"ASP.NET Core module version 1 is installed for .NET Core 1.0-2.1: {info.FileVersion}");
+                                Warn($"Please refer to pages such as https://dotnet.microsoft.com/download/dotnet-core/2.2 to verify that the version number {info.FileVersion} matches the runtime of the web app.");
                             }
                             else
                             {
