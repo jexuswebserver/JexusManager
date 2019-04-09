@@ -49,7 +49,8 @@ namespace JexusManager.Features.Main
                 { "5.6", new PhpVersion("5.6", new DateTime(2018, 12, 31), new Version(11, 0)) },
                 { "7.0", new PhpVersion("7.0", new DateTime(2018, 12, 3), new Version(14, 0)) },
                 { "7.1", new PhpVersion("7.1", new DateTime(2019, 12, 1), new Version(14, 0)) },
-                { "7.2", new PhpVersion("7.2", new DateTime(2020, 11, 30), new Version(14, 11)) }
+                { "7.2", new PhpVersion("7.2", new DateTime(2020, 11, 30), new Version(14, 11)) },
+                { "7.3", new PhpVersion("7.3", new DateTime(2021, 12, 6), new Version(14, 11)) }
             };
 
             var container = new CompositeDisposable();
@@ -173,7 +174,7 @@ namespace JexusManager.Features.Main
                                         var cpp = FileVersionInfo.GetVersionInfo(cppFile);
                                         if (cpp.FileMinorPart >= matched.CppVersion.Minor)
                                         {
-                                            Debug($"  Visual C++ runtime is detected (expected: {matched.CppVersion}, detected: {cpp.FileVersion}).");
+                                            Debug($"  Visual C++ runtime is detected (expected: {matched.CppVersion}, detected: {cpp.FileVersion}): {cppFile}.");
                                         }
                                         else
                                         {
