@@ -75,6 +75,10 @@ namespace JexusManager.Features.Main
 
                     manageGroup.Items.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     manageGroup.Items.Add(new MethodTaskItem("Advanced", "Advanced Settings...", string.Empty).SetUsage());
+                    manageGroup.Items.Add(MethodTaskItem.CreateSeparator().SetUsage());
+                    manageGroup.Items.Add(new TextTaskItem("Troubleshooting", string.Empty, true));
+                    manageGroup.Items.Add(new MethodTaskItem("FixKestrel", "ASP.NET Core Diagnostics", string.Empty).SetUsage());
+                    manageGroup.Items.Add(new MethodTaskItem("FixPhp", "PHP Diagnostics", string.Empty).SetUsage());
                 }
 
                 return result.ToArray(typeof(TaskItem)) as TaskItem[];
@@ -114,6 +118,18 @@ namespace JexusManager.Features.Main
             public void Advanced()
             {
                 _owner.Advanced();
+            }
+
+            [Obfuscation(Exclude = true)]
+            public void FixPhp()
+            {
+                _owner.FixPhp();
+            }
+
+            [Obfuscation(Exclude = true)]
+            public void FixKestrel()
+            {
+                _owner.FixKestrel();
             }
         }
 
@@ -227,6 +243,20 @@ namespace JexusManager.Features.Main
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             DialogHelper.Explore(service.Application.PhysicalPath.ExpandIisExpressEnvironmentVariables(service.Application.GetActualExecutable()));
+        }
+
+        private void FixPhp()
+        {
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+            var dialog = new PhpDiagDialog(Module, service.Application.Server);
+            dialog.ShowDialog();
+        }
+
+        private void FixKestrel()
+        {
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+            var dialog = new KestrelDiagDialog(Module, service.Application);
+            dialog.ShowDialog();
         }
 
         public IEnumerable<Binding> SiteBindings

@@ -424,7 +424,7 @@ namespace JexusManager.Features.Main
         private void FixKestrel()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var dialog = new KestrelDiagDialog(Module, service.Site);
+            var dialog = new KestrelDiagDialog(Module, service.Site.Applications[0]);
             dialog.ShowDialog();
         }
 

@@ -10,13 +10,9 @@ namespace JexusManager.Features.Main
 {
     using System.Drawing;
     using System.IO;
-    using Microsoft.Win32;
 
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
-    using System.Xml;
-    using System.Xml.Linq;
-    using System.Xml.XPath;
     using Newtonsoft.Json.Linq;
     using System.Linq;
     using System.Diagnostics;
@@ -24,11 +20,11 @@ namespace JexusManager.Features.Main
     using Microsoft.Web.Management.Client;
     using JexusManager.Features.Handlers;
     using System.Collections.Generic;
-    using Newtonsoft.Json;
+    using EnumsNET;
 
     public partial class KestrelDiagDialog : DialogForm
     {
-        public KestrelDiagDialog(IServiceProvider provider, Site site)
+        public KestrelDiagDialog(IServiceProvider provider, Application application)
             : base(provider)
         {
             InitializeComponent();
@@ -46,15 +42,20 @@ namespace JexusManager.Features.Main
                     {
                         Warn("IMPORTANT: This report might contain confidential information. Mask such before sharing to others.");
                         Warn("-----");
+                        Debug($"System Time: {DateTime.Now}");
+                        Debug($"Processor Architecture: {Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE")}");
+                        Debug($"OS: {Environment.OSVersion}");
+                        Debug($"Server Type: {application.Server.Mode.AsString(EnumFormat.Description)}");
+                        Debug(string.Empty);
 
-                        var root = site.PhysicalPath.ExpandIisExpressEnvironmentVariables(site.Applications[0].GetActualExecutable());
+                        var root = application.VirtualDirectories[0].PhysicalPath.ExpandIisExpressEnvironmentVariables(application.GetActualExecutable());
                         if (string.IsNullOrWhiteSpace(root))
                         {
                             Error("Invalid site root directory is detected.");
                             return;
                         }
 
-                        var config = site.Applications[0].GetWebConfiguration();
+                        var config = application.GetWebConfiguration();
                         var section = config.GetSection("system.webServer/aspNetCore");
                         var processPath = (string)section["processPath"];
                         var arguments = (string)section["arguments"];
@@ -65,50 +66,64 @@ namespace JexusManager.Features.Main
                         Debug($"\"arguments\": {arguments}.");
                         Debug($"\"hostingModel\": {hostingModel}.");
 
-                        var fileName = Path.GetFileName(processPath);
-                        string executable;
-                        if (string.Equals(fileName, "dotnet.exe", StringComparison.OrdinalIgnoreCase) || string.Equals(fileName, "dotnet", StringComparison.OrdinalIgnoreCase))
+                        if (string.IsNullOrWhiteSpace(processPath) && string.IsNullOrWhiteSpace(arguments))
                         {
-                            executable = Path.GetFileNameWithoutExtension(arguments);
+                            Warn("There is no ASP.NET Core web app to analyze.");
                         }
                         else
                         {
-                            executable = Path.GetFileNameWithoutExtension(processPath);
-                        }
-
-                        var runtime = Path.Combine(root, executable + ".deps.json");
-                        if (File.Exists(runtime))
-                        {
-                            var reader = JObject.Parse(File.ReadAllText(runtime));
-                            var targetName = (string)reader["runtimeTarget"]["name"];
-                            Debug($"\"runtimeTarget\": {targetName}.");
-                            var slash = targetName.IndexOf('/');
-                            if (slash > -1)
+                            try
                             {
-                                targetName = targetName.Substring(0, slash);
-                            }
-
-                            var actual = reader["targets"][targetName];
-                            foreach (var item in actual.Children())
-                            {
-                                if (item is JProperty prop)
+                                var fileName = Path.GetFileName(processPath);
+                                string executable;
+                                if (string.Equals(fileName, "dotnet.exe", StringComparison.OrdinalIgnoreCase) || string.Equals(fileName, "dotnet", StringComparison.OrdinalIgnoreCase))
                                 {
-                                    if (prop.Name.Contains("Microsoft.AspNetCore.All/"))
+                                    executable = Path.GetFileNameWithoutExtension(arguments);
+                                }
+                                else
+                                {
+                                    executable = Path.GetFileNameWithoutExtension(processPath);
+                                }
+
+                                var runtime = Path.Combine(root, executable + ".deps.json");
+                                if (File.Exists(runtime))
+                                {
+                                    var reader = JObject.Parse(File.ReadAllText(runtime));
+                                    var targetName = (string)reader["runtimeTarget"]["name"];
+                                    Debug($"\"runtimeTarget\": {targetName}.");
+                                    var slash = targetName.IndexOf('/');
+                                    if (slash > -1)
                                     {
-                                        Info($"Runtime is {prop.Name}.");
+                                        targetName = targetName.Substring(0, slash);
                                     }
-                                    else if (prop.Name.Contains("Microsoft.AspNetCore.App/"))
+
+                                    var actual = reader["targets"][targetName];
+                                    foreach (var item in actual.Children())
                                     {
-                                        Info($"Runtime is {prop.Name}.");
+                                        if (item is JProperty prop)
+                                        {
+                                            if (prop.Name.Contains("Microsoft.AspNetCore.All/"))
+                                            {
+                                                Info($"Runtime is {prop.Name}.");
+                                            }
+                                            else if (prop.Name.Contains("Microsoft.AspNetCore.App/"))
+                                            {
+                                                Info($"Runtime is {prop.Name}.");
+                                            }
+                                        }
                                     }
                                 }
+                                else
+                                {
+                                    Error($"Cannot locate runtime config file {runtime}.");
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Error("Cannot analyze ASP.NET Core web app successfully.");
+                                Rollbar.RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> { { "source", "web app" } });
                             }
                         }
-                        else
-                        {
-                            Error($"Cannot locate runtime config file {runtime}.");
-                        }
-
 
                         // check ANCM.
                         var modules = new ModulesFeature((Module)provider);
@@ -124,7 +139,7 @@ namespace JexusManager.Features.Main
                         }
                         else if (hasV2 != null)
                         {
-                            var file = hasV2.GlobalModule.Image.ExpandIisExpressEnvironmentVariables(site.Applications[0].GetActualExecutable());
+                            var file = hasV2.GlobalModule.Image.ExpandIisExpressEnvironmentVariables(application.GetActualExecutable());
                             if (File.Exists(file))
                             {
                                 var info = FileVersionInfo.GetVersionInfo(file);
@@ -138,8 +153,8 @@ namespace JexusManager.Features.Main
                         }
                         else
                         {
-                            var file = hasV1.GlobalModule.Image.ExpandIisExpressEnvironmentVariables(site.Applications[0].GetActualExecutable());
-                            if (File.Exists(hasV1.GlobalModule.Image.ExpandIisExpressEnvironmentVariables(site.Applications[0].GetActualExecutable())))
+                            var file = hasV1.GlobalModule.Image.ExpandIisExpressEnvironmentVariables(application.GetActualExecutable());
+                            if (File.Exists(hasV1.GlobalModule.Image.ExpandIisExpressEnvironmentVariables(application.GetActualExecutable())))
                             {
                                 var info = FileVersionInfo.GetVersionInfo(file);
                                 Info($"ASP.NET Core module version 1 is installed for .NET Core 1.0-2.1: {file} ({info.FileVersion})");
@@ -188,12 +203,12 @@ namespace JexusManager.Features.Main
                         if (foundHandlers.Count == 0)
                         {
                             Error($"No valid ASP.NET Core handler is registered for this web site.");
-                            Error($"To run ASP.NET Core on IIS, please refer to https://docs.microsoft.com/en-us/iis/application-frameworks/scenario-build-a-php-website-on-iis/configuring-step-1-install-iis-and-php#13-download-and-install-php-manually for more details.");
+                            Error($"To run ASP.NET Core on IIS, please refer to https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/iis/index for more details.");
                             return;
                         }
                         
-                        var name = site.Applications[0].ApplicationPoolName;
-                        var pool = site.Server.ApplicationPools.FirstOrDefault(item => item.Name == name);
+                        var name = application.ApplicationPoolName;
+                        var pool = application.Server.ApplicationPools.FirstOrDefault(item => item.Name == name);
                         if (pool == null)
                         {
                             Error($"The application pool '{name}' cannot be found.");
@@ -241,7 +256,7 @@ namespace JexusManager.Features.Main
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    var fileName = DialogHelper.ShowSaveFileDialog(null, "Text Files|*.txt|All Files|*.*", site.Applications[0].GetActualExecutable());
+                    var fileName = DialogHelper.ShowSaveFileDialog(null, "Text Files|*.txt|All Files|*.*", application.GetActualExecutable());
                     if (string.IsNullOrEmpty(fileName))
                     {
                         return;
