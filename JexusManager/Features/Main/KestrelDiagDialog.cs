@@ -24,6 +24,7 @@ namespace JexusManager.Features.Main
     using Microsoft.Web.Management.Client;
     using JexusManager.Features.Handlers;
     using System.Collections.Generic;
+    using Newtonsoft.Json;
 
     public partial class KestrelDiagDialog : DialogForm
     {
@@ -53,6 +54,62 @@ namespace JexusManager.Features.Main
                             return;
                         }
 
+                        var config = site.Applications[0].GetWebConfiguration();
+                        var section = config.GetSection("system.webServer/aspNetCore");
+                        var processPath = (string)section["processPath"];
+                        var arguments = (string)section["arguments"];
+                        var hostingModel = (string)section["hostingModel"];
+
+                        Debug($"Scan aspNetCore section");
+                        Debug($"\"processPath\": {processPath}.");
+                        Debug($"\"arguments\": {arguments}.");
+                        Debug($"\"hostingModel\": {hostingModel}.");
+
+                        var fileName = Path.GetFileName(processPath);
+                        string executable;
+                        if (string.Equals(fileName, "dotnet.exe", StringComparison.OrdinalIgnoreCase) || string.Equals(fileName, "dotnet", StringComparison.OrdinalIgnoreCase))
+                        {
+                            executable = Path.GetFileNameWithoutExtension(arguments);
+                        }
+                        else
+                        {
+                            executable = Path.GetFileNameWithoutExtension(processPath);
+                        }
+
+                        var runtime = Path.Combine(root, executable + ".deps.json");
+                        if (File.Exists(runtime))
+                        {
+                            var reader = JObject.Parse(File.ReadAllText(runtime));
+                            var targetName = (string)reader["runtimeTarget"]["name"];
+                            Debug($"\"runtimeTarget\": {targetName}.");
+                            var slash = targetName.IndexOf('/');
+                            if (slash > -1)
+                            {
+                                targetName = targetName.Substring(0, slash);
+                            }
+
+                            var actual = reader["targets"][targetName];
+                            foreach (var item in actual.Children())
+                            {
+                                if (item is JProperty prop)
+                                {
+                                    if (prop.Name.Contains("Microsoft.AspNetCore.All/"))
+                                    {
+                                        Info($"Runtime is {prop.Name}.");
+                                    }
+                                    else if (prop.Name.Contains("Microsoft.AspNetCore.App/"))
+                                    {
+                                        Info($"Runtime is {prop.Name}.");
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            Error($"Cannot locate runtime config file {runtime}.");
+                        }
+
+
                         // check ANCM.
                         var modules = new ModulesFeature((Module)provider);
                         modules.Load();
@@ -71,7 +128,7 @@ namespace JexusManager.Features.Main
                             if (File.Exists(file))
                             {
                                 var info = FileVersionInfo.GetVersionInfo(file);
-                                Debug($"ASP.NET Core module version 2 is installed for .NET Core 2.2 and above: {file} ({info.FileVersion}).");
+                                Info($"ASP.NET Core module version 2 is installed for .NET Core 2.2 and above: {file} ({info.FileVersion}).");
                                 Warn($"Please refer to pages such as https://dotnet.microsoft.com/download/dotnet-core/2.2 to verify that the version number {info.FileVersion} matches the runtime of the web app.");
                             }
                             else
@@ -85,7 +142,7 @@ namespace JexusManager.Features.Main
                             if (File.Exists(hasV1.GlobalModule.Image.ExpandIisExpressEnvironmentVariables(site.Applications[0].GetActualExecutable())))
                             {
                                 var info = FileVersionInfo.GetVersionInfo(file);
-                                Debug($"ASP.NET Core module version 1 is installed for .NET Core 1.0-2.1: {file} ({info.FileVersion})");
+                                Info($"ASP.NET Core module version 1 is installed for .NET Core 1.0-2.1: {file} ({info.FileVersion})");
                                 Warn($"Please refer to pages such as https://dotnet.microsoft.com/download/dotnet-core/2.2 to verify that the version number {info.FileVersion} matches the runtime of the web app.");
                             }
                             else
@@ -106,7 +163,7 @@ namespace JexusManager.Features.Main
                             {
                                 if (hasV1 != null)
                                 {
-                                    Debug($"* Found a valid ASP.NET Core handler as {{ Name: {item.Name}, Path: {item.Path}, State: {item.GetState(handlers.AccessPolicy)}, Module: {item.TypeString}, Entry Type: {item.Flag} }}.");
+                                    Info($"* Found a valid ASP.NET Core handler as {{ Name: {item.Name}, Path: {item.Path}, State: {item.GetState(handlers.AccessPolicy)}, Module: {item.TypeString}, Entry Type: {item.Flag} }}.");
                                     foundHandlers.Add(item);
                                 }
                                 else
@@ -118,7 +175,7 @@ namespace JexusManager.Features.Main
                             {
                                 if (hasV2 != null)
                                 {
-                                    Debug($"* Found a valid ASP.NET Core handler as {{ Name: {item.Name}, Path: {item.Path}, State: {item.GetState(handlers.AccessPolicy)}, Module: {item.TypeString}, Entry Type: {item.Flag} }}.");
+                                    Info($"* Found a valid ASP.NET Core handler as {{ Name: {item.Name}, Path: {item.Path}, State: {item.GetState(handlers.AccessPolicy)}, Module: {item.TypeString}, Entry Type: {item.Flag} }}.");
                                     foundHandlers.Add(item);
                                 }
                                 else
@@ -153,7 +210,7 @@ namespace JexusManager.Features.Main
                                 var cpp = FileVersionInfo.GetVersionInfo(cppFile);
                                 if (cpp.FileMinorPart >= 0)
                                 {
-                                    Debug($"  Visual C++ runtime is detected (expected: 14.0, detected: {cpp.FileVersion}): {cppFile}.");
+                                    Info($"  Visual C++ runtime is detected (expected: 14.0, detected: {cpp.FileVersion}): {cppFile}.");
                                 }
                                 else
                                 {
