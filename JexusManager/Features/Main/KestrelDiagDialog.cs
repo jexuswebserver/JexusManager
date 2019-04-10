@@ -78,6 +78,11 @@ namespace JexusManager.Features.Main
                                 string executable;
                                 if (string.Equals(fileName, "dotnet.exe", StringComparison.OrdinalIgnoreCase) || string.Equals(fileName, "dotnet", StringComparison.OrdinalIgnoreCase))
                                 {
+                                    if (arguments.StartsWith("exec ", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        arguments = arguments.Substring("exec ".Length).Replace("\"", null);
+                                    }
+
                                     executable = Path.GetFileNameWithoutExtension(arguments);
                                 }
                                 else
