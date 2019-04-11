@@ -55,81 +55,6 @@ namespace JexusManager.Features.Main
                             return;
                         }
 
-                        var config = application.GetWebConfiguration();
-                        var section = config.GetSection("system.webServer/aspNetCore");
-                        var processPath = (string)section["processPath"];
-                        var arguments = (string)section["arguments"];
-                        var hostingModel = (string)section["hostingModel"];
-
-                        Debug($"Scan aspNetCore section");
-                        Debug($"\"processPath\": {processPath}.");
-                        Debug($"\"arguments\": {arguments}.");
-                        Debug($"\"hostingModel\": {hostingModel}.");
-
-                        if (string.IsNullOrWhiteSpace(processPath) && string.IsNullOrWhiteSpace(arguments))
-                        {
-                            Warn("There is no ASP.NET Core web app to analyze.");
-                        }
-                        else
-                        {
-                            try
-                            {
-                                var fileName = Path.GetFileName(processPath);
-                                string executable;
-                                if (string.Equals(fileName, "dotnet.exe", StringComparison.OrdinalIgnoreCase) || string.Equals(fileName, "dotnet", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    if (arguments.StartsWith("exec ", StringComparison.OrdinalIgnoreCase))
-                                    {
-                                        arguments = arguments.Substring("exec ".Length).Replace("\"", null);
-                                    }
-
-                                    executable = Path.GetFileNameWithoutExtension(arguments);
-                                }
-                                else
-                                {
-                                    executable = Path.GetFileNameWithoutExtension(processPath);
-                                }
-
-                                var runtime = Path.Combine(root, executable + ".deps.json");
-                                if (File.Exists(runtime))
-                                {
-                                    var reader = JObject.Parse(File.ReadAllText(runtime));
-                                    var targetName = (string)reader["runtimeTarget"]["name"];
-                                    Debug($"\"runtimeTarget\": {targetName}.");
-                                    var slash = targetName.IndexOf('/');
-                                    if (slash > -1)
-                                    {
-                                        targetName = targetName.Substring(0, slash);
-                                    }
-
-                                    var actual = reader["targets"][targetName];
-                                    foreach (var item in actual.Children())
-                                    {
-                                        if (item is JProperty prop)
-                                        {
-                                            if (prop.Name.Contains("Microsoft.AspNetCore.All/"))
-                                            {
-                                                Info($"Runtime is {prop.Name}.");
-                                            }
-                                            else if (prop.Name.Contains("Microsoft.AspNetCore.App/"))
-                                            {
-                                                Info($"Runtime is {prop.Name}.");
-                                            }
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    Error($"Cannot locate runtime config file {runtime}.");
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                Error("Cannot analyze ASP.NET Core web app successfully.");
-                                Rollbar.RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> { { "source", "web app" } });
-                            }
-                        }
-
                         // check ANCM.
                         var modules = new ModulesFeature((Module)provider);
                         modules.Load();
@@ -142,7 +67,8 @@ namespace JexusManager.Features.Main
                             Error($"ASP.NET Core module is not installed as part of IIS. Please refer to https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/iis/index#install-the-net-core-hosting-bundle for more details.");
                             return;
                         }
-                        else if (hasV2 != null)
+
+                        if (hasV2 != null)
                         {
                             var file = hasV2.GlobalModule.Image.ExpandIisExpressEnvironmentVariables(application.GetActualExecutable());
                             if (File.Exists(file))
@@ -247,7 +173,82 @@ namespace JexusManager.Features.Main
                             {
                                 Error($"The application pool '{name}' is using .NET CLR {pool.ManagedRuntimeVersion}. Please set it to 'No Managed Code'.");
                             }
-                        } 
+                        }
+
+                        var config = application.GetWebConfiguration();
+                        var section = config.GetSection("system.webServer/aspNetCore");
+                        var processPath = (string)section["processPath"];
+                        var arguments = (string)section["arguments"];
+                        var hostingModel = (string)section["hostingModel"];
+
+                        Debug($"Scan aspNetCore section");
+                        Debug($"\"processPath\": {processPath}.");
+                        Debug($"\"arguments\": {arguments}.");
+                        Debug($"\"hostingModel\": {hostingModel}.");
+
+                        if (string.IsNullOrWhiteSpace(processPath) && string.IsNullOrWhiteSpace(arguments))
+                        {
+                            Warn("There is no ASP.NET Core web app to analyze.");
+                        }
+                        else
+                        {
+                            try
+                            {
+                                var fileName = Path.GetFileName(processPath);
+                                string executable;
+                                if (string.Equals(fileName, "dotnet.exe", StringComparison.OrdinalIgnoreCase) || string.Equals(fileName, "dotnet", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    if (arguments.StartsWith("exec ", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        arguments = arguments.Substring("exec ".Length).Replace("\"", null);
+                                    }
+
+                                    executable = Path.GetFileNameWithoutExtension(arguments);
+                                }
+                                else
+                                {
+                                    executable = Path.GetFileNameWithoutExtension(processPath);
+                                }
+
+                                var runtime = Path.Combine(root, executable + ".deps.json");
+                                if (File.Exists(runtime))
+                                {
+                                    var reader = JObject.Parse(File.ReadAllText(runtime));
+                                    var targetName = (string)reader["runtimeTarget"]["name"];
+                                    Debug($"\"runtimeTarget\": {targetName}.");
+                                    var slash = targetName.IndexOf('/');
+                                    if (slash > -1)
+                                    {
+                                        targetName = targetName.Substring(0, slash);
+                                    }
+
+                                    var actual = reader["targets"][targetName];
+                                    foreach (var item in actual.Children())
+                                    {
+                                        if (item is JProperty prop)
+                                        {
+                                            if (prop.Name.Contains("Microsoft.AspNetCore.All/"))
+                                            {
+                                                Info($"Runtime is {prop.Name}.");
+                                            }
+                                            else if (prop.Name.Contains("Microsoft.AspNetCore.App/"))
+                                            {
+                                                Info($"Runtime is {prop.Name}.");
+                                            }
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    Error($"Cannot locate runtime config file {runtime}.");
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Error("Cannot analyze ASP.NET Core web app successfully.");
+                                Rollbar.RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> { { "source", "web app" } });
+                            }
+                        }
                     }
                     catch (Exception ex)
                     {
