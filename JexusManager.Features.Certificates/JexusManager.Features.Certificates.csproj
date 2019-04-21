@@ -203,7 +203,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="BouncyCastle">
-      <Version>1.8.4</Version>
+      <Version>1.8.5</Version>
     </PackageReference>
     <PackageReference Include="Mono.Security">
       <Version>3.2.3</Version>
@@ -212,7 +212,7 @@
       <Version>0.0.8</Version>
     </PackageReference>
     <PackageReference Include="System.Reactive">
-      <Version>3.1.1</Version>
+      <Version>4.1.5</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

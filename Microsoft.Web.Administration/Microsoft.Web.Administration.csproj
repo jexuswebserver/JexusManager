@@ -196,7 +196,7 @@
       <Version>5.2.7</Version>
     </PackageReference>
     <PackageReference Include="Rollbar">
-      <Version>2.2.0</Version>
+      <Version>3.0.6</Version>
     </PackageReference>
     <PackageReference Include="StrongNamer">
       <Version>0.0.8</Version>
