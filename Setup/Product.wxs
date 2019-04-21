@@ -156,12 +156,10 @@
                         <File Id="PeNet.Asn1.dll" Name="PeNet.Asn1.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\PeNet.Asn1.dll" />
                         <File Id="Rollbar.dll" Name="Rollbar.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\Rollbar.dll" />
                         <File Id="System.Net.Http.Formatting.dll" Name="System.Net.Http.Formatting.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\System.Net.Http.Formatting.dll" />
-                        <File Id="System.Reactive.Core.dll" Name="System.Reactive.Core.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\System.Reactive.Core.dll" />
-                        <File Id="System.Reactive.Interfaces.dll" Name="System.Reactive.Interfaces.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\System.Reactive.Interfaces.dll" />
-                        <File Id="System.Reactive.Linq.dll" Name="System.Reactive.Linq.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\System.Reactive.Linq.dll" />
-                        <File Id="System.Reactive.PlatformServices.dll" Name="System.Reactive.PlatformServices.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\System.Reactive.PlatformServices.dll" />
-                        <File Id="System.Reactive.Windows.Threading.dll" Name="System.Reactive.Windows.Threading.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\System.Reactive.Windows.Threading.dll"
-                        />
+                        <File Id="System.Reactive.dll" Name="System.Reactive.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\System.Reactive.dll" />
+                        <File Id="System.Runtime.CompilerServices.Unsafe.dll" Name="System.Runtime.CompilerServices.Unsafe.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\System.Runtime.CompilerServices.Unsafe.dll" />
+                        <File Id="System.Threading.Tasks.Extensions.dll" Name="System.Threading.Tasks.Extensions.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\System.Threading.Tasks.Extensions.dll" />
+                        <File Id="System.ValueTuple.dll" Name="System.ValueTuple.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\System.ValueTuple.dll" />
                         <File Id="Vista.Controls.BreadcrumbBar.dll" Name="Vista.Controls.BreadcrumbBar.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\Vista.Controls.BreadcrumbBar.dll" />
                         <File Id="ThirdPartyNotices.txt" Name="ThirdPartyNotices.txt" Vital="no" DiskId="1" Source="$(var.SourceDir)\ThirdPartyNotices.txt" />
                     </Component>
