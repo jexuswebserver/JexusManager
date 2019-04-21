@@ -24,6 +24,25 @@ namespace JexusManager.Features.Main
 
     public partial class KestrelDiagDialog : DialogForm
     {
+        private static IDictionary<Version, Version> mappings = new Dictionary<Version, Version> {
+            { Version.Parse("2.2.4"), Version.Parse("12.2.19048.0") },
+            { Version.Parse("2.2.3"), Version.Parse("12.2.19024.2") },
+            { Version.Parse("2.2.2"), Version.Parse("12.2.18346.0") },
+            { Version.Parse("2.2.1"), Version.Parse("12.2.18316.0") },
+            { Version.Parse("2.2.0"), Version.Parse("12.2.18316.0") },
+            { Version.Parse("2.1.10"), Version.Parse("12.1.18263.2") },
+            { Version.Parse("2.1.9"), Version.Parse("12.1.19046.9") },
+            { Version.Parse("2.1.8"), Version.Parse("12.1.18263.2") },
+            { Version.Parse("2.1.7"), Version.Parse("12.1.18263.2") },
+            { Version.Parse("2.1.6"), Version.Parse("12.1.18263.2") },
+            { Version.Parse("2.1.5"), Version.Parse("8.2.1991.0") },
+            { Version.Parse("2.1.4"), Version.Parse("8.2.1991.0") },
+            { Version.Parse("2.1.3"), Version.Parse("8.2.1991.0") },
+            { Version.Parse("2.1.2"), Version.Parse("8.2.1991.0") },
+            { Version.Parse("2.1.1"), Version.Parse("8.2.1991.0") },
+            { Version.Parse("2.1.0"), Version.Parse("8.2.1991.0") }
+        };
+
         public KestrelDiagDialog(IServiceProvider provider, Application application)
             : base(provider)
         {
@@ -68,14 +87,15 @@ namespace JexusManager.Features.Main
                             return;
                         }
 
+                        Version ancmVersion = null;
                         if (hasV2 != null)
                         {
                             var file = hasV2.GlobalModule.Image.ExpandIisExpressEnvironmentVariables(application.GetActualExecutable());
                             if (File.Exists(file))
                             {
                                 var info = FileVersionInfo.GetVersionInfo(file);
+                                ancmVersion = new Version(info.FileMajorPart, info.FileMinorPart, info.FileBuildPart, info.FilePrivatePart);
                                 Info($"ASP.NET Core module version 2 is installed for .NET Core 2.2 and above: {file} ({info.FileVersion}).");
-                                Warn($"Please refer to pages such as https://dotnet.microsoft.com/download/dotnet-core/2.2 to verify that the version number {info.FileVersion} matches the runtime of the web app.");
                             }
                             else
                             {
@@ -88,8 +108,8 @@ namespace JexusManager.Features.Main
                             if (File.Exists(hasV1.GlobalModule.Image.ExpandIisExpressEnvironmentVariables(application.GetActualExecutable())))
                             {
                                 var info = FileVersionInfo.GetVersionInfo(file);
+                                ancmVersion = new Version(info.FileMajorPart, info.FileMinorPart, info.FileBuildPart, info.FilePrivatePart);
                                 Info($"ASP.NET Core module version 1 is installed for .NET Core 1.0-2.1: {file} ({info.FileVersion})");
-                                Warn($"Please refer to pages such as https://dotnet.microsoft.com/download/dotnet-core/2.2 to verify that the version number {info.FileVersion} matches the runtime of the web app.");
                             }
                             else
                             {
@@ -181,10 +201,10 @@ namespace JexusManager.Features.Main
                         var arguments = (string)section["arguments"];
                         var hostingModel = (string)section["hostingModel"];
 
-                        Debug($"Scan aspNetCore section");
-                        Debug($"\"processPath\": {processPath}.");
-                        Debug($"\"arguments\": {arguments}.");
-                        Debug($"\"hostingModel\": {hostingModel}.");
+                        Debug($"Scan aspNetCore section.");
+                        Debug($"    \"processPath\": {processPath}.");
+                        Debug($"    \"arguments\": {arguments}.");
+                        Debug($"    \"hostingModel\": {hostingModel}.");
 
                         if (string.IsNullOrWhiteSpace(processPath) && string.IsNullOrWhiteSpace(arguments))
                         {
@@ -223,6 +243,7 @@ namespace JexusManager.Features.Main
                                     }
 
                                     var actual = reader["targets"][targetName];
+                                    Version aspNetCoreVersion = null;
                                     foreach (var item in actual.Children())
                                     {
                                         if (item is JProperty prop)
@@ -230,10 +251,29 @@ namespace JexusManager.Features.Main
                                             if (prop.Name.Contains("Microsoft.AspNetCore.All/"))
                                             {
                                                 Info($"Runtime is {prop.Name}.");
+                                                Version.TryParse(prop.Name.Substring(prop.Name.IndexOf('/') + 1), out aspNetCoreVersion);
                                             }
                                             else if (prop.Name.Contains("Microsoft.AspNetCore.App/"))
                                             {
                                                 Info($"Runtime is {prop.Name}.");
+                                                Version.TryParse(prop.Name.Substring(prop.Name.IndexOf('/') + 1), out aspNetCoreVersion);
+                                            }
+                                        }
+                                    }
+
+                                    if (aspNetCoreVersion != null && aspNetCoreVersion > Version.Parse("2.1.0"))
+                                    {
+                                        if (mappings.ContainsKey(aspNetCoreVersion))
+                                        {
+                                            var minimal = mappings[aspNetCoreVersion];
+                                            if (ancmVersion == null || ancmVersion < minimal)
+                                            {
+                                                Error($"Runtime {aspNetCoreVersion} does not work with ASP.NET Core module version {ancmVersion}. Minimal version is {minimal}.");
+                                            }
+
+                                            if (ancmVersion > minimal && (ancmVersion.Major != minimal.Major || ancmVersion.Minor != minimal.Minor))
+                                            {
+                                                Warn($"Runtime {aspNetCoreVersion} requires ASP.NET Core module version {minimal}. Installed version {ancmVersion} might not be compatible.");
                                             }
                                         }
                                     }
@@ -249,6 +289,8 @@ namespace JexusManager.Features.Main
                                 Rollbar.RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> { { "source", "web app" } });
                             }
                         }
+
+                        Warn($"Please refer to pages such as https://dotnet.microsoft.com/download/dotnet-core/2.2 to verify that ASP.NET Core version {ancmVersion} matches the runtime of the web app.");
                     }
                     catch (Exception ex)
                     {
