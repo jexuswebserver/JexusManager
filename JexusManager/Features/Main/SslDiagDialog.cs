@@ -65,32 +65,67 @@ namespace JexusManager.Features.Main
                         Debug($"Server Type: {server.Mode.AsString(EnumFormat.Description)}");
                         Debug(string.Empty);
                         Debug($"SERVER SSL PROTOCOLS{Environment.NewLine}");
-                        bool ssl10Enabled = GetProtocol("PCT 1.0");
+
+                        bool? ssl10Enabled = GetProtocol("PCT 1.0");
                         Debug($"PCT 1.0: {ssl10Enabled}");
-                        if (ssl10Enabled)
+                        if (ssl10Enabled == true)
                         {
                             Warn("PCT 1.0 is not secure. Please disable it.");
                         }
+                        else if (ssl10Enabled == null)
+                        {
+                            Warn("PCT 1.0 is not secure. OS default is used. You might explicitly disable it via registry.");
+                        }
 
-                        bool ssl20Enabled = GetProtocol("SSL 2.0");
+                        bool? ssl20Enabled = GetProtocol("SSL 2.0");
                         Debug($"SSL 2.0: {ssl20Enabled}");
-                        if (ssl20Enabled)
+                        if (ssl20Enabled == true)
                         {
                             Warn("SSL 2.0 is not secure. Please disable it.");
                         }
+                        else if (ssl20Enabled == null)
+                        {
+                            Warn("SSL 2.0 is not secure. OS default is used. You might explicitly disable it via registry.");
+                        }
 
-                        bool ssl30Enabled = GetProtocol("SSL 3.0");
+                        bool? ssl30Enabled = GetProtocol("SSL 3.0");
                         Debug($"SSL 3.0: {ssl30Enabled}");
-                        if (ssl30Enabled)
+                        if (ssl30Enabled == true)
                         {
                             Warn("SSL 3.0 is not secure. Please disable it.");
                         }
+                        else if (ssl30Enabled == null)
+                        {
+                            Warn("SSL 3.0 is not secure. OS default is used. You might explicitly disable it via registry.");
+                        }
 
-                        Debug($"TLS 1.0: {GetProtocol("TLS 1.0")}");
-                        Debug($"TLS 1.1: {GetProtocol("TLS 1.1")}");
-                        Debug($"TLS 1.2: {GetProtocol("TLS 1.2")}");
+                        bool? tls10Enabled = GetProtocol("TLS 1.0");
+                        Debug($"TLS 1.0: {tls10Enabled}");
+                        if (tls10Enabled == true)
+                        {
+                            Warn("TLS 1.0 is not secure. Please disable it.");
+                        }
+                        else if (tls10Enabled == null)
+                        {
+                            Warn("TLS 1.0 is not secure. OS default is used. You might explicitly disable it via registry.");
+                        }
+
+                        bool? tls11Enabled = GetProtocol("TLS 1.1");
+                        Debug($"TLS 1.1: {tls11Enabled}");
+                        if (tls11Enabled == true)
+                        {
+                            Warn("TLS 1.1 is not secure. Please disable it.");
+                        }
+                        else if (tls11Enabled == null)
+                        {
+                            Warn("TLS 1.1 is not secure. OS default is used. You might explicitly disable it via registry.");
+                        }
+
+                        bool? tls12Enabled = GetProtocol("TLS 1.2");
+                        Debug($"TLS 1.2: {tls12Enabled}");
+
                         Debug($"SChannel EventLogging: {GetEventLogging()} (hex)");
-                        Warn($"To tune TLS related settings, try out IIS Crypto from https://www.nartac.com/Products/IISCrypto/.");
+                        Warn($"To tune TLS related settings, please follow https://support.microsoft.com/en-us/kb/187498 or try out IIS Crypto from https://www.nartac.com/Products/IISCrypto/.");
                         Debug("-----");
 
                         foreach (Site site in server.Sites)
@@ -387,11 +422,11 @@ namespace JexusManager.Features.Main
             return value;
         }
 
-        private static bool GetProtocol(string protocol)
+        private static bool? GetProtocol(string protocol)
         {
             if (Helper.IsRunningOnMono())
             {
-                return false;
+                return null;
             }
 
             // https://support.microsoft.com/en-us/kb/187498
@@ -400,7 +435,7 @@ namespace JexusManager.Features.Main
                     $@"SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\{protocol}\Server");
             if (key == null)
             {
-                return true;
+                return null;
             }
 
             var value = (int)key.GetValue("Enabled", 1);
