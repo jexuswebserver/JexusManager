@@ -4,7 +4,6 @@
 
 namespace JexusManager.Wizards.ConnectionWizard
 {
-    using System;
     using System.IO;
     using Microsoft.Web.Administration;
     using Microsoft.Web.Management.Client.Win32;
@@ -40,7 +39,13 @@ namespace JexusManager.Wizards.ConnectionWizard
             base.Activate();
             ConnectionWizardData data = (ConnectionWizardData)WizardData;
             var folder = Path.GetDirectoryName(data.SolutionFile);
+            var solutionName = Path.GetFileNameWithoutExtension(data.SolutionFile);
             _vsFile = Path.Combine(folder, ".vs", "config", "applicationHost.config");
+            if (!File.Exists(_vsFile))
+            {
+                _vsFile = Path.Combine(folder, ".vs", solutionName, "config", "applicationHost.config");
+            }
+
             _riderFile = Path.Combine(folder, ".idea", "config", "applicationHost.config");
             rbVisualStudio.Enabled = File.Exists(_vsFile);
             rbRider.Enabled = File.Exists(_riderFile);
