@@ -110,7 +110,12 @@ namespace JexusManager
                         };
                     }
                 });
-            RollbarLocator.RollbarInstance.Info($"Jexus Manager started from {Assembly.GetExecutingAssembly().Location}");
+            var path = Assembly.GetExecutingAssembly().Location;
+            var programFiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+            var programFilesX86 = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
+            var inProgramFiles = path.StartsWith(programFiles, StringComparison.OrdinalIgnoreCase)
+                || path.StartsWith(programFilesX86, StringComparison.OrdinalIgnoreCase);
+            RollbarLocator.RollbarInstance.Info($"Jexus Manager started from program files: {inProgramFiles}");
             
             Application.ThreadException += (sender, args) =>
             {
@@ -160,8 +165,10 @@ namespace JexusManager
         // Checking the version using >= will enable forward compatibility.
         private static string CheckFor45PlusVersion(int releaseKey)
         {
+            if (releaseKey >= 528040)
+                return "4.8 or later";
             if (releaseKey >= 461808)
-                return "4.7.2 or later";
+                return "4.7.2";
             if (releaseKey >= 461308)
                 return "4.7.1";
             if (releaseKey >= 460798)
