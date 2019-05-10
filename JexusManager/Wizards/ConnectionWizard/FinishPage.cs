@@ -43,7 +43,7 @@ namespace JexusManager.Wizards.ConnectionWizard
         {
             base.Activate();
             _initialized = false;
-            var connectionWizardData = ((ConnectionWizardData)this.WizardData);
+            var connectionWizardData = (ConnectionWizardData)WizardData;
             txtName.Text = connectionWizardData.HostName.ExtractName();
             connectionWizardData.Name = txtName.Text;
             _initialized = true;

@@ -846,14 +846,7 @@ namespace JexusManager
         internal void ConnectToServer()
         {
             var names = new List<string>();
-            foreach (var item in treeView1.Nodes)
-            {
-                if (item is ServerTreeNode serverNode)
-                {
-                    names.Add(serverNode.DisplayName);
-                }
-            }
-
+            GetAllServers(names, treeView1.Nodes);
             var dialog = new ConnectionWizard(_serviceContainer, names.ToArray());
             if (dialog.ShowDialog(this) != DialogResult.OK)
             {
@@ -910,6 +903,20 @@ namespace JexusManager
                     .AppendLine()
                     .AppendFormat("Details: {0}", last?.Message);
                 MessageBox.Show(message.ToString(), Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void GetAllServers(List<string> names, TreeNodeCollection nodes)
+        {
+            foreach (TreeNode item in nodes)
+            {
+                if (item is ServerTreeNode serverNode)
+                {
+                    names.Add(serverNode.DisplayName);
+                    continue;
+                }
+
+                GetAllServers(names, item.Nodes);
             }
         }
 
