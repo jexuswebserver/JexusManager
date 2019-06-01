@@ -81,7 +81,7 @@ namespace JexusManager.Features.Main
                         var appHost = application.Server.GetApplicationHostConfiguration();
                         var definitions = new List<SectionDefinition>();
                         appHost.RootSectionGroup.GetAllDefinitions(definitions);
-                        if (!definitions.Any(item => item.Name == "system.webServer/aspNetCore"))
+                        if (!definitions.Any(item => item.Path == "system.webServer/aspNetCore"))
                         {
                             Error($"ASP.NET Core module is not installed as part of IIS. Please refer to https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/iis/index#install-the-net-core-hosting-bundle for more details.");
                             return;
