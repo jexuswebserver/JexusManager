@@ -14,10 +14,8 @@ namespace Microsoft.Web.Administration
         private ConfigurationElementCollection _root;
 
         internal ConfigurationSection(string path, ConfigurationElementSchema schema, string location, FileContext core, XElement entity)
-            : base(null, path, schema, null, entity, core)
+            : base(null, path, schema, null, entity, core, null, true, location)
         {
-            Location = location;
-            Section = this;
         }
 
         public void RevertToParent()
@@ -46,7 +44,7 @@ namespace Microsoft.Web.Administration
             get { return _root ?? (_root = new ConfigurationElementCollection(SectionPath, Schema, null, this.InnerEntity, this.FileContext) { Section = this }); }
         }
 
-        internal string Location { get; private set; }
+        internal string Location { get; set; }
 
         internal override void AddChild(ConfigurationElement child)
         {

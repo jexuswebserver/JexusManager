@@ -33,7 +33,6 @@
 
 using System;
 using System.Collections;
-using System.Runtime.InteropServices;
 
 namespace Microsoft.Web.Administration
 {
@@ -92,12 +91,6 @@ namespace Microsoft.Web.Administration
                 _valid_name_hash.Keys.CopyTo(valid_name_array, 0);
 
                 _valid_names = String.Join(",", valid_name_array);
-            }
-
-            if (name == "*")
-            {
-                // IMPORTANT: wildcard.
-                return;
             }
 
             if (_valid_name_hash[name] == null)
@@ -162,6 +155,16 @@ namespace Microsoft.Web.Administration
         public void SetFromList(string attributeList)
         {
             Clear();
+
+            if (attributeList == "*")
+            {
+                foreach (var attribute in _element.Attributes)
+                {
+                    Add(attribute.Name);
+                }
+
+                return;
+            }
 
             char[] split = { ',' };
             string[] attrs = attributeList.Split(split, StringSplitOptions.RemoveEmptyEntries);

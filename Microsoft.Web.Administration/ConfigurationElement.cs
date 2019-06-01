@@ -18,11 +18,19 @@ namespace Microsoft.Web.Administration
     {
         private string _overriddenFileName;
 
-        internal ConfigurationElement(ConfigurationElement element, string name, ConfigurationElementSchema schema, ConfigurationElement parent, XElement entity, FileContext core, string fileName = null)
+        internal ConfigurationElement(ConfigurationElement element, string name, ConfigurationElementSchema schema, ConfigurationElement parent, XElement entity, FileContext core, string fileName = null, bool isSection = false, string location = null)
         {
             Methods = new ConfigurationMethodCollection();
             FileContext = parent?.FileContext ?? element?.FileContext ?? core;
-            Section = parent?.Section;
+            if (isSection)
+            {
+                Section = (ConfigurationSection)this;
+                Section.Location = location;
+            }
+            else
+            {
+                Section = parent?.Section;
+            }
             InnerEntity = entity ?? element?.InnerEntity;
             _overriddenFileName = fileName;
             if (element == null)
@@ -427,6 +435,11 @@ namespace Microsoft.Web.Administration
             {
                 try
                 {
+                    if (ParentLockAttribute(attribute.Name.LocalName))
+                    {
+                        throw new FileLoadException($"Filename: \\\\?\\{FileContext.FileName}\r\nLine number: {(entity as IXmlLineInfo).LineNumber}\r\nError: Lock violation\r\n\r\n");
+                    }
+
                     ParseAttribute(attribute, fileName);
                 }
                 catch (COMException ex)
@@ -449,6 +462,22 @@ namespace Microsoft.Web.Administration
             }
 
             Validate(true);
+        }
+
+        private bool ParentLockAttribute(string name)
+        {
+            var parent = GetParentElement();
+            if (parent == null)
+            {
+                return false;
+            }
+
+            if (parent.LockAttributes.Contains(name))
+            {
+                return true;
+            }
+
+            return parent.ParentLockAttribute(name);
         }
 
         private void ParseAttribute(XAttribute attribute, string fileName)
