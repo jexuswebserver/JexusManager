@@ -1365,5 +1365,38 @@ namespace Tests.Exceptions
             var exception = Assert.Throws<FileLoadException>(() => config.GetSection("system.webServer/httpErrors"));
             Assert.Equal($"Filename: \\\\?\\{siteConfig}\r\nLine number: 12\r\nError: Lock violation\r\n\r\n", exception.Message);
         }
+
+        [Fact]
+        public void TestIisExpressLockItem()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string current = Path.Combine(directoryName, @"applicationHost.config");
+            string original = Path.Combine(directoryName, @"original2.config");
+            var siteConfig = TestHelper.CopySiteConfig(directoryName, "original.config");
+            File.Copy(original, current, true);
+            TestHelper.FixPhysicalPathMono(current);
+
+#if IIS
+            var server = new ServerManager(current);
+#else
+            var server = new IisExpressServerManager(current);
+#endif
+            var config = server.Sites[0].Applications[0].GetWebConfiguration();
+            var section = config.GetSection("system.webServer/modules");
+            var collection = section.GetCollection();
+            var exception = Assert.Throws<FileLoadException>(() => collection.RemoveAt(0));
+//#if IIS
+            Assert.Equal($"Filename: \r\nError: Lock violation\r\n\r\n", exception.Message);
+//#else
+            //Assert.Equal($"Filename: \\\\?\\{current}\r\nLine number: 997\r\nError: Lock violation\r\n\r\n", exception.Message);
+//#endif
+        }
     }
 }

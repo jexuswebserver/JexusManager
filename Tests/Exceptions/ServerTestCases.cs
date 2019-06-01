@@ -259,7 +259,7 @@ namespace Tests.Exceptions
 
             string current = Path.Combine(directoryName, @"applicationHost.config");
             string original = Path.Combine(directoryName, @"original2.config");
-            TestHelper.CopySiteConfig(directoryName, "original.config");
+            string siteConfig = TestHelper.CopySiteConfig(directoryName, "original.config");
             File.Copy(original, current, true);
             TestHelper.FixPhysicalPathMono(current);
 
@@ -324,10 +324,15 @@ namespace Tests.Exceptions
                 Assert.False(third.IsLocallyStored);
 
                 var remove = Assert.Throws<FileLoadException>(() => filesCollection.RemoveAt(4));
+#if IIS
                 Assert.Equal(
                     "Filename: \r\nError: This configuration section cannot be modified because it has been opened for read only access\r\n\r\n",
                     remove.Message);
-
+#else
+                Assert.Equal(
+                    $"Filename: \\\\?\\{siteConfig}\r\nError: This configuration section cannot be modified because it has been opened for read only access\r\n\r\n",
+                    remove.Message);
+#endif
                 ConfigurationElement addElement = filesCollection.CreateElement();
                 var add = Assert.Throws<InvalidOperationException>(() => filesCollection.AddAt(0, addElement));
                 Assert.Equal(message, add.Message);
@@ -1565,7 +1570,7 @@ namespace Tests.Exceptions
 #endif
 
         [Fact]
-        public void TestIisExpressWrongLockedAttributes()
+        public void TestIisExpressWrongLockAttributes()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -1611,7 +1616,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressWildcardLockedAttributes()
+        public void TestIisExpressWildcardLockAttributes()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);

@@ -266,10 +266,17 @@ namespace Microsoft.Web.Administration
 
         public void Remove(T element)
         {
+            if (element.IsLocked == "true")
+            {
+                throw new FileLoadException(
+                    "Filename: \r\nError: Lock violation\r\n\r\n");
+                    // TODO: $"Filename: \\\\?\\{element.FileContext.FileName}\r\nLine number: {(element.Entity as IXmlLineInfo).LineNumber}\r\nError: Lock violation\r\n\r\n");
+            }
+
             if (FileContext.ReadOnly)
             {
                 throw new FileLoadException(
-                    "Filename: \r\nError: This configuration section cannot be modified because it has been opened for read only access\r\n\r\n");
+                    $"Filename: \\\\?\\{FileContext.FileName}\r\nError: This configuration section cannot be modified because it has been opened for read only access\r\n\r\n");
             }
 
             var addSchema =
