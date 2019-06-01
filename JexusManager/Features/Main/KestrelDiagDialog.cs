@@ -21,6 +21,7 @@ namespace JexusManager.Features.Main
     using JexusManager.Features.Handlers;
     using System.Collections.Generic;
     using EnumsNET;
+    using System.Runtime.InteropServices;
 
     public partial class KestrelDiagDialog : DialogForm
     {
@@ -77,6 +78,15 @@ namespace JexusManager.Features.Main
                         }
 
                         // check ANCM.
+                        var appHost = application.Server.GetApplicationHostConfiguration();
+                        var definitions = new List<SectionDefinition>();
+                        appHost.RootSectionGroup.GetAllDefinitions(definitions);
+                        if (!definitions.Any(item => item.Name == "system.webServer/aspNetCore"))
+                        {
+                            Error($"ASP.NET Core module is not installed as part of IIS. Please refer to https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/iis/index#install-the-net-core-hosting-bundle for more details.");
+                            return;
+                        }
+
                         var modules = new ModulesFeature((Module)provider);
                         modules.Load();
                         Debug($"Scan {modules.Items.Count} installed module(s).");
@@ -293,6 +303,13 @@ namespace JexusManager.Features.Main
                         }
 
                         Warn($"Please refer to pages such as https://dotnet.microsoft.com/download/dotnet-core/2.2 to verify that ASP.NET Core version {ancmVersion} matches the runtime of the web app.");
+                    }
+                    catch (COMException ex)
+                    {
+                        Error("A generic exception occurred.");
+                        Error($"To run ASP.NET Core on IIS, please refer to https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/iis/index for more details.");
+                        Debug(ex.ToString());
+                        Rollbar.RollbarLocator.RollbarInstance.Error(ex);
                     }
                     catch (Exception ex)
                     {
