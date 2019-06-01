@@ -158,7 +158,7 @@ namespace Microsoft.Web.Administration
 
             if (attributeList == "*")
             {
-                foreach (var attribute in _element.Attributes)
+                foreach (ConfigurationAttributeSchema attribute in _element.Schema.AttributeSchemas)
                 {
                     Add(attribute.Name);
                 }
