@@ -1391,6 +1391,52 @@ namespace Tests.Exceptions
         }
 
         [Fact]
+        public void TestIisExpressFileLocation()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string current = Path.Combine(directoryName, @"applicationHost.config");
+            string original = Path.Combine(directoryName, @"original2.config");
+            File.Copy(original, current, true);
+            TestHelper.FixPhysicalPathMono(current);
+
+            {
+                // add the tags
+                var file = XDocument.Load(current);
+                var root = file.Root;
+                if (root == null)
+                {
+                    return;
+                }
+
+                root.Add(
+                    new XElement("location",
+                        new XAttribute("path", "WebSite1/index.html"),
+                        new XElement("system.webServer",
+                            new XElement("security",
+                                new XElement("authentication",
+                                    new XElement("windowsAuthentication",
+                                        new XAttribute("enabled", true)))))));
+                file.Save(current);
+            }
+#if IIS
+            var server = new ServerManager(current);
+#else
+            var server = new IisExpressServerManager(current);
+#endif
+
+            var config = server.GetApplicationHostConfiguration();
+            var section = config.GetSection("system.webServer/security/authentication/windowsAuthentication", "WebSite1/index.html");
+            Assert.Equal(true, section["enabled"]);
+        }
+
+        [Fact]
         public void TestIisExpressMachine()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
