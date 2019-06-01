@@ -33,6 +33,7 @@
 
 using System;
 using System.Collections;
+using System.Runtime.InteropServices;
 
 namespace Microsoft.Web.Administration
 {
@@ -93,10 +94,14 @@ namespace Microsoft.Web.Administration
                 _valid_names = String.Join(",", valid_name_array);
             }
 
+            if (name == "*")
+            {
+                // IMPORTANT: wildcard.
+                return;
+            }
+
             if (_valid_name_hash[name] == null)
-                throw new ServerManagerException(
-                        String.Format("The {2} '{0}' is not valid in the locked list for this section.  The following {3} can be locked: '{1}'",
-                                   name, _valid_names, isAttribute ? "attribute" : "element", isAttribute ? "attributes" : "elements"));
+                throw new ArgumentException($"lockAttributes contains unknown attribute '{name}'");
         }
 
         public void Add(string name)

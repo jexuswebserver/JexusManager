@@ -1265,5 +1265,48 @@ namespace Tests.Exceptions
                 Assert.Equal(7, files.Count);
             }
         }
+
+        [Fact]
+        public void TestIisExpressLockAttributeModified()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string current = Path.Combine(directoryName, @"applicationHost.config");
+            string original = Path.Combine(directoryName, @"original2.config");
+            var siteConfig = TestHelper.CopySiteConfig(directoryName, "original.config");
+            File.Copy(original, current, true);
+            TestHelper.FixPhysicalPathMono(current);
+
+            {
+                // <directoryBrowse configSource="directorybrowse.config" />
+                // Add the section.
+                var file = XDocument.Load(siteConfig);
+                var root = file.Root;
+                root.Add(
+                    new XElement("location",
+                        new XAttribute("path", "."),
+                        new XAttribute("inheritInChildApplications", "false"),
+                        new XElement("system.webServer",
+                            new XElement("httpErrors",
+                                new XAttribute("defaultPath", "unknown")
+                                ))));
+                file.Save(siteConfig);
+            }
+
+#if IIS
+            var server = new ServerManager(current);
+#else
+            var server = new IisExpressServerManager(current);
+#endif
+            var config = server.Sites[0].Applications[0].GetWebConfiguration();
+            var exception = Assert.Throws<FileLoadException>(() => config.GetSection("system.webServer/httpErrors"));
+            Assert.Equal($"Filename: \\\\?\\{siteConfig}\r\nLine number: 12\r\nError: Lock violation\r\n\r\n", exception.Message);
+        }
     }
 }

@@ -350,7 +350,7 @@ namespace Tests.Exceptions
                 Assert.Equal(message, delete.Message);
             }
         }
-        
+
         [Fact]
         public void TestIisExpressNoBinding()
         {
@@ -899,7 +899,7 @@ namespace Tests.Exceptions
                 Assert.Equal("*:161902:localhost", server.Sites[1].Bindings[2].BindingInformation);
             }
         }
-        
+
         [Fact]
         public void TestIisExpressBindingInvalidPort2()
         {
@@ -1373,8 +1373,6 @@ namespace Tests.Exceptions
 #if IIS
             var config = server.GetApplicationHostConfiguration();
             var exception = Assert.Throws<FileNotFoundException>(() => config.GetSection("system.webServer/security/authentication/windowsAuthentication", "NotExist"));
-            Assert.Equal($"Filename: \\\\?\\{current}\r\nError: Unrecognized configuration path 'MACHINE/WEBROOT/APPHOST/NotExist'\r\n\r\n",
-                exception.Message);
 #else
             var config = server.GetApplicationHostConfiguration();
             var exception = Assert.Throws<FileNotFoundException>(() => config.GetSection("system.webServer/security/authentication/windowsAuthentication", "NotExist"));
@@ -1429,17 +1427,17 @@ namespace Tests.Exceptions
                                     systemNet = new XElement("system.net");
                                     root?.Add(systemNet);
                                 }
-                                
+
                                 mailSettings = new XElement("mailSettings");
                                 systemNet.Add(mailSettings);
                             }
-                            
+
                             smtp = new XElement("smtp",
                                 new XAttribute("deliveryMethod", "Network"),
                                 new XAttribute("from", "test@test.com"));
                             mailSettings.Add(smtp);
                         }
-                        
+
                         network = new XElement("network",
                             new XAttribute("defaultCredentials", true),
                             new XAttribute("host", "127.0.0.1"),
@@ -1448,7 +1446,7 @@ namespace Tests.Exceptions
                             new XAttribute("password", "test"));
                         smtp.Add(network);
                     }
-                    
+
                     network.SetAttributeValue("enableSsl", false);
                     network.SetAttributeValue("something", "else");
                     file.Save(machine);
@@ -1565,5 +1563,90 @@ namespace Tests.Exceptions
             }
         }
 #endif
+
+        [Fact]
+        public void TestIisExpressWrongLockedAttributes()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string current = Path.Combine(directoryName, @"applicationHost.config");
+            string original = Path.Combine(directoryName, @"original2.config");
+            File.Copy(original, current, true);
+            TestHelper.FixPhysicalPathMono(current);
+
+            {
+                // add the tags
+                var file = XDocument.Load(current);
+                var root = file.Root;
+                if (root == null)
+                {
+                    return;
+                }
+
+                var httpErrors = root.XPathSelectElement("/configuration/system.webServer/httpErrors");
+                httpErrors?.SetAttributeValue("lockAttributes", "notExisted");
+                file.Save(current);
+            }
+#if IIS
+            var server = new ServerManager(current);
+#else
+            var server = new IisExpressServerManager(current);
+#endif
+
+#if IIS
+            var config = server.GetApplicationHostConfiguration();
+            var exception = Assert.Throws<COMException>(() => config.GetSection("system.webServer/httpErrors"));
+#else
+            var exception = Assert.Throws<COMException>(() => server.GetApplicationHostConfiguration());
+            // TODO: fix where the exception is throwed.
+#endif
+            Assert.Equal($"Filename: \\\\?\\{current}\r\nLine number: 364\r\nError: lockAttributes contains unknown attribute 'notExisted'\r\n\r\n",
+                exception.Message);
+        }
+
+        [Fact]
+        public void TestIisExpressWildcardLockedAttributes()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string current = Path.Combine(directoryName, @"applicationHost.config");
+            string original = Path.Combine(directoryName, @"original2.config");
+            File.Copy(original, current, true);
+            TestHelper.FixPhysicalPathMono(current);
+
+            {
+                // add the tags
+                var file = XDocument.Load(current);
+                var root = file.Root;
+                if (root == null)
+                {
+                    return;
+                }
+
+                var httpErrors = root.XPathSelectElement("/configuration/system.webServer/httpErrors");
+                httpErrors?.SetAttributeValue("lockAttributes", "*");
+                file.Save(current);
+            }
+#if IIS
+            var server = new ServerManager(current);
+#else
+            var server = new IisExpressServerManager(current);
+#endif
+
+            var config = server.GetApplicationHostConfiguration();
+            var section = config.GetSection("system.webServer/httpErrors");
+        }
     }
 }
