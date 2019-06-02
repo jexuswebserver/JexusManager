@@ -1,2 +1,0 @@
-%xunit20%\xunit.console.x86 "C:\projects\jexusmanager\Tests\bin\Release\Tests.dll" -appveyor
-%xunit20%\xunit.console.x86 "C:\projects\jexusmanager\Tests.JexusManager\bin\Release\Tests.JexusManager.dll" -appveyor
