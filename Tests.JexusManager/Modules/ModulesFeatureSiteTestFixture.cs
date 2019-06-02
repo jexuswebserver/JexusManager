@@ -111,11 +111,11 @@ namespace Tests.Modules
                  new XElement("system.webServer",
                     new XElement("modules",
                         new XElement("remove",
-                            new XAttribute("name", "DynamicCompressionModule"))))));
+                            new XAttribute("name", "RewriteModule"))))));
             document.Save(Expected);
 
-            _feature.SelectedItem = _feature.Items[0];
-            Assert.Equal("DynamicCompressionModule", _feature.SelectedItem.Name);
+            _feature.SelectedItem = _feature.Items[26];
+            Assert.Equal("RewriteModule", _feature.SelectedItem.Name);
             _feature.Remove();
             Assert.Null(_feature.SelectedItem);
             Assert.Equal(43, _feature.Items.Count);

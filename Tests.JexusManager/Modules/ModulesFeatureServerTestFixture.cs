@@ -98,17 +98,16 @@ namespace Tests.Modules
             SetUp();
             const string Expected = @"expected_remove.config";
             var document = XDocument.Load(Current);
-            var node = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/modules");
-            node?.FirstNode?.Remove(); // remove comment
-            node?.FirstNode?.Remove();
+            var node1 = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/modules/add[@name='RewriteModule']");
+            node1?.Remove();
             document.Save(Expected);
 
-            Assert.Equal("DynamicCompressionModule", _feature.Items[0].Name);
-            _feature.SelectedItem = _feature.Items[0];
+            Assert.Equal("RewriteModule", _feature.Items[26].Name);
+            _feature.SelectedItem = _feature.Items[26];
             _feature.Remove();
             Assert.Null(_feature.SelectedItem);
             Assert.Equal(43, _feature.Items.Count);
-            Assert.Equal("StaticCompressionModule", _feature.Items[0].Name);
+            Assert.Equal("OutputCache", _feature.Items[26].Name);
 
             XmlAssert.Equal(Expected, Current);
         }
@@ -219,26 +218,25 @@ namespace Tests.Modules
             SetUp();
             const string Expected = @"expected_up.config";
             var document = XDocument.Load(Current);
-            var node = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/modules");
-            node?.FirstNode?.Remove(); // remove comment
-            var node1 = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/modules/add[@name='StaticCompressionModule']");
-            var node2 = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/modules/add[@name='DynamicCompressionModule']");
+            var last = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/modules/add[@name='FastCgiModule']");
+            var node1 = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/modules/add[@name='RewriteModule']");
+            var node2 = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/modules/add[@name='OutputCache']");
             node1?.Remove();
             node2?.Remove();
-            node?.AddFirst(node2);
-            node?.AddFirst(node1);
+            last?.AddAfterSelf(node1);
+            last?.AddAfterSelf(node2);
             document.Save(Expected);
 
-            _feature.SelectedItem = _feature.Items[1];
-            var selected = "StaticCompressionModule";
-            var other = "DynamicCompressionModule";
-            Assert.Equal(selected, _feature.Items[1].Name);
-            Assert.Equal(other, _feature.Items[0].Name);
+            _feature.SelectedItem = _feature.Items[27];
+            var selected = "OutputCache";
+            var other = "RewriteModule";
+            Assert.Equal(selected, _feature.Items[27].Name);
+            Assert.Equal(other, _feature.Items[26].Name);
             _feature.MoveUp();
             Assert.NotNull(_feature.SelectedItem);
             Assert.Equal(selected, _feature.SelectedItem.Name);
-            Assert.Equal(selected, _feature.Items[0].Name);
-            Assert.Equal(other, _feature.Items[1].Name);
+            Assert.Equal(selected, _feature.Items[26].Name);
+            Assert.Equal(other, _feature.Items[27].Name);
             XmlAssert.Equal(Expected, Current);
         }
 
@@ -248,26 +246,25 @@ namespace Tests.Modules
             SetUp();
             const string Expected = @"expected_up.config";
             var document = XDocument.Load(Current);
-            var node = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/modules");
-            node?.FirstNode?.Remove(); // remove comment
-            var node1 = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/modules/add[@name='StaticCompressionModule']");
-            var node2 = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/modules/add[@name='DynamicCompressionModule']");
+            var last = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/modules/add[@name='FastCgiModule']");
+            var node1 = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/modules/add[@name='RewriteModule']");
+            var node2 = document.Root?.XPathSelectElement("/configuration/location[@path='']/system.webServer/modules/add[@name='OutputCache']");
             node1?.Remove();
             node2?.Remove();
-            node?.AddFirst(node2);
-            node?.AddFirst(node1);
+            last?.AddAfterSelf(node1);
+            last?.AddAfterSelf(node2);
             document.Save(Expected);
 
-            _feature.SelectedItem = _feature.Items[0];
-            var other = "StaticCompressionModule";
-            Assert.Equal(other, _feature.Items[1].Name);
-            var selected = "DynamicCompressionModule";
-            Assert.Equal(selected, _feature.Items[0].Name);
+            _feature.SelectedItem = _feature.Items[26];
+            var other = "OutputCache";
+            Assert.Equal(other, _feature.Items[27].Name);
+            var selected = "RewriteModule";
+            Assert.Equal(selected, _feature.Items[26].Name);
             _feature.MoveDown();
             Assert.NotNull(_feature.SelectedItem);
             Assert.Equal(selected, _feature.SelectedItem.Name);
-            Assert.Equal(other, _feature.Items[0].Name);
-            Assert.Equal(selected, _feature.Items[1].Name);
+            Assert.Equal(other, _feature.Items[26].Name);
+            Assert.Equal(selected, _feature.Items[27].Name);
             XmlAssert.Equal(Expected, Current);
         }
     }
