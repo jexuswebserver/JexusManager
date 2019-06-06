@@ -1743,5 +1743,340 @@ namespace Tests.Exceptions
             var config = server.GetApplicationHostConfiguration();
             var section = config.GetSection("system.webServer/httpErrors");
         }
+
+        [Fact]
+        public void TestIisExpressDecryptPasswordEmpty()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string current = Path.Combine(directoryName, @"applicationHost.config");
+            string original = Path.Combine(directoryName, @"original2.config");
+            File.Copy(original, current, true);
+            TestHelper.FixPhysicalPathMono(current);
+
+            {
+                // add the tags
+                var file = XDocument.Load(current);
+                var root = file.Root;
+                if (root == null)
+                {
+                    return;
+                }
+
+                var anonymous = root.XPathSelectElement("/configuration/location[@path='WebSite2']/system.webServer/security/authentication/anonymousAuthentication");
+                anonymous?.SetAttributeValue("password", "[enc:AesProvider::enc]");
+                file.Save(current);
+            }
+
+#if IIS
+            var server = new ServerManager(current);
+#else
+            var server = new IisExpressServerManager(current);
+#endif
+            var config = server.GetApplicationHostConfiguration();
+
+            {
+                var section = config.GetSection("system.webServer/security/authentication/anonymousAuthentication", "WebSite2");
+                var attribute = section["password"];
+                Assert.Equal(string.Empty, attribute.ToString());
+            }
+
+            //var server = new IisExpressServerManager(current);
+            //var exception = Assert.Throws<COMException>(() => server.GetApplicationHostConfiguration());
+            //// TODO: fix where the exception is throwed.
+            //Assert.Equal($"Filename: \\\\?\\{current}\r\nLine number: 364\r\nError: lockAttributes contains unknown attribute 'notExisted'\r\n\r\n",
+            //    exception.Message);
+        }
+
+        [Fact]
+        public void TestIisExpressDecryptPasswordBroken()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string current = Path.Combine(directoryName, @"applicationHost.config");
+            string original = Path.Combine(directoryName, @"original2.config");
+            File.Copy(original, current, true);
+            TestHelper.FixPhysicalPathMono(current);
+
+            {
+                // add the tags
+                var file = XDocument.Load(current);
+                var root = file.Root;
+                if (root == null)
+                {
+                    return;
+                }
+
+                var anonymous = root.XPathSelectElement("/configuration/location[@path='WebSite2']/system.webServer/security/authentication/anonymousAuthentication");
+                anonymous?.SetAttributeValue("password", "[enc:AesProvider:enc]");
+                file.Save(current);
+            }
+
+#if IIS
+            var server = new ServerManager(current);
+#else
+            var server = new IisExpressServerManager(current);
+#endif
+            var config = server.GetApplicationHostConfiguration();
+
+            {
+                var section = config.GetSection("system.webServer/security/authentication/anonymousAuthentication", "WebSite2");
+                var attribute = section["password"];
+                Assert.Equal("[enc:AesProvider:enc]", attribute.ToString());
+            }
+
+            //var server = new IisExpressServerManager(current);
+            //var exception = Assert.Throws<COMException>(() => server.GetApplicationHostConfiguration());
+            //// TODO: fix where the exception is throwed.
+            //Assert.Equal($"Filename: \\\\?\\{current}\r\nLine number: 364\r\nError: lockAttributes contains unknown attribute 'notExisted'\r\n\r\n",
+            //    exception.Message);
+        }
+
+        [Fact]
+        public void TestIisExpressDecryptPasswordBroken2()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string current = Path.Combine(directoryName, @"applicationHost.config");
+            string original = Path.Combine(directoryName, @"original2.config");
+            File.Copy(original, current, true);
+            TestHelper.FixPhysicalPathMono(current);
+
+            {
+                // add the tags
+                var file = XDocument.Load(current);
+                var root = file.Root;
+                if (root == null)
+                {
+                    return;
+                }
+
+                var anonymous = root.XPathSelectElement("/configuration/location[@path='WebSite2']/system.webServer/security/authentication/anonymousAuthentication");
+                anonymous?.SetAttributeValue("password", "[enc::enc]");
+                file.Save(current);
+            }
+
+#if IIS
+            var server = new ServerManager(current);
+#else
+            var server = new IisExpressServerManager(current);
+#endif
+            var config = server.GetApplicationHostConfiguration();
+
+            {
+                var section = config.GetSection("system.webServer/security/authentication/anonymousAuthentication", "WebSite2");
+                var attribute = section["password"];
+                Assert.Equal("[enc::enc]", attribute.ToString());
+            }
+
+            //var server = new IisExpressServerManager(current);
+            //var exception = Assert.Throws<COMException>(() => server.GetApplicationHostConfiguration());
+            //// TODO: fix where the exception is throwed.
+            //Assert.Equal($"Filename: \\\\?\\{current}\r\nLine number: 364\r\nError: lockAttributes contains unknown attribute 'notExisted'\r\n\r\n",
+            //    exception.Message);
+        }
+
+        [Fact]
+        public void TestIisExpressDecryptPasswordBroken3()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string current = Path.Combine(directoryName, @"applicationHost.config");
+            string original = Path.Combine(directoryName, @"original2.config");
+            File.Copy(original, current, true);
+            TestHelper.FixPhysicalPathMono(current);
+
+            {
+                // add the tags
+                var file = XDocument.Load(current);
+                var root = file.Root;
+                if (root == null)
+                {
+                    return;
+                }
+
+                var anonymous = root.XPathSelectElement("/configuration/location[@path='WebSite2']/system.webServer/security/authentication/anonymousAuthentication");
+                anonymous?.SetAttributeValue("password", "[enc:enc]");
+                file.Save(current);
+            }
+
+#if IIS
+            var server = new ServerManager(current);
+#else
+            var server = new IisExpressServerManager(current);
+#endif
+            var config = server.GetApplicationHostConfiguration();
+
+            {
+                var section = config.GetSection("system.webServer/security/authentication/anonymousAuthentication", "WebSite2");
+                var attribute = section["password"];
+                Assert.Equal("[enc:enc]", attribute.ToString());
+            }
+
+            //var server = new IisExpressServerManager(current);
+            //var exception = Assert.Throws<COMException>(() => server.GetApplicationHostConfiguration());
+            //// TODO: fix where the exception is throwed.
+            //Assert.Equal($"Filename: \\\\?\\{current}\r\nLine number: 364\r\nError: lockAttributes contains unknown attribute 'notExisted'\r\n\r\n",
+            //    exception.Message);
+        }
+
+        [Fact]
+        public void TestIisExpressDecryptPasswordBroken4()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string current = Path.Combine(directoryName, @"applicationHost.config");
+            string original = Path.Combine(directoryName, @"original2.config");
+            File.Copy(original, current, true);
+            TestHelper.FixPhysicalPathMono(current);
+
+            {
+                // add the tags
+                var file = XDocument.Load(current);
+                var root = file.Root;
+                if (root == null)
+                {
+                    return;
+                }
+
+                var anonymous = root.XPathSelectElement("/configuration/location[@path='WebSite2']/system.webServer/security/authentication/anonymousAuthentication");
+                anonymous?.SetAttributeValue("password", "[encenc]");
+                file.Save(current);
+            }
+
+#if IIS
+            var server = new ServerManager(current);
+#else
+            var server = new IisExpressServerManager(current);
+#endif
+            var config = server.GetApplicationHostConfiguration();
+
+            {
+                var section = config.GetSection("system.webServer/security/authentication/anonymousAuthentication", "WebSite2");
+                var attribute = section["password"];
+                Assert.Equal("[encenc]", attribute.ToString());
+            }
+
+            //var server = new IisExpressServerManager(current);
+            //var exception = Assert.Throws<COMException>(() => server.GetApplicationHostConfiguration());
+            //// TODO: fix where the exception is throwed.
+            //Assert.Equal($"Filename: \\\\?\\{current}\r\nLine number: 364\r\nError: lockAttributes contains unknown attribute 'notExisted'\r\n\r\n",
+            //    exception.Message);
+        }
+
+        [Fact]
+        public void TestIisExpressDecryptPasswordBroken5()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string current = Path.Combine(directoryName, @"applicationHost.config");
+            string original = Path.Combine(directoryName, @"original2.config");
+            File.Copy(original, current, true);
+            TestHelper.FixPhysicalPathMono(current);
+
+            {
+                // add the tags
+                var file = XDocument.Load(current);
+                var root = file.Root;
+                if (root == null)
+                {
+                    return;
+                }
+
+                var anonymous = root.XPathSelectElement("/configuration/location[@path='WebSite2']/system.webServer/security/authentication/anonymousAuthentication");
+                anonymous?.SetAttributeValue("password", "[]");
+                file.Save(current);
+            }
+
+#if IIS
+            var server = new ServerManager(current);
+#else
+            var server = new IisExpressServerManager(current);
+#endif
+            var config = server.GetApplicationHostConfiguration();
+
+            {
+                var section = config.GetSection("system.webServer/security/authentication/anonymousAuthentication", "WebSite2");
+                var attribute = section["password"];
+                Assert.Equal("[]", attribute.ToString());
+            }
+
+            //var server = new IisExpressServerManager(current);
+            //var exception = Assert.Throws<COMException>(() => server.GetApplicationHostConfiguration());
+            //// TODO: fix where the exception is throwed.
+            //Assert.Equal($"Filename: \\\\?\\{current}\r\nLine number: 364\r\nError: lockAttributes contains unknown attribute 'notExisted'\r\n\r\n",
+            //    exception.Message);
+        }
+
+        [Fact]
+        public void TestIisExpressDecryptPassword()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string current = Path.Combine(directoryName, @"applicationHost.config");
+            string original = Path.Combine(directoryName, @"original2.config");
+            File.Copy(original, current, true);
+            TestHelper.FixPhysicalPathMono(current);
+
+#if IIS
+            var server = new ServerManager(current);
+#else
+            var server = new IisExpressServerManager(current);
+#endif
+            var config = server.GetApplicationHostConfiguration();
+            {
+                var section = config.GetSection("system.webServer/security/authentication/anonymousAuthentication");
+                var attribute = section["password"];
+                Assert.Equal("", attribute.ToString());
+            }
+
+            {
+                var section = config.GetSection("system.webServer/security/authentication/anonymousAuthentication", "WebSite2");
+                var attribute = section["password"];
+                Assert.Equal(string.Empty, attribute.ToString());
+            }
+        }
     }
 }

@@ -204,12 +204,16 @@ namespace Microsoft.Web.Administration
                 var length = full.Length - 10;
                 if (length < 0)
                 {
-                    // TODO: why it happens?
-                    return "";
+                    return value;
                 }
 
                 var inner = full.Substring(5, length);
                 var point = inner.IndexOf(':');
+                if (point < 0)
+                {
+                    return value;
+                }
+
                 var name = inner.Substring(0, point);
                 var data = inner.Substring(point + 1);
                 var protectedInfo = _element.FileContext.ProtectedConfiguration;
