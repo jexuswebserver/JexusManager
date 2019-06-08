@@ -41,12 +41,14 @@
             this.label3 = new System.Windows.Forms.Label();
             this.cbStore = new System.Windows.Forms.ComboBox();
             this.cbExport = new System.Windows.Forms.CheckBox();
+            this.txtName = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(252, 251);
+            this.btnCancel.Location = new System.Drawing.Point(252, 278);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(95, 23);
             this.btnCancel.TabIndex = 0;
@@ -56,7 +58,7 @@
             // btnOK
             // 
             this.btnOK.Enabled = false;
-            this.btnOK.Location = new System.Drawing.Point(156, 251);
+            this.btnOK.Location = new System.Drawing.Point(156, 278);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(90, 23);
             this.btnOK.TabIndex = 1;
@@ -93,7 +95,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(9, 78);
+            this.label2.Location = new System.Drawing.Point(9, 70);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(56, 13);
             this.label2.TabIndex = 5;
@@ -101,7 +103,7 @@
             // 
             // txtPassword
             // 
-            this.txtPassword.Location = new System.Drawing.Point(12, 94);
+            this.txtPassword.Location = new System.Drawing.Point(12, 86);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.Size = new System.Drawing.Size(335, 20);
             this.txtPassword.TabIndex = 6;
@@ -110,7 +112,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(9, 135);
+            this.label3.Location = new System.Drawing.Point(9, 162);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(118, 13);
             this.label3.TabIndex = 7;
@@ -123,7 +125,7 @@
             this.cbStore.FormattingEnabled = true;
             this.cbStore.Items.AddRange(new object[] {
             "Jexus"});
-            this.cbStore.Location = new System.Drawing.Point(12, 151);
+            this.cbStore.Location = new System.Drawing.Point(12, 178);
             this.cbStore.Name = "cbStore";
             this.cbStore.Size = new System.Drawing.Size(335, 21);
             this.cbStore.TabIndex = 8;
@@ -132,12 +134,29 @@
             // 
             this.cbExport.AutoSize = true;
             this.cbExport.Enabled = false;
-            this.cbExport.Location = new System.Drawing.Point(12, 200);
+            this.cbExport.Location = new System.Drawing.Point(12, 227);
             this.cbExport.Name = "cbExport";
             this.cbExport.Size = new System.Drawing.Size(190, 17);
             this.cbExport.TabIndex = 9;
             this.cbExport.Text = "Allow this certificate to be exported";
             this.cbExport.UseVisualStyleBackColor = true;
+            // 
+            // txtName
+            // 
+            this.txtName.Location = new System.Drawing.Point(12, 133);
+            this.txtName.Name = "txtName";
+            this.txtName.Size = new System.Drawing.Size(335, 20);
+            this.txtName.TabIndex = 11;
+            this.txtName.UseSystemPasswordChar = true;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(9, 117);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(75, 13);
+            this.label4.TabIndex = 10;
+            this.label4.Text = "Friendly name:";
             // 
             // ImportCertificateDialog
             // 
@@ -145,7 +164,9 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(359, 286);
+            this.ClientSize = new System.Drawing.Size(367, 318);
+            this.Controls.Add(this.txtName);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.cbExport);
             this.Controls.Add(this.cbStore);
             this.Controls.Add(this.label3);
@@ -175,5 +196,7 @@
         private Label label3;
         private ComboBox cbStore;
         private CheckBox cbExport;
+        private TextBox txtName;
+        private Label label4;
     }
 }

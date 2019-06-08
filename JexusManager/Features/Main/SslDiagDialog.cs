@@ -126,6 +126,7 @@ namespace JexusManager.Features.Main
 
                         Debug($"SChannel EventLogging: {GetEventLogging()} (hex)");
                         Warn($"To tune TLS related settings, please follow https://support.microsoft.com/en-us/kb/187498 or try out IIS Crypto from https://www.nartac.com/Products/IISCrypto/.");
+                        Warn("Microsoft documentation on cipher suites can be found at https://docs.microsoft.com/en-us/windows/desktop/secauthn/cipher-suites-in-schannel.");
                         Debug("-----");
 
                         foreach (Site site in server.Sites)
@@ -223,7 +224,6 @@ namespace JexusManager.Features.Main
                                                     "#You don't have a private key that corresponds to this certificate.");
                                             }
 
-                                            var key = cert.PublicKey.Key;
                                             var signatureAlgorithm = cert.SignatureAlgorithm;
                                             Debug($"#Signature Algorithm: {signatureAlgorithm.FriendlyName}");
                                             if (wellKnownSignatureAlgorithms.ContainsKey(signatureAlgorithm.Value))
@@ -238,7 +238,17 @@ namespace JexusManager.Features.Main
                                                 Warn("This certificate uses a not-well-known signature algorithm, which might not be supported by all web browsers and servers.");
                                             }
 
+                                            AsymmetricAlgorithm key = cert.GetECDsaPublicKey() ?? cert.PublicKey.Key;
                                             Debug($"#Key Exchange Algorithm: {key.KeyExchangeAlgorithm} Key Size: {key.KeySize}");
+                                            if (key.KeyExchangeAlgorithm.EndsWith("ECDSA", StringComparison.OrdinalIgnoreCase))
+                                            {
+                                                Warn("This is an ECC certificate, so certain (old) web browsers/clients might not be able to support it.");
+                                            }
+                                            else
+                                            {
+                                                Warn("This is not an ECC certificate, so *_ECDSA_* cipher suites cannot be used.");
+                                            }
+
                                             Debug($"#Subject: {cert.Subject}");
                                             Debug($"#Issuer: {cert.Issuer}");
                                             Debug($"#Validity: From {cert.NotBefore:G} To {cert.NotAfter:G}");
