@@ -178,10 +178,10 @@
 			</Directory>
         </Directory>
 
-        <!--Check .NET 4.6 is installed for Windows 7 and above-->
-        <PropertyRef Id="WIX_IS_NETFRAMEWORK_46_OR_LATER_INSTALLED" />
-        <Condition Message="This application requires .NET Framework 4.6. Please install the .NET Framework then run this installer again.">
-            <![CDATA[Installed OR (VersionNT >= 600 AND WIX_IS_NETFRAMEWORK_46_OR_LATER_INSTALLED)]]>
+        <!-- Ensure .Net 4.6.1 is installed -->
+        <PropertyRef Id="NETFRAMEWORK45" />
+        <Condition Message="[ProductName] Requires .NET Framework 4.6.1 or later to be installed">
+        <![CDATA[Installed OR (NETFRAMEWORK45 AND NETFRAMEWORK45 >= "#394254")]]>
         </Condition>
 
         <?if $(var.Platform) = x64 ?>
