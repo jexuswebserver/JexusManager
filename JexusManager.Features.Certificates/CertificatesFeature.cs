@@ -19,7 +19,6 @@ namespace JexusManager.Features.Certificates
     using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.IO;
     using System.Reflection;
     using System.Resources;
     using System.Security.Cryptography;
@@ -72,7 +71,19 @@ namespace JexusManager.Features.Certificates
                     {
                         try
                         {
-                            if (_owner.SelectedItem.Certificate.PrivateKey is RSACng cng)
+                            ECDsaCng eCdsa = _owner.SelectedItem.Certificate.GetECDsaPrivateKey() as ECDsaCng;
+                            if (eCdsa != null)
+                            {
+                                if (eCdsa.Key.ExportPolicy.HasFlag(CngExportPolicies.AllowExport))
+                                {
+                                    result.Add(new MethodTaskItem("Export", "Export...", string.Empty).SetUsage());
+                                    if (_owner.SelectedItem.Certificate.Issuer != LocalhostIssuer && _owner.SelectedItem.Certificate.Issuer != _localMachineIssuer)
+                                    {
+                                        result.Add(new MethodTaskItem("Renew", "Renew...", string.Empty).SetUsage());
+                                    }
+                                }
+                            }
+                            else if (_owner.SelectedItem.Certificate.PrivateKey is RSACng cng)
                             {
                                 if (cng.Key.ExportPolicy.HasFlag(CngExportPolicies.AllowExport))
                                 {
@@ -406,7 +417,7 @@ namespace JexusManager.Features.Certificates
             wizard.ShowDialog();
         }
 
-        private void View()
+        internal void View()
         {
             var cert = SelectedItem.Certificate;
             DialogHelper.DisplayCertificate(cert, IntPtr.Zero);
