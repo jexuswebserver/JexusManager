@@ -240,7 +240,7 @@ namespace JexusManager.Features.Main
 
                                             AsymmetricAlgorithm key = cert.GetECDsaPublicKey() ?? cert.PublicKey.Key;
                                             Debug($"#Key Exchange Algorithm: {key.KeyExchangeAlgorithm} Key Size: {key.KeySize}");
-                                            if (key.KeyExchangeAlgorithm.EndsWith("ECDSA", StringComparison.OrdinalIgnoreCase))
+                                            if (key.SignatureAlgorithm.Equals("ECDSA", StringComparison.OrdinalIgnoreCase))
                                             {
                                                 Warn("This is an ECC certificate, so certain (old) web browsers/clients might not be able to support it.");
                                             }
