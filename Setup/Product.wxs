@@ -141,6 +141,15 @@
                         <File Id="JexusManager.Shared.pdb" Name="JexusManager.Shared.pdb" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.Shared.pdb" />
                         <File Id="MakarovDev.ExpandCollapsePanel.dll" Name="MakarovDev.ExpandCollapsePanel.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\MakarovDev.ExpandCollapsePanel.dll" />
                         <File Id="MakarovDev.ExpandCollapsePanel.pdb" Name="MakarovDev.ExpandCollapsePanel.pdb" Vital="no" DiskId="1" Source="$(var.SourceDir)\MakarovDev.ExpandCollapsePanel.pdb" />
+                        <File Name="Microsoft.Extensions.Configuration.Abstractions.dll" Source="$(var.SourceDir)\Microsoft.Extensions.Configuration.Abstractions.dll" />
+                        <File Name="Microsoft.Extensions.Configuration.Binder.dll" Source="$(var.SourceDir)\Microsoft.Extensions.Configuration.Binder.dll" />
+                        <File Name="Microsoft.Extensions.Configuration.dll" Source="$(var.SourceDir)\Microsoft.Extensions.Configuration.dll" />
+                        <File Name="Microsoft.Extensions.Configuration.FileExtensions.dll" Source="$(var.SourceDir)\Microsoft.Extensions.Configuration.FileExtensions.dll" />
+                        <File Name="Microsoft.Extensions.Configuration.Json.dll" Source="$(var.SourceDir)\Microsoft.Extensions.Configuration.Json.dll" />
+                        <File Name="Microsoft.Extensions.FileProviders.Abstractions.dll" Source="$(var.SourceDir)\Microsoft.Extensions.FileProviders.Abstractions.dll" />
+                        <File Name="Microsoft.Extensions.FileProviders.Physical.dll" Source="$(var.SourceDir)\Microsoft.Extensions.FileProviders.Physical.dll" />
+                        <File Name="Microsoft.Extensions.FileSystemGlobbing.dll" Source="$(var.SourceDir)\Microsoft.Extensions.FileSystemGlobbing.dll" />
+                        <File Name="Microsoft.Extensions.Primitives.dll" Source="$(var.SourceDir)\Microsoft.Extensions.Primitives.dll" />
                         <File Id="Microsoft.Web.Administration.dll" Name="Microsoft.Web.Administration.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\Microsoft.Web.Administration.dll" />
                         <File Id="Microsoft.Web.Administration.pdb" Name="Microsoft.Web.Administration.pdb" Vital="no" DiskId="1" Source="$(var.SourceDir)\Microsoft.Web.Administration.pdb" />
                         <File Id="Microsoft.Web.Configuration.AppHostFileProvider.dll" Name="Microsoft.Web.Configuration.AppHostFileProvider.dll" Vital="no" DiskId="1" Source="$(var.SourceDir)\Microsoft.Web.Configuration.AppHostFileProvider.dll" />
