@@ -94,14 +94,14 @@ namespace JexusManager.Features.Main
                         {
                             if (item.Modules == "FastCgiModule")
                             {
-                                if (File.Exists(item.Path))
+                                if (File.Exists(item.ScriptProcessor))
                                 {
-                                    Debug($"* Found a valid FastCGI handler as {{ Name: {item.Name}, Path: {item.Path}, State: {item.GetState(handlers.AccessPolicy)}, Module: {item.TypeString}, Entry Type: {item.Flag} }}.");
+                                    Debug($"* Found a valid FastCGI handler as {{ Name: {item.Name}, Path: {item.Path}, State: {item.GetState(handlers.AccessPolicy)}, Module: {item.TypeString}, Entry Type: {item.Flag} }}. File path: {item.ScriptProcessor}.");
                                     foundPhpHandler.Add(item);
                                 }
                                 else
                                 {
-                                    Error($"* Found an invalid FastCGI handler as {{Name: {item.Name}, Path: {item.Path}, State: {item.GetState(handlers.AccessPolicy)}, Module: {item.TypeString}, Entry Type: {item.Flag} }} because the path does not exist.");
+                                    Error($"* Found an invalid FastCGI handler as {{Name: {item.Name}, Path: {item.Path}, State: {item.GetState(handlers.AccessPolicy)}, Module: {item.TypeString}, Entry Type: {item.Flag} }} because file path does not exist: {item.ScriptProcessor}.");
                                 }
                             }
                         }
@@ -221,8 +221,10 @@ namespace JexusManager.Features.Main
                                     var extensionFolder = data["PHP"]["extension_dir"];
                                     if (extensionFolder == null)
                                     {
-                                        extensionFolder = "ext";
+                                        extensionFolder = "\"ext\"";
                                     }
+
+                                    extensionFolder = extensionFolder.Trim('"');
 
                                     var fullPath = Path.Combine(rootFolder, extensionFolder);
                                     Info($"PHP loadable extension folder: {fullPath}");
