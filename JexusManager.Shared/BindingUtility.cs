@@ -181,6 +181,11 @@ namespace Microsoft.Web.Administration
             }
 
             // handle IP based
+            if (binding.EndPoint == null)
+            {
+                return "This binding does not have valid IP endpoint";
+            }
+
             var certificate = NativeMethods.QuerySslCertificateInfo(binding.EndPoint);
             if (certificate == null)
             {
