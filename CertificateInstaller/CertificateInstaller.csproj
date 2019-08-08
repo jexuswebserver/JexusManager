@@ -5,9 +5,6 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CertificateInstaller</RootNamespace>
     <AssemblyName>CertificateInstaller</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\JexusManager\JexusManager.snk</AssemblyOriginatorKeyFile>
     <TargetFramework>netcoreapp3.0</TargetFramework>

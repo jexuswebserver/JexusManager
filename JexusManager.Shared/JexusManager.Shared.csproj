@@ -1,36 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E4040A45-B156-4048-B1A4-BD262BA18047}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>JexusManager</RootNamespace>
-    <AssemblyName>JexusManager.Shared</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;DESIGN</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
@@ -41,75 +9,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BouncyCastle" Version="1.8.4" />
-    <PackageReference Include="Microsoft.VisualBasic" Version="10.4.0-preview.18571.3" />
-    <PackageReference Include="Ookii.Dialogs.WinForms" Version="1.0.0" />
-    <PackageReference Include="PeNet" Version="0.8.1" />
+    <PackageReference Include="BouncyCastle" Version="1.8.5" />
+    <PackageReference Include="Ookii.Dialogs.WinForms" Version="1.1.0" />
+    <PackageReference Include="PeNet" Version="1.0.8" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Microsoft.Web.Administration\Microsoft.Web.Administration.csproj" />
     <ProjectReference Include="..\Microsoft.Web.Management\Microsoft.Web.Management.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Properties\Resources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="JexusManager.snk" />
-    <None Include="Resources\application_32.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\title_32.png" />
-    <None Include="Resources\site_32.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\transparent_16.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\view_16.png" />
-    <None Include="Resources\move_up_16.png" />
-    <None Include="Resources\move_down_16.png" />
-    <None Include="Resources\show_all_16.png" />
-    <None Include="Resources\go_16.png" />
-    <None Include="Resources\back_16.png" />
-    <None Include="Resources\basic_settings_16.png" />
-    <Content Include="Resources\help_16.png" />
-    <None Include="Resources\remove_16.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="BouncyCastle">
-      <Version>1.8.5</Version>
-    </PackageReference>
-    <PackageReference Include="Ookii.Dialogs.WindowsForms">
-      <Version>1.0.0</Version>
-    </PackageReference>
-    <PackageReference Include="PeNet">
-      <Version>0.8.1</Version>
-    </PackageReference>
-    <PackageReference Include="StrongNamer">
-      <Version>0.0.8</Version>
-    </PackageReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
-</Project>
 
 </Project>

@@ -1,36 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{361E2F47-289F-480F-B976-A6E3F7D96EDC}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>JexusManager.Features.IpSecurity</RootNamespace>
-    <AssemblyName>JexusManager.Features.IpSecurity</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
@@ -47,51 +15,6 @@
   <ItemGroup>
     <ProjectReference Include="..\JexusManager.Shared\JexusManager.Shared.csproj" />
     <ProjectReference Include="..\Microsoft.Web.Management\Microsoft.Web.Management.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Properties\Resources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SetRestrictionsDialog.resx">
-      <DependentUpon>SetRestrictionsDialog.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\JexusManager.Shared\JexusManager.Shared.csproj">
-      <Project>{e4040a45-b156-4048-b1a4-bd262ba18047}</Project>
-      <Name>JexusManager.Shared</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Microsoft.Web.Administration\Microsoft.Web.Administration.csproj">
-      <Project>{BD24AFDA-292F-4F41-BA80-C48F21D4D9F2}</Project>
-      <Name>Microsoft.Web.Administration</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Microsoft.Web.Management\Microsoft.Web.Management.csproj">
-      <Project>{17e994b0-5a31-4f79-9796-83a45e87853d}</Project>
-      <Name>Microsoft.Web.Management</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="JexusManager.snk" />
-    <None Include="Resources\ip_restriction_36.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="StrongNamer">
-      <Version>0.0.8</Version>
-    </PackageReference>
-    <PackageReference Include="System.Reactive">
-      <Version>4.1.5</Version>
-    </PackageReference>
   </ItemGroup>
 
 </Project>
