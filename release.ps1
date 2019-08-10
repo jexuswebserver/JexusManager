@@ -38,4 +38,15 @@ Write-Host "MSBuild found. Compile the projects."
 & $msBuild JexusManager.sln /p:Configuration=Release /t:clean
 & $msBuild JexusManager.sln /p:Configuration=Release
 
+Set-Location .\JexusManager
+dotnet publish -c Release -r win-x64 /p:PublishSignelFile=true -o ..\bin\x64 /p:PublishSingleFile=true
+dotnet publish -c Release -r win-x86 /p:PublishSignelFile=true -o ..\bin\x86 /p:PublishSingleFile=true
+Copy-Item .\ThirdPartyNotices.txt ..\bin
+Set-Location ..
+
+Set-Location .\CertificateInstaller
+dotnet publish -c Release -r win-x64 /p:PublishSignelFile=true -o ..\bin\x64 /p:PublishSingleFile=true
+dotnet publish -c Release -r win-x86 /p:PublishSignelFile=true -o ..\bin\x86 /p:PublishSingleFile=true
+Set-Location ..
+
 Write-Host "Compilation finished."

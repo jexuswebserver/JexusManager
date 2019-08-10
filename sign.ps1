@@ -5,8 +5,6 @@ if(!$foundCert)
     exit
 }
 
-Copy-Item .\JexusManager.Features.Certificates\bin\Release\Mono.Security.dll .\bin
-
 Write-Host "Certificate found. Sign the assemblies."
 $signtool = "C:\Program Files (x86)\Windows Kits\10\bin\10.0.17134.0\x64\signtool.exe"
 foreach ($line in Get-Content .\sign.txt) {

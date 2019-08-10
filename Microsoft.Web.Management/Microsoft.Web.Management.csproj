@@ -11,9 +11,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="StrongNamer">
-      <Version>0.0.8</Version>
-    </PackageReference>
     <ProjectReference Include="..\Microsoft.Web.Administration\Microsoft.Web.Administration.csproj" />
     <ProjectReference Include="..\Microsoft.Web.Configuration.AppHostFileProvider\Microsoft.Web.Configuration.AppHostFileProvider.csproj" />
   </ItemGroup>
