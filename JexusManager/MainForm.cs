@@ -429,6 +429,17 @@ namespace JexusManager
 
         private void btnRemoveSite_Click(object sender, EventArgs e)
         {
+            TreeNode selectedNode = treeView1.SelectedNode;
+            if (selectedNode == null)
+            {
+                return;
+            }
+
+            if (!(selectedNode.Tag is global::Microsoft.Web.Administration.Site node))
+            {
+                return;
+            }
+
             var result = UIService.ShowMessage(
                 "Are you sure that you want to remove the selected site?",
                 "Confirm Remove",
@@ -440,10 +451,9 @@ namespace JexusManager
                 return;
             }
 
-            var node = (Site)treeView1.SelectedNode.Tag;
             node.Parent.Remove(node);
             node.Server.CommitChanges();
-            treeView1.SelectedNode.Remove();
+            selectedNode.Remove();
         }
 
         private void Form1FormClosing(object sender, FormClosingEventArgs e)
