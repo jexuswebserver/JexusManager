@@ -216,9 +216,7 @@ namespace Microsoft.Web.Administration
             domain = address == "*" || address == "0.0.0.0"
                 ? Parent.Parent.Parent.Parent.HostName.ExtractName()
                 : string.IsNullOrWhiteSpace(host)
-                    ? EndPoint.AddressFamily == AddressFamily.InterNetwork
-                        ? address
-                        : $"[{address}]"
+                    ? address
                     : Host;
             return IsDefaultPort
                 ? $"{Protocol}://{domain}"
