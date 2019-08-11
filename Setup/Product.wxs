@@ -74,16 +74,12 @@
                     <?if $(var.Platform) = x64 ?>
                         <File Id="CertificateInstaller.exe" Name="CertificateInstaller.exe" Vital="no" DiskId="1" Source="$(var.SourceDir)\x64\CertificateInstaller.exe" />
                         <File Id="CertificateInstaller.pdb" Name="CertificateInstaller.pdb" Vital="no" DiskId="1" Source="$(var.SourceDir)\x64\CertificateInstaller.pdb" />
-                        <File Id="JexusManager.exe" Name="JexusManager.exe" Vital="no" DiskId="1" Source="$(var.SourceDir)\x64\JexusManager.exe">
-                            <netfx:NativeImage Id="SharpDevelopNGenImage" Priority="1" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension" />
-                        </File>
+                        <File Id="JexusManager.exe" Name="JexusManager.exe" Vital="no" DiskId="1" Source="$(var.SourceDir)\x64\JexusManager.exe" />
                         <File Id="JexusManager.pdb" Name="JexusManager.pdb" Vital="no" DiskId="1" Source="$(var.SourceDir)\x64\JexusManager.pdb" />
                     <?else ?>
                         <File Id="CertificateInstaller.exe" Name="CertificateInstaller.exe" Vital="no" DiskId="1" Source="$(var.SourceDir)\x86\CertificateInstaller.exe" />
                         <File Id="CertificateInstaller.pdb" Name="CertificateInstaller.pdb" Vital="no" DiskId="1" Source="$(var.SourceDir)\x86\CertificateInstaller.pdb" />
-                        <File Id="JexusManager.exe" Name="JexusManager.exe" Vital="no" DiskId="1" Source="$(var.SourceDir)\x86\JexusManager.exe">
-                            <netfx:NativeImage Id="SharpDevelopNGenImage" Priority="1" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension" />
-                        </File>
+                        <File Id="JexusManager.exe" Name="JexusManager.exe" Vital="no" DiskId="1" Source="$(var.SourceDir)\x86\JexusManager.exe" />
                         <File Id="JexusManager.pdb" Name="JexusManager.pdb" Vital="no" DiskId="1" Source="$(var.SourceDir)\x86\JexusManager.pdb" />
                     <?endif ?>
                         <File Id="ThirdPartyNotices.txt" Name="ThirdPartyNotices.txt" Vital="no" DiskId="1" Source="$(var.SourceDir)\ThirdPartyNotices.txt" />
@@ -102,12 +98,6 @@
 				</Component>
 			</Directory>
         </Directory>
-
-        <!-- Ensure .Net 4.6.1 is installed -->
-        <PropertyRef Id="NETFRAMEWORK45" />
-        <Condition Message="[ProductName] Requires .NET Framework 4.6.1 or later to be installed">
-        <![CDATA[Installed OR (NETFRAMEWORK45 AND NETFRAMEWORK45 >= "#394254")]]>
-        </Condition>
 
         <?if $(var.Platform) = x64 ?>
         <Condition Message="The 64-bit version of $(var.ProductName) cannot be installed on a 32-bit edition of Microsoft Windows.">
