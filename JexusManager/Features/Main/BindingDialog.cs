@@ -213,6 +213,7 @@ namespace JexusManager.Features.Main
                     if (Binding == null)
                     {
                         txtPort.Text = cbType.Text == "http" ? "80" : "443";
+                        cbAddress.SelectedIndex = 0;
                     }
 
                     txtCertificates.Visible = cbType.SelectedIndex == 1;
@@ -234,6 +235,7 @@ namespace JexusManager.Features.Main
             container.Add(
                 Observable.FromEventPattern<EventArgs>(cbAddress, "TextChanged")
                 .Merge(Observable.FromEventPattern<EventArgs>(txtPort, "TextChanged"))
+                .Merge(Observable.FromEventPattern<EventArgs>(txtHost, "TextChanged"))
                 .Merge(certificatesSelected)
                 .Sample(TimeSpan.FromSeconds(1))
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
