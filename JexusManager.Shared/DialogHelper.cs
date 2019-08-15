@@ -7,6 +7,7 @@ namespace JexusManager
     using JexusManager.Services;
     using Microsoft.Web.Administration;
     using Ookii.Dialogs.WinForms;
+    using Rollbar;
     using System;
     using System.ComponentModel;
     using System.Diagnostics;
@@ -314,6 +315,7 @@ namespace JexusManager
             {
                 if (ex.HResult != Microsoft.Web.Administration.NativeMethods.NonExistingStore)
                 {
+                    RollbarLocator.RollbarInstance.Info($"CryptographicException {ex.HResult} from LoadCertificates");
                     throw;
                 }
             }

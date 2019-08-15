@@ -21,6 +21,7 @@ namespace JexusManager.Features.Main
     using System.Reactive.Linq;
     using System.Collections.Generic;
     using EnumsNET;
+    using Rollbar;
 
     public partial class SslDiagDialog : DialogForm
     {
@@ -335,6 +336,7 @@ namespace JexusManager.Features.Main
                                         Error($"Problems detected on certificate store {binding.CertificateStoreName}.");
                                         if (ex.HResult != Microsoft.Web.Administration.NativeMethods.NonExistingStore)
                                         {
+                                            RollbarLocator.RollbarInstance.Info($"CryptographicException {ex.HResult} from SslDiag.");
                                             throw;
                                         }
 

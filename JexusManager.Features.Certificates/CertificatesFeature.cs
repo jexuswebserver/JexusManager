@@ -279,6 +279,7 @@ namespace JexusManager.Features.Certificates
                     {
                         if (ex.HResult != NativeMethods.NonExistingStore)
                         {
+                            RollbarLocator.RollbarInstance.Info($"CryptographicException {ex.HResult} from CertificatesFeature.");
                             throw;
                         }
                     }
