@@ -221,7 +221,7 @@ namespace JexusManager
             var file = GetTempFileName() + ".crt";
             var bytes = x509Certificate2.Export(X509ContentType.Cert);
             File.WriteAllBytes(file, bytes);
-            Process.Start(file);
+            Process.Start("explorer.exe", file);
         }
 
         public static void Explore(string folder)
