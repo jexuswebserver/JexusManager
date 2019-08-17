@@ -1261,7 +1261,7 @@ namespace Microsoft.Web.Administration
 
         #region Win32 error codes
 
-        public const int NonExistingStore = -2147024894; //0x80070002
+        public const int NonExistingStore = 2; //0x80070002
         public const int UserCancelled = -2147023673;
         public const int BadKeySet = -2146893802;
         public const int NoProcessAssociated = -2146233079;
