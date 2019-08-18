@@ -1367,7 +1367,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressLockItem()
+        public void TestIisExpressLockItemRemovedFromCollection()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -1391,12 +1391,99 @@ namespace Tests.Exceptions
             var config = server.Sites[0].Applications[0].GetWebConfiguration();
             var section = config.GetSection("system.webServer/modules");
             var collection = section.GetCollection();
-            var exception = Assert.Throws<FileLoadException>(() => collection.RemoveAt(0));
-//#if IIS
-            Assert.Equal($"Filename: \r\nError: Lock violation\r\n\r\n", exception.Message);
-//#else
-            //Assert.Equal($"Filename: \\\\?\\{current}\r\nLine number: 997\r\nError: Lock violation\r\n\r\n", exception.Message);
-//#endif
+            {
+                var exception = Assert.Throws<FileLoadException>(() => collection.RemoveAt(0)); // lockItem=true
+                Assert.Equal($"Filename: \r\nError: Lock violation\r\n\r\n", exception.Message);
+            }
+
+            var item = collection[collection.Count - 1];
+            {
+                var exception = Assert.Throws<FileLoadException>(() => collection.Remove(item)); // lockItem=false
+                Assert.Equal($"Filename: \r\nError: Lock violation\r\n\r\n", exception.Message);
+            }
+        }
+
+        [Fact]
+        public void TestIisExpressLockItemRemovedInLocationTag()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string current = Path.Combine(directoryName, @"applicationHost.config");
+            string original = Path.Combine(directoryName, @"original2.config");
+            var siteConfig = TestHelper.CopySiteConfig(directoryName, "original.config");
+            File.Copy(original, current, true);
+            TestHelper.FixPhysicalPathMono(current);
+
+            {
+                // modify the path
+                var file = XDocument.Load(current);
+                var root = file.Root;
+                root.Add(
+                    new XElement("location",
+                        new XAttribute("path", "WebSite1"),
+                        new XElement("system.webServer",
+                            new XElement("modules",
+                                new XElement("remove",
+                                    new XAttribute("name", "DynamicCompressionModule")))))
+                    );
+                file.Save(current);
+            }
+#if IIS
+            var server = new ServerManager(current);
+#else
+            var server = new IisExpressServerManager(current);
+#endif
+            var config = server.Sites[0].Applications[0].GetWebConfiguration();
+            var section = config.GetSection("system.webServer/modules");
+            var collection = section.GetCollection();
+            var item = collection[0];
+            Assert.Equal("StaticCompressionModule", item["name"]);
+        }
+
+        [Fact]
+        public void TestIisExpressLockItemRemovedInWebConfig()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string current = Path.Combine(directoryName, @"applicationHost.config");
+            string original = Path.Combine(directoryName, @"original2.config");
+            var siteConfig = TestHelper.CopySiteConfig(directoryName, "original.config");
+            File.Copy(original, current, true);
+            TestHelper.FixPhysicalPathMono(current);
+
+            {
+                // modify the path
+                var file = XDocument.Load(siteConfig);
+                var root = file.Root;
+                var webServer = root.Element("system.webServer");
+                webServer.Add(
+                    new XElement("modules",
+                        new XElement("remove",
+                            new XAttribute("name", "DynamicCompressionModule")))
+                    );
+                file.Save(siteConfig);
+            }
+#if IIS
+            var server = new ServerManager(current);
+#else
+            var server = new IisExpressServerManager(current);
+#endif
+            var config = server.Sites[0].Applications[0].GetWebConfiguration();
+            var exception = Assert.Throws<FileLoadException>(() => config.GetSection("system.webServer/modules"));
+            Assert.Equal($"Filename: \\\\?\\{siteConfig}\r\nLine number: 10\r\nError: Lock violation\r\n\r\n", exception.Message);
+
         }
     }
 }
