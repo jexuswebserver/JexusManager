@@ -359,7 +359,7 @@ namespace JexusManager
 
         public static string GetPrivateKeyFile(string file)
         {
-            return GetSpecialFolder("PrivateKey", file);
+            return GetSpecialFolder("PrivateKey", $"{file.Replace('*', '_')}.txt");
         }
 
         public static string ListIisExpress => GetSpecialFolder("lists", "iisExpressList");
