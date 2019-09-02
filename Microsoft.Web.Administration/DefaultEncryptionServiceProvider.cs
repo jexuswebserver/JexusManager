@@ -1,4 +1,6 @@
-﻿namespace Microsoft.Web.Administration
+﻿using System;
+
+namespace Microsoft.Web.Administration
 {
     internal class DefaultEncryptionServiceProvider : IEncryptionServiceProvider
     {
