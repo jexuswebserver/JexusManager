@@ -349,8 +349,9 @@ namespace JexusManager
                 {
                     Directory.CreateDirectory(result);
                 }
-                catch (IOException)
+                catch (IOException ex)
                 {
+                    RollbarLocator.RollbarInstance.Error(ex);
                 }
             }
 
