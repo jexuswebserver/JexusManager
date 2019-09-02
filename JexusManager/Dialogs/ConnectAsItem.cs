@@ -1,19 +1,27 @@
-﻿using Microsoft.Web.Administration;
+﻿using JexusManager.Features;
+using Microsoft.Web.Administration;
 
 namespace JexusManager.Dialogs
 {
-    public class ConnectAsItem
+    public class ConnectAsItem : IItem<ConnectAsItem>
     {
         public string UserName { get; set; }
         public string Password { get; set; }
+        public ConfigurationElement Element
+        {
+            get { return _virtualDirectory; }
+            set { _virtualDirectory = (VirtualDirectory)value; }
+        }
 
-        public VirtualDirectory Element { get; set; }
+        public string Flag { get; set; }
+
+        private VirtualDirectory _virtualDirectory;
 
         public ConnectAsItem(VirtualDirectory virtualDirectory)
         {
             UserName = virtualDirectory?.UserName ?? string.Empty;
             Password = virtualDirectory?.Password ?? string.Empty;
-            Element = virtualDirectory;
+            _virtualDirectory = virtualDirectory;
         }
 
         public void Apply()
@@ -23,8 +31,18 @@ namespace JexusManager.Dialogs
                 return;
             }
 
-            Element.UserName = UserName;
-            Element.Password = Password;
+            _virtualDirectory.UserName = UserName;
+            _virtualDirectory.Password = Password;
+        }
+
+        public bool Match(ConnectAsItem other)
+        {
+            return other != null && other.UserName == UserName && other.Password == Password;
+        }
+
+        public bool Equals(ConnectAsItem other)
+        {
+            return Match(other);
         }
     }
 }
