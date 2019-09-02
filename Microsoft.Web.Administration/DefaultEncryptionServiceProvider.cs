@@ -10,7 +10,7 @@
 
         public string Encrypt(string data, string keyContainerName, string cspProviderName, string sessionKey, bool useOAEP, bool useMachineContainer)
         {
-            return string.Empty;
+            throw new NotImplementedException();
         }
     }
 }
