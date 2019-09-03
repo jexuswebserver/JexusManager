@@ -93,19 +93,19 @@ namespace Microsoft.Web.Administration
                             AllowUnrecognizedAttributes = top.AllowUnrecognizedAttributes
                         };
                         top.ChildElementSchemas.Add(child);
-                        child.Path = string.Format("{0}/{1}", (schema == null ? Name : schema.Path), child.Name);
+                        child.Path = string.Format("{0}/{1}", schema == null ? Name : schema.Path, child.Name);
                     }
                     else
                     {
                         // TODO: validation
                         if (item.Attribute("isCollectionDefault").LoadBoolean(false) != child.IsCollectionDefault)
                         {
-                            throw new ArgumentException("isCollectionDefault not equals");
+                            throw new ArgumentException($"isCollectionDefault not equals: item {fileName} child {child.IsCollectionDefault} {child.FileName}");
                         }
 
                         if (top.AllowUnrecognizedAttributes != child.AllowUnrecognizedAttributes)
                         {
-                            throw new ArgumentException("allowUnrecognizedAttributes not equals");
+                            throw new ArgumentException($"allowUnrecognizedAttributes not equals: {fileName} child {child.AllowUnrecognizedAttributes} {child.FileName}");
                         }
                     }
 
