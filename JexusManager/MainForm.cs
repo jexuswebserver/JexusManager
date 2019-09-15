@@ -52,8 +52,6 @@ namespace JexusManager
     using Microsoft.Web.Management.Client.Win32;
     using Microsoft.Web.Management.Server;
 
-    using Vista.Controls;
-
     using Action = Crad.Windows.Forms.Actions.Action;
     using Application = Microsoft.Web.Administration.Application;
     using Features;
@@ -142,9 +140,7 @@ namespace JexusManager
             _navigationService = new NavigationService(this);
             _navigationService.NavigationPerformed += (sender, args) =>
                 {
-                    var item = new ExplorerNavigationHistoryItem("");
-                    item.Tag = args.NewItem;
-                    eanLocation.Navigation.AddHistory(item);
+
                 };
             UIService = new ManagementUIService(this);
             _serviceContainer = new ServiceContainer();

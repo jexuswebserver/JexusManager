@@ -50,7 +50,6 @@
     <ProjectReference Include="..\JexusManager.Features.Rewrite\JexusManager.Features.Rewrite.csproj" />
     <ProjectReference Include="..\JexusManager.Features.TraceFailedRequests\JexusManager.Features.TraceFailedRequests.csproj" />
     <ProjectReference Include="..\JexusManager.Shared\JexusManager.Shared.csproj" />
-    <ProjectReference Include="..\lib\Vista.Controls.BreadcrumbBar\Vista.Controls.BreadcrumbBar.csproj" />
     <ProjectReference Include="..\Microsoft.Web.Administration\Microsoft.Web.Administration.csproj" />
   </ItemGroup>
 

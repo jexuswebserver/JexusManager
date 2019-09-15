@@ -36,8 +36,9 @@ Write-Host "MSBuild found. Compile the projects."
 
 & $msBuild JexusManager.sln /p:Configuration=Release /t:restore
 & $msBuild JexusManager.sln /p:Configuration=Release /t:clean
-& $msBuild JexusManager.sln /p:Configuration=Release
 
+Remove-Item .\bin -Recurse
+New-Item .\bin -ItemType Directory
 Set-Location .\JexusManager
 dotnet publish -c Release -r win-x64 /p:PublishSignelFile=true -o ..\bin\x64 /p:PublishSingleFile=true /p:PublishTrimmed=true
 dotnet publish -c Release -r win-x86 /p:PublishSignelFile=true -o ..\bin\x86 /p:PublishSingleFile=true /p:PublishTrimmed=true

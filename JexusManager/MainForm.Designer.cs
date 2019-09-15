@@ -5,8 +5,6 @@
 
     using Crad.Windows.Forms.Actions;
 
-    using Vista.Controls;
-
     public sealed partial class MainForm
     {
         /// <summary>
@@ -222,7 +220,6 @@
             this.toolStripMenuItem54 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem56 = new System.Windows.Forms.ToolStripMenuItem();
-            this.eanLocation = new Vista.Controls.ExplorerAddressNavigation();
             ((System.ComponentModel.ISupportInitialize)(this.scMain)).BeginInit();
             this.scMain.Panel1.SuspendLayout();
             this.scMain.SuspendLayout();
@@ -1763,19 +1760,6 @@
             this.toolStripMenuItem56.Size = new System.Drawing.Size(197, 22);
             this.toolStripMenuItem56.Text = "Switch to Content View";
             // 
-            // eanLocation
-            // 
-            this.eanLocation.BackColor = System.Drawing.SystemColors.Control;
-            this.eanLocation.Dock = System.Windows.Forms.DockStyle.Top;
-            this.eanLocation.DockOnGlass = false;
-            this.eanLocation.Location = new System.Drawing.Point(0, 0);
-            this.eanLocation.Name = "eanLocation";
-            this.eanLocation.Padding = new System.Windows.Forms.Padding(1, 3, 1, 3);
-            this.eanLocation.ShowRefresh = true;
-            this.eanLocation.Size = new System.Drawing.Size(784, 34);
-            this.eanLocation.TabIndex = 11;
-            this.eanLocation.Text = "explorerAddressNavigation1";
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1784,7 +1768,6 @@
             this.Controls.Add(this.scMain);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
-            this.Controls.Add(this.eanLocation);
             this.MainMenuStrip = this.menuStrip1;
             this.MinimumSize = new System.Drawing.Size(640, 480);
             this.Name = "MainForm";
@@ -2008,7 +1991,6 @@
         private Action actExplore;
         private Action actEditPermissions;
         private Action actBrowse;
-        private ExplorerAddressNavigation eanLocation;
         private ToolStripMenuItem btnOpenConfig;
         private ToolStripSeparator toolStripMenuItem40;
     }
