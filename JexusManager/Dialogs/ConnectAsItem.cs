@@ -32,7 +32,7 @@ namespace JexusManager.Dialogs
             }
 
             _virtualDirectory.UserName = UserName;
-            _virtualDirectory.Password = Password;
+            _virtualDirectory.SetPassword(Password);
         }
 
         public bool Match(ConnectAsItem other)

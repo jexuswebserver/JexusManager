@@ -205,5 +205,11 @@ namespace Microsoft.Web.Administration
                 "schema");
             return Directory.Exists(directory) ? Directory.GetFiles(directory) : base.GetSchemaFiles();
         }
+
+        internal override string GetAppCmd()
+        {
+            var appcmd = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "inetsrv", "appcmd.exe");
+            return File.Exists(appcmd) ? appcmd : null;
+        }
     }
 }

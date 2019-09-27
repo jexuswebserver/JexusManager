@@ -68,6 +68,27 @@ namespace Microsoft.Web.Administration
             return File.Exists(fileName) ? fileName : null;
         }
 
+        internal override string GetAppCmd()
+        {
+            var directory = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
+                "IIS Express");
+            if (!Directory.Exists(directory))
+            {
+                // IMPORTANT: for x86 IIS 7 Express
+                directory = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
+                    "IIS Express");
+                if (!Directory.Exists(directory))
+                {
+                    return null;
+                }
+            }
+
+            var fileName = Path.Combine(directory, "appcmd.exe");
+            return File.Exists(fileName) ? fileName : null;
+        }
+
         private Version GetIisExpressVersion()
         {
             if (PrimaryExecutable != null)
