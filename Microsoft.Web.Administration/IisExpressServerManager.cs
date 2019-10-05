@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Xml.Linq;
 using System.Xml.XPath;
@@ -68,7 +67,7 @@ namespace Microsoft.Web.Administration
             return File.Exists(fileName) ? fileName : null;
         }
 
-        internal override string GetAppCmd()
+        internal override void SetPassword(VirtualDirectory virtualDirectory, string password)
         {
             var directory = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
@@ -81,12 +80,38 @@ namespace Microsoft.Web.Administration
                     "IIS Express");
                 if (!Directory.Exists(directory))
                 {
-                    return null;
+                    // IMPORTANT: fallback to default password setting. Should throw encryption exception.
+                    virtualDirectory.Password = password;
+                    return;
                 }
             }
 
-            var fileName = Path.Combine(directory, "appcmd.exe");
-            return File.Exists(fileName) ? fileName : null;
+            var appcmd = Path.Combine(directory, "appcmd.exe");
+            if (!File.Exists(appcmd))
+            {
+                // IMPORTANT: fallback to default password setting. Should throw encryption exception.
+                virtualDirectory.Password = password;
+                return;
+            }
+
+            using var process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = appcmd,
+                    Arguments = $"set vdir /vdir.name:\"{virtualDirectory.LocationPath()}\" /password:{password} /apphostconfig:\"{FileName}\"",
+                    CreateNoWindow = true,
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    Verb = "runas",
+                    UseShellExecute = true
+                }
+            };
+            process.Start();
+            process.WaitForExit();
+            if (process.ExitCode != 0)
+            {
+                throw new Exception(process.ExitCode.ToString());
+            }
         }
 
         private Version GetIisExpressVersion()
@@ -106,23 +131,25 @@ namespace Microsoft.Web.Administration
         {
             try
             {
-                using (var process = new Process())
+                using var process = new Process
                 {
-                    var start = process.StartInfo;
-                    start.Verb = site.Bindings.ElevationRequired && !PublicNativeMethods.IsProcessElevated
-                        ? "runas"
-                        : null;
-                    start.UseShellExecute = true;
-                    start.FileName = "cmd";
-                    start.Arguments =
-                        $"/c \"\"{CertificateInstallerLocator.FileName}\" /config:\"{site.FileContext.FileName}\" /siteId:{site.Id}\"";
-                    start.CreateNoWindow = true;
-                    start.WindowStyle = ProcessWindowStyle.Hidden;
-                    process.Start();
-                    process.WaitForExit();
+                    StartInfo = new ProcessStartInfo
+                    {
+                        Verb = site.Bindings.ElevationRequired && !PublicNativeMethods.IsProcessElevated
+                    ? "runas"
+                    : null,
+                        UseShellExecute = true,
+                        FileName = "cmd",
+                        Arguments =
+                    $"/c \"\"{CertificateInstallerLocator.FileName}\" /config:\"{site.FileContext.FileName}\" /siteId:{site.Id}\"",
+                        CreateNoWindow = true,
+                        WindowStyle = ProcessWindowStyle.Hidden
+                    }
+                };
+                process.Start();
+                process.WaitForExit();
 
-                    return process.ExitCode == 1;
-                }
+                return process.ExitCode == 1;
             }
             catch (Win32Exception ex)
             {

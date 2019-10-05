@@ -83,27 +83,8 @@ namespace Microsoft.Web.Administration
             return Directory.Exists(path.ExpandIisExpressEnvironmentVariables(executable));
         }
 
-        internal void SetPassword(VirtualDirectory virtualDirectory, string password)
+        internal virtual void SetPassword(VirtualDirectory virtualDirectory, string password)
         {
-            var appcmd = GetAppCmd();
-            if (appcmd == null)
-            {
-                // IMPORTANT: fallback to default password setting. Should throw encryption exception.
-                virtualDirectory.Password = password;
-                return;
-            }
-
-            var process = Process.Start(appcmd, $"set vdir /vdir.name:\"{virtualDirectory.LocationPath()}\" /password:{password}");
-            process.WaitForExit();
-            if (process.ExitCode != 0)
-            {
-                throw new Exception(process.ExitCode.ToString());
-            }
-        }
-
-        internal virtual string GetAppCmd()
-        {
-            return null;
         }
 
         private void Initialize()

@@ -52,7 +52,7 @@ namespace Microsoft.Web.Administration
                 return false;
             }
 
-            var process = new Process
+            using var process = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
@@ -78,7 +78,7 @@ namespace Microsoft.Web.Administration
                 return false;
             }
 
-            var process = new Process
+            using var process = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
@@ -101,14 +101,16 @@ namespace Microsoft.Web.Administration
             var appcmd = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "inetsrv", "appcmd.exe");
             if (File.Exists(appcmd))
             {
-                var process = new Process
+                using var process = new Process
                 {
                     StartInfo = new ProcessStartInfo
                     {
                         FileName = appcmd,
                         Arguments = $"start site \"{site.Name}\"",
                         CreateNoWindow = true,
-                        WindowStyle = ProcessWindowStyle.Hidden
+                        WindowStyle = ProcessWindowStyle.Hidden,
+                        Verb = "runas",
+                        UseShellExecute = true
                     }
                 };
                 process.Start();
@@ -121,14 +123,16 @@ namespace Microsoft.Web.Administration
             var appcmd = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "inetsrv", "appcmd.exe");
             if (File.Exists(appcmd))
             {
-                var process = new Process
+                using var process = new Process
                 {
                     StartInfo = new ProcessStartInfo
                     {
                         FileName = appcmd,
                         Arguments = $"stop site \"{site.Name}\"",
                         CreateNoWindow = true,
-                        WindowStyle = ProcessWindowStyle.Hidden
+                        WindowStyle = ProcessWindowStyle.Hidden,
+                        Verb = "runas",
+                        UseShellExecute = true
                     }
                 };
                 process.Start();
@@ -141,14 +145,16 @@ namespace Microsoft.Web.Administration
             var appcmd = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "inetsrv", "appcmd.exe");
             if (File.Exists(appcmd))
             {
-                var process = new Process
+                using var process = new Process
                 {
                     StartInfo = new ProcessStartInfo
                     {
                         FileName = appcmd,
                         Arguments = $"start apppool \"{pool.Name}\"",
                         CreateNoWindow = true,
-                        WindowStyle = ProcessWindowStyle.Hidden
+                        WindowStyle = ProcessWindowStyle.Hidden,
+                        Verb = "runas",
+                        UseShellExecute = true
                     }
                 };
                 process.Start();
@@ -161,14 +167,16 @@ namespace Microsoft.Web.Administration
             var appcmd = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "inetsrv", "appcmd.exe");
             if (File.Exists(appcmd))
             {
-                var process = new Process
+                using var process = new Process
                 {
                     StartInfo = new ProcessStartInfo
                     {
                         FileName = appcmd,
                         Arguments = $"stop apppool \"{pool.Name}\"",
                         CreateNoWindow = true,
-                        WindowStyle = ProcessWindowStyle.Hidden
+                        WindowStyle = ProcessWindowStyle.Hidden,
+                        Verb = "runas",
+                        UseShellExecute = true
                     }
                 };
                 process.Start();
@@ -181,14 +189,16 @@ namespace Microsoft.Web.Administration
             var appcmd = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "inetsrv", "appcmd.exe");
             if (File.Exists(appcmd))
             {
-                var process = new Process
+                using var process = new Process
                 {
                     StartInfo = new ProcessStartInfo
                     {
                         FileName = appcmd,
                         Arguments = $"recycle apppool \"{pool.Name}\"",
                         CreateNoWindow = true,
-                        WindowStyle = ProcessWindowStyle.Hidden
+                        WindowStyle = ProcessWindowStyle.Hidden,
+                        Verb = "runas",
+                        UseShellExecute = true
                     }
                 };
                 process.Start();
@@ -206,10 +216,34 @@ namespace Microsoft.Web.Administration
             return Directory.Exists(directory) ? Directory.GetFiles(directory) : base.GetSchemaFiles();
         }
 
-        internal override string GetAppCmd()
+        internal override void SetPassword(VirtualDirectory virtualDirectory, string password)
         {
             var appcmd = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "inetsrv", "appcmd.exe");
-            return File.Exists(appcmd) ? appcmd : null;
+            if (!File.Exists(appcmd))
+            {
+                // IMPORTANT: fallback to default password setting. Should throw encryption exception.
+                virtualDirectory.Password = password;
+                return;
+            }
+
+            using var process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = appcmd,
+                    Arguments = $"set vdir /vdir.name:\"{virtualDirectory.LocationPath()}\" /password:{password}",
+                    CreateNoWindow = true,
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    Verb = "runas",
+                    UseShellExecute = true
+                }
+            };
+            process.Start();
+            process.WaitForExit();
+            if (process.ExitCode != 0)
+            {
+                throw new Exception(process.ExitCode.ToString());
+            }
         }
     }
 }

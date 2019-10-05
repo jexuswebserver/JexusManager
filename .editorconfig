@@ -28,3 +28,7 @@ indent_size = 2
 end_of_line = lf
 [*.{cmd, bat}]
 end_of_line = crlf
+[*.cs]
+
+# IDE0067: Dispose objects before losing scope
+dotnet_diagnostic.IDE0067.severity = error
