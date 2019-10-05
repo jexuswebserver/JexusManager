@@ -6,6 +6,7 @@ namespace JexusManager.Features
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Reflection;
     using System.Resources;
@@ -63,7 +64,7 @@ namespace JexusManager.Features
         protected void DisplayErrorMessage(Exception ex, ResourceManager resourceManager)
         {
             var service = (IManagementUIService)this.GetService(typeof(IManagementUIService));
-            service.ShowError(ex, resourceManager.GetString("General"), "", false);
+            service.ShowError(ex, resourceManager?.GetString("General"), "", false);
         }
 
         protected abstract void OnSettingsSaved();
@@ -167,7 +168,16 @@ namespace JexusManager.Features
             this.Items.Remove(this.SelectedItem);
             var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
             ConfigurationElementCollection collection = GetCollection(service, SelectedItem);
-            collection.Remove(this.SelectedItem.Element);
+            try
+            {
+                collection.Remove(this.SelectedItem.Element);
+            }
+            catch (FileLoadException ex)
+            {
+                DisplayErrorMessage(ex, null);
+                return;
+            }
+
             service.ServerManager.CommitChanges();
 
             this.SelectedItem = default(T);
