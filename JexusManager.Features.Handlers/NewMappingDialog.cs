@@ -58,6 +58,13 @@ namespace JexusManager.Features.Handlers
                     Item.Modules = txtModule.Text;
                     Item.Name = txtName.Text;
                     Item.Path = txtPath.Text;
+                    if ((txtModule.Text == "FastCgiModule" || txtModule.Text == "CgiModule") 
+                        && !string.Equals(Path.GetExtension(Item.ScriptProcessor), ".exe", StringComparison.OrdinalIgnoreCase))
+                    {
+                        ShowMessage("The executable specified for the CgiModule or the FastCgiModule should be a .exe file.");
+                        return;
+                    }
+                        
                     if (!txtName.ReadOnly)
                     {
                         if (_feature.Items.Any(item => item.Match(Item)))
@@ -126,16 +133,19 @@ namespace JexusManager.Features.Handlers
 
                     try
                     {
-                        var bit32Condition = "bitness32";
-                        var bit64Condition = "bitness64";
-                        var bit32 = DialogHelper.GetImageArchitecture(txtExecutable.Text);
-                        if (bit32 && !Item.PreConditions.Contains(bit32Condition))
+                        if (txtModule.Text != "FastCgiModule" && txtModule.Text != "CgiModule")
                         {
-                            Item.PreConditions.Add(bit32Condition);
-                        }
-                        else if (!bit32 && !Item.PreConditions.Contains(bit64Condition))
-                        {
-                            Item.PreConditions.Add(bit64Condition);
+                            var bit32Condition = "bitness32";
+                            var bit64Condition = "bitness64";
+                            var bit32 = DialogHelper.GetImageArchitecture(txtExecutable.Text);
+                            if (bit32 && !Item.PreConditions.Contains(bit32Condition))
+                            {
+                                Item.PreConditions.Add(bit32Condition);
+                            }
+                            else if (!bit32 && !Item.PreConditions.Contains(bit64Condition))
+                            {
+                                Item.PreConditions.Add(bit64Condition);
+                            }
                         }
                     }
                     catch (Exception)
