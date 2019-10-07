@@ -130,6 +130,7 @@ namespace JexusManager.Features.FastCgi
             var dialog = new NewApplicationDialog(Module, SelectedItem, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
+                SelectedItem.Reset();
                 return;
             }
 

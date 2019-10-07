@@ -4,7 +4,6 @@ using System.ComponentModel.Design;
 
 namespace JexusManager.Main.Features.Main
 {
-#if !NETCOREAPP3_0
     internal class ScheduleCollectionEditor : CollectionEditor
     {
         public ScheduleCollectionEditor(Type type)
@@ -28,5 +27,4 @@ namespace JexusManager.Main.Features.Main
             return typeof(Schedule);
         }
     }
-#endif
 }

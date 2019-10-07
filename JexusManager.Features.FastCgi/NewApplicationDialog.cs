@@ -52,6 +52,7 @@ namespace JexusManager.Features.FastCgi
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(txtPath, "TextChanged")
+                .Merge(Observable.FromEventPattern<EventArgs>(pgProperties, "PropertyValueChanged"))
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {

@@ -7,7 +7,6 @@ namespace JexusManager.Features.FastCgi
     using System;
     using System.ComponentModel.Design;
 
-#if !NETCOREAPP3_0
     internal class EnvironmentVariablesCollectionEditor : CollectionEditor
     {
         public EnvironmentVariablesCollectionEditor(Type type)
@@ -21,5 +20,4 @@ namespace JexusManager.Features.FastCgi
             return item.Name;
         }
     }
-#endif
 }

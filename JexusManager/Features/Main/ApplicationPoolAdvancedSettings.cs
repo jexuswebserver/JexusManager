@@ -520,10 +520,8 @@ namespace JexusManager.Features.Main
         [Category("Recycling")]
         [Description("[schedule] A set of specific local times, in 24 hour format, when the application pool is recycled.")]
         [DisplayName("Specific Times")]
-#if !NETCOREAPP3_0
         [Editor(typeof(ScheduleCollectionEditor),
             typeof(UITypeEditor))]
-#endif
         public ScheduleCollection Schedule { get; set; }
 
         [Browsable(true)]

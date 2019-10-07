@@ -29,23 +29,28 @@ namespace JexusManager.Features.FastCgi
                 return;
             }
 
-            Path = (string)element["fullPath"];
-            Arguments = (string)element["arguments"];
+            Reset();
+        }
 
-            MonitorChangesTo = (string)element["monitorChangesTo"];
-            ErrorMode = (ErrorMode)element["stderrMode"];
-            MaxInstances = (uint)element["maxInstances"];
-            IdleTimeout = (uint)element["idleTimeout"];
-            ActivityTimeout = (uint)element["activityTimeout"];
-            RequestTimeout = (uint)element["requestTimeout"];
-            InstanceMaxRequests = (uint)element["instanceMaxRequests"];
-            SignalBeforeTerminateSeconds = (uint)element["signalBeforeTerminateSeconds"];
-            AdvancedSettings.Protocol = (Protocol)element["protocol"];
-            QueueLength = (uint)element["queueLength"];
-            AdvancedSettings.FlushNamedPipe = (bool)element["flushNamedPipe"];
-            RapidFailsPerMinute = (uint)element["rapidFailsPerMinute"];
+        public void Reset()
+        {
+            Path = (string)Element["fullPath"];
+            Arguments = (string)Element["arguments"];
 
-            foreach (ConfigurationElement child in element.GetCollection("environmentVariables"))
+            MonitorChangesTo = (string)Element["monitorChangesTo"];
+            ErrorMode = (ErrorMode)Element["stderrMode"];
+            MaxInstances = (uint)Element["maxInstances"];
+            IdleTimeout = (uint)Element["idleTimeout"];
+            ActivityTimeout = (uint)Element["activityTimeout"];
+            RequestTimeout = (uint)Element["requestTimeout"];
+            InstanceMaxRequests = (uint)Element["instanceMaxRequests"];
+            SignalBeforeTerminateSeconds = (uint)Element["signalBeforeTerminateSeconds"];
+            AdvancedSettings.Protocol = (Protocol)Element["protocol"];
+            QueueLength = (uint)Element["queueLength"];
+            AdvancedSettings.FlushNamedPipe = (bool)Element["flushNamedPipe"];
+            RapidFailsPerMinute = (uint)Element["rapidFailsPerMinute"];
+
+            foreach (ConfigurationElement child in Element.GetCollection("environmentVariables"))
             {
                 EnvironmentVariables.Add(
                     new EnvironmentVariables { Name = (string)child["name"], Value = (string)child["value"] });
@@ -109,10 +114,8 @@ namespace JexusManager.Features.FastCgi
         [Category("General")]
         [Description("Specifies optional environment variables that will be set in the FastCGI executable.")]
         [DisplayName("Environment Variables")]
-#if !NETCOREAPP3_0
         [Editor(typeof(EnvironmentVariablesCollectionEditor),
             typeof(System.Drawing.Design.UITypeEditor))]
-#endif
         public EnvironmentVariablesCollection EnvironmentVariables { get; set; }
 
         [Browsable(true)]
