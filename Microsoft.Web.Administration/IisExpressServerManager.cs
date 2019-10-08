@@ -94,23 +94,46 @@ namespace Microsoft.Web.Administration
                 return;
             }
 
-            using var process = new Process
             {
-                StartInfo = new ProcessStartInfo
+                using var process = new Process
                 {
-                    FileName = appcmd,
-                    Arguments = $"set vdir /vdir.name:\"{virtualDirectory.LocationPath()}\" /password:{password} /apphostconfig:\"{FileName}\"",
-                    CreateNoWindow = true,
-                    WindowStyle = ProcessWindowStyle.Hidden,
-                    Verb = "runas",
-                    UseShellExecute = true
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = appcmd,
+                        Arguments = $"set vdir /vdir.name:\"{virtualDirectory.LocationPath()}\" /-password /apphostconfig:\"{FileName}\"",
+                        CreateNoWindow = true,
+                        WindowStyle = ProcessWindowStyle.Hidden,
+                        Verb = "runas",
+                        UseShellExecute = true
+                    }
+                };
+                process.Start();
+                process.WaitForExit();
+                if (process.ExitCode != 0)
+                {
+                    throw new Exception(process.ExitCode.ToString());
                 }
-            };
-            process.Start();
-            process.WaitForExit();
-            if (process.ExitCode != 0)
+            }
+
             {
-                throw new Exception(process.ExitCode.ToString());
+                using var process = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = appcmd,
+                        Arguments = $"set vdir /vdir.name:\"{virtualDirectory.LocationPath()}\" /password:{password} /apphostconfig:\"{FileName}\"",
+                        CreateNoWindow = true,
+                        WindowStyle = ProcessWindowStyle.Hidden,
+                        Verb = "runas",
+                        UseShellExecute = true
+                    }
+                };
+                process.Start();
+                process.WaitForExit();
+                if (process.ExitCode != 0)
+                {
+                    throw new Exception(process.ExitCode.ToString());
+                }
             }
         }
 
