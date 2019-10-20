@@ -6,7 +6,6 @@ namespace JexusManager.Wizards.ConnectionWizard
 {
     using System;
     using System.IO;
-    using System.Net;
     using System.Net.Security;
     using System.Text;
     using System.Threading;

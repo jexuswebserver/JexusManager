@@ -36,6 +36,12 @@ namespace JexusManager.Wizards.ConnectionWizard
                 toolTip1.SetToolTip(rbIisExpress, "IIS Express is not installed to the default location.");
                 toolTip1.SetToolTip(rbVisualStudio, "IIS Express is not installed to the default location.");
             }
+
+            if (!JexusServerManager.Enabled)
+            {
+                rbJexus.Enabled = false;
+                toolTip1.SetToolTip(rbJexus, "Jexus web server support must be enabled by --jexus switch.");
+            }
         }
 
         private void RbJexusCheckedChanged(object sender, EventArgs e)

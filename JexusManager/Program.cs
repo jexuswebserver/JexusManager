@@ -27,10 +27,12 @@ namespace JexusManager
         {
             var suppress = false;
             var help = false;
+            var jexus = false;
             OptionSet p =
                 new OptionSet()
                     .Add("s|suppress", "Suppress Rollbar reports", delegate (string v) { if (v != null) suppress = true; })
-                    .Add("h|help|?", "Display help", delegate (string v) { if (v != null) help = true; });
+                    .Add("h|help|?", "Display help", delegate (string v) { if (v != null) help = true; })
+                    .Add("j|jexus", "Enable Jexus web server support", delegate(string v) { if (v != null) jexus = true; });
 
             List<string> extra;
             try
@@ -73,6 +75,8 @@ namespace JexusManager
                 SetupRollbar();
 #endif
             }
+
+            Microsoft.Web.Administration.JexusServerManager.Enabled = jexus;
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -139,11 +143,9 @@ namespace JexusManager
         private static string GetWindowsVersion()
         {
             const string subkey = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion";
-            
-            using (RegistryKey ndpKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Default).OpenSubKey(subkey))
-            {
-                return ndpKey != null ? $"{ndpKey.GetValue("ProductName")} ({ndpKey.GetValue("ReleaseId", "unknown")})" : "Unknown Windows release";
-            }
+
+            using RegistryKey ndpKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Default).OpenSubKey(subkey);
+            return ndpKey != null ? $"{ndpKey.GetValue("ProductName")} ({ndpKey.GetValue("ReleaseId", "unknown")})" : "Unknown Windows release";
         }
         
         // https://docs.microsoft.com/en-us/dotnet/framework/migration-guide/how-to-determine-which-versions-are-installed#net_d
@@ -151,14 +153,14 @@ namespace JexusManager
         {
             const string subkey = @"SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\";
 
-            using (RegistryKey ndpKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32).OpenSubKey(subkey))
+            using RegistryKey ndpKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32).OpenSubKey(subkey);
+            if (ndpKey != null && ndpKey.GetValue("Release") != null)
             {
-                if (ndpKey != null && ndpKey.GetValue("Release") != null) {
-                    return ".NET Framework Version: " + CheckFor45PlusVersion((int) ndpKey.GetValue("Release"));
-                }
-                else {
-                    return ".NET Framework Version 4.5 or later is not detected.";
-                } 
+                return ".NET Framework Version: " + CheckFor45PlusVersion((int)ndpKey.GetValue("Release"));
+            }
+            else
+            {
+                return ".NET Framework Version 4.5 or later is not detected.";
             }
         }
 

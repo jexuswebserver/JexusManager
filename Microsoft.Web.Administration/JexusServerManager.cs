@@ -11,6 +11,8 @@ namespace Microsoft.Web.Administration
 {
     public sealed partial class JexusServerManager : ServerManager
     {
+        internal static bool Enabled { get; set; }
+
         public JexusServerManager(string hostName, string credentials)
             : base(hostName, false)
         {

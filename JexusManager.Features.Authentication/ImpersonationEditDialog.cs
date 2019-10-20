@@ -20,78 +20,80 @@ namespace JexusManager.Features.Authentication
         {
             InitializeComponent();
 
-            var container = new CompositeDisposable();
-            FormClosed += (sender, args) => container.Dispose();
+            using (var container = new CompositeDisposable())
+            {
+                FormClosed += (sender, args) => container.Dispose();
 
-            container.Add(
-                Observable.FromEventPattern<EventArgs>(txtName, "TextChanged")
-                .Sample(TimeSpan.FromSeconds(1))
-                .ObserveOn(System.Threading.SynchronizationContext.Current)
-                .Subscribe(evt =>
-                {
-                    rbPool.Checked = txtName.Text.Length == 0;
-                }));
-
-            container.Add(
-                Observable.FromEventPattern<EventArgs>(btnSet, "Click")
-                .ObserveOn(System.Threading.SynchronizationContext.Current)
-                .Subscribe(evt =>
-                {
-                    var dialog = new CredentialsDialog(ServiceProvider, existing.Name, feature);
-                    if (dialog.ShowDialog() != DialogResult.OK)
+                container.Add(
+                    Observable.FromEventPattern<EventArgs>(txtName, "TextChanged")
+                    .Sample(TimeSpan.FromSeconds(1))
+                    .ObserveOn(System.Threading.SynchronizationContext.Current)
+                    .Subscribe(evt =>
                     {
-                        return;
-                    }
+                        rbPool.Checked = txtName.Text.Length == 0;
+                    }));
 
-                    txtName.Text = dialog.UserName;
-                    existing.Name = dialog.UserName;
-                    existing.Password = dialog.Password;
-                    SetButton();
-                }));
-
-            container.Add(
-                Observable.FromEventPattern<EventArgs>(btnOK, "Click")
-                .ObserveOn(System.Threading.SynchronizationContext.Current)
-                .Subscribe(evt =>
-                {
-                    DialogResult = DialogResult.OK;
-                    if (rbPool.Checked)
+                container.Add(
+                    Observable.FromEventPattern<EventArgs>(btnSet, "Click")
+                    .ObserveOn(System.Threading.SynchronizationContext.Current)
+                    .Subscribe(evt =>
                     {
-                        existing.Name = string.Empty;
+                        var dialog = new CredentialsDialog(ServiceProvider, existing.Name, feature);
+                        if (dialog.ShowDialog() != DialogResult.OK)
+                        {
+                            return;
+                        }
+
+                        txtName.Text = dialog.UserName;
+                        existing.Name = txtName.Text;
+                        existing.Password = dialog.Password;
+                        SetButton();
+                    }));
+
+                container.Add(
+                    Observable.FromEventPattern<EventArgs>(btnOK, "Click")
+                    .ObserveOn(System.Threading.SynchronizationContext.Current)
+                    .Subscribe(evt =>
+                    {
+                        DialogResult = DialogResult.OK;
+                        if (rbPool.Checked)
+                        {
+                            existing.Name = string.Empty;
                         // TODO: reset password.
                         existing.Password = null;
-                    }
+                        }
 
-                    existing.Apply();
-                }));
+                        existing.Apply();
+                    }));
 
-            container.Add(
-                Observable.FromEventPattern<EventArgs>(rbPool, "CheckedChanged")
-                .Merge(Observable.FromEventPattern<EventArgs>(rbSpecific, "CheckedChanged"))
-                .Sample(TimeSpan.FromSeconds(1))
-                .ObserveOn(System.Threading.SynchronizationContext.Current)
-                .Subscribe(evt =>
-                {
-                    btnSet.Enabled = !rbPool.Checked;
-                    SetButton();
-                    var toElevate = !rbPool.Checked;
-                    if (toElevate)
+                container.Add(
+                    Observable.FromEventPattern<EventArgs>(rbPool, "CheckedChanged")
+                    .Merge(Observable.FromEventPattern<EventArgs>(rbSpecific, "CheckedChanged"))
+                    .Sample(TimeSpan.FromSeconds(1))
+                    .ObserveOn(System.Threading.SynchronizationContext.Current)
+                    .Subscribe(evt =>
                     {
-                        NativeMethods.TryAddShieldToButton(btnOK);
-                    }
-                    else
-                    {
-                        NativeMethods.RemoveShieldFromButton(btnOK);
-                    }
-                }));
+                        btnSet.Enabled = !rbPool.Checked;
+                        SetButton();
+                        var toElevate = !rbPool.Checked;
+                        if (toElevate)
+                        {
+                            NativeMethods.TryAddShieldToButton(btnOK);
+                        }
+                        else
+                        {
+                            NativeMethods.RemoveShieldFromButton(btnOK);
+                        }
+                    }));
 
-            container.Add(
-                Observable.FromEventPattern<CancelEventArgs>(this, "HelpButtonClicked")
-                .ObserveOn(System.Threading.SynchronizationContext.Current)
-                .Subscribe(EnvironmentVariableTarget =>
-                {
-                    feature.ShowHelp();
-                }));
+                container.Add(
+                    Observable.FromEventPattern<CancelEventArgs>(this, "HelpButtonClicked")
+                    .ObserveOn(System.Threading.SynchronizationContext.Current)
+                    .Subscribe(EnvironmentVariableTarget =>
+                    {
+                        feature.ShowHelp();
+                    }));
+            }
 
             txtName.Text = "test"; // IMPORTANT: trigger a change event.
             txtName.Text = existing.Name;
