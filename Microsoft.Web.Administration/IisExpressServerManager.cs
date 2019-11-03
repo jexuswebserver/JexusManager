@@ -139,7 +139,7 @@ namespace Microsoft.Web.Administration
 
         private Version GetIisExpressVersion()
         {
-            if (PrimaryExecutable != null)
+            if (PrimaryExecutable != null && File.Exists(PrimaryExecutable))
             {
                 if (Version.TryParse(FileVersionInfo.GetVersionInfo(PrimaryExecutable).ProductVersion, out Version result))
                 {
