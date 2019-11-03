@@ -293,13 +293,15 @@ namespace JexusManager.Features.Certificates
 
         public void Import()
         {
-            var dialog = new ImportCertificateDialog(Module, this);
-            if (dialog.ShowDialog() != DialogResult.OK)
+            using (var dialog = new ImportCertificateDialog(Module, this))
             {
-                return;
-            }
+                if (dialog.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
 
-            Items.Add(new CertificatesItem(dialog.Item, dialog.Store, this));
+                Items.Add(new CertificatesItem(dialog.Item, dialog.Store, this));
+            }
             OnCertificatesSettingsSaved();
         }
 
@@ -374,13 +376,15 @@ namespace JexusManager.Features.Certificates
 
         private void CreateSelf()
         {
-            var dialog = new SelfCertificateDialog(Module, this);
-            if (dialog.ShowDialog() != DialogResult.OK)
+            using (var dialog = new SelfCertificateDialog(Module, this))
             {
-                return;
-            }
+                if (dialog.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
 
-            Items.Add(new CertificatesItem(dialog.Item, dialog.Store, this));
+                Items.Add(new CertificatesItem(dialog.Item, dialog.Store, this));
+            }
             OnCertificatesSettingsSaved();
         }
 
@@ -390,32 +394,40 @@ namespace JexusManager.Features.Certificates
 
         private void Complete()
         {
-            var dialog = new CompleteRequestDialog(Module, this);
-            if (dialog.ShowDialog() != DialogResult.OK)
+            using (var dialog = new CompleteRequestDialog(Module, this))
             {
-                return;
-            }
+                if (dialog.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
 
-            Items.Add(new CertificatesItem(dialog.Item, dialog.Store, this));
+                Items.Add(new CertificatesItem(dialog.Item, dialog.Store, this));
+            }
             OnCertificatesSettingsSaved();
         }
 
         private void CreateRequest()
         {
-            var wizard = new CertificateRequestWizard(Module, this);
-            wizard.ShowDialog();
+            using (var wizard = new CertificateRequestWizard(Module, this))
+            {
+                wizard.ShowDialog();
+            }
         }
 
         private void Export()
         {
-            var dialog = new ExportCertificateDialog(SelectedItem.Certificate, Module, this);
-            dialog.ShowDialog();
+            using (var dialog = new ExportCertificateDialog(SelectedItem.Certificate, Module, this))
+            {
+                dialog.ShowDialog();
+            }
         }
 
         private void Renew()
         {
-            var wizard = new CertificateRenewWizard(SelectedItem.Certificate, Module, this);
-            wizard.ShowDialog();
+            using (var wizard = new CertificateRenewWizard(SelectedItem.Certificate, Module, this))
+            {
+                wizard.ShowDialog();
+            }
         }
 
         internal void View()

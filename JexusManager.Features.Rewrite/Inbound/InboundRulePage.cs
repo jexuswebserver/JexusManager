@@ -388,17 +388,19 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         private void BtnAddClick(object sender, EventArgs e)
         {
-            var dialog = new AddConditionDialog(ServiceProvider, null);
-            if (dialog.ShowDialog() != DialogResult.OK)
+            using (var dialog = new AddConditionDialog(ServiceProvider, null))
             {
-                return;
-            }
+                if (dialog.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
 
-            var newItem = dialog.Item;
-            Rule.Conditions.Add(newItem);
-            var listViewItem = new ConditionListViewItem(newItem);
-            lvConditions.Items.Add(listViewItem);
-            listViewItem.Selected = true;
+                var newItem = dialog.Item;
+                Rule.Conditions.Add(newItem);
+                var listViewItem = new ConditionListViewItem(newItem);
+                lvConditions.Items.Add(listViewItem);
+                listViewItem.Selected = true;
+            }
             InformChanges();
         }
 
@@ -425,10 +427,12 @@ namespace JexusManager.Features.Rewrite.Inbound
         private void BtnEditClick(object sender, EventArgs e)
         {
             var listViewItem = ((ConditionListViewItem)lvConditions.SelectedItems[0]);
-            var dialog = new AddConditionDialog(ServiceProvider, listViewItem.Item);
-            if (dialog.ShowDialog() != DialogResult.OK)
+            using (var dialog = new AddConditionDialog(ServiceProvider, listViewItem.Item))
             {
-                return;
+                if (dialog.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
             }
 
             listViewItem.Update();
@@ -476,17 +480,19 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         private void BtnVarAddClick(object sender, EventArgs e)
         {
-            var dialog = new AddServerVariableDialog(ServiceProvider, null);
-            if (dialog.ShowDialog() != DialogResult.OK)
+            using (var dialog = new AddServerVariableDialog(ServiceProvider, null))
             {
-                return;
-            }
+                if (dialog.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
 
-            var newItem = dialog.Item;
-            Rule.ServerVariables.Add(newItem);
-            var listViewItem = new ServerVariableListViewItem(newItem);
-            lvVariables.Items.Add(listViewItem);
-            listViewItem.Selected = true;
+                var newItem = dialog.Item;
+                Rule.ServerVariables.Add(newItem);
+                var listViewItem = new ServerVariableListViewItem(newItem);
+                lvVariables.Items.Add(listViewItem);
+                listViewItem.Selected = true;
+            }
             InformChanges();
         }
 
@@ -513,10 +519,12 @@ namespace JexusManager.Features.Rewrite.Inbound
         private void BtnVarEditClick(object sender, EventArgs e)
         {
             var listViewItem = ((ServerVariableListViewItem)lvVariables.SelectedItems[0]);
-            var dialog = new AddServerVariableDialog(ServiceProvider, listViewItem.Item);
-            if (dialog.ShowDialog() != DialogResult.OK)
+            using (var dialog = new AddServerVariableDialog(ServiceProvider, listViewItem.Item))
             {
-                return;
+                if (dialog.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
             }
 
             listViewItem.Update();

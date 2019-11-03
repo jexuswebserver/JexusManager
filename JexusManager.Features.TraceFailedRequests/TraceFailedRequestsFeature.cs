@@ -183,13 +183,15 @@ namespace JexusManager.Features.TraceFailedRequests
         public void Add()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var dialog = new AddTraceWizard(Module, null, service.GetSection("system.webServer/tracing/traceProviderDefinitions"), this);
-            if (dialog.ShowDialog() != DialogResult.OK)
+            using (var dialog = new AddTraceWizard(Module, null, service.GetSection("system.webServer/tracing/traceProviderDefinitions"), this))
             {
-                return;
-            }
+                if (dialog.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
 
-            AddItem(dialog.Item);
+                AddItem(dialog.Item);
+            }
         }
 
         public void Remove()
@@ -209,13 +211,15 @@ namespace JexusManager.Features.TraceFailedRequests
         public void Edit()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var dialog = new AddTraceWizard(Module, SelectedItem, service.GetSection("system.webServer/tracing/traceProviderDefinitions"), this);
-            if (dialog.ShowDialog() != DialogResult.OK)
+            using (var dialog = new AddTraceWizard(Module, SelectedItem, service.GetSection("system.webServer/tracing/traceProviderDefinitions"), this))
             {
-                return;
-            }
+                if (dialog.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
 
-            EditItem(dialog.Item);
+                EditItem(dialog.Item);
+            }
         }
 
         public void Rename()
@@ -313,10 +317,12 @@ namespace JexusManager.Features.TraceFailedRequests
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var section = service.Site.TraceFailedRequestsLogging;
-            var dialog = new SettingsDialog(Module, section, this);
-            if (dialog.ShowDialog() != DialogResult.OK)
+            using (var dialog = new SettingsDialog(Module, section, this))
             {
-                return;
+                if (dialog.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
             }
 
             service.ServerManager.CommitChanges();

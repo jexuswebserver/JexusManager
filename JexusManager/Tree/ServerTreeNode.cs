@@ -2,26 +2,24 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.Design;
+using System.IO;
+using System.Text;
+using System.Windows.Forms;
+
+using JexusManager.Dialogs;
+using JexusManager.Features.Main;
+using JexusManager.Services;
+
+using Microsoft.Web.Administration;
+using Microsoft.Web.Management.Client;
+using Microsoft.Web.Management.Server;
+using Rollbar;
+
 namespace JexusManager.Tree
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.Design;
-    using System.IO;
-    using System.Net;
-    using System.Net.Security;
-    using System.Text;
-    using System.Windows.Forms;
-
-    using JexusManager.Dialogs;
-    using JexusManager.Features.Main;
-    using JexusManager.Services;
-
-    using Microsoft.Web.Administration;
-    using Microsoft.Web.Management.Client;
-    using Microsoft.Web.Management.Server;
-    using Rollbar;
-
     internal sealed class ServerTreeNode : ManagerTreeNode
     {
         private enum NodeStatus
