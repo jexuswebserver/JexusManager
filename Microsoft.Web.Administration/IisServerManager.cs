@@ -6,7 +6,9 @@ using System;
 
 namespace Microsoft.Web.Administration
 {
+    using Rollbar;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Diagnostics;
     using System.IO;
 
@@ -239,11 +241,23 @@ namespace Microsoft.Web.Administration
                         UseShellExecute = true
                     }
                 };
-                process.Start();
-                process.WaitForExit();
-                if (process.ExitCode != 0)
+                try
                 {
-                    throw new Exception(process.ExitCode.ToString());
+                    process.Start();
+                    process.WaitForExit();
+                    if (process.ExitCode != 0)
+                    {
+                        throw new Exception(process.ExitCode.ToString());
+                    }
+                }
+                catch (Win32Exception ex)
+                {
+                    // elevation is cancelled.
+                    if (ex.NativeErrorCode != NativeMethods.ErrorCancelled)
+                    {
+                        RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> { { "native", ex.NativeErrorCode } });
+                        // throw;
+                    }
                 }
             }
 
@@ -260,11 +274,23 @@ namespace Microsoft.Web.Administration
                         UseShellExecute = true
                     }
                 };
-                process.Start();
-                process.WaitForExit();
-                if (process.ExitCode != 0)
+                try
                 {
-                    throw new Exception(process.ExitCode.ToString());
+                    process.Start();
+                    process.WaitForExit();
+                    if (process.ExitCode != 0)
+                    {
+                        throw new Exception(process.ExitCode.ToString());
+                    }
+                }
+                catch (Win32Exception ex)
+                {
+                    // elevation is cancelled.
+                    if (ex.NativeErrorCode != NativeMethods.ErrorCancelled)
+                    {
+                        RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> { { "native", ex.NativeErrorCode } });
+                        // throw;
+                    }
                 }
             }
         }
