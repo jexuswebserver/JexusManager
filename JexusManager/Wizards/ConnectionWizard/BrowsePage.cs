@@ -93,32 +93,26 @@ namespace JexusManager.Wizards.ConnectionWizard
                     if (string.Equals(name, bad, StringComparison.OrdinalIgnoreCase))
                     {
                         var service = (IManagementUIService)GetService(typeof(IManagementUIService));
-                        var result = service.ShowMessage(
-                            $"This file '{data.FileName}' does not seem to be a valid IIS configuration file. Do you want to continue?",
+                        service.ShowMessage(
+                            $"This file '{data.FileName}' does not seem to be a valid IIS configuration file.",
                             Caption,
-                            MessageBoxButtons.YesNoCancel,
-                            MessageBoxIcon.Question,
-                            MessageBoxDefaultButton.Button2);
-                        if (result != DialogResult.Yes)
-                        {
-                            return false;
-                        }
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error,
+                            MessageBoxDefaultButton.Button1);
+                        return false;
                     }
                 }
 
                 if (name.EndsWith(".exe.config", StringComparison.OrdinalIgnoreCase))
                 {
                     var service = (IManagementUIService)GetService(typeof(IManagementUIService));
-                    var result = service.ShowMessage(
-                        $"This file '{data.FileName}' does not seem to be a valid IIS configuration file. Do you want to continue?",
+                    service.ShowMessage(
+                        $"This file '{data.FileName}' does not seem to be a valid IIS configuration file.",
                         Caption,
-                        MessageBoxButtons.YesNoCancel,
-                        MessageBoxIcon.Question,
-                        MessageBoxDefaultButton.Button2);
-                    if (result != DialogResult.Yes)
-                    {
-                        return false;
-                    }
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error,
+                        MessageBoxDefaultButton.Button1);
+                    return false;
                 }
 
                 data.Server = new IisExpressServerManager(data.FileName);
