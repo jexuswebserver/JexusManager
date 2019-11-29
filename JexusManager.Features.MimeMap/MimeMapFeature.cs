@@ -92,9 +92,9 @@ namespace JexusManager.Features.MimeMap
 
         public void Load()
         {
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             ConfigurationSection section = service.GetSection("system.webServer/staticContent");
-            this.CanRevert = section.CanRevert();
+            CanRevert = section.CanRevert();
             LoadItems();
         }
 
@@ -106,18 +106,18 @@ namespace JexusManager.Features.MimeMap
 
         public void Add()
         {
-            var dialog = new NewMapItemDialog(this.Module, null, this);
+            using var dialog = new NewMapItemDialog(Module, null, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
-            this.AddItem(dialog.Item);
+            AddItem(dialog.Item);
         }
 
         public void Remove()
         {
-            var dialog = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+            var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
             if (
                 dialog.ShowMessage("Are you sure that you want to remove the selected authorization rule?", "Confirm Remove",
                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) !=
@@ -131,18 +131,18 @@ namespace JexusManager.Features.MimeMap
 
         public void Edit()
         {
-            var dialog = new NewMapItemDialog(this.Module, this.SelectedItem, this);
+            using var dialog = new NewMapItemDialog(Module, SelectedItem, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
-            this.EditItem(dialog.Item);
+            EditItem(dialog.Item);
         }
 
         protected override void OnSettingsSaved()
         {
-            this.MimeMapSettingsUpdated?.Invoke();
+            MimeMapSettingsUpdated?.Invoke();
         }
 
         public virtual bool ShowHelp()

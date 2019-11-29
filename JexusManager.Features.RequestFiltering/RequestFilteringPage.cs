@@ -539,10 +539,12 @@ namespace JexusManager.Features.RequestFiltering
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var section = service.GetSection("system.webServer/security/requestFiltering");
-            var dialog = new SegmentSettingsDialog(Module, section);
-            if (dialog.ShowDialog() != DialogResult.OK)
+            using (var dialog = new SegmentSettingsDialog(Module, section))
             {
-                return;
+                if (dialog.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
             }
 
             service.ServerManager.CommitChanges();

@@ -46,7 +46,7 @@ namespace JexusManager.Features.Rewrite.Outbound
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    var dialog = new AddConditionDialog(ServiceProvider, null);
+                    using var dialog = new AddConditionDialog(ServiceProvider, null);
                     if (dialog.ShowDialog() != DialogResult.OK)
                     {
                         return;
@@ -85,10 +85,12 @@ namespace JexusManager.Features.Rewrite.Outbound
                 .Subscribe(evt =>
                 {
                     var listViewItem = ((ConditionListViewItem)lvConditions.SelectedItems[0]);
-                    var dialog = new AddConditionDialog(ServiceProvider, listViewItem.Item);
-                    if (dialog.ShowDialog() != DialogResult.OK)
+                    using (var dialog = new AddConditionDialog(ServiceProvider, listViewItem.Item))
                     {
-                        return;
+                        if (dialog.ShowDialog() != DialogResult.OK)
+                        {
+                            return;
+                        }
                     }
 
                     listViewItem.Update();

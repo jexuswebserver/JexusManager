@@ -35,15 +35,17 @@ namespace JexusManager.Dialogs
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    var dialog = new CredentialsDialog(ServiceProvider, item.UserName);
-                    if (dialog.ShowDialog() != DialogResult.OK)
+                    using (var dialog = new CredentialsDialog(ServiceProvider, item.UserName))
                     {
-                        return;
-                    }
+                        if (dialog.ShowDialog() != DialogResult.OK)
+                        {
+                            return;
+                        }
 
-                    txtName.Text = dialog.UserName;
-                    item.UserName = dialog.UserName;
-                    item.Password = dialog.Password;
+                        txtName.Text = dialog.UserName;
+                        item.UserName = dialog.UserName;
+                        item.Password = dialog.Password;
+                    }
                     RefreshButton();
                 }));
 

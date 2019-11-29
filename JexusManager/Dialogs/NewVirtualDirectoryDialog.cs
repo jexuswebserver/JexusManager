@@ -146,10 +146,12 @@ namespace JexusManager.Dialogs
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    var dialog = new ConnectAsDialog(ServiceProvider, item);
-                    if (dialog.ShowDialog() != DialogResult.OK)
+                    using (var dialog = new ConnectAsDialog(ServiceProvider, item))
                     {
-                        return;
+                        if (dialog.ShowDialog() != DialogResult.OK)
+                        {
+                            return;
+                        }
                     }
 
                     item.Apply();

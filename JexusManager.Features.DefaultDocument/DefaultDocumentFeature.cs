@@ -144,7 +144,7 @@ namespace JexusManager.Features.DefaultDocument
 
         public void Add()
         {
-            var dialog = new NewDefaultDocumentDialog(Module, this);
+            using var dialog = new NewDefaultDocumentDialog(Module, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;

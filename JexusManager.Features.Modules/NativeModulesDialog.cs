@@ -75,7 +75,7 @@ namespace JexusManager.Features.Modules
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    var dialog = new NewNativeDialog(ServiceProvider, null);
+                    using var dialog = new NewNativeDialog(ServiceProvider, null);
                     if (dialog.ShowDialog() != DialogResult.OK)
                     {
                         return;
@@ -92,7 +92,7 @@ namespace JexusManager.Features.Modules
                 .Subscribe(evt =>
                 {
                     GlobalModule item = (GlobalModule)lvModules.SelectedItems[0].Tag;
-                    var dialog = new NewNativeDialog(ServiceProvider, item);
+                    using var dialog = new NewNativeDialog(ServiceProvider, item);
                     if (dialog.ShowDialog() != DialogResult.OK)
                     {
                         return;

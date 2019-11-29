@@ -189,19 +189,21 @@ namespace JexusManager.Features.Main
 
         private void Add()
         {
-            var dialog = new ApplicationPoolBasicSettingsDialog(Module, null, Items.Parent.ApplicationPoolDefaults, Items);
-            if (dialog.ShowDialog() == DialogResult.OK)
+            using (var dialog = new ApplicationPoolBasicSettingsDialog(Module, null, Items.Parent.ApplicationPoolDefaults, Items))
             {
-                Items.Parent.CommitChanges();
-            }
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    Items.Parent.CommitChanges();
+                }
 
-            SelectedItem = dialog.Pool;
+                SelectedItem = dialog.Pool;
+            }
             OnApplicationPoolsSettingsSaved();
         }
 
         private void Set()
         {
-            var dialog = new ApplicationPoolDefaultsSettingsDialog(Module, Items.Parent.ApplicationPoolDefaults);
+            using var dialog = new ApplicationPoolDefaultsSettingsDialog(Module, Items.Parent.ApplicationPoolDefaults);
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 Items.Parent.CommitChanges();
@@ -247,7 +249,7 @@ namespace JexusManager.Features.Main
 
         private void Advanced()
         {
-            var dialog = new ApplicationPoolAdvancedSettingsDialog(Module, SelectedItem);
+            using var dialog = new ApplicationPoolAdvancedSettingsDialog(Module, SelectedItem);
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 SelectedItem.Parent.Parent.CommitChanges();
@@ -307,10 +309,12 @@ namespace JexusManager.Features.Main
                 return;
             }
 
-            var dialog = new ApplicationPoolBasicSettingsDialog(Module, SelectedItem, null, Items);
-            if (dialog.ShowDialog() == DialogResult.OK)
+            using (var dialog = new ApplicationPoolBasicSettingsDialog(Module, SelectedItem, null, Items))
             {
-                SelectedItem.Parent.Parent.CommitChanges();
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    SelectedItem.Parent.Parent.CommitChanges();
+                }
             }
 
             OnApplicationPoolsSettingsSaved();

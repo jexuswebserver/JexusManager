@@ -133,7 +133,7 @@ namespace JexusManager.Features.IsapiCgiRestriction
 
         public void Add()
         {
-            var dialog = new NewRestrictionDialog(Module, null, this);
+            using var dialog = new NewRestrictionDialog(Module, null, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
@@ -165,10 +165,12 @@ namespace JexusManager.Features.IsapiCgiRestriction
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var section = service.GetSection("system.webServer/security/isapiCgiRestriction");
-            var dialog = new SettingsDialog(Module, section, this);
-            if (dialog.ShowDialog() != DialogResult.OK)
+            using (var dialog = new SettingsDialog(Module, section, this))
             {
-                return;
+                if (dialog.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
             }
 
             service.ServerManager.CommitChanges();
@@ -191,7 +193,7 @@ namespace JexusManager.Features.IsapiCgiRestriction
 
         public void Edit()
         {
-            var dialog = new NewRestrictionDialog(Module, SelectedItem, this);
+            using var dialog = new NewRestrictionDialog(Module, SelectedItem, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;

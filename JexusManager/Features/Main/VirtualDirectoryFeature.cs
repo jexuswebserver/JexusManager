@@ -199,11 +199,13 @@ namespace JexusManager.Features.Main
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var virtualDirectory = service.VirtualDirectory;
-            var dialog = new NewVirtualDirectoryDialog(Module, virtualDirectory, virtualDirectory.PathToSite().GetParentPath(),
-                virtualDirectory.Application);
-            if (dialog.ShowDialog() != DialogResult.OK)
+            using (var dialog = new NewVirtualDirectoryDialog(Module, virtualDirectory, virtualDirectory.PathToSite().GetParentPath(),
+                virtualDirectory.Application))
             {
-                return;
+                if (dialog.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
             }
 
             //await service.Application.SaveAsync();

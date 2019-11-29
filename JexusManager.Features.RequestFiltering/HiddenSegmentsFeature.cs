@@ -70,7 +70,7 @@ namespace JexusManager.Features.RequestFiltering
 
         public void Add()
         {
-            var dialog = new NewHiddenSegmentDialog(this.Module);
+            using var dialog = new NewHiddenSegmentDialog(this.Module);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;

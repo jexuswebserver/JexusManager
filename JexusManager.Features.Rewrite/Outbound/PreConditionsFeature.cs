@@ -95,7 +95,7 @@ namespace JexusManager.Features.Rewrite.Outbound
 
         public PreConditionsFeature(Module module)
         {
-            this.Module = module;
+            Module = module;
         }
 
         protected static readonly Version FxVersion10 = new Version("1.0");
@@ -106,13 +106,13 @@ namespace JexusManager.Features.Rewrite.Outbound
 
         protected void DisplayErrorMessage(Exception ex, ResourceManager resourceManager)
         {
-            var service = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+            var service = (IManagementUIService)GetService(typeof(IManagementUIService));
             service.ShowError(ex, resourceManager.GetString("General"), string.Empty, false);
         }
 
         protected object GetService(Type type)
         {
-            return (this.Module as IServiceProvider).GetService(type);
+            return (Module as IServiceProvider).GetService(type);
         }
 
         public TaskList GetTaskList()
@@ -122,85 +122,89 @@ namespace JexusManager.Features.Rewrite.Outbound
 
         public void Load()
         {
-            this.Items = new List<PreConditionItem>();
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            Items = new List<PreConditionItem>();
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var section = service.GetSection("system.webServer/rewrite/outboundRules");
             ConfigurationElementCollection rulesCollection = section.GetCollection("preConditions");
             foreach (ConfigurationElement ruleElement in rulesCollection)
             {
                 var node = new PreConditionItem(ruleElement);
-                this.Items.Add(node);
+                Items.Add(node);
             }
 
-            this.CanRevert = section.CanRevert();
-            this.OnRewriteSettingsSaved();
+            CanRevert = section.CanRevert();
+            OnRewriteSettingsSaved();
         }
 
         public List<PreConditionItem> Items { get; set; }
 
         public void Add()
         {
-            var dialog = new AddPreConditionDialog(this.Module, null);
-            if (dialog.ShowDialog() != DialogResult.OK)
+            using (var dialog = new AddPreConditionDialog(Module, null))
             {
-                return;
-            }
+                if (dialog.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
 
-            var newItem = dialog.Item;
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
-            var rulesSection = service.GetSection("system.webServer/rewrite/outboundRules");
-            ConfigurationElementCollection rulesCollection = rulesSection.GetCollection("preConditions");
+                var newItem = dialog.Item;
+                var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+                var rulesSection = service.GetSection("system.webServer/rewrite/outboundRules");
+                ConfigurationElementCollection rulesCollection = rulesSection.GetCollection("preConditions");
 
-            if (this.SelectedItem != newItem)
-            {
-                this.Items.Add(newItem);
-                this.SelectedItem = newItem;
-            }
-            else if (newItem.Flag != "Local")
-            {
-                rulesCollection.Remove(newItem.Element);
-                newItem.Flag = "Local";
-            }
+                if (SelectedItem != newItem)
+                {
+                    Items.Add(newItem);
+                    SelectedItem = newItem;
+                }
+                else if (newItem.Flag != "Local")
+                {
+                    rulesCollection.Remove(newItem.Element);
+                    newItem.Flag = "Local";
+                }
 
-            newItem.AppendTo(rulesCollection);
-            service.ServerManager.CommitChanges();
-            this.OnRewriteSettingsSaved();
+                newItem.AppendTo(rulesCollection);
+                service.ServerManager.CommitChanges();
+            }
+            OnRewriteSettingsSaved();
         }
 
         public void Edit()
         {
             // TODO: how to edit.
-            var dialog = new AddPreConditionDialog(this.Module, this.SelectedItem);
-            if (dialog.ShowDialog() != DialogResult.OK)
+            using (var dialog = new AddPreConditionDialog(Module, SelectedItem))
             {
-                return;
+                if (dialog.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
+
+                var newItem = dialog.Item;
+                var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+                var rulesSection = service.GetSection("system.webServer/rewrite/outboundRules");
+                ConfigurationElementCollection rulesCollection = rulesSection.GetCollection("preConditions");
+
+                if (SelectedItem != newItem)
+                {
+                    Items.Add(newItem);
+                    SelectedItem = newItem;
+                }
+                else if (newItem.Flag != "Local")
+                {
+                    rulesCollection.Remove(newItem.Element);
+                    newItem.Flag = "Local";
+                }
+
+                newItem.AppendTo(rulesCollection);
+
+                service.ServerManager.CommitChanges();
             }
-
-            var newItem = dialog.Item;
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
-            var rulesSection = service.GetSection("system.webServer/rewrite/outboundRules");
-            ConfigurationElementCollection rulesCollection = rulesSection.GetCollection("preConditions");
-
-            if (this.SelectedItem != newItem)
-            {
-                this.Items.Add(newItem);
-                this.SelectedItem = newItem;
-            }
-            else if (newItem.Flag != "Local")
-            {
-                rulesCollection.Remove(newItem.Element);
-                newItem.Flag = "Local";
-            }
-
-            newItem.AppendTo(rulesCollection);
-
-            service.ServerManager.CommitChanges();
-            this.OnRewriteSettingsSaved();
+            OnRewriteSettingsSaved();
         }
 
         public void Remove()
         {
-            var dialog = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+            var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
             if (
                 dialog.ShowMessage("Are you sure that you want to remove the selected entry?", "Confirm Remove",
                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) !=
@@ -209,20 +213,20 @@ namespace JexusManager.Features.Rewrite.Outbound
                 return;
             }
 
-            this.Items.Remove(this.SelectedItem);
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            Items.Remove(SelectedItem);
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var section = service.GetSection("system.webServer/rewrite/outboundRules");
             ConfigurationElementCollection collection = section.GetCollection("preConditions");
-            collection.Remove(this.SelectedItem.Element);
+            collection.Remove(SelectedItem.Element);
             service.ServerManager.CommitChanges();
 
-            this.SelectedItem = null;
-            this.OnRewriteSettingsSaved();
+            SelectedItem = null;
+            OnRewriteSettingsSaved();
         }
 
         internal protected void OnRewriteSettingsSaved()
         {
-            this.RewriteSettingsUpdated?.Invoke();
+            RewriteSettingsUpdated?.Invoke();
         }
 
         public virtual bool ShowHelp()
@@ -233,34 +237,34 @@ namespace JexusManager.Features.Rewrite.Outbound
 
         public void Revert()
         {
-            var dialog = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+            var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
             var result =
                 dialog.ShowMessage(
                     "Reverting to the parent configuration will result in the loss of all settings in the local configuration file for this feature. Are you sure you want to continue?",
-                    this.Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning,
+                    Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning,
                     MessageBoxDefaultButton.Button1);
             if (result != DialogResult.Yes)
             {
                 return;
             }
 
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var section = service.GetSection("system.webServer/rewrite/outboundRules");
             ConfigurationElementCollection collection = section.GetCollection("preConditions");
             collection.Clear();
             collection.Delete();
             collection = section.GetCollection();
 
-            this.SelectedItem = null;
-            this.Items.Clear();
+            SelectedItem = null;
+            Items.Clear();
             foreach (ConfigurationElement ruleElement in collection)
             {
                 var node = new PreConditionItem(ruleElement);
-                this.Items.Add(node);
+                Items.Add(node);
             }
 
             service.ServerManager.CommitChanges();
-            this.OnRewriteSettingsSaved();
+            OnRewriteSettingsSaved();
         }
 
         private void Rename()

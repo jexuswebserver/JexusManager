@@ -71,7 +71,7 @@ namespace JexusManager.Features.RequestFiltering
         }
         public void Add()
         {
-            var dialog = new NewHeaderDialog(this.Module);
+            using var dialog = new NewHeaderDialog(this.Module);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;

@@ -146,7 +146,7 @@ namespace JexusManager.Features.HttpApi
 
         private void Create()
         {
-            var dialog = new NewReservedUrlDialog(Module, this);
+            using var dialog = new NewReservedUrlDialog(Module, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;

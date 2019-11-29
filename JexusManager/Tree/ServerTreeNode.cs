@@ -116,16 +116,18 @@ namespace JexusManager.Tree
                             return true;
                         }
 
-                        var dialog = new CertificateErrorsDialog(certificate);
-                        var result = dialog.ShowDialog();
-                        if (result == DialogResult.OK)
+                        using (var dialog = new CertificateErrorsDialog(certificate))
                         {
-                            MainForm.SaveMenuItem.Enabled = true;
-                        }
+                            var result = dialog.ShowDialog();
+                            if (result == DialogResult.OK)
+                            {
+                                MainForm.SaveMenuItem.Enabled = true;
+                            }
 
-                        if (result != DialogResult.OK)
-                        {
-                            return false;
+                            if (result != DialogResult.OK)
+                            {
+                                return false;
+                            }
                         }
 
                         CertificateHash = remoteHash;

@@ -161,7 +161,7 @@ namespace JexusManager.Features.IsapiFilters
 
         public void Add()
         {
-            var dialog = new NewFilterDialog(Module, null, this);
+            using var dialog = new NewFilterDialog(Module, null, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
@@ -186,7 +186,7 @@ namespace JexusManager.Features.IsapiFilters
 
         public void Edit()
         {
-            var dialog = new NewFilterDialog(Module, SelectedItem, this);
+            using var dialog = new NewFilterDialog(Module, SelectedItem, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;

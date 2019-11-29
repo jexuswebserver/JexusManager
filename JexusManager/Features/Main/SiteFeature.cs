@@ -359,10 +359,12 @@ namespace JexusManager.Features.Main
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var site = service.Site;
-            var dialog = new EditSiteDialog(Module, site.Applications[0]);
-            if (dialog.ShowDialog() != DialogResult.OK)
+            using (var dialog = new EditSiteDialog(Module, site.Applications[0]))
             {
-                return;
+                if (dialog.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
             }
 
             site.Applications[0].Save();
@@ -395,36 +397,38 @@ namespace JexusManager.Features.Main
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var site = service.Site;
-            var dialog = new BindingsDialog(Module, site);
-            dialog.ShowDialog();
+            using (var dialog = new BindingsDialog(Module, site))
+            {
+                dialog.ShowDialog();
+            }
             OnSiteSettingsSaved();
         }
 
         private void FixProject()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var dialog = new VsDiagDialog(Module, service.Site);
+            using var dialog = new VsDiagDialog(Module, service.Site);
             dialog.ShowDialog();
         }
 
         private void FixBinding()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var dialog = new BindingDiagDialog(Module, service.Site);
+            using var dialog = new BindingDiagDialog(Module, service.Site);
             dialog.ShowDialog();
         }
 
         private void FixPhp()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var dialog = new PhpDiagDialog(Module, service.Site.Server);
+            using var dialog = new PhpDiagDialog(Module, service.Site.Server);
             dialog.ShowDialog();
         }
 
         private void FixKestrel()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var dialog = new KestrelDiagDialog(Module, service.Site.Applications[0]);
+            using var dialog = new KestrelDiagDialog(Module, service.Site.Applications[0]);
             dialog.ShowDialog();
         }
 

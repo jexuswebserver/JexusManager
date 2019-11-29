@@ -110,10 +110,12 @@ namespace JexusManager.Features.Main
 
                     var item = listView1.SelectedItems[0];
                     var binding = (Binding)item.Tag;
-                    var dialog = new BindingDialog(ServiceProvider, binding, _site);
-                    if (dialog.ShowDialog() != DialogResult.OK)
+                    using (var dialog = new BindingDialog(ServiceProvider, binding, _site))
                     {
-                        return;
+                        if (dialog.ShowDialog() != DialogResult.OK)
+                        {
+                            return;
+                        }
                     }
 
                     item.SubItems[1].Text = binding.Host.HostToDisplay();
@@ -127,29 +129,31 @@ namespace JexusManager.Features.Main
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    var dialog = new BindingDialog(ServiceProvider, null, _site);
-                    if (dialog.ShowDialog() != DialogResult.OK)
+                    using (var dialog = new BindingDialog(ServiceProvider, null, _site))
                     {
-                        return;
-                    }
-
-                    var binding = dialog.Binding;
-                    if (binding == null)
-                    {
-                        return;
-                    }
-
-                    var node = new ListViewItem(new[]
+                        if (dialog.ShowDialog() != DialogResult.OK)
                         {
+                            return;
+                        }
+
+                        var binding = dialog.Binding;
+                        if (binding == null)
+                        {
+                            return;
+                        }
+
+                        var node = new ListViewItem(new[]
+                            {
                     binding.Protocol,
                     binding.Host.HostToDisplay(),
                     binding.EndPoint.Port.ToString(CultureInfo.InvariantCulture),
                     binding.EndPoint.Address.AddressToDisplay(),
                     string.Empty
                 })
-                    { Tag = binding };
-                    listView1.Items.Add(node);
-                    _site.Bindings.Add(binding);
+                        { Tag = binding };
+                        listView1.Items.Add(node);
+                        _site.Bindings.Add(binding);
+                    }
                     _site.Server.CommitChanges();
                 }));
 

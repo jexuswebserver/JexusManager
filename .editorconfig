@@ -32,3 +32,6 @@ end_of_line = crlf
 
 # IDE0067: Dispose objects before losing scope
 dotnet_diagnostic.IDE0067.severity = error
+
+# IDE0063: Use simple 'using' statement
+csharp_prefer_simple_using_statement = true:error

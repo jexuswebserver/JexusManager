@@ -115,10 +115,12 @@ namespace JexusManager.Features.Authentication
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var section = service.GetSection("system.web/authentication");
-            var dialog = new FormsEditDialog(Module, new FormsItem(section.GetChildElement("forms")), Scope == ManagementScope.Server && !PublicNativeMethods.IsProcessElevated, this);
-            if (dialog.ShowDialog() != DialogResult.OK)
+            using (var dialog = new FormsEditDialog(Module, new FormsItem(section.GetChildElement("forms")), Scope == ManagementScope.Server && !PublicNativeMethods.IsProcessElevated, this))
             {
-                return;
+                if (dialog.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
             }
 
             service.ServerManager.CommitChanges();

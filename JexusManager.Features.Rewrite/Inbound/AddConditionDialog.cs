@@ -81,7 +81,7 @@ namespace JexusManager.Features.Rewrite.Inbound
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    var dialog = new RegexTestDialog(ServiceProvider, txtPattern.Text, cbIgnore.Checked, true);
+                    using var dialog = new RegexTestDialog(ServiceProvider, txtPattern.Text, cbIgnore.Checked, true);
                     if (dialog.ShowDialog() != DialogResult.OK)
                     {
                         return;

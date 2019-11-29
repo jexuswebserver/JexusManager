@@ -155,10 +155,12 @@ namespace JexusManager.Features.HttpErrors
                 {
                     if (cbLocalize.Checked)
                     {
-                        var dialog = new LocalErrorDialog(ServiceProvider, Item, feature);
-                        if (dialog.ShowDialog() != DialogResult.OK)
+                        using (var dialog = new LocalErrorDialog(ServiceProvider, Item, feature))
                         {
-                            return;
+                            if (dialog.ShowDialog() != DialogResult.OK)
+                            {
+                                return;
+                            }
                         }
 
                         txtStatic.Text = Item.FullPath;

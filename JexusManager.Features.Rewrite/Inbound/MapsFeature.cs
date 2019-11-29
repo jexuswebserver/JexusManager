@@ -77,7 +77,7 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         public MapsFeature(Module module)
         {
-            this.Module = module;
+            Module = module;
         }
 
         protected static readonly Version FxVersion10 = new Version("1.0");
@@ -88,13 +88,13 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         protected void DisplayErrorMessage(Exception ex, ResourceManager resourceManager)
         {
-            var service = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+            var service = (IManagementUIService)GetService(typeof(IManagementUIService));
             service.ShowError(ex, resourceManager.GetString("General"), string.Empty, false);
         }
 
         protected object GetService(Type type)
         {
-            return (this.Module as IServiceProvider).GetService(type);
+            return (Module as IServiceProvider).GetService(type);
         }
 
         public TaskList GetTaskList()
@@ -104,84 +104,88 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         public void Load()
         {
-            this.Items = new List<MapItem>();
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            Items = new List<MapItem>();
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var rulesSection = service.GetSection("system.webServer/rewrite/rewriteMaps");
             ConfigurationElementCollection rulesCollection = rulesSection.GetCollection();
             foreach (ConfigurationElement ruleElement in rulesCollection)
             {
                 var node = new MapItem(ruleElement, this);
-                this.Items.Add(node);
+                Items.Add(node);
             }
 
-            this.OnRewriteSettingsSaved();
+            OnRewriteSettingsSaved();
         }
 
         public List<MapItem> Items { get; set; }
 
         public void Add()
         {
-            var dialog = new AddMapsDialog(this.Module, this);
-            if (dialog.ShowDialog() != DialogResult.OK)
+            using (var dialog = new AddMapsDialog(Module, this))
             {
-                return;
+                if (dialog.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
+
+                var newItem = dialog.Item;
+                var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+                var rulesSection = service.GetSection("system.webServer/rewrite/rewriteMaps");
+                ConfigurationElementCollection rulesCollection = rulesSection.GetCollection();
+
+                if (SelectedItem != newItem)
+                {
+                    Items.Add(newItem);
+                    SelectedItem = newItem;
+                }
+                else if (newItem.Flag != "Local")
+                {
+                    rulesCollection.Remove(newItem.Element);
+                    newItem.Flag = "Local";
+                }
+
+                newItem.AppendTo(rulesCollection);
+                service.ServerManager.CommitChanges();
             }
+            OnRewriteSettingsSaved();
 
-            var newItem = dialog.Item;
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
-            var rulesSection = service.GetSection("system.webServer/rewrite/rewriteMaps");
-            ConfigurationElementCollection rulesCollection = rulesSection.GetCollection();
-
-            if (this.SelectedItem != newItem)
-            {
-                this.Items.Add(newItem);
-                this.SelectedItem = newItem;
-            }
-            else if (newItem.Flag != "Local")
-            {
-                rulesCollection.Remove(newItem.Element);
-                newItem.Flag = "Local";
-            }
-
-            newItem.AppendTo(rulesCollection);
-            service.ServerManager.CommitChanges();
-            this.OnRewriteSettingsSaved();
-
-            this.Edit();
+            Edit();
         }
 
         public void AddRule()
         {
-            var dialog = new AddMapDialog(this.Module, null, this);
-            if (dialog.ShowDialog() != DialogResult.OK)
+            using (var dialog = new AddMapDialog(Module, null, this))
             {
-                return;
-            }
+                if (dialog.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
 
-            var newItem = dialog.Item;
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
-            ConfigurationElementCollection rulesCollection = this.SelectedItem.Element.GetCollection();
+                var newItem = dialog.Item;
+                var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+                ConfigurationElementCollection rulesCollection = SelectedItem.Element.GetCollection();
 
-            if (this.SelectedItem.SelectedItem != newItem)
-            {
-                this.SelectedItem.Items.Add(newItem);
-                this.SelectedItem.SelectedItem = newItem;
-            }
-            else if (newItem.Flag != "Local")
-            {
-                rulesCollection.Remove(newItem.Element);
-                newItem.Flag = "Local";
-            }
+                if (SelectedItem.SelectedItem != newItem)
+                {
+                    SelectedItem.Items.Add(newItem);
+                    SelectedItem.SelectedItem = newItem;
+                }
+                else if (newItem.Flag != "Local")
+                {
+                    rulesCollection.Remove(newItem.Element);
+                    newItem.Flag = "Local";
+                }
 
-            newItem.AppendTo(rulesCollection);
-            service.ServerManager.CommitChanges();
-            this.OnRewriteSettingsSaved();
-            this.SelectedItem.OnRewriteSettingsSaved();
+                newItem.AppendTo(rulesCollection);
+                service.ServerManager.CommitChanges();
+            }
+            OnRewriteSettingsSaved();
+            SelectedItem.OnRewriteSettingsSaved();
         }
 
         public void Remove()
         {
-            var dialog = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+            var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
             if (
                 dialog.ShowMessage("Are you sure that you want to remove the selected entry?", "Confirm Remove",
                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) !=
@@ -190,20 +194,20 @@ namespace JexusManager.Features.Rewrite.Inbound
                 return;
             }
 
-            this.Items.Remove(this.SelectedItem);
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            Items.Remove(SelectedItem);
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var section = service.GetSection("system.webServer/rewrite/rewriteMaps");
             ConfigurationElementCollection collection = section.GetCollection();
-            collection.Remove(this.SelectedItem.Element);
+            collection.Remove(SelectedItem.Element);
             service.ServerManager.CommitChanges();
 
-            this.SelectedItem = null;
-            this.OnRewriteSettingsSaved();
+            SelectedItem = null;
+            OnRewriteSettingsSaved();
         }
 
         public void RemoveRule()
         {
-            var dialog = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+            var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
             if (
                 dialog.ShowMessage("Are you sure that you want to remove the selected entry?", "Confirm Remove",
                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) !=
@@ -212,20 +216,20 @@ namespace JexusManager.Features.Rewrite.Inbound
                 return;
             }
 
-            this.SelectedItem.Items.Remove(this.SelectedItem.SelectedItem);
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
-            ConfigurationElementCollection collection = this.SelectedItem.Element.GetCollection();
-            collection.Remove(this.SelectedItem.SelectedItem.Element);
+            SelectedItem.Items.Remove(SelectedItem.SelectedItem);
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+            ConfigurationElementCollection collection = SelectedItem.Element.GetCollection();
+            collection.Remove(SelectedItem.SelectedItem.Element);
             service.ServerManager.CommitChanges();
 
-            this.SelectedItem.SelectedItem = null;
-            this.OnRewriteSettingsSaved();
-            this.SelectedItem.OnRewriteSettingsSaved();
+            SelectedItem.SelectedItem = null;
+            OnRewriteSettingsSaved();
+            SelectedItem.OnRewriteSettingsSaved();
         }
 
         internal protected void OnRewriteSettingsSaved()
         {
-            this.RewriteSettingsUpdated?.Invoke();
+            RewriteSettingsUpdated?.Invoke();
         }
 
         public virtual bool ShowHelp()
@@ -236,38 +240,40 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         internal void Edit()
         {
-            var service = (INavigationService)this.GetService(typeof(INavigationService));
-            service.Navigate(null, null, typeof(MapPage), new Tuple<MapsFeature, MapItem>(this, this.SelectedItem));
-            this.OnRewriteSettingsSaved();
+            var service = (INavigationService)GetService(typeof(INavigationService));
+            service.Navigate(null, null, typeof(MapPage), new Tuple<MapsFeature, MapItem>(this, SelectedItem));
+            OnRewriteSettingsSaved();
         }
 
         public void EditRule()
         {
-            var dialog = new AddMapDialog(this.Module, this.SelectedItem.SelectedItem, this);
-            if (dialog.ShowDialog() != DialogResult.OK)
+            using (var dialog = new AddMapDialog(Module, SelectedItem.SelectedItem, this))
             {
-                return;
-            }
+                if (dialog.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
 
-            var newItem = dialog.Item;
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
-            ConfigurationElementCollection rulesCollection = this.SelectedItem.Element.GetCollection();
+                var newItem = dialog.Item;
+                var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+                ConfigurationElementCollection rulesCollection = SelectedItem.Element.GetCollection();
 
-            if (this.SelectedItem.SelectedItem != newItem)
-            {
-                this.SelectedItem.Items.Add(newItem);
-                this.SelectedItem.SelectedItem = newItem;
-            }
-            else if (newItem.Flag != "Local")
-            {
-                rulesCollection.Remove(newItem.Element);
-                newItem.Flag = "Local";
-            }
+                if (SelectedItem.SelectedItem != newItem)
+                {
+                    SelectedItem.Items.Add(newItem);
+                    SelectedItem.SelectedItem = newItem;
+                }
+                else if (newItem.Flag != "Local")
+                {
+                    rulesCollection.Remove(newItem.Element);
+                    newItem.Flag = "Local";
+                }
 
-            newItem.AppendTo(rulesCollection);
-            service.ServerManager.CommitChanges();
-            this.OnRewriteSettingsSaved();
-            this.SelectedItem.OnRewriteSettingsSaved();
+                newItem.AppendTo(rulesCollection);
+                service.ServerManager.CommitChanges();
+            }
+            OnRewriteSettingsSaved();
+            SelectedItem.OnRewriteSettingsSaved();
         }
 
         public MapItem SelectedItem { get; internal set; }
@@ -291,13 +297,15 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         public void Set()
         {
-            var dialog = new MapSettingsDialog(this.Module, this.SelectedItem);
-            if (dialog.ShowDialog() != DialogResult.OK)
+            using (var dialog = new MapSettingsDialog(Module, SelectedItem))
             {
-                return;
+                if (dialog.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
             }
 
-            this.OnRewriteSettingsSaved();
+            OnRewriteSettingsSaved();
         }
     }
 }

@@ -319,25 +319,23 @@ namespace JexusManager.Features.Certificates
             try
             {
                 // remove certificate and mapping
-                using (var process = new Process())
-                {
-                    var start = process.StartInfo;
-                    start.Verb = "runas";
-                    start.UseShellExecute = true;
-                    start.FileName = "cmd";
-                    start.Arguments =
-                        $"/c \"\"{CertificateInstallerLocator.FileName}\" /h:\"{SelectedItem.Certificate.Thumbprint}\" /s:{(SelectedItem.Store == "Personal" ? "MY" : "WebHosting")}\"";
-                    start.CreateNoWindow = true;
-                    start.WindowStyle = ProcessWindowStyle.Hidden;
-                    process.Start();
-                    process.WaitForExit();
+                using var process = new Process();
+                var start = process.StartInfo;
+                start.Verb = "runas";
+                start.UseShellExecute = true;
+                start.FileName = "cmd";
+                start.Arguments =
+                    $"/c \"\"{CertificateInstallerLocator.FileName}\" /h:\"{SelectedItem.Certificate.Thumbprint}\" /s:{(SelectedItem.Store == "Personal" ? "MY" : "WebHosting")}\"";
+                start.CreateNoWindow = true;
+                start.WindowStyle = ProcessWindowStyle.Hidden;
+                process.Start();
+                process.WaitForExit();
 
-                    if (process.ExitCode == 0)
-                    {
-                        Items.Remove(SelectedItem);
-                        SelectedItem = null;
-                        OnCertificatesSettingsSaved();
-                    }
+                if (process.ExitCode == 0)
+                {
+                    Items.Remove(SelectedItem);
+                    SelectedItem = null;
+                    OnCertificatesSettingsSaved();
                 }
             }
             catch (Win32Exception ex)
@@ -408,26 +406,20 @@ namespace JexusManager.Features.Certificates
 
         private void CreateRequest()
         {
-            using (var wizard = new CertificateRequestWizard(Module, this))
-            {
-                wizard.ShowDialog();
-            }
+            using var wizard = new CertificateRequestWizard(Module, this);
+            wizard.ShowDialog();
         }
 
         private void Export()
         {
-            using (var dialog = new ExportCertificateDialog(SelectedItem.Certificate, Module, this))
-            {
-                dialog.ShowDialog();
-            }
+            using var dialog = new ExportCertificateDialog(SelectedItem.Certificate, Module, this);
+            dialog.ShowDialog();
         }
 
         private void Renew()
         {
-            using (var wizard = new CertificateRenewWizard(SelectedItem.Certificate, Module, this))
-            {
-                wizard.ShowDialog();
-            }
+            using var wizard = new CertificateRenewWizard(SelectedItem.Certificate, Module, this);
+            wizard.ShowDialog();
         }
 
         internal void View()

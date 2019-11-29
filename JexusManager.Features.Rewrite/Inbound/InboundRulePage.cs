@@ -168,7 +168,7 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         private void BtnTestClick(object sender, EventArgs e)
         {
-            var dialog = new RegexTestDialog(Module, txtPattern.Text, cbIgnoreCase.Checked, false);
+            using var dialog = new RegexTestDialog(Module, txtPattern.Text, cbIgnoreCase.Checked, false);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;

@@ -16,7 +16,7 @@ namespace JexusManager.Dialogs
 
         public static void Report(string userName, string exception)
         {
-            var dialog = new ExceptionDialog();
+            using var dialog = new ExceptionDialog();
             dialog.txtInfo.Text = $"{userName}{Environment.NewLine}{Environment.NewLine}{exception}";
             dialog.ShowDialog();
         }

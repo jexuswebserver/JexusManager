@@ -113,10 +113,12 @@ namespace JexusManager.Features.Authentication
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var windowsSection = service.GetSection("system.webServer/security/authentication/windowsAuthentication", null, false);
-            var dialog = new WindowsAdvancedDialog(Module, new WindowsItem(windowsSection), this);
-            if (dialog.ShowDialog() != DialogResult.OK)
+            using (var dialog = new WindowsAdvancedDialog(Module, new WindowsItem(windowsSection), this))
             {
-                return;
+                if (dialog.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
             }
 
             service.ServerManager.CommitChanges();
@@ -127,10 +129,12 @@ namespace JexusManager.Features.Authentication
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var windowsSection = service.GetSection("system.webServer/security/authentication/windowsAuthentication", null, false);
-            var dialog = new ProvidersDialog(Module, new WindowsItem(windowsSection), this);
-            if (dialog.ShowDialog() != DialogResult.OK)
+            using (var dialog = new ProvidersDialog(Module, new WindowsItem(windowsSection), this))
             {
-                return;
+                if (dialog.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
             }
 
             service.ServerManager.CommitChanges();

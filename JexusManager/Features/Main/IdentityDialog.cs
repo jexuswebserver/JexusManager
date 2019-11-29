@@ -98,7 +98,7 @@ namespace JexusManager.Features.Main
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    var dialog = new CredentialsDialog(null, txtCustom.Text);
+                    using var dialog = new CredentialsDialog(null, txtCustom.Text);
                     if (dialog.ShowDialog() != DialogResult.OK)
                     {
                         return;

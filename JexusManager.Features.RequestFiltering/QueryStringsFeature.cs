@@ -76,18 +76,18 @@ namespace JexusManager.Features.RequestFiltering
 
         public void Add()
         {
-            var dialog = new NewQueryDialog(this.Module, true);
+            using var dialog = new NewQueryDialog(Module, true);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
-            this.AddItem(dialog.Item);
+            AddItem(dialog.Item);
         }
 
         public void AddDeny()
         {
-            var dialog = new NewQueryDialog(this.Module, false);
+            using var dialog = new NewQueryDialog(Module, false);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
@@ -98,9 +98,9 @@ namespace JexusManager.Features.RequestFiltering
 
         public void Remove()
         {
-            var dialog = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+            var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
             if (
-                dialog.ShowMessage("Are you sure that you want to remove the selected query string?", this.Name,
+                dialog.ShowMessage("Are you sure that you want to remove the selected query string?", Name,
                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) !=
                 DialogResult.Yes)
             {

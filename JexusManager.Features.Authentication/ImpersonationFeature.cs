@@ -106,10 +106,12 @@ namespace JexusManager.Features.Authentication
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var section = service.GetSection("system.web/identity");
-            var dialog = new ImpersonationEditDialog(Module, new ImpersonationItem(section), this);
-            if (dialog.ShowDialog() != DialogResult.OK)
+            using (var dialog = new ImpersonationEditDialog(Module, new ImpersonationItem(section), this))
             {
-                return;
+                if (dialog.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
             }
 
             service.ServerManager.CommitChanges();

@@ -76,31 +76,31 @@ namespace JexusManager.Features.RequestFiltering
 
         public void Add()
         {
-            var dialog = new NewVerbDialog(this.Module, true);
+            using var dialog = new NewVerbDialog(Module, true);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
-            this.AddItem(dialog.Item);
+            AddItem(dialog.Item);
         }
 
         public void AddDeny()
         {
-            var dialog = new NewVerbDialog(this.Module, false);
+            using var dialog = new NewVerbDialog(Module, false);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
-            this.AddItem(dialog.Item);
+            AddItem(dialog.Item);
         }
 
         public void Remove()
         {
-            var dialog = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+            var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
             if (
-                dialog.ShowMessage("Are you sure that you want to remove the selected verb?", this.Name,
+                dialog.ShowMessage("Are you sure that you want to remove the selected verb?", Name,
                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) !=
                 DialogResult.Yes)
             {

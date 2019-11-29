@@ -105,7 +105,7 @@ namespace JexusManager.Features.Caching
 
         public void Add()
         {
-            var dialog = new NewCachingDialog(Module, null, this);
+            using var dialog = new NewCachingDialog(Module, null, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
@@ -118,10 +118,12 @@ namespace JexusManager.Features.Caching
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var section = service.GetSection("system.webServer/caching");
-            var dialog = new CachingSettingsDialog(Module, section, this);
-            if (dialog.ShowDialog() != DialogResult.OK)
+            using (var dialog = new CachingSettingsDialog(Module, section, this))
             {
-                return;
+                if (dialog.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
             }
 
             service.ServerManager.CommitChanges();
@@ -144,7 +146,7 @@ namespace JexusManager.Features.Caching
 
         public void Edit()
         {
-            var dialog = new NewCachingDialog(Module, SelectedItem, this);
+            using var dialog = new NewCachingDialog(Module, SelectedItem, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;

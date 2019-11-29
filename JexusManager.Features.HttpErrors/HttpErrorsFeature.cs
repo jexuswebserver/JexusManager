@@ -110,7 +110,7 @@ namespace JexusManager.Features.HttpErrors
 
         public void Add()
         {
-            var dialog = new NewErrorDialog(Module, null, this);
+            using var dialog = new NewErrorDialog(Module, null, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
@@ -135,10 +135,12 @@ namespace JexusManager.Features.HttpErrors
 
         public void Edit()
         {
-            var dialog = new NewErrorDialog(Module, SelectedItem, this);
-            if (dialog.ShowDialog() != DialogResult.OK)
+            using (var dialog = new NewErrorDialog(Module, SelectedItem, this))
             {
-                return;
+                if (dialog.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
             }
 
             EditItem(SelectedItem);
@@ -148,10 +150,12 @@ namespace JexusManager.Features.HttpErrors
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var section = service.GetSection("system.webServer/httpErrors");
-            var dialog = new EditDialog(Module, section, this);
-            if (dialog.ShowDialog() != DialogResult.OK)
+            using (var dialog = new EditDialog(Module, section, this))
             {
-                return;
+                if (dialog.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
             }
 
             service.ServerManager.CommitChanges();

@@ -110,7 +110,7 @@ namespace JexusManager.Features.ResponseHeaders
 
         public void Add()
         {
-            var dialog = new NewHeaderDialog(Module, null, this);
+            using var dialog = new NewHeaderDialog(Module, null, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
@@ -135,7 +135,7 @@ namespace JexusManager.Features.ResponseHeaders
 
         public void Edit()
         {
-            var dialog = new NewHeaderDialog(Module, SelectedItem, this);
+            using var dialog = new NewHeaderDialog(Module, SelectedItem, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
@@ -148,10 +148,12 @@ namespace JexusManager.Features.ResponseHeaders
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var staticContent = service.GetSection("system.webServer/staticContent");
-            var dialog = new SetCommonHeadersDialog(Module, service.GetSection("system.webServer/httpProtocol"), staticContent.ChildElements["clientCache"], this);
-            if (dialog.ShowDialog() != DialogResult.OK)
+            using (var dialog = new SetCommonHeadersDialog(Module, service.GetSection("system.webServer/httpProtocol"), staticContent.ChildElements["clientCache"], this))
             {
-                return;
+                if (dialog.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
             }
 
             service.ServerManager.CommitChanges();

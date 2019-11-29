@@ -194,36 +194,40 @@ namespace JexusManager.Features.Modules
 
         public void Add()
         {
-            var dialog = new NativeModulesDialog(Module, this);
-            if (dialog.ShowDialog() != DialogResult.OK)
+            using (var dialog = new NativeModulesDialog(Module, this))
             {
-                return;
-            }
+                if (dialog.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
 
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            foreach (var item in dialog.Items)
-            {
-                Items.Add(item);
-                SelectedItem = item;
-                // server level modules are in "" location.
-                ConfigurationElementCollection collection = GetCollection(service);
-                item.AppendTo(collection);
-            }
+                var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+                foreach (var item in dialog.Items)
+                {
+                    Items.Add(item);
+                    SelectedItem = item;
+                    // server level modules are in "" location.
+                    ConfigurationElementCollection collection = GetCollection(service);
+                    item.AppendTo(collection);
+                }
 
-            // TODO: how to add item?
-            service.ServerManager.CommitChanges();
+                // TODO: how to add item?
+                service.ServerManager.CommitChanges();
+            }
             OnSettingsSaved();
         }
 
         public void AddManaged()
         {
-            var dialog = new NewModuleDialog(Module, null, this);
-            if (dialog.ShowDialog() != DialogResult.OK)
+            using (var dialog = new NewModuleDialog(Module, null, this))
             {
-                return;
-            }
+                if (dialog.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
 
-            AddItem(dialog.Item);
+                AddItem(dialog.Item);
+            }
         }
 
         public void AddGlobal(GlobalModule item)
@@ -263,13 +267,15 @@ namespace JexusManager.Features.Modules
 
         public void Edit()
         {
-            var dialog = new NewModuleDialog(Module, SelectedItem, this);
-            if (dialog.ShowDialog() != DialogResult.OK)
+            using (var dialog = new NewModuleDialog(Module, SelectedItem, this))
             {
-                return;
-            }
+                if (dialog.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
 
-            EditItem(dialog.Item);
+                EditItem(dialog.Item);
+            }
         }
 
         public void Rename()

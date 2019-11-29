@@ -102,7 +102,7 @@ namespace JexusManager.Features.Caching
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    var dialog = new CachingAdvancedDialog(ServiceProvider, Item, feature);
+                    using var dialog = new CachingAdvancedDialog(ServiceProvider, Item, feature);
                     dialog.ShowDialog();
                 }));
 

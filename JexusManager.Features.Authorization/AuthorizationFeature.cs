@@ -110,29 +110,29 @@ namespace JexusManager.Features.Authorization
 
         public void AddAllow()
         {
-            var dialog = new NewRuleDialog(this.Module, null, true, this);
+            using var dialog = new NewRuleDialog(Module, null, true, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
-            this.AddItem(dialog.Item);
+            AddItem(dialog.Item);
         }
 
         public void AddDeny()
         {
-            var dialog = new NewRuleDialog(this.Module, null, false, this);
+            using var dialog = new NewRuleDialog(Module, null, false, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
-            this.AddItem(dialog.Item);
+            AddItem(dialog.Item);
         }
 
         public void Remove()
         {
-            var dialog = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+            var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
             if (
                 dialog.ShowMessage("Are you sure that you want to remove the selected authorization rule?", "Confirm Remove",
                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) !=
@@ -141,23 +141,23 @@ namespace JexusManager.Features.Authorization
                 return;
             }
 
-            this.RemoveItem();
+            RemoveItem();
         }
 
         public void Edit()
         {
-            var dialog = new NewRuleDialog(this.Module, this.SelectedItem, false, this);
+            using var dialog = new NewRuleDialog(Module, SelectedItem, false, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
-            this.EditItem(dialog.Item);
+            EditItem(dialog.Item);
         }
 
         protected override void OnSettingsSaved()
         {
-            this.AuthorizationSettingsUpdated?.Invoke();
+            AuthorizationSettingsUpdated?.Invoke();
         }
 
         public virtual bool ShowHelp()

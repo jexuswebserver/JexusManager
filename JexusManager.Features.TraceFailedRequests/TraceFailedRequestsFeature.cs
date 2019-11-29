@@ -183,15 +183,13 @@ namespace JexusManager.Features.TraceFailedRequests
         public void Add()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            using (var dialog = new AddTraceWizard(Module, null, service.GetSection("system.webServer/tracing/traceProviderDefinitions"), this))
+            using var dialog = new AddTraceWizard(Module, null, service.GetSection("system.webServer/tracing/traceProviderDefinitions"), this);
+            if (dialog.ShowDialog() != DialogResult.OK)
             {
-                if (dialog.ShowDialog() != DialogResult.OK)
-                {
-                    return;
-                }
-
-                AddItem(dialog.Item);
+                return;
             }
+
+            AddItem(dialog.Item);
         }
 
         public void Remove()
@@ -211,15 +209,13 @@ namespace JexusManager.Features.TraceFailedRequests
         public void Edit()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            using (var dialog = new AddTraceWizard(Module, SelectedItem, service.GetSection("system.webServer/tracing/traceProviderDefinitions"), this))
+            using var dialog = new AddTraceWizard(Module, SelectedItem, service.GetSection("system.webServer/tracing/traceProviderDefinitions"), this);
+            if (dialog.ShowDialog() != DialogResult.OK)
             {
-                if (dialog.ShowDialog() != DialogResult.OK)
-                {
-                    return;
-                }
-
-                EditItem(dialog.Item);
+                return;
             }
+
+            EditItem(dialog.Item);
         }
 
         public void Rename()

@@ -123,13 +123,15 @@ namespace JexusManager.Features.Logging
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    var dialog = new AddFieldDialog(ServiceProvider, null, logFile);
-                    if (dialog.ShowDialog() != DialogResult.OK)
+                    using (var dialog = new AddFieldDialog(ServiceProvider, null, logFile))
                     {
-                        return;
-                    }
+                        if (dialog.ShowDialog() != DialogResult.OK)
+                        {
+                            return;
+                        }
 
-                    lvCustom.Items.Add(new CustomListViewItem(dialog.Custom));
+                        lvCustom.Items.Add(new CustomListViewItem(dialog.Custom));
+                    }
                     btnOK.Enabled = true;
                 }));
 
@@ -139,10 +141,12 @@ namespace JexusManager.Features.Logging
                 .Subscribe(evt =>
                 {
                     var selected = (CustomListViewItem)lvCustom.SelectedItems[0];
-                    var dialog = new AddFieldDialog(ServiceProvider, selected.Custom, logFile);
-                    if (dialog.ShowDialog() != DialogResult.OK)
+                    using (var dialog = new AddFieldDialog(ServiceProvider, selected.Custom, logFile))
                     {
-                        return;
+                        if (dialog.ShowDialog() != DialogResult.OK)
+                        {
+                            return;
+                        }
                     }
 
                     selected.Update();

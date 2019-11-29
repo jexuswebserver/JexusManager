@@ -268,7 +268,7 @@ namespace JexusManager.Features.Main
 
         private void Add()
         {
-            var dialog = new NewSiteDialog(Module, Items);
+            using var dialog = new NewSiteDialog(Module, Items);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
@@ -453,10 +453,12 @@ namespace JexusManager.Features.Main
                 return;
             }
 
-            var dialog = new EditSiteDialog(Module, SelectedItem.Applications[0]);
-            if (dialog.ShowDialog() != DialogResult.OK)
+            using (var dialog = new EditSiteDialog(Module, SelectedItem.Applications[0]))
             {
-                return;
+                if (dialog.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
             }
 
             SelectedItem.Applications[0].Save();
@@ -488,8 +490,10 @@ namespace JexusManager.Features.Main
                 return;
             }
 
-            var dialog = new BindingsDialog(Module, SelectedItem);
-            dialog.ShowDialog();
+            using (var dialog = new BindingsDialog(Module, SelectedItem))
+            {
+                dialog.ShowDialog();
+            }
             OnSitesSettingsSaved();
         }
 

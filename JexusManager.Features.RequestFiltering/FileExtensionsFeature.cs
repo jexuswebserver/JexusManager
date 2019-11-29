@@ -86,7 +86,7 @@ namespace JexusManager.Features.RequestFiltering
 
         private void CreateExtension(bool allowed)
         {
-            var dialog = new NewExtensionDialog(Module, this, allowed);
+            using var dialog = new NewExtensionDialog(Module, this, allowed);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;

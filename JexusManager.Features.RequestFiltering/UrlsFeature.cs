@@ -77,7 +77,7 @@ namespace JexusManager.Features.RequestFiltering
 
         public void Add()
         {
-            var dialog = new NewUrlDialog(this.Module, true);
+            using var dialog = new NewUrlDialog(this.Module, true);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
@@ -88,7 +88,7 @@ namespace JexusManager.Features.RequestFiltering
 
         public void AddDeny()
         {
-            var dialog = new NewUrlDialog(this.Module, false);
+            using var dialog = new NewUrlDialog(this.Module, false);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;

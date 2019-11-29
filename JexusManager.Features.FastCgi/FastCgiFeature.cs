@@ -102,7 +102,7 @@ namespace JexusManager.Features.FastCgi
 
         public void AddAllow()
         {
-            var dialog = new NewApplicationDialog(Module, null, this);
+            using var dialog = new NewApplicationDialog(Module, null, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
@@ -127,7 +127,7 @@ namespace JexusManager.Features.FastCgi
 
         public void Edit()
         {
-            var dialog = new NewApplicationDialog(Module, SelectedItem, this);
+            using var dialog = new NewApplicationDialog(Module, SelectedItem, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 SelectedItem.Reset();

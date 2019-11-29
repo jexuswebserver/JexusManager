@@ -177,14 +177,14 @@ namespace JexusManager.Features.Handlers
 
         public void Load()
         {
-            this.Items = new List<HandlersItem>();
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            Items = new List<HandlersItem>();
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
 
             // server level modules are in "" location.
             ConfigurationSection section = service.Scope == ManagementScope.Server ? service.GetSection("system.webServer/handlers", string.Empty) : service.GetSection("system.webServer/handlers", null, false);
-            this.AccessPolicy = (long)section["accessPolicy"];
-            this.CanRevert = service.Scope != ManagementScope.Server;
-            this.IsInOrder = false;
+            AccessPolicy = (long)section["accessPolicy"];
+            CanRevert = service.Scope != ManagementScope.Server;
+            IsInOrder = false;
             LoadItems();
         }
 
@@ -192,7 +192,7 @@ namespace JexusManager.Features.Handlers
 
         public void Add()
         {
-            var dialog = new NewMappingDialog(this.Module, null, this);
+            using var dialog = new NewMappingDialog(Module, null, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
@@ -203,53 +203,55 @@ namespace JexusManager.Features.Handlers
 
         public void AddManaged()
         {
-            var dialog = new NewHandlerDialog(this.Module, null, this);
+            using var dialog = new NewHandlerDialog(Module, null, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
-            this.AddItem(dialog.Item);
+            AddItem(dialog.Item);
         }
 
         public void AddScript()
         {
-            var dialog = new NewScriptMapDialog(this.Module, null, this);
+            using var dialog = new NewScriptMapDialog(Module, null, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
-            this.AddItem(dialog.Item);
+            AddItem(dialog.Item);
         }
 
         public void AddWildcard()
         {
-            var dialog = new NewWildcardDialog(this.Module, null, this);
+            using var dialog = new NewWildcardDialog(Module, null, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
-            this.AddItem(dialog.Item);
+            AddItem(dialog.Item);
         }
 
         public void Set()
         {
-            var dialog = new PermissionsDialog(this.Module, this);
-            if (dialog.ShowDialog() != DialogResult.OK)
+            using (var dialog = new PermissionsDialog(Module, this))
             {
-                return;
+                if (dialog.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
             }
 
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             service.ServerManager.CommitChanges();
-            this.OnSettingsSaved();
+            OnSettingsSaved();
         }
 
         public void Remove()
         {
-            var dialog = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+            var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
             if (
                 dialog.ShowMessage("Are you sure that you want to remove the selected authorization rule?", "Confirm Remove",
                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) !=
@@ -267,7 +269,7 @@ namespace JexusManager.Features.Handlers
 
             if (!string.IsNullOrWhiteSpace(SelectedItem.Type))
             {
-                var dialog = new NewHandlerDialog(this.Module, this.SelectedItem, this);
+                using var dialog = new NewHandlerDialog(Module, SelectedItem, this);
                 if (dialog.ShowDialog() != DialogResult.OK)
                 {
                     return;
@@ -277,7 +279,7 @@ namespace JexusManager.Features.Handlers
             }
             else if (SelectedItem.Modules == "IsapiModule" && !string.IsNullOrWhiteSpace(SelectedItem.ScriptProcessor))
             {
-                var dialog = new NewScriptMapDialog(this.Module, this.SelectedItem, this);
+                using var dialog = new NewScriptMapDialog(Module, SelectedItem, this);
                 if (dialog.ShowDialog() != DialogResult.OK)
                 {
                     return;
@@ -287,7 +289,7 @@ namespace JexusManager.Features.Handlers
             }
             else
             {
-                var dialog = new NewMappingDialog(this.Module, this.SelectedItem, this);
+                using var dialog = new NewMappingDialog(Module, SelectedItem, this);
                 if (dialog.ShowDialog() != DialogResult.OK)
                 {
                     return;
@@ -296,7 +298,7 @@ namespace JexusManager.Features.Handlers
                 newItem = dialog.Item;
             }
 
-            this.EditItem(newItem);
+            EditItem(newItem);
         }
 
         public void Rename()
@@ -305,13 +307,13 @@ namespace JexusManager.Features.Handlers
 
         public void MoveUp()
         {
-            if (this.Items.Any(item => item.Flag != "Local"))
+            if (Items.Any(item => item.Flag != "Local"))
             {
-                var dialog = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+                var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
                 var result =
                     dialog.ShowMessage(
                         "The list order will be changed for this feature. If you continue, changes made to this feature at a parent level will no longer be inherited at this level. Do you want to continue?",
-                        this.Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question,
+                        Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question,
                         MessageBoxDefaultButton.Button1);
                 if (result != DialogResult.Yes)
                 {
@@ -324,13 +326,13 @@ namespace JexusManager.Features.Handlers
 
         public void MoveDown()
         {
-            if (this.Items.Any(item => item.Flag != "Local"))
+            if (Items.Any(item => item.Flag != "Local"))
             {
-                var dialog = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+                var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
                 var result =
                     dialog.ShowMessage(
                         "The list order will be changed for this feature. If you continue, changes made to this feature at a parent level will no longer be inherited at this level. Do you want to continue?",
-                        this.Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question,
+                        Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question,
                         MessageBoxDefaultButton.Button1);
                 if (result != DialogResult.Yes)
                 {
@@ -350,14 +352,14 @@ namespace JexusManager.Features.Handlers
 
         public void InOrder()
         {
-            this.IsInOrder = true;
-            this.OnSettingsSaved();
+            IsInOrder = true;
+            OnSettingsSaved();
         }
 
         public void Unorder()
         {
-            this.IsInOrder = false;
-            this.OnSettingsSaved();
+            IsInOrder = false;
+            OnSettingsSaved();
         }
 
         public void Revert()
@@ -367,11 +369,11 @@ namespace JexusManager.Features.Handlers
                 throw new InvalidOperationException("Revert operation cannot be done at server level");
             }
 
-            var dialog = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+            var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
             var result =
                 dialog.ShowMessage(
                     "Reverting to the parent configuration will result in the loss of all settings in the local configuration file for this feature. Are you sure you want to continue?",
-                    this.Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning,
+                    Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning,
                     MessageBoxDefaultButton.Button1);
             if (result != DialogResult.Yes)
             {
@@ -383,7 +385,7 @@ namespace JexusManager.Features.Handlers
 
         protected override void OnSettingsSaved()
         {
-            this.HandlersSettingsUpdated?.Invoke();
+            HandlersSettingsUpdated?.Invoke();
         }
 
         public virtual bool ShowHelp()

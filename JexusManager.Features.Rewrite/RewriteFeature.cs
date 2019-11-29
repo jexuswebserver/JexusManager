@@ -293,7 +293,7 @@ namespace JexusManager.Features.Rewrite
 
         public void Add()
         {
-            var dialog = new NewRewriteRuleDialog(Inbound.Module);
+            using var dialog = new NewRewriteRuleDialog(Inbound.Module);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
@@ -307,7 +307,7 @@ namespace JexusManager.Features.Rewrite
             }
             else if (dialog.SelectedIndex == 1)
             {
-                var rule = new NewRuleWithRewriteMapsDialog(Inbound.Module, Inbound);
+                using var rule = new NewRuleWithRewriteMapsDialog(Inbound.Module, Inbound);
                 if (rule.ShowDialog() != DialogResult.OK)
                 {
                     return;
@@ -315,7 +315,7 @@ namespace JexusManager.Features.Rewrite
             }
             else if (dialog.SelectedIndex == 2)
             {
-                var rule = new NewRuleBlockingDialog(Inbound.Module, Inbound);
+                using var rule = new NewRuleBlockingDialog(Inbound.Module, Inbound);
                 if (rule.ShowDialog() != DialogResult.OK)
                 {
                     return;

@@ -220,13 +220,15 @@ namespace JexusManager.Features.Main
         private void Basic()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var dialog = new NewApplicationDialog(Module, service.Application.Site,
+            using (var dialog = new NewApplicationDialog(Module, service.Application.Site,
                 service.Application.Path.GetParentPath(),
                 service.Application.ApplicationPoolName,
-                service.Application);
-            if (dialog.ShowDialog() != DialogResult.OK)
+                service.Application))
             {
-                return;
+                if (dialog.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
             }
 
             service.ServerManager.CommitChanges();
@@ -248,14 +250,14 @@ namespace JexusManager.Features.Main
         private void FixPhp()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var dialog = new PhpDiagDialog(Module, service.Application.Server);
+            using var dialog = new PhpDiagDialog(Module, service.Application.Server);
             dialog.ShowDialog();
         }
 
         private void FixKestrel()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var dialog = new KestrelDiagDialog(Module, service.Application);
+            using var dialog = new KestrelDiagDialog(Module, service.Application);
             dialog.ShowDialog();
         }
 

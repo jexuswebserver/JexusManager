@@ -106,10 +106,12 @@ namespace JexusManager.Features.Authentication
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var basicSection = service.GetSection("system.webServer/security/authentication/basicAuthentication", null, false);
-            var dialog = new BasicEditDialog(Module, new BasicItem(basicSection), this);
-            if (dialog.ShowDialog() != DialogResult.OK)
+            using (var dialog = new BasicEditDialog(Module, new BasicItem(basicSection), this))
             {
-                return;
+                if (dialog.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
             }
 
             service.ServerManager.CommitChanges();

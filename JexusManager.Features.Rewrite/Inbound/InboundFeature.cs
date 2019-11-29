@@ -93,7 +93,7 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         public void AddConditions()
         {
-            var dialog = new AddConditionDialog(Module, null);
+            using var dialog = new AddConditionDialog(Module, null);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;

@@ -91,11 +91,13 @@ namespace JexusManager.Wizards.ConnectionWizard
                             return true;
                         }
 
-                        var dialog = new CertificateErrorsDialog(certificate);
-                        var result = dialog.ShowDialog();
-                        if (result != DialogResult.OK)
+                        using (var dialog = new CertificateErrorsDialog(certificate))
                         {
-                            return false;
+                            var result = dialog.ShowDialog();
+                            if (result != DialogResult.OK)
+                            {
+                                return false;
+                            }
                         }
 
                         server.AcceptedHash = hash;

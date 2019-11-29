@@ -229,7 +229,7 @@ namespace JexusManager.Dialogs
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    var dialog = new SelectPoolDialog(txtPool.Text, collection.Parent);
+                    using var dialog = new SelectPoolDialog(txtPool.Text, collection.Parent);
                     if (dialog.ShowDialog() != DialogResult.OK)
                     {
                         return;

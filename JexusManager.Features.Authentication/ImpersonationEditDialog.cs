@@ -38,15 +38,17 @@ namespace JexusManager.Features.Authentication
                     .ObserveOn(System.Threading.SynchronizationContext.Current)
                     .Subscribe(evt =>
                     {
-                        var dialog = new CredentialsDialog(ServiceProvider, existing.Name, feature);
-                        if (dialog.ShowDialog() != DialogResult.OK)
+                        using (var dialog = new CredentialsDialog(ServiceProvider, existing.Name, feature))
                         {
-                            return;
-                        }
+                            if (dialog.ShowDialog() != DialogResult.OK)
+                            {
+                                return;
+                            }
 
-                        txtName.Text = dialog.UserName;
-                        existing.Name = txtName.Text;
-                        existing.Password = dialog.Password;
+                            txtName.Text = dialog.UserName;
+                            existing.Name = txtName.Text;
+                            existing.Password = dialog.Password;
+                        }
                         SetButton();
                     }));
 

@@ -83,7 +83,7 @@ namespace JexusManager.Features.Rewrite.Outbound
 
         public CustomTagsFeature(Module module)
         {
-            this.Module = module;
+            Module = module;
         }
 
         protected static readonly Version FxVersion10 = new Version("1.0");
@@ -94,13 +94,13 @@ namespace JexusManager.Features.Rewrite.Outbound
 
         protected void DisplayErrorMessage(Exception ex, ResourceManager resourceManager)
         {
-            var service = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+            var service = (IManagementUIService)GetService(typeof(IManagementUIService));
             service.ShowError(ex, resourceManager.GetString("General"), string.Empty, false);
         }
 
         protected object GetService(Type type)
         {
-            return (this.Module as IServiceProvider).GetService(type);
+            return (Module as IServiceProvider).GetService(type);
         }
 
         public TaskList GetTaskList()
@@ -110,69 +110,73 @@ namespace JexusManager.Features.Rewrite.Outbound
 
         public void Load()
         {
-            this.Items = new List<CustomTagsItem>();
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            Items = new List<CustomTagsItem>();
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var section = service.GetSection("system.webServer/rewrite/outboundRules");
             ConfigurationElementCollection rulesCollection = section.GetCollection("customTags");
             foreach (ConfigurationElement ruleElement in rulesCollection)
             {
                 var node = new CustomTagsItem(ruleElement);
-                this.Items.Add(node);
+                Items.Add(node);
             }
 
-            this.CanRevert = section.CanRevert();
-            this.OnRewriteSettingsSaved();
+            CanRevert = section.CanRevert();
+            OnRewriteSettingsSaved();
         }
 
         public List<CustomTagsItem> Items { get; set; }
 
         public void AddGroup()
         {
-            var dialog = new AddCustomTagsDialog(this.Module);
-            if (dialog.ShowDialog() != DialogResult.OK)
+            using (var dialog = new AddCustomTagsDialog(Module))
             {
-                return;
-            }
+                if (dialog.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
 
-            var newItem = dialog.Item;
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
-            var rulesSection = service.GetSection("system.webServer/rewrite/outboundRules");
-            ConfigurationElementCollection rulesCollection = rulesSection.GetCollection("customTags");
+                var newItem = dialog.Item;
+                var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+                var rulesSection = service.GetSection("system.webServer/rewrite/outboundRules");
+                ConfigurationElementCollection rulesCollection = rulesSection.GetCollection("customTags");
 
-            if (this.SelectedItem != newItem)
-            {
-                this.Items.Add(newItem);
-                this.SelectedItem = newItem;
-            }
-            else if (newItem.Flag != "Local")
-            {
-                rulesCollection.Remove(newItem.Element);
-                newItem.Flag = "Local";
-            }
+                if (SelectedItem != newItem)
+                {
+                    Items.Add(newItem);
+                    SelectedItem = newItem;
+                }
+                else if (newItem.Flag != "Local")
+                {
+                    rulesCollection.Remove(newItem.Element);
+                    newItem.Flag = "Local";
+                }
 
-            newItem.AppendTo(rulesCollection);
-            service.ServerManager.CommitChanges();
-            this.OnRewriteSettingsSaved();
+                newItem.AppendTo(rulesCollection);
+                service.ServerManager.CommitChanges();
+            }
+            OnRewriteSettingsSaved();
         }
 
         public void Add()
         {
-            var dialog = new AddCustomTagDialog(this.Module);
-            if (dialog.ShowDialog() != DialogResult.OK)
+            using (var dialog = new AddCustomTagDialog(Module))
             {
-                return;
-            }
+                if (dialog.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
 
-            var newItem = dialog.Item;
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
-            this.SelectedItem.Add(newItem);
-            service.ServerManager.CommitChanges();
-            this.OnRewriteSettingsSaved();
+                var newItem = dialog.Item;
+                var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+                SelectedItem.Add(newItem);
+                service.ServerManager.CommitChanges();
+            }
+            OnRewriteSettingsSaved();
         }
 
         public void Remove()
         {
-            var dialog = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+            var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
             if (
                 dialog.ShowMessage("Are you sure that you want to remove the selected entry?", "Confirm Remove",
                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) !=
@@ -181,15 +185,15 @@ namespace JexusManager.Features.Rewrite.Outbound
                 return;
             }
 
-            this.Items.Remove(this.SelectedItem);
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            Items.Remove(SelectedItem);
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var section = service.GetSection("system.webServer/rewrite/outboundRules");
             ConfigurationElementCollection collection = section.GetCollection("customTags");
-            collection.Remove(this.SelectedItem.Element);
+            collection.Remove(SelectedItem.Element);
             service.ServerManager.CommitChanges();
 
-            this.SelectedItem = null;
-            this.OnRewriteSettingsSaved();
+            SelectedItem = null;
+            OnRewriteSettingsSaved();
         }
 
         public void Rename()
@@ -198,7 +202,7 @@ namespace JexusManager.Features.Rewrite.Outbound
 
         internal protected void OnRewriteSettingsSaved()
         {
-            this.RewriteSettingsUpdated?.Invoke();
+            RewriteSettingsUpdated?.Invoke();
         }
 
         public virtual bool ShowHelp()

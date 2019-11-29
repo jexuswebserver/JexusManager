@@ -77,7 +77,7 @@ namespace JexusManager.Features.RequestFiltering
 
         public void Add()
         {
-            var dialog = new NewRuleDialog(this.Module, null);
+            using var dialog = new NewRuleDialog(this.Module, null);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
@@ -88,7 +88,7 @@ namespace JexusManager.Features.RequestFiltering
 
         public void Edit()
         {
-            var dialog = new NewRuleDialog(this.Module, this.SelectedItem);
+            using var dialog = new NewRuleDialog(this.Module, this.SelectedItem);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;

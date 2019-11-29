@@ -129,7 +129,7 @@ namespace JexusManager.Tree
 
         public override void AddApplication(ContextMenuStrip appMenu)
         {
-            var dialog = new NewApplicationDialog(ServiceProvider, Site, PathToSite, Site.Applications[0].ApplicationPoolName, null);
+            using var dialog = new NewApplicationDialog(ServiceProvider, Site, PathToSite, Site.Applications[0].ApplicationPoolName, null);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
@@ -141,7 +141,7 @@ namespace JexusManager.Tree
 
         public override void AddVirtualDirectory(ContextMenuStrip vDirMenu)
         {
-            var dialog = new NewVirtualDirectoryDialog(ServiceProvider, null, PathToSite, Site.Applications[0]);
+            using var dialog = new NewVirtualDirectoryDialog(ServiceProvider, null, PathToSite, Site.Applications[0]);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;

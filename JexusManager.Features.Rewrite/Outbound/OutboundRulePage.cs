@@ -200,7 +200,7 @@ namespace JexusManager.Features.Rewrite.Outbound
 
         private void BtnTestClick(object sender, EventArgs e)
         {
-            var dialog = new RegexTestDialog(Module, txtPattern.Text, cbIgnoreCase.Checked, false);
+            using var dialog = new RegexTestDialog(Module, txtPattern.Text, cbIgnoreCase.Checked, false);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
@@ -403,16 +403,18 @@ namespace JexusManager.Features.Rewrite.Outbound
 
         private void BtnAddClick(object sender, EventArgs e)
         {
-            var dialog = new AddConditionDialog(ServiceProvider, null);
-            if (dialog.ShowDialog() != DialogResult.OK)
+            using (var dialog = new AddConditionDialog(ServiceProvider, null))
             {
-                return;
-            }
+                if (dialog.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
 
-            var newItem = dialog.Item;
-            var listViewItem = new ConditionListViewItem(newItem);
-            lvConditions.Items.Add(listViewItem);
-            listViewItem.Selected = true;
+                var newItem = dialog.Item;
+                var listViewItem = new ConditionListViewItem(newItem);
+                lvConditions.Items.Add(listViewItem);
+                listViewItem.Selected = true;
+            }
             InformChanges();
         }
 
@@ -435,10 +437,12 @@ namespace JexusManager.Features.Rewrite.Outbound
         private void BtnEditClick(object sender, EventArgs e)
         {
             var listViewItem = ((ConditionListViewItem)lvConditions.SelectedItems[0]);
-            var dialog = new AddConditionDialog(ServiceProvider, listViewItem.Item);
-            if (dialog.ShowDialog() != DialogResult.OK)
+            using (var dialog = new AddConditionDialog(ServiceProvider, listViewItem.Item))
             {
-                return;
+                if (dialog.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
             }
 
             listViewItem.Update();
@@ -488,7 +492,7 @@ namespace JexusManager.Features.Rewrite.Outbound
         {
             if (cbPreCondition.SelectedIndex == cbPreCondition.Items.Count - 1)
             {
-                var dialog = new AddPreConditionDialog(ServiceProvider, null);
+                using var dialog = new AddPreConditionDialog(ServiceProvider, null);
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
                     cbPreCondition.Items.Insert(0, dialog.Item.Name);
@@ -503,7 +507,7 @@ namespace JexusManager.Features.Rewrite.Outbound
 
         private void BtnEditPreconditionClick(object sender, EventArgs e)
         {
-            var dialog = new AddPreConditionDialog(ServiceProvider, _feature.PreConditions.FirstOrDefault(item => item.Name == cbPreCondition.Text));
+            using var dialog = new AddPreConditionDialog(ServiceProvider, _feature.PreConditions.FirstOrDefault(item => item.Name == cbPreCondition.Text));
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 return;
@@ -514,7 +518,7 @@ namespace JexusManager.Features.Rewrite.Outbound
         {
             if (cbTags.SelectedIndex == cbTags.Items.Count - 1)
             {
-                var dialog = new AddCustomTagsDialog(ServiceProvider);
+                using var dialog = new AddCustomTagsDialog(ServiceProvider);
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
                     cbTags.Items.Insert(0, dialog.Item.Name);
