@@ -6,7 +6,7 @@ if(!$foundCert)
 }
 
 Write-Host "Certificate found. Sign the assemblies."
-$signtool = "C:\Program Files (x86)\Windows Kits\10\bin\10.0.17134.0\x64\signtool.exe"
+$signtool = "C:\Program Files (x86)\Microsoft SDKs\ClickOnce\SignTool\signtool.exe"
 foreach ($line in Get-Content .\sign.txt) {
     & $signtool sign /tr http://timestamp.digicert.com /td sha256 /fd sha256 /a .\bin\$line | Write-Debug
     if ($LASTEXITCODE -ne 0)
