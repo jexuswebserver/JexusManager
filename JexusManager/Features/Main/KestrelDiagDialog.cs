@@ -26,7 +26,9 @@ namespace JexusManager.Features.Main
     public partial class KestrelDiagDialog : DialogForm
     {
         private static IDictionary<Version, Version> mappings = new Dictionary<Version, Version> {
+            { Version.Parse("3.0.1"), Version.Parse("13.0.19309.1") },
             { Version.Parse("3.0.0"), Version.Parse("13.0.19258.0") },
+            { Version.Parse("2.2.8"), Version.Parse("12.2.19109.5") },
             { Version.Parse("2.2.7"), Version.Parse("12.2.19169.6") },
             { Version.Parse("2.2.6"), Version.Parse("12.2.19169.6") },
             { Version.Parse("2.2.5"), Version.Parse("12.2.19109.5") },
@@ -35,6 +37,7 @@ namespace JexusManager.Features.Main
             { Version.Parse("2.2.2"), Version.Parse("12.2.18346.0") },
             { Version.Parse("2.2.1"), Version.Parse("12.2.18316.0") },
             { Version.Parse("2.2.0"), Version.Parse("12.2.18316.0") },
+            { Version.Parse("2.1.14"), Version.Parse("12.1.19108.11") },
             { Version.Parse("2.1.13"), Version.Parse("12.1.19170.12") },
             { Version.Parse("2.1.12"), Version.Parse("12.1.19170.12") },
             { Version.Parse("2.1.11"), Version.Parse("12.1.19108.11") },
