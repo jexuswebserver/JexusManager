@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
-    <PackageReference Include="Rollbar" Version="3.3.0" />
+    <PackageReference Include="Rollbar" Version="3.7.0" />
   </ItemGroup>
 
 </Project>
