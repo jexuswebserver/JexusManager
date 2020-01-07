@@ -36,9 +36,14 @@ namespace CertificateInstaller
             string resultFile = null;
             bool kill = false;
             bool restart = false;
+            string verb = null;
+            string input = null;
 
             OptionSet p =
-                new OptionSet().Add("f:", "File name", delegate (string v) { if (v != null) p12File = v; })
+                new OptionSet()
+                    .Add("verb:", "Verb", delegate (string v) { if (v != null) verb = v; })
+                    .Add("input:", "Appcmd input string", delegate (string v) { if (v != null) input = v; })
+                    .Add("f:", "File name", delegate (string v) { if (v != null) p12File = v; })
                     .Add("p:", "Password", delegate (string v) { if (v != null) p12Pwd = v; })
                     .Add("n:", "Friendly name", delegate (string v) { if (v != null) friendlyName = v; })
                     .Add("s:", "Store name", delegate (string v) { if (v != null) store = v; })
@@ -95,6 +100,37 @@ namespace CertificateInstaller
             {
                 ShowHelp(p);
                 return -1;
+            }
+
+            if (verb == "appcmd")
+            {
+                if (input == null || launcher == null)
+                {
+                    ShowHelp(p);
+                    return -1;
+                }
+
+                var process = new Process
+                {
+                    StartInfo =
+                            {
+                                FileName = launcher,
+                                Arguments = input,
+                                CreateNoWindow = true,
+                                WindowStyle = ProcessWindowStyle.Hidden,
+                                RedirectStandardOutput = true,
+                                UseShellExecute = false
+                            }
+                };
+                process.Start();
+                process.WaitForExit();
+                var message = process.StandardOutput.ReadToEnd();
+                if (process.ExitCode != 0)
+                {
+                    File.WriteAllText(resultFile, message);
+                }
+
+                return process.ExitCode;
             }
 
             try

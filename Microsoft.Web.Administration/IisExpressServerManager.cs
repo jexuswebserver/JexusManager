@@ -95,12 +95,14 @@ namespace Microsoft.Web.Administration
             }
 
             {
+                var command = $"set vdir /vdir.name:\"{virtualDirectory.LocationPath()}\" /-password /apphostconfig:\"{FileName}\"";
+                var resultFile = Path.GetTempFileName();
                 using var process = new Process
                 {
                     StartInfo = new ProcessStartInfo
                     {
-                        FileName = appcmd,
-                        Arguments = $"set vdir /vdir.name:\"{virtualDirectory.LocationPath()}\" /-password /apphostconfig:\"{FileName}\"",
+                        FileName = "cmd",
+                        Arguments = $"/c \"\"{CertificateInstallerLocator.FileName}\" /verb:appcmd /launcher:\"{appcmd}\" /resultFile:\"{resultFile}\" /input:\"{command}\"\"",
                         CreateNoWindow = true,
                         WindowStyle = ProcessWindowStyle.Hidden,
                         Verb = "runas",
@@ -113,7 +115,9 @@ namespace Microsoft.Web.Administration
                     process.WaitForExit();
                     if (process.ExitCode != 0)
                     {
-                        throw new Exception(process.ExitCode.ToString());
+                        var message = File.ReadAllText(resultFile);
+                        File.Delete(resultFile);
+                        throw new Exception($"{process.ExitCode.ToString()} {message}");                        
                     }
                 }
                 catch (Win32Exception ex)
@@ -128,12 +132,19 @@ namespace Microsoft.Web.Administration
             }
 
             {
+                if (string.IsNullOrEmpty(password))
+                {
+                    return;
+                }
+
+                var command = $"set vdir /vdir.name:\"{virtualDirectory.LocationPath()}\" /password:{password} /apphostconfig:\"{FileName}\"";
+                var resultFile = Path.GetTempFileName();
                 using var process = new Process
                 {
                     StartInfo = new ProcessStartInfo
                     {
-                        FileName = appcmd,
-                        Arguments = $"set vdir /vdir.name:\"{virtualDirectory.LocationPath()}\" /password:{password} /apphostconfig:\"{FileName}\"",
+                        FileName = "cmd",
+                        Arguments = $"/c \"\"{CertificateInstallerLocator.FileName}\" /verb:appcmd /launcher:\"{appcmd}\" /resultFile:{resultFile} /input:\"{command}\"\"",
                         CreateNoWindow = true,
                         WindowStyle = ProcessWindowStyle.Hidden,
                         Verb = "runas",
@@ -146,8 +157,12 @@ namespace Microsoft.Web.Administration
                     process.WaitForExit();
                     if (process.ExitCode != 0)
                     {
-                        throw new Exception(process.ExitCode.ToString());
+                        var message = File.ReadAllText(resultFile);
+                        File.Delete(resultFile);
+                        throw new Exception($"{process.ExitCode.ToString()} {message}");
                     }
+
+                    var message1 = File.ReadAllText(resultFile);
                 }
                 catch (Win32Exception ex)
                 {
