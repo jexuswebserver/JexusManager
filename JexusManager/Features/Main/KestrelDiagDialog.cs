@@ -26,6 +26,7 @@ namespace JexusManager.Features.Main
     public partial class KestrelDiagDialog : DialogForm
     {
         private static IDictionary<Version, Version> mappings = new Dictionary<Version, Version> {
+            { Version.Parse("3.1.0"), Version.Parse("13.1.19320.0") },
             { Version.Parse("3.0.1"), Version.Parse("13.0.19309.1") },
             { Version.Parse("3.0.0"), Version.Parse("13.0.19258.0") },
             { Version.Parse("2.2.8"), Version.Parse("12.2.19109.5") },
@@ -180,39 +181,41 @@ namespace JexusManager.Features.Main
                         
                         var name = application.ApplicationPoolName;
                         var pool = application.Server.ApplicationPools.FirstOrDefault(item => item.Name == name);
+
                         if (pool == null)
                         {
                             Error($"The application pool '{name}' cannot be found.");
+                            return;
                         }
-                        else
+
+                        var x86 = pool.Enable32BitAppOnWin64;
+                        Info($"The application pool '{name}' is used.");
+
+                        // check VC++ 2015.
+                        var cppFile = Path.Combine(
+                            Environment.GetFolderPath(x86 ? Environment.SpecialFolder.SystemX86 : Environment.SpecialFolder.System),
+                            $"msvcp140.dll");
+                        if (File.Exists(cppFile))
                         {
-                            // check VC++ 2015.
-                            var x86 = pool.Enable32BitAppOnWin64;
-                            var cppFile = Path.Combine(
-                                Environment.GetFolderPath(x86 ? Environment.SpecialFolder.SystemX86 : Environment.SpecialFolder.System),
-                                $"msvcp140.dll");
-                            if (File.Exists(cppFile))
+                            var cpp = FileVersionInfo.GetVersionInfo(cppFile);
+                            if (cpp.FileMinorPart >= 0)
                             {
-                                var cpp = FileVersionInfo.GetVersionInfo(cppFile);
-                                if (cpp.FileMinorPart >= 0)
-                                {
-                                    Info($"  Visual C++ runtime is detected (expected: 14.0, detected: {cpp.FileVersion}): {cppFile}.");
-                                }
-                                else
-                                {
-                                    Error($"  Visual C++ runtime 14.0 is not detected. Please install it following the tips on https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/iis/index#install-the-net-core-hosting-bundle.");
-                                }
+                                Info($"  Visual C++ runtime is detected (expected: 14.0, detected: {cpp.FileVersion}): {cppFile}.");
                             }
                             else
                             {
-                                Error($"  Visual C++ 14.0 runtime is not detected. Please install it following the tips on https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/iis/index#install-the-net-core-hosting-bundle.");
+                                Error($"  Visual C++ runtime 14.0 is not detected. Please install it following the tips on https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/iis/index#install-the-net-core-hosting-bundle.");
                             }
+                        }
+                        else
+                        {
+                            Error($"  Visual C++ 14.0 runtime is not detected. Please install it following the tips on https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/iis/index#install-the-net-core-hosting-bundle.");
+                        }
 
-                            // check ASP.NET version.
-                            if (pool.ManagedRuntimeVersion != ApplicationPool.ManagedRuntimeVersionNone)
-                            {
-                                Error($"The application pool '{name}' is using .NET CLR {pool.ManagedRuntimeVersion}. Please set it to 'No Managed Code'.");
-                            }
+                        // check ASP.NET version.
+                        if (pool.ManagedRuntimeVersion != ApplicationPool.ManagedRuntimeVersionNone)
+                        {
+                            Error($"The application pool '{name}' is using .NET CLR {pool.ManagedRuntimeVersion}. Please set it to 'No Managed Code'.");
                         }
 
                         var config = application.GetWebConfiguration();
@@ -226,9 +229,27 @@ namespace JexusManager.Features.Main
                         Debug($"    \"arguments\": {arguments}.");
                         Debug($"    \"hostingModel\": {hostingModel}.");
 
+                        if (string.Equals("InProcess", hostingModel, StringComparison.OrdinalIgnoreCase))
+                        {
+                            Warn("In-process hosting model is detected. To avoid 500.xx errors, make sure that the bitness of published artifacts matches the application pool bitness");
+                            if (x86)
+                            {
+                                Warn("The current application pool is 32 bit, so published artifacts must be 32 bit.");
+                            }
+                            else
+                            {
+                                Warn("The current application pool is 64 bit, so published artifacts must be 64 bit.");
+                            }
+                        }
+
                         if (string.IsNullOrWhiteSpace(processPath) && string.IsNullOrWhiteSpace(arguments))
                         {
                             Warn("There is no ASP.NET Core web app to analyze.");
+                        }
+                        else if (string.Equals(processPath, "%LAUNCHER_PATH%", StringComparison.OrdinalIgnoreCase)
+                            || string.Equals(arguments, "%LAUNCHER_ARGS%", StringComparison.OrdinalIgnoreCase))
+                        {
+                            Warn("Value of processPath or arguments is placeholder used by Visual Studio. This site can only be run from within Visual Studio.");
                         }
                         else
                         {
