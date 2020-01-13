@@ -79,7 +79,7 @@ namespace JexusManager
             if (name.IsWildcard())
             {
                 // IMPORTANT: wildcard certificate.
-#if NETCOREAPP3_0
+#if NETCOREAPP3_1
                 return host.IsLike(name);
 #else
                 return LikeOperator.LikeString(host, name, Microsoft.VisualBasic.CompareMethod.Text);

@@ -7,7 +7,7 @@
     <AssemblyName>CertificateInstaller</AssemblyName>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\JexusManager\JexusManager.snk</AssemblyOriginatorKeyFile>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 

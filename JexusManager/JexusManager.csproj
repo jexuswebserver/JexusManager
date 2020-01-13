@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>JexusManager.snk</AssemblyOriginatorKeyFile>
@@ -10,8 +10,8 @@
     <OutputType>WinExe</OutputType>
     <StartupObject />
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <AssemblyVersion>13.0.0.19</AssemblyVersion>
-    <FileVersion>13.0.0.19</FileVersion>
+    <AssemblyVersion>13.0.0.20</AssemblyVersion>
+    <FileVersion>13.0.0.20</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

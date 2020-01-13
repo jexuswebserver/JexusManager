@@ -5,7 +5,7 @@
 using System;
 using System.Collections;
 using System.Collections.Specialized;
-#if !NETCOREAPP3_0
+#if !NETCOREAPP3_1
 using System.Web.UI;
 #endif
 
@@ -71,7 +71,7 @@ namespace Microsoft.Web.Management.Server
 
         public static PropertyBag CreatePropertyBagFromState(string state, bool readOnly)
         {
-#if !NETCOREAPP3_0
+#if !NETCOREAPP3_1
             var formatter = new ObjectStateFormatter();
             var bag = (PropertyBag)formatter.Deserialize(state);
             if (readOnly)
@@ -86,7 +86,7 @@ namespace Microsoft.Web.Management.Server
 
         public string GetState()
         {
-#if !NETCOREAPP3_0
+#if !NETCOREAPP3_1
             var formatter = new ObjectStateFormatter();
             return formatter.Serialize(this);
 #endif
