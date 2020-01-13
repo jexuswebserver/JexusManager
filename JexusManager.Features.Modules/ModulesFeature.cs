@@ -219,15 +219,13 @@ namespace JexusManager.Features.Modules
 
         public void AddManaged()
         {
-            using (var dialog = new NewModuleDialog(Module, null, this))
+            using var dialog = new NewModuleDialog(Module, null, this);
+            if (dialog.ShowDialog() != DialogResult.OK)
             {
-                if (dialog.ShowDialog() != DialogResult.OK)
-                {
-                    return;
-                }
-
-                AddItem(dialog.Item);
+                return;
             }
+
+            AddItem(dialog.Item);
         }
 
         public void AddGlobal(GlobalModule item)
@@ -267,15 +265,13 @@ namespace JexusManager.Features.Modules
 
         public void Edit()
         {
-            using (var dialog = new NewModuleDialog(Module, SelectedItem, this))
+            using var dialog = new NewModuleDialog(Module, SelectedItem, this);
+            if (dialog.ShowDialog() != DialogResult.OK)
             {
-                if (dialog.ShowDialog() != DialogResult.OK)
-                {
-                    return;
-                }
-
-                EditItem(dialog.Item);
+                return;
             }
+
+            EditItem(dialog.Item);
         }
 
         public void Rename()

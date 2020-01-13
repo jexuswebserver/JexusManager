@@ -166,7 +166,7 @@ namespace JexusManager.Features.Main
                                         Debug($"* PHP {version} ({path}) is supported.");
                                     }
 
-                                    var x86 = new PeNet.PeFile(path).Is32Bit;
+                                    var x86 = DialogHelper.GetImageArchitecture(path);
                                     var cppFile = Path.Combine(
                                         Environment.GetFolderPath(x86 ? Environment.SpecialFolder.SystemX86 : Environment.SpecialFolder.System),
                                         $"msvcp{matched.CppVersion.Major}0.dll");

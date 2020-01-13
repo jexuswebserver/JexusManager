@@ -173,10 +173,8 @@ namespace Microsoft.Web.Administration
                 {
                     try
                     {
-                        using (var stream = File.Open(FileName, FileMode.Create, FileAccess.Write, FileShare.None))
-                        {
-                            _document.Save(stream);
-                        }
+                        using var stream = File.Open(FileName, FileMode.Create, FileAccess.Write, FileShare.None);
+                        _document.Save(stream);
                     }
                     catch (SystemException ex)
                     {

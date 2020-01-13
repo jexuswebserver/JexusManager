@@ -200,13 +200,13 @@ namespace JexusManager
 
         public static bool GetImageArchitecture(string filepath)
         {
-            var file = new PeNet.PeFile(filepath);
-            if (file.HasValidComDescriptor)
+            var file = new PEFile.PEFile(filepath);
+            if (file.Header.IsManaged)
             {
                 throw new BadImageFormatException(".NET assembly is not supported.");
             }
 
-            return file.Is32Bit;
+            return !file.Header.IsPE64;
         }
 
         public static void DisplayCertificate(X509Certificate2 x509Certificate2, IntPtr handle)
@@ -372,11 +372,11 @@ namespace JexusManager
         {
             try
             {
-                using (var process = new Process())
+                using var process = new Process
                 {
-                    process.StartInfo = new ProcessStartInfo { FileName = url, UseShellExecute = true };
-                    process.Start();
-                }
+                    StartInfo = new ProcessStartInfo { FileName = url, UseShellExecute = true }
+                };
+                process.Start();
             }
             catch (Win32Exception)
             {
