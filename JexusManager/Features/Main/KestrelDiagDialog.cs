@@ -232,13 +232,38 @@ namespace JexusManager.Features.Main
                         if (string.Equals("InProcess", hostingModel, StringComparison.OrdinalIgnoreCase))
                         {
                             Warn("In-process hosting model is detected. To avoid 500.xx errors, make sure that the bitness of published artifacts matches the application pool bitness");
-                            if (x86)
+
+                            if (string.Equals("dotnet", processPath, StringComparison.OrdinalIgnoreCase))
                             {
-                                Warn("The current application pool is 32 bit, so published artifacts must be 32 bit.");
+                                Info("Framework dependent deployment is detected. Skip bitness check.");
                             }
                             else
                             {
-                                Warn("The current application pool is 64 bit, so published artifacts must be 64 bit.");
+                                Info("Self-contained deployment is detected. Check bitness.");
+                                var path = processPath;
+                                if (!File.Exists(path))
+                                {
+                                    path = Path.Combine(application.PhysicalPath, path);
+                                }
+
+                                if (!File.Exists(path))
+                                {
+                                    Error($"Cannot locate executable: {path}");
+                                }
+                                else
+                                {
+                                    var bit32 = DialogHelper.GetImageArchitecture(path);
+                                    var poolBitness = x86 ? "32" : "64";
+                                    if (bit32 == x86)
+                                    {
+                                        Info($"Pool bitness is {poolBitness} bit, and matches artifacts bitness.");
+                                    }
+                                    else
+                                    {
+                                        var artifactBitness = bit32 ? "32" : "64";
+                                        Error($"The current application pool is {poolBitness} bit, but published artifacts was {artifactBitness} bit.");
+                                    }
+                                }
                             }
                         }
 
