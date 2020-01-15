@@ -103,8 +103,9 @@ namespace Microsoft.Web.Administration
                 case ProcessModelIdentityType.LocalSystem:
                 case ProcessModelIdentityType.LocalService:
                 case ProcessModelIdentityType.NetworkService:
+                    return IdentityType.ToString();
                 case ProcessModelIdentityType.ApplicationPoolIdentity:
-                    return this.IdentityType.ToString();
+                    return $"IIS AppPool\\{ParentElement["name"]}";
                 case ProcessModelIdentityType.SpecificUser:
                     return this.UserName;
                 default:

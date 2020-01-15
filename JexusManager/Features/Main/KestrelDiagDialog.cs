@@ -25,34 +25,37 @@ namespace JexusManager.Features.Main
 
     public partial class KestrelDiagDialog : DialogForm
     {
-        private static IDictionary<Version, Version> mappings = new Dictionary<Version, Version> {
-            { Version.Parse("3.1.0"), Version.Parse("13.1.19320.0") },
-            { Version.Parse("3.0.1"), Version.Parse("13.0.19309.1") },
-            { Version.Parse("3.0.0"), Version.Parse("13.0.19258.0") },
-            { Version.Parse("2.2.8"), Version.Parse("12.2.19109.5") },
-            { Version.Parse("2.2.7"), Version.Parse("12.2.19169.6") },
-            { Version.Parse("2.2.6"), Version.Parse("12.2.19169.6") },
-            { Version.Parse("2.2.5"), Version.Parse("12.2.19109.5") },
-            { Version.Parse("2.2.4"), Version.Parse("12.2.19048.0") },
-            { Version.Parse("2.2.3"), Version.Parse("12.2.19024.2") },
-            { Version.Parse("2.2.2"), Version.Parse("12.2.18346.0") },
-            { Version.Parse("2.2.1"), Version.Parse("12.2.18316.0") },
-            { Version.Parse("2.2.0"), Version.Parse("12.2.18316.0") },
-            { Version.Parse("2.1.14"), Version.Parse("12.1.19108.11") },
-            { Version.Parse("2.1.13"), Version.Parse("12.1.19170.12") },
-            { Version.Parse("2.1.12"), Version.Parse("12.1.19170.12") },
-            { Version.Parse("2.1.11"), Version.Parse("12.1.19108.11") },
-            { Version.Parse("2.1.10"), Version.Parse("12.1.18263.2") },
-            { Version.Parse("2.1.9"), Version.Parse("12.1.19046.9") },
-            { Version.Parse("2.1.8"), Version.Parse("12.1.18263.2") },
-            { Version.Parse("2.1.7"), Version.Parse("12.1.18263.2") },
-            { Version.Parse("2.1.6"), Version.Parse("12.1.18263.2") },
-            { Version.Parse("2.1.5"), Version.Parse("8.2.1991.0") },
-            { Version.Parse("2.1.4"), Version.Parse("8.2.1991.0") },
-            { Version.Parse("2.1.3"), Version.Parse("8.2.1991.0") },
-            { Version.Parse("2.1.2"), Version.Parse("8.2.1991.0") },
-            { Version.Parse("2.1.1"), Version.Parse("8.2.1991.0") },
-            { Version.Parse("2.1.0"), Version.Parse("8.2.1991.0") }
+        private static IDictionary<Version, Tuple<Version, bool>> mappings = new Dictionary<Version, Tuple<Version, bool>> {
+            { Version.Parse("3.1.1"), new Tuple<Version, bool>(Version.Parse("13.1.19350.1"), false)},
+            { Version.Parse("3.1.0"), new Tuple<Version, bool>(Version.Parse("13.1.19320.0"), false)},
+            { Version.Parse("3.0.2"), new Tuple<Version, bool>(Version.Parse("13.0.19350.2"), false)},
+            { Version.Parse("3.0.1"), new Tuple<Version, bool>(Version.Parse("13.0.19309.1"), false)},
+            { Version.Parse("3.0.0"), new Tuple<Version, bool>(Version.Parse("13.0.19258.0"), false)},
+            { Version.Parse("2.2.8"), new Tuple<Version, bool>(Version.Parse("12.2.19109.5"), true)},
+            { Version.Parse("2.2.7"), new Tuple<Version, bool>(Version.Parse("12.2.19169.6"), true)},
+            { Version.Parse("2.2.6"), new Tuple<Version, bool>(Version.Parse("12.2.19169.6"), true)},
+            { Version.Parse("2.2.5"), new Tuple<Version, bool>(Version.Parse("12.2.19109.5"), true)},
+            { Version.Parse("2.2.4"), new Tuple<Version, bool>(Version.Parse("12.2.19048.0"), true)},
+            { Version.Parse("2.2.3"), new Tuple<Version, bool>(Version.Parse("12.2.19024.2"), true)},
+            { Version.Parse("2.2.2"), new Tuple<Version, bool>(Version.Parse("12.2.18346.0"), true)},
+            { Version.Parse("2.2.1"), new Tuple<Version, bool>(Version.Parse("12.2.18316.0"), true)},
+            { Version.Parse("2.2.0"), new Tuple<Version, bool>(Version.Parse("12.2.18316.0"), true)},
+            { Version.Parse("2.1.15"), new Tuple<Version, bool>(Version.Parse("12.1.19337.15"), false)},
+            { Version.Parse("2.1.14"), new Tuple<Version, bool>(Version.Parse("12.1.19108.11"), false)},
+            { Version.Parse("2.1.13"), new Tuple<Version, bool>(Version.Parse("12.1.19170.12"), false)},
+            { Version.Parse("2.1.12"), new Tuple<Version, bool>(Version.Parse("12.1.19170.12"), false)},
+            { Version.Parse("2.1.11"), new Tuple<Version, bool>(Version.Parse("12.1.19108.11"), false)},
+            { Version.Parse("2.1.10"), new Tuple<Version, bool>(Version.Parse("12.1.18263.2"), false)},
+            { Version.Parse("2.1.9"), new Tuple<Version, bool>(Version.Parse("12.1.19046.9"), false)},
+            { Version.Parse("2.1.8"), new Tuple<Version, bool>(Version.Parse("12.1.18263.2"), false)},
+            { Version.Parse("2.1.7"), new Tuple<Version, bool>(Version.Parse("12.1.18263.2"), false)},
+            { Version.Parse("2.1.6"), new Tuple<Version, bool>(Version.Parse("12.1.18263.2"), false)},
+            { Version.Parse("2.1.5"), new Tuple<Version, bool>(Version.Parse("8.2.1991.0"), false)},
+            { Version.Parse("2.1.4"), new Tuple<Version, bool>(Version.Parse("8.2.1991.0"), false)},
+            { Version.Parse("2.1.3"), new Tuple<Version, bool>(Version.Parse("8.2.1991.0"), false)},
+            { Version.Parse("2.1.2"), new Tuple<Version, bool>(Version.Parse("8.2.1991.0"), false)},
+            { Version.Parse("2.1.1"), new Tuple<Version, bool>(Version.Parse("8.2.1991.0"), false)},
+            { Version.Parse("2.1.0"), new Tuple<Version, bool>(Version.Parse("8.2.1991.0"), false)}
         };
 
         public KestrelDiagDialog(IServiceProvider provider, Application application)
@@ -181,7 +184,6 @@ namespace JexusManager.Features.Main
                         
                         var name = application.ApplicationPoolName;
                         var pool = application.Server.ApplicationPools.FirstOrDefault(item => item.Name == name);
-
                         if (pool == null)
                         {
                             Error($"The application pool '{name}' cannot be found.");
@@ -189,7 +191,6 @@ namespace JexusManager.Features.Main
                         }
 
                         var x86 = pool.Enable32BitAppOnWin64;
-                        Info($"The application pool '{name}' is used.");
 
                         // check VC++ 2015.
                         var cppFile = Path.Combine(
@@ -212,11 +213,19 @@ namespace JexusManager.Features.Main
                             Error($"  Visual C++ 14.0 runtime is not detected. Please install it following the tips on https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/iis/index#install-the-net-core-hosting-bundle.");
                         }
 
+                        Info($"The application pool '{name}' is used.");
                         // check ASP.NET version.
                         if (pool.ManagedRuntimeVersion != ApplicationPool.ManagedRuntimeVersionNone)
                         {
                             Error($"The application pool '{name}' is using .NET CLR {pool.ManagedRuntimeVersion}. Please set it to 'No Managed Code'.");
                         }
+
+                        Info($"Pool identity is {pool.ProcessModel}");
+                        var user = application.Server.Mode == WorkingMode.IisExpress ? $"{Environment.UserDomainName}\\{Environment.UserName}" : pool.ProcessModel.ToString();
+                        Warn($"Please ensure pool identity has read access to the content folder {application.PhysicalPath}.");                        
+
+                        var poolBitness = x86 ? "32" : "64";
+                        Info($"Pool bitness is {poolBitness} bit");
 
                         var config = application.GetWebConfiguration();
                         var section = config.GetSection("system.webServer/aspNetCore");
@@ -253,15 +262,14 @@ namespace JexusManager.Features.Main
                                 else
                                 {
                                     var bit32 = DialogHelper.GetImageArchitecture(path);
-                                    var poolBitness = x86 ? "32" : "64";
                                     if (bit32 == x86)
                                     {
-                                        Info($"Pool bitness is {poolBitness} bit, and matches artifacts bitness.");
+                                        Info($"Published artifacts bitness matches.");
                                     }
                                     else
                                     {
                                         var artifactBitness = bit32 ? "32" : "64";
-                                        Error($"The current application pool is {poolBitness} bit, but published artifacts was {artifactBitness} bit.");
+                                        Error($"Published artifacts bitness is {artifactBitness} bit. Mismatch detected.");
                                     }
                                 }
                             }
@@ -327,11 +335,17 @@ namespace JexusManager.Features.Main
                                         }
                                     }
 
-                                    if (aspNetCoreVersion != null && aspNetCoreVersion > Version.Parse("2.1.0"))
+                                    if (aspNetCoreVersion != null && aspNetCoreVersion >= Version.Parse("2.1.0"))
                                     {
                                         if (mappings.ContainsKey(aspNetCoreVersion))
                                         {
-                                            var minimal = mappings[aspNetCoreVersion];
+                                            var expired = mappings[aspNetCoreVersion].Item2;
+                                            if (expired)
+                                            {
+                                                Error($".NET Core version {aspNetCoreVersion} is end-of-life. Please upgrade to a supported version.");
+                                            }
+
+                                            var minimal = mappings[aspNetCoreVersion].Item1;
                                             if (ancmVersion == null || ancmVersion < minimal)
                                             {
                                                 Error($"Runtime {aspNetCoreVersion} does not work with ASP.NET Core module version {ancmVersion}. Minimal version is {minimal}.");
@@ -356,7 +370,7 @@ namespace JexusManager.Features.Main
                             }
                         }
 
-                        Warn($"Please refer to pages such as https://dotnet.microsoft.com/download/dotnet-core/2.2 to verify that ASP.NET Core version {ancmVersion} matches the runtime of the web app.");
+                        Warn($"Please refer to pages such as https://dotnet.microsoft.com/download/dotnet-core/3.1 to verify that ASP.NET Core version {ancmVersion} matches the runtime of the web app.");
                     }
                     catch (COMException ex)
                     {
