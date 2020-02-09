@@ -103,5 +103,27 @@ namespace Microsoft.Web.Administration
 
             return false;
         }
+
+        /// <summary>
+        /// Gets a site that has the specified name in the collection.
+        /// </summary>
+        /// <param name="name">The name of the site to retrieve from the site collection.</param>
+        /// <returns>The <see cref="Site"/> object with the specified name in the <see cref="SiteCollection"/> object.</returns>
+        /// <remarks>The <see cref="Site.Name"/> property of a <see cref="Site"/> object corresponds to the name parameter that is used to find a site in the <see cref="SiteCollection"/> object.</remarks>
+        public new Site this[string name]
+        {
+            get
+            {
+                foreach (Site site in this)
+                {
+                    if (site.Name == name)
+                    {
+                        return site;
+                    }
+                }
+
+                return null;
+            }
+        }
     }
 }
