@@ -2078,5 +2078,46 @@ namespace Tests.Exceptions
                 Assert.Equal(string.Empty, attribute.ToString());
             }
         }
+
+        [Fact]
+        public void TestIisExpressInvalidSslFlags()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string current = Path.Combine(directoryName, @"applicationHost.config");
+            string original = Path.Combine(directoryName, @"original2.config");
+            File.Copy(original, current, true);
+            TestHelper.FixPhysicalPathMono(current);
+
+            {
+                // add the tags
+                var file = XDocument.Load(current);
+                var root = file.Root;
+                if (root == null)
+                {
+                    return;
+                }
+
+                var binding = root.XPathSelectElement("/configuration/system.applicationHost/sites/site[@name='GuessMeWeb']/bindings/binding[@protocol='https']");
+                binding?.SetAttributeValue("sslFlags", "NotExist");
+                file.Save(current);
+            }
+
+#if IIS
+            var server = new ServerManager(current);
+#else
+            var server = new IisExpressServerManager(current);
+#endif
+            var config = server.GetApplicationHostConfiguration();
+            var exception = Assert.Throws<COMException>(() => server.Sites["GuessMeWeb"].Bindings[1].SslFlags);
+            Assert.Equal($"Filename: \\\\?\\{current}\r\nLine number: 181\r\nError: The 'sslFlags' attribute is invalid.  Not a valid unsigned integer\r\n\r\n\r\n",
+                exception.Message);
+        }
     }
 }

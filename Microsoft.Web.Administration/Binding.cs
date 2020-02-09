@@ -6,7 +6,9 @@ using System;
 using System.ComponentModel;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace Microsoft.Web.Administration
 {
@@ -156,7 +158,19 @@ namespace Microsoft.Web.Administration
                 Initialize();
                 if (ContainsAttribute("sslFlags"))
                 {
-                    return (SslFlags)Enum.ToObject(typeof(SslFlags), this["sslFlags"]);
+                    if (RawAttributes.ContainsKey("sslFlags"))
+                    {
+                        try
+                        {
+                            var input = RawAttributes["sslFlags"];
+                            var result = Enum.Parse(typeof(SslFlags), input);
+                            return (SslFlags)result;
+                        }
+                        catch
+                        {
+                            throw new COMException($"Filename: \\\\?\\{FileContext.FileName}\r\nLine number: {(Entity as IXmlLineInfo).LineNumber}\r\nError: The 'sslFlags' attribute is invalid.  Not a valid unsigned integer\r\n\r\n\r\n");
+                        }
+                    }
                 }
 
                 return SslFlags.None;
