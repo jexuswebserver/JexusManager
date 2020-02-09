@@ -154,9 +154,7 @@ namespace Microsoft.Web.Administration
 
                 if (loading)
                 {
-                    var line = (Entity as IXmlLineInfo).LineNumber;
-                    throw new COMException(
-                        string.Format("Line number: {0}\r\nError: Missing {1}\r\n", line, error));
+                    throw new COMException($"Line number: {(Entity as IXmlLineInfo).LineNumber}\r\nError: Missing {error}\r\n");
                 }
 
                 throw new FileNotFoundException($"Filename: \r\nError: Element is missing {error}\r\n\r\n");

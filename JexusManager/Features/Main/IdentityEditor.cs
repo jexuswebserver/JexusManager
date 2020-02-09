@@ -24,10 +24,8 @@ namespace JexusManager.Features.Main
             if (editorService != null)
             {
                 ApplicationPoolProcessModel element = (ApplicationPoolProcessModel)value;
-                using (IdentityDialog dialog = new IdentityDialog(null, element))
-                {
-                    editorService.ShowDialog(dialog);
-                }
+                using IdentityDialog dialog = new IdentityDialog(null, element);
+                editorService.ShowDialog(dialog);
             }
 
             return value;

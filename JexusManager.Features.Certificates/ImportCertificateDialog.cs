@@ -110,26 +110,24 @@ namespace JexusManager.Features.Certificates
                         {
                             try
                             {
-                                using (var process = new Process())
+                                using var process = new Process();
+                                // add certificate
+                                var start = process.StartInfo;
+                                start.Verb = "runas";
+                                start.UseShellExecute = true;
+                                start.FileName = "cmd";
+                                start.Arguments = $"/c \"\"{CertificateInstallerLocator.FileName}\" /f:\"{txtFile.Text}\" /p:{txtPassword.Text} /n:\"{Item.FriendlyName}\" /s:{(cbStore.SelectedIndex == 0 ? "MY" : "WebHosting")}\"";
+                                start.CreateNoWindow = true;
+                                start.WindowStyle = ProcessWindowStyle.Hidden;
+                                process.Start();
+                                process.WaitForExit();
+                                if (process.ExitCode == 0)
                                 {
-                                    // add certificate
-                                    var start = process.StartInfo;
-                                    start.Verb = "runas";
-                                    start.UseShellExecute = true;
-                                    start.FileName = "cmd";
-                                    start.Arguments = $"/c \"\"{CertificateInstallerLocator.FileName}\" /f:\"{txtFile.Text}\" /p:{txtPassword.Text} /n:\"{Item.FriendlyName}\" /s:{(cbStore.SelectedIndex == 0 ? "MY" : "WebHosting")}\"";
-                                    start.CreateNoWindow = true;
-                                    start.WindowStyle = ProcessWindowStyle.Hidden;
-                                    process.Start();
-                                    process.WaitForExit();
-                                    if (process.ExitCode == 0)
-                                    {
-                                        DialogResult = DialogResult.OK;
-                                    }
-                                    else
-                                    {
-                                        MessageBox.Show(process.ExitCode.ToString());
-                                    }
+                                    DialogResult = DialogResult.OK;
+                                }
+                                else
+                                {
+                                    MessageBox.Show(process.ExitCode.ToString());
                                 }
                             }
                             catch (Win32Exception ex)
