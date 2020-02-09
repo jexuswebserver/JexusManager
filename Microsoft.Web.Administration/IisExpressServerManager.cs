@@ -249,57 +249,56 @@ namespace Microsoft.Web.Administration
 
         private void StartInner(Site site, bool restart)
         {
+            if (site.Bindings.ElevationRequired && !PublicNativeMethods.IsProcessElevated)
+            {
+                throw new InvalidOperationException("This site requires elevation. Please run Jexus Manager as administrator");
+            }
+
             var actualExecutable = site.Applications[0].GetActualExecutable();
             var temp = Path.GetTempFileName();
-            using (var process = new Process())
-            {
-                var start = process.StartInfo;
-                start.Verb = site.Bindings.ElevationRequired && !PublicNativeMethods.IsProcessElevated
-                    ? "runas"
-                    : null;
-                start.UseShellExecute = true;
-                start.FileName = "cmd";
-                var extra = restart ? "/r" : string.Empty;
-                start.Arguments =
-                    $"/c \"\"{CertificateInstallerLocator.FileName}\" /launcher:\"{actualExecutable}\" /config:\"{site.FileContext.FileName}\" /siteId:{site.Id} /resultFile:\"{temp}\"\" {extra}";
-                start.CreateNoWindow = true;
-                start.WindowStyle = ProcessWindowStyle.Hidden;
-                InjectEnvironmentVariables(site, start, actualExecutable);
+            using var process = new Process();
+            var start = process.StartInfo;
+            start.FileName = "cmd";
+            var extra = restart ? "/r" : string.Empty;
+            start.Arguments =
+                $"/c \"\"{CertificateInstallerLocator.FileName}\" /launcher:\"{actualExecutable}\" /config:\"{site.FileContext.FileName}\" /siteId:{site.Id} /resultFile:\"{temp}\"\" {extra}";
+            start.CreateNoWindow = true;
+            start.WindowStyle = ProcessWindowStyle.Hidden;
+            InjectEnvironmentVariables(site, start, actualExecutable);
 
-                try
+            try
+            {
+                process.Start();
+                process.WaitForExit();
+                if (process.ExitCode == 0)
                 {
-                    process.Start();
-                    process.WaitForExit();
-                    if (process.ExitCode == 0)
-                    {
-                        site.State = ObjectState.Started;
-                    }
-                    else if (process.ExitCode == 1)
-                    {
-                        throw new InvalidOperationException("The process has terminated");
-                    }
+                    site.State = ObjectState.Started;
                 }
-                catch (Win32Exception ex)
+                else if (process.ExitCode == 1)
                 {
-                    // elevation is cancelled.
-                    if (ex.NativeErrorCode != NativeMethods.ErrorCancelled)
-                    {
-                        throw new COMException(
-                            $"cannot start site: {ex.Message}, {File.ReadAllText(temp)}");
-                    }
-                    
-                    throw new COMException(
-                        $"site start cancelled: {ex.Message}, {File.ReadAllText(temp)}");
+                    throw new InvalidOperationException("The process has terminated");
                 }
-                catch (Exception ex)
+            }
+            catch (Win32Exception ex)
+            {
+                // elevation is cancelled.
+                if (ex.NativeErrorCode != NativeMethods.ErrorCancelled)
                 {
                     throw new COMException(
                         $"cannot start site: {ex.Message}, {File.ReadAllText(temp)}");
                 }
-                finally
-                {
-                    site.State = process.ExitCode == 0 ? ObjectState.Started : ObjectState.Stopped;
-                }
+
+                throw new COMException(
+                    $"site start cancelled: {ex.Message}, {File.ReadAllText(temp)}");
+            }
+            catch (Exception ex)
+            {
+                throw new COMException(
+                    $"cannot start site: {ex.Message}, {File.ReadAllText(temp)}");
+            }
+            finally
+            {
+                site.State = process.ExitCode == 0 ? ObjectState.Started : ObjectState.Stopped;
             }
         }
 
@@ -330,23 +329,6 @@ namespace Microsoft.Web.Administration
                 return;
             }
 
-            var file = Environment.ExpandEnvironmentVariables(@"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe");
-            var args = "-latest -products * -requires Microsoft.Component.MSBuild -property installationPath";
-            if (!File.Exists(file))
-            {
-                // Not VS 15.2 and above
-                return;
-            }
-
-            var vswhere = Process.Start(new ProcessStartInfo
-            {
-                FileName = file,
-                Arguments = args,
-                RedirectStandardOutput = true,
-                UseShellExecute = false
-            });
-            Debug.Assert(vswhere != null, nameof(vswhere) + " != null");
-            var folder = vswhere.StandardOutput.ReadToEnd().TrimEnd();
             var dotnet = Environment.ExpandEnvironmentVariables(@"%ProgramFiles%\dotnet\dotnet.exe");
             var restore = Process.Start(new ProcessStartInfo
             {
@@ -366,38 +348,83 @@ namespace Microsoft.Web.Administration
             build.WaitForExit();
             XElement framework = xml.Root.XPathSelectElement("/Project/PropertyGroup/TargetFramework");
             Debug.Assert(framework != null, nameof(framework) + " != null");
-            var files = Directory.GetFiles(Path.Combine(root, "bin", "Debug", framework.Value), "*.dll");
-            if (files.Length == 1)
+            var primary = Path.Combine(Path.Combine(root, "bin", "Debug", framework.Value), $"{Path.GetFileNameWithoutExtension(project)}.exe");
+            if (File.Exists(primary))
             {
-                var rootAssembly = files[0].Replace(@"\", @"\\");
-                startInfo.EnvironmentVariables.Add("LAUNCHER_PATH", $@"{folder}\Common7\IDE\Extensions\Microsoft\Web Tools\ProjectSystem\VSIISExeLauncher.exe");
-                startInfo.EnvironmentVariables.Add("LAUNCHER_ARGS", $"-p \"{dotnet.Replace(@"\", @"\\")}\" -a \"exec \\\"{rootAssembly}\\\"\" -pidFile \"{Path.GetTempFileName().Replace(@"\", @"\\")}\" -wd \"{root.Replace(@"\", @"\\")}\"");
+                // Shortcut for 3.1 apps. What about 2.2?
+                startInfo.EnvironmentVariables.Add("LAUNCHER_PATH", primary);
+                return;
             }
+
+            primary = Path.Combine(Path.Combine(root, "bin", "Debug", framework.Value), $"{Path.GetFileNameWithoutExtension(project)}.dll");
+            if (!File.Exists(primary))
+            {
+                var files = Directory.GetFiles(Path.Combine(root, "bin", "Debug", framework.Value), "*.dll");
+                if (files.Length == 1)
+                {
+                    primary = files[0];
+                }
+                else
+                {
+                    primary = null;
+                }
+            }
+
+            if (primary == null)
+            {
+                return;
+            }
+
+            var file = Environment.ExpandEnvironmentVariables(@"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe");
+            var args = "-latest -products * -requires Microsoft.Component.MSBuild -property installationPath";
+            if (!File.Exists(file))
+            {
+                // Not VS 15.2 and above
+                return;
+            }
+
+            var vswhere = Process.Start(new ProcessStartInfo
+            {
+                FileName = file,
+                Arguments = args,
+                RedirectStandardOutput = true,
+                UseShellExecute = false
+            });
+            Debug.Assert(vswhere != null, nameof(vswhere) + " != null");
+            var folder = vswhere.StandardOutput.ReadToEnd().TrimEnd();
+
+            var launcher = $@"{folder}\Common7\IDE\Extensions\Microsoft\Web Tools\ProjectSystem\VSIISExeLauncher.exe";
+            if (!File.Exists(launcher))
+            {
+                return;
+            }
+
+            var rootAssembly = primary.Replace(@"\", @"\\");
+            startInfo.EnvironmentVariables.Add("LAUNCHER_PATH", $@"{folder}\Common7\IDE\Extensions\Microsoft\Web Tools\ProjectSystem\VSIISExeLauncher.exe");
+            startInfo.EnvironmentVariables.Add("LAUNCHER_ARGS", $"-p \"{dotnet.Replace(@"\", @"\\")}\" -a \"exec \\\"{rootAssembly}\\\"\" -pidFile \"{Path.GetTempFileName().Replace(@"\", @"\\")}\" -wd \"{root.Replace(@"\", @"\\")}\"");
         }
 
         internal override void Stop(Site site)
         {
             try
             {
-                using (var process = new Process())
-                {
-                    var start = process.StartInfo;
-                    start.Verb = site.Bindings.ElevationRequired && !PublicNativeMethods.IsProcessElevated
-                        ? "runas"
-                        : null;
-                    start.UseShellExecute = true;
-                    start.FileName = "cmd";
-                    start.Arguments =
-                        $"/c \"\"{CertificateInstallerLocator.FileName}\" /k /config:\"{site.FileContext.FileName}\" /siteId:{site.Id}\"";
-                    start.CreateNoWindow = true;
-                    start.WindowStyle = ProcessWindowStyle.Hidden;
-                    process.Start();
-                    process.WaitForExit();
+                using var process = new Process();
+                var start = process.StartInfo;
+                start.Verb = site.Bindings.ElevationRequired && !PublicNativeMethods.IsProcessElevated
+                    ? "runas"
+                    : null;
+                start.UseShellExecute = true;
+                start.FileName = "cmd";
+                start.Arguments =
+                    $"/c \"\"{CertificateInstallerLocator.FileName}\" /k /config:\"{site.FileContext.FileName}\" /siteId:{site.Id}\"";
+                start.CreateNoWindow = true;
+                start.WindowStyle = ProcessWindowStyle.Hidden;
+                process.Start();
+                process.WaitForExit();
 
-                    if (process.ExitCode == 0)
-                    {
-                        site.State = ObjectState.Stopped;
-                    }
+                if (process.ExitCode == 0)
+                {
+                    site.State = ObjectState.Stopped;
                 }
             }
             catch (Win32Exception ex)
