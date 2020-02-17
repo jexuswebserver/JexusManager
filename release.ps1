@@ -40,14 +40,17 @@ Write-Host "MSBuild found. Compile the projects."
 Remove-Item .\bin -Recurse
 New-Item .\bin -ItemType Directory
 Set-Location .\JexusManager
-dotnet publish -c Release -r win-x64 /p:PublishSignelFile=true -o ..\bin\x64 /p:PublishSingleFile=true /p:PublishTrimmed=true
-dotnet publish -c Release -r win-x86 /p:PublishSignelFile=true -o ..\bin\x86 /p:PublishSingleFile=true /p:PublishTrimmed=true
+dotnet publish -c Release -r win-x64 -o ..\bin\x64 /p:PublishTrimmed=true
+dotnet publish -c Release -r win-x86 -o ..\bin\x86 /p:PublishTrimmed=true
 Copy-Item .\ThirdPartyNotices.txt ..\bin
 Set-Location ..
 
 Set-Location .\CertificateInstaller
-dotnet publish -c Release -r win-x64 /p:PublishSignelFile=true -o ..\bin\x64 /p:PublishSingleFile=true /p:PublishTrimmed=true
-dotnet publish -c Release -r win-x86 /p:PublishSignelFile=true -o ..\bin\x86 /p:PublishSingleFile=true /p:PublishTrimmed=true
+dotnet publish -c Release -r win-x64 -o ..\bin\x64 /p:PublishTrimmed=true
+dotnet publish -c Release -r win-x86 -o ..\bin\x86 /p:PublishTrimmed=true
 Set-Location ..
+
+.\lib\Paraffin.exe -NoRootDirectory -dir .\bin\x64 -GroupName JexusFiles64 .\Setup\Files64.wxs
+.\lib\Paraffin.exe -NoRootDirectory -dir .\bin\x86 -GroupName JexusFiles86 .\Setup\Files86.wxs
 
 Write-Host "Compilation finished."

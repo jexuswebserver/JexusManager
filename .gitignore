@@ -37,3 +37,5 @@ T4MVC.cs
 /.idea
 /JexusManager.zip
 /*.msi
+/Setup/Files64.wxs
+/Setup/Files86.wxs
