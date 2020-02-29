@@ -103,7 +103,8 @@ namespace JexusManager.Wizards.ConnectionWizard
                     }
                 }
 
-                if (name.EndsWith(".exe.config", StringComparison.OrdinalIgnoreCase))
+                if (name.EndsWith(".exe.config", StringComparison.OrdinalIgnoreCase) ||
+                    name.EndsWith(".dll.config", StringComparison.OrdinalIgnoreCase))
                 {
                     var service = (IManagementUIService)GetService(typeof(IManagementUIService));
                     service.ShowMessage(
