@@ -118,16 +118,19 @@ namespace CertificateInstaller
                                 Arguments = input,
                                 CreateNoWindow = true,
                                 WindowStyle = ProcessWindowStyle.Hidden,
+                                RedirectStandardError = true,
                                 RedirectStandardOutput = true,
                                 UseShellExecute = false
                             }
                 };
                 process.Start();
                 process.WaitForExit();
-                var message = process.StandardOutput.ReadToEnd();
+                var error = process.StandardError.ReadToEnd();
+                var output = process.StandardOutput.ReadToEnd();
                 if (process.ExitCode != 0)
                 {
-                    File.WriteAllText(resultFile, message);
+                    File.AppendAllText(resultFile, error);
+                    File.AppendAllText(resultFile, output);
                 }
 
                 return process.ExitCode;
