@@ -6,7 +6,7 @@ if(!$foundCert)
 }
 
 Write-Host "Certificate found. Sign the assemblies."
-$signtool = "C:\Program Files (x86)\Windows Kits\10\bin\10.0.17134.0\x64\signtool.exe"
+$signtool = "C:\Program Files (x86)\Windows Kits\10\bin\10.0.17763.0\x64\signtool.exe"
 
 Write-Host "Verify digital signature."
 $files = Get-ChildItem .\* -Include ('*.msi') -File
