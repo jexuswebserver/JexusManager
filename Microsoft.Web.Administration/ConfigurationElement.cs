@@ -376,6 +376,8 @@ namespace Microsoft.Web.Administration
             }
         }
 
+        internal ConfigurationElement CloneSource { get; set; }
+
         internal bool SkipCheck { get; set; }
         public ConfigurationElement ConfigSource { get; set; }
 

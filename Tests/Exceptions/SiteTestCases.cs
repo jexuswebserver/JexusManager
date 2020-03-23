@@ -21,7 +21,7 @@ namespace Tests.Exceptions
     public class SiteTestCases
     {
         [Fact]
-        public void TestIisExpressInvalidSection()
+        public void InvalidSection()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -47,7 +47,7 @@ namespace Tests.Exceptions
                         new XElement("authentication",
                             new XElement("windowsAuthentication",
                                 new XAttribute("enabled", true)))));
-      
+
                 file.Save(siteConfig);
             }
 
@@ -62,7 +62,7 @@ namespace Tests.Exceptions
                     {
                         // enable Windows authentication
                         var unused =
-                            config.GetSection("system.webServer/security/authentication/windowsAuthentication");
+                                config.GetSection("system.webServer/security/authentication/windowsAuthentication");
                     });
             Assert.Equal(
                 $"Filename: \\\\?\\{siteConfig}\r\nLine number: 11\r\nError: This configuration section cannot be used at this path. This happens when the section is locked at a parent level. Locking is either by default (overrideModeDefault=\"Deny\"), or set explicitly by a location tag with overrideMode=\"Deny\" or the legacy allowOverride=\"false\".\r\n\r\n",
@@ -70,7 +70,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressEmptyFile()
+        public void EmptyFile()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -104,7 +104,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressEmptyTag()
+        public void EmptyTag()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -141,7 +141,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressEmptyTag2()
+        public void EmptyTag2()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -179,7 +179,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressUnlockSection()
+        public void UnlockSection()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -194,7 +194,7 @@ namespace Tests.Exceptions
             var siteConfig = TestHelper.CopySiteConfig(directoryName, "original.config");
             File.Copy(original, current, true);
             TestHelper.FixPhysicalPathMono(current);
-            
+
             {
                 // add the section.
                 var file = XDocument.Load(current);
@@ -228,7 +228,7 @@ namespace Tests.Exceptions
             var server = new IisExpressServerManager(current);
 #endif
             var config = server.Sites[0].Applications[0].GetWebConfiguration();
-            
+
             // enable Windows authentication
             var windowsSection =
                 config.GetSection("system.webServer/security/authentication/windowsAuthentication");
@@ -236,7 +236,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressUnlockSectionWithRuntimeTag()
+        public void UnlockSectionWithRuntimeTag()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -277,7 +277,7 @@ namespace Tests.Exceptions
                         new XElement("authentication",
                             new XElement("windowsAuthentication",
                                 new XAttribute("enabled", true)))));
-                
+
                 var tag = "<runtime>" +
                           "<asm:assemblyBinding xmlns:asm=\"urn:schemas-microsoft-com:asm.v1\">" +
                           "<asm:dependentAssembly>" +
@@ -301,11 +301,11 @@ namespace Tests.Exceptions
             // enable Windows authentication
             var windowsSection =
                 config.GetSection("system.webServer/security/authentication/windowsAuthentication");
-            Assert.True((bool) windowsSection["enabled"]);
+            Assert.True((bool)windowsSection["enabled"]);
 #if IIS
             windowsSection.SetAttributeValue("enabled", false);
             var exception = Assert.Throws<COMException>(() => server.CommitChanges());
-            Assert.Equal(0xc00cef03, (uint) exception.HResult);
+            Assert.Equal(0xc00cef03, (uint)exception.HResult);
             Assert.Equal("Exception from HRESULT: 0xC00CEF03", exception.Message);
 #else
             server.CommitChanges();
@@ -314,7 +314,7 @@ namespace Tests.Exceptions
 
 
         [Fact]
-        public void TestIisExpressUnknownSection()
+        public void UnknownSection()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -365,7 +365,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressArrSection()
+        public void ArrSection()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -417,7 +417,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressDuplicateSection()
+        public void DuplicateSection()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -494,7 +494,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressDuplicateSectionDefinition()
+        public void DuplicateSectionDefinition()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -535,7 +535,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressDuplicateSectionDefinition2()
+        public void DuplicateSectionDefinition2()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -578,7 +578,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressDuplicateSectionDefinition3()
+        public void DuplicateSectionDefinition3()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -628,7 +628,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressDuplicateSectionDefinition4()
+        public void DuplicateSectionDefinition4()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -671,7 +671,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressInheritance()
+        public void Inheritance()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -838,10 +838,10 @@ namespace Tests.Exceptions
                 var childHandlers = childSection.GetCollection("files");
                 Assert.Equal(9, childHandlers.Count);
             }
-            
+
             var serverSection = serverConfig.GetSection("system.webServer/defaultDocument", "WebSite1");
             var serverChildSection = serverConfig.GetSection("system.webServer/defaultDocument", "WebSite1/test");
-            
+
             {
                 var handlers = serverSection.GetCollection("files");
                 Assert.Equal(7, handlers.Count);
@@ -852,7 +852,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressUnlockedSection()
+        public void UnlockedSection()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -902,7 +902,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressConfigSource()
+        public void ConfigSource()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -940,7 +940,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressConfigSource2()
+        public void ConfigSource2()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -1009,7 +1009,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressConfigSource3()
+        public void ConfigSource3()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -1048,7 +1048,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressLog4Net()
+        public void Log4Net()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -1077,7 +1077,7 @@ namespace Tests.Exceptions
                 root.Add(
                     new XElement("log4net",
                         new XElement("root",
-                            new XElement("level", 
+                            new XElement("level",
                                 new XAttribute("value", "INFO")))));
                 file.Save(siteConfig);
             }
@@ -1098,7 +1098,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressLog4Net2()
+        public void Log4Net2()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -1159,7 +1159,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressMissingSectionDefinition()
+        public void MissingSectionDefinition()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -1201,7 +1201,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressAspNetCore()
+        public void AspNetCore()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -1267,7 +1267,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressLockAttributeModified()
+        public void LockAttributeModified()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -1310,7 +1310,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressLockAttributeModifiedWildcard()
+        public void LockAttributeModifiedWildcard()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -1367,7 +1367,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressLockItemRemovedFromCollection()
+        public void LockItemRemovedFromCollection()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -1392,19 +1392,116 @@ namespace Tests.Exceptions
             var section = config.GetSection("system.webServer/modules");
             var collection = section.GetCollection();
             {
+                Assert.Equal("DynamicCompressionModule", collection[0]["name"]);
                 var exception = Assert.Throws<FileLoadException>(() => collection.RemoveAt(0)); // lockItem=true
-                Assert.Equal($"Filename: \r\nError: Lock violation\r\n\r\n", exception.Message);
-            }
-
-            var item = collection[collection.Count - 1];
-            {
-                var exception = Assert.Throws<FileLoadException>(() => collection.Remove(item)); // lockItem=false
                 Assert.Equal($"Filename: \r\nError: Lock violation\r\n\r\n", exception.Message);
             }
         }
 
         [Fact]
-        public void TestIisExpressLockItemRemovedInLocationTag()
+        public void LockItemRemovedFromCollection2()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string current = Path.Combine(directoryName, @"applicationHost.config");
+            string original = Path.Combine(directoryName, @"original2.config");
+            var siteConfig = TestHelper.CopySiteConfig(directoryName, "original.config");
+            File.Copy(original, current, true);
+            TestHelper.FixPhysicalPathMono(current);
+
+#if IIS
+            var server = new ServerManager(current);
+#else
+            var server = new IisExpressServerManager(current);
+#endif
+            var config = server.Sites[0].Applications[0].GetWebConfiguration();
+            var section = config.GetSection("system.webServer/modules");
+            var collection = section.GetCollection();
+            var item = collection[collection.Count - 1];
+            {
+                Assert.Equal("ScriptModule-4.0", item["name"]);
+                Assert.Equal(44, collection.Count);
+                collection.Remove(item);
+                Assert.Equal(43, collection.Count);
+            }
+        }
+
+        [Fact]
+        public void LockItemAddToCollection()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string current = Path.Combine(directoryName, @"applicationHost.config");
+            string original = Path.Combine(directoryName, @"original2.config");
+            var siteConfig = TestHelper.CopySiteConfig(directoryName, "original.config");
+            File.Copy(original, current, true);
+            TestHelper.FixPhysicalPathMono(current);
+
+#if IIS
+            var server = new ServerManager(current);
+#else
+            var server = new IisExpressServerManager(current);
+#endif
+            var config = server.Sites[0].Applications[0].GetWebConfiguration();
+            var section = config.GetSection("system.webServer/modules");
+            var collection = section.GetCollection();
+            var newModule = collection.CreateElement();
+            newModule["name"] = "RequestMonitorModule";
+            collection.Add(newModule);
+            collection.Remove(newModule);
+        }
+
+        [Fact]
+        public void LockItemAddToCollection2()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string current = Path.Combine(directoryName, @"applicationHost.config");
+            string original = Path.Combine(directoryName, @"original2.config");
+            var siteConfig = TestHelper.CopySiteConfig(directoryName, "original.config");
+            File.Copy(original, current, true);
+            TestHelper.FixPhysicalPathMono(current);
+
+#if IIS
+            var server = new ServerManager(current);
+#else
+            var server = new IisExpressServerManager(current);
+#endif
+            var config = server.Sites[0].Applications[0].GetWebConfiguration();
+            var section = config.GetSection("system.webServer/modules");
+            var collection = section.GetCollection();
+            var newModule = collection.CreateElement();
+            newModule["name"] = "RequestMonitorModule";
+            // TODO: investigate how to behave the same.
+#if IIS
+            var exception = Assert.Throws<FileLoadException>(() => collection.AddAt(0, newModule));
+            Assert.Equal("Filename: \r\nError: This configuration section cannot be used at this path. This happens when the section is locked at a parent level. Locking is either by default (overrideModeDefault=\"Deny\"), or set explicitly by a location tag with overrideMode=\"Deny\" or the legacy allowOverride=\"false\".\r\n\r\n", exception.Message);
+#else            
+            collection.AddAt(0, newModule);
+            collection.Remove(newModule);
+#endif
+        }
+
+        [Fact]
+        public void LockItemRemovedInLocationTag()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -1447,7 +1544,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressLockItemRemovedInWebConfig()
+        public void LockItemRemovedInWebConfig()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -1483,7 +1580,45 @@ namespace Tests.Exceptions
             var config = server.Sites[0].Applications[0].GetWebConfiguration();
             var exception = Assert.Throws<FileLoadException>(() => config.GetSection("system.webServer/modules"));
             Assert.Equal($"Filename: \\\\?\\{siteConfig}\r\nLine number: 10\r\nError: Lock violation\r\n\r\n", exception.Message);
+        }
 
+        [Fact]
+        public void LockItemRemovedInWebConfig2()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string current = Path.Combine(directoryName, @"applicationHost.config");
+            string original = Path.Combine(directoryName, @"original2.config");
+            var siteConfig = TestHelper.CopySiteConfig(directoryName, "original.config");
+            File.Copy(original, current, true);
+            TestHelper.FixPhysicalPathMono(current);
+
+            {
+                // modify the path
+                var file = XDocument.Load(siteConfig);
+                var root = file.Root;
+                var webServer = root.Element("system.webServer");
+                webServer.Add(
+                    new XElement("modules",
+                        new XElement("remove",
+                            new XAttribute("name", "ScriptModule-4.0")))
+                    );
+                file.Save(siteConfig);
+            }
+#if IIS
+            var server = new ServerManager(current);
+#else
+            var server = new IisExpressServerManager(current);
+#endif
+            var config = server.Sites[0].Applications[0].GetWebConfiguration();
+            var section = config.GetSection("system.webServer/modules");
+            Assert.Equal(43, section.GetCollection().Count);
         }
     }
 }

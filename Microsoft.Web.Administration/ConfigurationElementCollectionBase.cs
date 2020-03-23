@@ -266,14 +266,6 @@ namespace Microsoft.Web.Administration
 
         public void Remove(T element)
         {
-            foreach (T item in Exposed)
-            {
-                if (item.IsLocked == "true")
-                {
-                    throw new FileLoadException("Filename: \r\nError: Lock violation\r\n\r\n");
-                }
-            }
-
             if (FileContext.ReadOnly)
             {
                 throw new FileLoadException(
@@ -302,6 +294,11 @@ namespace Microsoft.Web.Administration
                 if (notMatched)
                 {
                     continue;
+                }
+
+                if (item.IsLocked == "true")
+                {
+                    throw new FileLoadException("Filename: \r\nError: Lock violation\r\n\r\n");
                 }
 
                 Exposed.Remove(item);

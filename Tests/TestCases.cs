@@ -14,7 +14,7 @@ namespace Tests
 {
     public static class TestCases
     {
-        public static void TestIisExpress(ServerManager server, string fileName)
+        public static void IisExpress(ServerManager server, string fileName)
         {
             Assert.Equal(5, server.ApplicationPools.Count);
             Assert.True(server.ApplicationPools.AllowsAdd);
@@ -691,7 +691,7 @@ namespace Tests
             server.CommitChanges();
         }
 
-        public static void TestIisExpressMissingWebsiteConfig(ServerManager server)
+        public static void IisExpressMissingWebsiteConfig(ServerManager server)
         {
             {
                 var config = server.GetApplicationHostConfiguration();
@@ -870,7 +870,7 @@ $"Filename: \\\\?\\{config.FileContext.FileName}\r\nLine number: 0\r\nError: Can
             server.CommitChanges();
         }
 
-        public static void TestIisExpressHandlers(ServerManager server)
+        public static void IisExpressHandlers(ServerManager server)
         {
             {
                 // server config "Website1"
@@ -897,7 +897,7 @@ $"Filename: \\\\?\\{config.FileContext.FileName}\r\nLine number: 0\r\nError: Can
             }
         }
 
-        public static void TestIisExpressLocation(ServerManager server)
+        public static void IisExpressLocation(ServerManager server)
         {
             {
                 // server config "Website1"
@@ -958,7 +958,7 @@ $"Filename: \\\\?\\{config.FileContext.FileName}\r\nLine number: 0\r\nError: Can
             }
         }
 
-        public static void TestIisExpressInheritance(ServerManager server)
+        public static void IisExpressInheritance(ServerManager server)
         {
             {
                 // server config "Website1"
@@ -1077,7 +1077,7 @@ $"Filename: \\\\?\\{config.FileContext.FileName}\r\nLine number: 0\r\nError: Can
             }
         }
 
-        public static void TestIisExpressLocation2(ServerManager server)
+        public static void IisExpressLocation2(ServerManager server)
         {
             {
                 // site config "Website1"
@@ -1136,7 +1136,7 @@ $"Filename: \\\\?\\{config.FileContext.FileName}\r\nLine number: 0\r\nError: Can
             }
         }
 
-        public static void TestIisSiteDefaults(ServerManager server)
+        public static void IisSiteDefaults(ServerManager server)
         {
             var siteDefaults = server.SiteDefaults.TraceFailedRequestsLogging;
             Assert.True(siteDefaults.Enabled);

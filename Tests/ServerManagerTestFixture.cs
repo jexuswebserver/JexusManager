@@ -19,7 +19,7 @@ namespace Tests
     public class ServerManagerTestFixture
     {
         [Fact]
-        public void TestIisExpressMissingWebsiteConfig()
+        public void MissingWebsiteConfig()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -41,7 +41,7 @@ namespace Tests
 #else
             var server = new IisExpressServerManager(Current);
 #endif
-            TestCases.TestIisExpressMissingWebsiteConfig(server);
+            TestCases.IisExpressMissingWebsiteConfig(server);
 
             {
                 // reorder entities to match IIS result.
@@ -114,7 +114,7 @@ namespace Tests
         }
 
         [Fact]
-        public void TestIisExpressLoad()
+        public void Load()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -136,7 +136,7 @@ namespace Tests
 #else
             var server = new IisExpressServerManager(Current);
 #endif
-            TestCases.TestIisExpress(server, Current);
+            TestCases.IisExpress(server, Current);
 
             {
                 // reorder entities to match IIS result.
@@ -207,7 +207,7 @@ namespace Tests
         }
 
         [Fact]
-        public void TestIisExpressLocking()
+        public void Locking()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -229,11 +229,11 @@ namespace Tests
 #else
             var server = new IisExpressServerManager(Current);
 #endif
-            TestCases.TestIisExpressHandlers(server);
+            TestCases.IisExpressHandlers(server);
         }
 
         [Fact]
-        public void TestIisExpressLocation()
+        public void Location()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -255,11 +255,11 @@ namespace Tests
 #else
             var server = new IisExpressServerManager(Current);
 #endif
-            TestCases.TestIisExpressLocation(server);
+            TestCases.IisExpressLocation(server);
         }
 
         [Fact]
-        public void TestIisExpressLocation2()
+        public void Location2()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -281,11 +281,11 @@ namespace Tests
 #else
             var server = new IisExpressServerManager(Current);
 #endif
-            TestCases.TestIisExpressLocation2(server);
+            TestCases.IisExpressLocation2(server);
         }
 
         [Fact]
-        public void TestIisExpressInheritance()
+        public void Inheritance()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -307,11 +307,11 @@ namespace Tests
 #else
             var server = new IisExpressServerManager(Current);
 #endif
-            TestCases.TestIisExpressInheritance(server);
+            TestCases.IisExpressInheritance(server);
         }
 
         [Fact]
-        public void TestIisExpressSiteDefaults()
+        public void SiteDefaults()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -333,7 +333,7 @@ namespace Tests
 #else
             var server = new IisExpressServerManager(Current);
 #endif
-            TestCases.TestIisSiteDefaults(server);
+            TestCases.IisSiteDefaults(server);
 
             // TODO: assert generated XML.
         }

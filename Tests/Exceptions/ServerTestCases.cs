@@ -21,7 +21,7 @@ namespace Tests.Exceptions
     public class ServerTestCases
     {
         [Fact]
-        public void TestProviders()
+        public void Providers()
         {
             const string current = @"applicationHost.config";
             const string original = @"original2.config";
@@ -48,7 +48,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressMissingFile()
+        public void MissingFile()
         {
             const string original = @"applicationHost.config";
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -70,7 +70,7 @@ namespace Tests.Exceptions
             var exception = Assert.Throws<FileNotFoundException>(
                 () =>
                     {
-                        TestCases.TestIisExpress(server, file);
+                        TestCases.IisExpress(server, file);
                     });
             Assert.Equal(
                 $"Filename: \\\\?\\{file}\r\nError: Cannot read configuration file\r\n\r\n",
@@ -78,7 +78,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressMissingClosingTag()
+        public void MissingClosingTag()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -101,7 +101,7 @@ namespace Tests.Exceptions
             var exception = Assert.Throws<COMException>(
                 () =>
                     {
-                        TestCases.TestIisExpress(server, current);
+                        TestCases.IisExpress(server, current);
                     });
             Assert.Equal(
                 $"Filename: \\\\?\\{current}\r\nLine number: 1134\r\nError: Configuration file is not well-formed XML\r\n\r\n",
@@ -109,7 +109,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressMissingRequiredAttribute()
+        public void MissingRequiredAttribute()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -147,7 +147,7 @@ namespace Tests.Exceptions
             var exception = Assert.Throws<COMException>(
                 () =>
                     {
-                        TestCases.TestIisExpress(server, current);
+                        TestCases.IisExpress(server, current);
                     });
             Assert.Equal(
                 $"Filename: \\\\?\\{current}\r\nLine number: 141\r\nError: Missing required attribute 'name'\r\n\r\n",
@@ -155,7 +155,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressValidatorFails()
+        public void ValidatorFails()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -193,7 +193,7 @@ namespace Tests.Exceptions
             var exception = Assert.Throws<COMException>(
                 () =>
                     {
-                        TestCases.TestIisExpress(server, current);
+                        TestCases.IisExpress(server, current);
                     });
             Assert.Equal(
                 $"Filename: \\\\?\\{current}\r\nLine number: 141\r\nError: The 'name' attribute is invalid.  Invalid application pool name\r\n\r\n\r\n",
@@ -201,7 +201,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressInvalidAttribute()
+        public void InvalidAttribute()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -239,7 +239,7 @@ namespace Tests.Exceptions
             var exception = Assert.Throws<COMException>(
                 () =>
                     {
-                        TestCases.TestIisExpress(server, current);
+                        TestCases.IisExpress(server, current);
                     });
             Assert.Equal(
                 $"Filename: \\\\?\\{current}\r\nLine number: 141\r\nError: Unrecognized attribute 'testAuto'\r\n\r\n",
@@ -247,7 +247,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressReadOnly()
+        public void ReadOnly()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -273,7 +273,7 @@ namespace Tests.Exceptions
             var exception1 = Assert.Throws<InvalidOperationException>(
                 () =>
                     {
-                        TestCases.TestIisExpress(server, current);
+                        TestCases.IisExpress(server, current);
                     });
             Assert.Equal(message, exception1.Message);
 
@@ -357,7 +357,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressNoBinding()
+        public void NoBinding()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -401,7 +401,7 @@ namespace Tests.Exceptions
 
 
         [Fact]
-        public void TestIisExpressNoRootApplication()
+        public void NoRootApplication()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -451,7 +451,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressRootApplicationOutOfOrder()
+        public void RootApplicationOutOfOrder()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -507,7 +507,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressNoRootVirtualDirectory()
+        public void NoRootVirtualDirectory()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -562,7 +562,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressRootVirtualDirectoryOutOfOrder()
+        public void RootVirtualDirectoryOutOfOrder()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -616,7 +616,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressVirtualDirectoryDoesNotExist()
+        public void VirtualDirectoryDoesNotExist()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -660,7 +660,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressVirtualDirectoryInvalidPath()
+        public void VirtualDirectoryInvalidPath()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -708,7 +708,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressVirtualDirectoryInvalidPath2()
+        public void VirtualDirectoryInvalidPath2()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -756,7 +756,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressLogFileInheritance()
+        public void LogFileInheritance()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -818,7 +818,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressDuplicateBindings()
+        public void DuplicateBindings()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -862,7 +862,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressBindingInvalidPort()
+        public void BindingInvalidPort()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -906,7 +906,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressBindingInvalidPort2()
+        public void BindingInvalidPort2()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -955,7 +955,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressBindingInvalidAddress()
+        public void BindingInvalidAddress()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -1004,7 +1004,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressBindingInvalidAddress2()
+        public void BindingInvalidAddress2()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -1053,7 +1053,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressBindingInvalidAddress3()
+        public void BindingInvalidAddress3()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -1102,7 +1102,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressBindingInvalidAddress4()
+        public void BindingInvalidAddress4()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -1151,7 +1151,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressBindingInvalidAddress5()
+        public void BindingInvalidAddress5()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -1200,7 +1200,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressDuplicateApplicationPools()
+        public void DuplicateApplicationPools()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -1243,7 +1243,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressNoApplicationPools()
+        public void NoApplicationPools()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -1284,7 +1284,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressConfigSource()
+        public void ConfigSource()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -1335,7 +1335,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressInvalidLocation()
+        public void InvalidLocation()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -1389,7 +1389,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressInvalidFileLocation()
+        public void InvalidFileLocation()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -1435,7 +1435,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressFileLocation()
+        public void FileLocation()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -1481,7 +1481,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressMachine()
+        public void Machine()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -1576,7 +1576,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressAdministration()
+        public void Administration()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -1603,7 +1603,7 @@ namespace Tests.Exceptions
         }
 #if !IIS
         [Fact]
-        public void TestIisExpressSchemaNonEmpty()
+        public void SchemaNonEmpty()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -1660,7 +1660,7 @@ namespace Tests.Exceptions
 #endif
 
         [Fact]
-        public void TestIisExpressWrongLockAttributes()
+        public void WrongLockAttributes()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -1706,7 +1706,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressWildcardLockAttributes()
+        public void WildcardLockAttributes()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -1745,7 +1745,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressDecryptPasswordEmpty()
+        public void DecryptPasswordEmpty()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -1795,7 +1795,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressDecryptPasswordBroken()
+        public void DecryptPasswordBroken()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -1845,7 +1845,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressDecryptPasswordBroken2()
+        public void DecryptPasswordBroken2()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -1895,7 +1895,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressDecryptPasswordBroken3()
+        public void DecryptPasswordBroken3()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -1945,7 +1945,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressDecryptPasswordBroken4()
+        public void DecryptPasswordBroken4()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -1995,7 +1995,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressDecryptPasswordBroken5()
+        public void DecryptPasswordBroken5()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -2045,7 +2045,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressDecryptPassword()
+        public void DecryptPassword()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
@@ -2080,7 +2080,7 @@ namespace Tests.Exceptions
         }
 
         [Fact]
-        public void TestIisExpressInvalidSslFlags()
+        public void InvalidSslFlags()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);

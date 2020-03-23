@@ -2,7 +2,9 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.IO;
 using System.Linq;
+using System.Xml;
 using System.Xml.Linq;
 
 namespace Microsoft.Web.Administration
@@ -74,6 +76,12 @@ namespace Microsoft.Web.Administration
                 {
                     if (Match(item, child, Schema.CollectionSchema.RemoveSchema))
                     {
+                        // IMPORTANT: can remove from location tag in the same file, but not from child web.config.
+                        if (item.IsLocked == "true" && item.CloneSource?.FileContext != FileContext)
+                        {
+                            throw new FileLoadException($"Filename: \\\\?\\{FileContext.FileName}\r\nLine number: {(child.Entity as IXmlLineInfo).LineNumber}\r\nError: Lock violation\r\n\r\n");
+                        }
+
                         Exposed.Remove(item);
                     }
                 }
@@ -105,6 +113,7 @@ namespace Microsoft.Web.Administration
                     var newItem = CreateNewElement(element.ElementTagName);
                     Clone(element, newItem);
                     newItem.IsLocallyStored = false;
+                    newItem.CloneSource = element;
                     Exposed.Add(newItem);
                 }
 
@@ -124,6 +133,7 @@ namespace Microsoft.Web.Administration
                 var newItem = CreateNewElement(element.ElementTagName);
                 Clone(element, newItem);
                 newItem.IsLocallyStored = false;
+                newItem.CloneSource = element;
                 Exposed.Add(newItem);
             }
 
