@@ -434,7 +434,7 @@ namespace JexusManager.Features.Main
             return value;
         }
 
-        private static bool? GetProtocol(string protocol)
+        private bool? GetProtocol(string protocol)
         {
             if (Helper.IsRunningOnMono())
             {
@@ -450,9 +450,15 @@ namespace JexusManager.Features.Main
                 return null;
             }
 
-            var value = (int)key.GetValue("Enabled", 1);
-            var enabled = value == 1;
-            return enabled;
+            var value = key.GetValue("Enabled", 1);
+            if (value is int flag)
+            {
+                var enabled = flag == 1;
+                return enabled;
+            }
+
+            Error($"Invalid registry key value is detected for {protocol}. Please read https://support.microsoft.com/en-us/kb/187498 to resolve the issue.");
+            return null;
         }
 
         private void BtnHelpClick(object sender, EventArgs e)
