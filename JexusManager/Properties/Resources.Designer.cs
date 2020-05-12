@@ -61,6 +61,86 @@ namespace JexusManager.Main.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] _1_0_release {
+            get {
+                object obj = ResourceManager.GetObject("_1_0_release", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] _1_1_release {
+            get {
+                object obj = ResourceManager.GetObject("_1_1_release", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] _2_0_release {
+            get {
+                object obj = ResourceManager.GetObject("_2_0_release", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] _2_1_release {
+            get {
+                object obj = ResourceManager.GetObject("_2_1_release", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] _2_2_release {
+            get {
+                object obj = ResourceManager.GetObject("_2_2_release", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] _3_0_release {
+            get {
+                object obj = ResourceManager.GetObject("_3_0_release", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] _3_1_release {
+            get {
+                object obj = ResourceManager.GetObject("_3_1_release", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] _5_0_release {
+            get {
+                object obj = ResourceManager.GetObject("_5_0_release", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap application_16 {
@@ -267,6 +347,16 @@ namespace JexusManager.Main.Properties {
             get {
                 object obj = ResourceManager.GetObject("refresh_16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] releases_index {
+            get {
+                object obj = ResourceManager.GetObject("releases_index", resourceCulture);
+                return ((byte[])(obj));
             }
         }
         

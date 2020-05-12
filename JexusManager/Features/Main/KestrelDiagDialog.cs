@@ -22,49 +22,93 @@ namespace JexusManager.Features.Main
     using System.Collections.Generic;
     using EnumsNET;
     using System.Runtime.InteropServices;
+    using JexusManager.Main.Properties;
+    using Newtonsoft.Json;
+    using System.Net;
 
     public partial class KestrelDiagDialog : DialogForm
     {
-        private static IDictionary<Version, Tuple<Version, bool>> mappings = new Dictionary<Version, Tuple<Version, bool>> {
-            { Version.Parse("3.1.2"), new Tuple<Version, bool>(Version.Parse("13.1.20018.2"), false) },
-            { Version.Parse("3.1.1"), new Tuple<Version, bool>(Version.Parse("13.1.19350.1"), false) },
-            { Version.Parse("3.1.0"), new Tuple<Version, bool>(Version.Parse("13.1.19320.0"), false) },
-            { Version.Parse("3.0.3"), new Tuple<Version, bool>(Version.Parse("13.0.20023.3"), true) },
-            { Version.Parse("3.0.2"), new Tuple<Version, bool>(Version.Parse("13.0.19350.2"), true) },
-            { Version.Parse("3.0.1"), new Tuple<Version, bool>(Version.Parse("13.0.19309.1"), true) },
-            { Version.Parse("3.0.0"), new Tuple<Version, bool>(Version.Parse("13.0.19258.0"), true) },
-            { Version.Parse("2.2.8"), new Tuple<Version, bool>(Version.Parse("12.2.19109.5"), true) },
-            { Version.Parse("2.2.7"), new Tuple<Version, bool>(Version.Parse("12.2.19169.6"), true) },
-            { Version.Parse("2.2.6"), new Tuple<Version, bool>(Version.Parse("12.2.19169.6"), true) },
-            { Version.Parse("2.2.5"), new Tuple<Version, bool>(Version.Parse("12.2.19109.5"), true) },
-            { Version.Parse("2.2.4"), new Tuple<Version, bool>(Version.Parse("12.2.19048.0"), true) },
-            { Version.Parse("2.2.3"), new Tuple<Version, bool>(Version.Parse("12.2.19024.2"), true) },
-            { Version.Parse("2.2.2"), new Tuple<Version, bool>(Version.Parse("12.2.18346.0"), true) },
-            { Version.Parse("2.2.1"), new Tuple<Version, bool>(Version.Parse("12.2.18316.0"), true) },
-            { Version.Parse("2.2.0"), new Tuple<Version, bool>(Version.Parse("12.2.18316.0"), true) },
-            { Version.Parse("2.1.16"), new Tuple<Version, bool>(Version.Parse("12.1.20017.16"), false) },
-            { Version.Parse("2.1.15"), new Tuple<Version, bool>(Version.Parse("12.1.19337.15"), false) },
-            { Version.Parse("2.1.14"), new Tuple<Version, bool>(Version.Parse("12.1.19108.11"), false) },
-            { Version.Parse("2.1.13"), new Tuple<Version, bool>(Version.Parse("12.1.19170.12"), false) },
-            { Version.Parse("2.1.12"), new Tuple<Version, bool>(Version.Parse("12.1.19170.12"), false) },
-            { Version.Parse("2.1.11"), new Tuple<Version, bool>(Version.Parse("12.1.19108.11"), false) },
-            { Version.Parse("2.1.10"), new Tuple<Version, bool>(Version.Parse("12.1.18263.2"), false) },
-            { Version.Parse("2.1.9"), new Tuple<Version, bool>(Version.Parse("12.1.19046.9"), false) },
-            { Version.Parse("2.1.8"), new Tuple<Version, bool>(Version.Parse("12.1.18263.2"), false) },
-            { Version.Parse("2.1.7"), new Tuple<Version, bool>(Version.Parse("12.1.18263.2"), false) },
-            { Version.Parse("2.1.6"), new Tuple<Version, bool>(Version.Parse("12.1.18263.2"), false) },
-            { Version.Parse("2.1.5"), new Tuple<Version, bool>(Version.Parse("8.2.1991.0"), false) },
-            { Version.Parse("2.1.4"), new Tuple<Version, bool>(Version.Parse("8.2.1991.0"), false) },
-            { Version.Parse("2.1.3"), new Tuple<Version, bool>(Version.Parse("8.2.1991.0"), false) },
-            { Version.Parse("2.1.2"), new Tuple<Version, bool>(Version.Parse("8.2.1991.0"), false) },
-            { Version.Parse("2.1.1"), new Tuple<Version, bool>(Version.Parse("8.2.1991.0"), false) },
-            { Version.Parse("2.1.0"), new Tuple<Version, bool>(Version.Parse("8.2.1991.0"), false) }
-        };
+        private static IDictionary<Version, Tuple<Version, bool>> mappings = new Dictionary<Version, Tuple<Version, bool>>();
 
         public KestrelDiagDialog(IServiceProvider provider, Application application)
             : base(provider)
         {
             InitializeComponent();
+
+            using (var client = new WebClient())
+            {
+                var latest = client.DownloadString("https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json");
+                JObject content;
+                if (string.IsNullOrWhiteSpace(latest))
+                {
+                    // fallback to resources.
+                    using var bytes = new MemoryStream(Resources.releases_index);
+                    using var stream = new StreamReader(bytes);
+                    using var json = new JsonTextReader(stream);
+                    content = (JObject)JToken.ReadFrom(json);
+                }
+                else
+                {
+                    content = JObject.Parse(latest);
+                }
+
+                var releases = content["releases-index"];
+                foreach (var release in releases)
+                {
+                    var link = release["releases.json"];
+                    var info = client.DownloadString(link.Value<string>());
+
+                    JObject details = JObject.Parse(info);
+                    foreach (var actual in details["releases"])
+                    {
+                        var runtimeObject = actual["runtime"];
+                        if (runtimeObject == null)
+                        {
+                            // skip no runtime release.
+                            continue;
+                        }
+
+                        if (runtimeObject["version"] == null)
+                        {
+                            continue;
+                        }
+
+                        var longVersion = runtimeObject["version"].Value<string>();
+                        var aspNetRuntime = actual["aspnetcore-runtime"];
+                        if (aspNetRuntime == null || !aspNetRuntime.HasValues)
+                        {
+                            continue;
+                        }
+
+                        var aspNetCoreModuleObject = aspNetRuntime["version-aspnetcoremodule"];
+                        if (aspNetCoreModuleObject == null || !aspNetCoreModuleObject.HasValues)
+                        {
+                            // skip no ASP.NET Core module release.
+                            continue;
+                        }
+
+                        var aspNetCoreModule = aspNetCoreModuleObject.Values<string>().First();
+                        var phase = release["support-phase"].Value<string>();
+                        var expired = phase == "eol";
+                        if (phase == "preview" || longVersion.Contains("-"))
+                        {
+                            // skip preview release.
+                            continue;
+                        }
+
+                        var runtime = Version.Parse(longVersion);
+                        if (mappings.ContainsKey(runtime))
+                        {
+                            Console.WriteLine($"{runtime}: new {aspNetCoreModule}: old {mappings[runtime].Item1}");
+                        }
+                        else
+                        {
+                            mappings.Add(runtime,
+                                new Tuple<Version, bool>(Version.Parse(aspNetCoreModule), expired));
+                        }
+                    }
+                }
+            }
 
             var container = new CompositeDisposable();
             FormClosed += (sender, args) => container.Dispose();
