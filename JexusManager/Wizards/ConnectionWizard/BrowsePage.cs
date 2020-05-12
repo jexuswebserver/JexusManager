@@ -87,7 +87,7 @@ namespace JexusManager.Wizards.ConnectionWizard
                 }
 
                 var name = Path.GetFileName(data.FileName);
-                var badNames = new[] { "administration.config", "redirection.config", "web.config", "aspnet.config" };
+                var badNames = new[] { "administration.config", "redirection.config", "web.config", "aspnet.config", "web.config" };
                 foreach (var bad in badNames)
                 {
                     if (string.Equals(name, bad, StringComparison.OrdinalIgnoreCase))
