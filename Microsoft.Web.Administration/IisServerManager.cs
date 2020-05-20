@@ -228,6 +228,7 @@ namespace Microsoft.Web.Administration
                 return;
             }
 
+            // IMPORTANT: save vdir to config file.
             {
                 var command = $"set vdir /vdir.name:\"{virtualDirectory.LocationPath()}\" /-password";
                 var resultFile = Path.GetTempFileName();
@@ -251,7 +252,7 @@ namespace Microsoft.Web.Administration
                     {
                         var message = File.ReadAllText(resultFile);
                         File.Delete(resultFile);
-                        throw new Exception($"{process.ExitCode.ToString()} {message}");
+                        throw new Exception($"{process.ExitCode} {message}");
                     }
                 }
                 catch (Win32Exception ex)
@@ -293,7 +294,7 @@ namespace Microsoft.Web.Administration
                     {
                         var message = File.ReadAllText(resultFile);
                         File.Delete(resultFile);
-                        throw new Exception($"{process.ExitCode.ToString()} {message}");
+                        throw new Exception($"{process.ExitCode} {message}");
                     }
                 }
                 catch (Win32Exception ex)

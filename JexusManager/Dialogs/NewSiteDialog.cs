@@ -49,6 +49,8 @@ namespace JexusManager.Dialogs
                 cbSniRequired.Enabled = false;
             }
 
+            var item = new ConnectAsItem(NewSite?.Applications[0].VirtualDirectories[0]);
+
             var container = new CompositeDisposable();
             FormClosed += (sender, args) => container.Dispose();
 
@@ -63,6 +65,25 @@ namespace JexusManager.Dialogs
                     cbCertificates.Visible = cbType.SelectedIndex == 1;
                     btnSelect.Visible = cbType.SelectedIndex == 1;
                     btnView.Visible = cbType.SelectedIndex == 1;
+                }));
+
+            container.Add(
+                Observable.FromEventPattern<EventArgs>(btnConnect, "Click")
+                .ObserveOn(System.Threading.SynchronizationContext.Current)
+                .Subscribe(evt =>
+                {
+                    using (var dialog = new ConnectAsDialog(ServiceProvider, item))
+                    {
+                        if (dialog.ShowDialog() != DialogResult.OK)
+                        {
+                            return;
+                        }
+                    }
+
+                    item.Apply();
+                    txtConnectAs.Text = string.IsNullOrEmpty(item.UserName)
+                        ? "Pass-through authentication"
+                        : $"connect as '{item.UserName}'";
                 }));
 
             container.Add(
@@ -175,6 +196,10 @@ namespace JexusManager.Dialogs
                     app.Name = string.Empty;
                     app.ApplicationPoolName = txtPool.Text;
                     NewSite.Bindings.Add(binding);
+
+                    item.Element = NewSite.Applications[0].VirtualDirectories[0];
+                    item.Apply();
+
                     DialogResult = DialogResult.OK;
                 }));
 

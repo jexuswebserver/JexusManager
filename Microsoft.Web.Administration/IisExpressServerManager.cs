@@ -86,6 +86,8 @@ namespace Microsoft.Web.Administration
                 }
             }
 
+            // IMPORTANT: save vdir to config file.
+            CommitChanges();
             var appcmd = Path.Combine(directory, "appcmd.exe");
             if (!File.Exists(appcmd))
             {
@@ -117,7 +119,7 @@ namespace Microsoft.Web.Administration
                     {
                         var message = File.ReadAllText(resultFile);
                         File.Delete(resultFile);
-                        throw new Exception($"{process.ExitCode.ToString()} {message}");                        
+                        throw new Exception($"{process.ExitCode} {message}");                        
                     }
                 }
                 catch (Win32Exception ex)
@@ -159,7 +161,7 @@ namespace Microsoft.Web.Administration
                     {
                         var message = File.ReadAllText(resultFile);
                         File.Delete(resultFile);
-                        throw new Exception($"{process.ExitCode.ToString()} {message}");
+                        throw new Exception($"{process.ExitCode} {message}");
                     }
 
                     var message1 = File.ReadAllText(resultFile);

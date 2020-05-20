@@ -39,7 +39,7 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.btnTest = new System.Windows.Forms.Button();
             this.btnConnect = new System.Windows.Forms.Button();
-            this.label4 = new System.Windows.Forms.Label();
+            this.txtConnectAs = new System.Windows.Forms.Label();
             this.btnBrowse = new System.Windows.Forms.Button();
             this.txtPath = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -113,7 +113,7 @@
             // 
             this.groupBox1.Controls.Add(this.btnTest);
             this.groupBox1.Controls.Add(this.btnConnect);
-            this.groupBox1.Controls.Add(this.label4);
+            this.groupBox1.Controls.Add(this.txtConnectAs);
             this.groupBox1.Controls.Add(this.btnBrowse);
             this.groupBox1.Controls.Add(this.txtPath);
             this.groupBox1.Controls.Add(this.label3);
@@ -136,7 +136,6 @@
             // 
             // btnConnect
             // 
-            this.btnConnect.Enabled = false;
             this.btnConnect.Location = new System.Drawing.Point(24, 98);
             this.btnConnect.Name = "btnConnect";
             this.btnConnect.Size = new System.Drawing.Size(85, 23);
@@ -144,14 +143,14 @@
             this.btnConnect.Text = "Connect as...";
             this.btnConnect.UseVisualStyleBackColor = true;
             // 
-            // label4
+            // txtConnectAs
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(21, 69);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(139, 13);
-            this.label4.TabIndex = 3;
-            this.label4.Text = "Pass-through authentication";
+            this.txtConnectAs.AutoSize = true;
+            this.txtConnectAs.Location = new System.Drawing.Point(21, 69);
+            this.txtConnectAs.Name = "txtConnectAs";
+            this.txtConnectAs.Size = new System.Drawing.Size(139, 13);
+            this.txtConnectAs.TabIndex = 3;
+            this.txtConnectAs.Text = "Pass-through authentication";
             // 
             // btnBrowse
             // 
@@ -404,7 +403,7 @@
         private GroupBox groupBox1;
         private Button btnTest;
         private Button btnConnect;
-        private Label label4;
+        private Label txtConnectAs;
         private Button btnBrowse;
         private TextBox txtPath;
         private Label label3;
