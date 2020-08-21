@@ -76,7 +76,7 @@
             <Directory Id="$(var.PlatformProgramFilesFolder)">
                 <Directory Id="INSTALLDIR" Name="$(var.ProductName)">
                     <Component Id="Dummy" Guid="{7D7AF5BF-E0D6-4997-9E98-C8BBBFD7A29D}">
-                        <File Id="JexusManager.exe" Name="dummy" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.exe" />
+                        <File Id="JexusManager.exe" Name="JexusManager.exe" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.exe" />
                     </Component>
                 </Directory>
             </Directory>
