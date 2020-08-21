@@ -1,3 +1,5 @@
+Import-Module PowerShellGet
+
 $msBuild = "msbuild"
 try
 {
