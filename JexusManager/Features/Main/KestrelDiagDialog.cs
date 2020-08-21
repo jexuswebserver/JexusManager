@@ -25,6 +25,7 @@ namespace JexusManager.Features.Main
     using JexusManager.Main.Properties;
     using Newtonsoft.Json;
     using System.Net;
+    using System.Text;
 
     public partial class KestrelDiagDialog : DialogForm
     {
@@ -37,9 +38,19 @@ namespace JexusManager.Features.Main
 
             using (var client = new WebClient())
             {
-                var latest = client.DownloadString("https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json");
+                string latest = null;
+                var hasException = false;
+                try
+                {
+                    latest = client.DownloadString("https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json");
+                }
+                catch (Exception)
+                {
+                    hasException = true;
+                }
+
                 JObject content;
-                if (string.IsNullOrWhiteSpace(latest))
+                if (string.IsNullOrWhiteSpace(latest) || hasException)
                 {
                     // fallback to resources.
                     using var bytes = new MemoryStream(Resources.releases_index);
@@ -56,9 +67,33 @@ namespace JexusManager.Features.Main
                 foreach (var release in releases)
                 {
                     var link = release["releases.json"];
-                    var info = client.DownloadString(link.Value<string>());
+                    string info = null;
+                    hasException = false;
+                    try
+                    {
+                        info = client.DownloadString(link.Value<string>());
+                    }
+                    catch (Exception)
+                    {
+                        hasException = true;
+                    }
 
-                    JObject details = JObject.Parse(info);
+                    JObject details;
+                    if (string.IsNullOrWhiteSpace(info) || hasException)
+                    {
+                        // fallback to resources.
+                        var number = new Version(release["channel-version"].Value<string>());
+                        var name = $"_{number.Major}_{number.Minor}_release";
+                        using var bytes = new MemoryStream((byte[])Resources.ResourceManager.GetObject(name));
+                        using var stream = new StreamReader(bytes);
+                        using var json = new JsonTextReader(stream);
+                        details = (JObject)JToken.ReadFrom(json);
+                    }
+                    else
+                    {
+                        details = JObject.Parse(info);
+                    }
+
                     foreach (var actual in details["releases"])
                     {
                         var runtimeObject = actual["runtime"];
