@@ -22,6 +22,9 @@ namespace JexusManager.Features.Main
     using EnumsNET;
     using JexusManager.Features.HttpApi;
     using Microsoft.Web.Management.Client;
+    using Vanara.PInvoke;
+    using static Vanara.PInvoke.IpHlpApi;
+    using static Vanara.PInvoke.Ws2_32;
 
     public partial class BindingDiagDialog : DialogForm
     {
@@ -77,123 +80,146 @@ namespace JexusManager.Features.Main
                         foreach (Binding binding in site.Bindings)
                         {
                             Debug($"BINDING: {binding.Protocol} {binding}");
-                            if (binding.Protocol == "https" || binding.Protocol == "http")
+                            if (binding.Protocol != "https" && binding.Protocol != "http")
+                            {
+                                Warn("This prototol is not analyzed.");
+                                Debug(string.Empty);
+                                continue;
+                            }
+
+                            if (PublicNativeMethods.IsProcessElevated)
+                            {
+                                ushort port = htons((ushort)binding.EndPoint.Port);
+                                Win32Error result = CreatePersistentTcpPortReservation(port, 1, out var token);
+                                if (result == Win32Error.ERROR_SUCCESS)
+                                {
+                                    Info("No conflicting TCP reserved port range is found.");
+                                    DeletePersistentTcpPortReservation(port, 1);
+                                }
+                                else
+                                {
+                                    Error("Found a conflicting TCP reserved port range. Please run \"netsh int ipv4 show excludedportrange protocol=tcp\" at command prompt to troubleshoot.");
+                                }
+                            }
+                            else
+                            {
+                                Warn("Jexus Manager is not running as administrator, so TCP reserved port range is not verified. Please run \"netsh int ipv4 show excludedportrange protocol=tcp\" at command prompt to see if any conflict exists.");
+                            }
+
+                            if (binding.Host != "localhost")
+                            {
+                                if (site.Server.Mode == WorkingMode.IisExpress)
+                                {
+                                    var reservation = binding.ToUrlPrefix();
+                                    if (!feature.Items.Any(item => item.UrlPrefix == reservation))
+                                    {
+                                        Warn($"URL reservation {reservation} is missing. So this binding only works if IIS Express runs as administrator.");
+                                    }
+                                }
+
+                                Info($"This site can take external traffic if,");
+                                Info($" * TCP port {binding.EndPoint.Port} must be opened on Windows Firewall (or any other installed firewall products).");
+                            }
+
+                            if (binding.EndPoint.Address.Equals(IPAddress.Any))
                             {
                                 if (binding.Host != "localhost")
                                 {
-                                    if (site.Server.Mode == WorkingMode.IisExpress)
+                                    Info($" * Requests from web browsers must be routed to following end points on this machine,");
+                                    foreach (IPAddress address in adapters)
                                     {
-                                        var reservation = binding.ToUrlPrefix();
-                                        if (!feature.Items.Any(item => item.UrlPrefix == reservation))
-                                        {
-                                            Warn($"URL reservation {reservation} is missing. So this binding only works if IIS Express runs as administrator.");
-                                        }
+                                        Info(address.AddressFamily == AddressFamily.InterNetworkV6
+                                            ? $"   * [{address}]:{binding.EndPoint.Port}."
+                                            : $"   * {address}:{binding.EndPoint.Port}.");
                                     }
-
-                                    Info($"This site can take external traffic if,");
-                                    Info($" * TCP port {binding.EndPoint.Port} must be opened on Windows Firewall (or any other equivalent products).");
                                 }
 
+                                if (Socket.OSSupportsIPv4)
+                                {
+                                    Debug($"This site can take local traffic at {IPAddress.Loopback}:{binding.EndPoint.Port}.");
+                                }
+
+                                if (Socket.OSSupportsIPv6)
+                                {
+                                    Debug($"This site can take local traffic at [{IPAddress.IPv6Loopback}]:{binding.EndPoint.Port}.");
+                                }
+                            }
+                            else
+                            {
+                                Info($" * The networking must be properly set up to forward requests from web browsers to {binding.EndPoint} on this machine.");
+                            }
+
+                            if (binding.Host == "*" || binding.Host == string.Empty)
+                            {
                                 if (binding.EndPoint.Address.Equals(IPAddress.Any))
                                 {
-                                    if (binding.Host != "localhost")
+                                    Info($" * Web browsers can use several URLs, such as");
+                                    foreach (IPAddress address in adapters)
                                     {
-                                        Info($" * Requests from web browsers must be routed to following end points on this machine,");
-                                        foreach (IPAddress address in adapters)
+                                        Debug(address.AddressFamily == AddressFamily.InterNetworkV6
+                                            ? $"   * {binding.Protocol}://[{address}]:{binding.EndPoint.Port}."
+                                            : $"   * {binding.Protocol}://{address}:{binding.EndPoint.Port}.");
+                                    }
+
+                                    Info($"   * {binding.Protocol}://localhost:{binding.EndPoint.Port}.");
+                                    Info($"   * {binding.Protocol}://{IPAddress.Loopback}:{binding.EndPoint.Port}.");
+                                    Info($"   * {binding.Protocol}://[{IPAddress.IPv6Loopback}]:{binding.EndPoint.Port}.");
+                                }
+                                else
+                                {
+                                    Info($" * Web browsers should use URL {binding.Protocol}://{binding.EndPoint.Address}:{binding.EndPoint.Port}.");
+                                }
+                            }
+                            else
+                            {
+                                Info($" * Web browsers should use URL {binding.Protocol}://{binding.Host}:{binding.EndPoint.Port}. Requests must have Host header of \"{binding.Host}\".");
+                                if (!binding.Host.IsWildcard())
+                                {
+                                    Info($"   Start DNS query for {binding.Host}.");
+                                    // IMPORTANT: wildcard host is not supported.
+                                    try
+                                    {
+                                        var entry = Dns.GetHostEntry(binding.Host);
+                                        var list = entry.AddressList;
+                                        Info($"   DNS Query returns {list.Length} result(s).");
+                                        var found = false;
+                                        foreach (var address in list)
                                         {
                                             Info(address.AddressFamily == AddressFamily.InterNetworkV6
-                                                ? $"   * [{address}]:{binding.EndPoint.Port}."
-                                                : $"   * {address}:{binding.EndPoint.Port}.");
-                                        }
-                                    }
-
-                                    if (Socket.OSSupportsIPv4)
-                                    {
-                                        Debug($"This site can take local traffic at {IPAddress.Loopback}:{binding.EndPoint.Port}.");
-                                    }
-
-                                    if (Socket.OSSupportsIPv6)
-                                    {
-                                        Debug($"This site can take local traffic at [{IPAddress.IPv6Loopback}]:{binding.EndPoint.Port}.");
-                                    }
-                                }
-                                else
-                                {
-                                    Info($" * The networking must be properly set up to forward requests from web browsers to {binding.EndPoint} on this machine.");
-                                }
-
-                                if (binding.Host == "*" || binding.Host == string.Empty)
-                                {
-                                    if (binding.EndPoint.Address.Equals(IPAddress.Any))
-                                    {
-                                        Info($" * Web browsers can use several URLs, such as");
-                                        foreach (IPAddress address in adapters)
-                                        {
-                                            Debug(address.AddressFamily == AddressFamily.InterNetworkV6
-                                                ? $"   * {binding.Protocol}://[{address}]:{binding.EndPoint.Port}."
-                                                : $"   * {binding.Protocol}://{address}:{binding.EndPoint.Port}.");
-                                        }
-
-                                        Info($"   * {binding.Protocol}://localhost:{binding.EndPoint.Port}.");
-                                        Info($"   * {binding.Protocol}://{IPAddress.Loopback}:{binding.EndPoint.Port}.");
-                                        Info($"   * {binding.Protocol}://[{IPAddress.IPv6Loopback}]:{binding.EndPoint.Port}.");
-                                    }
-                                    else
-                                    {
-                                        Info($" * Web browsers should use URL {binding.Protocol}://{binding.EndPoint.Address}:{binding.EndPoint.Port}.");
-                                    }
-                                }
-                                else
-                                {
-                                    Info($" * Web browsers should use URL {binding.Protocol}://{binding.Host}:{binding.EndPoint.Port}. Requests must have Host header of \"{binding.Host}\".");
-                                    if (!binding.Host.IsWildcard())
-                                    {
-                                        Info($"   Start DNS query for {binding.Host}.");
-                                        // IMPORTANT: wildcard host is not supported.
-                                        try
-                                        {
-                                            var entry = Dns.GetHostEntry(binding.Host);
-                                            var list = entry.AddressList;
-                                            Info($"   DNS Query returns {list.Length} result(s).");
-                                            var found = false;
-                                            foreach (var address in list)
+                                                ? $"    * [{address}]"
+                                                : $"    * {address}");
+                                            if (adapters.Any(item => address.Equals(item)))
                                             {
-                                                Info(address.AddressFamily == AddressFamily.InterNetworkV6
-                                                    ? $"    * [{address}]"
-                                                    : $"    * {address}");
-                                                if (adapters.Any(item => address.Equals(item)))
-                                                {
-                                                    found = true;
-                                                    break;
-                                                }
-
-                                                if (address.Equals(IPAddress.Loopback))
-                                                {
-                                                    found = true;
-                                                }
+                                                found = true;
+                                                break;
                                             }
 
-                                            if (!found)
+                                            if (address.Equals(IPAddress.Loopback))
                                             {
-                                                Warn($"   DNS query of \"{binding.Host}\" does not return a known IP address for any network adapter of this machine.");
-                                                Warn("   The server usally uses private IP addresses, and DNS query returns public IP addresses.");
-                                                Warn("   If packets are forwarded from public IP to private IP properly, this warning can be ignored.");
-                                                Warn("   Otherwise, please review DNS settings (or modify the hosts file to emulate DNS).");
+                                                found = true;
                                             }
                                         }
-                                        catch (SocketException ex)
+
+                                        if (!found)
                                         {
-                                            Error($"DNS query failed: {ex.Message}.");
-                                            Error($"Please review the host name {binding.Host}.");
+                                            Warn($"   DNS query of \"{binding.Host}\" does not return a known IP address for any network adapter of this machine.");
+                                            Warn("   The server usally uses private IP addresses, and DNS query returns public IP addresses.");
+                                            Warn("   If packets are forwarded from public IP to private IP properly, this warning can be ignored.");
+                                            Warn("   Otherwise, please review DNS settings (or modify the hosts file to emulate DNS).");
                                         }
                                     }
+                                    catch (SocketException ex)
+                                    {
+                                        Error($"DNS query failed: {ex.Message}.");
+                                        Error($"Please review the host name {binding.Host}.");
+                                    }
                                 }
+                            }
 
-                                if (binding.Protocol == "https")
-                                {
-                                    Warn("Binding Diagnostics does not verify certificates and other SSL/TLS related settings.");
-                                    Warn($"Please run SSL Diagnostics at server level to analyze SSL/TLS configuration. More information can be found at https://docs.jexusmanager.com/tutorials/ssl-diagnostics.html.");
-                                }
+                            if (binding.Protocol == "https")
+                            {
+                                Warn("Binding Diagnostics does not verify certificates and other SSL/TLS related settings.");
+                                Warn($"Please run SSL Diagnostics at server level to analyze SSL/TLS configuration. More information can be found at https://docs.jexusmanager.com/tutorials/ssl-diagnostics.html.");
                             }
 
                             Debug(string.Empty);
