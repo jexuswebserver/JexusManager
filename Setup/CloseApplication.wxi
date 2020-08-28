@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<Include xmlns="http://schemas.microsoft.com/wix/2006/wi"
+         xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+
+    <util:CloseApplication Id="CloseIisManager"
+                        CloseMessage="yes"
+                        Description="!(loc.CloseApplication)"
+                        ElevatedCloseMessage="yes"
+                        RebootPrompt="no"
+                        PromptToContinue="yes"
+                        Target="$(var.MainExecutable)" />
+
+</Include>

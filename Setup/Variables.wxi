@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<Include xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <?define UpgradeCode="F07B4406-6CA1-4BFB-BAF0-3A2675DA5728"?>
+    <?define ProductCode="629958AA-14AA-4F7A-8706-F3511D99EA38"?>
+    <?define PackageCode="89E25BEF-C13F-4FAF-BD71-6FD060C0BB24"?>
+    <?define ProductName="!(loc.ProductName)"?>
+    <?define Manufacturer="!(loc.Manufacturer)"?>
+    <?define ProductDescription="!(loc.ProductDescription)"?>
+
+    <?if $(var.Platform) = x64 ?>
+    <?define PlatformProgramFilesFolder="ProgramFiles64Folder" ?>
+    <?define SourceDir=..\bin\x64?>
+    <?else ?>
+    <?define PlatformProgramFilesFolder="ProgramFilesFolder" ?>
+    <?define SourceDir=..\bin\x86?>
+    <?endif ?>
+
+    <?define Icon="iis.ico" ?>
+    <?define MinimalVersion="12.0.0" ?>
+
+    <!-- For registry keys -->
+    <?define ManufacturerShort="LeXtudio" ?>
+    <?define ProductNameShort="JexusManager" ?>
+
+    <?define MainExecutable="JexusManager.exe"?>
+    <?define ProductVersion="!(bind.FileVersion.$(var.MainExecutable))"?>
+
+</Include>

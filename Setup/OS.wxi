@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<Include xmlns="http://schemas.microsoft.com/wix/2006/wi">
+
+    <!-- Installer bitness matches OS bitness. -->
+    <?if $(var.Platform) = x64 ?>
+    <Condition Message="!(loc.Windows64Required)">
+        <![CDATA[Installed OR VersionNT64]]>
+    </Condition>
+    <?else?>
+    <Condition Message="!(loc.Windows32Required)">
+        <![CDATA[Installed OR not VersionNT64]]>
+    </Condition>
+    <?endif ?>
+
+</Include>

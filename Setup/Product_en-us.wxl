@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WixLocalization Culture="en-us" Codepage="1252" xmlns="http://schemas.microsoft.com/wix/2006/localization">
+  <String Id="Language">1033</String>
+  <!-- Supported language and codepage codes can be found here: http://www.tramontana.co.hu/wix/lesson2.php#2.4 -->
+
+  <String Id="ProductName">Jexus Manager</String>
+  <String Id="Manufacturer">LeXtudio Inc.</String>
+  <String Id="ProductDescription">Jexus Manager is the management console for IIS/IIS Express and Jexus.</String>
+  <String Id="CloseApplication">Please close Jexus Manager before continuing.</String>
+  <String Id="Windows64Required">The 64-bit version of Jexus Manager cannot be installed on a 32-bit edition of Microsoft Windows.</String>
+  <String Id="Windows32Required">The 32-bit version of Jexus Manager cannot be installed on a 64-bit edition of Microsoft Windows.</String>
+</WixLocalization>

@@ -1,38 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?define ProductVersion="!(bind.FileVersion.JexusManager.exe)"?>
-<?define UpgradeCode="F07B4406-6CA1-4BFB-BAF0-3A2675DA5728"?>
-<?define ProductCode="629958AA-14AA-4F7A-8706-F3511D99EA38"?>
-<?define PackageCode="89E25BEF-C13F-4FAF-BD71-6FD060C0BB24"?>
-<?define ProductName="Jexus Manager"?>
-
-<?if $(var.Platform) = x64 ?>
-<?define PlatformProgramFilesFolder="ProgramFiles64Folder" ?>
-<?define SourceDir=..\bin\x64?>
-<?else ?>
-<?define PlatformProgramFilesFolder="ProgramFilesFolder" ?>
-<?define SourceDir=..\bin\x86?>
-<?endif ?>
-
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
      xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension"
      xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+
+    <?include "Variables.wxi" ?>
+
     <Product Id="*"
              Name="$(var.ProductName) $(var.ProductVersion)"
              Language="1033"
              Version="$(var.ProductVersion)"
-             Manufacturer="LeXtudio"
+             Manufacturer="$(var.Manufacturer)"
              UpgradeCode="$(var.UpgradeCode)">
 
         <Package Id="*"
-                 Comments="Jexus Manager is the management console for IIS/IIS Express and Jexus."
+                 Comments="$(var.ProductDescription)"
                  InstallerVersion="300"
                  Languages="1033"
                  Compressed="yes"
                  InstallScope="perMachine"
                  Description="$(var.ProductName) $(var.ProductVersion)" />
 
-        <Icon Id="icon.ico" SourceFile="iis.ico" />
+        <Icon Id="icon.ico" SourceFile="$(var.Icon)" />
         <Property Id="ARPPRODUCTICON" Value="icon.ico" />
 
         <!-- Upgrade information -->
@@ -40,7 +29,7 @@
 			<!-- The UpgradeCode must be changed to allow two versions of SharpDevelop to be installed side-by-side -->
 			
 			<!-- Checks for older versions -->
-			<UpgradeVersion Minimum="12.0.0"
+			<UpgradeVersion Minimum="$(var.MinimalVersion)"
 				IncludeMinimum="yes"
 				Maximum="$(var.ProductVersion)"
 				IncludeMaximum="no" 
@@ -63,45 +52,37 @@
 
             <!-- Files installed -->
             <?if $(var.Platform) = x64 ?>
-            <ComponentGroupRef  Id="JexusFiles64" />
+            <ComponentGroupRef  Id="Files64" />
             <?else ?>
-            <ComponentGroupRef  Id="JexusFiles86" />
+            <ComponentGroupRef  Id="Files86" />
             <?endif ?>
-            <ComponentRef Id="JexusManagerProgramMenuItems" />
-            <ComponentRef Id="Dummy" />
+            <ComponentRef Id="ProgramMenuItems" />
+            <ComponentRef Id="MainExecutable" />
         </Feature>
 
         <!-- Directories and files -->
         <Directory Id="TARGETDIR" Name="SourceDir">
             <Directory Id="$(var.PlatformProgramFilesFolder)">
                 <Directory Id="INSTALLDIR" Name="$(var.ProductName)">
-                    <Component Id="Dummy" Guid="{7D7AF5BF-E0D6-4997-9E98-C8BBBFD7A29D}">
-                        <File Id="JexusManager.exe" Name="JexusManager.exe" Vital="no" DiskId="1" Source="$(var.SourceDir)\JexusManager.exe" />
+                    <Component Id="MainExecutable" Guid="{7D7AF5BF-E0D6-4997-9E98-C8BBBFD7A29D}">
+                        <File Id="$(var.MainExecutable)" Name="$(var.MainExecutable)" Vital="no" DiskId="1" Source="$(var.SourceDir)\$(var.MainExecutable)" />
                     </Component>
                 </Directory>
             </Directory>
             <Directory Id="ProgramMenuFolder" Name="Programs">
-				<Component Id="JexusManagerProgramMenuItems" Guid="BBB6934E-57F3-4E39-A2C8-C6C26A9FE0C6">
+				<Component Id="ProgramMenuItems" Guid="BBB6934E-57F3-4E39-A2C8-C6C26A9FE0C6">
 					<!--
 								Fix ICE 38 by adding a dummy registry key that is the key for this shortcut.
 								http://msdn.microsoft.com/library/en-us/msi/setup/ice38.asp
 							-->
-					<RegistryValue Id="JexusManagerExeStartMenuShortcutRegistryKey" Root="HKCU" Type="string" KeyPath="yes" Key="Software\LeXtudio\JexusManager\$(var.ProductVersion)" Name="ProgramFilesShortcut" Value="1" />
-					<Shortcut Name="Jexus Manager $(var.ProductVersion)" Target="[!JexusManager.exe]" Id="JexusManagerExeStartMenuShortcut" WorkingDirectory="INSTALLDIR" Directory="ProgramMenuFolder" />
+					<RegistryValue Id="JexusManagerExeStartMenuShortcutRegistryKey" Root="HKCU" Type="string" KeyPath="yes" Key="Software\$(var.ManufacturerShort)\$(var.ProductNameShort)\$(var.ProductVersion)" Name="ProgramFilesShortcut" Value="1" />
+					<Shortcut Name="$(var.ProductName) $(var.ProductVersion)" Target="[!$(var.MainExecutable)]" Id="MainExeStartMenuShortcut" WorkingDirectory="INSTALLDIR" Directory="ProgramMenuFolder" />
                     <RemoveFolder Id="CleanUpShortCut" Directory="ProgramMenuFolder" On="uninstall"/>
 				</Component>
 			</Directory>
         </Directory>
 
-        <?if $(var.Platform) = x64 ?>
-        <Condition Message="The 64-bit version of $(var.ProductName) cannot be installed on a 32-bit edition of Microsoft Windows.">
-            <![CDATA[Installed OR VersionNT64]]>
-        </Condition>
-        <?else?>
-        <Condition Message="The 32-bit version of $(var.ProductName) cannot be installed on a 64-bit edition of Microsoft Windows.">
-            <![CDATA[Installed OR not VersionNT64]]>
-        </Condition>
-        <?endif ?>
+        <?include "OS.wxi" ?>
 
         <!--
 			If a newer version of SharpDevelop is installed, show an error message.
@@ -112,13 +93,7 @@
 		-->
 		<CustomAction Id="NoDowngrade" Error="A later version of [ProductName] is already installed." />
 
-        <util:CloseApplication Id="CloseIisManager"
-                            CloseMessage="yes"
-                            Description="Please close Jexus Manager before continuing."
-                            ElevatedCloseMessage="yes"
-                            RebootPrompt="no"
-                            PromptToContinue="yes"
-                            Target="JexusManager.exe" />
+        <?include "CloseApplication.wxi" ?>
 
         <!-- Custom Actions using Install Util -->
         <InstallExecuteSequence>
