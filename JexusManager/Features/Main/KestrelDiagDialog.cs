@@ -82,7 +82,7 @@ namespace JexusManager.Features.Main
                     if (string.IsNullOrWhiteSpace(info) || hasException)
                     {
                         // fallback to resources.
-                        var number = new Version(release["channel-version"].Value<string>());
+                        var number = new Version(release.Value<string>("channel-version"));
                         var name = $"_{number.Major}_{number.Minor}_release";
                         using var bytes = new MemoryStream((byte[])Resources.ResourceManager.GetObject(name));
                         using var stream = new StreamReader(bytes);
@@ -103,43 +103,55 @@ namespace JexusManager.Features.Main
                             continue;
                         }
 
-                        if (runtimeObject["version"] == null)
+                        try
                         {
-                            continue;
-                        }
+                            if (!runtimeObject.HasValues)
+                            {
+                                continue;
+                            }
 
-                        var longVersion = runtimeObject["version"].Value<string>();
-                        var aspNetRuntime = actual["aspnetcore-runtime"];
-                        if (aspNetRuntime == null || !aspNetRuntime.HasValues)
-                        {
-                            continue;
-                        }
+                            var longVersion = runtimeObject.Value<string>("version");
+                            if (longVersion == null)
+                            {
+                                continue;
+                            }
 
-                        var aspNetCoreModuleObject = aspNetRuntime["version-aspnetcoremodule"];
-                        if (aspNetCoreModuleObject == null || !aspNetCoreModuleObject.HasValues)
-                        {
-                            // skip no ASP.NET Core module release.
-                            continue;
-                        }
+                            var aspNetRuntime = actual["aspnetcore-runtime"];
+                            if (aspNetRuntime == null || !aspNetRuntime.HasValues)
+                            {
+                                continue;
+                            }
 
-                        var aspNetCoreModule = aspNetCoreModuleObject.Values<string>().First();
-                        var phase = release["support-phase"].Value<string>();
-                        var expired = phase == "eol";
-                        if (phase == "preview" || longVersion.Contains("-"))
-                        {
-                            // skip preview release.
-                            continue;
-                        }
+                            var aspNetCoreModuleObject = aspNetRuntime["version-aspnetcoremodule"];
+                            if (aspNetCoreModuleObject == null || !aspNetCoreModuleObject.HasValues)
+                            {
+                                // skip no ASP.NET Core module release.
+                                continue;
+                            }
 
-                        var runtime = Version.Parse(longVersion);
-                        if (mappings.ContainsKey(runtime))
-                        {
-                            Console.WriteLine($"{runtime}: new {aspNetCoreModule}: old {mappings[runtime].Item1}");
+                            var aspNetCoreModule = aspNetCoreModuleObject.Values<string>().First();
+                            var phase = release.Value<string>("support-phase");
+                            var expired = phase == "eol";
+                            if (phase == "preview" || longVersion.Contains("-"))
+                            {
+                                // skip preview release.
+                                continue;
+                            }
+
+                            var runtime = Version.Parse(longVersion);
+                            if (mappings.ContainsKey(runtime))
+                            {
+                                Console.WriteLine($"{runtime}: new {aspNetCoreModule}: old {mappings[runtime].Item1}");
+                            }
+                            else
+                            {
+                                mappings.Add(runtime,
+                                    new Tuple<Version, bool>(Version.Parse(aspNetCoreModule), expired));
+                            }
                         }
-                        else
+                        catch (Exception ex)
                         {
-                            mappings.Add(runtime,
-                                new Tuple<Version, bool>(Version.Parse(aspNetCoreModule), expired));
+                            Console.WriteLine($"JSON parsing failed. {ex}");
                         }
                     }
                 }
