@@ -61,8 +61,12 @@ namespace JexusManager.Features.IpSecurity
                 }
 
                 result.Add(new MethodTaskItem("View", "View Ordered List...", string.Empty).SetUsage());
-                result.Add(MethodTaskItem.CreateSeparator().SetUsage());
-                result.Add(new MethodTaskItem("Dynamic", "Edit Dynamic Restriction Settings...", string.Empty).SetUsage());
+                if (_owner.IsFeatureEnabled)
+                {
+                    result.Add(MethodTaskItem.CreateSeparator().SetUsage());
+                    result.Add(new MethodTaskItem("Dynamic", "Edit Dynamic Restriction Settings...", string.Empty).SetUsage());
+                }
+
                 return result.ToArray(typeof(TaskItem)) as TaskItem[];
             }
 
@@ -211,12 +215,6 @@ namespace JexusManager.Features.IpSecurity
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var section = service.GetSection("system.webServer/security/dynamicIpSecurity", null, false);
-            if (section == null)
-            {
-                // TODO: display a friendly error message.
-                return;
-            }
-
             using (var dialog = new DynamicDialog(Module, section, this))
             {
                 if (dialog.ShowDialog() != DialogResult.OK)
@@ -253,5 +251,15 @@ namespace JexusManager.Features.IpSecurity
         public virtual Version MinimumFrameworkVersion => FxVersionNotRequired;
 
         public string Name => "IP Address and Domain Restrictions";
+
+        public bool IsFeatureEnabled
+        {
+            get
+            {
+                var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+                var section = service.GetSection("system.webServer/security/dynamicIpSecurity", null, false);
+                return section != null;
+            }
+        }
     }
 }
