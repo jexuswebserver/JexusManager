@@ -376,45 +376,6 @@ namespace JexusManager.Features.Main
             txtResult.AppendText(Environment.NewLine);
         }
 
-        private int GetEventLogging()
-        {
-            if (Helper.IsRunningOnMono())
-            {
-                return -1;
-            }
-
-            // https://support.microsoft.com/en-us/kb/260729
-            var key = Registry.LocalMachine.OpenSubKey(@"System\CurrentControlSet\Control\SecurityProviders\SCHANNEL");
-            if (key == null)
-            {
-                return 1;
-            }
-
-            var value = (int)key.GetValue("EventLogging", 1);
-            return value;
-        }
-
-        private static bool GetProtocol(string protocol)
-        {
-            if (Helper.IsRunningOnMono())
-            {
-                return false;
-            }
-
-            // https://support.microsoft.com/en-us/kb/187498
-            var key =
-                Registry.LocalMachine.OpenSubKey(
-                    $@"SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\{protocol}\Server");
-            if (key == null)
-            {
-                return true;
-            }
-
-            var value = (int)key.GetValue("Enabled", 1);
-            var enabled = value == 1;
-            return enabled;
-        }
-
         private void BtnHelpClick(object sender, EventArgs e)
         {
             DialogHelper.ProcessStart("http://www.jexusmanager.com/en/latest/tutorials/vs-diagnostics.html");
