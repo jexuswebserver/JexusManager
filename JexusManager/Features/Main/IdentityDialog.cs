@@ -19,33 +19,6 @@ namespace JexusManager.Features.Main
             : base(serviceProvider)
         {
             InitializeComponent();
-            rbBuiltin.Checked = element.IdentityType != ProcessModelIdentityType.SpecificUser;
-            rbCustom.Checked = !rbBuiltin.Checked;
-            if (element.IdentityType == ProcessModelIdentityType.SpecificUser)
-            {
-                txtCustom.Text = element.UserName;
-            }
-            else
-            {
-                switch (element.IdentityType)
-                {
-                    case ProcessModelIdentityType.LocalSystem:
-                        cbBuiltin.SelectedIndex = 1;
-                        break;
-                    case ProcessModelIdentityType.LocalService:
-                        cbBuiltin.SelectedIndex = 0;
-                        break;
-                    case ProcessModelIdentityType.NetworkService:
-                        cbBuiltin.SelectedIndex = 2;
-                        break;
-                    case ProcessModelIdentityType.ApplicationPoolIdentity:
-                        cbBuiltin.SelectedIndex = 3;
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-
             var container = new CompositeDisposable();
             FormClosed += (sender, args) => container.Dispose();
 
@@ -89,7 +62,8 @@ namespace JexusManager.Features.Main
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    txtCustom.Enabled = btnSet.Enabled = rbCustom.Checked;
+                    txtCustom.Enabled = rbCustom.Checked;
+                    btnSet.Enabled = rbCustom.Checked;
                     cbBuiltin.Enabled = rbBuiltin.Checked;
                 }));
 
@@ -107,6 +81,34 @@ namespace JexusManager.Features.Main
                     txtCustom.Text = dialog.UserName;
                     element.Password = dialog.Password;
                 }));
+
+
+            rbBuiltin.Checked = element.IdentityType != ProcessModelIdentityType.SpecificUser;
+            rbCustom.Checked = !rbBuiltin.Checked;
+            if (element.IdentityType == ProcessModelIdentityType.SpecificUser)
+            {
+                txtCustom.Text = element.UserName;
+            }
+            else
+            {
+                switch (element.IdentityType)
+                {
+                    case ProcessModelIdentityType.LocalSystem:
+                        cbBuiltin.SelectedIndex = 1;
+                        break;
+                    case ProcessModelIdentityType.LocalService:
+                        cbBuiltin.SelectedIndex = 0;
+                        break;
+                    case ProcessModelIdentityType.NetworkService:
+                        cbBuiltin.SelectedIndex = 2;
+                        break;
+                    case ProcessModelIdentityType.ApplicationPoolIdentity:
+                        cbBuiltin.SelectedIndex = 3;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
         }
 
         private void IdentityDialogHelpButtonClicked(object sender, System.ComponentModel.CancelEventArgs e)

@@ -83,7 +83,6 @@
             // 
             // btnSet
             // 
-            this.btnSet.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnSet.Location = new System.Drawing.Point(307, 95);
             this.btnSet.Name = "btnSet";
             this.btnSet.Size = new System.Drawing.Size(95, 23);
@@ -103,7 +102,6 @@
             // 
             // btnOK
             // 
-            this.btnOK.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnOK.Location = new System.Drawing.Point(211, 176);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(90, 23);
