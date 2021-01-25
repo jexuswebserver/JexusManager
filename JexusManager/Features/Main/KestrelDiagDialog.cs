@@ -401,6 +401,7 @@ namespace JexusManager.Features.Main
                                 var runtime = Path.Combine(root, executable + ".deps.json");
                                 if (File.Exists(runtime))
                                 {
+                                    Debug($"Found runtime config file {runtime}.");
                                     var reader = JObject.Parse(File.ReadAllText(runtime));
                                     var targetName = (string)reader["runtimeTarget"]["name"];
                                     Debug($"\"runtimeTarget\": {targetName}.");
@@ -451,6 +452,10 @@ namespace JexusManager.Features.Main
                                             }
                                         }
                                     }
+                                    else
+                                    {
+                                        Warn($"Couldn't detect runtime version. Please refer to pages such as https://dotnet.microsoft.com/download/dotnet-core/3.1 to verify that ASP.NET Core version {ancmVersion} matches the runtime of the web app.");
+                                    }
                                 }
                                 else
                                 {
@@ -463,8 +468,6 @@ namespace JexusManager.Features.Main
                                 Rollbar.RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> { { "source", "web app" } });
                             }
                         }
-
-                        Warn($"Please refer to pages such as https://dotnet.microsoft.com/download/dotnet-core/3.1 to verify that ASP.NET Core version {ancmVersion} matches the runtime of the web app.");
                     }
                     catch (COMException ex)
                     {
