@@ -178,6 +178,117 @@ namespace Microsoft.Web.Administration
             }
         }
 
+        internal override void SetPassword(ApplicationPoolProcessModel processModel, string password)
+        {
+            var directory = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
+                "IIS Express");
+            if (!Directory.Exists(directory))
+            {
+                // IMPORTANT: for x86 IIS 7 Express
+                directory = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
+                    "IIS Express");
+                if (!Directory.Exists(directory))
+                {
+                    // IMPORTANT: fallback to default password setting. Should throw encryption exception.
+                    processModel.Password = password;
+                    return;
+                }
+            }
+
+            // IMPORTANT: save vdir to config file.
+            CommitChanges();
+            var appcmd = Path.Combine(directory, "appcmd.exe");
+            if (!File.Exists(appcmd))
+            {
+                // IMPORTANT: fallback to default password setting. Should throw encryption exception.
+                processModel.Password = password;
+                return;
+            }
+
+            {
+                var command = $"set apppool \"{processModel.ParentElement["name"]}\" /-processModel.password /apphostconfig:\"{FileName}\"";
+                var resultFile = Path.GetTempFileName();
+                using var process = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = "cmd",
+                        Arguments = $"/c \"\"{CertificateInstallerLocator.FileName}\" /verb:appcmd /launcher:\"{appcmd}\" /resultFile:\"{resultFile}\" /input:\"{command}\"\"",
+                        CreateNoWindow = true,
+                        WindowStyle = ProcessWindowStyle.Hidden,
+                        Verb = "runas",
+                        UseShellExecute = true
+                    }
+                };
+                try
+                {
+                    process.Start();
+                    process.WaitForExit();
+                    if (process.ExitCode != 0)
+                    {
+                        var message = File.ReadAllText(resultFile);
+                        File.Delete(resultFile);
+                        throw new Exception($"{process.ExitCode} {message}");
+                    }
+                }
+                catch (Win32Exception ex)
+                {
+                    // elevation is cancelled.
+                    if (ex.NativeErrorCode != NativeMethods.ErrorCancelled)
+                    {
+                        RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> { { "native", ex.NativeErrorCode } });
+                        // throw;
+                    }
+                }
+            }
+
+            {
+                if (string.IsNullOrEmpty(password))
+                {
+                    return;
+                }
+
+                var command = $"set apppool \"{processModel.ParentElement["name"]}\" /processModel.password:{password} /apphostconfig:\"{FileName}\"";
+                var resultFile = Path.GetTempFileName();
+                using var process = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = "cmd",
+                        Arguments = $"/c \"\"{CertificateInstallerLocator.FileName}\" /verb:appcmd /launcher:\"{appcmd}\" /resultFile:{resultFile} /input:\"{command}\"\"",
+                        CreateNoWindow = true,
+                        WindowStyle = ProcessWindowStyle.Hidden,
+                        Verb = "runas",
+                        UseShellExecute = true
+                    }
+                };
+                try
+                {
+                    process.Start();
+                    process.WaitForExit();
+                    if (process.ExitCode != 0)
+                    {
+                        var message = File.ReadAllText(resultFile);
+                        File.Delete(resultFile);
+                        throw new Exception($"{process.ExitCode} {message}");
+                    }
+
+                    var message1 = File.ReadAllText(resultFile);
+                }
+                catch (Win32Exception ex)
+                {
+                    // elevation is cancelled.
+                    if (ex.NativeErrorCode != NativeMethods.ErrorCancelled)
+                    {
+                        RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> { { "native", ex.NativeErrorCode } });
+                        // throw;
+                    }
+                }
+            }
+        }
+
         private Version GetIisExpressVersion()
         {
             if (PrimaryExecutable != null && File.Exists(PrimaryExecutable))

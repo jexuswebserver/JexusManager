@@ -5,7 +5,6 @@
 namespace JexusManager.Features.Main
 {
     using System;
-    using System.Diagnostics;
     using System.Windows.Forms;
 
     using Microsoft.Web.Administration;
@@ -21,6 +20,7 @@ namespace JexusManager.Features.Main
             InitializeComponent();
             var container = new CompositeDisposable();
             FormClosed += (sender, args) => container.Dispose();
+            var password = string.Empty;
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
@@ -29,8 +29,9 @@ namespace JexusManager.Features.Main
                 {
                     if (rbCustom.Checked)
                     {
-                        element.UserName = txtCustom.Text;
                         element.IdentityType = ProcessModelIdentityType.SpecificUser;
+                        element.UserName = txtCustom.Text;
+                        element.SetPassword(password);
                     }
 
                     if (rbBuiltin.Checked)
@@ -53,18 +54,20 @@ namespace JexusManager.Features.Main
                         }
                     }
 
-                    this.DialogResult = DialogResult.OK;
+                    DialogResult = DialogResult.OK;
                 }));
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(rbBuiltin, "CheckedChanged")
                 .Merge(Observable.FromEventPattern<EventArgs>(rbCustom, "CheckedChanged"))
+                .Sample(TimeSpan.FromSeconds(0.5))
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
                     txtCustom.Enabled = rbCustom.Checked;
                     btnSet.Enabled = rbCustom.Checked;
                     cbBuiltin.Enabled = rbBuiltin.Checked;
+                    btnOK.Enabled = (rbBuiltin.Checked && cbBuiltin.SelectedIndex > -1) || (rbCustom.Checked && txtCustom.Text.Length > 0);
                 }));
 
             container.Add(
@@ -79,9 +82,8 @@ namespace JexusManager.Features.Main
                     }
 
                     txtCustom.Text = dialog.UserName;
-                    element.Password = dialog.Password;
+                    password = dialog.Password;
                 }));
-
 
             rbBuiltin.Checked = element.IdentityType != ProcessModelIdentityType.SpecificUser;
             rbCustom.Checked = !rbBuiltin.Checked;

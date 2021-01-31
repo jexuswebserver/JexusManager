@@ -308,5 +308,96 @@ namespace Microsoft.Web.Administration
                 }
             }
         }
+
+        internal override void SetPassword(ApplicationPoolProcessModel processModel, string password)
+        {
+            var appcmd = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "inetsrv", "appcmd.exe");
+            if (!File.Exists(appcmd))
+            {
+                // IMPORTANT: fallback to default password setting. Should throw encryption exception.
+                processModel.Password = password;
+                return;
+            }
+
+            // IMPORTANT: save vdir to config file.
+            {
+                var command = $"set apppool \"{processModel.ParentElement["name"]}\" /-processModel.password";
+                var resultFile = Path.GetTempFileName();
+                using var process = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = "cmd",
+                        Arguments = $"/c \"\"{CertificateInstallerLocator.FileName}\" /verb:appcmd /launcher:\"{appcmd}\" /resultFile:{resultFile} /input:\"{command}\"\"",
+                        CreateNoWindow = true,
+                        WindowStyle = ProcessWindowStyle.Hidden,
+                        Verb = "runas",
+                        UseShellExecute = true
+                    }
+                };
+                try
+                {
+                    process.Start();
+                    process.WaitForExit();
+                    if (process.ExitCode != 0)
+                    {
+                        var message = File.ReadAllText(resultFile);
+                        File.Delete(resultFile);
+                        throw new Exception($"{process.ExitCode} {message}");
+                    }
+                }
+                catch (Win32Exception ex)
+                {
+                    // elevation is cancelled.
+                    if (ex.NativeErrorCode != NativeMethods.ErrorCancelled)
+                    {
+                        RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> { { "native", ex.NativeErrorCode } });
+                        // throw;
+                    }
+                }
+            }
+
+            {
+                if (string.IsNullOrEmpty(password))
+                {
+                    return;
+                }
+
+                var command = $"set apppool \"{processModel.ParentElement["name"]}\" /processModel.password:{password}";
+                var resultFile = Path.GetTempFileName();
+                using var process = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = "cmd",
+                        Arguments = $"/c \"\"{CertificateInstallerLocator.FileName}\" /verb:appcmd /launcher:\"{appcmd}\" /resultFile:{resultFile} /input:\"{command}\"\"",
+                        CreateNoWindow = true,
+                        WindowStyle = ProcessWindowStyle.Hidden,
+                        Verb = "runas",
+                        UseShellExecute = true
+                    }
+                };
+                try
+                {
+                    process.Start();
+                    process.WaitForExit();
+                    if (process.ExitCode != 0)
+                    {
+                        var message = File.ReadAllText(resultFile);
+                        File.Delete(resultFile);
+                        throw new Exception($"{process.ExitCode} {message}");
+                    }
+                }
+                catch (Win32Exception ex)
+                {
+                    // elevation is cancelled.
+                    if (ex.NativeErrorCode != NativeMethods.ErrorCancelled)
+                    {
+                        RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> { { "native", ex.NativeErrorCode } });
+                        // throw;
+                    }
+                }
+            }
+        }
     }
 }

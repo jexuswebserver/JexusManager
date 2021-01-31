@@ -87,6 +87,10 @@ namespace Microsoft.Web.Administration
         {
         }
 
+        internal virtual void SetPassword(ApplicationPoolProcessModel processModel, string password)
+        {
+        }
+
         private void Initialize()
         {
             lock (_locker)

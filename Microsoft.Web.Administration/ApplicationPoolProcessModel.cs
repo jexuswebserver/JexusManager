@@ -112,5 +112,12 @@ namespace Microsoft.Web.Administration
                     throw new ArgumentOutOfRangeException();
             }
         }
+
+        internal void SetPassword(string password)
+        {
+            // IMPORTANT: delegate to ServerManager so we can implement IIS/IIS Express separately.
+            var parent = ParentElement as ApplicationPool;
+            parent?.Server.SetPassword(this, password);
+        }
     }
 }
