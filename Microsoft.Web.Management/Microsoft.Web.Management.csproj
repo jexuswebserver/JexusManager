@@ -11,6 +11,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.ServiceProcess.ServiceController" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Microsoft.Web.Administration\Microsoft.Web.Administration.csproj" />
     <ProjectReference Include="..\Microsoft.Web.Configuration.AppHostFileProvider\Microsoft.Web.Configuration.AppHostFileProvider.csproj" />
   </ItemGroup>
