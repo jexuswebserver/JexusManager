@@ -86,7 +86,7 @@ namespace JexusManager.Features.RequestFiltering
                 .Merge(Observable.FromEventPattern<EventArgs>(dgvHeaders, "RowsAdded"))
                 .Merge(Observable.FromEventPattern<EventArgs>(dgvExtensions, "RowsAdded"))
                 .Merge(Observable.FromEventPattern<EventArgs>(dgvStrings, "RowsAdded"))
-                .Sample(TimeSpan.FromSeconds(1))
+                .Sample(TimeSpan.FromSeconds(0.5))
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {

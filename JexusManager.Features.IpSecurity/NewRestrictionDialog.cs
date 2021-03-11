@@ -32,7 +32,7 @@ namespace JexusManager.Features.IpSecurity
             container.Add(
                 Observable.FromEventPattern<EventArgs>(rbAddress, "CheckedChanged")
                 .Merge(Observable.FromEventPattern<EventArgs>(rbRange, "CheckedChanged"))
-                .Sample(TimeSpan.FromSeconds(1))
+                .Sample(TimeSpan.FromSeconds(0.5))
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {

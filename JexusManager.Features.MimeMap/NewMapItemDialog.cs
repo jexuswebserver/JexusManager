@@ -53,7 +53,7 @@ namespace JexusManager.Features.MimeMap
             container.Add(
                 Observable.FromEventPattern<EventArgs>(txtExtension, "TextChanged")
                 .Merge(Observable.FromEventPattern<EventArgs>(txtType, "TextChanged"))
-                .Sample(TimeSpan.FromSeconds(1))
+                .Sample(TimeSpan.FromSeconds(0.5))
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {

@@ -36,7 +36,7 @@ namespace JexusManager.Features.IpSecurity
             container.Add(
                 Observable.FromEventPattern<EventArgs>(cbInterval, "CheckedChanged")
                 .Merge(load)
-                .Sample(TimeSpan.FromSeconds(1))
+                .Sample(TimeSpan.FromSeconds(0.5))
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
@@ -46,7 +46,7 @@ namespace JexusManager.Features.IpSecurity
             container.Add(
                 Observable.FromEventPattern<EventArgs>(cbConcurrent, "CheckedChanged")
                 .Merge(load)
-                .Sample(TimeSpan.FromSeconds(1))
+                .Sample(TimeSpan.FromSeconds(0.5))
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {

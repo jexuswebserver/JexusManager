@@ -56,7 +56,7 @@ namespace JexusManager.Dialogs
             container.Add(
                 Observable.FromEventPattern<EventArgs>(txtAlias, "TextChanged")
                 .Merge(Observable.FromEventPattern<EventArgs>(txtPhysicalPath, "TextChanged"))
-                .Sample(TimeSpan.FromSeconds(1))
+                .Sample(TimeSpan.FromSeconds(0.5))
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {

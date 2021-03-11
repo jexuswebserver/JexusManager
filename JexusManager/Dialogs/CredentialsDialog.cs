@@ -28,7 +28,7 @@ namespace JexusManager.Dialogs
                 Observable.FromEventPattern<EventArgs>(txtName, "TextChanged")
                 .Merge(Observable.FromEventPattern<EventArgs>(txtPassword, "TextChanged"))
                 .Merge(Observable.FromEventPattern<EventArgs>(txtConfirm, "TextChanged"))
-                .Sample(TimeSpan.FromSeconds(1))
+                .Sample(TimeSpan.FromSeconds(0.5))
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {

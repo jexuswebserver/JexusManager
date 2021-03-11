@@ -97,7 +97,7 @@ namespace JexusManager.Features.RequestFiltering
                 Observable.FromEventPattern<EventArgs>(txtContent, "TextChanged")
                 .Merge(Observable.FromEventPattern<EventArgs>(txtQuery, "TextChanged"))
                 .Merge(Observable.FromEventPattern<EventArgs>(txtURL, "TextChanged"))
-                .Sample(TimeSpan.FromSeconds(1))
+                .Sample(TimeSpan.FromSeconds(0.5))
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {

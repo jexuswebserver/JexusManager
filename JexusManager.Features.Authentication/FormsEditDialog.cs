@@ -88,7 +88,7 @@ namespace JexusManager.Features.Authentication
                 Observable.FromEventPattern<EventArgs>(cbSSL, "CheckedChanged")
                 .Merge(Observable.FromEventPattern<EventArgs>(txtURL, "TextChanged"))
                 .Merge(Observable.FromEventPattern<EventArgs>(cbMode, "SelectedIndexChanged"))
-                .Sample(TimeSpan.FromSeconds(1))
+                .Sample(TimeSpan.FromSeconds(0.5))
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {

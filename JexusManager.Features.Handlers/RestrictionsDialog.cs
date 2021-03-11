@@ -106,7 +106,7 @@ namespace JexusManager.Features.Handlers
             container.Add(
                 Observable.FromEventPattern<EventArgs>(rbSelectedVerbs, "CheckedChanged")
                 .Merge(Observable.FromEventPattern<EventArgs>(rbAllVerbs, "CheckedChanged"))
-                .Sample(TimeSpan.FromSeconds(1))
+                .Sample(TimeSpan.FromSeconds(0.5))
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {

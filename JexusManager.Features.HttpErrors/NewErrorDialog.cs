@@ -40,7 +40,7 @@ namespace JexusManager.Features.HttpErrors
                 .Merge(Observable.FromEventPattern<EventArgs>(txtRedirect, "TextChanged"))
                 .Merge(Observable.FromEventPattern<EventArgs>(txtExecute, "TextChanged"))
                 .Merge(Observable.FromEventPattern<EventArgs>(txtStatic, "TextChanged"))
-                .Sample(TimeSpan.FromSeconds(1))
+                .Sample(TimeSpan.FromSeconds(0.5))
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
@@ -128,7 +128,7 @@ namespace JexusManager.Features.HttpErrors
                 Observable.FromEventPattern<EventArgs>(rbRedirect, "CheckedChanged")
                 .Merge(Observable.FromEventPattern<EventArgs>(rbExecute, "CheckedChanged"))
                 .Merge(Observable.FromEventPattern<EventArgs>(rbStatic, "CheckedChanged"))
-                .Sample(TimeSpan.FromSeconds(1))
+                .Sample(TimeSpan.FromSeconds(0.5))
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {

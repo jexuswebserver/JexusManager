@@ -24,7 +24,7 @@ namespace JexusManager.Features.Authentication
             FormClosed += (sender, args) => container.Dispose();
             container.Add(
                 Observable.FromEventPattern<EventArgs>(txtName, "TextChanged")
-                .Sample(TimeSpan.FromSeconds(1))
+                .Sample(TimeSpan.FromSeconds(0.5))
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
@@ -69,7 +69,7 @@ namespace JexusManager.Features.Authentication
             container.Add(
                 Observable.FromEventPattern<EventArgs>(rbPool, "CheckedChanged")
                 .Merge(Observable.FromEventPattern<EventArgs>(rbSpecific, "CheckedChanged"))
-                .Sample(TimeSpan.FromSeconds(1))
+                .Sample(TimeSpan.FromSeconds(0.5))
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {

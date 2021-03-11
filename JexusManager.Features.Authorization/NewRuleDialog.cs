@@ -97,7 +97,7 @@ namespace JexusManager.Features.Authorization
                 .Merge(Observable.FromEventPattern<EventArgs>(rbAnonymous, "CheckedChanged"))
                 .Merge(Observable.FromEventPattern<EventArgs>(rbUsers, "CheckedChanged"))
                 .Merge(Observable.FromEventPattern<EventArgs>(cbVerbs, "CheckedChanged"))
-                .Sample(TimeSpan.FromSeconds(1))
+                .Sample(TimeSpan.FromSeconds(0.5))
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
@@ -114,7 +114,7 @@ namespace JexusManager.Features.Authorization
                 Observable.FromEventPattern<EventArgs>(txtRoles, "TextChanged")
                 .Merge(Observable.FromEventPattern<EventArgs>(txtUsers, "TextChanged"))
                 .Merge(Observable.FromEventPattern<EventArgs>(txtVerbs, "TextChanged"))
-                .Sample(TimeSpan.FromSeconds(1))
+                .Sample(TimeSpan.FromSeconds(0.5))
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {

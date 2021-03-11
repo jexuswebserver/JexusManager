@@ -58,7 +58,7 @@ namespace JexusManager.Features.Certificates
 
             container.Add(
                 Observable.FromEventPattern<EventArgs>(txtFile, "TextChanged")
-                .Sample(TimeSpan.FromSeconds(1))
+                .Sample(TimeSpan.FromSeconds(0.5))
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {

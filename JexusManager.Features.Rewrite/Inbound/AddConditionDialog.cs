@@ -57,7 +57,7 @@ namespace JexusManager.Features.Rewrite.Inbound
                 Observable.FromEventPattern<EventArgs>(txtPattern, "TextChanged")
                 .Merge(check)
                 .Merge(Observable.FromEventPattern<EventArgs>(txtInput, "TextChanged"))
-                .Sample(TimeSpan.FromSeconds(1))
+                .Sample(TimeSpan.FromSeconds(0.5))
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {

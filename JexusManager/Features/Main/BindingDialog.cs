@@ -237,7 +237,7 @@ namespace JexusManager.Features.Main
                 .Merge(Observable.FromEventPattern<EventArgs>(txtPort, "TextChanged"))
                 .Merge(Observable.FromEventPattern<EventArgs>(txtHost, "TextChanged"))
                 .Merge(certificatesSelected)
-                .Sample(TimeSpan.FromSeconds(1))
+                .Sample(TimeSpan.FromSeconds(0.5))
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {

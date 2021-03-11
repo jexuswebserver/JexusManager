@@ -47,7 +47,7 @@ namespace JexusManager.Features.TraceFailedRequests.Wizards.AddTraceWizard
                 }));
             container.Add(
                 Observable.FromEventPattern<EventArgs>(txtCodes, "TextChanged")
-                .Sample(TimeSpan.FromSeconds(1))
+                .Sample(TimeSpan.FromSeconds(0.5))
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
@@ -55,7 +55,7 @@ namespace JexusManager.Features.TraceFailedRequests.Wizards.AddTraceWizard
                 }));
             container.Add(
                 Observable.FromEventPattern<EventArgs>(txtTime, "TextChanged")
-                .Sample(TimeSpan.FromSeconds(1))
+                .Sample(TimeSpan.FromSeconds(0.5))
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
