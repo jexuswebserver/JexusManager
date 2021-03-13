@@ -438,6 +438,8 @@ namespace JexusManager.Features.Certificates
                 try
                 {
                     store.Add(cert);
+                    var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
+                    dialog.ShowMessage("This certificate is now trusted by the logon user.", Name);
                 }
                 catch (CryptographicException ex)
                 {
