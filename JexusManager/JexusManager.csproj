@@ -10,8 +10,8 @@
     <OutputType>WinExe</OutputType>
     <StartupObject />
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <AssemblyVersion>13.0.0.27</AssemblyVersion>
-    <FileVersion>13.0.0.27</FileVersion>
+    <AssemblyVersion>13.0.0.28</AssemblyVersion>
+    <FileVersion>13.0.0.28</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
