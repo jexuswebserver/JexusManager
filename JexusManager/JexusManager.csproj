@@ -10,8 +10,9 @@
     <OutputType>WinExe</OutputType>
     <StartupObject />
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <AssemblyVersion>13.0.0.29</AssemblyVersion>
-    <FileVersion>13.0.0.29</FileVersion>
+    <!-- MSI engine uses the first three fields https://docs.microsoft.com/en-us/windows/win32/msi/upgrade-table?redirectedfrom=MSDN#columns -->
+    <AssemblyVersion>13.0.1.0</AssemblyVersion>
+    <FileVersion>13.0.1.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
