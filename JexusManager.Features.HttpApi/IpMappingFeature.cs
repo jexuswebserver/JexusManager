@@ -97,25 +97,23 @@ namespace JexusManager.Features.HttpApi
             try
             {
                 // remove IP mapping
-                using (var process = new Process())
-                {
-                    var start = process.StartInfo;
-                    start.Verb = "runas";
-                    start.UseShellExecute = true;
-                    start.FileName = "cmd";
-                    start.Arguments =
-                        $"/c \"\"{CertificateInstallerLocator.FileName}\" /a:\"{SelectedItem.Address}\" /o:{SelectedItem.Port}\"";
-                    start.CreateNoWindow = true;
-                    start.WindowStyle = ProcessWindowStyle.Hidden;
-                    process.Start();
-                    process.WaitForExit();
+                using var process = new Process();
+                var start = process.StartInfo;
+                start.Verb = "runas";
+                start.UseShellExecute = true;
+                start.FileName = "cmd";
+                start.Arguments =
+                    $"/c \"\"{CertificateInstallerLocator.FileName}\" /a:\"{SelectedItem.Address}\" /o:{SelectedItem.Port}\"";
+                start.CreateNoWindow = true;
+                start.WindowStyle = ProcessWindowStyle.Hidden;
+                process.Start();
+                process.WaitForExit();
 
-                    if (process.ExitCode == 0)
-                    {
-                        Items.Remove(SelectedItem);
-                        SelectedItem = null;
-                        OnHttpApiSettingsSaved();
-                    }
+                if (process.ExitCode == 0)
+                {
+                    Items.Remove(SelectedItem);
+                    SelectedItem = null;
+                    OnHttpApiSettingsSaved();
                 }
             }
             catch (Win32Exception ex)
@@ -136,23 +134,25 @@ namespace JexusManager.Features.HttpApi
         private void View()
         {
             X509Certificate2 cert = null;
-            X509Store personal = new X509Store(SelectedItem.Store, StoreLocation.LocalMachine);
-            try
+            using (X509Store personal = new X509Store(SelectedItem.Store, StoreLocation.LocalMachine))
             {
-                personal.Open(OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
-                var found = personal.Certificates.Find(X509FindType.FindByThumbprint, SelectedItem.Hash, false);
-                if (found.Count > 0)
+                try
                 {
-                    cert = found[0];
-                }
+                    personal.Open(OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
+                    var found = personal.Certificates.Find(X509FindType.FindByThumbprint, SelectedItem.Hash, false);
+                    if (found.Count > 0)
+                    {
+                        cert = found[0];
+                    }
 
-                personal.Close();
-            }
-            catch (CryptographicException ex)
-            {
-                var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
-                dialog.ShowError(ex, $"This mapping might point to an invalid certificate. Thumbprint {SelectedItem.Hash}, Store {SelectedItem.Store}.", Name, false);
-                return;
+                    personal.Close();
+                }
+                catch (CryptographicException ex)
+                {
+                    var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
+                    dialog.ShowError(ex, $"This mapping might point to an invalid certificate. Thumbprint {SelectedItem.Hash}, Store {SelectedItem.Store}.", Name, false);
+                    return;
+                }
             }
 
             if (cert != null)

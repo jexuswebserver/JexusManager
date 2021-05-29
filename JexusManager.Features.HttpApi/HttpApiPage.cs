@@ -13,6 +13,8 @@ namespace JexusManager.Features.HttpApi
     using Microsoft.Web.Administration;
     using Microsoft.Web.Management.Client;
     using Microsoft.Web.Management.Client.Win32;
+    using System.Security.Cryptography.X509Certificates;
+    using System.Security.Cryptography;
 
     internal partial class HttpApiPage : ModuleListPage
     {
@@ -47,6 +49,26 @@ namespace JexusManager.Features.HttpApi
                 SubItems.Add(new ListViewSubItem(this, item.AppId));
                 SubItems.Add(new ListViewSubItem(this, item.Hash));
                 SubItems.Add(new ListViewSubItem(this, item.Store));
+
+                string flag = "Broken";
+                using X509Store personal = new X509Store(item.Store, StoreLocation.LocalMachine);
+                try
+                {
+                    personal.Open(OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
+                    var found = personal.Certificates.Find(X509FindType.FindByThumbprint, item.Hash, false);
+                    if (found.Count > 0)
+                    {
+                        flag = "Healthy";
+                    }
+
+                    personal.Close();
+                }
+                catch (CryptographicException)
+                {
+                    flag = "Unknown";
+                }
+
+                SubItems.Add(new ListViewSubItem(this, flag));
             }
         }
 
@@ -65,6 +87,26 @@ namespace JexusManager.Features.HttpApi
                 SubItems.Add(new ListViewSubItem(this, item.AppId));
                 SubItems.Add(new ListViewSubItem(this, item.Hash));
                 SubItems.Add(new ListViewSubItem(this, item.Store));
+
+                string flag = "Broken";
+                using X509Store personal = new X509Store(item.Store, StoreLocation.LocalMachine);
+                try
+                {
+                    personal.Open(OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
+                    var found = personal.Certificates.Find(X509FindType.FindByThumbprint, item.Hash, false);
+                    if (found.Count > 0)
+                    {
+                        flag = "Healthy";
+                    }
+
+                    personal.Close();
+                }
+                catch (CryptographicException)
+                {
+                    flag = "Unknown";
+                }
+
+                SubItems.Add(new ListViewSubItem(this, flag));
             }
         }
 

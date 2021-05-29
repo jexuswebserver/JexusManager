@@ -44,6 +44,7 @@
             this.chAppId = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chHash = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chStore = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tpSNI = new System.Windows.Forms.TabPage();
             this.lvSni = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -52,6 +53,7 @@
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tpURL = new System.Windows.Forms.TabPage();
             this.lvURL = new System.Windows.Forms.ListView();
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -149,7 +151,8 @@
             this.chApp,
             this.chAppId,
             this.chHash,
-            this.chStore});
+            this.chStore,
+            this.chStatus});
             this.lvIP.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvIP.FullRowSelect = true;
             this.lvIP.HideSelection = false;
@@ -193,6 +196,11 @@
             this.chStore.Text = "Certificate Store";
             this.chStore.Width = 120;
             // 
+            // chStatus
+            // 
+            this.chStatus.Text = "Certificate Status";
+            this.chStatus.Width = 80;
+            // 
             // tpSNI
             // 
             this.tpSNI.Controls.Add(this.lvSni);
@@ -212,7 +220,8 @@
             this.columnHeader3,
             this.columnHeader4,
             this.columnHeader5,
-            this.columnHeader6});
+            this.columnHeader6,
+            this.columnHeader8});
             this.lvSni.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvSni.FullRowSelect = true;
             this.lvSni.HideSelection = false;
@@ -255,6 +264,11 @@
             // 
             this.columnHeader6.Text = "Certificate Store";
             this.columnHeader6.Width = 120;
+            // 
+            // columnHeader8
+            // 
+            this.columnHeader8.Text = "Certificate Status";
+            this.columnHeader8.Width = 80;
             // 
             // tpURL
             // 
@@ -421,6 +435,7 @@
         private ColumnHeader chAppId;
         private ColumnHeader chHash;
         private ColumnHeader chStore;
+        private ColumnHeader chStatus;
         private TabPage tpSNI;
         private TabPage tpURL;
         private ListView lvSni;
@@ -430,6 +445,7 @@
         private ColumnHeader columnHeader4;
         private ColumnHeader columnHeader5;
         private ColumnHeader columnHeader6;
+        private ColumnHeader columnHeader8;
         private ListView lvURL;
         private ColumnHeader columnHeader7;
         private ColumnHeader columnHeader10;
