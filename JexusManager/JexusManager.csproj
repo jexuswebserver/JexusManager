@@ -20,7 +20,7 @@
     <PackageReference Include="ini-parser" Version="2.5.2" />
     <PackageReference Include="Mono.Options" Version="6.6.0.161" />
     <PackageReference Include="Octokit" Version="0.50.0" />
-    <PackageReference Include="Vanara.PInvoke.IpHlpApi" Version="3.3.5" />
+    <PackageReference Include="Vanara.PInvoke.IpHlpApi" Version="3.3.9" />
   </ItemGroup>
 
   <ItemGroup>
