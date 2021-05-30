@@ -272,20 +272,22 @@ namespace JexusManager
                 return;
             }
 
-            X509Store store1 = new X509Store("MY", StoreLocation.LocalMachine);
-            store1.Open(OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
-            foreach (var certificate in store1.Certificates)
+            using (X509Store store1 = new X509Store("MY", StoreLocation.LocalMachine))
             {
-                var index = comboBox.Items.Add(new CertificateInfo(certificate, store1.Name));
-                if (hash != null &&
-                    hash.SequenceEqual(certificate.GetCertHash()) &&
-                    store1.Name == store)
+                store1.Open(OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
+                foreach (var certificate in store1.Certificates)
                 {
-                    comboBox.SelectedIndex = index;
+                    var index = comboBox.Items.Add(new CertificateInfo(certificate, store1.Name));
+                    if (hash != null &&
+                        hash.SequenceEqual(certificate.GetCertHash()) &&
+                        store1.Name == store)
+                    {
+                        comboBox.SelectedIndex = index;
+                    }
                 }
-            }
 
-            store1.Close();
+                store1.Close();
+            }
 
             if (Environment.OSVersion.Version < Version.Parse("6.2"))
             {
@@ -293,7 +295,7 @@ namespace JexusManager
                 return;
             }
 
-            X509Store store2 = new X509Store("WebHosting", StoreLocation.LocalMachine);
+            using X509Store store2 = new X509Store("WebHosting", StoreLocation.LocalMachine);
             try
             {
                 store2.Open(OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);

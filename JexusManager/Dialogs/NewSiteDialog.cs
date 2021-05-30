@@ -2,26 +2,23 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
+using System.ComponentModel;
+using System.Net;
+using System.Windows.Forms;
+
+using JexusManager.Services;
+
+using Microsoft.Web.Administration;
+using Microsoft.Web.Management.Client.Win32;
+
+using Application = Microsoft.Web.Administration.Application;
+using Binding = Microsoft.Web.Administration.Binding;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
+
 namespace JexusManager.Dialogs
 {
-    using System;
-    using System.ComponentModel;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Net;
-    using System.Windows.Forms;
-
-    using JexusManager.Services;
-
-    using Microsoft.Web.Administration;
-    using Microsoft.Web.Management.Client.Win32;
-
-    using Application = Microsoft.Web.Administration.Application;
-    using Binding = Microsoft.Web.Administration.Binding;
-    using NativeMethods = JexusManager.NativeMethods;
-    using System.Reactive.Disposables;
-    using System.Reactive.Linq;
-
     public partial class NewSiteDialog : DialogForm
     {
         public NewSiteDialog(IServiceProvider serviceProvider, SiteCollection collection)
