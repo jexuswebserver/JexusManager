@@ -13,12 +13,9 @@
              Manufacturer="$(var.Manufacturer)"
              UpgradeCode="$(var.UpgradeCode)">
 
-        <Package Id="*"
-                 Comments="$(var.ProductDescription)"
+        <Package Comments="$(var.ProductDescription)"
                  InstallerVersion="300"
-                 Languages="1033"
                  Compressed="yes"
-                 InstallScope="perMachine"
                  Description="$(var.ProductName) $(var.ProductVersion)" />
 
         <Icon Id="icon.ico" SourceFile="$(var.Icon)" />
