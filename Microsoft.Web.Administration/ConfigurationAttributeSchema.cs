@@ -164,6 +164,12 @@ namespace Microsoft.Web.Administration
                     return string.Empty;
                 }
 
+                if (Type == "uint")
+                {
+                    // IMPORTANT: system.webServer/rewrite/rules action "statusCode"
+                    return "0";
+                }
+
                 return null;
             }
         }
