@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
+using static Vanara.PInvoke.Ws2_32;
 
 namespace Microsoft.Web.Administration
 {
@@ -87,20 +88,6 @@ namespace Microsoft.Web.Administration
         {
             public SOCKADDR_STORAGE IpPort;
             [MarshalAs(UnmanagedType.LPWStr)] public string Host;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        private struct SOCKADDR_STORAGE
-        {
-            public short ss_family;
-
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 6)]
-            public byte[] __ss_pad1;
-
-            public long __ss_align;
-
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 112)]
-            public byte[] __ss_pad2;
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -1122,17 +1109,9 @@ namespace Microsoft.Web.Administration
 
         private static SOCKADDR_STORAGE CreateSockAddrStorageStructure(int port)
         {
-            var result = new SOCKADDR_STORAGE();
-            result.ss_family = (short) AddressFamily.InterNetwork;
-            var ipEndPoint = new IPEndPoint(IPAddress.Any, port);
-            var socketAddress = ipEndPoint.Serialize();
-            result.__ss_pad1 = new byte[6];
-            for (var i = 0; i < result.__ss_pad1.Length; i++)
-            {
-                result.__ss_pad1[i] = socketAddress[i + 2];
-            }
-
-            return result;
+            var sin_port = ntohs((ushort)port);
+            var address = new SOCKADDR_IN(new IN_ADDR(0, 0, 0, 0), sin_port);
+            return (SOCKADDR_STORAGE)address;
         }
 
         /// <summary>
@@ -1187,26 +1166,14 @@ namespace Microsoft.Web.Administration
         /// <returns>IP address and port number</returns>
         private static IPEndPoint ReadSockAddrStorageStructure(SOCKADDR_STORAGE sockAddrStorageStructure)
         {
-            short sAddressFamily = sockAddrStorageStructure.ss_family;
+            var sAddressFamily = sockAddrStorageStructure.ss_family;
             AddressFamily addressFamily = (AddressFamily) sAddressFamily;
-
-            int sockAddrSructureSize;
-            IPEndPoint ipEndPointAny;
             switch (addressFamily)
             {
                 case AddressFamily.InterNetwork:
                     // IP v4 address
-                    sockAddrSructureSize = 8;
-                    var socketAddress = new SocketAddress(AddressFamily.InterNetwork, sockAddrSructureSize);
-                    socketAddress[0] = 2;
-                    socketAddress[1] = 0;
-                    for (int i = 2; i < sockAddrSructureSize; i++)
-                    {
-                        socketAddress[i] = sockAddrStorageStructure.__ss_pad1[i - 2];
-                    }
-
-                    ipEndPointAny = new IPEndPoint(IPAddress.Any, 0);
-                    return (IPEndPoint) ipEndPointAny.Create(socketAddress);
+                    var v4Address = (SOCKADDR_IN)sockAddrStorageStructure;
+                    return new IPEndPoint(IPAddress.Any, ntohs(v4Address.sin_port));
                 default:
                     throw new ArgumentOutOfRangeException(nameof(sockAddrStorageStructure), "Unknown address family");
             }
