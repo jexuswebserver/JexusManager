@@ -18,6 +18,7 @@
   <ItemGroup>
     <PackageReference Include="Mono.Options" Version="6.6.0.161" />
     <PackageReference Include="System.Management" Version="5.0.0" />
+    <PackageReference Include="Vanara.PInvoke.Shell32" Version="3.3.10" />
     <PackageReference Include="Vanara.PInvoke.Ws2_32" Version="3.3.10" />
   </ItemGroup>
 

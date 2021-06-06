@@ -155,6 +155,9 @@
     <PackageReference Include="Moq">
       <Version>4.16.1</Version>
     </PackageReference>
+    <PackageReference Include="Vanara.PInvoke.Shell32">
+      <Version>3.3.10</Version>
+    </PackageReference>
     <PackageReference Include="Vanara.PInvoke.Ws2_32">
       <Version>3.3.10</Version>
     </PackageReference>

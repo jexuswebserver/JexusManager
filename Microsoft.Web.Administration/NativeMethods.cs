@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
+using static Vanara.PInvoke.Shell32;
 using static Vanara.PInvoke.Ws2_32;
 
 namespace Microsoft.Web.Administration
@@ -1183,40 +1184,14 @@ namespace Microsoft.Web.Administration
 
         #region View Folder Information
 
-        [DllImport("shell32.dll", CharSet = CharSet.Auto)]
-        private static extern bool ShellExecuteEx(ref SHELLEXECUTEINFO lpExecInfo);
-
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
-        internal struct SHELLEXECUTEINFO
-        {
-            public int cbSize;
-            public uint fMask;
-            public IntPtr hwnd;
-            [MarshalAs(UnmanagedType.LPTStr)] public string lpVerb;
-            [MarshalAs(UnmanagedType.LPTStr)] public string lpFile;
-            [MarshalAs(UnmanagedType.LPTStr)] public string lpParameters;
-            [MarshalAs(UnmanagedType.LPTStr)] public string lpDirectory;
-            public int nShow;
-            public IntPtr hInstApp;
-            public IntPtr lpIDList;
-            [MarshalAs(UnmanagedType.LPTStr)] public string lpClass;
-            public IntPtr hkeyClass;
-            public uint dwHotKey;
-            public IntPtr hIcon;
-            public IntPtr hProcess;
-        }
-
-        private const int SW_SHOW = 5;
-        private const uint SEE_MASK_INVOKEIDLIST = 12;
-
         internal static bool ShowFileProperties(string Filename)
         {
             SHELLEXECUTEINFO info = new SHELLEXECUTEINFO();
             info.cbSize = Marshal.SizeOf(info);
             info.lpVerb = "properties";
             info.lpFile = Filename;
-            info.nShow = SW_SHOW;
-            info.fMask = SEE_MASK_INVOKEIDLIST;
+            info.nShellExecuteShow = Vanara.PInvoke.ShowWindowCommand.SW_SHOW;
+            info.fMask = ShellExecuteMaskFlags.SEE_MASK_INVOKEIDLIST;
             return ShellExecuteEx(ref info);
         }
 
