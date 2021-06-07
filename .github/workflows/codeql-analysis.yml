@@ -55,7 +55,7 @@ jobs:
       uses: actions/setup-dotnet@v1.8.0
       with:
         # Optional SDK version to use. If not provided, will install global.json version when available. Examples: 2.2.104, 3.1, 3.1.x
-        dotnet-version: 5.0
+        dotnet-version: 5.0.*
 
     # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
     # If this step fails, then you should remove it and run the build manually (see below)
