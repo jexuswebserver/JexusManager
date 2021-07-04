@@ -65,7 +65,7 @@ namespace JexusManager.Main.Properties {
         /// </summary>
         internal static byte[] _1_0_release {
             get {
-                object obj = ResourceManager.GetObject("_1_0_release", resourceCulture);
+                object obj = ResourceManager.GetObject("1.0-release", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -75,7 +75,7 @@ namespace JexusManager.Main.Properties {
         /// </summary>
         internal static byte[] _1_1_release {
             get {
-                object obj = ResourceManager.GetObject("_1_1_release", resourceCulture);
+                object obj = ResourceManager.GetObject("1.1-release", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -85,7 +85,7 @@ namespace JexusManager.Main.Properties {
         /// </summary>
         internal static byte[] _2_0_release {
             get {
-                object obj = ResourceManager.GetObject("_2_0_release", resourceCulture);
+                object obj = ResourceManager.GetObject("2.0-release", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -95,7 +95,7 @@ namespace JexusManager.Main.Properties {
         /// </summary>
         internal static byte[] _2_1_release {
             get {
-                object obj = ResourceManager.GetObject("_2_1_release", resourceCulture);
+                object obj = ResourceManager.GetObject("2.1-release", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -105,7 +105,7 @@ namespace JexusManager.Main.Properties {
         /// </summary>
         internal static byte[] _2_2_release {
             get {
-                object obj = ResourceManager.GetObject("_2_2_release", resourceCulture);
+                object obj = ResourceManager.GetObject("2.2-release", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -115,7 +115,7 @@ namespace JexusManager.Main.Properties {
         /// </summary>
         internal static byte[] _3_0_release {
             get {
-                object obj = ResourceManager.GetObject("_3_0_release", resourceCulture);
+                object obj = ResourceManager.GetObject("3.0-release", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -125,7 +125,7 @@ namespace JexusManager.Main.Properties {
         /// </summary>
         internal static byte[] _3_1_release {
             get {
-                object obj = ResourceManager.GetObject("_3_1_release", resourceCulture);
+                object obj = ResourceManager.GetObject("3.1-release", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -135,7 +135,17 @@ namespace JexusManager.Main.Properties {
         /// </summary>
         internal static byte[] _5_0_release {
             get {
-                object obj = ResourceManager.GetObject("_5_0_release", resourceCulture);
+                object obj = ResourceManager.GetObject("5.0-release", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] _6_0_release {
+            get {
+                object obj = ResourceManager.GetObject("6.0-release", resourceCulture);
                 return ((byte[])(obj));
             }
         }

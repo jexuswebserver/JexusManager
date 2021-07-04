@@ -83,8 +83,15 @@ namespace JexusManager.Features.Main
                     {
                         // fallback to resources.
                         var number = new Version(release.Value<string>("channel-version"));
-                        var name = $"_{number.Major}_{number.Minor}_release";
-                        using var bytes = new MemoryStream((byte[])Resources.ResourceManager.GetObject(name));
+                        var name = $"{number.Major}.{number.Minor}-release";
+                        var stored = Resources.ResourceManager.GetObject(name);
+                        if (stored == null)
+                        {
+                            // IMPORTANT: didn't have this version in resource.
+                            continue;
+                        }
+
+                        using var bytes = new MemoryStream((byte[])stored);
                         using var stream = new StreamReader(bytes);
                         using var json = new JsonTextReader(stream);
                         details = (JObject)JToken.ReadFrom(json);
