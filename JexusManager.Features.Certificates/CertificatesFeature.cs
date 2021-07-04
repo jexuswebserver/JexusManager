@@ -79,7 +79,7 @@ namespace JexusManager.Features.Certificates
                                     result.Add(new MethodTaskItem("Export", "Export...", string.Empty).SetUsage());
                                     if (_owner.SelectedItem.Certificate.Issuer != LocalhostIssuer && _owner.SelectedItem.Certificate.Issuer != _localMachineIssuer)
                                     {
-                                        result.Add(new MethodTaskItem("Renew", "Renew...", string.Empty).SetUsage());
+                                        // result.Add(new MethodTaskItem("Renew", "Renew...", string.Empty).SetUsage());
                                     }
                                 }
                             }
@@ -90,7 +90,7 @@ namespace JexusManager.Features.Certificates
                                     result.Add(new MethodTaskItem("Export", "Export...", string.Empty).SetUsage());
                                     if (_owner.SelectedItem.Certificate.Issuer != LocalhostIssuer && _owner.SelectedItem.Certificate.Issuer != _localMachineIssuer)
                                     {
-                                        result.Add(new MethodTaskItem("Renew", "Renew...", string.Empty).SetUsage());
+                                        // result.Add(new MethodTaskItem("Renew", "Renew...", string.Empty).SetUsage());
                                     }
                                 }
                             }
@@ -101,7 +101,7 @@ namespace JexusManager.Features.Certificates
                                     result.Add(new MethodTaskItem("Export", "Export...", string.Empty).SetUsage());
                                     if (_owner.SelectedItem.Certificate.Issuer != LocalhostIssuer && _owner.SelectedItem.Certificate.Issuer != _localMachineIssuer)
                                     {
-                                        result.Add(new MethodTaskItem("Renew", "Renew...", string.Empty).SetUsage());
+                                        // result.Add(new MethodTaskItem("Renew", "Renew...", string.Empty).SetUsage());
                                     }
                                 }
                             }
@@ -112,6 +112,7 @@ namespace JexusManager.Features.Certificates
                             {
                                 // TODO: add CNG support.
                                 // throw;
+                                RollbarLocator.RollbarInstance.Error($"ate exception in certificates feature {ex}");
                             }
                         }
                     }
