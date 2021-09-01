@@ -32,6 +32,9 @@ namespace JexusManager.Dialogs
             }
 
             _virtualDirectory.UserName = UserName;
+
+            // IMORTANT: force creating the config elements.
+            _virtualDirectory.Application.Server.CommitChanges();
             _virtualDirectory.SetPassword(Password);
         }
 
