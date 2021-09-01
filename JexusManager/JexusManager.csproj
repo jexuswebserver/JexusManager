@@ -11,8 +11,8 @@
     <StartupObject />
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <!-- MSI engine uses the first three fields https://docs.microsoft.com/en-us/windows/win32/msi/upgrade-table?redirectedfrom=MSDN#columns -->
-    <AssemblyVersion>13.0.4.0</AssemblyVersion>
-    <FileVersion>13.0.4.0</FileVersion>
+    <AssemblyVersion>13.0.5.0</AssemblyVersion>
+    <FileVersion>13.0.5.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
