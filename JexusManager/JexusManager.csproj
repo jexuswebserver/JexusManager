@@ -44,9 +44,9 @@
     <PackageReference Include="ActionListWinForms" Version="2.0.0" />
     <PackageReference Include="Enums.NET" Version="4.0.0" />
     <PackageReference Include="ini-parser" Version="2.5.2" />
-    <PackageReference Include="Mono.Options" Version="6.6.0.161" />
+    <PackageReference Include="Mono.Options" Version="6.12.0.148" />
     <PackageReference Include="Octokit" Version="0.50.0" />
-    <PackageReference Include="Vanara.PInvoke.IpHlpApi" Version="3.3.9" />
+    <PackageReference Include="Vanara.PInvoke.IpHlpApi" Version="3.3.12" />
   </ItemGroup>
 
   <ItemGroup>

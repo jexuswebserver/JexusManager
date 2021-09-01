@@ -156,10 +156,10 @@
       <Version>4.16.1</Version>
     </PackageReference>
     <PackageReference Include="Vanara.PInvoke.Shell32">
-      <Version>3.3.10</Version>
+      <Version>3.3.12</Version>
     </PackageReference>
     <PackageReference Include="Vanara.PInvoke.Ws2_32">
-      <Version>3.3.10</Version>
+      <Version>3.3.12</Version>
     </PackageReference>
     <PackageReference Include="xunit">
       <Version>2.4.1</Version>

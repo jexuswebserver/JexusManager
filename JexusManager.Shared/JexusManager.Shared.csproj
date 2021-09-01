@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="BouncyCastle" Version="1.8.9" />
-    <PackageReference Include="Microsoft.Diagnostics.Tracing.TraceEvent" Version="2.0.69" />
+    <PackageReference Include="Microsoft.Diagnostics.Tracing.TraceEvent" Version="2.0.71" />
     <PackageReference Include="Ookii.Dialogs.WinForms" Version="1.2.0" />
   </ItemGroup>
 
