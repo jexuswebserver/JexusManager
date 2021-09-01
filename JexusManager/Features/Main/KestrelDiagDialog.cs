@@ -25,7 +25,6 @@ namespace JexusManager.Features.Main
     using JexusManager.Main.Properties;
     using Newtonsoft.Json;
     using System.Net;
-    using System.Text;
 
     public partial class KestrelDiagDialog : DialogForm
     {
@@ -405,39 +404,34 @@ namespace JexusManager.Features.Main
                                     executable = Path.GetFileNameWithoutExtension(processPath);
                                 }
 
-                                var runtime = Path.Combine(root, executable + ".deps.json");
+                                var runtime = Path.Combine(root, executable + ".runtimeconfig.json");
                                 if (File.Exists(runtime))
                                 {
                                     Debug($"Found runtime config file {runtime}.");
                                     var reader = JObject.Parse(File.ReadAllText(runtime));
-                                    var targetName = (string)reader["runtimeTarget"]["name"];
-                                    Debug($"\"runtimeTarget\": {targetName}.");
-                                    var slash = targetName.IndexOf('/');
-                                    if (slash > -1)
+                                    string actual = null;
+                                    var framework = reader["runtimeOptions"]["framework"];
+                                    if (framework != null)
                                     {
-                                        targetName = targetName.Substring(0, slash);
+                                        actual = framework["version"].Value<string>();
+                                        Info($"Runtime is {actual}");
                                     }
-
-                                    var actual = reader["targets"][targetName];
-                                    Version aspNetCoreVersion = null;
-                                    foreach (var item in actual.Children())
+                                    else
                                     {
-                                        if (item is JProperty prop)
+                                        var frameworks = reader["runtimeOptions"]["includedFrameworks"];
+                                        if (frameworks != null)
                                         {
-                                            if (prop.Name.Contains("Microsoft.AspNetCore.All/"))
+                                            foreach (var item in frameworks.Children())
                                             {
-                                                Info($"Runtime is {prop.Name}.");
-                                                Version.TryParse(prop.Name.Substring(prop.Name.IndexOf('/') + 1), out aspNetCoreVersion);
-                                            }
-                                            else if (prop.Name.Contains("Microsoft.AspNetCore.App/"))
-                                            {
-                                                Info($"Runtime is {prop.Name}.");
-                                                Version.TryParse(prop.Name.Substring(prop.Name.IndexOf('/') + 1), out aspNetCoreVersion);
+                                                if (item["name"].Value<string>() == "Microsoft.AspNetCore.App")
+                                                {
+                                                    actual = item["version"].Value<string>();
+                                                    Info($"Runtime is {actual}");
+                                                }
                                             }
                                         }
                                     }
-
-                                    if (aspNetCoreVersion != null && aspNetCoreVersion >= Version.Parse("2.1.0"))
+                                    if (actual != null && Version.TryParse(actual, out Version aspNetCoreVersion) && aspNetCoreVersion >= Version.Parse("3.1.0"))
                                     {
                                         if (mappings.ContainsKey(aspNetCoreVersion))
                                         {
@@ -461,7 +455,7 @@ namespace JexusManager.Features.Main
                                     }
                                     else
                                     {
-                                        Warn($"Couldn't detect runtime version. Please refer to pages such as https://dotnet.microsoft.com/download/dotnet-core/3.1 to verify that ASP.NET Core version {ancmVersion} matches the runtime of the web app.");
+                                        Warn($"Couldn't detect runtime version {actual}. Please refer to pages such as https://dotnet.microsoft.com/download/dotnet-core/3.1 to verify that ASP.NET Core version {ancmVersion} matches the runtime of the web app.");
                                     }
                                 }
                                 else
