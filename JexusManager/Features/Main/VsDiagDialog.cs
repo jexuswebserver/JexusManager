@@ -38,7 +38,7 @@ namespace JexusManager.Features.Main
                     txtResult.Clear();
                     try
                     {
-                        Warn("IMPORTANT: This report might contain confidential information. Mask such before sharing to others.");
+                        Warn("IMPORTANT: This report might contain confidential information. Mask such before sharing with others.");
                         Warn("-----");
 
                         var root = site.PhysicalPath.ExpandIisExpressEnvironmentVariables(site.Applications[0].GetActualExecutable());
