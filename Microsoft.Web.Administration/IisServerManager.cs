@@ -258,7 +258,7 @@ namespace Microsoft.Web.Administration
                 catch (Win32Exception ex)
                 {
                     // elevation is cancelled.
-                    if (ex.NativeErrorCode != NativeMethods.ErrorCancelled)
+                    if (ex.NativeErrorCode != NativeMethods.ErrorCancelled || ex.NativeErrorCode != NativeMethods.ErrorAccessDisabledByPolicy)
                     {
                         RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> { { "native", ex.NativeErrorCode } });
                         // throw;
@@ -300,7 +300,7 @@ namespace Microsoft.Web.Administration
                 catch (Win32Exception ex)
                 {
                     // elevation is cancelled.
-                    if (ex.NativeErrorCode != NativeMethods.ErrorCancelled)
+                    if (ex.NativeErrorCode != NativeMethods.ErrorCancelled || ex.NativeErrorCode != NativeMethods.ErrorAccessDisabledByPolicy)
                     {
                         RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> { { "native", ex.NativeErrorCode } });
                         // throw;
@@ -349,7 +349,7 @@ namespace Microsoft.Web.Administration
                 catch (Win32Exception ex)
                 {
                     // elevation is cancelled.
-                    if (ex.NativeErrorCode != NativeMethods.ErrorCancelled)
+                    if (ex.NativeErrorCode != NativeMethods.ErrorCancelled || ex.NativeErrorCode != NativeMethods.ErrorAccessDisabledByPolicy)
                     {
                         RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> { { "native", ex.NativeErrorCode } });
                         // throw;
@@ -391,7 +391,7 @@ namespace Microsoft.Web.Administration
                 catch (Win32Exception ex)
                 {
                     // elevation is cancelled.
-                    if (ex.NativeErrorCode != NativeMethods.ErrorCancelled)
+                    if (ex.NativeErrorCode != NativeMethods.ErrorCancelled || ex.NativeErrorCode != NativeMethods.ErrorAccessDisabledByPolicy)
                     {
                         RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> { { "native", ex.NativeErrorCode } });
                         // throw;

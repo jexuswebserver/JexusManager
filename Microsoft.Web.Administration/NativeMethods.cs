@@ -1205,6 +1205,7 @@ namespace Microsoft.Web.Administration
         public const int NoProcessAssociated = -2146233079;
 
         public const int ErrorCancelled = 1223; // https://msdn.microsoft.com/en-us/library/windows/desktop/ms681383(v=vs.85).aspx
+        public const int ErrorAccessDisabledByPolicy = 1260;
 
         #endregion
     }
