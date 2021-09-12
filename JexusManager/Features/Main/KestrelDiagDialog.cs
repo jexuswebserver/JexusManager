@@ -25,10 +25,11 @@ namespace JexusManager.Features.Main
     using JexusManager.Main.Properties;
     using Newtonsoft.Json;
     using System.Net;
+    using NuGet.Versioning;
 
     public partial class KestrelDiagDialog : DialogForm
     {
-        private static IDictionary<Version, Tuple<Version, bool>> mappings = new Dictionary<Version, Tuple<Version, bool>>();
+        private static IDictionary<SemanticVersion, Tuple<Version, bool>> mappings = new Dictionary<SemanticVersion, Tuple<Version, bool>>();
 
         public KestrelDiagDialog(IServiceProvider provider, Application application)
             : base(provider)
@@ -138,13 +139,7 @@ namespace JexusManager.Features.Main
                             var aspNetCoreModule = aspNetCoreModuleObject.Values<string>().First();
                             var phase = release.Value<string>("support-phase");
                             var expired = phase == "eol";
-                            if (phase == "preview" || longVersion.Contains("-"))
-                            {
-                                // skip preview release.
-                                continue;
-                            }
-
-                            var runtime = Version.Parse(longVersion);
+                            var runtime = SemanticVersion.Parse(longVersion);
                             if (mappings.ContainsKey(runtime))
                             {
                                 Console.WriteLine($"{runtime}: new {aspNetCoreModule}: old {mappings[runtime].Item1}");
@@ -219,7 +214,7 @@ namespace JexusManager.Features.Main
                             {
                                 var info = FileVersionInfo.GetVersionInfo(file);
                                 ancmVersion = new Version(info.FileMajorPart, info.FileMinorPart, info.FileBuildPart, info.FilePrivatePart);
-                                Info($"ASP.NET Core module version 2 is installed for .NET Core 2.2 and above: {file} ({info.FileVersion}).");
+                                Info($"ASP.NET Core module version 2 is installed for .NET Core 3.1 and above: {file} ({info.FileVersion}).");
                             }
                             else
                             {
@@ -322,7 +317,7 @@ namespace JexusManager.Features.Main
 
                         Info($"Pool identity is {pool.ProcessModel}");
                         var user = application.Server.Mode == WorkingMode.IisExpress ? $"{Environment.UserDomainName}\\{Environment.UserName}" : pool.ProcessModel.ToString();
-                        Warn($"Please ensure pool identity has read access to the content folder {application.PhysicalPath}.");                        
+                        Warn($"Please ensure pool identity has read access to the content folder {application.PhysicalPath}.");
 
                         var poolBitness = x86 ? "32" : "64";
                         Info($"Pool bitness is {poolBitness} bit");
@@ -419,6 +414,11 @@ namespace JexusManager.Features.Main
                                     else
                                     {
                                         var frameworks = reader["runtimeOptions"]["includedFrameworks"];
+                                        if (frameworks == null)
+                                        {
+                                            frameworks = reader["runtimeOptions"]["frameworks"]; // .NET 6
+                                        }
+
                                         if (frameworks != null)
                                         {
                                             foreach (var item in frameworks.Children())
@@ -426,13 +426,18 @@ namespace JexusManager.Features.Main
                                                 if (item["name"].Value<string>() == "Microsoft.AspNetCore.App")
                                                 {
                                                     actual = item["version"].Value<string>();
-                                                    Info($"Runtime is {actual}");
+                                                    Info($"Runtime is {actual}.");
                                                 }
                                             }
                                         }
                                     }
-                                    if (actual != null && Version.TryParse(actual, out Version aspNetCoreVersion) && aspNetCoreVersion >= Version.Parse("3.1.0"))
+                                    if (actual != null && SemanticVersion.TryParse(actual, out SemanticVersion aspNetCoreVersion) && aspNetCoreVersion >= SemanticVersion.Parse("3.1.0"))
                                     {
+                                        if (aspNetCoreVersion.IsPrerelease)
+                                        {
+                                            Warn("This is a prerelease runtime version.");
+                                        }
+
                                         if (mappings.ContainsKey(aspNetCoreVersion))
                                         {
                                             var expired = mappings[aspNetCoreVersion].Item2;
