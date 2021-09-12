@@ -72,8 +72,8 @@
 								Fix ICE 38 by adding a dummy registry key that is the key for this shortcut.
 								http://msdn.microsoft.com/library/en-us/msi/setup/ice38.asp
 							-->
-					<RegistryValue Id="JexusManagerExeStartMenuShortcutRegistryKey" Root="HKCU" Type="string" KeyPath="yes" Key="Software\$(var.ManufacturerShort)\$(var.ProductNameShort)\$(var.ProductVersion)" Name="ProgramFilesShortcut" Value="1" />
-					<Shortcut Name="$(var.ProductName) $(var.ProductVersion)" Target="[!$(var.MainExecutable)]" Id="MainExeStartMenuShortcut" WorkingDirectory="INSTALLDIR" Directory="ProgramMenuFolder" />
+					<RegistryValue Id="JexusManagerExeStartMenuShortcutRegistryKey" Root="HKCU" Type="string" KeyPath="yes" Key="Software\$(var.ManufacturerShort)\$(var.ProductNameShort)" Name="ProgramFilesShortcut" Value="1" />
+					<Shortcut Name="$(var.ProductName)" Target="[!$(var.MainExecutable)]" Id="MainExeStartMenuShortcut" WorkingDirectory="INSTALLDIR" Directory="ProgramMenuFolder" />
                     <RemoveFolder Id="CleanUpShortCut" Directory="ProgramMenuFolder" On="uninstall"/>
 				</Component>
 			</Directory>
