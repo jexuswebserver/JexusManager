@@ -274,19 +274,30 @@ namespace JexusManager
 
             using (X509Store store1 = new X509Store("MY", StoreLocation.LocalMachine))
             {
-                store1.Open(OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
-                foreach (var certificate in store1.Certificates)
+                try
                 {
-                    var index = comboBox.Items.Add(new CertificateInfo(certificate, store1.Name));
-                    if (hash != null &&
-                        hash.SequenceEqual(certificate.GetCertHash()) &&
-                        store1.Name == store)
+                    store1.Open(OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
+                    foreach (var certificate in store1.Certificates)
                     {
-                        comboBox.SelectedIndex = index;
+                        var index = comboBox.Items.Add(new CertificateInfo(certificate, store1.Name));
+                        if (hash != null &&
+                            hash.SequenceEqual(certificate.GetCertHash()) &&
+                            store1.Name == store)
+                        {
+                            comboBox.SelectedIndex = index;
+                        }
+                    }
+
+                    store1.Close();
+                }
+                catch (CryptographicException ex)
+                {
+                    if (ex.HResult != Microsoft.Web.Administration.NativeMethods.NonExistingStore)
+                    {
+                        RollbarLocator.RollbarInstance.Info($"CryptographicException {ex.HResult} from LoadCertificates MY");
+                        throw;
                     }
                 }
-
-                store1.Close();
             }
 
             if (Environment.OSVersion.Version < Version.Parse("6.2"))
@@ -316,7 +327,7 @@ namespace JexusManager
             {
                 if (ex.HResult != Microsoft.Web.Administration.NativeMethods.NonExistingStore)
                 {
-                    RollbarLocator.RollbarInstance.Info($"CryptographicException {ex.HResult} from LoadCertificates");
+                    RollbarLocator.RollbarInstance.Info($"CryptographicException {ex.HResult} from LoadCertificates WebHosting");
                     throw;
                 }
             }
