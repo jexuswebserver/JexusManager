@@ -30,6 +30,7 @@ namespace JexusManager.Features.Main
     public partial class KestrelDiagDialog : DialogForm
     {
         private static IDictionary<SemanticVersion, Tuple<Version, bool>> mappings = new Dictionary<SemanticVersion, Tuple<Version, bool>>();
+        private static IDictionary<string, string> fileCaches = new Dictionary<string, string>();
 
         public KestrelDiagDialog(IServiceProvider provider, Application application)
             : base(provider)
@@ -42,7 +43,16 @@ namespace JexusManager.Features.Main
                 var hasException = false;
                 try
                 {
-                    latest = client.DownloadString("https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json");
+                    var entry = "https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json";
+                    if (fileCaches.ContainsKey(entry))
+                    {
+                        latest = fileCaches[entry];
+                    }
+                    else
+                    {
+                        latest = client.DownloadString(entry);
+                        fileCaches.Add(entry, latest);
+                    }
                 }
                 catch (Exception)
                 {
@@ -66,12 +76,20 @@ namespace JexusManager.Features.Main
                 var releases = content["releases-index"];
                 foreach (var release in releases)
                 {
-                    var link = release["releases.json"];
+                    var link = release["releases.json"].Value<string>();
                     string info = null;
                     hasException = false;
                     try
                     {
-                        info = client.DownloadString(link.Value<string>());
+                        if (fileCaches.ContainsKey(link))
+                        {
+                            info = fileCaches[link];
+                        }
+                        else
+                        {
+                            info = client.DownloadString(link);
+                            fileCaches.Add(link, info);
+                        }
                     }
                     catch (Exception)
                     {
