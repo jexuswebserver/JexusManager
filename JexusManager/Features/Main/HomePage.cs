@@ -27,5 +27,10 @@ namespace JexusManager.Features.Main
         {
             DialogHelper.ProcessStart("https://blog.lextudio.com");
         }
+
+        private void btnSponsor_Click(object sender, System.EventArgs e)
+        {
+            DialogHelper.ProcessStart("https://github.com/sponsors/lextm");
+        }
     }
 }
