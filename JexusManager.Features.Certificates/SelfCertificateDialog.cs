@@ -197,9 +197,9 @@ namespace JexusManager.Features.Certificates
                     catch (Exception ex)
                     {
                         RollbarLocator.RollbarInstance.Error(ex);
-                        ShowError(ex, "Certificate generation error", false);
+                        ShowError(ex, Text, false);
                         return;
-                    }                    
+                    }
                 }));
 
             container.Add(

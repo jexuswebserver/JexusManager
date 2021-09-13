@@ -147,7 +147,7 @@ namespace JexusManager.Features.Certificates
                     }
                     catch (Exception ex)
                     {
-                        ShowError(ex, string.Empty, false);
+                        ShowError(ex, Text, false);
                     }
                 }));
 

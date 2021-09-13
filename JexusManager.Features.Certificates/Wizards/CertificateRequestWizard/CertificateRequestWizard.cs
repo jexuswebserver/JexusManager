@@ -43,14 +43,23 @@ namespace JexusManager.Features.Certificates.Wizards.CertificateRequestWizard
         protected override void CompleteWizard()
         {
             // Generate the CSR 
-            X509Name subjectName =
-                new X509Name(string.Format("C={0},ST={1},L={2},O={3},OU={4},CN={5}",
-                    _wizardData.Country,
-                    _wizardData.State,
-                    _wizardData.City,
-                    _wizardData.Organization,
-                    _wizardData.Unit,
-                    _wizardData.CommonName));
+            X509Name subjectName;
+            try
+            {
+                subjectName = new X509Name(string.Format("C={0},ST={1},L={2},O={3},OU={4},CN={5}",
+                        _wizardData.Country,
+                        _wizardData.State,
+                        _wizardData.City,
+                        _wizardData.Organization,
+                        _wizardData.Unit,
+                        _wizardData.CommonName));
+
+            }
+            catch (ArgumentException ex)
+            {
+                ShowError(ex, Text, false);
+                return;
+            }
 
             // Generate the private/public keypair 
             RsaKeyPairGenerator kpgen = new RsaKeyPairGenerator();

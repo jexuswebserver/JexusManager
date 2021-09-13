@@ -123,7 +123,7 @@ namespace JexusManager.Dialogs
                         }
                         catch (COMException ex)
                         {
-                            ShowError(ex, string.Empty, false);
+                            ShowError(ex, Text, false);
                             return;
                         }
 
