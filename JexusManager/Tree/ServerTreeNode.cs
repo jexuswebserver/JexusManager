@@ -219,11 +219,18 @@ namespace JexusManager.Tree
                 }
 
                 ServerManager.IsLocalhost = IsLocalhost;
-                LoadServer(mainForm.ApplicationPoolsMenu, mainForm.SitesMenu, mainForm.SiteMenu);
-                Tag = ServerManager;
-                mainForm.EnableServerMenuItems(true);
-                _status = NodeStatus.Loaded;
-                mainForm.DisconnectButton.Enabled = true;
+                var succeeded = LoadServer(mainForm.ApplicationPoolsMenu, mainForm.SitesMenu, mainForm.SiteMenu);
+                if (succeeded)
+                {
+                    Tag = ServerManager;
+                    mainForm.EnableServerMenuItems(true);
+                    _status = NodeStatus.Loaded;
+                    mainForm.DisconnectButton.Enabled = true;
+                }
+                else
+                {
+                    HandleServerConnectionFailed();
+                }
             }
             catch (Exception ex)
             {
@@ -240,14 +247,19 @@ namespace JexusManager.Tree
                     .AppendLine()
                     .AppendFormat("Details: {0}", last?.Message);
                 MessageBox.Show(message.ToString(), mainForm.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                ServerManager = null;
-                _status = NodeStatus.Default;
-                mainForm.DisconnectButton.Enabled = true;
+                HandleServerConnectionFailed();
             }
             finally
             {
                 mainForm.HideInfo();
             }
+        }
+
+        private void HandleServerConnectionFailed()
+        {
+            ServerManager = null;
+            _status = NodeStatus.Default;
+            MainForm.DisconnectButton.Enabled = true;
         }
 
         public MainForm MainForm { get; set; }
@@ -348,11 +360,19 @@ namespace JexusManager.Tree
                 return false;
             }
 
-            PoolsNode = new ApplicationPoolsTreeNode(ServiceProvider, ServerManager.ApplicationPools, this)
+            try
             {
-                ContextMenuStrip = poolsMenu
-            };
-            Nodes.Add(PoolsNode);
+                PoolsNode = new ApplicationPoolsTreeNode(ServiceProvider, ServerManager.ApplicationPools, this)
+                {
+                    ContextMenuStrip = poolsMenu
+                };
+                Nodes.Add(PoolsNode);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
             SitesNode = new SitesTreeNode(ServiceProvider, ServerManager.Sites, this)
             {
                 ContextMenuStrip = sitesMenu

@@ -873,8 +873,11 @@ namespace JexusManager
             {
                 RegisterServer(node);
                 // TODO: trigger the load in connection wizard to throw exception earlier.
-                node.LoadServer(cmsApplicationPools, cmsSites, cmsSite);
-                actSave.Enabled = true;
+                var succeeded = node.LoadServer(cmsApplicationPools, cmsSites, cmsSite);
+                if (succeeded)
+                {
+                    actSave.Enabled = true;
+                }
             }
             catch (Exception ex)
             {
