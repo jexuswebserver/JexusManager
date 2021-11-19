@@ -14,7 +14,7 @@ namespace Microsoft.Web.Administration
             return null;
         }
 
-#if !NET5_0
+#if !NET6_0
         public static ConfigurationSection GetSection(HttpContext context, string sectionPath)
         {
             return null;
@@ -24,7 +24,7 @@ namespace Microsoft.Web.Administration
         {
             return null;
         }
-#if !NET5_0
+#if !NET6_0
         public static ConfigurationSection GetSection(HttpContext context, string sectionPath, Type sectionType)
         {
             return null;
