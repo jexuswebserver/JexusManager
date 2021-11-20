@@ -88,7 +88,7 @@ namespace JexusManager.Features.Certificates
                             return;
                         }
 
-                        x509.PrivateKey = PrivateKey.CreateFromFile(filename).RSA;
+                        x509.CopyWithPrivateKey(PrivateKey.CreateFromFile(filename).RSA);
                         x509.FriendlyName = txtName.Text;
                         var raw = x509.Export(X509ContentType.Pfx, p12pwd);
                         File.WriteAllBytes(p12File, raw);
@@ -105,26 +105,24 @@ namespace JexusManager.Features.Certificates
                     try
                     {
                         // add certificate
-                        using (var process = new Process())
+                        using var process = new Process();
+                        var start = process.StartInfo;
+                        start.Verb = "runas";
+                        start.UseShellExecute = true;
+                        start.FileName = "cmd";
+                        start.Arguments = $"/c \"\"{CertificateInstallerLocator.FileName}\" /f:\"{p12File}\" /p:{p12pwd} /n:\"{txtName.Text}\" /s:{(cbStore.SelectedIndex == 0 ? "MY" : "WebHosting")}\"";
+                        start.CreateNoWindow = true;
+                        start.WindowStyle = ProcessWindowStyle.Hidden;
+                        process.Start();
+                        process.WaitForExit();
+                        File.Delete(p12File);
+                        if (process.ExitCode == 0)
                         {
-                            var start = process.StartInfo;
-                            start.Verb = "runas";
-                            start.UseShellExecute = true;
-                            start.FileName = "cmd";
-                            start.Arguments = $"/c \"\"{CertificateInstallerLocator.FileName}\" /f:\"{p12File}\" /p:{p12pwd} /n:\"{txtName.Text}\" /s:{(cbStore.SelectedIndex == 0 ? "MY" : "WebHosting")}\"";
-                            start.CreateNoWindow = true;
-                            start.WindowStyle = ProcessWindowStyle.Hidden;
-                            process.Start();
-                            process.WaitForExit();
-                            File.Delete(p12File);
-                            if (process.ExitCode == 0)
-                            {
-                                DialogResult = DialogResult.OK;
-                            }
-                            else
-                            {
-                                MessageBox.Show(process.ExitCode.ToString());
-                            }
+                            DialogResult = DialogResult.OK;
+                        }
+                        else
+                        {
+                            MessageBox.Show(process.ExitCode.ToString());
                         }
                     }
                     catch (Win32Exception ex)

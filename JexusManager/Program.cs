@@ -78,8 +78,7 @@ namespace JexusManager
 
             Microsoft.Web.Administration.JexusServerManager.Enabled = jexus;
 
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
+            ApplicationConfiguration.Initialize();
             
             // TODO: set encryption support
             // ProtectedConfigurationProvider.Provider = new WorkingEncryptionServiceProvider();

@@ -90,7 +90,7 @@ namespace JexusManager.Features.Certificates
                             var file = AsyncHelper.RunSync(() => server.SaveCertificateAsync(publicBuilder.ToString()));
                             server.SetCertificate(file);
                             // Private Key
-                            RSACryptoServiceProvider rsa = (RSACryptoServiceProvider)Item.PrivateKey;
+                            var rsa = Item.GetRSAPrivateKey();
                             MemoryStream memoryStream = new MemoryStream();
                             TextWriter streamWriter = new StreamWriter(memoryStream);
                             PemWriter pemWriter = new PemWriter(streamWriter);

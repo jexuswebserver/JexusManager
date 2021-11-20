@@ -18,8 +18,6 @@ namespace JexusManager.Features.Certificates.Wizards.CertificateRenewWizard
     using Org.BouncyCastle.Security;
     using Properties;
     using Org.BouncyCastle.Crypto.Operators;
-    using System.Reactive.Linq;
-    using System.ComponentModel;
     using Mono.Security.Authenticode;
 
     internal partial class CertificateRenewWizard : DefaultWizardForm
@@ -46,8 +44,18 @@ namespace JexusManager.Features.Certificates.Wizards.CertificateRenewWizard
         {
             X509Name subjectName = new X509Name(_existing.Subject);
 
-            // Generate the private/public keypair 
-            var keyPair = DotNetUtilities.GetKeyPair(_existing.PrivateKey);
+            var useRsa = true;
+            AsymmetricAlgorithm privateKey = _existing.GetRSAPrivateKey();
+            if (privateKey == null)
+            {
+                useRsa = false;
+                privateKey = _existing.GetECDsaPrivateKey();
+                ShowError(null, "Renewing ECDSA based certificates is not yet supported.", false);
+                return;
+            }
+
+            // Generate the private/public keypair
+            var keyPair = DotNetUtilities.GetKeyPair(privateKey);
 
             // Generate the CSR 
             Asn1Set attributes = new DerSet(
@@ -127,7 +135,7 @@ namespace JexusManager.Features.Certificates.Wizards.CertificateRenewWizard
                                     0x3b, 0x20, 0xf1, 0x4e, 0x65, 0xe5
                                 }))))));
 
-            var signing = new Asn1SignatureFactory("SHA256withRSA", keyPair.Private);
+            var signing = new Asn1SignatureFactory(useRsa ? "SHA256withRSA" : "SHA256WithECDSA", keyPair.Private);
             Pkcs10CertificationRequest kpGen = new Pkcs10CertificationRequest(signing, subjectName, keyPair.Public, attributes);
             using (var stream = new StreamWriter(_wizardData.FileName))
             {

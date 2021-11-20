@@ -252,7 +252,7 @@ namespace JexusManager.Features.IpSecurity
 
         public string Name => "IP Address and Domain Restrictions";
 
-        public bool IsFeatureEnabled
+        public override bool IsFeatureEnabled
         {
             get
             {

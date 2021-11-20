@@ -6,7 +6,6 @@ namespace JexusManager
 {
     using JexusManager.Services;
     using Microsoft.Web.Administration;
-    using Ookii.Dialogs.WinForms;
     using Rollbar;
     using System;
     using System.ComponentModel;
@@ -81,33 +80,13 @@ namespace JexusManager
                             };
         public static void ShowBrowseDialog(TextBox textBox, string executable)
         {
-            var dialog = new VistaFolderBrowserDialog
+            var fallback = new FolderBrowserDialog { SelectedPath = textBox.Text.ExpandIisExpressEnvironmentVariables(executable) };
+            if (fallback.ShowDialog() == DialogResult.Cancel)
             {
-                SelectedPath = textBox.Text.ExpandIisExpressEnvironmentVariables(executable)
-            };
-            try
-            {
-                if (dialog.ShowDialog() == DialogResult.Cancel)
-                {
-                    return;
-                }
-
-                textBox.Text = dialog.SelectedPath;
+                return;
             }
-            catch (COMException ex)
-            {
-                if (ex.StackTrace.Contains("Ookii.Dialogs.VistaFolderBrowserDialog.RunDialog(System.IntPtr hwndOwner)"))
-                {
-                    // IMPORTANT: use a workaround to suppress failure.
-                    var fallback = new FolderBrowserDialog { SelectedPath = textBox.Text.ExpandIisExpressEnvironmentVariables(executable) };
-                    if (fallback.ShowDialog() == DialogResult.Cancel)
-                    {
-                        return;
-                    }
 
-                    textBox.Text = fallback.SelectedPath;
-                }
-            }
+            textBox.Text = fallback.SelectedPath;
         }
 
         public static void ShowOpenFileDialog(TextBox textBox, string filter, string executable)

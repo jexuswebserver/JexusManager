@@ -83,7 +83,7 @@ namespace JexusManager.Features.Certificates
                                     }
                                 }
                             }
-                            else if (_owner.SelectedItem.Certificate.PrivateKey is RSACng cng)
+                            else if (_owner.SelectedItem.Certificate.GetRSAPrivateKey() is RSACng cng)
                             {
                                 if (cng.Key.ExportPolicy.HasFlag(CngExportPolicies.AllowExport))
                                 {
@@ -94,7 +94,7 @@ namespace JexusManager.Features.Certificates
                                     }
                                 }
                             }
-                            else if (_owner.SelectedItem.Certificate.PrivateKey is RSACryptoServiceProvider keyInfo)
+                            else if (_owner.SelectedItem.Certificate.GetRSAPrivateKey() is RSACryptoServiceProvider keyInfo)
                             {
                                 if (keyInfo.CspKeyContainerInfo.Exportable)
                                 {

@@ -239,7 +239,12 @@ namespace JexusManager.Features.Main
                                                 Warn("This certificate uses a not-well-known signature algorithm, which might not be supported by all web browsers and servers.");
                                             }
 
-                                            AsymmetricAlgorithm key = cert.GetECDsaPublicKey() ?? cert.PublicKey.Key;
+                                            AsymmetricAlgorithm key = cert.GetECDsaPublicKey();
+                                            if (key == null)
+                                            {
+                                                key = cert.GetRSAPublicKey();
+                                            }
+
                                             Debug($"#Key Exchange Algorithm: {key.KeyExchangeAlgorithm} Key Size: {key.KeySize}");
                                             if (key.SignatureAlgorithm.Equals("ECDSA", StringComparison.OrdinalIgnoreCase))
                                             {

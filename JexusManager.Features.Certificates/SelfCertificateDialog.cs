@@ -157,27 +157,25 @@ namespace JexusManager.Features.Certificates
 
                         try
                         {
-                            using (var process = new Process())
+                            using var process = new Process();
+                            // add certificate
+                            var start = process.StartInfo;
+                            start.Verb = "runas";
+                            start.UseShellExecute = true;
+                            start.FileName = "cmd";
+                            start.Arguments = $"/c \"\"{CertificateInstallerLocator.FileName}\" /f:\"{p12File}\" /p:{p12pwd} /n:\"{txtName.Text}\" /s:{(cbStore.SelectedIndex == 0 ? "MY" : "WebHosting")}\"";
+                            start.CreateNoWindow = true;
+                            start.WindowStyle = ProcessWindowStyle.Hidden;
+                            process.Start();
+                            process.WaitForExit();
+                            File.Delete(p12File);
+                            if (process.ExitCode == 0)
                             {
-                                // add certificate
-                                var start = process.StartInfo;
-                                start.Verb = "runas";
-                                start.UseShellExecute = true;
-                                start.FileName = "cmd";
-                                start.Arguments = $"/c \"\"{CertificateInstallerLocator.FileName}\" /f:\"{p12File}\" /p:{p12pwd} /n:\"{txtName.Text}\" /s:{(cbStore.SelectedIndex == 0 ? "MY" : "WebHosting")}\"";
-                                start.CreateNoWindow = true;
-                                start.WindowStyle = ProcessWindowStyle.Hidden;
-                                process.Start();
-                                process.WaitForExit();
-                                File.Delete(p12File);
-                                if (process.ExitCode == 0)
-                                {
-                                    DialogResult = DialogResult.OK;
-                                }
-                                else
-                                {
-                                    ShowMessage(process.ExitCode.ToString(), MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                                }
+                                DialogResult = DialogResult.OK;
+                            }
+                            else
+                            {
+                                ShowMessage(process.ExitCode.ToString(), MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                             }
                         }
                         catch (Win32Exception ex)
