@@ -8,8 +8,9 @@ using System.ComponentModel;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
-using static Vanara.PInvoke.Shell32;
-using static Vanara.PInvoke.Ws2_32;
+using Windows.Win32;
+using Windows.Win32.Foundation;
+using Windows.Win32.Networking.WinSock;
 
 namespace Microsoft.Web.Administration
 {
@@ -195,6 +196,19 @@ namespace Microsoft.Web.Administration
         #endregion
 
         #region Public methods
+
+        public static bool FoundReserved(ushort inPort)
+        {
+            ushort port = PInvoke.htons(inPort);
+            WIN32_ERROR result = (WIN32_ERROR)PInvoke.CreatePersistentTcpPortReservation(port, 1, out var token);
+            if (result == WIN32_ERROR.ERROR_SUCCESS)
+            {
+                PInvoke.DeletePersistentTcpPortReservation(port, 1);
+                return false;
+            }
+
+            return true;
+        }
 
         public class SslCertificateInfo
         {
@@ -1110,8 +1124,11 @@ namespace Microsoft.Web.Administration
 
         private static SOCKADDR_STORAGE CreateSockAddrStorageStructure(int port)
         {
-            var sin_port = ntohs((ushort)port);
-            var address = new SOCKADDR_IN(new IN_ADDR(0, 0, 0, 0), sin_port);
+            var address = new SOCKADDR_IN
+            {
+                sin_family = (ushort)Windows.Win32.NetworkManagement.IpHelper.ADDRESS_FAMILY.AF_INET,
+                sin_port = PInvoke.ntohs((ushort)port)
+            };
             return (SOCKADDR_STORAGE)address;
         }
 
@@ -1143,7 +1160,6 @@ namespace Microsoft.Web.Administration
                     throw new ArgumentOutOfRangeException(nameof(pSockaddrStructure), "Unknown address family");
             }
 
-
             // get bytes of the sockadrr structure
             byte[] sockAddrSructureBytes = new byte[sockAddrSructureSize];
             Marshal.Copy(pSockaddrStructure, sockAddrSructureBytes, 0, sockAddrSructureSize);
@@ -1174,7 +1190,7 @@ namespace Microsoft.Web.Administration
                 case AddressFamily.InterNetwork:
                     // IP v4 address
                     var v4Address = (SOCKADDR_IN)sockAddrStorageStructure;
-                    return new IPEndPoint(IPAddress.Any, ntohs(v4Address.sin_port));
+                    return new IPEndPoint(IPAddress.Any, PInvoke.ntohs(v4Address.sin_port));
                 default:
                     throw new ArgumentOutOfRangeException(nameof(sockAddrStorageStructure), "Unknown address family");
             }
@@ -1186,13 +1202,7 @@ namespace Microsoft.Web.Administration
 
         internal static bool ShowFileProperties(string Filename)
         {
-            SHELLEXECUTEINFO info = new SHELLEXECUTEINFO();
-            info.cbSize = Marshal.SizeOf(info);
-            info.lpVerb = "properties";
-            info.lpFile = Filename;
-            info.nShellExecuteShow = Vanara.PInvoke.ShowWindowCommand.SW_SHOW;
-            info.fMask = ShellExecuteMaskFlags.SEE_MASK_INVOKEIDLIST;
-            return ShellExecuteEx(ref info);
+            return PInvoke.SHObjectProperties(new HWND(0), Windows.Win32.UI.Shell.SHOP_TYPE.SHOP_FILEPATH, Filename, "Security");
         }
 
         #endregion
@@ -1203,9 +1213,6 @@ namespace Microsoft.Web.Administration
         public const int UserCancelled = -2147023673;
         public const int BadKeySet = -2146893802;
         public const int NoProcessAssociated = -2146233079;
-
-        public const int ErrorCancelled = 1223; // https://msdn.microsoft.com/en-us/library/windows/desktop/ms681383(v=vs.85).aspx
-        public const int ErrorAccessDisabledByPolicy = 1260;
 
         #endregion
     }

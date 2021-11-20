@@ -1,0 +1,10 @@
+SHObjectProperties
+SHOW_WINDOW_CMD
+ntohs
+htons
+SOCKADDR_IN
+SOCKADDR_STORAGE
+ADDRESS_FAMILY
+CreatePersistentTcpPortReservation
+DeletePersistentTcpPortReservation
+WIN32_ERROR

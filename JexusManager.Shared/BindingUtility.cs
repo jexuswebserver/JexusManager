@@ -72,26 +72,24 @@ namespace Microsoft.Web.Administration
                         try
                         {
                             // register mapping
-                            using (var process = new Process())
+                            using var process = new Process();
+                            var start = process.StartInfo;
+                            start.Verb = "runas";
+                            start.UseShellExecute = true;
+                            start.FileName = "cmd";
+                            start.Arguments =
+                                $"/c \"\"{CertificateInstallerLocator.FileName}\" /h:\"{Hex.ToHexString(binding.CertificateHash)}\" /s:{binding.CertificateStoreName}\" /i:{AppIdIisExpress} /a:{binding.EndPoint.Address} /o:{binding.EndPoint.Port} /x:{binding.Host}";
+                            start.CreateNoWindow = true;
+                            start.WindowStyle = ProcessWindowStyle.Hidden;
+                            process.Start();
+                            process.WaitForExit();
+
+                            if (process.ExitCode != 0)
                             {
-                                var start = process.StartInfo;
-                                start.Verb = "runas";
-                                start.UseShellExecute = true;
-                                start.FileName = "cmd";
-                                start.Arguments =
-                                    $"/c \"\"{CertificateInstallerLocator.FileName}\" /h:\"{Hex.ToHexString(binding.CertificateHash)}\" /s:{binding.CertificateStoreName}\" /i:{AppIdIisExpress} /a:{binding.EndPoint.Address} /o:{binding.EndPoint.Port} /x:{binding.Host}";
-                                start.CreateNoWindow = true;
-                                start.WindowStyle = ProcessWindowStyle.Hidden;
-                                process.Start();
-                                process.WaitForExit();
-
-                                if (process.ExitCode != 0)
-                                {
-                                    return "Register new certificate failed: access is denied";
-                                }
-
-                                return string.Empty;
+                                return "Register new certificate failed: access is denied";
                             }
+
+                            return string.Empty;
                         }
                         catch (Win32Exception ex)
                         {
@@ -130,26 +128,24 @@ namespace Microsoft.Web.Administration
                         try
                         {
                             // register mapping
-                            using (var process = new Process())
+                            using var process = new Process();
+                            var start = process.StartInfo;
+                            start.Verb = "runas";
+                            start.UseShellExecute = true;
+                            start.FileName = "cmd";
+                            start.Arguments =
+                                $"/c \"\"{CertificateInstallerLocator.FileName}\" /h:\"{Hex.ToHexString(binding.CertificateHash)}\" /s:{binding.CertificateStoreName}\" /i:{AppIdIisExpress} /a:{binding.EndPoint.Address} /o:{binding.EndPoint.Port} /x:{binding.Host}";
+                            start.CreateNoWindow = true;
+                            start.WindowStyle = ProcessWindowStyle.Hidden;
+                            process.Start();
+                            process.WaitForExit();
+
+                            if (process.ExitCode != 0)
                             {
-                                var start = process.StartInfo;
-                                start.Verb = "runas";
-                                start.UseShellExecute = true;
-                                start.FileName = "cmd";
-                                start.Arguments =
-                                    $"/c \"\"{CertificateInstallerLocator.FileName}\" /h:\"{Hex.ToHexString(binding.CertificateHash)}\" /s:{binding.CertificateStoreName}\" /i:{AppIdIisExpress} /a:{binding.EndPoint.Address} /o:{binding.EndPoint.Port} /x:{binding.Host}";
-                                start.CreateNoWindow = true;
-                                start.WindowStyle = ProcessWindowStyle.Hidden;
-                                process.Start();
-                                process.WaitForExit();
-
-                                if (process.ExitCode != 0)
-                                {
-                                    return "Register new certificate failed: access is denied";
-                                }
-
-                                return string.Empty;
+                                return "Register new certificate failed: access is denied";
                             }
+
+                            return string.Empty;
                         }
                         catch (Win32Exception ex)
                         {
@@ -192,26 +188,24 @@ namespace Microsoft.Web.Administration
                 try
                 {
                     // register mapping
-                    using (var process = new Process())
+                    using var process = new Process();
+                    var start = process.StartInfo;
+                    start.Verb = "runas";
+                    start.UseShellExecute = true;
+                    start.FileName = "cmd";
+                    start.Arguments =
+                        $"/c \"\"{CertificateInstallerLocator.FileName}\" /h:\"{Hex.ToHexString(binding.CertificateHash)}\" /s:{binding.CertificateStoreName}\" /i:{AppIdIisExpress} /a:{binding.EndPoint.Address} /o:{binding.EndPoint.Port}";
+                    start.CreateNoWindow = true;
+                    start.WindowStyle = ProcessWindowStyle.Hidden;
+                    process.Start();
+                    process.WaitForExit();
+
+                    if (process.ExitCode != 0)
                     {
-                        var start = process.StartInfo;
-                        start.Verb = "runas";
-                        start.UseShellExecute = true;
-                        start.FileName = "cmd";
-                        start.Arguments =
-                            $"/c \"\"{CertificateInstallerLocator.FileName}\" /h:\"{Hex.ToHexString(binding.CertificateHash)}\" /s:{binding.CertificateStoreName}\" /i:{AppIdIisExpress} /a:{binding.EndPoint.Address} /o:{binding.EndPoint.Port}";
-                        start.CreateNoWindow = true;
-                        start.WindowStyle = ProcessWindowStyle.Hidden;
-                        process.Start();
-                        process.WaitForExit();
-
-                        if (process.ExitCode != 0)
-                        {
-                            return "Register new certificate failed: access is denied";
-                        }
-
-                        return string.Empty;
+                        return "Register new certificate failed: access is denied";
                     }
+
+                    return string.Empty;
                 }
                 catch (Win32Exception ex)
                 {
@@ -248,26 +242,24 @@ namespace Microsoft.Web.Administration
                 try
                 {
                     // register mapping
-                    using (var process = new Process())
+                    using var process = new Process();
+                    var start = process.StartInfo;
+                    start.Verb = "runas";
+                    start.UseShellExecute = true;
+                    start.FileName = "cmd";
+                    start.Arguments =
+                        $"/c \"\"{CertificateInstallerLocator.FileName}\" /h:\"{Hex.ToHexString(binding.CertificateHash)}\" /s:{binding.CertificateStoreName}\" /i:{AppIdIisExpress} /a:{binding.EndPoint.Address} /o:{binding.EndPoint.Port}";
+                    start.CreateNoWindow = true;
+                    start.WindowStyle = ProcessWindowStyle.Hidden;
+                    process.Start();
+                    process.WaitForExit();
+
+                    if (process.ExitCode != 0)
                     {
-                        var start = process.StartInfo;
-                        start.Verb = "runas";
-                        start.UseShellExecute = true;
-                        start.FileName = "cmd";
-                        start.Arguments =
-                            $"/c \"\"{CertificateInstallerLocator.FileName}\" /h:\"{Hex.ToHexString(binding.CertificateHash)}\" /s:{binding.CertificateStoreName}\" /i:{AppIdIisExpress} /a:{binding.EndPoint.Address} /o:{binding.EndPoint.Port}";
-                        start.CreateNoWindow = true;
-                        start.WindowStyle = ProcessWindowStyle.Hidden;
-                        process.Start();
-                        process.WaitForExit();
-
-                        if (process.ExitCode != 0)
-                        {
-                            return "Register new certificate failed: access is denied";
-                        }
-
-                        return string.Empty;
+                        return "Register new certificate failed: access is denied";
                     }
+
+                    return string.Empty;
                 }
                 catch (Win32Exception ex)
                 {
@@ -370,26 +362,24 @@ namespace Microsoft.Web.Administration
             {
                 var hash = binding.CertificateHash == null ? string.Empty : Hex.ToHexString(binding.CertificateHash);
                 // remove sni mapping
-                using (var process = new Process())
+                using var process = new Process();
+                var start = process.StartInfo;
+                start.Verb = "runas";
+                start.UseShellExecute = true;
+                start.FileName = "cmd";
+                start.Arguments =
+                    $"/c \"\"{CertificateInstallerLocator.FileName}\" /h:\"{hash}\" /s:{binding.CertificateStoreName}\" /i:{AppIdIisExpress} /o:{binding.EndPoint.Port} /x:{binding.Host}";
+                start.CreateNoWindow = true;
+                start.WindowStyle = ProcessWindowStyle.Hidden;
+                process.Start();
+                process.WaitForExit();
+
+                if (process.ExitCode != 0)
                 {
-                    var start = process.StartInfo;
-                    start.Verb = "runas";
-                    start.UseShellExecute = true;
-                    start.FileName = "cmd";
-                    start.Arguments =
-                        $"/c \"\"{CertificateInstallerLocator.FileName}\" /h:\"{hash}\" /s:{binding.CertificateStoreName}\" /i:{AppIdIisExpress} /o:{binding.EndPoint.Port} /x:{binding.Host}";
-                    start.CreateNoWindow = true;
-                    start.WindowStyle = ProcessWindowStyle.Hidden;
-                    process.Start();
-                    process.WaitForExit();
-
-                    if (process.ExitCode != 0)
-                    {
-                        return "Remove SNI certificate failed: access is denied";
-                    }
-
-                    return string.Empty;
+                    return "Remove SNI certificate failed: access is denied";
                 }
+
+                return string.Empty;
             }
             catch (Win32Exception ex)
             {
@@ -419,19 +409,17 @@ namespace Microsoft.Web.Administration
             try
             {
                 // add reserved URL
-                using (var process = new Process())
-                {
-                    var start = process.StartInfo;
-                    start.Verb = "runas";
-                    start.UseShellExecute = true;
-                    start.FileName = "cmd";
-                    start.Arguments = $"/c \"\"{CertificateInstallerLocator.FileName}\" /u:\"{url}\"";
-                    start.CreateNoWindow = true;
-                    start.WindowStyle = ProcessWindowStyle.Hidden;
-                    process.Start();
-                    process.WaitForExit();
-                    return process.ExitCode == 0;
-                }
+                using var process = new Process();
+                var start = process.StartInfo;
+                start.Verb = "runas";
+                start.UseShellExecute = true;
+                start.FileName = "cmd";
+                start.Arguments = $"/c \"\"{CertificateInstallerLocator.FileName}\" /u:\"{url}\"";
+                start.CreateNoWindow = true;
+                start.WindowStyle = ProcessWindowStyle.Hidden;
+                process.Start();
+                process.WaitForExit();
+                return process.ExitCode == 0;
             }
             catch (Win32Exception ex)
             {

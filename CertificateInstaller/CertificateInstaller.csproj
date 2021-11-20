@@ -13,13 +13,17 @@
 
   <ItemGroup>
     <Compile Include="..\Microsoft.Web.Administration\NativeMethods.cs" Link="NativeMethods.cs" />
+    <Compile Include="..\Microsoft.Web.Administration\SOCKADDR_IN.cs" Link="SOCKADDR_IN.cs" />
+    <Compile Include="..\Microsoft.Web.Administration\SOCKADDR_STORAGE.cs" Link="SOCKADDR_STORAGE.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.1.619-beta">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Mono.Options" Version="6.12.0.148" />
     <PackageReference Include="System.Management" Version="5.0.0" />
-    <PackageReference Include="Vanara.PInvoke.Shell32" Version="3.3.12" />
-    <PackageReference Include="Vanara.PInvoke.Ws2_32" Version="3.3.12" />
   </ItemGroup>
 
   <ItemGroup>

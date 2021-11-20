@@ -22,9 +22,6 @@ namespace JexusManager.Features.Main
     using EnumsNET;
     using JexusManager.Features.HttpApi;
     using Microsoft.Web.Management.Client;
-    using Vanara.PInvoke;
-    using static Vanara.PInvoke.IpHlpApi;
-    using static Vanara.PInvoke.Ws2_32;
 
     public partial class BindingDiagDialog : DialogForm
     {
@@ -89,16 +86,14 @@ namespace JexusManager.Features.Main
 
                             if (PublicNativeMethods.IsProcessElevated)
                             {
-                                ushort port = htons((ushort)binding.EndPoint.Port);
-                                Win32Error result = CreatePersistentTcpPortReservation(port, 1, out var token);
-                                if (result == Win32Error.ERROR_SUCCESS)
+                                var found = Microsoft.Web.Administration.NativeMethods.FoundReserved((ushort)binding.EndPoint.Port);
+                                if (found)
                                 {
-                                    Info("No conflicting TCP reserved port range is found.");
-                                    DeletePersistentTcpPortReservation(port, 1);
+                                    Error("Found a conflicting TCP reserved port range. Please run \"netsh int ipv4 show excludedportrange protocol=tcp\" at command prompt to troubleshoot.");
                                 }
                                 else
                                 {
-                                    Error("Found a conflicting TCP reserved port range. Please run \"netsh int ipv4 show excludedportrange protocol=tcp\" at command prompt to troubleshoot.");
+                                    Info("No conflicting TCP reserved port range is found.");
                                 }
                             }
                             else
