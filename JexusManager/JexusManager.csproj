@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0-windows</TargetFramework>
@@ -11,8 +11,8 @@
     <StartupObject />
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <!-- MSI engine uses the first three fields https://docs.microsoft.com/en-us/windows/win32/msi/upgrade-table?redirectedfrom=MSDN#columns -->
-    <AssemblyVersion>13.0.6.0</AssemblyVersion>
-    <FileVersion>13.0.6.0</FileVersion>
+    <AssemblyVersion>13.0.7.0</AssemblyVersion>
+    <FileVersion>13.0.7.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -47,7 +47,6 @@
     <PackageReference Include="Mono.Options" Version="6.12.0.148" />
     <PackageReference Include="NuGet.Versioning" Version="5.11.0" />
     <PackageReference Include="Octokit" Version="0.50.0" />
-    <PackageReference Include="Vanara.PInvoke.IpHlpApi" Version="3.3.12" />
   </ItemGroup>
 
   <ItemGroup>
