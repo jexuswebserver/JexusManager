@@ -19,7 +19,7 @@ jobs:
   - script: |
       git submodule update --init --recursive
   - script: |
-      dist.deploy.bat
+      dist.ci.bat
   - task: VSTest@2
     inputs:
       testSelector: 'testAssemblies'
