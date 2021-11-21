@@ -114,31 +114,29 @@ namespace JexusManager.Features.HttpApi
             try
             {
                 // remove certificate and mapping
-                using (var process = new Process())
-                {
-                    var start = process.StartInfo;
-                    start.Verb = "runas";
-                    start.UseShellExecute = true;
-                    start.FileName = "cmd";
-                    start.Arguments =
-                        $"/c \"\"{CertificateInstallerLocator.FileName}\" /x:\"{SelectedItem.Host}\" /o:{SelectedItem.Port}\"";
-                    start.CreateNoWindow = true;
-                    start.WindowStyle = ProcessWindowStyle.Hidden;
-                    process.Start();
-                    process.WaitForExit();
+                using var process = new Process();
+                var start = process.StartInfo;
+                start.Verb = "runas";
+                start.UseShellExecute = true;
+                start.FileName = "cmd";
+                start.Arguments =
+                    $"/c \"\"{CertificateInstallerLocator.FileName}\" /x:\"{SelectedItem.Host}\" /o:{SelectedItem.Port}\"";
+                start.CreateNoWindow = true;
+                start.WindowStyle = ProcessWindowStyle.Hidden;
+                process.Start();
+                process.WaitForExit();
 
-                    if (process.ExitCode == 0)
-                    {
-                        Items.Remove(SelectedItem);
-                        SelectedItem = null;
-                        this.OnHttpApiSettingsSaved();
-                    }
+                if (process.ExitCode == 0)
+                {
+                    Items.Remove(SelectedItem);
+                    SelectedItem = null;
+                    this.OnHttpApiSettingsSaved();
                 }
             }
             catch (Win32Exception ex)
             {
                 // elevation is cancelled.
-                if (ex.NativeErrorCode != NativeMethods.ErrorCancelled)
+                if (!NativeMethods.ErrorCancelled(ex.NativeErrorCode))
                 {
                     RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> {{ "native", ex.NativeErrorCode } });
                     // throw;

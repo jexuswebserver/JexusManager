@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -16,6 +16,11 @@ namespace Microsoft.Web.Administration
 {
     internal static class NativeMethods
     {
+        internal static bool ErrorCancelled(int nativeErrorCode)
+        {
+            return (int)WIN32_ERROR.ERROR_CANCELLED == nativeErrorCode;
+        }
+
         #region HTTP API
 
         private static readonly HTTPAPI_VERSION s_httpApiVersion = new HTTPAPI_VERSION(2, 0);
@@ -186,12 +191,6 @@ namespace Microsoft.Web.Administration
         internal const uint HTTP_INITIALIZE_CONFIG = 0x00000002;
         internal const uint HTTP_SERVICE_CONFIG_SSL_FLAG_NEGOTIATE_CLIENT_CERT = 0x00000002;
         internal const uint HTTP_SERVICE_CONFIG_SSL_FLAG_NO_RAW_FILTER = 0x00000004;
-        private const uint NOERROR = 0;
-        private const uint ERROR_INSUFFICIENT_BUFFER = 122;
-        private const uint ERROR_ALREADY_EXISTS = 183;
-        private const uint ERROR_ACCESS_DENIED = 5;
-        private const uint ERROR_FILE_NOT_FOUND = 2;
-        private const int ERROR_NO_MORE_ITEMS = 259;
 
         #endregion
 
@@ -255,10 +254,10 @@ namespace Microsoft.Web.Administration
                         returnLength,
                         out returnLength,
                         IntPtr.Zero);
-                    if (retVal == ERROR_FILE_NOT_FOUND)
+                    if (retVal == (uint)WIN32_ERROR.ERROR_FILE_NOT_FOUND)
                         return;
 
-                    if (ERROR_INSUFFICIENT_BUFFER == retVal) // ERROR_INSUFFICIENT_BUFFER = 122
+                    if ((uint)WIN32_ERROR.ERROR_INSUFFICIENT_BUFFER == retVal) // ERROR_INSUFFICIENT_BUFFER = 122
                     {
                         pOutputConfigInfo = Marshal.AllocCoTaskMem(returnLength);
 
@@ -354,7 +353,7 @@ namespace Microsoft.Web.Administration
                             Marshal.SizeOf(configSslSet),
                             IntPtr.Zero);
 
-                        if (ERROR_ALREADY_EXISTS != retVal)
+                        if ((uint)WIN32_ERROR.ERROR_ALREADY_EXISTS != retVal)
                         {
                             ThrowWin32ExceptionIfError(retVal);
                         }
@@ -468,9 +467,9 @@ namespace Microsoft.Web.Administration
                                 returnLength,
                                 out returnLength,
                                 IntPtr.Zero);
-                            if (ERROR_NO_MORE_ITEMS == retVal)
+                            if ((uint)WIN32_ERROR.ERROR_NO_MORE_ITEMS == retVal)
                                 break;
-                            if (ERROR_INSUFFICIENT_BUFFER == retVal) // ERROR_INSUFFICIENT_BUFFER = 122
+                            if ((uint)WIN32_ERROR.ERROR_INSUFFICIENT_BUFFER == retVal) // ERROR_INSUFFICIENT_BUFFER = 122
                             {
                                 pOutputConfigInfo = Marshal.AllocCoTaskMem(returnLength);
 
@@ -522,7 +521,7 @@ namespace Microsoft.Web.Administration
                         {
                             Marshal.FreeCoTaskMem(pInputConfigInfo);
                         }
-                    } while (NOERROR == retVal);
+                    } while ((uint)WIN32_ERROR.NO_ERROR == retVal);
                 });
 
             return result.ToArray();
@@ -585,10 +584,10 @@ namespace Microsoft.Web.Administration
                         returnLength,
                         out returnLength,
                         IntPtr.Zero);
-                    if (retVal == ERROR_FILE_NOT_FOUND)
+                    if (retVal == (uint)WIN32_ERROR.ERROR_FILE_NOT_FOUND)
                         return;
 
-                    if (ERROR_INSUFFICIENT_BUFFER == retVal) // ERROR_INSUFFICIENT_BUFFER = 122
+                    if ((uint)WIN32_ERROR.ERROR_INSUFFICIENT_BUFFER == retVal) // ERROR_INSUFFICIENT_BUFFER = 122
                     {
                         pOutputConfigInfo = Marshal.AllocCoTaskMem(returnLength);
 
@@ -692,7 +691,7 @@ namespace Microsoft.Web.Administration
                             Marshal.SizeOf(configSslSet),
                             IntPtr.Zero);
 
-                        if (ERROR_ALREADY_EXISTS != retVal)
+                        if ((uint)WIN32_ERROR.ERROR_ALREADY_EXISTS != retVal)
                         {
                             ThrowWin32ExceptionIfError(retVal);
                         }
@@ -812,9 +811,9 @@ namespace Microsoft.Web.Administration
                                 returnLength,
                                 out returnLength,
                                 IntPtr.Zero);
-                            if (ERROR_NO_MORE_ITEMS == retVal)
+                            if ((uint)WIN32_ERROR.ERROR_NO_MORE_ITEMS == retVal)
                                 break;
-                            if (ERROR_INSUFFICIENT_BUFFER == retVal) // ERROR_INSUFFICIENT_BUFFER = 122
+                            if ((uint)WIN32_ERROR.ERROR_INSUFFICIENT_BUFFER == retVal) // ERROR_INSUFFICIENT_BUFFER = 122
                             {
                                 pOutputConfigInfo = Marshal.AllocCoTaskMem(returnLength);
 
@@ -869,7 +868,7 @@ namespace Microsoft.Web.Administration
                         {
                             Marshal.FreeCoTaskMem(pInputConfigInfo);
                         }
-                    } while (NOERROR == retVal);
+                    } while ((uint)WIN32_ERROR.NO_ERROR == retVal);
                 });
 
             return result.ToArray();
@@ -920,9 +919,9 @@ namespace Microsoft.Web.Administration
                                 returnLength,
                                 out returnLength,
                                 IntPtr.Zero);
-                            if (ERROR_NO_MORE_ITEMS == retVal)
+                            if ((uint)WIN32_ERROR.ERROR_NO_MORE_ITEMS == retVal)
                                 break;
-                            if (ERROR_INSUFFICIENT_BUFFER == retVal) // ERROR_INSUFFICIENT_BUFFER = 122
+                            if ((uint)WIN32_ERROR.ERROR_INSUFFICIENT_BUFFER == retVal) // ERROR_INSUFFICIENT_BUFFER = 122
                             {
                                 pOutputConfigInfo = Marshal.AllocCoTaskMem(returnLength);
 
@@ -966,7 +965,7 @@ namespace Microsoft.Web.Administration
                         {
                             Marshal.FreeCoTaskMem(pInputConfigInfo);
                         }
-                    } while (NOERROR == retVal);
+                    } while ((uint)WIN32_ERROR.NO_ERROR == retVal);
                 });
 
             return result.ToArray();
@@ -974,11 +973,11 @@ namespace Microsoft.Web.Administration
 
         public static void BindHttpNamespaceAcl(string networkURL, string securityDescriptor)
         {
-            var retVal = NOERROR; // NOERROR = 0
+            var retVal = (uint)WIN32_ERROR.NO_ERROR; // NOERROR = 0
 
             CallHttpApi(() =>
             {
-                if (NOERROR == retVal)
+                if ((uint)WIN32_ERROR.NO_ERROR == retVal)
                 {
                     var keyDesc = new HTTP_SERVICE_CONFIG_URLACL_KEY {pUrlPrefix = networkURL};
                     var paramDesc =
@@ -999,7 +998,7 @@ namespace Microsoft.Web.Administration
                         Marshal.SizeOf(inputConfigInfoSet),
                         IntPtr.Zero);
 
-                    if (ERROR_ALREADY_EXISTS == retVal) // ERROR_ALREADY_EXISTS = 183
+                    if ((uint)WIN32_ERROR.ERROR_ALREADY_EXISTS == retVal) // ERROR_ALREADY_EXISTS = 183
                     {
                         retVal = HttpDeleteServiceConfiguration(
                             IntPtr.Zero,
@@ -1008,7 +1007,7 @@ namespace Microsoft.Web.Administration
                             Marshal.SizeOf(inputConfigInfoSet),
                             IntPtr.Zero);
 
-                        if (NOERROR == retVal)
+                        if ((uint)WIN32_ERROR.NO_ERROR == retVal)
                         {
                             retVal = HttpSetServiceConfiguration(IntPtr.Zero,
                                 HTTP_SERVICE_CONFIG_ID.HttpServiceConfigUrlAclInfo,
@@ -1017,16 +1016,16 @@ namespace Microsoft.Web.Administration
                                 IntPtr.Zero);
                         }
                     }
-                    else if (ERROR_ACCESS_DENIED == retVal)
+                    else if ((uint)WIN32_ERROR.ERROR_ACCESS_DENIED == retVal)
                     {
                         //Debug.WriteLine("ERROR_ACCESS_DENIED reserving a HTTP url");
-                        retVal = NOERROR;
+                        retVal = (uint)WIN32_ERROR.NO_ERROR;
                     }
 
                     Marshal.FreeCoTaskMem(pInputConfigInfo);
                 }
 
-                if (NOERROR != retVal)
+                if ((uint)WIN32_ERROR.NO_ERROR != retVal)
                 {
                     throw new Win32Exception(Convert.ToInt32(retVal));
                 }
@@ -1035,11 +1034,11 @@ namespace Microsoft.Web.Administration
 
         public static void DeleteHttpNamespaceAcl(string networkURL, string securityDescriptor)
         {
-            var retVal = NOERROR; // NOERROR = 0
+            var retVal = (uint)WIN32_ERROR.NO_ERROR; // NOERROR = 0
 
             CallHttpApi(() =>
             {
-                if (NOERROR == retVal)
+                if ((uint)WIN32_ERROR.NO_ERROR == retVal)
                 {
                     var keyDesc = new HTTP_SERVICE_CONFIG_URLACL_KEY {pUrlPrefix = networkURL};
                     var paramDesc =
@@ -1060,16 +1059,16 @@ namespace Microsoft.Web.Administration
                         Marshal.SizeOf(inputConfigInfoSet),
                         IntPtr.Zero);
 
-                    if (ERROR_ACCESS_DENIED == retVal)
+                    if ((uint)WIN32_ERROR.ERROR_ACCESS_DENIED == retVal)
                     {
                         //Debug.WriteLine("ERROR_ACCESS_DENIED reserving a HTTP url");
-                        retVal = NOERROR;
+                        retVal = (uint)WIN32_ERROR.NO_ERROR;
                     }
 
                     Marshal.FreeCoTaskMem(pInputConfigInfo);
                 }
 
-                if (NOERROR != retVal)
+                if ((uint)WIN32_ERROR.NO_ERROR != retVal)
                 {
                     throw new Win32Exception(Convert.ToInt32(retVal));
                 }
@@ -1080,7 +1079,7 @@ namespace Microsoft.Web.Administration
 
         private static void ThrowWin32ExceptionIfError(uint retVal)
         {
-            if (NOERROR != retVal)
+            if ((uint)WIN32_ERROR.NO_ERROR != retVal)
             {
                 throw new Win32Exception(Convert.ToInt32(retVal));
             }

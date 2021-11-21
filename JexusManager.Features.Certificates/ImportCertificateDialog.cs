@@ -133,7 +133,7 @@ namespace JexusManager.Features.Certificates
                             catch (Win32Exception ex)
                             {
                                 // elevation is cancelled.
-                                if (ex.NativeErrorCode != NativeMethods.ErrorCancelled)
+                                if (!NativeMethods.ErrorCancelled(ex.NativeErrorCode))
                                 {
                                     RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> {{ "native", ex.NativeErrorCode } });
                                     // throw;

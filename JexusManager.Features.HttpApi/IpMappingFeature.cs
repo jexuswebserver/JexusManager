@@ -119,7 +119,7 @@ namespace JexusManager.Features.HttpApi
             catch (Win32Exception ex)
             {
                 // elevation is cancelled.
-                if (ex.NativeErrorCode != Microsoft.Web.Administration.NativeMethods.ErrorCancelled)
+                if (!Microsoft.Web.Administration.NativeMethods.ErrorCancelled(ex.NativeErrorCode))
                 {
                     RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> {{ "native", ex.NativeErrorCode } });
                     // throw;

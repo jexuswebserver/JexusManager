@@ -98,30 +98,28 @@ namespace JexusManager.Features.HttpApi
             try
             {
                 // remove reserved URL
-                using (var process = new Process())
-                {
-                    var start = process.StartInfo;
-                    start.Verb = "runas";
-                    start.UseShellExecute = true;
-                    start.FileName = "cmd";
-                    start.Arguments = $"/c \"\"{CertificateInstallerLocator.FileName}\" /u:\"{SelectedItem.UrlPrefix}\" /d:\"{SelectedItem.SecurityDescriptor}\"";
-                    start.CreateNoWindow = true;
-                    start.WindowStyle = ProcessWindowStyle.Hidden;
-                    process.Start();
-                    process.WaitForExit();
+                using var process = new Process();
+                var start = process.StartInfo;
+                start.Verb = "runas";
+                start.UseShellExecute = true;
+                start.FileName = "cmd";
+                start.Arguments = $"/c \"\"{CertificateInstallerLocator.FileName}\" /u:\"{SelectedItem.UrlPrefix}\" /d:\"{SelectedItem.SecurityDescriptor}\"";
+                start.CreateNoWindow = true;
+                start.WindowStyle = ProcessWindowStyle.Hidden;
+                process.Start();
+                process.WaitForExit();
 
-                    if (process.ExitCode == 0)
-                    {
-                        Items.Remove(SelectedItem);
-                        SelectedItem = null;
-                        OnHttpApiSettingsSaved();
-                    }
+                if (process.ExitCode == 0)
+                {
+                    Items.Remove(SelectedItem);
+                    SelectedItem = null;
+                    OnHttpApiSettingsSaved();
                 }
             }
             catch (Win32Exception ex)
             {
                 // elevation is cancelled.
-                if (ex.NativeErrorCode != Microsoft.Web.Administration.NativeMethods.ErrorCancelled)
+                if (!Microsoft.Web.Administration.NativeMethods.ErrorCancelled(ex.NativeErrorCode))
                 {
                     RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> {{ "native", ex.NativeErrorCode } });
                     // throw;
