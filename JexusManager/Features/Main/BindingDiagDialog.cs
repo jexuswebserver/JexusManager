@@ -198,7 +198,7 @@ namespace JexusManager.Features.Main
                                         if (!found)
                                         {
                                             Warn($"   DNS query of \"{binding.Host}\" does not return a known IP address for any network adapter of this machine.");
-                                            Warn("   The server usally uses private IP addresses, and DNS query returns public IP addresses.");
+                                            Warn("   The server usually uses private IP addresses, and DNS query returns public IP addresses.");
                                             Warn("   If packets are forwarded from public IP to private IP properly, this warning can be ignored.");
                                             Warn("   Otherwise, please review DNS settings (or modify the hosts file to emulate DNS).");
                                         }
