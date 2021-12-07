@@ -51,8 +51,9 @@ namespace JexusManager.Features.Main
                 { "7.1", new PhpVersion("7.1", new DateTime(2019, 12, 1), new Version(14, 0)) },
                 { "7.2", new PhpVersion("7.2", new DateTime(2020, 11, 30), new Version(14, 11)) },
                 { "7.3", new PhpVersion("7.3", new DateTime(2021, 12, 6), new Version(14, 11)) },
-                { "7.4", new PhpVersion("7.4", new DateTime(2022, 11, 28), new Version(14, 0)) },
-                { "8.0", new PhpVersion("8.0", new DateTime(2023, 11, 26), new Version(14, 0)) }
+                { "7.4", new PhpVersion("7.4", new DateTime(2022, 11, 28), new Version(14, 21)) },
+                { "8.0", new PhpVersion("8.0", new DateTime(2023, 11, 26), new Version(14, 21)) },
+                { "8.1", new PhpVersion("8.1", new DateTime(2024, 11, 25), new Version(14, 21)) }
             };
 
             var container = new CompositeDisposable();
