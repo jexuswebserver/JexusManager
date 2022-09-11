@@ -1,7 +1,7 @@
-powershell -ExecutionPolicy Bypass -file download.dotnet.releases.ps1
+pwsh -ExecutionPolicy Bypass -file download.dotnet.releases.ps1
 IF %ERRORLEVEL% NEQ 0 goto failed
 
-powershell -ExecutionPolicy Bypass -file release.ps1
+pwsh -ExecutionPolicy Bypass -file release.ps1
 IF %ERRORLEVEL% NEQ 0 goto failed
 
 echo succeeded.

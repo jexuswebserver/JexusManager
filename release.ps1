@@ -42,14 +42,14 @@ Write-Host "MSBuild found. Compile the projects."
 Remove-Item .\bin -Recurse
 New-Item .\bin -ItemType Directory
 Set-Location .\JexusManager
-dotnet publish -c Release -r win-x64 -o ..\bin\x64
-dotnet publish -c Release -r win-x86 -o ..\bin\x86
+dotnet publish -c Release -r win-x64 --self-contained -o ..\bin\x64
+dotnet publish -c Release -r win-x86 --self-contained -o ..\bin\x86
 Copy-Item .\ThirdPartyNotices.txt ..\bin
 Set-Location ..
 
 Set-Location .\CertificateInstaller
-dotnet publish -c Release -r win-x64 -o ..\bin\x64
-dotnet publish -c Release -r win-x86 -o ..\bin\x86
+dotnet publish -c Release -r win-x64 --self-contained -o ..\bin\x64
+dotnet publish -c Release -r win-x86 --self-contained -o ..\bin\x86
 Set-Location ..
 
 .\lib\Paraffin.exe -regExExclude "JexusManager\.exe" -NoRootDirectory -dir .\bin\x64 -GroupName Files64 .\Setup\Files64.wxs
