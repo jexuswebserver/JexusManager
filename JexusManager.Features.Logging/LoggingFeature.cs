@@ -7,6 +7,7 @@ namespace JexusManager.Features.Logging
     using System;
     using System.Collections;
     using System.Diagnostics;
+    using System.IO;
     using System.Reflection;
     using System.Resources;
     using System.Windows.Forms;
@@ -123,10 +124,11 @@ namespace JexusManager.Features.Logging
             }
             else
             {
-                var logFile = service.Application.GetSite().LogFile;
+                Site site = service.Application.GetSite();
+                var logFile = site.LogFile;
                 Fields = new Fields(logFile);
                 LogFormat = (long)logFile.LogFormat;
-                Directory = logFile.Directory;
+                Directory = Path.Combine(logFile.Directory, $"W3SVC{site.Id}");
                 if (logFile.Schema.AttributeSchemas["logTargetW3C"] != null)
                 {
                     LogTargetW3C = (long)logFile.LogTargetW3C;
