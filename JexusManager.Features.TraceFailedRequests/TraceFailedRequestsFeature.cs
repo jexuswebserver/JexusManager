@@ -27,6 +27,7 @@ namespace JexusManager.Features.TraceFailedRequests
 
     using Module = Microsoft.Web.Management.Client.Module;
     using JexusManager.Features.TraceFailedRequests.Wizards.AddTraceWizard;
+    using System.IO;
 
     /// <summary>
     /// Description of TraceFailedRequests feature.
@@ -296,8 +297,8 @@ namespace JexusManager.Features.TraceFailedRequests
         public void ViewTraceLogs()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.Site.TraceFailedRequestsLogging;
-            var path = section.Directory.ExpandIisExpressEnvironmentVariables(
+            Site site = service.Site;
+            var path = Path.Combine(site.TraceFailedRequestsLogging.Directory, $"W3SVC{site.Id}").ExpandIisExpressEnvironmentVariables(
                 service.Server != null ? null : service.Application.GetActualExecutable());
             if (System.IO.Directory.Exists(path))
             {
