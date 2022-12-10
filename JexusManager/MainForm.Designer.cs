@@ -111,6 +111,7 @@
             this.saveConnectionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.disconnectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem21 = new System.Windows.Forms.ToolStripSeparator();
+            this.runAsAdministratorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.backToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -146,6 +147,7 @@
             this.actBrowse = new Crad.Windows.Forms.Actions.Action();
             this.actConnectSite = new Crad.Windows.Forms.Actions.Action();
             this.actConnectionApplication = new Crad.Windows.Forms.Actions.Action();
+            this.actRunAsAdmin = new Crad.Windows.Forms.Actions.Action();
             this.connectToAServerToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.connectToAWebsiteToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.connectToAnApplicationToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -246,15 +248,16 @@
             // scMain
             // 
             this.scMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.scMain.Location = new System.Drawing.Point(0, 58);
+            this.scMain.Location = new System.Drawing.Point(0, 24);
             this.scMain.Name = "scMain";
             // 
             // scMain.Panel1
             // 
             this.scMain.Panel1.Controls.Add(this.tableLayoutPanel1);
             this.scMain.Panel1MinSize = 150;
-            this.scMain.Size = new System.Drawing.Size(784, 481);
-            this.scMain.SplitterDistance = 150;
+            this.scMain.Size = new System.Drawing.Size(915, 451);
+            this.scMain.SplitterDistance = 175;
+            this.scMain.SplitterWidth = 5;
             this.scMain.TabIndex = 0;
             this.scMain.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.scMain_SplitterMoved);
             // 
@@ -268,11 +271,11 @@
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(150, 481);
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(175, 451);
             this.tableLayoutPanel1.TabIndex = 3;
             // 
             // panel2
@@ -280,9 +283,9 @@
             this.panel2.Controls.Add(this.treeView1);
             this.panel2.Controls.Add(this.toolStrip2);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(3, 26);
+            this.panel2.Location = new System.Drawing.Point(3, 30);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(144, 452);
+            this.panel2.Size = new System.Drawing.Size(169, 418);
             this.panel2.TabIndex = 0;
             // 
             // treeView1
@@ -292,10 +295,10 @@
             this.treeView1.ImageIndex = 0;
             this.treeView1.ImageList = this.imageList1;
             this.treeView1.LabelEdit = true;
-            this.treeView1.Location = new System.Drawing.Point(0, 25);
+            this.treeView1.Location = new System.Drawing.Point(0, 39);
             this.treeView1.Name = "treeView1";
             this.treeView1.SelectedImageIndex = 0;
-            this.treeView1.Size = new System.Drawing.Size(144, 427);
+            this.treeView1.Size = new System.Drawing.Size(169, 379);
             this.treeView1.TabIndex = 0;
             this.treeView1.BeforeLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.treeView1_BeforeLabelEdit);
             this.treeView1.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.treeView1_AfterLabelEdit);
@@ -313,6 +316,7 @@
             // toolStrip2
             // 
             this.toolStrip2.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.toolStrip2.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButton3,
             this.btnSave,
@@ -322,7 +326,8 @@
             this.btnDisconnect});
             this.toolStrip2.Location = new System.Drawing.Point(0, 0);
             this.toolStrip2.Name = "toolStrip2";
-            this.toolStrip2.Size = new System.Drawing.Size(144, 25);
+            this.toolStrip2.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
+            this.toolStrip2.Size = new System.Drawing.Size(169, 39);
             this.toolStrip2.TabIndex = 6;
             this.toolStrip2.Text = "toolStrip2";
             // 
@@ -336,7 +341,7 @@
             this.toolStripButton3.Image = global::JexusManager.Main.Properties.Resources.connect_16;
             this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton3.Name = "toolStripButton3";
-            this.toolStripButton3.Size = new System.Drawing.Size(32, 22);
+            this.toolStripButton3.Size = new System.Drawing.Size(48, 36);
             this.toolStripButton3.Text = "Create New Connection";
             // 
             // btnServer
@@ -373,14 +378,14 @@
             this.btnSave.Image = global::JexusManager.Main.Properties.Resources.save_16;
             this.btnSave.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(23, 22);
+            this.btnSave.Size = new System.Drawing.Size(36, 36);
             this.btnSave.Text = "Save Connections";
             this.btnSave.ToolTipText = "Save Connections";
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 39);
             // 
             // btnUp
             // 
@@ -391,14 +396,14 @@
             this.btnUp.Image = global::JexusManager.Main.Properties.Resources.up_16;
             this.btnUp.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnUp.Name = "btnUp";
-            this.btnUp.Size = new System.Drawing.Size(23, 22);
+            this.btnUp.Size = new System.Drawing.Size(36, 36);
             this.btnUp.Text = "Up One Level";
             this.btnUp.ToolTipText = "Up One Level";
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 39);
             // 
             // btnDisconnect
             // 
@@ -409,7 +414,7 @@
             this.btnDisconnect.Image = global::JexusManager.Main.Properties.Resources.disconnected_16;
             this.btnDisconnect.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnDisconnect.Name = "btnDisconnect";
-            this.btnDisconnect.Size = new System.Drawing.Size(23, 22);
+            this.btnDisconnect.Size = new System.Drawing.Size(36, 36);
             this.btnDisconnect.Text = "Disconnect";
             this.btnDisconnect.ToolTipText = "Disconnect";
             // 
@@ -421,14 +426,14 @@
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Margin = new System.Windows.Forms.Padding(0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(150, 23);
+            this.panel1.Size = new System.Drawing.Size(175, 27);
             this.panel1.TabIndex = 1;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(3, 5);
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label1.Location = new System.Drawing.Point(3, 6);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(77, 13);
             this.label1.TabIndex = 0;
@@ -436,6 +441,7 @@
             // 
             // cmsServer
             // 
+            this.cmsServer.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.cmsServer.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.refreshToolStripMenuItem,
             this.toolStripMenuItem1,
@@ -452,20 +458,20 @@
             this.toolStripMenuItem40,
             this.switchToContentViewToolStripMenuItem});
             this.cmsServer.Name = "cmsServer";
-            this.cmsServer.Size = new System.Drawing.Size(202, 238);
+            this.cmsServer.Size = new System.Drawing.Size(218, 344);
             // 
             // refreshToolStripMenuItem
             // 
             this.refreshToolStripMenuItem.Enabled = false;
             this.refreshToolStripMenuItem.Image = global::JexusManager.Main.Properties.Resources.refresh_16;
             this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
-            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
+            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(217, 38);
             this.refreshToolStripMenuItem.Text = "Refresh";
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(198, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(214, 6);
             // 
             // removeConnectionToolStripMenuItem
             // 
@@ -473,14 +479,14 @@
             this.removeConnectionToolStripMenuItem.Enabled = false;
             this.removeConnectionToolStripMenuItem.Image = global::JexusManager.Main.Properties.Resources.disconnected_16;
             this.removeConnectionToolStripMenuItem.Name = "removeConnectionToolStripMenuItem";
-            this.removeConnectionToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
+            this.removeConnectionToolStripMenuItem.Size = new System.Drawing.Size(217, 38);
             this.removeConnectionToolStripMenuItem.Text = "Disconnect";
             this.removeConnectionToolStripMenuItem.ToolTipText = "Disconnect";
             // 
             // toolStripMenuItem4
             // 
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(198, 6);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(214, 6);
             // 
             // addWebsiteToolStripMenuItem
             // 
@@ -488,20 +494,20 @@
             this.addWebsiteToolStripMenuItem.AutoToolTip = true;
             this.addWebsiteToolStripMenuItem.Image = global::JexusManager.Main.Properties.Resources.site_new_16;
             this.addWebsiteToolStripMenuItem.Name = "addWebsiteToolStripMenuItem";
-            this.addWebsiteToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
+            this.addWebsiteToolStripMenuItem.Size = new System.Drawing.Size(217, 38);
             this.addWebsiteToolStripMenuItem.Text = "Add Website...";
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(198, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(214, 6);
             // 
             // btnStartServer
             // 
             this.btnStartServer.Enabled = false;
             this.btnStartServer.Image = global::JexusManager.Main.Properties.Resources.start_16;
             this.btnStartServer.Name = "btnStartServer";
-            this.btnStartServer.Size = new System.Drawing.Size(201, 22);
+            this.btnStartServer.Size = new System.Drawing.Size(217, 38);
             this.btnStartServer.Text = "Start";
             // 
             // btnStopServer
@@ -509,77 +515,79 @@
             this.btnStopServer.Enabled = false;
             this.btnStopServer.Image = global::JexusManager.Main.Properties.Resources.stop_16;
             this.btnStopServer.Name = "btnStopServer";
-            this.btnStopServer.Size = new System.Drawing.Size(201, 22);
+            this.btnStopServer.Size = new System.Drawing.Size(217, 38);
             this.btnStopServer.Text = "Stop";
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(198, 6);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(214, 6);
             // 
             // btnRenameServer
             // 
             this.btnRenameServer.Enabled = false;
             this.btnRenameServer.Name = "btnRenameServer";
-            this.btnRenameServer.Size = new System.Drawing.Size(201, 22);
+            this.btnRenameServer.Size = new System.Drawing.Size(217, 38);
             this.btnRenameServer.Text = "Rename";
             // 
             // toolStripMenuItem5
             // 
             this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(198, 6);
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(214, 6);
             // 
             // btnOpenConfig
             // 
             this.btnOpenConfig.Name = "btnOpenConfig";
-            this.btnOpenConfig.Size = new System.Drawing.Size(201, 22);
+            this.btnOpenConfig.Size = new System.Drawing.Size(217, 38);
             this.btnOpenConfig.Text = "Open Configuration File";
             this.btnOpenConfig.Click += new System.EventHandler(this.btnOpenConfig_Click);
             // 
             // toolStripMenuItem40
             // 
             this.toolStripMenuItem40.Name = "toolStripMenuItem40";
-            this.toolStripMenuItem40.Size = new System.Drawing.Size(198, 6);
+            this.toolStripMenuItem40.Size = new System.Drawing.Size(214, 6);
             // 
             // switchToContentViewToolStripMenuItem
             // 
             this.switchToContentViewToolStripMenuItem.Enabled = false;
             this.switchToContentViewToolStripMenuItem.Image = global::JexusManager.Main.Properties.Resources.switch_16;
             this.switchToContentViewToolStripMenuItem.Name = "switchToContentViewToolStripMenuItem";
-            this.switchToContentViewToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
+            this.switchToContentViewToolStripMenuItem.Size = new System.Drawing.Size(217, 38);
             this.switchToContentViewToolStripMenuItem.Text = "Switch to Content View";
             // 
             // cmsApplicationPools
             // 
+            this.cmsApplicationPools.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.cmsApplicationPools.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addApplicationPoolToolStripMenuItem,
             this.toolStripMenuItem6,
             this.refreshToolStripMenuItem1});
             this.cmsApplicationPools.Name = "cmsApplicationPools";
-            this.cmsApplicationPools.Size = new System.Drawing.Size(197, 54);
+            this.cmsApplicationPools.Size = new System.Drawing.Size(213, 86);
             // 
             // addApplicationPoolToolStripMenuItem
             // 
             this.addApplicationPoolToolStripMenuItem.Enabled = false;
             this.addApplicationPoolToolStripMenuItem.Name = "addApplicationPoolToolStripMenuItem";
-            this.addApplicationPoolToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.addApplicationPoolToolStripMenuItem.Size = new System.Drawing.Size(212, 38);
             this.addApplicationPoolToolStripMenuItem.Text = "Add Application Pool...";
             // 
             // toolStripMenuItem6
             // 
             this.toolStripMenuItem6.Name = "toolStripMenuItem6";
-            this.toolStripMenuItem6.Size = new System.Drawing.Size(193, 6);
+            this.toolStripMenuItem6.Size = new System.Drawing.Size(209, 6);
             // 
             // refreshToolStripMenuItem1
             // 
             this.refreshToolStripMenuItem1.Enabled = false;
             this.refreshToolStripMenuItem1.Image = global::JexusManager.Main.Properties.Resources.refresh_16;
             this.refreshToolStripMenuItem1.Name = "refreshToolStripMenuItem1";
-            this.refreshToolStripMenuItem1.Size = new System.Drawing.Size(196, 22);
+            this.refreshToolStripMenuItem1.Size = new System.Drawing.Size(212, 38);
             this.refreshToolStripMenuItem1.Text = "Refresh";
             // 
             // cmsSites
             // 
+            this.cmsSites.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.cmsSites.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addWebsiteToolStripMenuItem1,
             this.toolStripMenuItem7,
@@ -587,7 +595,7 @@
             this.toolStripMenuItem8,
             this.switchToContentViewToolStripMenuItem1});
             this.cmsSites.Name = "cmsSites";
-            this.cmsSites.Size = new System.Drawing.Size(198, 82);
+            this.cmsSites.Size = new System.Drawing.Size(214, 130);
             // 
             // addWebsiteToolStripMenuItem1
             // 
@@ -595,35 +603,36 @@
             this.addWebsiteToolStripMenuItem1.AutoToolTip = true;
             this.addWebsiteToolStripMenuItem1.Image = global::JexusManager.Main.Properties.Resources.site_new_16;
             this.addWebsiteToolStripMenuItem1.Name = "addWebsiteToolStripMenuItem1";
-            this.addWebsiteToolStripMenuItem1.Size = new System.Drawing.Size(197, 22);
+            this.addWebsiteToolStripMenuItem1.Size = new System.Drawing.Size(213, 38);
             this.addWebsiteToolStripMenuItem1.Text = "Add Website...";
             // 
             // toolStripMenuItem7
             // 
             this.toolStripMenuItem7.Name = "toolStripMenuItem7";
-            this.toolStripMenuItem7.Size = new System.Drawing.Size(194, 6);
+            this.toolStripMenuItem7.Size = new System.Drawing.Size(210, 6);
             // 
             // refreshToolStripMenuItem2
             // 
             this.refreshToolStripMenuItem2.Enabled = false;
             this.refreshToolStripMenuItem2.Name = "refreshToolStripMenuItem2";
-            this.refreshToolStripMenuItem2.Size = new System.Drawing.Size(197, 22);
+            this.refreshToolStripMenuItem2.Size = new System.Drawing.Size(213, 38);
             this.refreshToolStripMenuItem2.Text = "Refresh";
             // 
             // toolStripMenuItem8
             // 
             this.toolStripMenuItem8.Name = "toolStripMenuItem8";
-            this.toolStripMenuItem8.Size = new System.Drawing.Size(194, 6);
+            this.toolStripMenuItem8.Size = new System.Drawing.Size(210, 6);
             // 
             // switchToContentViewToolStripMenuItem1
             // 
             this.switchToContentViewToolStripMenuItem1.Enabled = false;
             this.switchToContentViewToolStripMenuItem1.Name = "switchToContentViewToolStripMenuItem1";
-            this.switchToContentViewToolStripMenuItem1.Size = new System.Drawing.Size(197, 22);
+            this.switchToContentViewToolStripMenuItem1.Size = new System.Drawing.Size(213, 38);
             this.switchToContentViewToolStripMenuItem1.Text = "Switch to Content View";
             // 
             // cmsSite
             // 
+            this.cmsSite.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.cmsSite.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.exploreToolStripMenuItem,
             this.editPermissionsToolStripMenuItem,
@@ -642,7 +651,7 @@
             this.toolStripMenuItem17,
             this.switchToContentViewToolStripMenuItem2});
             this.cmsSite.Name = "cmsSite";
-            this.cmsSite.Size = new System.Drawing.Size(198, 260);
+            this.cmsSite.Size = new System.Drawing.Size(214, 420);
             // 
             // exploreToolStripMenuItem
             // 
@@ -650,7 +659,7 @@
             this.exploreToolStripMenuItem.AutoToolTip = true;
             this.exploreToolStripMenuItem.Image = global::JexusManager.Main.Properties.Resources.explore_16;
             this.exploreToolStripMenuItem.Name = "exploreToolStripMenuItem";
-            this.exploreToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.exploreToolStripMenuItem.Size = new System.Drawing.Size(213, 38);
             this.exploreToolStripMenuItem.Text = "Explore";
             // 
             // editPermissionsToolStripMenuItem
@@ -658,13 +667,13 @@
             this.actionList1.SetAction(this.editPermissionsToolStripMenuItem, this.actEditPermissions);
             this.editPermissionsToolStripMenuItem.AutoToolTip = true;
             this.editPermissionsToolStripMenuItem.Name = "editPermissionsToolStripMenuItem";
-            this.editPermissionsToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.editPermissionsToolStripMenuItem.Size = new System.Drawing.Size(213, 38);
             this.editPermissionsToolStripMenuItem.Text = "Edit Permissions...";
             // 
             // toolStripMenuItem10
             // 
             this.toolStripMenuItem10.Name = "toolStripMenuItem10";
-            this.toolStripMenuItem10.Size = new System.Drawing.Size(194, 6);
+            this.toolStripMenuItem10.Size = new System.Drawing.Size(210, 6);
             // 
             // btnApplication
             // 
@@ -672,7 +681,7 @@
             this.btnApplication.AutoToolTip = true;
             this.btnApplication.Image = global::JexusManager.Main.Properties.Resources.application_new_16;
             this.btnApplication.Name = "btnApplication";
-            this.btnApplication.Size = new System.Drawing.Size(197, 22);
+            this.btnApplication.Size = new System.Drawing.Size(213, 38);
             this.btnApplication.Text = "Add Application...";
             // 
             // addVirtualDirectoryToolStripMenuItem
@@ -681,25 +690,25 @@
             this.addVirtualDirectoryToolStripMenuItem.AutoToolTip = true;
             this.addVirtualDirectoryToolStripMenuItem.Image = global::JexusManager.Main.Properties.Resources.virtual_directory_new_16;
             this.addVirtualDirectoryToolStripMenuItem.Name = "addVirtualDirectoryToolStripMenuItem";
-            this.addVirtualDirectoryToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.addVirtualDirectoryToolStripMenuItem.Size = new System.Drawing.Size(213, 38);
             this.addVirtualDirectoryToolStripMenuItem.Text = "Add Virtual Directory...";
             // 
             // toolStripMenuItem11
             // 
             this.toolStripMenuItem11.Name = "toolStripMenuItem11";
-            this.toolStripMenuItem11.Size = new System.Drawing.Size(194, 6);
+            this.toolStripMenuItem11.Size = new System.Drawing.Size(210, 6);
             // 
             // editBindingsToolStripMenuItem
             // 
             this.editBindingsToolStripMenuItem.Name = "editBindingsToolStripMenuItem";
-            this.editBindingsToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.editBindingsToolStripMenuItem.Size = new System.Drawing.Size(213, 38);
             this.editBindingsToolStripMenuItem.Text = "Edit Bindings...";
             this.editBindingsToolStripMenuItem.Click += new System.EventHandler(this.editBindingsToolStripMenuItem_Click);
             // 
             // toolStripMenuItem12
             // 
             this.toolStripMenuItem12.Name = "toolStripMenuItem12";
-            this.toolStripMenuItem12.Size = new System.Drawing.Size(194, 6);
+            this.toolStripMenuItem12.Size = new System.Drawing.Size(210, 6);
             // 
             // manageWebsiteToolStripMenuItem
             // 
@@ -712,7 +721,7 @@
             this.toolStripMenuItem27,
             this.advancedSettingsToolStripMenuItem1});
             this.manageWebsiteToolStripMenuItem.Name = "manageWebsiteToolStripMenuItem";
-            this.manageWebsiteToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.manageWebsiteToolStripMenuItem.Size = new System.Drawing.Size(213, 38);
             this.manageWebsiteToolStripMenuItem.Text = "Manage Website";
             // 
             // btnRestartSite
@@ -768,55 +777,57 @@
             // toolStripMenuItem13
             // 
             this.toolStripMenuItem13.Name = "toolStripMenuItem13";
-            this.toolStripMenuItem13.Size = new System.Drawing.Size(194, 6);
+            this.toolStripMenuItem13.Size = new System.Drawing.Size(210, 6);
             // 
             // refreshToolStripMenuItem3
             // 
             this.refreshToolStripMenuItem3.Enabled = false;
             this.refreshToolStripMenuItem3.Image = global::JexusManager.Main.Properties.Resources.refresh_16;
             this.refreshToolStripMenuItem3.Name = "refreshToolStripMenuItem3";
-            this.refreshToolStripMenuItem3.Size = new System.Drawing.Size(197, 22);
+            this.refreshToolStripMenuItem3.Size = new System.Drawing.Size(213, 38);
             this.refreshToolStripMenuItem3.Text = "Refresh";
             // 
             // removeToolStripMenuItem
             // 
             this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
-            this.removeToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.removeToolStripMenuItem.Size = new System.Drawing.Size(213, 38);
             this.removeToolStripMenuItem.Text = "Remove";
             this.removeToolStripMenuItem.Click += new System.EventHandler(this.btnRemoveSite_Click);
             // 
             // toolStripMenuItem14
             // 
             this.toolStripMenuItem14.Name = "toolStripMenuItem14";
-            this.toolStripMenuItem14.Size = new System.Drawing.Size(194, 6);
+            this.toolStripMenuItem14.Size = new System.Drawing.Size(210, 6);
             // 
             // renameToolStripMenuItem1
             // 
             this.renameToolStripMenuItem1.Name = "renameToolStripMenuItem1";
-            this.renameToolStripMenuItem1.Size = new System.Drawing.Size(197, 22);
+            this.renameToolStripMenuItem1.Size = new System.Drawing.Size(213, 38);
             this.renameToolStripMenuItem1.Text = "Rename";
             this.renameToolStripMenuItem1.Click += new System.EventHandler(this.renameToolStripMenuItem1_Click);
             // 
             // toolStripMenuItem17
             // 
             this.toolStripMenuItem17.Name = "toolStripMenuItem17";
-            this.toolStripMenuItem17.Size = new System.Drawing.Size(194, 6);
+            this.toolStripMenuItem17.Size = new System.Drawing.Size(210, 6);
             // 
             // switchToContentViewToolStripMenuItem2
             // 
             this.switchToContentViewToolStripMenuItem2.Enabled = false;
             this.switchToContentViewToolStripMenuItem2.Image = global::JexusManager.Main.Properties.Resources.switch_16;
             this.switchToContentViewToolStripMenuItem2.Name = "switchToContentViewToolStripMenuItem2";
-            this.switchToContentViewToolStripMenuItem2.Size = new System.Drawing.Size(197, 22);
+            this.switchToContentViewToolStripMenuItem2.Size = new System.Drawing.Size(213, 38);
             this.switchToContentViewToolStripMenuItem2.Text = "Switch to Content View";
             // 
             // statusStrip1
             // 
+            this.statusStrip1.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.txtInfo});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 539);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 475);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(784, 22);
+            this.statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
+            this.statusStrip1.Size = new System.Drawing.Size(915, 22);
             this.statusStrip1.TabIndex = 0;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -824,19 +835,21 @@
             // 
             this.txtInfo.Image = global::JexusManager.Main.Properties.Resources.info_16;
             this.txtInfo.Name = "txtInfo";
-            this.txtInfo.Size = new System.Drawing.Size(134, 17);
+            this.txtInfo.Size = new System.Drawing.Size(150, 32);
             this.txtInfo.Text = "toolStripStatusLabel1";
             this.txtInfo.Visible = false;
             // 
             // menuStrip1
             // 
+            this.menuStrip1.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.viewToolStripMenuItem,
             this.helpToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 34);
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(784, 24);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(7, 2, 0, 2);
+            this.menuStrip1.Size = new System.Drawing.Size(915, 24);
             this.menuStrip1.TabIndex = 5;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -850,6 +863,7 @@
             this.saveConnectionsToolStripMenuItem,
             this.disconnectToolStripMenuItem,
             this.toolStripMenuItem21,
+            this.runAsAdministratorToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
@@ -860,7 +874,7 @@
             this.actionList1.SetAction(this.connectToAServerToolStripMenuItem, this.actConnectServer);
             this.connectToAServerToolStripMenuItem.Image = global::JexusManager.Main.Properties.Resources.server_16;
             this.connectToAServerToolStripMenuItem.Name = "connectToAServerToolStripMenuItem";
-            this.connectToAServerToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.connectToAServerToolStripMenuItem.Size = new System.Drawing.Size(238, 38);
             this.connectToAServerToolStripMenuItem.Text = "Connect to a Server...";
             this.connectToAServerToolStripMenuItem.ToolTipText = "Connect to a Server...";
             // 
@@ -870,7 +884,7 @@
             this.connectToAWebsiteToolStripMenuItem.Enabled = false;
             this.connectToAWebsiteToolStripMenuItem.Image = global::JexusManager.Main.Properties.Resources.site_16;
             this.connectToAWebsiteToolStripMenuItem.Name = "connectToAWebsiteToolStripMenuItem";
-            this.connectToAWebsiteToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.connectToAWebsiteToolStripMenuItem.Size = new System.Drawing.Size(238, 38);
             this.connectToAWebsiteToolStripMenuItem.Text = "Connect to a Website...";
             this.connectToAWebsiteToolStripMenuItem.ToolTipText = "Connect to a Website...";
             // 
@@ -880,14 +894,14 @@
             this.connectToAnApplicationToolStripMenuItem.Enabled = false;
             this.connectToAnApplicationToolStripMenuItem.Image = global::JexusManager.Main.Properties.Resources.application_16;
             this.connectToAnApplicationToolStripMenuItem.Name = "connectToAnApplicationToolStripMenuItem";
-            this.connectToAnApplicationToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.connectToAnApplicationToolStripMenuItem.Size = new System.Drawing.Size(238, 38);
             this.connectToAnApplicationToolStripMenuItem.Text = "Connect to an Application...";
             this.connectToAnApplicationToolStripMenuItem.ToolTipText = "Connect to an Application...";
             // 
             // toolStripMenuItem22
             // 
             this.toolStripMenuItem22.Name = "toolStripMenuItem22";
-            this.toolStripMenuItem22.Size = new System.Drawing.Size(219, 6);
+            this.toolStripMenuItem22.Size = new System.Drawing.Size(235, 6);
             // 
             // saveConnectionsToolStripMenuItem
             // 
@@ -895,7 +909,7 @@
             this.saveConnectionsToolStripMenuItem.Enabled = false;
             this.saveConnectionsToolStripMenuItem.Image = global::JexusManager.Main.Properties.Resources.save_16;
             this.saveConnectionsToolStripMenuItem.Name = "saveConnectionsToolStripMenuItem";
-            this.saveConnectionsToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.saveConnectionsToolStripMenuItem.Size = new System.Drawing.Size(238, 38);
             this.saveConnectionsToolStripMenuItem.Text = "Save Connections";
             this.saveConnectionsToolStripMenuItem.ToolTipText = "Save Connections";
             // 
@@ -905,19 +919,27 @@
             this.disconnectToolStripMenuItem.Enabled = false;
             this.disconnectToolStripMenuItem.Image = global::JexusManager.Main.Properties.Resources.disconnected_16;
             this.disconnectToolStripMenuItem.Name = "disconnectToolStripMenuItem";
-            this.disconnectToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.disconnectToolStripMenuItem.Size = new System.Drawing.Size(238, 38);
             this.disconnectToolStripMenuItem.Text = "Disconnect";
             this.disconnectToolStripMenuItem.ToolTipText = "Disconnect";
             // 
             // toolStripMenuItem21
             // 
             this.toolStripMenuItem21.Name = "toolStripMenuItem21";
-            this.toolStripMenuItem21.Size = new System.Drawing.Size(219, 6);
+            this.toolStripMenuItem21.Size = new System.Drawing.Size(235, 6);
+            // 
+            // runAsAdministratorToolStripMenuItem
+            // 
+            this.actionList1.SetAction(this.runAsAdministratorToolStripMenuItem, this.actRunAsAdmin);
+            this.runAsAdministratorToolStripMenuItem.AutoToolTip = true;
+            this.runAsAdministratorToolStripMenuItem.Name = "runAsAdministratorToolStripMenuItem";
+            this.runAsAdministratorToolStripMenuItem.Size = new System.Drawing.Size(238, 38);
+            this.runAsAdministratorToolStripMenuItem.Text = "Run as Administrator";
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(238, 38);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -1036,52 +1058,52 @@
             this.iISHelpToolStripMenuItem.Image = global::JexusManager.Main.Properties.Resources.help_16;
             this.iISHelpToolStripMenuItem.Name = "iISHelpToolStripMenuItem";
             this.iISHelpToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F1;
-            this.iISHelpToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.iISHelpToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
             this.iISHelpToolStripMenuItem.Text = "IIS Help";
             // 
             // iISOnMSDNOnlineToolStripMenuItem
             // 
             this.iISOnMSDNOnlineToolStripMenuItem.Name = "iISOnMSDNOnlineToolStripMenuItem";
-            this.iISOnMSDNOnlineToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.iISOnMSDNOnlineToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
             this.iISOnMSDNOnlineToolStripMenuItem.Text = "IIS on MSDN Online";
             this.iISOnMSDNOnlineToolStripMenuItem.Click += new System.EventHandler(this.iISOnMSDNOnlineToolStripMenuItem_Click);
             // 
             // iISNETOnlineToolStripMenuItem
             // 
             this.iISNETOnlineToolStripMenuItem.Name = "iISNETOnlineToolStripMenuItem";
-            this.iISNETOnlineToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.iISNETOnlineToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
             this.iISNETOnlineToolStripMenuItem.Text = "IIS.NET Online";
             this.iISNETOnlineToolStripMenuItem.Click += new System.EventHandler(this.iISNETOnlineToolStripMenuItem_Click);
             // 
             // iISKBsOnlineToolStripMenuItem
             // 
             this.iISKBsOnlineToolStripMenuItem.Name = "iISKBsOnlineToolStripMenuItem";
-            this.iISKBsOnlineToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.iISKBsOnlineToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
             this.iISKBsOnlineToolStripMenuItem.Text = "IIS KBs Online";
             this.iISKBsOnlineToolStripMenuItem.Click += new System.EventHandler(this.iISKBsOnlineToolStripMenuItem_Click);
             // 
             // toolStripMenuItem28
             // 
             this.toolStripMenuItem28.Name = "toolStripMenuItem28";
-            this.toolStripMenuItem28.Size = new System.Drawing.Size(184, 6);
+            this.toolStripMenuItem28.Size = new System.Drawing.Size(185, 6);
             // 
             // btnUpdate
             // 
             this.btnUpdate.Image = global::JexusManager.Main.Properties.Resources.update_16;
             this.btnUpdate.Name = "btnUpdate";
-            this.btnUpdate.Size = new System.Drawing.Size(187, 22);
+            this.btnUpdate.Size = new System.Drawing.Size(188, 22);
             this.btnUpdate.Text = "Check Update";
             this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
             // 
             // toolStripMenuItem18
             // 
             this.toolStripMenuItem18.Name = "toolStripMenuItem18";
-            this.toolStripMenuItem18.Size = new System.Drawing.Size(184, 6);
+            this.toolStripMenuItem18.Size = new System.Drawing.Size(185, 6);
             // 
             // btnAbout
             // 
             this.btnAbout.Name = "btnAbout";
-            this.btnAbout.Size = new System.Drawing.Size(187, 22);
+            this.btnAbout.Size = new System.Drawing.Size(188, 22);
             this.btnAbout.Text = "About Jexus Manager";
             this.btnAbout.Click += new System.EventHandler(this.btnAbout_Click);
             // 
@@ -1099,6 +1121,7 @@
             this.actionList1.Actions.Add(this.actExplore);
             this.actionList1.Actions.Add(this.actEditPermissions);
             this.actionList1.Actions.Add(this.actBrowse);
+            this.actionList1.Actions.Add(this.actRunAsAdmin);
             this.actionList1.ContainerControl = this;
             // 
             // actConnectServer
@@ -1182,12 +1205,17 @@
             this.actConnectionApplication.Text = "Connect to an Application...";
             this.actConnectionApplication.ToolTipText = "Connect to an Application...";
             // 
+            // actRunAsAdmin
+            // 
+            this.actRunAsAdmin.Text = "Run as Administrator";
+            this.actRunAsAdmin.Execute += new System.EventHandler(this.actRunAsAdmin_Execute);
+            // 
             // connectToAServerToolStripMenuItem1
             // 
             this.actionList1.SetAction(this.connectToAServerToolStripMenuItem1, this.actConnectServer);
             this.connectToAServerToolStripMenuItem1.Image = global::JexusManager.Main.Properties.Resources.server_16;
             this.connectToAServerToolStripMenuItem1.Name = "connectToAServerToolStripMenuItem1";
-            this.connectToAServerToolStripMenuItem1.Size = new System.Drawing.Size(222, 22);
+            this.connectToAServerToolStripMenuItem1.Size = new System.Drawing.Size(238, 38);
             this.connectToAServerToolStripMenuItem1.Text = "Connect to a Server...";
             this.connectToAServerToolStripMenuItem1.ToolTipText = "Connect to a Server...";
             // 
@@ -1197,7 +1225,7 @@
             this.connectToAWebsiteToolStripMenuItem1.Enabled = false;
             this.connectToAWebsiteToolStripMenuItem1.Image = global::JexusManager.Main.Properties.Resources.site_16;
             this.connectToAWebsiteToolStripMenuItem1.Name = "connectToAWebsiteToolStripMenuItem1";
-            this.connectToAWebsiteToolStripMenuItem1.Size = new System.Drawing.Size(222, 22);
+            this.connectToAWebsiteToolStripMenuItem1.Size = new System.Drawing.Size(238, 38);
             this.connectToAWebsiteToolStripMenuItem1.Text = "Connect to a Website...";
             this.connectToAWebsiteToolStripMenuItem1.ToolTipText = "Connect to a Website...";
             // 
@@ -1207,7 +1235,7 @@
             this.connectToAnApplicationToolStripMenuItem1.Enabled = false;
             this.connectToAnApplicationToolStripMenuItem1.Image = global::JexusManager.Main.Properties.Resources.application_16;
             this.connectToAnApplicationToolStripMenuItem1.Name = "connectToAnApplicationToolStripMenuItem1";
-            this.connectToAnApplicationToolStripMenuItem1.Size = new System.Drawing.Size(222, 22);
+            this.connectToAnApplicationToolStripMenuItem1.Size = new System.Drawing.Size(238, 38);
             this.connectToAnApplicationToolStripMenuItem1.Text = "Connect to an Application...";
             this.connectToAnApplicationToolStripMenuItem1.ToolTipText = "Connect to an Application...";
             // 
@@ -1217,7 +1245,7 @@
             this.addApplicationToolStripMenuItem.AutoToolTip = true;
             this.addApplicationToolStripMenuItem.Image = global::JexusManager.Main.Properties.Resources.application_new_16;
             this.addApplicationToolStripMenuItem.Name = "addApplicationToolStripMenuItem";
-            this.addApplicationToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.addApplicationToolStripMenuItem.Size = new System.Drawing.Size(213, 38);
             this.addApplicationToolStripMenuItem.Text = "Add Application...";
             // 
             // toolStripMenuItem38
@@ -1225,7 +1253,7 @@
             this.actionList1.SetAction(this.toolStripMenuItem38, this.actCreateApplication);
             this.toolStripMenuItem38.Image = global::JexusManager.Main.Properties.Resources.application_new_16;
             this.toolStripMenuItem38.Name = "toolStripMenuItem38";
-            this.toolStripMenuItem38.Size = new System.Drawing.Size(205, 22);
+            this.toolStripMenuItem38.Size = new System.Drawing.Size(221, 38);
             this.toolStripMenuItem38.Text = "Add Application...";
             // 
             // toolStripMenuItem49
@@ -1234,7 +1262,7 @@
             this.toolStripMenuItem49.AutoToolTip = true;
             this.toolStripMenuItem49.Image = global::JexusManager.Main.Properties.Resources.application_new_16;
             this.toolStripMenuItem49.Name = "toolStripMenuItem49";
-            this.toolStripMenuItem49.Size = new System.Drawing.Size(197, 22);
+            this.toolStripMenuItem49.Size = new System.Drawing.Size(213, 38);
             this.toolStripMenuItem49.Text = "Add Application...";
             // 
             // exploreToolStripMenuItem1
@@ -1243,7 +1271,7 @@
             this.exploreToolStripMenuItem1.AutoToolTip = true;
             this.exploreToolStripMenuItem1.Image = global::JexusManager.Main.Properties.Resources.explore_16;
             this.exploreToolStripMenuItem1.Name = "exploreToolStripMenuItem1";
-            this.exploreToolStripMenuItem1.Size = new System.Drawing.Size(197, 22);
+            this.exploreToolStripMenuItem1.Size = new System.Drawing.Size(213, 38);
             this.exploreToolStripMenuItem1.Text = "Explore";
             // 
             // editPermissionsToolStripMenuItem1
@@ -1251,7 +1279,7 @@
             this.actionList1.SetAction(this.editPermissionsToolStripMenuItem1, this.actEditPermissions);
             this.editPermissionsToolStripMenuItem1.AutoToolTip = true;
             this.editPermissionsToolStripMenuItem1.Name = "editPermissionsToolStripMenuItem1";
-            this.editPermissionsToolStripMenuItem1.Size = new System.Drawing.Size(197, 22);
+            this.editPermissionsToolStripMenuItem1.Size = new System.Drawing.Size(213, 38);
             this.editPermissionsToolStripMenuItem1.Text = "Edit Permissions...";
             // 
             // addVirtualDirectoryToolStripMenuItem1
@@ -1260,7 +1288,7 @@
             this.addVirtualDirectoryToolStripMenuItem1.AutoToolTip = true;
             this.addVirtualDirectoryToolStripMenuItem1.Image = global::JexusManager.Main.Properties.Resources.virtual_directory_new_16;
             this.addVirtualDirectoryToolStripMenuItem1.Name = "addVirtualDirectoryToolStripMenuItem1";
-            this.addVirtualDirectoryToolStripMenuItem1.Size = new System.Drawing.Size(197, 22);
+            this.addVirtualDirectoryToolStripMenuItem1.Size = new System.Drawing.Size(213, 38);
             this.addVirtualDirectoryToolStripMenuItem1.Text = "Add Virtual Directory...";
             // 
             // btnBrowseApplication
@@ -1278,7 +1306,7 @@
             this.toolStripMenuItem36.AutoToolTip = true;
             this.toolStripMenuItem36.Image = global::JexusManager.Main.Properties.Resources.explore_16;
             this.toolStripMenuItem36.Name = "toolStripMenuItem36";
-            this.toolStripMenuItem36.Size = new System.Drawing.Size(205, 22);
+            this.toolStripMenuItem36.Size = new System.Drawing.Size(221, 38);
             this.toolStripMenuItem36.Text = "Explore";
             // 
             // toolStripMenuItem37
@@ -1286,7 +1314,7 @@
             this.actionList1.SetAction(this.toolStripMenuItem37, this.actEditPermissions);
             this.toolStripMenuItem37.AutoToolTip = true;
             this.toolStripMenuItem37.Name = "toolStripMenuItem37";
-            this.toolStripMenuItem37.Size = new System.Drawing.Size(205, 22);
+            this.toolStripMenuItem37.Size = new System.Drawing.Size(221, 38);
             this.toolStripMenuItem37.Text = "Edit Permissions...";
             // 
             // toolStripMenuItem39
@@ -1295,7 +1323,7 @@
             this.toolStripMenuItem39.AutoToolTip = true;
             this.toolStripMenuItem39.Image = global::JexusManager.Main.Properties.Resources.virtual_directory_new_16;
             this.toolStripMenuItem39.Name = "toolStripMenuItem39";
-            this.toolStripMenuItem39.Size = new System.Drawing.Size(205, 22);
+            this.toolStripMenuItem39.Size = new System.Drawing.Size(221, 38);
             this.toolStripMenuItem39.Text = "Add Virtual Directory...";
             // 
             // toolStripMenuItem41
@@ -1313,7 +1341,7 @@
             this.toolStripMenuItem46.AutoToolTip = true;
             this.toolStripMenuItem46.Image = global::JexusManager.Main.Properties.Resources.explore_16;
             this.toolStripMenuItem46.Name = "toolStripMenuItem46";
-            this.toolStripMenuItem46.Size = new System.Drawing.Size(197, 22);
+            this.toolStripMenuItem46.Size = new System.Drawing.Size(213, 38);
             this.toolStripMenuItem46.Text = "Explore";
             // 
             // toolStripMenuItem47
@@ -1321,7 +1349,7 @@
             this.actionList1.SetAction(this.toolStripMenuItem47, this.actEditPermissions);
             this.toolStripMenuItem47.AutoToolTip = true;
             this.toolStripMenuItem47.Name = "toolStripMenuItem47";
-            this.toolStripMenuItem47.Size = new System.Drawing.Size(197, 22);
+            this.toolStripMenuItem47.Size = new System.Drawing.Size(213, 38);
             this.toolStripMenuItem47.Text = "Edit Permissions...";
             // 
             // toolStripMenuItem50
@@ -1330,7 +1358,7 @@
             this.toolStripMenuItem50.AutoToolTip = true;
             this.toolStripMenuItem50.Image = global::JexusManager.Main.Properties.Resources.virtual_directory_new_16;
             this.toolStripMenuItem50.Name = "toolStripMenuItem50";
-            this.toolStripMenuItem50.Size = new System.Drawing.Size(197, 22);
+            this.toolStripMenuItem50.Size = new System.Drawing.Size(213, 38);
             this.toolStripMenuItem50.Text = "Add Virtual Directory...";
             // 
             // toolStripMenuItem52
@@ -1344,6 +1372,7 @@
             // 
             // cmsIis
             // 
+            this.cmsIis.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.cmsIis.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.refreshToolStripMenuItem5,
             this.toolStripMenuItem23,
@@ -1351,23 +1380,24 @@
             this.connectToAWebsiteToolStripMenuItem1,
             this.connectToAnApplicationToolStripMenuItem1});
             this.cmsIis.Name = "cmsIis";
-            this.cmsIis.Size = new System.Drawing.Size(223, 98);
+            this.cmsIis.Size = new System.Drawing.Size(239, 162);
             // 
             // refreshToolStripMenuItem5
             // 
             this.refreshToolStripMenuItem5.Enabled = false;
             this.refreshToolStripMenuItem5.Image = global::JexusManager.Main.Properties.Resources.refresh_16;
             this.refreshToolStripMenuItem5.Name = "refreshToolStripMenuItem5";
-            this.refreshToolStripMenuItem5.Size = new System.Drawing.Size(222, 22);
+            this.refreshToolStripMenuItem5.Size = new System.Drawing.Size(238, 38);
             this.refreshToolStripMenuItem5.Text = "Refresh";
             // 
             // toolStripMenuItem23
             // 
             this.toolStripMenuItem23.Name = "toolStripMenuItem23";
-            this.toolStripMenuItem23.Size = new System.Drawing.Size(219, 6);
+            this.toolStripMenuItem23.Size = new System.Drawing.Size(235, 6);
             // 
             // cmsApplication
             // 
+            this.cmsApplication.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.cmsApplication.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.exploreToolStripMenuItem1,
             this.editPermissionsToolStripMenuItem1,
@@ -1382,17 +1412,17 @@
             this.toolStripMenuItem24,
             this.switchToContentViewToolStripMenuItem3});
             this.cmsApplication.Name = "cmsApplication";
-            this.cmsApplication.Size = new System.Drawing.Size(198, 204);
+            this.cmsApplication.Size = new System.Drawing.Size(214, 332);
             // 
             // toolStripMenuItem9
             // 
             this.toolStripMenuItem9.Name = "toolStripMenuItem9";
-            this.toolStripMenuItem9.Size = new System.Drawing.Size(194, 6);
+            this.toolStripMenuItem9.Size = new System.Drawing.Size(210, 6);
             // 
             // toolStripMenuItem15
             // 
             this.toolStripMenuItem15.Name = "toolStripMenuItem15";
-            this.toolStripMenuItem15.Size = new System.Drawing.Size(194, 6);
+            this.toolStripMenuItem15.Size = new System.Drawing.Size(210, 6);
             // 
             // manageApplicationToolStripMenuItem
             // 
@@ -1401,7 +1431,7 @@
             this.toolStripMenuItem25,
             this.advancedSettingsToolStripMenuItem});
             this.manageApplicationToolStripMenuItem.Name = "manageApplicationToolStripMenuItem";
-            this.manageApplicationToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.manageApplicationToolStripMenuItem.Size = new System.Drawing.Size(213, 38);
             this.manageApplicationToolStripMenuItem.Text = "Manage Application";
             // 
             // toolStripMenuItem25
@@ -1419,38 +1449,39 @@
             // toolStripMenuItem16
             // 
             this.toolStripMenuItem16.Name = "toolStripMenuItem16";
-            this.toolStripMenuItem16.Size = new System.Drawing.Size(194, 6);
+            this.toolStripMenuItem16.Size = new System.Drawing.Size(210, 6);
             // 
             // refreshToolStripMenuItem6
             // 
             this.refreshToolStripMenuItem6.Enabled = false;
             this.refreshToolStripMenuItem6.Image = global::JexusManager.Main.Properties.Resources.refresh_16;
             this.refreshToolStripMenuItem6.Name = "refreshToolStripMenuItem6";
-            this.refreshToolStripMenuItem6.Size = new System.Drawing.Size(197, 22);
+            this.refreshToolStripMenuItem6.Size = new System.Drawing.Size(213, 38);
             this.refreshToolStripMenuItem6.Text = "Refresh";
             // 
             // removeToolStripMenuItem1
             // 
             this.removeToolStripMenuItem1.Name = "removeToolStripMenuItem1";
-            this.removeToolStripMenuItem1.Size = new System.Drawing.Size(197, 22);
+            this.removeToolStripMenuItem1.Size = new System.Drawing.Size(213, 38);
             this.removeToolStripMenuItem1.Text = "Remove";
             this.removeToolStripMenuItem1.Click += new System.EventHandler(this.btnRemoveApplication_Click);
             // 
             // toolStripMenuItem24
             // 
             this.toolStripMenuItem24.Name = "toolStripMenuItem24";
-            this.toolStripMenuItem24.Size = new System.Drawing.Size(194, 6);
+            this.toolStripMenuItem24.Size = new System.Drawing.Size(210, 6);
             // 
             // switchToContentViewToolStripMenuItem3
             // 
             this.switchToContentViewToolStripMenuItem3.Enabled = false;
             this.switchToContentViewToolStripMenuItem3.Image = global::JexusManager.Main.Properties.Resources.switch_16;
             this.switchToContentViewToolStripMenuItem3.Name = "switchToContentViewToolStripMenuItem3";
-            this.switchToContentViewToolStripMenuItem3.Size = new System.Drawing.Size(197, 22);
+            this.switchToContentViewToolStripMenuItem3.Size = new System.Drawing.Size(213, 38);
             this.switchToContentViewToolStripMenuItem3.Text = "Switch to Content View";
             // 
             // cmsFarm
             // 
+            this.cmsFarm.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.cmsFarm.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.refreshToolStripMenuItem7,
             this.toolStripMenuItem29,
@@ -1458,43 +1489,44 @@
             this.toolStripMenuItem30,
             this.switchToContentViewToolStripMenuItem4});
             this.cmsFarm.Name = "cmsFarm";
-            this.cmsFarm.Size = new System.Drawing.Size(198, 82);
+            this.cmsFarm.Size = new System.Drawing.Size(214, 130);
             // 
             // refreshToolStripMenuItem7
             // 
             this.refreshToolStripMenuItem7.Enabled = false;
             this.refreshToolStripMenuItem7.Image = global::JexusManager.Main.Properties.Resources.refresh_16;
             this.refreshToolStripMenuItem7.Name = "refreshToolStripMenuItem7";
-            this.refreshToolStripMenuItem7.Size = new System.Drawing.Size(197, 22);
+            this.refreshToolStripMenuItem7.Size = new System.Drawing.Size(213, 38);
             this.refreshToolStripMenuItem7.Text = "Refresh";
             // 
             // toolStripMenuItem29
             // 
             this.toolStripMenuItem29.Name = "toolStripMenuItem29";
-            this.toolStripMenuItem29.Size = new System.Drawing.Size(194, 6);
+            this.toolStripMenuItem29.Size = new System.Drawing.Size(210, 6);
             // 
             // btnCreateFarm
             // 
             this.btnCreateFarm.Name = "btnCreateFarm";
-            this.btnCreateFarm.Size = new System.Drawing.Size(197, 22);
+            this.btnCreateFarm.Size = new System.Drawing.Size(213, 38);
             this.btnCreateFarm.Text = "Create Server Farm...";
             this.btnCreateFarm.Click += new System.EventHandler(this.btnCreateFarm_Click);
             // 
             // toolStripMenuItem30
             // 
             this.toolStripMenuItem30.Name = "toolStripMenuItem30";
-            this.toolStripMenuItem30.Size = new System.Drawing.Size(194, 6);
+            this.toolStripMenuItem30.Size = new System.Drawing.Size(210, 6);
             // 
             // switchToContentViewToolStripMenuItem4
             // 
             this.switchToContentViewToolStripMenuItem4.Enabled = false;
             this.switchToContentViewToolStripMenuItem4.Image = global::JexusManager.Main.Properties.Resources.switch_16;
             this.switchToContentViewToolStripMenuItem4.Name = "switchToContentViewToolStripMenuItem4";
-            this.switchToContentViewToolStripMenuItem4.Size = new System.Drawing.Size(197, 22);
+            this.switchToContentViewToolStripMenuItem4.Size = new System.Drawing.Size(213, 38);
             this.switchToContentViewToolStripMenuItem4.Text = "Switch to Content View";
             // 
             // cmsFarmServer
             // 
+            this.cmsFarmServer.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.cmsFarmServer.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.refreshToolStripMenuItem8,
             this.btnRemoveFarmServer,
@@ -1505,62 +1537,63 @@
             this.toolStripMenuItem33,
             this.switchToContentViewToolStripMenuItem5});
             this.cmsFarmServer.Name = "cmsFarmServer";
-            this.cmsFarmServer.Size = new System.Drawing.Size(198, 132);
+            this.cmsFarmServer.Size = new System.Drawing.Size(214, 212);
             // 
             // refreshToolStripMenuItem8
             // 
             this.refreshToolStripMenuItem8.Enabled = false;
             this.refreshToolStripMenuItem8.Image = global::JexusManager.Main.Properties.Resources.refresh_16;
             this.refreshToolStripMenuItem8.Name = "refreshToolStripMenuItem8";
-            this.refreshToolStripMenuItem8.Size = new System.Drawing.Size(197, 22);
+            this.refreshToolStripMenuItem8.Size = new System.Drawing.Size(213, 38);
             this.refreshToolStripMenuItem8.Text = "Refresh";
             // 
             // btnRemoveFarmServer
             // 
             this.btnRemoveFarmServer.Name = "btnRemoveFarmServer";
-            this.btnRemoveFarmServer.Size = new System.Drawing.Size(197, 22);
+            this.btnRemoveFarmServer.Size = new System.Drawing.Size(213, 38);
             this.btnRemoveFarmServer.Text = "Remove";
             this.btnRemoveFarmServer.Click += new System.EventHandler(this.btnRemoveFarmServer_Click);
             // 
             // toolStripMenuItem31
             // 
             this.toolStripMenuItem31.Name = "toolStripMenuItem31";
-            this.toolStripMenuItem31.Size = new System.Drawing.Size(194, 6);
+            this.toolStripMenuItem31.Size = new System.Drawing.Size(210, 6);
             // 
             // btnAddFarmServer
             // 
             this.btnAddFarmServer.Name = "btnAddFarmServer";
-            this.btnAddFarmServer.Size = new System.Drawing.Size(197, 22);
+            this.btnAddFarmServer.Size = new System.Drawing.Size(213, 38);
             this.btnAddFarmServer.Text = "Add Server...";
             this.btnAddFarmServer.Click += new System.EventHandler(this.btnAddFarmServer_Click);
             // 
             // toolStripMenuItem32
             // 
             this.toolStripMenuItem32.Name = "toolStripMenuItem32";
-            this.toolStripMenuItem32.Size = new System.Drawing.Size(194, 6);
+            this.toolStripMenuItem32.Size = new System.Drawing.Size(210, 6);
             // 
             // btnRenameFarmServer
             // 
             this.btnRenameFarmServer.Enabled = false;
             this.btnRenameFarmServer.Name = "btnRenameFarmServer";
-            this.btnRenameFarmServer.Size = new System.Drawing.Size(197, 22);
+            this.btnRenameFarmServer.Size = new System.Drawing.Size(213, 38);
             this.btnRenameFarmServer.Text = "Rename";
             // 
             // toolStripMenuItem33
             // 
             this.toolStripMenuItem33.Name = "toolStripMenuItem33";
-            this.toolStripMenuItem33.Size = new System.Drawing.Size(194, 6);
+            this.toolStripMenuItem33.Size = new System.Drawing.Size(210, 6);
             // 
             // switchToContentViewToolStripMenuItem5
             // 
             this.switchToContentViewToolStripMenuItem5.Enabled = false;
             this.switchToContentViewToolStripMenuItem5.Image = global::JexusManager.Main.Properties.Resources.switch_16;
             this.switchToContentViewToolStripMenuItem5.Name = "switchToContentViewToolStripMenuItem5";
-            this.switchToContentViewToolStripMenuItem5.Size = new System.Drawing.Size(197, 22);
+            this.switchToContentViewToolStripMenuItem5.Size = new System.Drawing.Size(213, 38);
             this.switchToContentViewToolStripMenuItem5.Text = "Switch to Content View";
             // 
             // cmsServers
             // 
+            this.cmsServers.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.cmsServers.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.refreshToolStripMenuItem9,
             this.toolStripMenuItem34,
@@ -1568,40 +1601,41 @@
             this.toolStripMenuItem35,
             this.switchToContentViewToolStripMenuItem6});
             this.cmsServers.Name = "cmsServers";
-            this.cmsServers.Size = new System.Drawing.Size(198, 82);
+            this.cmsServers.Size = new System.Drawing.Size(214, 130);
             // 
             // refreshToolStripMenuItem9
             // 
             this.refreshToolStripMenuItem9.Image = global::JexusManager.Main.Properties.Resources.refresh_16;
             this.refreshToolStripMenuItem9.Name = "refreshToolStripMenuItem9";
-            this.refreshToolStripMenuItem9.Size = new System.Drawing.Size(197, 22);
+            this.refreshToolStripMenuItem9.Size = new System.Drawing.Size(213, 38);
             this.refreshToolStripMenuItem9.Text = "Refresh";
             // 
             // toolStripMenuItem34
             // 
             this.toolStripMenuItem34.Name = "toolStripMenuItem34";
-            this.toolStripMenuItem34.Size = new System.Drawing.Size(194, 6);
+            this.toolStripMenuItem34.Size = new System.Drawing.Size(210, 6);
             // 
             // addServerToolStripMenuItem
             // 
             this.addServerToolStripMenuItem.Name = "addServerToolStripMenuItem";
-            this.addServerToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.addServerToolStripMenuItem.Size = new System.Drawing.Size(213, 38);
             this.addServerToolStripMenuItem.Text = "Add Server...";
             // 
             // toolStripMenuItem35
             // 
             this.toolStripMenuItem35.Name = "toolStripMenuItem35";
-            this.toolStripMenuItem35.Size = new System.Drawing.Size(194, 6);
+            this.toolStripMenuItem35.Size = new System.Drawing.Size(210, 6);
             // 
             // switchToContentViewToolStripMenuItem6
             // 
             this.switchToContentViewToolStripMenuItem6.Image = global::JexusManager.Main.Properties.Resources.switch_16;
             this.switchToContentViewToolStripMenuItem6.Name = "switchToContentViewToolStripMenuItem6";
-            this.switchToContentViewToolStripMenuItem6.Size = new System.Drawing.Size(197, 22);
+            this.switchToContentViewToolStripMenuItem6.Size = new System.Drawing.Size(213, 38);
             this.switchToContentViewToolStripMenuItem6.Text = "Switch to Content View";
             // 
             // cmsVirtualDirectory
             // 
+            this.cmsVirtualDirectory.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.cmsVirtualDirectory.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem36,
             this.toolStripMenuItem37,
@@ -1617,24 +1651,24 @@
             this.toolStripSeparator7,
             this.toolStripMenuItem45});
             this.cmsVirtualDirectory.Name = "cmsApplication";
-            this.cmsVirtualDirectory.Size = new System.Drawing.Size(206, 226);
+            this.cmsVirtualDirectory.Size = new System.Drawing.Size(222, 370);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(202, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(218, 6);
             // 
             // convertToApplicationToolStripMenuItem
             // 
             this.convertToApplicationToolStripMenuItem.Image = global::JexusManager.Main.Properties.Resources.application_new_16;
             this.convertToApplicationToolStripMenuItem.Name = "convertToApplicationToolStripMenuItem";
-            this.convertToApplicationToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.convertToApplicationToolStripMenuItem.Size = new System.Drawing.Size(221, 38);
             this.convertToApplicationToolStripMenuItem.Text = "Convert to Application";
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(202, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(218, 6);
             // 
             // manageVirtualDirectoryToolStripMenuItem
             // 
@@ -1643,7 +1677,7 @@
             this.toolStripSeparator5,
             this.toolStripMenuItem42});
             this.manageVirtualDirectoryToolStripMenuItem.Name = "manageVirtualDirectoryToolStripMenuItem";
-            this.manageVirtualDirectoryToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.manageVirtualDirectoryToolStripMenuItem.Size = new System.Drawing.Size(221, 38);
             this.manageVirtualDirectoryToolStripMenuItem.Text = "Manage Virtual Directory";
             // 
             // toolStripSeparator5
@@ -1661,38 +1695,39 @@
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(202, 6);
+            this.toolStripSeparator6.Size = new System.Drawing.Size(218, 6);
             // 
             // toolStripMenuItem43
             // 
             this.toolStripMenuItem43.Enabled = false;
             this.toolStripMenuItem43.Image = global::JexusManager.Main.Properties.Resources.refresh_16;
             this.toolStripMenuItem43.Name = "toolStripMenuItem43";
-            this.toolStripMenuItem43.Size = new System.Drawing.Size(205, 22);
+            this.toolStripMenuItem43.Size = new System.Drawing.Size(221, 38);
             this.toolStripMenuItem43.Text = "Refresh";
             // 
             // toolStripMenuItem44
             // 
             this.toolStripMenuItem44.Name = "toolStripMenuItem44";
-            this.toolStripMenuItem44.Size = new System.Drawing.Size(205, 22);
+            this.toolStripMenuItem44.Size = new System.Drawing.Size(221, 38);
             this.toolStripMenuItem44.Text = "Remove";
             this.toolStripMenuItem44.Click += new System.EventHandler(this.btnRemoveVirtualDirectory_Click);
             // 
             // toolStripSeparator7
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(202, 6);
+            this.toolStripSeparator7.Size = new System.Drawing.Size(218, 6);
             // 
             // toolStripMenuItem45
             // 
             this.toolStripMenuItem45.Enabled = false;
             this.toolStripMenuItem45.Image = global::JexusManager.Main.Properties.Resources.switch_16;
             this.toolStripMenuItem45.Name = "toolStripMenuItem45";
-            this.toolStripMenuItem45.Size = new System.Drawing.Size(205, 22);
+            this.toolStripMenuItem45.Size = new System.Drawing.Size(221, 38);
             this.toolStripMenuItem45.Text = "Switch to Content View";
             // 
             // cmsPhysicalDirectory
             // 
+            this.cmsPhysicalDirectory.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.cmsPhysicalDirectory.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem46,
             this.toolStripMenuItem47,
@@ -1707,69 +1742,70 @@
             this.toolStripSeparator12,
             this.toolStripMenuItem56});
             this.cmsPhysicalDirectory.Name = "cmsPhysicalDirectory";
-            this.cmsPhysicalDirectory.Size = new System.Drawing.Size(198, 204);
+            this.cmsPhysicalDirectory.Size = new System.Drawing.Size(214, 332);
             // 
             // toolStripSeparator8
             // 
             this.toolStripSeparator8.Name = "toolStripSeparator8";
-            this.toolStripSeparator8.Size = new System.Drawing.Size(194, 6);
+            this.toolStripSeparator8.Size = new System.Drawing.Size(210, 6);
             // 
             // toolStripMenuItem48
             // 
             this.toolStripMenuItem48.Image = global::JexusManager.Main.Properties.Resources.application_new_16;
             this.toolStripMenuItem48.Name = "toolStripMenuItem48";
-            this.toolStripMenuItem48.Size = new System.Drawing.Size(197, 22);
+            this.toolStripMenuItem48.Size = new System.Drawing.Size(213, 38);
             this.toolStripMenuItem48.Text = "Convert to Application";
             // 
             // toolStripSeparator9
             // 
             this.toolStripSeparator9.Name = "toolStripSeparator9";
-            this.toolStripSeparator9.Size = new System.Drawing.Size(194, 6);
+            this.toolStripSeparator9.Size = new System.Drawing.Size(210, 6);
             // 
             // manageFolderToolStripMenuItem
             // 
             this.manageFolderToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem52});
             this.manageFolderToolStripMenuItem.Name = "manageFolderToolStripMenuItem";
-            this.manageFolderToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.manageFolderToolStripMenuItem.Size = new System.Drawing.Size(213, 38);
             this.manageFolderToolStripMenuItem.Text = "Manage Folder";
             // 
             // toolStripSeparator11
             // 
             this.toolStripSeparator11.Name = "toolStripSeparator11";
-            this.toolStripSeparator11.Size = new System.Drawing.Size(194, 6);
+            this.toolStripSeparator11.Size = new System.Drawing.Size(210, 6);
             // 
             // toolStripMenuItem54
             // 
             this.toolStripMenuItem54.Enabled = false;
             this.toolStripMenuItem54.Image = global::JexusManager.Main.Properties.Resources.refresh_16;
             this.toolStripMenuItem54.Name = "toolStripMenuItem54";
-            this.toolStripMenuItem54.Size = new System.Drawing.Size(197, 22);
+            this.toolStripMenuItem54.Size = new System.Drawing.Size(213, 38);
             this.toolStripMenuItem54.Text = "Refresh";
             // 
             // toolStripSeparator12
             // 
             this.toolStripSeparator12.Name = "toolStripSeparator12";
-            this.toolStripSeparator12.Size = new System.Drawing.Size(194, 6);
+            this.toolStripSeparator12.Size = new System.Drawing.Size(210, 6);
             // 
             // toolStripMenuItem56
             // 
             this.toolStripMenuItem56.Enabled = false;
             this.toolStripMenuItem56.Image = global::JexusManager.Main.Properties.Resources.switch_16;
             this.toolStripMenuItem56.Name = "toolStripMenuItem56";
-            this.toolStripMenuItem56.Size = new System.Drawing.Size(197, 22);
+            this.toolStripMenuItem56.Size = new System.Drawing.Size(213, 38);
             this.toolStripMenuItem56.Text = "Switch to Content View";
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(784, 561);
+            this.ClientSize = new System.Drawing.Size(915, 497);
             this.Controls.Add(this.scMain);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
+            this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
-            this.MinimumSize = new System.Drawing.Size(640, 480);
+            this.MinimumSize = new System.Drawing.Size(738, 504);
             this.Name = "MainForm";
             this.Text = "Jexus Manager";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1FormClosing);
@@ -1993,6 +2029,8 @@
         private Action actBrowse;
         private ToolStripMenuItem btnOpenConfig;
         private ToolStripSeparator toolStripMenuItem40;
+        private Action actRunAsAdmin;
+        private ToolStripMenuItem runAsAdministratorToolStripMenuItem;
     }
 }
 

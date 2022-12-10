@@ -58,6 +58,7 @@ namespace JexusManager
     using JexusManager.Features.Asp;
     using JexusManager.Features.TraceFailedRequests;
     using Rollbar;
+    using System.Diagnostics;
 
     public sealed partial class MainForm : Form
     {
@@ -94,6 +95,8 @@ namespace JexusManager
             imageList1.Images.Add(Resources.servers_16); // 10
             imageList1.Images.Add(Resources.server_disabled_16); // 11
             imageList1.Images.Add(Resources.farm_disabled_16); // 12
+
+            actRunAsAdmin.Image = NativeMethods.GetShieldIcon();
             btnAbout.Text = string.Format("About Jexus Manager {0}", Assembly.GetExecutingAssembly().GetName().Version);
             treeView1.Nodes.Add(new PlaceholderTreeNode("Start Page", 0) { ContextMenuStrip = cmsIis });
             if (!Helper.IsRunningOnMono())
@@ -158,7 +161,16 @@ namespace JexusManager
                 LoadIisExpressQuick(files);
             }
 
-            Text = PublicNativeMethods.IsProcessElevated ? string.Format("{0} (Administrator)", Text) : Text;
+            if (PublicNativeMethods.IsProcessElevated)
+            {
+                Text = string.Format("{0} (Administrator)", Text);
+                actRunAsAdmin.Visible = false;
+            }
+            else
+            {
+                IisRoot.ToolTipText = "This program must run ad ministrator to manage IIS";
+                IisRoot.Text = "IIS (Disabled)";
+            }
         }
 
         internal ToolStripButton DisconnectButton
@@ -1176,6 +1188,32 @@ namespace JexusManager
             {
                 DialogHelper.BrowseFile(server.ServerManager.FileName);
                 return;
+            }
+        }
+
+        private void actRunAsAdmin_Execute(object sender, EventArgs e)
+        {
+            var info = new ProcessStartInfo
+            {
+                FileName = Path.ChangeExtension(Environment.CommandLine, ".exe"),
+                Verb = "runas",
+                UseShellExecute = true
+            };
+            using var process = new Process
+            {
+                StartInfo = info
+            };
+            try
+            {
+                process.Start();
+                if (process.Id != 0)
+                {
+                    Close();
+                }
+            }
+            catch (Exception)
+            {
+
             }
         }
     }
