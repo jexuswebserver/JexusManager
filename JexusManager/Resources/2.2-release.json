@@ -4,15 +4,16 @@
   "latest-release-date": "2019-11-19",
   "latest-runtime": "2.2.8",
   "latest-sdk": "2.2.207",
+  "release-type" : "sts",
   "support-phase": "eol",
   "eol-date": "2019-12-23",
-  "lifecycle-policy": "https://www.microsoft.com/net/support/policy",
+  "lifecycle-policy": "https://dotnet.microsoft.com/platform/support/policy/",
   "releases": [
     {
       "release-date": "2019-11-19",
       "release-version": "2.2.8",
       "security": false,
-      "release-notes": "https://github.com/dotnet/core/blob/master/release-notes/2.2/2.2.8/2.2.8.md",
+      "release-notes": "https://github.com/dotnet/core/blob/main/release-notes/2.2/2.2.8/2.2.8.md",
       "runtime": {
         "version": "2.2.8",
         "version-display": "2.2.8",
@@ -495,7 +496,7 @@
           "cve-url": "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-1302"
         }
       ],
-      "release-notes": "https://github.com/dotnet/core/blob/master/release-notes/2.2/2.2.7/2.2.7.md",
+      "release-notes": "https://github.com/dotnet/core/blob/main/release-notes/2.2/2.2.7/2.2.7.md",
       "runtime": {
         "version": "2.2.7",
         "version-display": "2.2.7",
@@ -587,6 +588,7 @@
         "runtime-version": "2.2.7",
         "vs-version": "16.2.5",
         "vs-support": "Visual Studio 2019 (v16.2)",
+        "vs-mac-support": "Visual Studio 2019 for Mac (v8.1, v8.2, v8.3)",
         "csharp-version": "7.3",
         "fsharp-version": "4.5",
         "files": [
@@ -1020,7 +1022,7 @@
           "cve-url": "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-1075"
         }
       ],
-      "release-notes": "https://github.com/dotnet/core/blob/master/release-notes/2.2/2.2.6/2.2.6.md",
+      "release-notes": "https://github.com/dotnet/core/blob/main/release-notes/2.2/2.2.6/2.2.6.md",
       "runtime": {
         "version": "2.2.6",
         "version-display": "2.2.6",
@@ -1106,6 +1108,7 @@
         "runtime-version": "2.2.6",
         "vs-version": "16.2.0",
         "vs-support": "Visual Studio 2019 (v16.2)",
+        "vs-mac-support": "Visual Studio 2019 for Mac (v8.1, v8.2, v8.3)",
         "csharp-version": "7.3",
         "fsharp-version": "4.6",
         "files": [
@@ -1731,7 +1734,7 @@
       "release-version": "2.2.300",
       "security": false,
       "cve-list": [],
-      "release-notes": "https://github.com/dotnet/core/blob/master/release-notes/2.2/2.2.300-SDK/2.2.300-SDK-download.md",
+      "release-notes": "https://github.com/dotnet/core/blob/main/release-notes/2.2/2.2.300-SDK/2.2.300-SDK-download.md",
       "runtime": {
         "version": "2.2.5",
         "version-display": "2.2.5",
@@ -2039,7 +2042,7 @@
           "cve-url": "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-0976"
         }
       ],
-      "release-notes": "https://github.com/dotnet/core/blob/master/release-notes/2.2/2.2.5/2.2.5.md",
+      "release-notes": "https://github.com/dotnet/core/blob/main/release-notes/2.2/2.2.5/2.2.5.md",
       "runtime": {
         "version": "2.2.5",
         "version-display": "2.2.5",
@@ -2358,7 +2361,7 @@
           "cve-url": "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-0982"
         }
       ],
-      "release-notes": "https://github.com/dotnet/core/blob/master/release-notes/2.2/2.2.5/2.2.5.md",
+      "release-notes": "https://github.com/dotnet/core/blob/main/release-notes/2.2/2.2.5/2.2.5.md",
       "runtime": {
         "version": "2.2.5",
         "version-display": "2.2.5",
@@ -2661,7 +2664,7 @@
           "cve-url": "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-0815"
         }
       ],
-      "release-notes": "https://github.com/dotnet/core/blob/master/release-notes/2.2/2.2.4/2.2.4.md",
+      "release-notes": "https://github.com/dotnet/core/blob/main/release-notes/2.2/2.2.4/2.2.4.md",
       "runtime": {
         "version": "2.2.4",
         "version-display": "2.2.4",
@@ -2962,7 +2965,7 @@
           "cve-url": "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-0815"
         }
       ],
-      "release-notes": "https://github.com/dotnet/core/blob/master/release-notes/2.2/2.2.4/2.2.4.md",
+      "release-notes": "https://github.com/dotnet/core/blob/main/release-notes/2.2/2.2.4/2.2.4.md",
       "runtime": {
         "version": "2.2.4",
         "version-display": "2.2.4",
@@ -3257,7 +3260,7 @@
       "release-version": "2.2.202",
       "security": false,
       "cve-list": [],
-      "release-notes": "https://github.com/dotnet/core/blob/master/release-notes/2.2/2.2.202-SDK/2.2.202-SDK.md",
+      "release-notes": "https://github.com/dotnet/core/blob/main/release-notes/2.2/2.2.202-SDK/2.2.202-SDK.md",
       "runtime": {
         "version": "2.2.3",
         "version-display": "2.2.3",
@@ -3553,7 +3556,7 @@
           "cve-url": "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-0757"
         }
       ],
-      "release-notes": "https://github.com/dotnet/core/blob/master/release-notes/2.2/2.2.3/2.2.3.md",
+      "release-notes": "https://github.com/dotnet/core/blob/main/release-notes/2.2/2.2.3/2.2.3.md",
       "runtime": {
         "version": "2.2.3",
         "version-display": "2.2.3",
@@ -3846,7 +3849,7 @@
           "cve-url": "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-0657"
         }
       ],
-      "release-notes": "https://github.com/dotnet/core/blob/master/release-notes/2.2/2.2.2/2.2.2.md",
+      "release-notes": "https://github.com/dotnet/core/blob/main/release-notes/2.2/2.2.2/2.2.2.md",
       "runtime": {
         "version": "2.2.2",
         "version-display": "2.2.2",
@@ -4147,7 +4150,7 @@
           "cve-url": "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-0548"
         }
       ],
-      "release-notes": "https://github.com/dotnet/core/blob/master/release-notes/2.2/2.2.1/2.2.1.md",
+      "release-notes": "https://github.com/dotnet/core/blob/main/release-notes/2.2/2.2.1/2.2.1.md",
       "sdk": {
         "version": "2.2.103",
         "version-display": "2.2.103",
@@ -4267,7 +4270,7 @@
           "cve-url": "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-0548"
         }
       ],
-      "release-notes": "https://github.com/dotnet/core/blob/master/release-notes/2.2/2.2.1/2.2.1.md",
+      "release-notes": "https://github.com/dotnet/core/blob/main/release-notes/2.2/2.2.1/2.2.1.md",
       "runtime": {
         "version": "2.2.1",
         "version-display": "2.2.1",
@@ -4560,7 +4563,7 @@
       "release-date": "2018-12-11",
       "release-version": "2.2.101",
       "security": false,
-      "release-notes": "https://github.com/dotnet/core/blob/master/release-notes/2.2/2.2.101-SDK/2.2.101.md",
+      "release-notes": "https://github.com/dotnet/core/blob/main/release-notes/2.2/2.2.101-SDK/2.2.101.md",
       "sdk": {
         "version": "2.2.101",
         "version-display": "2.2.101",
@@ -4662,7 +4665,7 @@
       "release-date": "2018-12-06",
       "release-version": "2.2.200-preview",
       "security": false,
-      "release-notes": "https://github.com/dotnet/core/blob/master/release-notes/2.2/preview/2.2.200-preview.md",
+      "release-notes": "https://github.com/dotnet/core/blob/main/release-notes/2.2/preview/2.2.200-preview.md",
       "sdk": {
         "version": "2.2.200-preview-009648",
         "version-display": "2.2.200-preview",
@@ -4772,7 +4775,7 @@
       "release-date": "2018-12-04",
       "release-version": "2.2.0",
       "security": false,
-      "release-notes": "https://github.com/dotnet/core/blob/master/release-notes/2.2/2.2.0/2.2.0.md",
+      "release-notes": "https://github.com/dotnet/core/blob/main/release-notes/2.2/2.2.0/2.2.0.md",
       "runtime": {
         "version": "2.2.0",
         "version-display": "2.2.0",
@@ -5074,7 +5077,7 @@
       "release-date": "2018-10-17",
       "release-version": "2.2.0-preview3",
       "security": false,
-      "release-notes": "https://github.com/dotnet/core/blob/master/release-notes/2.2/preview/2.2.0-preview3.md",
+      "release-notes": "https://github.com/dotnet/core/blob/main/release-notes/2.2/preview/2.2.0-preview3.md",
       "runtime": {
         "version": "2.2.0-preview3-27014-02",
         "version-display": "2.2.0-preview3",
@@ -5339,7 +5342,7 @@
       "release-date": "2018-09-12",
       "release-version": "2.2.0-preview2",
       "security": false,
-      "release-notes": "https://github.com/dotnet/core/blob/master/release-notes/2.2/preview/2.2.0-preview2.md",
+      "release-notes": "https://github.com/dotnet/core/blob/main/release-notes/2.2/preview/2.2.0-preview2.md",
       "runtime": {
         "version": "2.2.0-preview2-26905-02",
         "version-display": "2.2.0-preview2",
@@ -5595,7 +5598,7 @@
       "release-date": "2018-08-22",
       "release-version": "2.2.0-preview1",
       "security": false,
-      "release-notes": "https://github.com/dotnet/core/blob/master/release-notes/2.2/preview/2.2.0-preview1.md",
+      "release-notes": "https://github.com/dotnet/core/blob/main/release-notes/2.2/preview/2.2.0-preview1.md",
       "runtime": {
         "version": "2.2.0-preview-26820-02",
         "version-display": "2.2.0-preview",
