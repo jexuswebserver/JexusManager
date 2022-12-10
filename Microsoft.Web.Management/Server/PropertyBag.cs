@@ -5,7 +5,7 @@
 using System;
 using System.Collections;
 using System.Collections.Specialized;
-#if !NET6_0
+#if !NET7_0
 using System.Web.UI;
 #endif
 
@@ -71,7 +71,7 @@ namespace Microsoft.Web.Management.Server
 
         public static PropertyBag CreatePropertyBagFromState(string state, bool readOnly)
         {
-#if !NET6_0
+#if !NET7_0
             var formatter = new ObjectStateFormatter();
             var bag = (PropertyBag)formatter.Deserialize(state);
             if (readOnly)
@@ -86,7 +86,7 @@ namespace Microsoft.Web.Management.Server
 
         public string GetState()
         {
-#if !NET6_0
+#if !NET7_0
             var formatter = new ObjectStateFormatter();
             return formatter.Serialize(this);
 #endif

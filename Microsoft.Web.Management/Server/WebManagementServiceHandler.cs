@@ -7,7 +7,7 @@ using System.Web;
 
 namespace Microsoft.Web.Management.Server
 {
-#if !NET6_0
+#if !NET7_0
     public sealed class WebManagementServiceHandler : IHttpHandler
     {
         bool IHttpHandler.IsReusable

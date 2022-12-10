@@ -15,13 +15,13 @@ namespace Microsoft.Web.Administration
                     return defaultPath;
                 }
 
-                var debugBuild = Path.Combine(Environment.CurrentDirectory, @"..\..\..\..\CertificateInstaller\bin\Debug\net6.0-windows\certificateinstaller.exe");
+                var debugBuild = Path.Combine(Environment.CurrentDirectory, @"..\..\..\..\CertificateInstaller\bin\Debug\net7.0-windows\certificateinstaller.exe");
                 if (File.Exists(debugBuild))
                 {
                     return debugBuild;
                 }
 
-                var releaseBuild = Path.Combine(Environment.CurrentDirectory, @"..\..\..\..\CertificateInstaller\bin\Release\net6.0-windows\certificateinstaller.exe");
+                var releaseBuild = Path.Combine(Environment.CurrentDirectory, @"..\..\..\..\CertificateInstaller\bin\Release\net7.0-windows\certificateinstaller.exe");
                 if (File.Exists(releaseBuild))
                 {
                     return releaseBuild;
