@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net7.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>false</UseWPF>
     <ProjectGuid>{17E994B0-5A31-4F79-9796-83A45E87853D}</ProjectGuid>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Microsoft.Web.Management</RootNamespace>
