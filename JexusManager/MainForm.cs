@@ -1195,7 +1195,7 @@ namespace JexusManager
         {
             var info = new ProcessStartInfo
             {
-                FileName = Path.ChangeExtension(Environment.CommandLine, ".exe"),
+                FileName = Path.ChangeExtension(Environment.CommandLine.Trim('"'), ".exe"),
                 Verb = "runas",
                 UseShellExecute = true
             };
