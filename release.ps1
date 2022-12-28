@@ -1,3 +1,9 @@
+[CmdletBinding()]
+param(
+    [Parameter(Position = 0)]
+    [string] $Configuration = 'Release'
+)
+
 Import-Module PowerShellGet
 
 $msBuild = "msbuild"
@@ -36,20 +42,20 @@ catch
 
 Write-Host "MSBuild found. Compile the projects."
 
-& $msBuild JexusManager.sln /p:Configuration=Release /t:restore
-& $msBuild JexusManager.sln /p:Configuration=Release /t:clean
+& $msBuild JexusManager.sln /p:Configuration=$Configuration /t:restore
+& $msBuild JexusManager.sln /p:Configuration=$Configuration /t:clean
 
 Remove-Item .\bin -Recurse
 New-Item .\bin -ItemType Directory
 Set-Location .\JexusManager
-dotnet publish -c Release -r win-x64 --self-contained -o ..\bin\x64
-dotnet publish -c Release -r win-x86 --self-contained -o ..\bin\x86
+dotnet publish -c $Configuration -r win-x64 --self-contained -o ..\bin\x64
+dotnet publish -c $Configuration -r win-x86 --self-contained -o ..\bin\x86
 Copy-Item .\ThirdPartyNotices.txt ..\bin
 Set-Location ..
 
 Set-Location .\CertificateInstaller
-dotnet publish -c Release -r win-x64 --self-contained -o ..\bin\x64
-dotnet publish -c Release -r win-x86 --self-contained -o ..\bin\x86
+dotnet publish -c $Configuration -r win-x64 --self-contained -o ..\bin\x64
+dotnet publish -c $Configuration -r win-x86 --self-contained -o ..\bin\x86
 Set-Location ..
 
 .\lib\Paraffin.exe -regExExclude "JexusManager\.exe" -NoRootDirectory -dir .\bin\x64 -GroupName Files64 .\Setup\Files64.wxs

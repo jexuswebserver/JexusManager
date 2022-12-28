@@ -11,9 +11,6 @@
     <OutputType>WinExe</OutputType>
     <StartupObject />
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <!-- MSI engine uses the first three fields https://docs.microsoft.com/en-us/windows/win32/msi/upgrade-table?redirectedfrom=MSDN#columns -->
-    <AssemblyVersion>13.0.9.0</AssemblyVersion>
-    <FileVersion>13.0.9.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -44,6 +41,10 @@
   <ItemGroup>
     <PackageReference Include="ActionListWinForms" Version="2.0.0" />
     <PackageReference Include="Enums.NET" Version="4.0.0" />
+    <PackageReference Include="GitVersion.MsBuild" Version="5.11.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="ini-parser" Version="2.5.2" />
     <PackageReference Include="Mono.Options" Version="6.12.0.148" />
     <PackageReference Include="NuGet.Versioning" Version="5.11.0" />

@@ -14,7 +14,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Tests.IIS")]
-[assembly: AssemblyCopyright("Copyright \u00A9  2014")]
+[assembly: AssemblyCopyright("Copyright \u00A9  2014-2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
