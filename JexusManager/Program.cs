@@ -104,7 +104,7 @@ namespace JexusManager
             var config = new RollbarInfrastructureConfig("5b11a2cb773f42d8afb4265951208c24", "production");
             var additional = new RollbarPayloadAdditionOptions
             {
-                Person = new Person
+                Person = new Person("001")
                 {
                     UserName = userName
                 }
@@ -124,6 +124,7 @@ namespace JexusManager
                 ExceptionDialog.Report(userName, args.Exception.ToString());
             };
 
+            Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
             AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
             {
                 RollbarLocator.RollbarInstance.Error(args.ExceptionObject as System.Exception);
