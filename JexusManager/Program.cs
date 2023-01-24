@@ -101,18 +101,16 @@ namespace JexusManager
         {
             var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             var userName = $"{version} on {GetWindowsVersion()} with {Get45PlusFromRegistry()}";
-            RollbarLocator.RollbarInstance.Configure(
-                new RollbarConfig("5b11a2cb773f42d8afb4265951208c24")
+            var config = new RollbarInfrastructureConfig("5b11a2cb773f42d8afb4265951208c24", "production");
+            var additional = new RollbarPayloadAdditionOptions
+            {
+                Person = new Person
                 {
-                    Environment = "production",
-                    Transform = payload =>
-                    {
-                        payload.Data.Person = new Person(version)
-                        {
-                            UserName = userName
-                        };
-                    }
-                });
+                    UserName = userName
+                }
+            };
+            config.RollbarLoggerConfig.RollbarPayloadAdditionOptions.Reconfigure(additional);
+            RollbarInfrastructure.Instance.Init(config);                
             var path = Assembly.GetExecutingAssembly().Location;
             var programFiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
             var programFilesX86 = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);

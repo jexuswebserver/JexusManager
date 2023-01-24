@@ -9,14 +9,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.9" />
     <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.1.619-beta">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Rollbar" Version="4.0.3" />
-    <PackageReference Include="Vanara.PInvoke.Shell32" Version="3.3.12" />
-    <PackageReference Include="Vanara.PInvoke.Ws2_32" Version="3.3.12" />
+    <PackageReference Include="Rollbar" Version="5.2.0" />
+    <PackageReference Include="Vanara.PInvoke.Shell32" Version="3.4.12" />
+    <PackageReference Include="Vanara.PInvoke.Ws2_32" Version="3.4.12" />
   </ItemGroup>
 
 </Project>
