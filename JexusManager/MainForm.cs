@@ -168,7 +168,7 @@ namespace JexusManager
             }
             else
             {
-                IisRoot.ToolTipText = "This program must run ad ministrator to manage IIS";
+                IisRoot.ToolTipText = "This program must run administrator to manage IIS";
                 IisRoot.Text = "IIS (Disabled)";
             }
         }
@@ -266,7 +266,7 @@ namespace JexusManager
 
         private void LoadIisExpressQuick(List<string> files)
         {
-            if (!File.Exists(DialogHelper.ListIisExpress))
+            if (files.Count == 0 && !File.Exists(DialogHelper.ListIisExpress))
             {
                 return;
             }
@@ -281,6 +281,8 @@ namespace JexusManager
                     server: null,
                     ignoreInCache: true);
                 RegisterServer(data);
+                IisExpressRoot.Expand();
+                data.HandleDoubleClick(this);
             }
         }
 
