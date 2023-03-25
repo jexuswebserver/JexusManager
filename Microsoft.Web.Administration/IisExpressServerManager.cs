@@ -461,20 +461,48 @@ namespace Microsoft.Web.Administration
             build.WaitForExit();
             XElement framework = xml.Root.XPathSelectElement("/Project/PropertyGroup/TargetFramework");
             Debug.Assert(framework != null, nameof(framework) + " != null");
-            var primary = Path.Combine(Path.Combine(root, "bin", "Debug", framework.Value), $"{Path.GetFileNameWithoutExtension(project)}.exe");
-            if (File.Exists(primary))
+            string input = framework.Value;
+            int index = input.IndexOf("net");
+            if (index == -1)
             {
-                // Shortcut for 3.1 apps. What about 2.2?
-                startInfo.EnvironmentVariables.Add("LAUNCHER_PATH", primary);
+                RollbarLocator.RollbarInstance.Error($"Unknown framework {input}");
                 return;
             }
 
-            primary = Path.Combine(Path.Combine(root, "bin", "Debug", framework.Value), $"{Path.GetFileNameWithoutExtension(project)}.dll");
+            string versionString = input.Substring(index + 3);
+            var latestFramework = Version.TryParse(versionString, out Version version);
+            var primary = Path.Combine(Path.Combine(root, "bin", "Debug", input), $"{Path.GetFileNameWithoutExtension(project)}.exe");
+            var baseVersion = Version.Parse("5.0");
+            if (File.Exists(primary)) // found default executables.
+            {
+                if (latestFramework)
+                { 
+                    if (version >= baseVersion)
+                    {
+                        startInfo.EnvironmentVariables.Add("ANCM_LAUNCHER_PATH", primary); // New environment variable in ANCM since 5.0 preview.
+                    }
+                    else
+                    {
+                        RollbarLocator.RollbarInstance.Error($"impossible ASP.NET Core version {version}");
+                    }
+                }
+                else
+                {
+                    // Shortcut for .NET Core 3.0/3.1 apps.
+                    startInfo.EnvironmentVariables.Add("LAUNCHER_PATH", primary); // To replace %LAUNCHER_PATH% in ".vs\xxx\applicationHost.config"
+                }
+
+                return;
+            }
+
+            // .NET Core 2.2 and below, special treatment.
+            primary = Path.Combine(Path.Combine(root, "bin", "Debug", input), $"{Path.GetFileNameWithoutExtension(project)}.dll");
             if (!File.Exists(primary))
             {
-                var files = Directory.GetFiles(Path.Combine(root, "bin", "Debug", framework.Value), "*.dll");
+                var files = Directory.GetFiles(Path.Combine(root, "bin", "Debug", input), "*.dll");
                 if (files.Length == 1)
                 {
+                    RollbarLocator.RollbarInstance.Error($"Didn't find the expected assembly. Choose another instead.");
                     primary = files[0];
                 }
                 else
@@ -485,6 +513,7 @@ namespace Microsoft.Web.Administration
 
             if (primary == null)
             {
+                RollbarLocator.RollbarInstance.Error($"Didn't find compiled assembly for {input}");
                 return;
             }
 
@@ -493,6 +522,7 @@ namespace Microsoft.Web.Administration
             if (!File.Exists(file))
             {
                 // Not VS 15.2 and above
+                RollbarLocator.RollbarInstance.Error($"Didn't detect VS 15.2 or above");
                 return;
             }
 
@@ -509,12 +539,14 @@ namespace Microsoft.Web.Administration
             var launcher = $@"{folder}\Common7\IDE\Extensions\Microsoft\Web Tools\ProjectSystem\VSIISExeLauncher.exe";
             if (!File.Exists(launcher))
             {
+                RollbarLocator.RollbarInstance.Error($"Didn't detect VSIISExeLauncher");
                 return;
             }
 
             var rootAssembly = primary.Replace(@"\", @"\\");
-            startInfo.EnvironmentVariables.Add("LAUNCHER_PATH", $@"{folder}\Common7\IDE\Extensions\Microsoft\Web Tools\ProjectSystem\VSIISExeLauncher.exe");
-            startInfo.EnvironmentVariables.Add("LAUNCHER_ARGS", $"-p \"{dotnet.Replace(@"\", @"\\")}\" -a \"exec \\\"{rootAssembly}\\\"\" -pidFile \"{Path.GetTempFileName().Replace(@"\", @"\\")}\" -wd \"{root.Replace(@"\", @"\\")}\"");
+            var launcherArgs = $"-p \"{dotnet.Replace(@"\", @"\\")}\" -a \"exec \\\"{rootAssembly}\\\"\" -pidFile \"{Path.GetTempFileName().Replace(@"\", @"\\")}\" -wd \"{root.Replace(@"\", @"\\")}\"";
+            startInfo.EnvironmentVariables.Add("LAUNCHER_PATH", launcher);
+            startInfo.EnvironmentVariables.Add("LAUNCHER_ARGS", launcherArgs);
         }
 
         internal override void Stop(Site site)
