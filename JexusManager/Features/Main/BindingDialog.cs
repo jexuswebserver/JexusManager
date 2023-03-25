@@ -115,11 +115,13 @@ namespace JexusManager.Features.Main
 
                     var certificate = cbCertificates.SelectedItem as CertificateInfo;
                     var host = txtHost.Text.DisplayToHost();
+                    var hash = certificate?.Certificate.GetCertHash();
+                    var store = certificate?.Store;
                     var binding = new Binding(
                         cbType.Text,
                         $"{address.AddressToDisplay()}:{port}:{host.HostToDisplay()}",
-                        cbType.Text == "https" ? certificate?.Certificate.GetCertHash() : new byte[0],
-                        cbType.Text == "https" ? certificate?.Store : null,
+                        cbType.Text == "https" ? hash : new byte[0],
+                        cbType.Text == "https" ? store : null,
                         cbSniRequired.Checked ? SslFlags.Sni : SslFlags.None,
                         site.Bindings);
                     var matched = site.Parent.FindDuplicate(binding, site, Binding);
@@ -147,8 +149,8 @@ namespace JexusManager.Features.Main
                         return;
                     }
 
-                    var conflicts = binding.DetectConflicts();
-                    if (conflicts)
+                    var conflicts = binding.DetectConflicts(hash, store);
+                    if (conflicts == Binding.SecureBindingDetectionResult.Conflicting)
                     {
                         var result = ShowMessage(
                             $"This binding is already being used. If you continue you might overwrite the existing certificate for this IP Address:Port or Host Name:Port combination. Do you want to use this binding anyway?",
@@ -172,11 +174,14 @@ namespace JexusManager.Features.Main
 
                     if (site.Server.Mode == WorkingMode.IisExpress || site.Server.Mode == WorkingMode.Iis)
                     {
-                        var result = Binding.FixCertificateMapping(certificate?.Certificate);
-                        if (!string.IsNullOrEmpty(result))
+                        if (conflicts == Binding.SecureBindingDetectionResult.Conflicting)
                         {
-                            ShowMessage($"The binding '{Binding}' is invalid: {result}.", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                            return;
+                            var result = Binding.FixCertificateMapping(certificate?.Certificate);
+                            if (!string.IsNullOrEmpty(result))
+                            {
+                                ShowMessage($"The binding '{Binding}' is invalid: {result}.", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                                return;
+                            }
                         }
                     }
 

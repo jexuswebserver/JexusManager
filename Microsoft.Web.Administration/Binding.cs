@@ -4,8 +4,8 @@
 
 using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Net;
-using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Xml;
@@ -267,16 +267,38 @@ namespace Microsoft.Web.Administration
 
         internal bool CanBrowse => Protocol == "http" || Protocol == "https";
 
-        internal bool DetectConflicts()
+        internal SecureBindingDetectionResult DetectConflicts(byte[] hash, string store)
         {
             if (SslFlags == SslFlags.Sni)
             {
                 var sni = NativeMethods.QuerySslSniInfo(new Tuple<string, int>(_host, _endPoint.Port));
-                return sni != null; // true if detect existing SNI mapping.
+                if (sni != null)
+                {
+                    if (sni.StoreName == store && hash != null && sni.Hash != null && hash.SequenceEqual(sni.Hash))
+                    {
+                        // true if detect existing SNI mapping.
+                        return SecureBindingDetectionResult.Duplicate;
+                    }
+
+                    return SecureBindingDetectionResult.Conflicting;
+                }
+
+                return SecureBindingDetectionResult.None;
             }
 
             var certificate = NativeMethods.QuerySslCertificateInfo(_endPoint);
-            return certificate != null; // true if detect existing IP mapping.
+            if (certificate != null)
+            {
+                if (certificate.StoreName == store && hash != null && certificate.Hash != null && hash.SequenceEqual(certificate.Hash))
+                {
+                    // true if detect existing IP mapping.
+                    return SecureBindingDetectionResult.Duplicate;
+                }
+
+                return SecureBindingDetectionResult.Conflicting;
+            }
+
+            return SecureBindingDetectionResult.None;
         }
 
         internal bool GetIsSni()
@@ -372,6 +394,13 @@ namespace Microsoft.Web.Administration
             }
 
             return true;
+        }
+
+        internal enum SecureBindingDetectionResult
+        {
+            None = 0,
+            Duplicate = 1,
+            Conflicting = 2
         }
     }
 }
