@@ -3,8 +3,10 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information. 
 using Rollbar;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Xml.Linq;
 using System.Xml.XPath;
 
@@ -12,79 +14,156 @@ namespace Microsoft.Web.Administration
 {
     internal static class AspNetCoreHelper
     {
-        public static void FixConfigFile(ServerManager serverManager)
+        public static void FixConfigFile(string fileName)
         {
-            foreach (Site site in serverManager.Sites)
+            var doc = XDocument.Load(fileName);
+            var virturalDirectories = doc.Descendants("virtualDirectory");
+            var fixSection = false;
+            foreach (var vDir in virturalDirectories)                
             {
-                FixConfigFile(site);
+                string[] projects;
+                try
+                {
+                    projects = Directory.GetFiles(vDir.Attribute("physicalPath").Value, "*.csproj");
+                    if (projects.Length != 1)
+                    {
+                        continue;
+                    }
+                }
+                catch (IOException)
+                {
+                    continue;
+                }
+
+                var project = projects[0];
+                var xml = XDocument.Load(project);
+                Debug.Assert(xml.Root != null, "xml.Root != null");
+                if (xml.Root.Attribute("Sdk")?.Value != "Microsoft.NET.Sdk.Web")
+                {
+                    // Not web project
+                    continue;
+                }
+
+                fixSection = true;
+                var siteName = vDir.Ancestors("site").Select(s => s.Attribute("name").Value).FirstOrDefault();
+                FixSite(doc, siteName);
+            }
+            
+            if (fixSection)
+            {
+                FixSection(doc);
+            }
+
+            doc.Save(fileName);
+        }
+
+        private static void FixSite(XDocument xml, string siteName)
+        {
+            // Find the <location> element with a "path" attribute equal to site name
+            XElement locationElement = xml.Descendants("location")
+                .FirstOrDefault(e => e.Attribute("path")?.Value == siteName);
+
+            // Create a new <location> element for site name
+            XElement newLocationElement = new XElement("location",
+                new XAttribute("path", siteName),
+                new XAttribute("inheritInChildApplications", "false"),
+                new XElement("system.webServer",
+                    new XElement("modules",
+                        new XElement("remove", new XAttribute("name", "WebMatrixSupportModule"))),
+                    new XElement("handlers",
+                        new XElement("add",
+                            new XAttribute("name", "aspNetCore"),
+                            new XAttribute("path", "*"),
+                            new XAttribute("verb", "*"),
+                            new XAttribute("modules", "AspNetCoreModuleV2"),
+                            new XAttribute("resourceType", "Unspecified"))),
+                    new XElement("aspNetCore",
+                        new XAttribute("processPath", "%LAUNCHER_PATH%"),
+                        new XAttribute("stdoutLogEnabled", "false"),
+                        new XAttribute("hostingModel", "InProcess"),
+                        new XAttribute("startupTimeLimit", "3600"),
+                        new XAttribute("requestTimeout", "23:00:00")),
+                    new XElement("httpCompression",
+                        new XElement("dynamicTypes",
+                            new XElement("add",
+                                new XAttribute("mimeType", "text/event-stream"),
+                                new XAttribute("enabled", "false"))))));
+
+            if (locationElement != null)
+            {
+                // Replace the existing <location> element with the new one
+                locationElement.ReplaceWith(newLocationElement);
+            }
+            else
+            {
+                // Add the new <location> element to the <configuration> element
+                xml.Element("configuration").Add(newLocationElement);
             }
         }
 
-        private static void FixConfigFile(Site site)
+        private static void FixSection(XDocument xml)
         {
-            // TODO: make this site extension method.
-            var root = site.PhysicalPath.ExpandIisExpressEnvironmentVariables(null);
-            string[] projects;
-            try
+            // Find all descendant elements named "section"
+            IEnumerable<XElement> sections = xml.Descendants("section");
+
+            // Check if any of the "section" elements have a "name" attribute equal to "aspNetCore"
+            bool aspNetCoreExists = sections.Any(s => s.Attribute("name")?.Value == "aspNetCore");
+
+            if (!aspNetCoreExists)
             {
-                projects = Directory.GetFiles(root, "*.csproj");
-                if (projects.Length != 1)
+                // Create a new section element for "aspNetCore"
+                XElement aspNetCoreSection = new XElement("section",
+                    new XAttribute("name", "aspNetCore"),
+                    new XAttribute("overrideModeDefault", "Allow"));
+
+                // Find the sectionGroup element with the name "system.webServer"
+                XElement sectionGroup = xml.Descendants("sectionGroup")
+                    .FirstOrDefault(sg => sg.Attribute("name")?.Value == "system.webServer");
+
+                if (sectionGroup != null)
                 {
-                    return;
+                    // Add the "aspNetCore" section element to the sectionGroup
+                    sectionGroup.Add(aspNetCoreSection);
                 }
             }
-            catch (IOException)
+
+            // Find the <globalModules> element in <system.webServer>
+            XElement globalModulesElement = xml.Descendants("system.webServer")
+                .Elements("globalModules").FirstOrDefault();
+
+            // Check if the <globalModules> element already contains an <add> element with name="AspNetCoreModuleV2"
+            bool aspNetCoreModuleExists = globalModulesElement?.Descendants("add")
+                .Any(e => e.Attribute("name")?.Value == "AspNetCoreModuleV2") ?? false;
+
+            if (!aspNetCoreModuleExists)
             {
-                return;
+                // Create a new <add> element for AspNetCoreModuleV2
+                XElement aspNetCoreModuleElement = new XElement("add",
+                    new XAttribute("name", "AspNetCoreModuleV2"),
+                    new XAttribute("image", "%IIS_BIN%\\Asp.Net Core Module\\V2\\aspnetcorev2.dll"));
+
+                // Add the new <add> element to the <globalModules> element
+                globalModulesElement.Add(aspNetCoreModuleElement);
             }
 
-            var project = projects[0];
-            var xml = XDocument.Load(project);
-            Debug.Assert(xml.Root != null, "xml.Root != null");
-            if (xml.Root.Attribute("Sdk")?.Value != "Microsoft.NET.Sdk.Web")
+            // Find the <modules> element under <system.webServer> inside <location>
+            XElement modulesElement = xml.Descendants("location")
+                .Where(e => e.Attribute("path")?.Value == "")
+                .Elements("system.webServer")
+                .Elements("modules")
+                .FirstOrDefault();
+
+            // Check if the <modules> element already contains an <add> element with name="AspNetCoreModuleV2"
+            bool aspNetCoreModuleExistsInLocation = modulesElement?.Descendants("add")
+                .Any(e => e.Attribute("name")?.Value == "AspNetCoreModuleV2") ?? false;
+
+            if (!aspNetCoreModuleExistsInLocation)
             {
-                // Not web project
-                return;
-            }
+                // Create a new <add> element for AspNetCoreModuleV2
+                XElement aspNetCoreModuleElement = new XElement("add",
+                    new XAttribute("name", "AspNetCoreModuleV2"));
 
-            var config = site.Server.GetApplicationHostConfiguration();
-            var section = config.GetSection("system.webServer/aspNetCore", site.Name);
-            if (section.RawAttributes.Count == 0)
-            {
-                section["processPath"] = "%LAUNCHER_PATH%";
-                section["stdoutLogEnabled"] = false;
-                section["hostingModel"] = "InProcess";
-                section["startupTimeLimit"] = 3600;
-                section["requestTimeout"] = TimeSpan.Parse("23:00:00");
-
-                // TODO: found a bug in Remove.
-                //var modules = config.GetSection("system.webServer/modules", site.Name);
-                //var collectionModules = modules.GetCollection();
-                //var found = collectionModules.FirstOrDefault(item => item["name"].ObjectToString() == "WebMatrixSupportModule");
-                //if (found != null)
-                //{
-                //    collectionModules.Remove(found);
-                //}
-
-                var handlers = config.GetSection("system.webServer/handlers", site.Name);
-                var collection = handlers.GetCollection();
-                var add = collection.CreateElement("add");
-                add["name"] = "aspNetCore";
-                add["path"] = "*";
-                add["verb"] = "*";
-                add["modules"] = "AspNetCoreModuleV2";
-                add["resourceType"] = "Unspecified";
-                collection.Add(add);
-
-                // TODO: cannot add this to the location tag?
-                // var httpCompression = config.GetSection("system.webServer/httpCompression");
-                // var types = httpCompression.GetCollection("dynamicTypes");
-                // var type = types.CreateElement("add");
-                // type["mimeType"] = "text/event-stream";
-                // type["enabled"] = false;
-                // types.Add(type);
-
-                site.Server.CommitChanges();
+                modulesElement.Add(aspNetCoreModuleElement);
             }
         }
 

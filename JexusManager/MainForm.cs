@@ -274,6 +274,7 @@ namespace JexusManager
             var number = 1;
             foreach (var file in files)
             {
+                AspNetCoreHelper.FixConfigFile(file);
                 var data = ServerTreeNode.CreateIisExpressNode(
                     _serviceContainer,
                     name: $"IIS Express {number++}",
@@ -283,7 +284,6 @@ namespace JexusManager
                 RegisterServer(data);
                 IisExpressRoot.Expand();
                 data.HandleDoubleClick(this);
-                AspNetCoreHelper.FixConfigFile(data.ServerManager);
             }
         }
 
