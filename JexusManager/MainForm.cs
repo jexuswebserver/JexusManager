@@ -283,6 +283,7 @@ namespace JexusManager
                 RegisterServer(data);
                 IisExpressRoot.Expand();
                 data.HandleDoubleClick(this);
+                AspNetCoreHelper.FixConfigFile(data.ServerManager);
             }
         }
 
