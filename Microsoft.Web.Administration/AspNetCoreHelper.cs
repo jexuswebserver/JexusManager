@@ -232,6 +232,7 @@ namespace Microsoft.Web.Administration
                     if (version >= baseVersion)
                     {
                         startInfo.EnvironmentVariables.Add("ANCM_LAUNCHER_PATH", primary); // New environment variable in ANCM since 5.0 preview.
+                        startInfo.EnvironmentVariables.Add("ASPNETCORE_ENVIRONMENT", "Development");
                     }
                     else
                     {
