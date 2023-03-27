@@ -38,7 +38,8 @@ namespace Microsoft.Web.Administration
                 var project = projects[0];
                 var xml = XDocument.Load(project);
                 Debug.Assert(xml.Root != null, "xml.Root != null");
-                if (xml.Root.Attribute("Sdk")?.Value != "Microsoft.NET.Sdk.Web")
+                var sdk = xml.Root.Attribute("Sdk")?.Value;
+                if (sdk != "Microsoft.NET.Sdk.Web")
                 {
                     // Not web project
                     continue;
@@ -188,12 +189,143 @@ namespace Microsoft.Web.Administration
             var project = projects[0];
             var xml = XDocument.Load(project);
             Debug.Assert(xml.Root != null, "xml.Root != null");
-            if (xml.Root.Attribute("Sdk")?.Value != "Microsoft.NET.Sdk.Web")
+            var sdk = xml.Root.Attribute("Sdk")?.Value;
+            if (sdk == "Microsoft.NET.Sdk.BlazorWebAssembly")
             {
-                // Not web project
-                return;
-            }
+                // Blazor WASM
+                string dotnet = RestoreAndBuild(root);
+                string devServerVersion = xml.Descendants("PackageReference")
+                    .Where(e => (string)e.Attribute("Include") == "Microsoft.AspNetCore.Components.WebAssembly.DevServer")
+                    .Select(e => (string)e.Attribute("Version"))
+                    .FirstOrDefault();
+                if (devServerVersion == null)
+                {
+                    RollbarLocator.RollbarInstance.Error($"Blazor dev server missing");
+                    return;
+                }
 
+                XElement framework = xml.Root.XPathSelectElement("/Project/PropertyGroup/TargetFramework");
+                Debug.Assert(framework != null, nameof(framework) + " != null");
+                string input = framework.Value;
+                int index = input.IndexOf("net");
+                if (index == -1)
+                {
+                    RollbarLocator.RollbarInstance.Error($"Unknown framework {input}");
+                    return;
+                }
+
+                string versionString = input.Substring(index + 3);
+                var latestFramework = Version.TryParse(versionString, out Version version);
+                var primary = Path.Combine(Path.Combine(root, "bin", "Debug", input), $"{Path.GetFileNameWithoutExtension(project)}.dll");
+
+                var devServerLibrary = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".nuget", "packages", "microsoft.aspnetcore.components.webassembly.devserver", devServerVersion, "tools", "blazor-devserver.dll");
+                if (!File.Exists(devServerLibrary))
+                {
+                    RollbarLocator.RollbarInstance.Error($"Cannot find Blazor dev server library {devServerVersion}");
+                    return;
+                }
+
+                var launcherArgs = $"\"{devServerLibrary}\" --applicationpath \"{primary}\"";
+                startInfo.EnvironmentVariables.Add("ANCM_LAUNCHER_PATH", dotnet);
+                startInfo.EnvironmentVariables.Add("ANCM_LAUNCHER_ARGS", launcherArgs);
+            }
+            else if (sdk == "Microsoft.NET.Sdk.Web")
+            {
+                string dotnet = RestoreAndBuild(root);
+                XElement framework = xml.Root.XPathSelectElement("/Project/PropertyGroup/TargetFramework");
+                Debug.Assert(framework != null, nameof(framework) + " != null");
+                string input = framework.Value;
+                int index = input.IndexOf("net");
+                if (index == -1)
+                {
+                    RollbarLocator.RollbarInstance.Error($"Unknown framework {input}");
+                    return;
+                }
+
+                string versionString = input.Substring(index + 3);
+                var latestFramework = Version.TryParse(versionString, out Version version);
+                var primary = Path.Combine(Path.Combine(root, "bin", "Debug", input), $"{Path.GetFileNameWithoutExtension(project)}.exe");
+                var baseVersion = Version.Parse("5.0");
+                if (File.Exists(primary)) // found default executables.
+                {
+                    if (latestFramework)
+                    {
+                        if (version >= baseVersion)
+                        {
+                            startInfo.EnvironmentVariables.Add("ANCM_LAUNCHER_PATH", primary); // New environment variable in ANCM since 5.0 preview.
+                            startInfo.EnvironmentVariables.Add("ASPNETCORE_ENVIRONMENT", "Development");
+                        }
+                        else
+                        {
+                            RollbarLocator.RollbarInstance.Error($"impossible ASP.NET Core version {version}");
+                        }
+                    }
+                    else
+                    {
+                        // Shortcut for .NET Core 3.0/3.1 apps.
+                        startInfo.EnvironmentVariables.Add("LAUNCHER_PATH", primary); // To replace %LAUNCHER_PATH% in ".vs\xxx\applicationHost.config"
+                    }
+
+                    return;
+                }
+
+                // .NET Core 2.2 and below, special treatment.
+                primary = Path.Combine(Path.Combine(root, "bin", "Debug", input), $"{Path.GetFileNameWithoutExtension(project)}.dll");
+                if (!File.Exists(primary))
+                {
+                    var files = Directory.GetFiles(Path.Combine(root, "bin", "Debug", input), "*.dll");
+                    if (files.Length == 1)
+                    {
+                        RollbarLocator.RollbarInstance.Error($"Didn't find the expected assembly. Choose another instead.");
+                        primary = files[0];
+                    }
+                    else
+                    {
+                        primary = null;
+                    }
+                }
+
+                if (primary == null)
+                {
+                    RollbarLocator.RollbarInstance.Error($"Didn't find compiled assembly for {input}");
+                    return;
+                }
+
+                var file = Environment.ExpandEnvironmentVariables(@"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe");
+                var args = "-latest -products * -requires Microsoft.Component.MSBuild -property installationPath";
+                if (!File.Exists(file))
+                {
+                    // Not VS 15.2 and above
+                    RollbarLocator.RollbarInstance.Error($"Didn't detect VS 15.2 or above");
+                    return;
+                }
+
+                var vswhere = Process.Start(new ProcessStartInfo
+                {
+                    FileName = file,
+                    Arguments = args,
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false
+                });
+                Debug.Assert(vswhere != null, nameof(vswhere) + " != null");
+                var folder = vswhere.StandardOutput.ReadToEnd().TrimEnd();
+
+                var launcher = $@"{folder}\Common7\IDE\Extensions\Microsoft\Web Tools\ProjectSystem\VSIISExeLauncher.exe";
+                if (!File.Exists(launcher))
+                {
+                    RollbarLocator.RollbarInstance.Error($"Didn't detect VSIISExeLauncher");
+                    return;
+                }
+
+                var rootAssembly = primary.Replace(@"\", @"\\");
+                var launcherArgs = $"-p \"{dotnet.Replace(@"\", @"\\")}\" -a \"exec \\\"{rootAssembly}\\\"\" -pidFile \"{Path.GetTempFileName().Replace(@"\", @"\\")}\" -wd \"{root.Replace(@"\", @"\\")}\"";
+                startInfo.EnvironmentVariables.Add("LAUNCHER_PATH", launcher);
+                startInfo.EnvironmentVariables.Add("LAUNCHER_ARGS", launcherArgs);
+            }
+        }
+
+        private static string RestoreAndBuild(string root)
+        {
             var dotnet = Environment.ExpandEnvironmentVariables(@"%ProgramFiles%\dotnet\dotnet.exe");
             var restore = Process.Start(new ProcessStartInfo
             {
@@ -211,95 +343,7 @@ namespace Microsoft.Web.Administration
             });
             Debug.Assert(build != null, nameof(build) + " != null");
             build.WaitForExit();
-            XElement framework = xml.Root.XPathSelectElement("/Project/PropertyGroup/TargetFramework");
-            Debug.Assert(framework != null, nameof(framework) + " != null");
-            string input = framework.Value;
-            int index = input.IndexOf("net");
-            if (index == -1)
-            {
-                RollbarLocator.RollbarInstance.Error($"Unknown framework {input}");
-                return;
-            }
-
-            string versionString = input.Substring(index + 3);
-            var latestFramework = Version.TryParse(versionString, out Version version);
-            var primary = Path.Combine(Path.Combine(root, "bin", "Debug", input), $"{Path.GetFileNameWithoutExtension(project)}.exe");
-            var baseVersion = Version.Parse("5.0");
-            if (File.Exists(primary)) // found default executables.
-            {
-                if (latestFramework)
-                {
-                    if (version >= baseVersion)
-                    {
-                        startInfo.EnvironmentVariables.Add("ANCM_LAUNCHER_PATH", primary); // New environment variable in ANCM since 5.0 preview.
-                        startInfo.EnvironmentVariables.Add("ASPNETCORE_ENVIRONMENT", "Development");
-                    }
-                    else
-                    {
-                        RollbarLocator.RollbarInstance.Error($"impossible ASP.NET Core version {version}");
-                    }
-                }
-                else
-                {
-                    // Shortcut for .NET Core 3.0/3.1 apps.
-                    startInfo.EnvironmentVariables.Add("LAUNCHER_PATH", primary); // To replace %LAUNCHER_PATH% in ".vs\xxx\applicationHost.config"
-                }
-
-                return;
-            }
-
-            // .NET Core 2.2 and below, special treatment.
-            primary = Path.Combine(Path.Combine(root, "bin", "Debug", input), $"{Path.GetFileNameWithoutExtension(project)}.dll");
-            if (!File.Exists(primary))
-            {
-                var files = Directory.GetFiles(Path.Combine(root, "bin", "Debug", input), "*.dll");
-                if (files.Length == 1)
-                {
-                    RollbarLocator.RollbarInstance.Error($"Didn't find the expected assembly. Choose another instead.");
-                    primary = files[0];
-                }
-                else
-                {
-                    primary = null;
-                }
-            }
-
-            if (primary == null)
-            {
-                RollbarLocator.RollbarInstance.Error($"Didn't find compiled assembly for {input}");
-                return;
-            }
-
-            var file = Environment.ExpandEnvironmentVariables(@"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe");
-            var args = "-latest -products * -requires Microsoft.Component.MSBuild -property installationPath";
-            if (!File.Exists(file))
-            {
-                // Not VS 15.2 and above
-                RollbarLocator.RollbarInstance.Error($"Didn't detect VS 15.2 or above");
-                return;
-            }
-
-            var vswhere = Process.Start(new ProcessStartInfo
-            {
-                FileName = file,
-                Arguments = args,
-                RedirectStandardOutput = true,
-                UseShellExecute = false
-            });
-            Debug.Assert(vswhere != null, nameof(vswhere) + " != null");
-            var folder = vswhere.StandardOutput.ReadToEnd().TrimEnd();
-
-            var launcher = $@"{folder}\Common7\IDE\Extensions\Microsoft\Web Tools\ProjectSystem\VSIISExeLauncher.exe";
-            if (!File.Exists(launcher))
-            {
-                RollbarLocator.RollbarInstance.Error($"Didn't detect VSIISExeLauncher");
-                return;
-            }
-
-            var rootAssembly = primary.Replace(@"\", @"\\");
-            var launcherArgs = $"-p \"{dotnet.Replace(@"\", @"\\")}\" -a \"exec \\\"{rootAssembly}\\\"\" -pidFile \"{Path.GetTempFileName().Replace(@"\", @"\\")}\" -wd \"{root.Replace(@"\", @"\\")}\"";
-            startInfo.EnvironmentVariables.Add("LAUNCHER_PATH", launcher);
-            startInfo.EnvironmentVariables.Add("LAUNCHER_ARGS", launcherArgs);
+            return dotnet;
         }
     }
 }
