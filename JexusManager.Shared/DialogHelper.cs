@@ -362,11 +362,18 @@ namespace JexusManager
 
         public static void ProcessStart(string url)
         {
+            var browser = Environment.GetEnvironmentVariable("JEXUSMANAGER_BROWSER");
+            var useDefault = string.IsNullOrWhiteSpace(browser);
             try
             {
                 using var process = new Process
                 {
-                    StartInfo = new ProcessStartInfo { FileName = url, UseShellExecute = true }
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = useDefault ? url: browser,
+                        Arguments = useDefault ? string.Empty : url,
+                        UseShellExecute = true
+                    }
                 };
                 process.Start();
             }

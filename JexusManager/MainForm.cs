@@ -269,17 +269,17 @@ namespace JexusManager
             if (!IisExpressServerManager.ServerInstalled)
             {
                 var result = UIService.ShowMessage(
-                    "Didn't find IIS Express on this machine. Do you want to install it now?",
+                    "Didn't find IIS Express on this machine. Do you want to go and download it now?",
                     "IIS Express not found",
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Question,
                     MessageBoxDefaultButton.Button1);
-                if (result != DialogResult.Yes)
+                if (result == DialogResult.Yes)
                 {
-                    return;
+                    DialogHelper.ProcessStart("https://www.microsoft.com/download/details.aspx?id=48264");
                 }
 
-                DialogHelper.ProcessStart("https://www.microsoft.com/download/details.aspx?id=48264");
+                IisExpressRoot.Text = "IIS Express (Disabled)";
                 return;
             }
 
