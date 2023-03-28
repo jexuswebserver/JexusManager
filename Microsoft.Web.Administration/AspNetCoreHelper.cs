@@ -53,9 +53,8 @@ namespace Microsoft.Web.Administration
             if (fixSection)
             {
                 FixSection(doc);
+                doc.Save(fileName);
             }
-
-            doc.Save(fileName);
         }
 
         private static void FixSite(XDocument xml, string siteName)

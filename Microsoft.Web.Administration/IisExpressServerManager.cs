@@ -8,8 +8,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Xml.Linq;
-using System.Xml.XPath;
 using Rollbar;
 using Exception = System.Exception;
 
