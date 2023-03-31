@@ -495,14 +495,9 @@ namespace JexusManager
                 }
             }
 
-            foreach (var item in treeView1.Nodes)
+            foreach (var item in JexusRoot.Nodes)
             {
                 var serverNode = item as ServerTreeNode;
-                if (serverNode?.ServerManager?.Mode != WorkingMode.Jexus)
-                {
-                    continue;
-                }
-
                 try
                 {
                     serverNode.ServerManager.CommitChanges();
@@ -528,6 +523,27 @@ namespace JexusManager
                         .AppendLine()
                         .AppendFormat("Details: {0}", previous?.Message ?? last.Message);
                     MessageBox.Show(message.ToString(), Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+
+            foreach (var item in IisExpressRoot.Nodes)
+            {
+                var serverNode = item as ServerTreeNode;
+                if (serverNode.ServerManager.Sites.Count == 0)
+                {
+                    continue;
+                }
+
+                foreach (Site site in serverNode.ServerManager.Sites)
+                {
+                    if (site.State == ObjectState.Started)
+                    {
+                        var result = UIService.ShowMessage($"Site {site.Name} is still running. Do you want to stop it?", Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                        if (result == DialogResult.Yes)
+                        {
+                            site.Stop();
+                        }
+                    }
                 }
             }
         }
