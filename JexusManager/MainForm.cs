@@ -1071,10 +1071,9 @@ namespace JexusManager
             treeView1_AfterSelect(sender, new TreeViewEventArgs(e.Node));
         }
 
-        private void btnUpdate_Click(object sender, EventArgs e)
+        private async void btnUpdate_Click(object sender, EventArgs e)
         {
-            var dialog = new UpdateDialog();
-            dialog.ShowDialog(this);
+            await UpdateHelper.FindUpdate();
         }
 
         private void btnRemoveFarmServer_Click(object sender, EventArgs e)

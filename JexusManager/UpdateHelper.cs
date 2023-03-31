@@ -4,35 +4,27 @@
 
 using Octokit;
 
-namespace JexusManager.Dialogs
+namespace JexusManager
 {
     using System;
-    using System.Diagnostics;
     using System.Net;
     using System.Reflection;
-    using System.Windows.Forms;
+    using System.Threading.Tasks;
 
-    public partial class UpdateDialog : Form
+    internal static class UpdateHelper
     {
-        public UpdateDialog()
+        public static async Task FindUpdate()
         {
-            InitializeComponent();
-        }
-
-        private async void UpdateDialog_Load(object sender, EventArgs e)
-        {
-            txtStep.Text = "Checking update...";
             string version = null;
             var previous = ServicePointManager.SecurityProtocol;
             try
             {
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls13;
                 var client = new GitHubClient(new ProductHeaderValue("JexusManager"));
                 var releases = await client.Repository.Release.GetAll("jexuswebserver", "JexusManager");
                 if (releases.Count == 0)
                 {
-                    MessageBox.Show("No update is found.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    Close();
+                    DialogHelper.MessageBoxShow("No update is found.");
                     return;
                 }
 
@@ -41,9 +33,8 @@ namespace JexusManager.Dialogs
             }
             catch (Exception)
             {
-                MessageBox.Show("Cannot connect to GitHub. Will open https://github.com/jexuswebserver/JexusManager/releases.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                DialogHelper.MessageBoxShow("Cannot connect to GitHub. Will open https://github.com/jexuswebserver/JexusManager/releases.");
                 DialogHelper.ProcessStart("https://github.com/jexuswebserver/JexusManager/releases");
-                Close();
                 return;
             }
             finally
@@ -54,28 +45,19 @@ namespace JexusManager.Dialogs
             Version latest;
             if (!Version.TryParse(version, out latest))
             {
-                MessageBox.Show("No update is found.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
-                Close();
+                DialogHelper.MessageBoxShow("No update is found.");
                 return;
             }
 
             var current = Assembly.GetExecutingAssembly().GetName().Version;
             if (current >= latest)
             {
-                MessageBox.Show($"{current} is in use. No update is found, and {latest} is latest release.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
-                Close();
+                DialogHelper.MessageBoxShow($"{current} is in use. No update is found, and {latest} is latest release.");
                 return;
             }
 
-            var result = MessageBox.Show($"{current} is in use. An update ({latest}) is available. Do you want to download it now?", Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (result != DialogResult.Yes)
-            {
-                Close();
-                return;
-            }
-
+            DialogHelper.MessageBoxShow($"{current} is in use. An update ({latest}) is available. Will open https://github.com/jexuswebserver/JexusManager/releases.");
             DialogHelper.ProcessStart("https://github.com/jexuswebserver/JexusManager/releases");
-            Close();
         }
     }
 }

@@ -10,6 +10,7 @@ namespace JexusManager
     using System;
     using System.ComponentModel;
     using System.Diagnostics;
+    using System.Drawing;
     using System.IO;
     using System.Linq;
     using System.Net;
@@ -17,6 +18,7 @@ namespace JexusManager
     using System.Security.Cryptography;
     using System.Security.Cryptography.X509Certificates;
     using System.Windows.Forms;
+    using Tulpep.NotificationWindow;
 
     public static class DialogHelper
     {
@@ -386,6 +388,23 @@ namespace JexusManager
         public static void BrowseFile(string file)
         {
             Process.Start("explorer.exe", $"/select,\"{file}\"");
+        }
+
+        public static void MessageBoxShow(string message)
+        {
+            var popupNotifier = new PopupNotifier
+            {
+                TitleText = "Jexus Manager",
+                ContentText = message,
+                ContentPadding = new Padding(15),
+                Size = new Size(480, 180),
+                Image = SystemIcons.Information.ToBitmap(),
+                ImageSize = new Size(24, 24),
+                ImagePadding = new Padding(5),
+                Delay = 30000,
+                IsRightToLeft = false
+            };
+            popupNotifier.Popup();
         }
     }
 }
