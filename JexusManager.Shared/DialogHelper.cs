@@ -401,7 +401,7 @@ namespace JexusManager
                 Image = SystemIcons.Information.ToBitmap(),
                 ImageSize = new Size(24, 24),
                 ImagePadding = new Padding(5),
-                Delay = 30000,
+                Delay = 15000, // 15 seconds
                 IsRightToLeft = false
             };
             popupNotifier.Popup();
