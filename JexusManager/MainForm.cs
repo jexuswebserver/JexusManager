@@ -529,7 +529,7 @@ namespace JexusManager
             foreach (var item in IisExpressRoot.Nodes)
             {
                 var serverNode = item as ServerTreeNode;
-                if (serverNode.ServerManager.Sites.Count == 0)
+                if (serverNode.ServerManager?.Sites.Count == 0)
                 {
                     continue;
                 }
