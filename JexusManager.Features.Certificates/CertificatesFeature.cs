@@ -121,7 +121,14 @@ namespace JexusManager.Features.Certificates
                     result.Add(RemoveTaskItem);
                     if (certificate.Issuer == LocalhostIssuer || certificate.Issuer == _localMachineIssuer || certificate.Issuer == certificate.Subject)
                     {
-                        result.Add(new MethodTaskItem("Trust", "Trust Self-Signed Certificate", string.Empty).SetUsage());
+                        X509Chain chain = new X509Chain();
+                        chain.ChainPolicy.VerificationFlags = X509VerificationFlags.AllowUnknownCertificateAuthority;
+                        chain.ChainPolicy.RevocationMode = X509RevocationMode.NoCheck;
+                        chain.Build(certificate);
+                        if (chain.ChainStatus.Length > 0) // not trusted yet
+                        {
+                            result.Add(new MethodTaskItem("Trust", "Trust Self-Signed Certificate", string.Empty).SetUsage());
+                        }
                     }
                 }
 
