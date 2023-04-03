@@ -174,13 +174,26 @@ namespace JexusManager.Features.Main
 
                     if (site.Server.Mode == WorkingMode.IisExpress || site.Server.Mode == WorkingMode.Iis)
                     {
-                        if (conflicts == Binding.SecureBindingDetectionResult.Conflicting)
+                        if (conflicts == Binding.SecureBindingDetectionResult.Conflicting || conflicts == Binding.SecureBindingDetectionResult.None)
                         {
-                            var result = Binding.FixCertificateMapping(certificate?.Certificate);
-                            if (!string.IsNullOrEmpty(result))
+                            var (state, message) = binding.FixCertificateMapping(certificate?.Certificate);
+                            if (state != CertificateMappingState.RegistrationSucceeded)
                             {
-                                ShowMessage($"The binding '{Binding}' is invalid: {result}.", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                                return;
+                                if (state == CertificateMappingState.HostNameNotMatched)
+                                {
+                                    var result = ShowMessage($"{message}. Do you still want to use this certificate?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                                    if (result == DialogResult.Yes)
+                                    {
+                                        // IMPORTANT: force using the certificate.
+                                        (state, message) = binding.FixCertificateMapping(certificate?.Certificate, true);
+                                    }
+                                }
+
+                                if (state != CertificateMappingState.RegistrationSucceeded)
+                                {
+                                    ShowMessage(string.Format("The binding '{0}' is invalid: {1}", binding, message), MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                                    return;
+                                }
                             }
                         }
                     }

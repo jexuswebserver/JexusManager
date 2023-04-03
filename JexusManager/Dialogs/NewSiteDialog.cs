@@ -16,6 +16,9 @@ using Application = Microsoft.Web.Administration.Application;
 using Binding = Microsoft.Web.Administration.Binding;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using JexusManager.Features.HttpApi;
+using Microsoft.Web.Management.Client;
+using System.Linq;
 
 namespace JexusManager.Dialogs
 {
@@ -100,7 +103,7 @@ namespace JexusManager.Dialogs
                     {
                         if (txtName.Text.Contains(ch))
                         {
-                            MessageBox.Show("The site name cannot contain the following characters: '\\, /, ?, ;, :, @, &, =, +, $, ,, |, \", <, >'.", Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            ShowMessage("The site name cannot contain the following characters: '\\, /, ?, ;, :, @, &, =, +, $, ,, |, \", <, >'.", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                             return;
                         }
                     }
@@ -109,14 +112,14 @@ namespace JexusManager.Dialogs
                     {
                         if (txtName.Text.Contains(ch) || txtName.Text.StartsWith("~"))
                         {
-                            MessageBox.Show("The site name cannot contain the following characters: '~,  '.", Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            ShowMessage("The site name cannot contain the following characters: '~,  '.", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                             return;
                         }
                     }
 
                     if (!collection.Parent.Verify(txtPath.Text, null))
                     {
-                        MessageBox.Show("The specified directory does not exist on the server.", Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        ShowMessage("The specified directory does not exist on the server.", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                         return;
                     }
 
@@ -130,7 +133,7 @@ namespace JexusManager.Dialogs
                     {
                         if (txtHost.Text.Contains(ch))
                         {
-                            MessageBox.Show("The specified host name is incorrect. The host name must use a valid host name format and cannot contain the following characters: \"/\\[]:|<>+=;,?*$%#@{}^`. Example: www.contoso.com.", Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            ShowMessage("The specified host name is incorrect. The host name must use a valid host name format and cannot contain the following characters: \"/\\[]:|<>+=;,?*$%#@{}^`. Example: www.contoso.com.", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                             return;
                         }
                     }
@@ -139,11 +142,11 @@ namespace JexusManager.Dialogs
                     {
                         if (txtHost.Text != "localhost")
                         {
-                            MessageBox.Show(
+                            ShowMessage(
                                 "The specific host name is not recommended for IIS Express. The host name should be localhost.",
-                                Text,
                                 MessageBoxButtons.OK,
-                                MessageBoxIcon.Warning);
+                                MessageBoxIcon.Warning,
+                                MessageBoxDefaultButton.Button1);
                         }
                     }
 
@@ -170,7 +173,7 @@ namespace JexusManager.Dialogs
                         NewSite.Bindings);
                     if (collection.FindDuplicate(binding, null, null) != false)
                     {
-                        var result = MessageBox.Show(string.Format("The binding '{0}' is assigned to another site. If you assign the same binding to this site, you will only be able to start one of the sites. Are you sure that you want to add this duplicate binding?", binding), Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        var result = ShowMessage(string.Format("The binding '{0}' is assigned to another site. If you assign the same binding to this site, you will only be able to start one of the sites. Are you sure that you want to add this duplicate binding?", binding), MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                         if (result != DialogResult.Yes)
                         {
                             collection.Remove(NewSite);
@@ -178,14 +181,27 @@ namespace JexusManager.Dialogs
                         }
                     }
 
-                    if (collection.Parent.Mode == WorkingMode.IisExpress)
+                    if (collection.Parent.Mode == WorkingMode.IisExpress || collection.Parent.Mode == WorkingMode.Iis)
                     {
-                        var result = binding.FixCertificateMapping(info?.Certificate);
-                        if (!string.IsNullOrEmpty(result))
+                        var (state, message)  = binding.FixCertificateMapping(info?.Certificate);
+                        if (state != CertificateMappingState.RegistrationSucceeded)
                         {
-                            collection.Remove(NewSite);
-                            MessageBox.Show(string.Format("The binding '{0}' is invalid: {1}", binding, result), Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            return;
+                            if (state == CertificateMappingState.HostNameNotMatched)
+                            {
+                                var result = ShowMessage($"{message}. Do you still want to use this certificate?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                                if (result == DialogResult.Yes)
+                                {
+                                    // IMPORTANT: force using the certificate.
+                                    (state, message) = binding.FixCertificateMapping(info?.Certificate, true);
+                                }
+                            }
+
+                            if (state != CertificateMappingState.RegistrationSucceeded)
+                            {
+                                collection.Remove(NewSite);
+                                ShowMessage(string.Format("The binding '{0}' is invalid: {1}", binding, message), MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                                return;
+                            }
                         }
                     }
 
@@ -196,6 +212,27 @@ namespace JexusManager.Dialogs
 
                     item.Element = NewSite.Applications[0].VirtualDirectories[0];
                     item.Apply();
+
+                    if (collection.Parent.Mode == WorkingMode.IisExpress)
+                    {
+                        if (binding.Host != "localhost")
+                        {
+                            ShowMessage(
+                                "The specific host name is not recommended for IIS Express. The host name should be localhost.",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Warning,
+                                MessageBoxDefaultButton.Button1);
+
+                            var reservation = binding.ToUrlPrefix();
+                            var feature = new ReservedUrlsFeature((Module)serviceProvider);
+                            feature.Load();
+                            if (feature.Items.All(item => item.UrlPrefix != reservation) && !BindingUtility.AddReservedUrl(reservation))
+                            {
+                                ShowMessage($"Reserved URL {reservation} cannot be added.", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                                return;
+                            }
+                        }
+                    }
 
                     DialogResult = DialogResult.OK;
                 }));
@@ -271,7 +308,7 @@ namespace JexusManager.Dialogs
             {
                 if (showDialog)
                 {
-                    MessageBox.Show("The specified IP address is invalid. Specify a valid IP address.", Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    ShowMessage("The specified IP address is invalid. Specify a valid IP address.", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                 }
 
                 address = null;

@@ -21,6 +21,19 @@ namespace Microsoft.Web.Administration
 
     using Org.BouncyCastle.Utilities.Encoders;
 
+    public enum CertificateMappingState
+    {
+        HostNameNotMatched, 
+        RegistrationFailed,
+        RegistrationSucceeded,
+        UacCancelled,
+        Win32ErrorOccurred,
+        GenericErrorOccurred, 
+        CertificateHashNotMatched,
+        CertificateStoreNotMatched,
+        IpEndPointInvalid,
+    }
+
     public static class BindingUtility
     {
         private const string AppIdIisExpress = "214124cd-d05b-4309-9af9-9caa44b2b74a";
@@ -48,181 +61,45 @@ namespace Microsoft.Web.Administration
             binding.Delete();
         }
 
-        internal static string FixCertificateMapping(this Binding binding, X509Certificate2 certificate2)
+        internal static (CertificateMappingState state, string message) FixCertificateMapping(this Binding binding, X509Certificate2 certificate2, bool suppressHostNameMatching = false)
         {
             if (binding.Protocol == "http")
             {
-                return string.Empty;
+                return (CertificateMappingState.RegistrationSucceeded, null);
             }
 
             if (binding.Parent.Parent.Server.SupportsSni)
             {
                 if (binding.GetIsSni())
                 {
-                    if (!certificate2.MatchHostName(binding.Host))
+                    if (!suppressHostNameMatching && !certificate2.MatchHostName(binding.Host))
                     {
-                        return "SNI mode requires host name matches common name of the certificate";
+                        return (CertificateMappingState.HostNameNotMatched, "SNI mode requires host name matches common name of the certificate");
                     }
 
                     // handle SNI
                     var sni = NativeMethods.QuerySslSniInfo(new Tuple<string, int>(binding.Host,
                         binding.EndPoint.Port));
-                    if (sni == null)
-                    {
-                        try
-                        {
-                            // register mapping
-                            using var process = new Process();
-                            var start = process.StartInfo;
-                            start.Verb = "runas";
-                            start.UseShellExecute = true;
-                            start.FileName = "cmd";
-                            start.Arguments =
-                                $"/c \"\"{CertificateInstallerLocator.FileName}\" /h:\"{Hex.ToHexString(binding.CertificateHash)}\" /s:{binding.CertificateStoreName}\" /i:{AppIdIisExpress} /a:{binding.EndPoint.Address} /o:{binding.EndPoint.Port} /x:{binding.Host}";
-                            start.CreateNoWindow = true;
-                            start.WindowStyle = ProcessWindowStyle.Hidden;
-                            process.Start();
-                            process.WaitForExit();
-
-                            if (process.ExitCode != 0)
-                            {
-                                return "Register new certificate failed: access is denied";
-                            }
-
-                            return string.Empty;
-                        }
-                        catch (Win32Exception ex)
-                        {
-                            // elevation is cancelled.
-                            if (!NativeMethods.ErrorCancelled(ex.NativeErrorCode))
-                            {
-                                RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> {{ "native", ex.NativeErrorCode } });
-                                return $"Register new certificate failed: unknown (native {ex.NativeErrorCode})";
-                            }
-                            
-                            return "Register new certificate failed: operation is cancelled";
-                        }
-                        catch (Exception ex)
-                        {
-                            RollbarLocator.RollbarInstance.Error(ex);
-                            return $"Register new certificate failed: unknown ({ex.Message})";
-                        }
-                    }
-
-                    if (!sni.Hash.SequenceEqual(binding.CertificateHash))
-                    {
-                        // TODO: fix the error message.
-                        var result =
-                            MessageBox.Show(
-                                "At least one other site is using the same HTTPS binding and the binding is configured with a different certificate. Are you sure that you want to reuse this HTTPS binding and reassign the other site or sites to use the new certificate?",
-                                "TODO",
-                                MessageBoxButtons.YesNo,
-                                MessageBoxIcon.Question,
-                                MessageBoxDefaultButton.Button1);
-                        if (result != DialogResult.Yes)
-                        {
-                            return
-                                "Certificate hash does not match. Please use the certificate that matches HTTPS binding";
-                        }
-
-                        try
-                        {
-                            // register mapping
-                            using var process = new Process();
-                            var start = process.StartInfo;
-                            start.Verb = "runas";
-                            start.UseShellExecute = true;
-                            start.FileName = "cmd";
-                            start.Arguments =
-                                $"/c \"\"{CertificateInstallerLocator.FileName}\" /h:\"{Hex.ToHexString(binding.CertificateHash)}\" /s:{binding.CertificateStoreName}\" /i:{AppIdIisExpress} /a:{binding.EndPoint.Address} /o:{binding.EndPoint.Port} /x:{binding.Host}";
-                            start.CreateNoWindow = true;
-                            start.WindowStyle = ProcessWindowStyle.Hidden;
-                            process.Start();
-                            process.WaitForExit();
-
-                            if (process.ExitCode != 0)
-                            {
-                                return "Register new certificate failed: access is denied";
-                            }
-
-                            return string.Empty;
-                        }
-                        catch (Win32Exception ex)
-                        {
-                            // elevation is cancelled.
-                            if (!NativeMethods.ErrorCancelled(ex.NativeErrorCode))
-                            {
-                                RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> {{ "native", ex.NativeErrorCode } });
-                                return $"Register new certificate failed: unknown (native {ex.NativeErrorCode})";
-                            }
-                            
-                            return "Register new certificate failed: operation is cancelled";
-                        }
-                        catch (Exception ex)
-                        {
-                            RollbarLocator.RollbarInstance.Error(ex);
-                            return $"Register new certificate failed: unknown ({ex.Message})";
-                        }
-                    }
-
-                    if (!string.Equals(sni.StoreName, binding.CertificateStoreName, StringComparison.OrdinalIgnoreCase))
-                    {
-                        // TODO: can this happen?
-                        return
-                            "Certificate store name does not match. Please use the certificate that matches HTTPS binding";
-                    }
-
-                    return string.Empty;
+                    AddMapping(binding, sni, true);                    
                 }
             }
 
             // handle IP based
             if (binding.EndPoint == null)
             {
-                return "This binding does not have valid IP endpoint";
+                return (CertificateMappingState.IpEndPointInvalid, "This binding does not have valid IP endpoint");
             }
 
             var certificate = NativeMethods.QuerySslCertificateInfo(binding.EndPoint);
+            return AddMapping(binding, certificate, false);
+        }
+
+        private static (CertificateMappingState state, string message) AddMapping(this Binding binding, NativeMethods.ISslCertificateInfo certificate, bool sni)
+        {
+            var arguments = binding.ToAddMappingArguments(sni);
             if (certificate == null)
             {
-                try
-                {
-                    // register mapping
-                    using var process = new Process();
-                    var start = process.StartInfo;
-                    start.Verb = "runas";
-                    start.UseShellExecute = true;
-                    start.FileName = "cmd";
-                    start.Arguments =
-                        $"/c \"\"{CertificateInstallerLocator.FileName}\" /h:\"{Hex.ToHexString(binding.CertificateHash)}\" /s:{binding.CertificateStoreName}\" /i:{AppIdIisExpress} /a:{binding.EndPoint.Address} /o:{binding.EndPoint.Port}";
-                    start.CreateNoWindow = true;
-                    start.WindowStyle = ProcessWindowStyle.Hidden;
-                    process.Start();
-                    process.WaitForExit();
-
-                    if (process.ExitCode != 0)
-                    {
-                        return "Register new certificate failed: access is denied";
-                    }
-
-                    return string.Empty;
-                }
-                catch (Win32Exception ex)
-                {
-                    // elevation is cancelled.
-                    if (!NativeMethods.ErrorCancelled(ex.NativeErrorCode))
-                    {
-                        RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> {{ "native", ex.NativeErrorCode } });
-                        return $"Register new certificate failed: unknown (native {ex.NativeErrorCode})";
-                    }
-                            
-                    return "Register new certificate failed: operation is cancelled";
-                }
-                catch (Exception ex)
-                {
-                    RollbarLocator.RollbarInstance.Error(ex);
-                    return $"Register new certificate failed: unknown ({ex.Message})";
-                }
+                return ManipulateCertificateMapping(arguments);
             }
 
             if (!certificate.Hash.SequenceEqual(binding.CertificateHash))
@@ -236,57 +113,60 @@ namespace Microsoft.Web.Administration
                         MessageBoxDefaultButton.Button1);
                 if (result != DialogResult.Yes)
                 {
-                    return "Certificate hash does not match. Please use the certificate that matches HTTPS binding";
+                    return (CertificateMappingState.CertificateHashNotMatched, "Certificate hash does not match. Please use the certificate that matches HTTPS binding");
                 }
 
-                try
-                {
-                    // register mapping
-                    using var process = new Process();
-                    var start = process.StartInfo;
-                    start.Verb = "runas";
-                    start.UseShellExecute = true;
-                    start.FileName = "cmd";
-                    start.Arguments =
-                        $"/c \"\"{CertificateInstallerLocator.FileName}\" /h:\"{Hex.ToHexString(binding.CertificateHash)}\" /s:{binding.CertificateStoreName}\" /i:{AppIdIisExpress} /a:{binding.EndPoint.Address} /o:{binding.EndPoint.Port}";
-                    start.CreateNoWindow = true;
-                    start.WindowStyle = ProcessWindowStyle.Hidden;
-                    process.Start();
-                    process.WaitForExit();
-
-                    if (process.ExitCode != 0)
-                    {
-                        return "Register new certificate failed: access is denied";
-                    }
-
-                    return string.Empty;
-                }
-                catch (Win32Exception ex)
-                {
-                    // elevation is cancelled.
-                    if (!NativeMethods.ErrorCancelled(ex.NativeErrorCode))
-                    {
-                        RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> {{ "native", ex.NativeErrorCode } });
-                        return $"Register new certificate failed: unknown (native {ex.NativeErrorCode})";
-                    }
-                            
-                    return "Register new certificate failed: operation is cancelled";
-                }
-                catch (Exception ex)
-                {
-                    RollbarLocator.RollbarInstance.Error(ex);
-                    return $"Register new certificate failed: unknown ({ex.Message})";
-                }
+                return ManipulateCertificateMapping(arguments);
             }
 
-            if (!string.Equals(certificate.StoreName, binding.CertificateStoreName, StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(certificate.StoreName, binding.CertificateStoreName, StringComparison.OrdinalIgnoreCase))
             {
-                // TODO: can this happen?
-                return
-                    "Certificate store name does not match. Please use the certificate that matches HTTPS binding";
+                return (CertificateMappingState.RegistrationSucceeded, null);
             }
 
-            return string.Empty;
+            // TODO: can this happen?
+            return (CertificateMappingState.CertificateStoreNotMatched, "Certificate store name does not match. Please use the certificate that matches HTTPS binding");
+        }
+
+        private static (CertificateMappingState state, string message) ManipulateCertificateMapping(string arguments)
+        {
+            try
+            {
+                // register mapping
+                using var process = new Process();
+                var start = process.StartInfo;
+                start.Verb = "runas";
+                start.UseShellExecute = true;
+                start.FileName = "cmd";
+                start.Arguments = arguments;                    
+                start.CreateNoWindow = true;
+                start.WindowStyle = ProcessWindowStyle.Hidden;
+                process.Start();
+                process.WaitForExit();
+
+                if (process.ExitCode != 0)
+                {
+                    return (CertificateMappingState.RegistrationFailed, "Register new certificate failed: access is denied");
+                }
+
+                return (CertificateMappingState.RegistrationSucceeded, null);
+            }
+            catch (Win32Exception ex)
+            {
+                // elevation is cancelled.
+                if (!NativeMethods.ErrorCancelled(ex.NativeErrorCode))
+                {
+                    RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> { { "native", ex.NativeErrorCode } });
+                    return (CertificateMappingState.Win32ErrorOccurred, $"Register new certificate failed: unknown (native {ex.NativeErrorCode})");
+                }
+
+                return (CertificateMappingState.UacCancelled, "Register new certificate failed: operation is cancelled");
+            }
+            catch (Exception ex)
+            {
+                RollbarLocator.RollbarInstance.Error(ex);
+                return (CertificateMappingState.GenericErrorOccurred, $"Register new certificate failed: unknown ({ex.Message})");
+            }
         }
 
         internal static bool? Verify(string protocol, string address, string port, CertificateInfo certificate)
@@ -462,6 +342,13 @@ namespace Microsoft.Web.Administration
             }
 
             return certificate.GetNameInfo(X509NameType.SimpleName, false).MatchHostName(host);
+        }
+
+        private static string ToAddMappingArguments(this Binding binding, bool sni)
+        {
+            return sni 
+                ? $"/c \"\"{CertificateInstallerLocator.FileName}\" /h:\"{Hex.ToHexString(binding.CertificateHash)}\" /s:{binding.CertificateStoreName}\" /i:{AppIdIisExpress} /a:{binding.EndPoint.Address} /o:{binding.EndPoint.Port} /x:{binding.Host}"
+                : $"/c \"\"{CertificateInstallerLocator.FileName}\" /h:\"{Hex.ToHexString(binding.CertificateHash)}\" /s:{binding.CertificateStoreName}\" /i:{AppIdIisExpress} /a:{binding.EndPoint.Address} /o:{binding.EndPoint.Port}";
         }
     }
 }

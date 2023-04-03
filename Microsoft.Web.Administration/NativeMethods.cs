@@ -209,7 +209,13 @@ namespace Microsoft.Web.Administration
             return true;
         }
 
-        public class SslCertificateInfo
+        public interface ISslCertificateInfo
+        {
+            byte[] Hash { get; set; }
+            string StoreName { get; set; }
+        }
+
+        public class SslCertificateInfo : ISslCertificateInfo
         {
             public byte[] Hash { get; set; }
             public Guid AppId { get; set; }
@@ -527,7 +533,7 @@ namespace Microsoft.Web.Administration
             return result.ToArray();
         }
 
-        public class SslSniInfo
+        public class SslSniInfo : ISslCertificateInfo
         {
             public byte[] Hash { get; set; }
             public Guid AppId { get; set; }
