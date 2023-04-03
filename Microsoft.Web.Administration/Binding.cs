@@ -227,11 +227,11 @@ namespace Microsoft.Web.Administration
                 return $"{Protocol}://{domain}";
             }
 
-            domain = address == "*" || address == "0.0.0.0"
-                ? Parent.Parent.Parent.Parent.HostName.ExtractName()
-                : string.IsNullOrWhiteSpace(host)
-                    ? address
-                    : Host;
+            domain = !string.IsNullOrWhiteSpace(host) 
+                ? host 
+                : address == "*" || address == "0.0.0.0"
+                    ? Parent.Parent.Parent.Parent.HostName.ExtractName()
+                    : address;
             return IsDefaultPort
                 ? $"{Protocol}://{domain}"
                 : $"{Protocol}://{domain}:{EndPoint.Port}";
