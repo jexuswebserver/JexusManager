@@ -93,13 +93,13 @@ namespace CertificateInstaller
             }
             catch (OptionException)
             {
-                return -1;
+                return -2;
             }
 
             if (extra.Count > 0)
             {
                 ShowHelp(p);
-                return -1;
+                return -3;
             }
 
             if (verb == "appcmd")
@@ -107,7 +107,7 @@ namespace CertificateInstaller
                 if (input == null || launcher == null)
                 {
                     ShowHelp(p);
-                    return -1;
+                    return -4;
                 }
 
                 var process = new Process
@@ -249,7 +249,7 @@ namespace CertificateInstaller
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
-                    return -1;
+                    return -5;
                 }
 
                 if (hash == null)
@@ -277,7 +277,7 @@ namespace CertificateInstaller
                         }
                     }
 
-                    return -1;
+                    return -6;
                 }
 
                 var selectedItem = personal.Certificates.Find(X509FindType.FindByThumbprint, hash, false);
@@ -333,11 +333,11 @@ namespace CertificateInstaller
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                return -1;
+                return -7;
             }
 
             Console.WriteLine("Not supported path");
-            return -1;
+            return -8;
         }
 
         private static void ShowHelp(OptionSet optionSet)
