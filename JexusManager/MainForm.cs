@@ -463,7 +463,7 @@ namespace JexusManager
                 return;
             }
 
-            if (!(selectedNode.Tag is global::Microsoft.Web.Administration.Site node))
+            if (!(selectedNode.Tag is Site node))
             {
                 return;
             }
@@ -504,7 +504,7 @@ namespace JexusManager
                     var conflict = AsyncHelper.RunSync(() => ((JexusServerManager)serverNode.ServerManager).ByeAsync());
                     if (Environment.MachineName != conflict)
                     {
-                        MessageBox.Show(string.Format("The server is also connected to {0}. Making changes on multiple clients might corrupt server configuration.", conflict), Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        UIService.ShowMessage(string.Format("The server is also connected to {0}. Making changes on multiple clients might corrupt server configuration.", conflict), Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 }
                 catch (Exception ex)
@@ -522,7 +522,7 @@ namespace JexusManager
                     message.AppendLine("Could not connect to the specified computer.")
                         .AppendLine()
                         .AppendFormat("Details: {0}", previous?.Message ?? last.Message);
-                    MessageBox.Show(message.ToString(), Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    UIService.ShowMessage(message.ToString(), Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
 
@@ -946,7 +946,7 @@ namespace JexusManager
                 message.AppendLine("Could not connect to the specified computer.")
                     .AppendLine()
                     .AppendFormat("Details: {0}", last?.Message);
-                MessageBox.Show(message.ToString(), Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                UIService.ShowMessage(message.ToString(), Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -1051,6 +1051,7 @@ namespace JexusManager
                 return;
             }
 
+            // TODO: disable this so that config file errors can be investigated.
             if (server.ServerManager == null && e.Button == MouseButtons.Right)
             {
                 treeView1_NodeMouseDoubleClick(sender, e);
@@ -1080,7 +1081,7 @@ namespace JexusManager
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                UIService.ShowError(ex, string.Empty, Name, false);
             }
 
             btnRestartSite.Enabled = true;

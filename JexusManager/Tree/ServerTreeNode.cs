@@ -142,7 +142,7 @@ namespace JexusManager.Tree
         {
             if (readOnly)
             {
-                MessageBox.Show("Elevation is required. Please run Jexus Manager as administrator.");
+                MainForm.UIService.ShowMessage("Elevation is required. Please run Jexus Manager as administrator.", Text);
                 return;
             }
 
@@ -180,10 +180,10 @@ namespace JexusManager.Tree
                 if (Mode == WorkingMode.Jexus)
                 {
                     var server = (JexusServerManager)ServerManager;
-                    var version = AsyncHelper.RunSync(() => server.GetVersionAsync());
+                    var version = AsyncHelper.RunSync(server.GetVersionAsync);
                     if (version == null)
                     {
-                        MessageBox.Show("Authentication failed.", Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MainForm.UIService.ShowMessage("Authentication failed.", Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         ServerManager = null;
                         _status = NodeStatus.Default;
                         mainForm.DisconnectButton.Enabled = true;
@@ -193,7 +193,7 @@ namespace JexusManager.Tree
                     if (version < JexusServerManager.MinimumServerVersion)
                     {
                         var toContinue =
-                            MessageBox.Show(
+                            MainForm.UIService.ShowMessage(
                                 $"The server version is {version}, while minimum compatible version is {JexusServerManager.MinimumServerVersion}. Making changes might corrupt server configuration. Do you want to continue?",
                                 Text,
                                 MessageBoxButtons.YesNoCancel,
@@ -207,10 +207,10 @@ namespace JexusManager.Tree
                         }
                     }
 
-                    var conflict = AsyncHelper.RunSync(() => server.HelloAsync());
+                    var conflict = AsyncHelper.RunSync(server.HelloAsync);
                     if (Environment.MachineName != conflict)
                     {
-                        MessageBox.Show(
+                        MainForm.UIService.ShowMessage(
                             $"The server is also connected to {conflict}. Making changes on multiple clients might corrupt server configuration.",
                             Text,
                             MessageBoxButtons.OK,
@@ -246,7 +246,7 @@ namespace JexusManager.Tree
                 message.AppendLine("Could not connect to the specified computer.")
                     .AppendLine()
                     .AppendFormat("Details: {0}", last?.Message);
-                MessageBox.Show(message.ToString(), mainForm.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MainForm.UIService.ShowMessage(message.ToString(), Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 HandleServerConnectionFailed();
             }
             finally
@@ -276,7 +276,7 @@ namespace JexusManager.Tree
         {
             if (readOnly)
             {
-                MessageBox.Show("Elevation is required. Please run Jexus Manager as administrator.");
+                MainForm.UIService.ShowMessage("Elevation is required. Please run Jexus Manager as administrator.", Text);
                 return;
             }
 
@@ -351,7 +351,7 @@ namespace JexusManager.Tree
         {
             if (readOnly)
             {
-                MessageBox.Show("Elevation is required. Please run Jexus Manager as administrator.");
+                MainForm.UIService.ShowMessage("Elevation is required. Please run Jexus Manager as administrator.", Text);
                 return false;
             }
 
@@ -368,8 +368,9 @@ namespace JexusManager.Tree
                 };
                 Nodes.Add(PoolsNode);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                MainForm.UIService.ShowError(ex, string.Empty, Text, false);
                 return false;
             }
 
