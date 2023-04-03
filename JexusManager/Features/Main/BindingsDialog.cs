@@ -86,7 +86,7 @@ namespace JexusManager.Features.Main
                     }
 
                     var binding = (Binding)listView1.SelectedItems[0].Tag;
-                    binding.CleanUpSni();
+                    binding.CleanUpMapping();
                     listView1.SelectedItems[0].Remove();
                     _site.Bindings.Remove(binding);
                     _site.Server.CommitChanges();

@@ -18,7 +18,6 @@ namespace Microsoft.Web.Administration
     using System.Windows.Forms;
 
     using JexusManager;
-
     using Org.BouncyCastle.Utilities.Encoders;
 
     public enum CertificateMappingState
@@ -48,7 +47,7 @@ namespace Microsoft.Web.Administration
             {
                 if (original.GetIsSni() && (!binding.GetIsSni() || original.Host != binding.Host))
                 {
-                    original.CleanUpSni();
+                    original.CleanUpMapping();
                 }
 
                 original.SslFlags = binding.SslFlags;
@@ -80,7 +79,7 @@ namespace Microsoft.Web.Administration
                     // handle SNI
                     var sni = NativeMethods.QuerySslSniInfo(new Tuple<string, int>(binding.Host,
                         binding.EndPoint.Port));
-                    AddMapping(binding, sni, true);                    
+                    return AddMapping(binding, sni, true);                    
                 }
             }
 
@@ -230,25 +229,32 @@ namespace Microsoft.Web.Administration
             return string.Empty;
         }
 
-        public static string CleanUpSni(this Binding binding)
+        public static string CleanUpMapping(this Binding binding)
         {
-#if !IIS
-            if (!binding.GetIsSni())
+            if (binding.Protocol == "http")
             {
                 return string.Empty;
             }
-#endif
+
+            var sni = true;
+#if !IIS
+            sni = binding.GetIsSni();
+#endif            
+            return binding.RemoveMapping(sni);
+        }
+
+        private static string RemoveMapping(this Binding binding, bool sni)
+        {
+            var arguments = binding.ToRemoveMappingArguments(sni);
             try
             {
-                var hash = binding.CertificateHash == null ? string.Empty : Hex.ToHexString(binding.CertificateHash);
                 // remove sni mapping
                 using var process = new Process();
                 var start = process.StartInfo;
                 start.Verb = "runas";
                 start.UseShellExecute = true;
                 start.FileName = "cmd";
-                start.Arguments =
-                    $"/c \"\"{CertificateInstallerLocator.FileName}\" /h:\"{hash}\" /s:{binding.CertificateStoreName}\" /i:{AppIdIisExpress} /o:{binding.EndPoint.Port} /x:{binding.Host}";
+                start.Arguments = arguments;
                 start.CreateNoWindow = true;
                 start.WindowStyle = ProcessWindowStyle.Hidden;
                 process.Start();
@@ -266,10 +272,10 @@ namespace Microsoft.Web.Administration
                 // elevation is cancelled.
                 if (!NativeMethods.ErrorCancelled(ex.NativeErrorCode))
                 {
-                    RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> {{ "native", ex.NativeErrorCode } });
+                    RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> { { "native", ex.NativeErrorCode } });
                     return $"Remove SNI certificate failed: unknown (native {ex.NativeErrorCode})";
                 }
-                            
+
                 return "Remove SNI certificate failed: operation is cancelled";
             }
             catch (NullReferenceException ex)
@@ -282,6 +288,15 @@ namespace Microsoft.Web.Administration
                 RollbarLocator.RollbarInstance.Error(ex);
                 return $"Remove SNI certificate failed: unknown ({ex.Message})";
             }
+        }
+
+        private static string ToRemoveMappingArguments(this Binding binding, bool sni)
+        {
+            var hash = binding.CertificateHash == null ? string.Empty : Hex.ToHexString(binding.CertificateHash);
+            // TODO: should app ID and port number to verified?
+            return sni
+                ? $"/c \"\"{CertificateInstallerLocator.FileName}\" /h:\"{hash}\" /s:{binding.CertificateStoreName}\" /i:{AppIdIisExpress} /o:{binding.EndPoint.Port} /x:{binding.Host}"
+                : $"/c \"\"{CertificateInstallerLocator.FileName}\" /h:\"{hash}\" /s:{binding.CertificateStoreName}\" /i:{AppIdIisExpress} /o:{binding.EndPoint.Port}";
         }
 
         public static bool AddReservedUrl(string url)

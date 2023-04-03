@@ -283,32 +283,38 @@ namespace CertificateInstaller
                 var selectedItem = personal.Certificates.Find(X509FindType.FindByThumbprint, hash, false);
                 if (selectedItem.Count > 0)
                 {
+                    X509Certificate2 cert = selectedItem[0];
                     if (address == null)
                     {
-                        if (host == null)
+                        // remove IP based mapping
+                        var mappings = NativeMethods.QuerySslCertificateInfo();
+                        foreach (var mapping in mappings)
                         {
-                            // remove certificate and mapping
-                            var mappings = NativeMethods.QuerySslCertificateInfo();
-                            foreach (var mapping in mappings)
+                            if (mapping.Hash.SequenceEqual(cert.GetCertHash()))
                             {
-                                if (mapping.Hash.SequenceEqual(selectedItem[0].GetCertHash()))
+                                if (port != null && host == null)
                                 {
                                     NativeMethods.DeleteCertificateBinding(mapping.IpPort);
                                 }
                             }
-
-                            personal.Remove(selectedItem[0]);
                         }
-                        else
+
+                        // remove SNI mapping.
+                        var mappings1 = NativeMethods.QuerySslSniInfo();
+                        foreach (var mapping in mappings1)
                         {
-                            var mappings = NativeMethods.QuerySslSniInfo();
-                            foreach (var mapping in mappings)
+                            if (mapping.Hash.SequenceEqual(cert.GetCertHash()))
                             {
-                                if (mapping.Hash.SequenceEqual(selectedItem[0].GetCertHash()))
+                                if (port != null && host != null)
                                 {
                                     NativeMethods.DeleteSniBinding(new Tuple<string, int>(mapping.Host, mapping.Port));
                                 }
                             }
+                        }
+
+                        if (port == null)
+                        {
+                            personal.Remove(cert);
                         }
 
                         personal.Close();
