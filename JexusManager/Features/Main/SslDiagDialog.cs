@@ -273,7 +273,7 @@ namespace JexusManager.Features.Main
                                             Debug($"DS Mapper Usage: {(binding.UseDsMapper ? "Enabled" : "Disabled")}");
                                             Debug($"Archived: {cert.Archived}");
 
-                                            var hasSAN = false;
+                                            string hasSAN = null;
                                             foreach (var extension in cert.Extensions)
                                             {
                                                 if (extension.Oid.Value == "2.5.29.15")
@@ -296,7 +296,7 @@ namespace JexusManager.Features.Main
                                                 {
                                                     var name = extension.Format(true).TrimEnd();
                                                     Debug($"#Subject Alternative Name: {name}");
-                                                    hasSAN = true;
+                                                    hasSAN = name;
                                                     continue;
                                                 }
 
@@ -308,9 +308,19 @@ namespace JexusManager.Features.Main
                                                 }
                                             }
 
-                                            if (!hasSAN)
+                                            if (hasSAN == null)
                                             {
                                                 Warn("Modern web browsers require Subject Alternative Name extension to present. This certificate does not have SAN extension, so might trigger warnings and/or errors.");
+                                            }
+
+                                            var matched = BindingUtility.MatchHostName(cert, binding.Host);
+                                            if (matched)
+                                            {
+                                                Debug("The host name matches the certificate.");
+                                            }
+                                            else
+                                            {
+                                                Warn("The host name does not match the certificate.");
                                             }
 
                                             X509Chain chain = X509Chain.Create();
