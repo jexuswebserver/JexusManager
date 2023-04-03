@@ -67,39 +67,40 @@ namespace JexusManager.Features.Certificates
                 {
                     result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     result.Add(new MethodTaskItem("View", "View...", string.Empty).SetUsage());
-                    if (_owner.SelectedItem.Certificate.HasPrivateKey)
+                    X509Certificate2 certificate = _owner.SelectedItem.Certificate;
+                    if (certificate.HasPrivateKey)
                     {
                         try
                         {
-                            ECDsaCng eCdsa = _owner.SelectedItem.Certificate.GetECDsaPrivateKey() as ECDsaCng;
+                            ECDsaCng eCdsa = certificate.GetECDsaPrivateKey() as ECDsaCng;
                             if (eCdsa != null)
                             {
                                 if (eCdsa.Key.ExportPolicy.HasFlag(CngExportPolicies.AllowExport))
                                 {
                                     result.Add(new MethodTaskItem("Export", "Export...", string.Empty).SetUsage());
-                                    if (_owner.SelectedItem.Certificate.Issuer != LocalhostIssuer && _owner.SelectedItem.Certificate.Issuer != _localMachineIssuer)
+                                    if (certificate.Issuer != LocalhostIssuer && certificate.Issuer != _localMachineIssuer)
                                     {
                                         // result.Add(new MethodTaskItem("Renew", "Renew...", string.Empty).SetUsage());
                                     }
                                 }
                             }
-                            else if (_owner.SelectedItem.Certificate.GetRSAPrivateKey() is RSACng cng)
+                            else if (certificate.GetRSAPrivateKey() is RSACng cng)
                             {
                                 if (cng.Key.ExportPolicy.HasFlag(CngExportPolicies.AllowExport))
                                 {
                                     result.Add(new MethodTaskItem("Export", "Export...", string.Empty).SetUsage());
-                                    if (_owner.SelectedItem.Certificate.Issuer != LocalhostIssuer && _owner.SelectedItem.Certificate.Issuer != _localMachineIssuer)
+                                    if (certificate.Issuer != LocalhostIssuer && certificate.Issuer != _localMachineIssuer)
                                     {
                                         // result.Add(new MethodTaskItem("Renew", "Renew...", string.Empty).SetUsage());
                                     }
                                 }
                             }
-                            else if (_owner.SelectedItem.Certificate.GetRSAPrivateKey() is RSACryptoServiceProvider keyInfo)
+                            else if (certificate.GetRSAPrivateKey() is RSACryptoServiceProvider keyInfo)
                             {
                                 if (keyInfo.CspKeyContainerInfo.Exportable)
                                 {
                                     result.Add(new MethodTaskItem("Export", "Export...", string.Empty).SetUsage());
-                                    if (_owner.SelectedItem.Certificate.Issuer != LocalhostIssuer && _owner.SelectedItem.Certificate.Issuer != _localMachineIssuer)
+                                    if (certificate.Issuer != LocalhostIssuer && certificate.Issuer != _localMachineIssuer)
                                     {
                                         // result.Add(new MethodTaskItem("Renew", "Renew...", string.Empty).SetUsage());
                                     }
@@ -118,7 +119,7 @@ namespace JexusManager.Features.Certificates
                     }
 
                     result.Add(RemoveTaskItem);
-                    if (_owner.SelectedItem.Certificate.Issuer == LocalhostIssuer || _owner.SelectedItem.Certificate.Issuer == _localMachineIssuer)
+                    if (certificate.Issuer == LocalhostIssuer || certificate.Issuer == _localMachineIssuer || certificate.Issuer == certificate.Subject)
                     {
                         result.Add(new MethodTaskItem("Trust", "Trust Self-Signed Certificate", string.Empty).SetUsage());
                     }
