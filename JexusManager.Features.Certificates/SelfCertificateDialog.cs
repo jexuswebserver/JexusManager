@@ -168,7 +168,6 @@ namespace JexusManager.Features.Certificates
                             start.WindowStyle = ProcessWindowStyle.Hidden;
                             process.Start();
                             process.WaitForExit();
-                            File.Delete(p12File);
                             if (process.ExitCode == 0)
                             {
                                 DialogResult = DialogResult.OK;
@@ -189,8 +188,18 @@ namespace JexusManager.Features.Certificates
                         }
                         catch (Exception ex)
                         {
+                            ShowError(ex, $"unexpected exception", false);
                             RollbarLocator.RollbarInstance.Error(ex);
                         }
+                        finally
+                        {
+                            if (File.Exists(p12File))
+                            {
+                                File.Delete(p12File);
+                            }
+                        }
+
+                        // TODO: flatten the two try catch.
                     }
                     catch (Exception ex)
                     {
