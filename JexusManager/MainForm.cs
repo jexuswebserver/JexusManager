@@ -531,17 +531,18 @@ namespace JexusManager
             foreach (var item in IisExpressRoot.Nodes)
             {
                 var serverNode = item as ServerTreeNode;
-                if (serverNode.ServerManager == null)
+                var serverManager = serverNode?.ServerManager;
+                if (serverManager == null)
                 {
                     continue;
                 }
 
-                if (serverNode.ServerManager.Sites.Count == 0)
+                if (serverManager.Sites.Count == 0)
                 {
                     continue;
                 }
 
-                foreach (Site site in serverNode.ServerManager.Sites)
+                foreach (Site site in serverManager.Sites)
                 {
                     if (site.State == ObjectState.Started)
                     {
