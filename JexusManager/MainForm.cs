@@ -400,7 +400,9 @@ namespace JexusManager
                 return;
             }
 
-            var dialog = new NewSiteDialog(_serviceContainer, data.ServerManager.Sites);
+            var module = new MainModule();
+            module.Initialize(_serviceContainer, null);
+            var dialog = new NewSiteDialog(module, data.ServerManager.Sites);
             if (dialog.ShowDialog(this) != DialogResult.OK)
             {
                 return;
