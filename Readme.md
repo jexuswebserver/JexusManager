@@ -14,7 +14,7 @@ the code base has been cleaned up and published to GitHub.
 
 More information about the code will be published in the coming weeks.
 
-Documentation is at http://jexusmanager.com
+Documentation is at https://docs.jexusmanager.com
 
 Build from Source
 =================
