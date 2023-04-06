@@ -143,7 +143,7 @@ namespace JexusManager.Tree
             AddToParent(this, new VirtualDirectoryTreeNode(ServiceProvider, dialog.VirtualDirectory, this.ServerNode) { ContextMenuStrip = vDirMenu });
         }
 
-        public override void HandleDoubleClick(MainForm mainForm)
+        public override void HandleDoubleClick()
         { }
     }
 }

@@ -64,7 +64,7 @@ namespace JexusManager.Tree
             mainForm.LoadPage(page);
         }
 
-        public override void HandleDoubleClick(MainForm mainForm)
+        public override void HandleDoubleClick()
         {
         }
 

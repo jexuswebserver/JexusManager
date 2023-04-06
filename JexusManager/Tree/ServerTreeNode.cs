@@ -53,9 +53,10 @@ namespace JexusManager.Tree
                     Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows)) + Path.DirectorySeparatorChar
                 };
 
-        private ServerTreeNode(IServiceProvider serviceProvider, string name, string hostName, string credentials, string hash, ServerManager server, bool isLocalhost, WorkingMode mode, bool ignoreInCache)
+        private ServerTreeNode(MainForm mainForm, IServiceProvider serviceProvider, string name, string hostName, string credentials, string hash, ServerManager server, bool isLocalhost, WorkingMode mode, bool ignoreInCache)
             : base(GetNodeName(name, credentials, isLocalhost), serviceProvider)
         {
+            MainForm = mainForm;
             Tag = server;
             ServerManager = server;
             DisplayName = name;
@@ -138,7 +139,7 @@ namespace JexusManager.Tree
 
         public bool IsBusy => _status == NodeStatus.Loading;
 
-        public override void HandleDoubleClick(MainForm mainForm)
+        public override void HandleDoubleClick()
         {
             if (readOnly)
             {
@@ -156,10 +157,9 @@ namespace JexusManager.Tree
                 return;
             }
 
-            MainForm = mainForm;
-            mainForm.DisconnectButton.Enabled = false;
+            MainForm.DisconnectButton.Enabled = false;
             _status = NodeStatus.Loading;
-            mainForm.ShowInfo($"Connecting to {HostName}...");
+            MainForm.ShowInfo($"Connecting to {HostName}...");
             try
             {
                 if (Mode == WorkingMode.IisExpress)
@@ -186,7 +186,7 @@ namespace JexusManager.Tree
                         MainForm.UIService.ShowMessage("Authentication failed.", Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         ServerManager = null;
                         _status = NodeStatus.Default;
-                        mainForm.DisconnectButton.Enabled = true;
+                        MainForm.DisconnectButton.Enabled = true;
                         return;
                     }
 
@@ -202,7 +202,7 @@ namespace JexusManager.Tree
                         {
                             ServerManager = null;
                             _status = NodeStatus.Default;
-                            mainForm.DisconnectButton.Enabled = true;
+                            MainForm.DisconnectButton.Enabled = true;
                             return;
                         }
                     }
@@ -219,13 +219,13 @@ namespace JexusManager.Tree
                 }
 
                 ServerManager.IsLocalhost = IsLocalhost;
-                var succeeded = LoadServer(mainForm.ApplicationPoolsMenu, mainForm.SitesMenu, mainForm.SiteMenu);
+                var succeeded = LoadServer(MainForm.ApplicationPoolsMenu, MainForm.SitesMenu, MainForm.SiteMenu);
                 if (succeeded)
                 {
                     Tag = ServerManager;
-                    mainForm.EnableServerMenuItems(true);
+                    MainForm.EnableServerMenuItems(true);
                     _status = NodeStatus.Loaded;
-                    mainForm.DisconnectButton.Enabled = true;
+                    MainForm.DisconnectButton.Enabled = true;
                 }
                 else
                 {
@@ -251,7 +251,7 @@ namespace JexusManager.Tree
             }
             finally
             {
-                mainForm.HideInfo();
+                MainForm.HideInfo();
             }
         }
 
@@ -397,19 +397,19 @@ namespace JexusManager.Tree
             return true;
         }
 
-        public static ServerTreeNode CreateJexusNode(IServiceProvider serviceProvider, string name, string hostName, string credentials, string hash, ServerManager server, bool isLocalhost)
+        public static ServerTreeNode CreateJexusNode(MainForm mainForm, IServiceProvider serviceProvider, string name, string hostName, string credentials, string hash, ServerManager server, bool isLocalhost)
         {
-            return new ServerTreeNode(serviceProvider, name, hostName, credentials, hash, server, isLocalhost, WorkingMode.Jexus, false);
+            return new ServerTreeNode(mainForm, serviceProvider, name, hostName, credentials, hash, server, isLocalhost, WorkingMode.Jexus, false);
         }
 
-        public static ServerTreeNode CreateIisExpressNode(IServiceProvider serviceProvider, string name, string fileName, ServerManager server, bool ignoreInCache)
+        public static ServerTreeNode CreateIisExpressNode(MainForm mainForm, IServiceProvider serviceProvider, string name, string fileName, ServerManager server, bool ignoreInCache)
         {
-            return new ServerTreeNode(serviceProvider, name, fileName, string.Empty, string.Empty, server, true, WorkingMode.IisExpress, ignoreInCache);
+            return new ServerTreeNode(mainForm, serviceProvider, name, fileName, string.Empty, string.Empty, server, true, WorkingMode.IisExpress, ignoreInCache);
         }
 
-        public static ServerTreeNode CreateIisNode(IServiceProvider serviceProvider, string name, string fileName)
+        public static ServerTreeNode CreateIisNode(MainForm mainForm, IServiceProvider serviceProvider, string name, string fileName)
         {
-            return new ServerTreeNode(serviceProvider, name, fileName, string.Empty, string.Empty, null, true, WorkingMode.Iis, true);
+            return new ServerTreeNode(mainForm, serviceProvider, name, fileName, string.Empty, string.Empty, null, true, WorkingMode.Iis, true);
         }
     }
 }

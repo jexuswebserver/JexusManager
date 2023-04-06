@@ -39,12 +39,8 @@ namespace JexusManager.Tree
             mainForm.LoadInner(new HomePage());
         }
 
-        public override void HandleDoubleClick(MainForm mainForm)
+        public override void HandleDoubleClick()
         {
-            if (Nodes.Count == 0)
-            {
-                mainForm.ConnectToServer();
-            }
         }
 
         public override void Expand(MainForm mainForm)

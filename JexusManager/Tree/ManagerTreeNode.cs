@@ -37,7 +37,7 @@ namespace JexusManager.Tree
 
         public abstract void LoadPanels(MainForm mainForm, ServiceContainer serviceContainer, List<ModuleProvider> moduleProviders);
 
-        public abstract void HandleDoubleClick(MainForm mainForm);
+        public abstract void HandleDoubleClick();
 
         protected void LoadChildren(Application rootApp, int rootLevel, string rootFolder, string pathToSite, ContextMenuStrip phyMenu, ContextMenuStrip vDirMenu, ContextMenuStrip appMenu)
         {

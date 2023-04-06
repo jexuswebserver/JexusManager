@@ -159,7 +159,7 @@ namespace JexusManager.Tree
             }
         }
 
-        public override void HandleDoubleClick(MainForm mainForm)
+        public override void HandleDoubleClick()
         { }
     }
 }

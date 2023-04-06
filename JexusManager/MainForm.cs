@@ -232,6 +232,7 @@ namespace JexusManager
             if (File.Exists(globalFile))
             {
                 var global = ServerTreeNode.CreateIisExpressNode(
+                    this,
                     _serviceContainer,
                     expressGlobalInstanceName,
                     globalFile,
@@ -255,6 +256,7 @@ namespace JexusManager
                 }
 
                 var data = ServerTreeNode.CreateIisExpressNode(
+                    this,
                     _serviceContainer,
                     name: parts[0],
                     fileName: parts[1], 
@@ -293,6 +295,7 @@ namespace JexusManager
             {
                 AspNetCoreHelper.FixConfigFile(file);
                 var data = ServerTreeNode.CreateIisExpressNode(
+                    this,
                     _serviceContainer,
                     name: $"IIS Express {number++}",
                     fileName: file,
@@ -300,7 +303,7 @@ namespace JexusManager
                     ignoreInCache: true);
                 RegisterServer(data);
                 IisExpressRoot.Expand();
-                data.HandleDoubleClick(this);
+                data.HandleDoubleClick();
             }
         }
 
@@ -315,6 +318,7 @@ namespace JexusManager
             if (File.Exists(config))
             {
                 var data = ServerTreeNode.CreateIisNode(
+                    this,
                     _serviceContainer,
                     Environment.MachineName,
                     config);
@@ -351,6 +355,7 @@ namespace JexusManager
             {
                 var parts = item.Split(',');
                 var data =  ServerTreeNode.CreateJexusNode(
+                    this,
                     _serviceContainer, 
                     name: parts[0],
                     hostName: parts[1],
@@ -898,6 +903,7 @@ namespace JexusManager
             if (data.Mode == WorkingMode.Jexus)
             {
                 node = ServerTreeNode.CreateJexusNode(
+                    this,
                     _serviceContainer,
                     data.Name,
                     data.HostName,
@@ -914,6 +920,7 @@ namespace JexusManager
             else
             {
                 node = ServerTreeNode.CreateIisExpressNode(
+                    this,
                     _serviceContainer,
                     data.Name,
                     data.FileName,
@@ -1088,7 +1095,7 @@ namespace JexusManager
 
         private void treeView1_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            ((ManagerTreeNode)e.Node).HandleDoubleClick(this);
+            ((ManagerTreeNode)e.Node).HandleDoubleClick();
             treeView1_AfterSelect(sender, new TreeViewEventArgs(e.Node));
         }
 
