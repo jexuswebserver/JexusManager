@@ -30,7 +30,7 @@ namespace JexusManager.Features.Main
             }
 
             Enable32Bit = pool.Enable32BitAppOnWin64;
-#if ARM64
+#if DEBUG || ARM64
             EnableEmulation = pool.EnableEmulationOnWinArm64;
 #endif
             Mode = pool.ManagedPipelineMode;
@@ -132,7 +132,7 @@ namespace JexusManager.Features.Main
             }
 
             pool.Enable32BitAppOnWin64 = Enable32Bit;
-#if ARM64
+#if DEBUG || ARM64
             pool.EnableEmulationOnWinArm64 = EnableEmulation;
 #endif
             pool.ManagedPipelineMode = Mode;
@@ -269,7 +269,7 @@ namespace JexusManager.Features.Main
         [DisplayName("Enable 32-Bit Applications")]
         [DefaultValue(false)]
         public bool Enable32Bit { get; set; }
-#if ARM64
+#if DEBUG || ARM64
         [Browsable(true)]
         [Category("(General)")]
         [Description("[enableEmulationOnWinArm64] If set to true for an application pool on an ARM64 operating system, the worker process(es) serving the application pool will be in x86 or x64 emulation mode depending on property [enable32BitAppOnWin64].")]
