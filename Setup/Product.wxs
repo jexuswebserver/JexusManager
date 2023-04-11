@@ -5,6 +5,7 @@
      xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
 
     <?include "Variables.wxi" ?>
+    <?include "Paths.wxi" ?>
 
     <Product Id="*"
              Name="$(var.ProductName) $(var.ProductVersion)"
@@ -48,13 +49,7 @@
                  ConfigurableDirectory="INSTALLDIR">
 
             <!-- Files installed -->
-            <?if $(var.Platform) = x64 ?>
-            <ComponentGroupRef  Id="Files64" />
-            <?elif $(var.Platform) = arm64 ?>
-            <ComponentGroupRef  Id="FilesARM64" />
-            <?else ?>
-            <ComponentGroupRef  Id="Files86" />
-            <?endif ?>
+            <?include "Components.wxi" ?>
             <ComponentRef Id="ProgramMenuItems" />
             <ComponentRef Id="MainExecutable" />
         </Feature>

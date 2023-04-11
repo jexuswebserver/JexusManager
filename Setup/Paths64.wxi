@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<Include xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <?define PlatformProgramFilesFolder="ProgramFiles64Folder" ?>
+    <?define SourceDir=..\bin\x64?>
+</Include>

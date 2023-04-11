@@ -42,9 +42,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Product.wxs" />
-    <Compile Include="Files86.wxs" />
-    <Compile Include="Files64.wxs" />
-    <Compile Include="FilesARM64.wsx" />
+    <Compile Condition=" '$(Platform)' == 'x86' " Include="Files86.wxs" />
+    <Compile Condition=" '$(Platform)' == 'x64' " Include="Files64.wxs" />
+    <Compile Condition=" '$(Platform)' == 'ARM64' " Include="FilesARM64.wxs" />
   </ItemGroup>
   <ItemGroup>
     <WixExtension Include="WixUIExtension">
@@ -69,6 +69,14 @@
   <Import Project="$(WixTargetsPath)" />
   <Target Name="EnsureWixToolsetInstalled" Condition=" '$(WixTargetsImported)' != 'true' ">
     <Error Text="The WiX Toolset v3.11 (or newer) build tools must be installed to build this project. To download the WiX Toolset, see http://wixtoolset.org/releases/" />
+  </Target>
+  <Target Name="BeforeBuild">
+    <Exec Command="copy /Y Components86.wxi Components.wxi" Condition=" '$(Platform)' == 'x86' " />
+    <Exec Command="copy /Y Paths86.wxi Paths.wxi" Condition=" '$(Platform)' == 'x86' " />
+    <Exec Command="copy /Y Components64.wxi Components.wxi" Condition=" '$(Platform)' == 'x64' " />
+    <Exec Command="copy /Y Paths64.wxi Paths.wxi" Condition=" '$(Platform)' == 'x64' " />
+    <Exec Command="copy /Y ComponentsARM64.wxi Components.wxi" Condition=" '$(Platform)' == 'ARM64' " />
+    <Exec Command="copy /Y PathsARM64.wxi Paths.wxi" Condition=" '$(Platform)' == 'ARM64' " />
   </Target>
   <!--
 	To modify your build process, add your task inside one of the targets below and uncomment it.

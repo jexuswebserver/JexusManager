@@ -6,6 +6,10 @@
     <Condition Message="!(loc.Windows64Required)">
         <![CDATA[Installed OR VersionNT64]]>
     </Condition>
+    <?elif $(var.Platform) = arm64 ?>
+    <Condition Message="!(loc.Windows64Required)">
+        <![CDATA[Installed OR (VersionNT64 AND PROCESSOR_ARCHITECTURE = ARM64)]]>
+    </Condition>
     <?else?>
     <Condition Message="!(loc.Windows32Required)">
         <![CDATA[Installed OR not VersionNT64]]>
