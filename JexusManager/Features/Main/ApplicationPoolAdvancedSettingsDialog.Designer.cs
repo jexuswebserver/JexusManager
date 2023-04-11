@@ -31,86 +31,94 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.btnCancel = new System.Windows.Forms.Button();
-            this.btnOK = new System.Windows.Forms.Button();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.panel1.SuspendLayout();
-            this.SuspendLayout();
+            propertyGrid1 = new PropertyGrid();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            panel1 = new Panel();
+            btnCancel = new Button();
+            btnOK = new Button();
+            tableLayoutPanel1.SuspendLayout();
+            panel1.SuspendLayout();
+            SuspendLayout();
             // 
             // propertyGrid1
             // 
-            this.propertyGrid1.CategoryForeColor = System.Drawing.SystemColors.InactiveCaptionText;
-            this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.propertyGrid1.Location = new System.Drawing.Point(3, 3);
-            this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(477, 378);
-            this.propertyGrid1.TabIndex = 0;
-            this.propertyGrid1.ToolbarVisible = false;
+            propertyGrid1.CategoryForeColor = System.Drawing.SystemColors.InactiveCaptionText;
+            propertyGrid1.Dock = DockStyle.Fill;
+            propertyGrid1.Location = new System.Drawing.Point(5, 6);
+            propertyGrid1.Margin = new Padding(5, 6, 5, 6);
+            propertyGrid1.Name = "propertyGrid1";
+            propertyGrid1.Size = new System.Drawing.Size(793, 725);
+            propertyGrid1.TabIndex = 0;
+            propertyGrid1.ToolbarVisible = false;
             // 
             // tableLayoutPanel1
             // 
-            this.tableLayoutPanel1.AutoSize = true;
-            this.tableLayoutPanel1.ColumnCount = 1;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.propertyGrid1, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.panel1, 0, 1);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(483, 429);
-            this.tableLayoutPanel1.TabIndex = 1;
+            tableLayoutPanel1.AutoSize = true;
+            tableLayoutPanel1.ColumnCount = 1;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.Controls.Add(propertyGrid1, 0, 0);
+            tableLayoutPanel1.Controls.Add(panel1, 0, 1);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            tableLayoutPanel1.Margin = new Padding(5, 6, 5, 6);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 2;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 87F));
+            tableLayoutPanel1.Size = new System.Drawing.Size(803, 824);
+            tableLayoutPanel1.TabIndex = 1;
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.btnCancel);
-            this.panel1.Controls.Add(this.btnOK);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(3, 387);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(477, 39);
-            this.panel1.TabIndex = 1;
+            panel1.Controls.Add(btnCancel);
+            panel1.Controls.Add(btnOK);
+            panel1.Dock = DockStyle.Fill;
+            panel1.Location = new System.Drawing.Point(5, 743);
+            panel1.Margin = new Padding(5, 6, 5, 6);
+            panel1.Name = "panel1";
+            panel1.Size = new System.Drawing.Size(793, 75);
+            panel1.TabIndex = 1;
             // 
             // btnCancel
             // 
-            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(373, 7);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(95, 23);
-            this.btnCancel.TabIndex = 1;
-            this.btnCancel.Text = "Cancel";
-            this.btnCancel.UseVisualStyleBackColor = true;
+            btnCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            btnCancel.DialogResult = DialogResult.Cancel;
+            btnCancel.Location = new System.Drawing.Point(620, 13);
+            btnCancel.Margin = new Padding(5, 6, 5, 6);
+            btnCancel.Name = "btnCancel";
+            btnCancel.Size = new System.Drawing.Size(158, 44);
+            btnCancel.TabIndex = 1;
+            btnCancel.Text = "Cancel";
+            btnCancel.UseVisualStyleBackColor = true;
             // 
             // btnOK
             // 
-            this.btnOK.Location = new System.Drawing.Point(277, 7);
-            this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(90, 23);
-            this.btnOK.TabIndex = 0;
-            this.btnOK.Text = "OK";
-            this.btnOK.UseVisualStyleBackColor = true;
+            btnOK.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            btnOK.Location = new System.Drawing.Point(461, 13);
+            btnOK.Margin = new Padding(5, 6, 5, 6);
+            btnOK.Name = "btnOK";
+            btnOK.Size = new System.Drawing.Size(150, 44);
+            btnOK.TabIndex = 0;
+            btnOK.Text = "OK";
+            btnOK.UseVisualStyleBackColor = true;
             // 
             // ApplicationPoolAdvancedSettingsDialog
             // 
-            this.AcceptButton = this.btnOK;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(483, 429);
-            this.Controls.Add(this.tableLayoutPanel1);
-            this.Name = "ApplicationPoolAdvancedSettingsDialog";
-            this.Text = "Advanced Settings";
-            this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.ApplicationPoolAdvancedSettingsDialog_HelpButtonClicked);
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AcceptButton = btnOK;
+            AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
+            AutoScaleMode = AutoScaleMode.Font;
+            CancelButton = btnCancel;
+            ClientSize = new System.Drawing.Size(803, 824);
+            Controls.Add(tableLayoutPanel1);
+            FormBorderStyle = FormBorderStyle.Sizable;
+            Margin = new Padding(5, 6, 5, 6);
+            Name = "ApplicationPoolAdvancedSettingsDialog";
+            Text = "Advanced Settings";
+            HelpButtonClicked += ApplicationPoolAdvancedSettingsDialog_HelpButtonClicked;
+            tableLayoutPanel1.ResumeLayout(false);
+            panel1.ResumeLayout(false);
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion

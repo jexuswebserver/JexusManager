@@ -50,15 +50,18 @@ New-Item .\bin -ItemType Directory
 Set-Location .\JexusManager
 dotnet publish -c $Configuration -r win-x64 --self-contained -o ..\bin\x64
 dotnet publish -c $Configuration -r win-x86 --self-contained -o ..\bin\x86
+dotnet publish -c $Configuration -r win-arm64 --self-contained -o ..\bin\arm64
 Copy-Item .\ThirdPartyNotices.txt ..\bin
 Set-Location ..
 
 Set-Location .\CertificateInstaller
 dotnet publish -c $Configuration -r win-x64 --self-contained -o ..\bin\x64
 dotnet publish -c $Configuration -r win-x86 --self-contained -o ..\bin\x86
+dotnet publish -c $Configuration -r win-arm64 --self-contained -o ..\bin\arm64
 Set-Location ..
 
 .\lib\Paraffin.exe -regExExclude "JexusManager\.exe" -NoRootDirectory -dir .\bin\x64 -GroupName Files64 .\Setup\Files64.wxs
 .\lib\Paraffin.exe -regExExclude "JexusManager\.exe" -NoRootDirectory -dir .\bin\x86 -GroupName Files86 .\Setup\Files86.wxs
+.\lib\Paraffin.exe -regExExclude "JexusManager\.exe" -NoRootDirectory -dir .\bin\arm64 -GroupName FilesARM64 .\Setup\FilesARM64.wxs
 
 Write-Host "Compilation finished."

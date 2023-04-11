@@ -50,6 +50,8 @@
             <!-- Files installed -->
             <?if $(var.Platform) = x64 ?>
             <ComponentGroupRef  Id="Files64" />
+            <?elif $(var.Platform) = arm64 ?>
+            <ComponentGroupRef  Id="FilesARM64" />
             <?else ?>
             <ComponentGroupRef  Id="Files86" />
             <?endif ?>

@@ -10,6 +10,9 @@
     <?if $(var.Platform) = x64 ?>
     <?define PlatformProgramFilesFolder="ProgramFiles64Folder" ?>
     <?define SourceDir=..\bin\x64?>
+    <?elif $(var.Platform) = arm64 ?>
+    <?define PlatformProgramFilesFolder="ProgramFiles64Folder" ?>
+    <?define SourceDir=..\bin\arm64?>
     <?else ?>
     <?define PlatformProgramFilesFolder="ProgramFilesFolder" ?>
     <?define SourceDir=..\bin\x86?>

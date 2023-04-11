@@ -67,6 +67,12 @@ namespace Microsoft.Web.Administration
             set { this["enable32BitAppOnWin64"] = value; }
         }
 
+        public bool EnableEmulationOnWinArm64
+        {
+            get { return (bool)this["enableEmulationOnWinArm64"]; }
+            set { this["enableEmulationOnWinArm64"] = value; }
+        }
+
         public ApplicationPoolFailure Failure
         {
             get { return _failure ?? (_failure = new ApplicationPoolFailure(ChildElements["failure"], this)); }

@@ -39,3 +39,4 @@ T4MVC.cs
 /*.msi
 /Setup/Files64.wxs
 /Setup/Files86.wxs
+/Setup/FilesARM64.wxs

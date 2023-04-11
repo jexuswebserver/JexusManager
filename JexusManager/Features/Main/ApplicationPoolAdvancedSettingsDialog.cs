@@ -16,8 +16,8 @@ namespace JexusManager.Features.Main
 
     public partial class ApplicationPoolAdvancedSettingsDialog : DialogForm
     {
-         public ApplicationPoolAdvancedSettingsDialog(IServiceProvider serviceProvider, ApplicationPool pool)
-            : base(serviceProvider)
+        public ApplicationPoolAdvancedSettingsDialog(IServiceProvider serviceProvider, ApplicationPool pool)
+           : base(serviceProvider)
         {
             InitializeComponent();
             var settings = new ApplicationPoolAdvancedSettings(pool);
