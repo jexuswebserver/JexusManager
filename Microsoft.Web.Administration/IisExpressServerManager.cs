@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using Rollbar;
 using Exception = System.Exception;
@@ -365,14 +366,20 @@ namespace Microsoft.Web.Administration
                 throw new InvalidOperationException("This site requires elevation. Please run Jexus Manager as administrator");
             }
 
-            var actualExecutable = site.Applications[0].GetActualExecutable();
+            Application application = site.Applications[0];
+            var actualExecutable = application.GetActualExecutable();
+            var pool = site.Server.ApplicationPools.First(item => item.Name == application.ApplicationPoolName);
+            var x64Tool = CertificateInstallerLocator.AlternativeFileName;
+            var tool = x64Tool != null && !pool.Enable32BitAppOnWin64 && pool.EnableEmulationOnWinArm64 
+                ? x64Tool
+                : CertificateInstallerLocator.FileName;
             var temp = Path.GetTempFileName();
             using var process = new Process();
             var start = process.StartInfo;
             start.FileName = "cmd";
             var extra = restart ? "/r" : string.Empty;
             start.Arguments =
-                $"/c \"\"{CertificateInstallerLocator.FileName}\" /launcher:\"{actualExecutable}\" /config:\"{site.FileContext.FileName}\" /siteId:{site.Id} /resultFile:\"{temp}\"\" {extra}";
+                $"/c \"\"{tool}\" /launcher:\"{actualExecutable}\" /config:\"{site.FileContext.FileName}\" /siteId:{site.Id} /resultFile:\"{temp}\"\" {extra}";
             start.CreateNoWindow = true;
             start.WindowStyle = ProcessWindowStyle.Hidden;
             AspNetCoreHelper.InjectEnvironmentVariables(site, start, actualExecutable);

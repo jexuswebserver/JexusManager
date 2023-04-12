@@ -48,17 +48,19 @@ Write-Host "MSBuild found. Compile the projects."
 Remove-Item .\bin -Recurse
 New-Item .\bin -ItemType Directory
 Set-Location .\JexusManager
-dotnet publish -c $Configuration -r win-x64 --self-contained -o ..\bin\x64
-dotnet publish -c $Configuration -r win-x86 --self-contained -o ..\bin\x86
-dotnet publish -c $Configuration -r win-arm64 --self-contained -o ..\bin\arm64
+dotnet publish -c $Configuration -r win-x64 --self-contained -p:PublishSingleFile=true -o ..\bin\x64
+dotnet publish -c $Configuration -r win-x86 --self-contained -p:PublishSingleFile=true -o ..\bin\x86
+dotnet publish -c $Configuration -r win-arm64 --self-contained -p:PublishSingleFile=true -o ..\bin\arm64
 Copy-Item .\ThirdPartyNotices.txt ..\bin
 Set-Location ..
 
 Set-Location .\CertificateInstaller
-dotnet publish -c $Configuration -r win-x64 --self-contained -o ..\bin\x64
-dotnet publish -c $Configuration -r win-x86 --self-contained -o ..\bin\x86
-dotnet publish -c $Configuration -r win-arm64 --self-contained -o ..\bin\arm64
+dotnet publish -c $Configuration -r win-x64 --self-contained -p:PublishSingleFile=true -p:PublishTrimmed=true -o ..\bin\x64
+dotnet publish -c $Configuration -r win-x86 --self-contained -p:PublishSingleFile=true -p:PublishTrimmed=true -o ..\bin\x86
+dotnet publish -c $Configuration -r win-arm64 --self-contained -p:PublishSingleFile=true -p:PublishTrimmed=true -o ..\bin\arm64
 Set-Location ..
+
+Copy-Item .\bin\x64\CertificateInstaller.exe .\bin\arm64\CertificateInstaller.x64.exe
 
 .\lib\Paraffin.exe -regExExclude "JexusManager\.exe" -NoRootDirectory -dir .\bin\x64 -GroupName Files64 .\Setup\Files64.wxs
 .\lib\Paraffin.exe -regExExclude "JexusManager\.exe" -NoRootDirectory -dir .\bin\x86 -GroupName Files86 .\Setup\Files86.wxs
