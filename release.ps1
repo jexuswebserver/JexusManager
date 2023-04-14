@@ -55,9 +55,9 @@ Copy-Item .\ThirdPartyNotices.txt ..\bin
 Set-Location ..
 
 Set-Location .\CertificateInstaller
-dotnet publish -c $Configuration -r win-x64 --self-contained -p:PublishSingleFile=true -p:PublishTrimmed=true -o ..\bin\x64
-dotnet publish -c $Configuration -r win-x86 --self-contained -p:PublishSingleFile=true -p:PublishTrimmed=true -o ..\bin\x86
-dotnet publish -c $Configuration -r win-arm64 --self-contained -p:PublishSingleFile=true -p:PublishTrimmed=true -o ..\bin\arm64
+dotnet publish -c $Configuration -r win-x64 --self-contained -p:PublishSingleFile=true -o ..\bin\x64
+dotnet publish -c $Configuration -r win-x86 --self-contained -p:PublishSingleFile=true -o ..\bin\x86
+dotnet publish -c $Configuration -r win-arm64 --self-contained -p:PublishSingleFile=true -o ..\bin\arm64
 Set-Location ..
 
 Copy-Item .\bin\x64\CertificateInstaller.exe .\bin\arm64\CertificateInstaller.x64.exe
