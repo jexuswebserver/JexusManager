@@ -303,7 +303,6 @@ namespace Microsoft.Web.Administration
 
         internal override bool GetSiteState(Site site)
         {
-            var tool = CertificateInstallerLocator.AlternativeFileName ?? CertificateInstallerLocator.FileName;
             try
             {
                 using var process = new Process
@@ -316,7 +315,7 @@ namespace Microsoft.Web.Administration
                         UseShellExecute = true,
                         FileName = "cmd",
                         Arguments =
-                    $"/c \"\"{tool}\" /config:\"{site.FileContext.FileName}\" /siteId:{site.Id}\"",
+                    $"/c \"\"{CertificateInstallerLocator.FileName}\" /config:\"{site.FileContext.FileName}\" /siteId:{site.Id}\"",
                         CreateNoWindow = true,
                         WindowStyle = ProcessWindowStyle.Hidden
                     }
@@ -423,7 +422,6 @@ namespace Microsoft.Web.Administration
 
         internal override void Stop(Site site)
         {
-            var tool = CertificateInstallerLocator.AlternativeFileName ?? CertificateInstallerLocator.FileName;
             try
             {
                 using var process = new Process();
@@ -434,7 +432,7 @@ namespace Microsoft.Web.Administration
                 start.UseShellExecute = true;
                 start.FileName = "cmd";
                 start.Arguments =
-                    $"/c \"\"{tool}\" /k /config:\"{site.FileContext.FileName}\" /siteId:{site.Id}\"";
+                    $"/c \"\"{CertificateInstallerLocator.FileName}\" /k /config:\"{site.FileContext.FileName}\" /siteId:{site.Id}\"";
                 start.CreateNoWindow = true;
                 start.WindowStyle = ProcessWindowStyle.Hidden;
                 process.Start();
