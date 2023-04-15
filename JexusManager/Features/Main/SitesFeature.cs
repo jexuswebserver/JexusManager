@@ -398,7 +398,7 @@ namespace JexusManager.Features.Main
             OnSitesSettingsSaved();
             try
             {
-                SelectedItem.Start();
+                DialogHelper.SiteStart(SelectedItem);
             }
             catch (Exception ex)
             {

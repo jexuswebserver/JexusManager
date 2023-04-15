@@ -295,11 +295,10 @@ namespace JexusManager.Features.Main
                             return;
                         }
                         
-                        var name = application.ApplicationPoolName;
-                        var pool = application.Server.ApplicationPools.FirstOrDefault(item => item.Name == name);
+                        var pool = application.GetPool();
                         if (pool == null)
                         {
-                            Error($"The application pool '{name}' cannot be found.");
+                            Error($"The application pool '{application.ApplicationPoolName}' cannot be found.");
                             return;
                         }
 
@@ -326,11 +325,11 @@ namespace JexusManager.Features.Main
                             Error($"  Visual C++ 14.0 runtime is not detected. Please install it following the tips on https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/iis/index#install-the-net-core-hosting-bundle.");
                         }
 
-                        Info($"The application pool '{name}' is used.");
+                        Info($"The application pool '{pool.Name}' is used.");
                         // check ASP.NET version.
                         if (pool.ManagedRuntimeVersion != ApplicationPool.ManagedRuntimeVersionNone)
                         {
-                            Error($"The application pool '{name}' is using .NET CLR {pool.ManagedRuntimeVersion}. Please set it to 'No Managed Code'.");
+                            Error($"The application pool '{pool.Name}' is using .NET CLR {pool.ManagedRuntimeVersion}. Please set it to 'No Managed Code'.");
                         }
 
                         Info($"Pool identity is {pool.ProcessModel}");

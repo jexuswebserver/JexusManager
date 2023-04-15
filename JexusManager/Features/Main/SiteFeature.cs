@@ -314,7 +314,7 @@ namespace JexusManager.Features.Main
             OnSiteSettingsSaved();
             try
             {
-                site.Start();
+                DialogHelper.SiteStart(site);
             }
             catch (Exception ex)
             {

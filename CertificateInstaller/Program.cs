@@ -296,22 +296,22 @@ int StartSite(string config, string siteId, string launcher, string resultFile, 
     if (process.HasExited)
     {
         File.WriteAllText(resultFile, process.StandardOutput.ReadToEnd());
-        return 1;
+        return 0;
     }
 
-    return 0;
+    return process.Id;
 }
 
 int QuerySite(string config, string siteId)
 {
     var toQuery = $"/config:\"{config}\" /siteid:{siteId} /systray:false /trace:error";
     var items = Process.GetProcessesByName("iisexpress");
-    var found = items.Any(item =>
+    var found = items.First(item =>
     {
         var command = item.GetCommandLine();
         return command != null && command.TrimEnd().EndsWith(toQuery, StringComparison.Ordinal);
     });
-    return found ? 1 : 0;
+    return found == null ? 0 : found.Id;
 }
 
 int KillSite(string config, string siteId)

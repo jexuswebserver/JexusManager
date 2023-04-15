@@ -51,8 +51,12 @@ namespace Microsoft.Web.Administration
                 return null;
             }
 
-            var name = application.ApplicationPoolName;
-            var pool = application.Server.ApplicationPools.FirstOrDefault(item => item.Name == name);
+            var pool = application.GetPool();
+            if (pool == null)
+            {
+                return null;
+            }
+
             var result = Path.Combine(
                 Environment.GetFolderPath(
                     pool != null && pool.Enable32BitAppOnWin64

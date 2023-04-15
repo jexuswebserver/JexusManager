@@ -390,6 +390,16 @@ namespace JexusManager
             Process.Start("explorer.exe", $"/select,\"{file}\"");
         }
 
+        public static void SiteStart(Site site)
+        {
+            site.Start();
+            if (site.Server.Mode == WorkingMode.IisExpress)
+            {
+                var pid = site.Applications[0].GetPool()?.WorkerProcesses[0]?.ProcessId;
+                MessageBoxShow($"Worker process {pid} has been started.");
+            }
+        }
+
         public static void MessageBoxShow(string message)
         {
             var popupNotifier = new PopupNotifier

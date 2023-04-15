@@ -160,7 +160,7 @@ namespace JexusManager.Features.Main
 
                 try
                 {
-                    site.Start();
+                    DialogHelper.SiteStart(site);
                 }
                 catch (Exception ex)
                 {

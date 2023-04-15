@@ -368,7 +368,7 @@ namespace Microsoft.Web.Administration
 
             Application application = site.Applications[0];
             var actualExecutable = application.GetActualExecutable();
-            var pool = site.Server.ApplicationPools.First(item => item.Name == application.ApplicationPoolName);
+            var pool = application.GetPool() ?? throw new InvalidOperationException($"The application pool {application.ApplicationPoolName} does not exist.");
             var x64Tool = CertificateInstallerLocator.AlternativeFileName;
             var tool = x64Tool != null && !pool.Enable32BitAppOnWin64 && pool.EnableEmulationOnWinArm64 
                 ? x64Tool
@@ -388,14 +388,18 @@ namespace Microsoft.Web.Administration
             {
                 process.Start();
                 process.WaitForExit();
-                if (process.ExitCode == 0)
+                if (process.ExitCode > 0)
                 {
                     site.State = ObjectState.Started;
                 }
-                else if (process.ExitCode == 1)
+                else if (process.ExitCode == 0)
                 {
                     throw new InvalidOperationException("The process has terminated");
                 }
+
+                var workerProcess = pool.WorkerProcesses.CreateElement();
+                workerProcess["processId"] = process.ExitCode;
+                workerProcess["appPoolName"] = pool.Name;
             }
             catch (Win32Exception ex)
             {
@@ -416,7 +420,11 @@ namespace Microsoft.Web.Administration
             }
             finally
             {
-                site.State = process.ExitCode == 0 ? ObjectState.Started : ObjectState.Stopped;
+                site.State = process.ExitCode > 0 ? ObjectState.Started : ObjectState.Stopped;
+                if (File.Exists(temp))
+                {
+                    File.Delete(temp);
+                }
             }
         }
 

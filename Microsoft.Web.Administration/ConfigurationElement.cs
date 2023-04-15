@@ -43,7 +43,7 @@ namespace Microsoft.Web.Administration
                 ParentElement = parent;
                 if (parent == null)
                 {
-                    Schema = schema ?? throw new ArgumentException();
+                    Schema = schema ?? throw new ArgumentException("empty schema");
                     IsLocallyStored = true;
                 }
                 else

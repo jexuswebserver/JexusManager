@@ -12,6 +12,7 @@ namespace Microsoft.Web.Administration
         private ApplicationPoolRecycling _recycling;
         private ApplicationPoolFailure _failure;
         private ApplicationPoolCpu _cpu;
+        private WorkerProcessCollection _workerProcesses;
 
         private ObjectState? _state;
         internal const string ManagedRuntimeVersion40 = "v4.0";
@@ -22,6 +23,7 @@ namespace Microsoft.Web.Administration
             : base(element, "add", null, parent, null, null)
         {
             Parent = parent;
+            _workerProcesses = new WorkerProcessCollection(GetCollection("workerProcesses"), parent.Parent);
         }
 
         internal ApplicationPoolCollection Parent { get; }
@@ -144,7 +146,7 @@ namespace Microsoft.Web.Administration
 
         public WorkerProcessCollection WorkerProcesses
         {
-            get { return new WorkerProcessCollection(); }
+            get { return _workerProcesses; }
         }
 
         public override string ToString()

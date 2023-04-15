@@ -156,6 +156,7 @@ namespace Microsoft.Web.Administration
                     siteSection);
                 _virtualDirectoryDefaults =
                     new VirtualDirectoryDefaults(siteSection?.GetChildElement("virtualDirectoryDefaults"), siteSection);
+                //_workerProcessCollection = new WorkerProcessCollection(poolSection);
                 SiteCollection = new SiteCollection(siteSection, this);
             }
 

@@ -110,7 +110,12 @@ namespace Microsoft.Web.Administration
             return application.IsRoot() ? application.Site.Name : application.Site.Name + application.Path;
         }
 
-        internal static bool IsJexus(ServerManager server, Application application)
+        internal static ApplicationPool GetPool(this Application application)
+        {
+            return application.Server.ApplicationPools.First(item => item.Name == application.ApplicationPoolName);
+        }
+
+        internal static bool IsJexus(this ServerManager server, Application application)
         {
             if (server != null)
             {
@@ -119,7 +124,7 @@ namespace Microsoft.Web.Administration
 
             if (application == null)
             {
-                throw new ArgumentException("both server and applicatioin null");
+                throw new ArgumentException("both server and application null");
             }
 
             return application.Server.Mode == WorkingMode.Jexus;
