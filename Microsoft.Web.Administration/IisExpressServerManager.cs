@@ -465,6 +465,10 @@ namespace Microsoft.Web.Administration
 
         internal override IEnumerable<string> GetSchemaFiles()
         {
+            var extra = Path.Combine(Environment.CurrentDirectory, "schemas");
+            var files = Directory.Exists(extra) ? Directory.GetFiles(extra) : Array.Empty<string>();
+
+            // IMPORTANT: for x64 IIS 7 Express
             var directory = Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
                     "IIS Express",
@@ -472,7 +476,7 @@ namespace Microsoft.Web.Administration
                     "schema");
             if (Directory.Exists(directory))
             {
-                return Directory.GetFiles(directory);
+                return Directory.GetFiles(directory).Concat(files);
             }
 
             // IMPORTANT: for x86 IIS 7 Express

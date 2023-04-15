@@ -364,7 +364,7 @@ namespace JexusManager
 
         public static void ProcessStart(string url)
         {
-            var browser = Environment.GetEnvironmentVariable("JEXUSMANAGER_BROWSER");
+            var browser = Environment.GetEnvironmentVariable(JexusManagerOptions.VariableNameBrowser);
             var useDefault = string.IsNullOrWhiteSpace(browser);
             try
             {

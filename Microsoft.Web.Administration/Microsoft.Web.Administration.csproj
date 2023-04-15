@@ -19,4 +19,10 @@
     <PackageReference Include="Vanara.PInvoke.Ws2_32" Version="3.4.12" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="schemas\rscaext.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
