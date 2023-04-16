@@ -112,7 +112,7 @@ namespace Microsoft.Web.Administration
 
         internal static ApplicationPool GetPool(this Application application)
         {
-            return application.Server.ApplicationPools.First(item => item.Name == application.ApplicationPoolName);
+            return application.Server.ApplicationPools.FirstOrDefault(item => item.Name == application.ApplicationPoolName);
         }
 
         internal static bool IsJexus(this ServerManager server, Application application)

@@ -306,7 +306,7 @@ int QuerySite(string config, string siteId)
 {
     var toQuery = $"/config:\"{config}\" /siteid:{siteId} /systray:false /trace:error";
     var items = Process.GetProcessesByName("iisexpress");
-    var found = items.First(item =>
+    var found = items.FirstOrDefault(item =>
     {
         var command = item.GetCommandLine();
         return command != null && command.TrimEnd().EndsWith(toQuery, StringComparison.Ordinal);
