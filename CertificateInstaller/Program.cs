@@ -133,6 +133,7 @@ try
         return RunProcess(launcher, resultFile, input);
     }
 
+    Log.Information($"Arguments: {string.Join(' ', args)}");
     if (config != null)
     {
         return HandleSite(config, siteId, launcher, resultFile, kill, restart);

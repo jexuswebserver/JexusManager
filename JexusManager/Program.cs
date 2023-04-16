@@ -15,6 +15,7 @@ namespace JexusManager
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Runtime.InteropServices;
     using System.Windows.Forms;
 
     internal static class Program
@@ -100,7 +101,7 @@ namespace JexusManager
         private static void SetupRollbar()
         {
             var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            var userName = $"{version} on {GetWindowsVersion()} with {Get45PlusFromRegistry()}";
+            var userName = $"{version} on {GetWindowsVersion()} {RuntimeInformation.ProcessArchitecture}";
             var config = new RollbarInfrastructureConfig("5b11a2cb773f42d8afb4265951208c24", "production");
             var additional = new RollbarPayloadAdditionOptions
             {

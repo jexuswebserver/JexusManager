@@ -323,7 +323,7 @@ namespace Microsoft.Web.Administration
                 process.Start();
                 process.WaitForExit();
 
-                return process.ExitCode == 1;
+                return process.ExitCode > 0;
             }
             catch (Win32Exception ex)
             {

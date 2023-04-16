@@ -396,7 +396,7 @@ namespace JexusManager
             if (site.Server.Mode == WorkingMode.IisExpress)
             {
                 var pid = site.Applications[0].GetPool()?.WorkerProcesses[0]?.ProcessId;
-                MessageBoxShow($"Worker process {pid} has been started.");
+                MessageBoxShow($"Worker process {pid} has been started for {site.Name}.");
             }
         }
 
