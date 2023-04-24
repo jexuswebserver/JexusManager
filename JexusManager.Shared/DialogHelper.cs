@@ -387,7 +387,14 @@ namespace JexusManager
 
         public static void BrowseFile(string file)
         {
-            Process.Start("explorer.exe", $"/select,\"{file}\"");
+            var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "explorer.exe");
+            if (File.Exists(path))
+            {
+                Process.Start(path, $"/select,\"{file}\"");
+                return;
+            }
+
+            MessageBoxShow($"Windows Explorer cannot be located.", true);
         }
 
         public static void SiteStart(Site site)
@@ -400,7 +407,7 @@ namespace JexusManager
             }
         }
 
-        public static void MessageBoxShow(string message)
+        public static void MessageBoxShow(string message, bool error = false)
         {
             var popupNotifier = new PopupNotifier
             {
@@ -408,7 +415,7 @@ namespace JexusManager
                 ContentText = message,
                 ContentPadding = new Padding(15),
                 Size = new Size(480, 180),
-                Image = SystemIcons.Information.ToBitmap(),
+                Image = error ? SystemIcons.Error.ToBitmap() : SystemIcons.Information.ToBitmap(),
                 ImageSize = new Size(24, 24),
                 ImagePadding = new Padding(5),
                 Delay = 15000, // 15 seconds
