@@ -397,6 +397,7 @@ namespace Microsoft.Web.Administration
                     throw new InvalidOperationException("The process has terminated");
                 }
 
+                pool.WorkerProcesses.Clear();
                 var workerProcess = pool.WorkerProcesses.CreateElement();
                 workerProcess["processId"] = process.ExitCode;
                 workerProcess["appPoolName"] = pool.Name;
