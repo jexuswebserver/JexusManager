@@ -226,10 +226,14 @@ namespace JexusManager.Dialogs
                             var reservation = binding.ToUrlPrefix();
                             var feature = new ReservedUrlsFeature((Module)serviceProvider);
                             feature.Load();
-                            if (feature.Items.All(item => item.UrlPrefix != reservation) && !BindingUtility.AddReservedUrl(reservation))
+                            if (feature.Items.All(item => item.UrlPrefix != reservation))
                             {
-                                ShowMessage($"Reserved URL {reservation} cannot be added.", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                                return;
+                                var message = BindingUtility.AddReservedUrl(reservation);
+                                if (!string.IsNullOrEmpty(message))
+                                {
+                                    ShowMessage($"Reserved URL {reservation} cannot be added. {message}", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                                    return;
+                                }
                             }
                         }
                     }

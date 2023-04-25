@@ -19,6 +19,7 @@ namespace Microsoft.Web.Administration
 
     using JexusManager;
     using Org.BouncyCastle.Utilities.Encoders;
+    using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
     public enum CertificateMappingState
     {
@@ -153,13 +154,14 @@ namespace Microsoft.Web.Administration
             catch (Win32Exception ex)
             {
                 // elevation is cancelled.
-                if (!NativeMethods.ErrorCancelled(ex.NativeErrorCode))
+                var message = NativeMethods.KnownCases(ex.NativeErrorCode);
+                if (string.IsNullOrEmpty(message))
                 {
                     RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> { { "native", ex.NativeErrorCode } });
                     return (CertificateMappingState.Win32ErrorOccurred, $"Register new certificate failed: unknown (native {ex.NativeErrorCode})");
                 }
 
-                return (CertificateMappingState.UacCancelled, "Register new certificate failed: operation is cancelled");
+                return (CertificateMappingState.UacCancelled, $"Register new certificate failed: {message}");
             }
             catch (Exception ex)
             {
@@ -270,13 +272,14 @@ namespace Microsoft.Web.Administration
             catch (Win32Exception ex)
             {
                 // elevation is cancelled.
-                if (!NativeMethods.ErrorCancelled(ex.NativeErrorCode))
+                var message = NativeMethods.KnownCases(ex.NativeErrorCode);
+                if (string.IsNullOrEmpty(message))
                 {
                     RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> { { "native", ex.NativeErrorCode } });
                     return $"Remove SNI certificate failed: unknown (native {ex.NativeErrorCode})";
                 }
 
-                return "Remove SNI certificate failed: operation is cancelled";
+                return $"Remove SNI certificate failed: {message}";
             }
             catch (NullReferenceException ex)
             {
@@ -299,7 +302,7 @@ namespace Microsoft.Web.Administration
                 : $"/c \"\"{CertificateInstallerLocator.FileName}\" /h:\"{hash}\" /s:{binding.CertificateStoreName}\" /i:{AppIdIisExpress} /o:{binding.EndPoint.Port}";
         }
 
-        public static bool AddReservedUrl(string url)
+        public static string AddReservedUrl(string url)
         {
             try
             {
@@ -314,23 +317,32 @@ namespace Microsoft.Web.Administration
                 start.WindowStyle = ProcessWindowStyle.Hidden;
                 process.Start();
                 process.WaitForExit();
-                return process.ExitCode == 0;
+                if (process.ExitCode != 0)
+                {
+                    return $"Process exited unexpectedly: {process.ExitCode}";
+                }
+
+                return string.Empty;
             }
             catch (Win32Exception ex)
             {
                 // elevation is cancelled.
-                if (!NativeMethods.ErrorCancelled(ex.NativeErrorCode))
+                var message = NativeMethods.KnownCases(ex.NativeErrorCode);
+                if (string.IsNullOrEmpty(message))
                 {
                     RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> { { "native", ex.NativeErrorCode } });
-                    // throw;
+                    return $"failed to add reserved URL: unknown ({message})";
+                }
+                else
+                {
+                    return $"failed to add reserved URL: {message}";
                 }
             }
             catch (Exception ex)
             {
                 RollbarLocator.RollbarInstance.Error(ex);
+                return $"failed to add reserved URL: unknown ({ex.Message})";
             }
-
-            return false;
         }
 
         public static string ToUrlPrefix(this Binding binding)

@@ -16,9 +16,19 @@ namespace Microsoft.Web.Administration
 {
     internal static class NativeMethods
     {
-        internal static bool ErrorCancelled(int nativeErrorCode)
+        internal static string KnownCases(int nativeErrorCode)
         {
-            return (int)WIN32_ERROR.ERROR_CANCELLED == nativeErrorCode;
+            if ((int)WIN32_ERROR.ERROR_CANCELLED == nativeErrorCode)
+            {
+                return "This operation requires elevation but the prompt was cancelled. Please retry.";
+            }
+
+            if ((int)WIN32_ERROR.ERROR_ACCESS_DISABLED_BY_POLICY == nativeErrorCode)
+            {
+                return "This operation requires elevation but it is disabled by system administrators. Please contact them to remove this restriction.";
+            }
+
+            return null;
         }
 
         #region HTTP API

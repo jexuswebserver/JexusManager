@@ -119,10 +119,15 @@ namespace JexusManager.Features.HttpApi
             catch (Win32Exception ex)
             {
                 // elevation is cancelled.
-                if (!Microsoft.Web.Administration.NativeMethods.ErrorCancelled(ex.NativeErrorCode))
+                var message = Microsoft.Web.Administration.NativeMethods.KnownCases(ex.NativeErrorCode);
+                if (string.IsNullOrEmpty(message))
                 {
-                    RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> {{ "native", ex.NativeErrorCode } });
+                    RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> { { "native", ex.NativeErrorCode } });
                     // throw;
+                }
+                else
+                {
+                    dialog.ShowError(ex, message, Name, false);
                 }
             }
             catch (Exception ex)
@@ -150,7 +155,8 @@ namespace JexusManager.Features.HttpApi
                 return;
             }
 
-            if (BindingUtility.AddReservedUrl(dialog.Item.UrlPrefix))
+            var message = BindingUtility.AddReservedUrl(dialog.Item.UrlPrefix);
+            if (string.IsNullOrEmpty(message))
             {
                 Items.Add(dialog.Item);
                 OnHttpApiSettingsSaved();
@@ -158,7 +164,7 @@ namespace JexusManager.Features.HttpApi
             else
             {
                 var service = (IManagementUIService)GetService(typeof(IManagementUIService));
-                service.ShowMessage("Invalid URL prefix input is detected.", Name, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                service.ShowMessage($"Invalid URL prefix input is detected. {message}", Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

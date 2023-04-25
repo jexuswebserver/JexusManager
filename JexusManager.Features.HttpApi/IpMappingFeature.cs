@@ -119,10 +119,15 @@ namespace JexusManager.Features.HttpApi
             catch (Win32Exception ex)
             {
                 // elevation is cancelled.
-                if (!Microsoft.Web.Administration.NativeMethods.ErrorCancelled(ex.NativeErrorCode))
+                var message = Microsoft.Web.Administration.NativeMethods.KnownCases(ex.NativeErrorCode);
+                if (string.IsNullOrEmpty(message))
                 {
-                    RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> {{ "native", ex.NativeErrorCode } });
+                    RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> { { "native", ex.NativeErrorCode } });
                     // throw;
+                }
+                else
+                {
+                    dialog.ShowError(ex, message, Name, false);
                 }
             }
             catch (Exception ex)

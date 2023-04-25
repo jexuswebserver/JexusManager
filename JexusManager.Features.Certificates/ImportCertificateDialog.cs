@@ -26,6 +26,7 @@ namespace JexusManager.Features.Certificates
     using Org.BouncyCastle.Crypto;
     using Org.BouncyCastle.OpenSsl;
     using Org.BouncyCastle.Security;
+    using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
     internal partial class ImportCertificateDialog : DialogForm
     {
@@ -133,10 +134,15 @@ namespace JexusManager.Features.Certificates
                             catch (Win32Exception ex)
                             {
                                 // elevation is cancelled.
-                                if (!NativeMethods.ErrorCancelled(ex.NativeErrorCode))
+                                var message = NativeMethods.KnownCases(ex.NativeErrorCode);
+                                if (string.IsNullOrEmpty(message))
                                 {
-                                    RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> {{ "native", ex.NativeErrorCode } });
+                                    RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> { { "native", ex.NativeErrorCode } });
                                     // throw;
+                                }
+                                else
+                                {
+                                    ShowError(ex, message, false);
                                 }
                             }
                             catch (Exception ex)

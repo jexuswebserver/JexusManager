@@ -30,6 +30,7 @@ namespace JexusManager.Features.Certificates
     using Org.BouncyCastle.Security;
     using Org.BouncyCastle.Utilities;
     using Org.BouncyCastle.X509;
+    using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
     internal partial class SelfCertificateDialog : DialogForm
     {
@@ -180,10 +181,15 @@ namespace JexusManager.Features.Certificates
                         catch (Win32Exception ex)
                         {
                             // elevation is cancelled.
-                            if (!Microsoft.Web.Administration.NativeMethods.ErrorCancelled(ex.NativeErrorCode))
+                            var message = Microsoft.Web.Administration.NativeMethods.KnownCases(ex.NativeErrorCode);
+                            if (string.IsNullOrEmpty(message))
                             {
                                 RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> { { "native", ex.NativeErrorCode } });
                                 // throw;
+                            }
+                            else
+                            {
+                                ShowError(ex, message, false);
                             }
                         }
                         catch (Exception ex)

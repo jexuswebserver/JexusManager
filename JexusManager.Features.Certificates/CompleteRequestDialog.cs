@@ -19,6 +19,7 @@ namespace JexusManager.Features.Certificates
 
     using Microsoft.Web.Management.Client.Win32;
     using Mono.Security.Authenticode;
+    using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
     internal partial class CompleteRequestDialog : DialogForm
     {
@@ -128,10 +129,15 @@ namespace JexusManager.Features.Certificates
                     catch (Win32Exception ex)
                     {
                         // elevation is cancelled.
-                        if (!Microsoft.Web.Administration.NativeMethods.ErrorCancelled(ex.NativeErrorCode))
+                        var message = Microsoft.Web.Administration.NativeMethods.KnownCases(ex.NativeErrorCode);
+                        if (string.IsNullOrEmpty(message))
                         {
-                            RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> {{ "native", ex.NativeErrorCode } });
+                            RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> { { "native", ex.NativeErrorCode } });
                             // throw;
+                        }
+                        else
+                        {
+                            ShowError(ex, message, false);
                         }
                     }
                     catch (Exception ex)
