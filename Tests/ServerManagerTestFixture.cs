@@ -337,5 +337,45 @@ namespace Tests
 
             // TODO: assert generated XML.
         }
+
+        [Fact]
+        public void PreloadEnabledInApplicationDefaults()
+        {
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Environment.SetEnvironmentVariable("JEXUS_TEST_HOME", directoryName);
+
+            if (directoryName == null)
+            {
+                return;
+            }
+
+            string current = Path.Combine(directoryName, @"applicationHost.config");
+            string original = Path.Combine(directoryName, @"original2.config");
+            File.Copy(original, current, true);
+            TestHelper.FixPhysicalPathMono(current);
+
+            {
+                // set the flag to true
+                var file = XDocument.Load(current);
+                var root = file.Root;
+                if (root == null)
+                {
+                    return;
+                }
+
+                var site = root.XPathSelectElement("/configuration/system.applicationHost/sites/site[@name='GuessMeWeb']");
+                site.Add(new XElement("applicationDefaults",
+                                       new XAttribute("preloadEnabled", "true")));
+                file.Save(current);
+            }
+
+#if IIS
+            var server = new ServerManager(current);
+#else
+            var server = new IisExpressServerManager(current);
+#endif
+            var config = server.GetApplicationHostConfiguration();
+            Assert.Equal(true, server.Sites["GuessMeWeb"].ApplicationDefaults.GetAttributeValue("preloadEnabled"));
+        }
     }
 }
