@@ -21,6 +21,7 @@
 
         <Icon Id="icon.ico" SourceFile="$(var.Icon)" />
         <Property Id="ARPPRODUCTICON" Value="icon.ico" />
+        <Property Id="ARPINSTALLLOCATION" Secure="yes" />
 
         <!-- Upgrade information -->
 		<Upgrade Id="$(var.UpgradeCode)">
@@ -86,6 +87,7 @@
 			configured everything.
 		-->
 		<CustomAction Id="NoDowngrade" Error="A later version of [ProductName] is already installed." />
+        <CustomAction Id="SetARPINSTALLLOCATION" Property="ARPINSTALLLOCATION" Value="[INSTALLDIR]" />
 
         <?include "CloseApplication.wxi" ?>
 
@@ -118,6 +120,7 @@
 			-->
 			<RemoveExistingProducts Before="InstallInitialize"/>
             <Custom Action="WixCloseApplications" After="InstallInitialize" />
+            <Custom Action="SetARPINSTALLLOCATION" After="InstallFiles">NOT Installed</Custom>
         </InstallExecuteSequence>
 
         <!-- Using WixUI -->

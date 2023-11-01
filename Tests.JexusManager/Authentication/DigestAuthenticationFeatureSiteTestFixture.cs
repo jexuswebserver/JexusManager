@@ -19,10 +19,9 @@ namespace Tests.Authentication
     using Microsoft.Web.Management.Client.Win32;
     using Microsoft.Web.Management.Server;
 
-    using Moq;
-
     using Xunit;
     using System.Xml.Linq;
+    using NSubstitute;
 
     public class DigestAuthenticationFeatureSiteTestFixture
     {
@@ -64,16 +63,15 @@ namespace Tests.Authentication
                 new ConfigurationService(null, _server.Sites[0].GetWebConfiguration(), scope, null, _server.Sites[0], null, null, null, _server.Sites[0].Name));
 
             _serviceContainer.RemoveService(typeof(IManagementUIService));
-            var mock = new Mock<IManagementUIService>();
-            mock.Setup(
-                action =>
-                    action.ShowMessage(
-                        It.IsAny<string>(),
-                        It.IsAny<string>(),
-                        It.IsAny<MessageBoxButtons>(),
-                        It.IsAny<MessageBoxIcon>(),
-                        It.IsAny<MessageBoxDefaultButton>())).Returns(DialogResult.Yes);
-            _serviceContainer.AddService(typeof(IManagementUIService), mock.Object);
+            var substitute = Substitute.For<IManagementUIService>();
+            substitute.ShowMessage(
+                Arg.Any<string>(),
+                Arg.Any<string>(),
+                Arg.Any<MessageBoxButtons>(),
+                Arg.Any<MessageBoxIcon>(),
+                Arg.Any<MessageBoxDefaultButton>()).Returns(DialogResult.Yes);
+
+            _serviceContainer.AddService(typeof(IManagementUIService), substitute);
 
             var module = new AuthenticationModule();
             module.TestInitialize(_serviceContainer, null);

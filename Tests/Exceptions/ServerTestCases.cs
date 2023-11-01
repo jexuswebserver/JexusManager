@@ -1625,7 +1625,6 @@ namespace Tests.Exceptions
             bool replaced = false;
             try
             {
-
                 {
                     // add the tags
                     var file = XDocument.Load(schemaIis);

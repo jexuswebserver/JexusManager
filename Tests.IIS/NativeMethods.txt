@@ -8,3 +8,4 @@ ADDRESS_FAMILY
 CreatePersistentTcpPortReservation
 DeletePersistentTcpPortReservation
 WIN32_ERROR
+AF_INET

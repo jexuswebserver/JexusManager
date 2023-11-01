@@ -20,9 +20,7 @@ namespace Tests.IsapiCgiRestriction
     using Microsoft.Web.Management.Client;
     using Microsoft.Web.Management.Client.Win32;
     using Microsoft.Web.Management.Server;
-
-    using Moq;
-
+    using NSubstitute;
     using Xunit;
 
     public class IsapiCgiRestrictionFeatureSiteTestFixture
@@ -72,16 +70,15 @@ namespace Tests.IsapiCgiRestriction
                     null, _server.Sites[0].Name));
 
             serviceContainer.RemoveService(typeof(IManagementUIService));
-            var mock = new Mock<IManagementUIService>();
-            mock.Setup(
-                action =>
-                action.ShowMessage(
-                    It.IsAny<string>(),
-                    It.IsAny<string>(),
-                    It.IsAny<MessageBoxButtons>(),
-                    It.IsAny<MessageBoxIcon>(),
-                    It.IsAny<MessageBoxDefaultButton>())).Returns(DialogResult.Yes);
-            serviceContainer.AddService(typeof(IManagementUIService), mock.Object);
+            var substitute = Substitute.For<IManagementUIService>();
+            substitute.ShowMessage(
+                Arg.Any<string>(),
+                Arg.Any<string>(),
+                Arg.Any<MessageBoxButtons>(),
+                Arg.Any<MessageBoxIcon>(),
+                Arg.Any<MessageBoxDefaultButton>()).Returns(DialogResult.Yes);
+
+            serviceContainer.AddService(typeof(IManagementUIService), substitute);
 
             var module = new IsapiCgiRestrictionModule();
             module.TestInitialize(serviceContainer, null);

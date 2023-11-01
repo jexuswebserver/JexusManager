@@ -1141,7 +1141,7 @@ namespace Microsoft.Web.Administration
         {
             var address = new SOCKADDR_IN
             {
-                sin_family = (ushort)Windows.Win32.NetworkManagement.IpHelper.ADDRESS_FAMILY.AF_INET,
+                sin_family = ADDRESS_FAMILY.AF_INET,
                 sin_port = PInvoke.ntohs((ushort)port)
             };
             return (SOCKADDR_STORAGE)address;
@@ -1217,7 +1217,7 @@ namespace Microsoft.Web.Administration
 
         internal static bool ShowFileProperties(string Filename)
         {
-            return PInvoke.SHObjectProperties(new HWND(0), Windows.Win32.UI.Shell.SHOP_TYPE.SHOP_FILEPATH, Filename, "Security");
+            return PInvoke.SHObjectProperties(new HWND(IntPtr.Zero), Windows.Win32.UI.Shell.SHOP_TYPE.SHOP_FILEPATH, Filename, "Security");
         }
 
         #endregion
