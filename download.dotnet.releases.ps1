@@ -7,11 +7,6 @@ if (-not (Test-Path $file)) {
 }
 
 $content = Get-Content $file | Out-String | ConvertFrom-Json
-if ($content.PSObject.Properties.name -notmatch "releases-index") {
-    Write-Error "Couldn't find any release. Exit."
-    exit 1
-}
-
 $releases = $content.'releases-index'
 foreach ($release in $releases) {
     $version = $release.'channel-version'
