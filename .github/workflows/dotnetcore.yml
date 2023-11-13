@@ -1,0 +1,22 @@
+name: .NET Desktop CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: windows-2022
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    - name: Set up .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '7.0' # Specify the .NET version
+
+    - name: Run custom script
+      run: .\dist.ci.bat
+
+    # Add additional steps as needed
