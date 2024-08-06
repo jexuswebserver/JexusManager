@@ -17,7 +17,7 @@ catch
     Write-Host "MSBuild doesn't exist. Use VSSetup instead."
 
     Install-Module VSSetup -Scope CurrentUser -Force
-    $instance = Get-VSSetupInstance -All -Prerelease | Select-VSSetupInstance -Latest
+    $instance = Get-VSSetupInstance -All -Prerelease | Select-VSSetupInstance -Product * -Latest
     $installDir = $instance.installationPath
     $msBuild = $installDir + '\MSBuild\Current\Bin\MSBuild.exe'
     if (![System.IO.File]::Exists($msBuild))
