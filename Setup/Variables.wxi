@@ -15,7 +15,7 @@
     <?define ProductNameShort="JexusManager" ?>
 
     <?define MainExecutable="JexusManager.exe"?>
-    <!-- MSI engine only uses first three fields https://docs.microsoft.com/en-us/windows/win32/msi/upgrade-table?redirectedfrom=MSDN#columns -->
+    <!-- MSI engine only uses first three fields https://docs.microsoft.com/windows/win32/msi/upgrade-table?redirectedfrom=MSDN#columns -->
     <?define ProductVersion="!(bind.FileVersion.$(var.MainExecutable))"?>
 
 </Include>

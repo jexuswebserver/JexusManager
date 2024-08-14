@@ -410,7 +410,7 @@ namespace Tests.Exceptions
             Assert.Equal(string.Format("Filename: \\\\?\\{0}\r\nError: \r\n", siteConfig), exception.Message);
 #else
             Assert.Equal("Application Request Routing Module (system.webServer/webFarms/)", exception.Data["oob"]);
-            Assert.Equal("https://docs.microsoft.com/en-us/iis/extensions/configuring-application-request-routing-arr/define-and-configure-an-application-request-routing-server-farm#prerequisites", exception.Data["link"]);
+            Assert.Equal("https://docs.microsoft.com/iis/extensions/configuring-application-request-routing-arr/define-and-configure-an-application-request-routing-server-farm#prerequisites", exception.Data["link"]);
             Assert.Equal(
                 $"Filename: \\\\?\\{siteConfig}\r\nLine number: 10\r\nError: Unrecognized element 'test'\r\n\r\n", exception.Message);
 #endif

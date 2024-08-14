@@ -80,7 +80,7 @@ namespace JexusManager.Features.Main
                         Debug($"Scan {modules.Items.Count} installed module(s).");
                         if (modules.Items.All(item => item.Name != "FastCgiModule"))
                         {
-                            Error($"FastCGI module is not installed as part of IIS. Please refer to https://docs.microsoft.com/en-us/iis/application-frameworks/scenario-build-a-php-website-on-iis/configuring-step-1-install-iis-and-php#13-download-and-install-php-manually for more details.");
+                            Error($"FastCGI module is not installed as part of IIS. Please refer to https://learn.microsoft.com/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/hh994590(v=ws.11) for more details.");
                             return;
                         }
                         else
@@ -112,7 +112,7 @@ namespace JexusManager.Features.Main
                         if (foundPhpHandler.Count == 0)
                         {
                             Error($"No valid FastCGI handler is registered for this web site.");
-                            Error($"To run PHP on IIS, please refer to https://docs.microsoft.com/en-us/iis/application-frameworks/scenario-build-a-php-website-on-iis/configuring-step-1-install-iis-and-php#13-download-and-install-php-manually for more details.");
+                            Error($"To run PHP on IIS, please refer to https://learn.microsoft.com/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/hh994590(v=ws.11) for more details.");
                             return;
                         }
 
@@ -138,7 +138,7 @@ namespace JexusManager.Features.Main
                         if (foundPhp.Count == 0)
                         {
                             Error($"No suitable FastCGI appilcation is registered on this server.");
-                            Error($"To run PHP on IIS, please refer to https://docs.microsoft.com/en-us/iis/application-frameworks/scenario-build-a-php-website-on-iis/configuring-step-1-install-iis-and-php#13-download-and-install-php-manually for more details.");
+                            Error($"To run PHP on IIS, please refer to https://learn.microsoft.com/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/hh994590(v=ws.11) for more details.");
                            return;
                         }
 
@@ -278,7 +278,7 @@ namespace JexusManager.Features.Main
                                 }
                                 else
                                 {
-                                    Error($"PHP installation is not yet added to Windows Path environment variable. Please refer to https://docs.microsoft.com/en-us/iis/application-frameworks/scenario-build-a-php-website-on-iis/configuring-step-1-install-iis-and-php#13-download-and-install-php-manually for more details.");
+                                    Error($"PHP installation is not yet added to Windows Path environment variable. Please refer to https://learn.microsoft.com/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/hh994590(v=ws.11) for more details.");
                                     Warn($"Restart Jexus Manager and rerun PHP Diagnostics after changing Windows Path environment variable.");
                                 }
 

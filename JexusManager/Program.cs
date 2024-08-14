@@ -147,7 +147,7 @@ namespace JexusManager
             return ndpKey != null ? $"{ndpKey.GetValue("ProductName")} ({ndpKey.GetValue("ReleaseId", "unknown")})" : "Unknown Windows release";
         }
         
-        // https://docs.microsoft.com/en-us/dotnet/framework/migration-guide/how-to-determine-which-versions-are-installed#net_d
+        // https://docs.microsoft.com/dotnet/framework/migration-guide/how-to-determine-which-versions-are-installed#net_d
         private static string Get45PlusFromRegistry()
         {
             const string subkey = @"SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\";

@@ -287,7 +287,7 @@ namespace JexusManager.Features.Main
                 return -1;
             }
 
-            // https://support.microsoft.com/en-us/kb/260729
+            // https://support.microsoft.com/kb/260729
             var key = Registry.LocalMachine.OpenSubKey(@"System\CurrentControlSet\Control\SecurityProviders\SCHANNEL");
             if (key == null)
             {
@@ -305,7 +305,7 @@ namespace JexusManager.Features.Main
                 return false;
             }
 
-            // https://support.microsoft.com/en-us/kb/187498
+            // https://support.microsoft.com/kb/187498
             var key =
                 Registry.LocalMachine.OpenSubKey(
                     $@"SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\{protocol}\Server");

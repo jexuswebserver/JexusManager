@@ -68,7 +68,7 @@
 				<Component Id="ProgramMenuItems" Guid="BBB6934E-57F3-4E39-A2C8-C6C26A9FE0C6">
 					<!--
 								Fix ICE 38 by adding a dummy registry key that is the key for this shortcut.
-								http://msdn.microsoft.com/library/en-us/msi/setup/ice38.asp
+								http://msdn.microsoft.com/library/msi/setup/ice38.asp
 							-->
 					<RegistryValue Id="JexusManagerExeStartMenuShortcutRegistryKey" Root="HKCU" Type="string" KeyPath="yes" Key="Software\$(var.ManufacturerShort)\$(var.ProductNameShort)" Name="ProgramFilesShortcut" Value="1" />
 					<Shortcut Name="$(var.ProductName)" Target="[!$(var.MainExecutable)]" Id="MainExeStartMenuShortcut" WorkingDirectory="INSTALLDIR" Directory="ProgramMenuFolder" />
@@ -116,7 +116,7 @@
 				we make sure SharpDevelop is completely removed before installing
 				the newer version. This also covers us if we accidentally
 				modify a component but do not change its Guid.
-				http://msdn.microsoft.com/library/en-us/msi/setup/removeexistingproducts_action.asp
+				http://msdn.microsoft.com/library/msi/setup/removeexistingproducts_action.asp
 			-->
 			<RemoveExistingProducts Before="InstallInitialize"/>
             <Custom Action="WixCloseApplications" After="InstallInitialize" />

@@ -126,8 +126,8 @@ namespace JexusManager.Features.Main
                         Debug($"TLS 1.2: {tls12Enabled}");
 
                         Debug($"SChannel EventLogging: {GetEventLogging()} (hex)");
-                        Warn($"To tune TLS related settings, please follow https://support.microsoft.com/en-us/kb/187498 or try out IIS Crypto from https://www.nartac.com/Products/IISCrypto/.");
-                        Warn("Microsoft documentation on cipher suites can be found at https://docs.microsoft.com/en-us/windows/desktop/secauthn/cipher-suites-in-schannel.");
+                        Warn($"To tune TLS related settings, please follow https://support.microsoft.com/kb/187498 or try out IIS Crypto from https://www.nartac.com/Products/IISCrypto/.");
+                        Warn("Microsoft documentation on cipher suites can be found at https://docs.microsoft.com/windows/desktop/secauthn/cipher-suites-in-schannel.");
                         Debug("-----");
 
                         foreach (Site site in server.Sites)
@@ -438,7 +438,7 @@ namespace JexusManager.Features.Main
                 return -1;
             }
 
-            // https://support.microsoft.com/en-us/kb/260729
+            // https://support.microsoft.com/kb/260729
             var key = Registry.LocalMachine.OpenSubKey(@"System\CurrentControlSet\Control\SecurityProviders\SCHANNEL");
             if (key == null)
             {
@@ -456,7 +456,7 @@ namespace JexusManager.Features.Main
                 return null;
             }
 
-            // https://support.microsoft.com/en-us/kb/187498
+            // https://support.microsoft.com/kb/187498
             var key =
                 Registry.LocalMachine.OpenSubKey(
                     $@"SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\{protocol}\Server");
@@ -472,13 +472,13 @@ namespace JexusManager.Features.Main
                 return enabled;
             }
 
-            Error($"Invalid registry key value is detected for {protocol}. Please read https://support.microsoft.com/en-us/kb/187498 to resolve the issue.");
+            Error($"Invalid registry key value is detected for {protocol}. Please read https://support.microsoft.com/kb/187498 to resolve the issue.");
             return null;
         }
 
         private void BtnHelpClick(object sender, EventArgs e)
         {
-            DialogHelper.ProcessStart("http://www.jexusmanager.com/en/latest/tutorials/ssl-diagnostics.html");
+            DialogHelper.ProcessStart("https://docs.lextudio.com/jexusmanager/tutorials/ssl-diagnostics.html");
         }
 
         private void SslDiagDialogHelpButtonClicked(object sender, System.ComponentModel.CancelEventArgs e)

@@ -208,7 +208,7 @@ namespace JexusManager.Features.Main
                         appHost.RootSectionGroup.GetAllDefinitions(definitions);
                         if (!definitions.Any(item => item.Path == "system.webServer/aspNetCore"))
                         {
-                            Error($"ASP.NET Core module is not installed as part of IIS. Please refer to https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/iis/index#install-the-net-core-hosting-bundle for more details.");
+                            Error($"ASP.NET Core module is not installed as part of IIS. Please refer to https://docs.microsoft.com/aspnet/core/host-and-deploy/iis/index#install-the-net-core-hosting-bundle for more details.");
                             return;
                         }
 
@@ -220,7 +220,7 @@ namespace JexusManager.Features.Main
 
                         if (hasV1 == null && hasV2 == null)
                         {
-                            Error($"ASP.NET Core module is not installed as part of IIS. Please refer to https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/iis/index#install-the-net-core-hosting-bundle for more details.");
+                            Error($"ASP.NET Core module is not installed as part of IIS. Please refer to https://docs.microsoft.com/aspnet/core/host-and-deploy/iis/index#install-the-net-core-hosting-bundle for more details.");
                             return;
                         }
 
@@ -291,7 +291,7 @@ namespace JexusManager.Features.Main
                         if (foundHandlers.Count == 0)
                         {
                             Error($"No valid ASP.NET Core handler is registered for this web site.");
-                            Error($"To run ASP.NET Core on IIS, please refer to https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/iis/index for more details.");
+                            Error($"To run ASP.NET Core on IIS, please refer to https://docs.microsoft.com/aspnet/core/host-and-deploy/iis/index for more details.");
                             return;
                         }
                         
@@ -317,12 +317,12 @@ namespace JexusManager.Features.Main
                             }
                             else
                             {
-                                Error($"  Visual C++ runtime 14.0 is not detected. Please install it following the tips on https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/iis/index#install-the-net-core-hosting-bundle.");
+                                Error($"  Visual C++ runtime 14.0 is not detected. Please install it following the tips on https://docs.microsoft.com/aspnet/core/host-and-deploy/iis/index#install-the-net-core-hosting-bundle.");
                             }
                         }
                         else
                         {
-                            Error($"  Visual C++ 14.0 runtime is not detected. Please install it following the tips on https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/iis/index#install-the-net-core-hosting-bundle.");
+                            Error($"  Visual C++ 14.0 runtime is not detected. Please install it following the tips on https://docs.microsoft.com/aspnet/core/host-and-deploy/iis/index#install-the-net-core-hosting-bundle.");
                         }
 
                         Info($"The application pool '{pool.Name}' is used.");
@@ -495,7 +495,7 @@ namespace JexusManager.Features.Main
                     catch (COMException ex)
                     {
                         Error("A generic exception occurred.");
-                        Error($"To run ASP.NET Core on IIS, please refer to https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/iis/index for more details.");
+                        Error($"To run ASP.NET Core on IIS, please refer to https://docs.microsoft.com/aspnet/core/host-and-deploy/iis/index for more details.");
                         Debug(ex.ToString());
                         Rollbar.RollbarLocator.RollbarInstance.Error(ex);
                     }
@@ -564,7 +564,7 @@ namespace JexusManager.Features.Main
 
         private void BtnHelpClick(object sender, EventArgs e)
         {
-            DialogHelper.ProcessStart("http://www.jexusmanager.com/en/latest/tutorials/vs-diagnostics.html");
+            DialogHelper.ProcessStart("https://docs.lextudio.com/jexusmanager/tutorials/ancm-diagnostics.html");
         }
 
         private void SslDiagDialogHelpButtonClicked(object sender, System.ComponentModel.CancelEventArgs e)

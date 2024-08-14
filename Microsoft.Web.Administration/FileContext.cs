@@ -466,22 +466,22 @@ namespace Microsoft.Web.Administration
                 if (path.StartsWith("system.webServer/aspNetCore/"))
                 {
                     oob = "ASP.NET Core Module (system.webServer/aspNetCore/)";
-                    link = "https://docs.microsoft.com/en-us/aspnet/core/publishing/iis?tabs=aspnetcore2x#install-the-net-core-windows-server-hosting-bundle";
+                    link = "https://docs.microsoft.com/aspnet/core/publishing/iis?tabs=aspnetcore2x#install-the-net-core-windows-server-hosting-bundle";
                 }
                 else if (path.StartsWith("system.webServer/rewrite/"))
                 {
                     oob = "URL Rewrite Module (system.webServer/rewrite/)";
-                    link = "https://docs.microsoft.com/en-us/iis/extensions/url-rewrite-module/using-the-url-rewrite-module#where-to-get-the-url-rewrite-module";
+                    link = "https://docs.microsoft.com/iis/extensions/url-rewrite-module/using-the-url-rewrite-module#where-to-get-the-url-rewrite-module";
                 }
                 else if (path.StartsWith("system.webServer/webFarms/"))
                 {
                     oob = "Application Request Routing Module (system.webServer/webFarms/)";
-                    link = "https://docs.microsoft.com/en-us/iis/extensions/configuring-application-request-routing-arr/define-and-configure-an-application-request-routing-server-farm#prerequisites";
+                    link = "https://docs.microsoft.com/iis/extensions/configuring-application-request-routing-arr/define-and-configure-an-application-request-routing-server-farm#prerequisites";
                 }
                 else if (path.StartsWith("system.webServer/httpPlatform/"))
                 {
                     oob = "HttpPlatformHandler Module (system.webServer/httpPlatform/)";
-                    link = "https://docs.microsoft.com/en-us/iis/extensions/httpplatformhandler/httpplatformhandler-configuration-reference";
+                    link = "https://docs.microsoft.com/iis/extensions/httpplatformhandler/httpplatformhandler-configuration-reference";
                 }
 
                 var exception = new COMException(
