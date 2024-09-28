@@ -3,11 +3,11 @@ Jexus Manager from LeXtudio
 
 [![Github All Releases](https://img.shields.io/github/downloads/jexuswebserver/JexusManager/total.svg)](https://github.com/jexuswebserver/JexusManager/releases)
 [![Gitter](https://img.shields.io/gitter/room/jexuswebserver/JexusManager.svg?style=flat-square)](https://gitter.im/jexuswebserver/JexusManager?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-[![Build status](https://img.shields.io/azure-devops/build/lextudio/2ff52850-71c5-4578-ba6f-9022767c1ae6/9.svg?style=flat-square)](https://dev.azure.com/lextudio/jexus/_build?definitionId=9)
+[![Build status](https://img.shields.io/github/actions/workflow/status/jexuswebserver/JexusManager/dotnetcore.yml?style=flat-square)](https://github.com/jexuswebserver/JexusManager/actions/workflows/dotnetcore.yml)
 
 Jexus Manager was designed to be the cross platform manager for Jexus web server, which can also work with IIS and IIS Express.
 
-![Jexus Manager](http://i.stack.imgur.com/IeWe3.png)
+![Jexus Manager](https://github.com/jexuswebserver/vscode-iis/raw/HEAD/images/vscode-iis.gif)
 
 Documentation is at https://docs.jexusmanager.com
 
@@ -30,3 +30,9 @@ Source 1: http://8666.deviantart.com/art/Tango-MIME-Icons-114829865
 Source 2: http://commons.wikimedia.org/wiki/Tango_icons
 > Tango Icons
 > Public Domain
+
+Sponsor
+=======
+<a href="https://www.cloudflare.com">
+  <img src="https://cf-assets.www.cloudflare.com/slt3lc6tev37/7bIgGp4hk4SFO0o3SBbOKJ/b48185dcf20c579960afad879b25ea11/CF_logo_stacked_blktype.jpg" alt="Cloudflare" width="200"/>
+</a>
