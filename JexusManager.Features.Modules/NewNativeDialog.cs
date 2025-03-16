@@ -85,6 +85,10 @@ namespace JexusManager.Features.Modules
                         return;
                     }
 
+                    ShowMessage("The module has been added successfully, but its section definition(s) might haven't yet been added to the applicationHost.config file. You can add them manually. Please refer to its documentation for more details.",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning,
+                        MessageBoxDefaultButton.Button1);
                     DialogResult = DialogResult.OK;
                 }));
         }
