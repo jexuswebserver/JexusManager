@@ -18,6 +18,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Microsoft.Web.Configuration.AppHostFileProvider\Microsoft.Web.Configuration.AppHostFileProvider.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="schemas\rscaext.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

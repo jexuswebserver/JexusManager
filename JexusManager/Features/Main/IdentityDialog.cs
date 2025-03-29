@@ -31,7 +31,7 @@ namespace JexusManager.Features.Main
                     {
                         element.IdentityType = ProcessModelIdentityType.SpecificUser;
                         element.UserName = txtCustom.Text;
-                        element.SetPassword(password);
+                        element.Password = password;
                     }
 
                     if (rbBuiltin.Checked)

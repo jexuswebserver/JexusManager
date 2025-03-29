@@ -35,19 +35,19 @@ namespace Microsoft.Web.Administration
 {
     internal class ProtectedConfigurationProviderCollection
     {
-        private readonly Dictionary<string, ProtectedConfigurationProvider> _providers = new Dictionary<string, ProtectedConfigurationProvider>();
+        internal readonly Dictionary<string, ProtectedConfigurationProvider> Items = new Dictionary<string, ProtectedConfigurationProvider>();
 
         public ProtectedConfigurationProvider this[string name]
         {
             get
             {
-                return _providers.ContainsKey(name) ? _providers[name] : null;
+                return Items.ContainsKey(name) ? Items[name] : null;
             }
         }
 
         public void Add(ProtectedConfigurationProvider provider)
         {
-            _providers.Add(provider.Name, provider);
+            Items.Add(provider.Name, provider);
         }
     }
 }

@@ -49,7 +49,6 @@ namespace Microsoft.Web.Administration
             get;
         }
 
-
         internal string EncryptSection(string clearXml, ProtectedConfigurationProvider protectionProvider)
         {
             var encryptedNode = protectionProvider.Encrypt(clearXml);
@@ -70,7 +69,11 @@ namespace Microsoft.Web.Administration
 
                 foreach (ProviderSettings ps in Providers)
                 {
-                    _providers.Add(InstantiateProvider(ps));
+                    var provider = InstantiateProvider(ps);
+                    if (provider != null)
+                    {
+                        _providers.Add(provider);
+                    }
                 }
             }
 
@@ -79,6 +82,7 @@ namespace Microsoft.Web.Administration
 
         private ProtectedConfigurationProvider InstantiateProvider(ProviderSettings ps)
         {
+            // Here we create a new instance of our dynamic provider
             return new ProtectedConfigurationProvider(ps);
         }
     }

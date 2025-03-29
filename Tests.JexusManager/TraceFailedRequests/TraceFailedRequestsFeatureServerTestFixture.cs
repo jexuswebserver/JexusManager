@@ -22,7 +22,6 @@ namespace Tests.TraceFailedRequests
     using Xunit;
     using System.Xml.Linq;
     using System.Xml.XPath;
-    using static Vanara.PInvoke.User32;
     using NSubstitute;
 
     public class TraceFailedRequestsFeatureServerTestFixture

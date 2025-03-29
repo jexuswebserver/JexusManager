@@ -83,14 +83,6 @@ namespace Microsoft.Web.Administration
             return Directory.Exists(path.ExpandIisExpressEnvironmentVariables(executable));
         }
 
-        internal virtual void SetPassword(VirtualDirectory virtualDirectory, string password)
-        {
-        }
-
-        internal virtual void SetPassword(ApplicationPoolProcessModel processModel, string password)
-        {
-        }
-
         private void Initialize()
         {
             lock (_locker)
