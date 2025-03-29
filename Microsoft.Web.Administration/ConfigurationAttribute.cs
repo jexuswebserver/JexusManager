@@ -182,53 +182,60 @@ namespace Microsoft.Web.Administration
             if (IsProtected)
             {
                 var protectedInfo = _element.FileContext.ProtectedConfiguration;
-                var provider = protectedInfo.GetProvider("AesProvider", false);
-                var secret = provider.Encrypt(value);
-                return string.Format("[enc:AesProvider:{0}:enc]", secret);
-            }
-
-            return value;
-        }
-
-        private object Decrypt(object value)
-        {
-            if (value is string && IsProtected)
-            {
-                var full = value.ToString();
-                if (string.IsNullOrWhiteSpace(full))
+                
+                // Get all available providers
+                var providers = protectedInfo.Providers;
+                
+                if (providers.Count > 0)
                 {
-                    // IMPORTANT: workaround IIS 7 Express anonymous authentication default password is empty in schema issue.
-                    return value;
-                }
-
-                var length = full.Length - 10;
-                if (length < 0)
-                {
-                    return value;
-                }
-
-                var inner = full.Substring(5, length);
-                var point = inner.IndexOf(':');
-                if (point < 0)
-                {
-                    return value;
-                }
-
-                var name = inner.Substring(0, point);
-                var data = inner.Substring(point + 1);
-                var protectedInfo = _element.FileContext.ProtectedConfiguration;
-                var provider = protectedInfo.GetProvider(name, false);
-                try
-                {
-                    return data.Length == 0 ? data : provider.Decrypt(data);
-                }
-                catch (CryptographicException)
-                {
-                    return "**********************";
-                }
-                catch (DllNotFoundException)
-                {
-                    return "";
+                    string selectedProvider = null;
+                    
+                    // Determine which provider to use based on the element context
+                    bool isAppPoolPassword = _element.ParentElement != null && 
+                                            _element.ParentElement.ElementTagName == "processModel" && 
+                                            Name == "password";
+                    
+                    if (isAppPoolPassword)
+                    {
+                        // For application pool passwords, prefer IISWASOnlyCngProvider
+                        if (providers.ContainsKey("IISWASOnlyCngProvider"))
+                        {
+                            selectedProvider = "IISWASOnlyCngProvider";
+                        }
+                        else if (providers.ContainsKey("IISCngProvider"))
+                        {
+                            selectedProvider = "IISCngProvider";
+                        }
+                    }
+                    else
+                    {
+                        // For other passwords (virtual directories, etc.), prefer IISCngProvider
+                        if (providers.ContainsKey("IISCngProvider"))
+                        {
+                            selectedProvider = "IISCngProvider";
+                        }
+                        else if (providers.ContainsKey("IISWASOnlyCngProvider"))
+                        {
+                            selectedProvider = "IISWASOnlyCngProvider";
+                        }
+                    }
+                    
+                    // If no preferred provider is found, fall back to any available provider
+                    if (selectedProvider == null)
+                    {
+                        foreach (var key in providers.Keys)
+                        {
+                            selectedProvider = key;
+                            break;
+                        }
+                    }
+                    
+                    if (selectedProvider != null)
+                    {
+                        var provider = protectedInfo.GetProvider(selectedProvider, false);
+                        var secret = provider.Encrypt(value);
+                        return string.Format("[enc:{0}:{1}:enc]", selectedProvider, secret);
+                    }
                 }
             }
 
@@ -236,3 +243,4 @@ namespace Microsoft.Web.Administration
         }
     }
 }
+

@@ -61,11 +61,5 @@ namespace Microsoft.Web.Administration
         {
             get { return Parent.Parent; }
         }
-
-        internal void SetPassword(string password)
-        {
-            // IMPORTANT: delegate to ServerManager so we can implement IIS/IIS Express separately.
-            Application.Server.SetPassword(this, password);
-        }
     }
 }

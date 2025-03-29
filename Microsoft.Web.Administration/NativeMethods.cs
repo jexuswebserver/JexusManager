@@ -31,6 +31,59 @@ namespace Microsoft.Web.Administration
             return null;
         }
 
+        #region BCrypt
+
+        // BCrypt API constants and functions
+        internal const uint BCRYPT_PAD_PKCS1 = 0x00000002;
+        internal const uint BCRYPT_PAD_OAEP = 0x00000004;
+        internal const string BCRYPT_RSA_ALGORITHM = "RSA";
+        internal const string BCRYPT_KEY_DATA_BLOB = "KeyDataBlob";
+        internal const string BCRYPT_RSAPRIVATE_BLOB = "RSAPRIVATEBLOB";
+        internal const string BCRYPT_RSAPUBLIC_BLOB = "RSAPUBLICBLOB";
+        internal const uint BCRYPT_RSAPUBLIC_MAGIC = 0x31415352;  // RSA1
+        internal const uint BCRYPT_RSAPRIVATE_MAGIC = 0x32415352; // RSA2
+        internal const string NCRYPT_NAME_PROPERTY = "Name";
+        internal const string NCRYPT_IMPL_TYPE_PROPERTY = "Impl Type";
+        internal const string MS_KEY_STORAGE_PROVIDER = "Microsoft Software Key Storage Provider";
+        internal const int NTE_BAD_KEYSET = unchecked((int)0x80090016);
+        internal const int NCRYPT_MACHINE_KEY_FLAG = 0x00000020;
+
+        [DllImport("bcrypt.dll", CharSet = CharSet.Unicode)]
+        internal static extern uint BCryptOpenAlgorithmProvider(out IntPtr phAlgorithm, string pszAlgId, string pszImplementation, uint dwFlags);
+
+        [DllImport("bcrypt.dll")]
+        internal static extern uint BCryptCloseAlgorithmProvider(IntPtr hAlgorithm, uint dwFlags);
+
+        [DllImport("bcrypt.dll", CharSet = CharSet.Unicode)]
+        internal static extern uint BCryptImportKeyPair(IntPtr hAlgorithm, IntPtr hImportKey, string pszBlobType, out IntPtr phKey, byte[] pbInput, int cbInput, uint dwFlags);
+        
+        [DllImport("bcrypt.dll")]
+        internal static extern uint BCryptDestroyKey(IntPtr hKey);
+        
+        [DllImport("bcrypt.dll")]
+        internal static extern uint BCryptDecrypt(IntPtr hKey, byte[] pbInput, int cbInput, IntPtr pPaddingInfo, byte[] pbIV, int cbIV, byte[] pbOutput, int cbOutput, out int pcbResult, uint dwFlags);
+
+        [DllImport("bcrypt.dll")]
+        internal static extern uint BCryptEncrypt(IntPtr hKey, byte[] pbInput, int cbInput, IntPtr pPaddingInfo, byte[] pbIV, int cbIV, byte[] pbOutput, int cbOutput, out int pcbResult, uint dwFlags);
+
+        // NCrypt API functions for accessing key storage
+        [DllImport("ncrypt.dll", CharSet = CharSet.Unicode)]
+        internal static extern uint NCryptOpenStorageProvider(out IntPtr phProvider, string pszProviderName, uint dwFlags);
+
+        [DllImport("ncrypt.dll")]
+        internal static extern uint NCryptCloseStorageProvider(IntPtr hProvider);
+
+        [DllImport("ncrypt.dll", CharSet = CharSet.Unicode)]
+        internal static extern uint NCryptOpenKey(IntPtr hProvider, out IntPtr phKey, string pszKeyName, uint dwLegacyKeySpec, uint dwFlags);
+
+        [DllImport("ncrypt.dll")]
+        internal static extern uint NCryptFreeObject(IntPtr hObject);
+
+        [DllImport("ncrypt.dll")]
+        internal static extern uint NCryptExportKey(IntPtr hKey, IntPtr hExportKey, string pszBlobType, IntPtr pParameterList, byte[] pbOutput, int cbOutput, out int pcbResult, uint dwFlags);
+
+        #endregion
+
         #region HTTP API
 
         private static readonly HTTPAPI_VERSION s_httpApiVersion = new HTTPAPI_VERSION(2, 0);
