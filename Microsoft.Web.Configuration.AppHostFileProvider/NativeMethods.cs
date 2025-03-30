@@ -8,92 +8,75 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Win32.SafeHandles;
+using Windows.Win32;
+using Windows.Win32.Foundation;
+using Windows.Win32.Security.Cryptography;
 
 namespace Microsoft.ApplicationHost
 {
     internal static class NativeMethods
     {
-        #region AES
-        internal const int PROV_RSA_AES = 24;
-
-        internal const uint AT_KEYEXCHANGE = 1u;
-
-        internal const int ERROR_MORE_DATA = 234;
-
-        [DllImport("advapi32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern bool CryptDecrypt(IntPtr hKey, IntPtr hHash, [MarshalAs(UnmanagedType.Bool)] bool Final, uint dwFlags, byte[] pbData, ref int pdwDataLen);
-
-        [DllImport("advapi32.dll", CharSet = CharSet.Auto)]
-        internal static extern bool CryptDestroyKey([In] IntPtr hKey);
-
-        [DllImport("advapi32.dll", SetLastError = true)]
-        internal static extern bool CryptEncrypt(IntPtr hKey, IntPtr hHash, bool Final, uint dwFlags, byte[] pbData, ref int pdwDataLen, int dwBufLen);
-
-        [DllImport("advapi32.dll", SetLastError = true)]
-        internal static extern bool CryptImportKey(SafeCryptProvHandle hProviderKey, byte[] SessionKeyData, int dwDataLength, IntPtr hPubKey, uint dwFlags, ref IntPtr hEncryptKey);
-
-        [DllImport("advapi32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern bool CryptGetUserKey(SafeCryptProvHandle hCryptProv, uint pdwKeySpec, ref IntPtr hKey);
-
-        [DllImport("advapi32.dll", SetLastError = true)]
-        internal static extern bool CryptGenRandom(SafeCryptProvHandle hProviderKey, uint dwLen, byte[] pbBuffer);
-
         internal sealed class SafeCryptProvHandle : SafeHandleZeroOrMinusOneIsInvalid
         {
-            private const int NTE_EXISTS = -2146893809;
-
-            private const uint CRYPT_NEWKEYSET = 8u;
-
-            private const uint CRYPT_MACHINE_KEYSET = 32u;
-
-            private SafeCryptProvHandle()
-                : base(ownsHandle: true)
+            private SafeCryptProvHandle() : base(ownsHandle: true)
             {
             }
 
-            public SafeCryptProvHandle(IntPtr handle)
-                : base(ownsHandle: true)
+            public SafeCryptProvHandle(nuint handle) : base(ownsHandle: true)
             {
-                SetHandle(handle);
+                SetHandle(NUintToIntPtr(handle));
             }
 
-            internal static SafeCryptProvHandle AcquireMachineContext(string keyContainerName, string providerName, uint providerType, bool useMachineContainer)
+            internal unsafe static SafeCryptProvHandle AcquireMachineContext(string keyContainerName, string providerName, uint providerType, bool useMachineContainer)
             {
-                uint dwFlags = 0u;
-                if (useMachineContainer)
-                {
-                    dwFlags = 32u;
-                }
+                uint dwFlags = useMachineContainer ? (uint)CRYPT_KEY_FLAGS.CRYPT_MACHINE_KEYSET : 0u;
                 SafeCryptProvHandle hCryptProv;
-                bool num = CryptAcquireContextW(out hCryptProv, keyContainerName, providerName, providerType, dwFlags);
-                int lastWin32Error = Marshal.GetLastWin32Error();
-                if (!num && !CryptAcquireContextW(out hCryptProv, keyContainerName, providerName, providerType, dwFlags))
+                
+                unsafe
                 {
-                    lastWin32Error = Marshal.GetLastWin32Error();
-                    if (lastWin32Error != -2146893809)
+                    nuint phProv;
+                    bool success = PInvoke.CryptAcquireContext(
+                        out phProv,
+                        keyContainerName,
+                        providerName,
+                        providerType,
+                        dwFlags);
+                    
+                    hCryptProv = new SafeCryptProvHandle(phProv);
+                    
+                    if (!success)
                     {
-                        throw new CryptographicException(lastWin32Error);
+                        int lastWin32Error = Marshal.GetLastWin32Error();
+                        if (lastWin32Error != HRESULT.NTE_EXISTS)
+                        {
+                            throw new CryptographicException(lastWin32Error);
+                        }
                     }
                 }
+                
                 return hCryptProv;
             }
 
             protected override bool ReleaseHandle()
             {
-                return CryptReleaseContext(handle, 0u);
+                unsafe
+                {
+                    return PInvoke.CryptReleaseContext(IntPtrToNUint(handle), 0);
+                }
             }
-
-            [DllImport("advapi32.dll")]
-            private static extern bool CryptReleaseContext(IntPtr hCryptProv, uint dwFlags);
-
-            [DllImport("advapi32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-            private static extern bool CryptAcquireContextW(out SafeCryptProvHandle hCryptProv, [In][MarshalAs(UnmanagedType.LPWStr)] string pszContainer, [In][MarshalAs(UnmanagedType.LPWStr)] string pszProvider, [In] uint dwProvType, [In] uint dwFlags);
         }
-        #endregion
 
-        #region CNG
+        internal static nuint IntPtrToNUint(IntPtr ptr)
+        {
+            return unchecked((nuint)(ulong)ptr);
+        }
+
+        internal static IntPtr NUintToIntPtr(nuint ptr)
+        {
+            return unchecked((IntPtr)(ulong)ptr);
+        }
+
+        #region CNG Support
         [DllImport("cngkeyhelper.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         internal static extern uint IisCngDecrypt(string pszKeyName, [In][Out][MarshalAs(UnmanagedType.LPArray)] byte[] pbData, [In][Out] ref uint pcbData);
 
@@ -105,7 +88,6 @@ namespace Microsoft.ApplicationHost
             uint pcbData = (uint)encrypted.Length;
             byte[] array = new byte[pcbData];
             encrypted.CopyTo(array, 0);
-            if ((long)IisCngDecrypt(keyContainer, array, ref pcbData) != 0L)
             {
                 throw new Win32Exception(Marshal.GetLastWin32Error());
             }
@@ -116,18 +98,17 @@ namespace Microsoft.ApplicationHost
         {
             uint pcbResult = 0u;
             byte[] pbOutput = null;
-            if ((long)IisCngEncrypt(keyContainer, data, pbOutput, out pcbResult) != 0L)
+            if (IisCngEncrypt(keyContainer, data, pbOutput, out pcbResult) != 0L)
             {
                 throw new Win32Exception(Marshal.GetLastWin32Error());
             }
             pbOutput = new byte[pcbResult];
-            if ((long)IisCngEncrypt(keyContainer, data, pbOutput, out pcbResult) != 0L)
+            if (IisCngEncrypt(keyContainer, data, pbOutput, out pcbResult) != 0L)
             {
                 throw new Win32Exception(Marshal.GetLastWin32Error());
             }
             return pbOutput;
         }
-
         #endregion
     }
 }

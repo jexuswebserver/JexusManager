@@ -6,6 +6,8 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Text;
 using System;
+using Windows.Win32.Security.Cryptography;
+using System.Runtime.CompilerServices;
 
 namespace Microsoft.ApplicationHost
 {
@@ -40,33 +42,43 @@ namespace Microsoft.ApplicationHost
             return EncodingHelper.Encode(AesEncrypt(data, _keyContainerName, _cspProviderName, EncodingHelper.Decode(_sessionKey), _useOAEP, _userMachineContainer));
         }
 
-	    public static string AesDecrypt(byte[] encrypted, string keyContainer, string cspProvider, byte[] sessionKey, bool useOAEP, bool useMachineContainer)
+	    public unsafe static string AesDecrypt(byte[] encrypted, string keyContainer, string cspProvider, byte[] sessionKey, bool useOAEP, bool useMachineContainer)
         {
             using NativeMethods.SafeCryptProvHandle safeCryptProvHandle = NativeMethods.SafeCryptProvHandle.AcquireMachineContext(keyContainer, cspProvider, 24u, useMachineContainer);
-            IntPtr hKey = IntPtr.Zero;
-            IntPtr hEncryptKey = IntPtr.Zero;
+            nuint hKey = 0;
+            nuint hEncryptKey = 0;
             try
             {
-                if (!NativeMethods.CryptGetUserKey(safeCryptProvHandle, 1u, ref hKey))
+                var handle = NativeMethods.IntPtrToNUint(safeCryptProvHandle.DangerousGetHandle());
+                if (!Windows.Win32.PInvoke.CryptGetUserKey(handle, 1u, out hKey))
                 {
                     throw new Win32Exception(Marshal.GetLastWin32Error());
                 }
-                uint dwFlags = 0u;
+                CRYPT_KEY_FLAGS dwFlags = 0u;
                 if (useOAEP)
                 {
-                    dwFlags = 64u;
+                    dwFlags = CRYPT_KEY_FLAGS.CRYPT_OAEP;
                 }
-                if (!NativeMethods.CryptImportKey(safeCryptProvHandle, sessionKey, sessionKey.Length, hKey, dwFlags, ref hEncryptKey))
+
+                fixed (byte* sessionPtr = sessionKey)
                 {
-                    throw new Win32Exception(Marshal.GetLastWin32Error());
+                    if (!Windows.Win32.PInvoke.CryptImportKey(handle, sessionPtr, (uint)sessionKey.Length, hKey, dwFlags, out hEncryptKey))
+                    {
+                        throw new Win32Exception(Marshal.GetLastWin32Error());
+                    }
                 }
+
                 byte[] array = new byte[encrypted.Length];
                 encrypted.CopyTo(array, 0);
-                int pdwDataLen = array.Length;
-                if (!NativeMethods.CryptDecrypt(hEncryptKey, IntPtr.Zero, Final: true, 0u, array, ref pdwDataLen))
+                uint pdwDataLen = (uint)array.Length;
+                fixed (byte* arrayPtr = array)
                 {
-                    throw new Win32Exception(Marshal.GetLastWin32Error());
+                    if (!Windows.Win32.PInvoke.CryptDecrypt(hEncryptKey, 0, Final: false, 0u, arrayPtr, ref pdwDataLen))
+                    {
+                        throw new Win32Exception(Marshal.GetLastWin32Error());
+                    }
                 }
+
                 int num = 0;
                 for (int i = 0; i < array.Length; i += 2)
                 {
@@ -80,88 +92,112 @@ namespace Microsoft.ApplicationHost
             }
             finally
             {
-                if (hKey != IntPtr.Zero)
+                if (hKey != 0)
                 {
-                    NativeMethods.CryptDestroyKey(hKey);
+                    Windows.Win32.PInvoke.CryptDestroyKey(hKey);
                 }
-                if (hEncryptKey != IntPtr.Zero)
+                if (hEncryptKey != 0)
                 {
-                    NativeMethods.CryptDestroyKey(hEncryptKey);
+                    Windows.Win32.PInvoke.CryptDestroyKey(hEncryptKey);
                 }
             }
         }
 
-        public static byte[] AesEncrypt(string data, string keyContainer, string cspProvider, byte[] sessionKey, bool useOAEP, bool useMachineContainer)
+        public unsafe static byte[] AesEncrypt(string data, string keyContainer, string cspProvider, byte[] sessionKey, bool useOAEP, bool useMachineContainer)
         {
             using NativeMethods.SafeCryptProvHandle safeCryptProvHandle = NativeMethods.SafeCryptProvHandle.AcquireMachineContext(keyContainer, cspProvider, 24u, useMachineContainer);
-            IntPtr hKey = IntPtr.Zero;
-            IntPtr hEncryptKey = IntPtr.Zero;
+            nuint hKey = 0;
+            nuint hEncryptKey = 0;
             try
             {
                 byte[] array = PrepareInputData(data, safeCryptProvHandle);
-                if (!NativeMethods.CryptGetUserKey(safeCryptProvHandle, 1u, ref hKey))
+                nuint handle = NativeMethods.IntPtrToNUint(safeCryptProvHandle.DangerousGetHandle());
+                if (!Windows.Win32.PInvoke.CryptGetUserKey(handle, 1u, out hKey))
                 {
                     throw new Win32Exception(Marshal.GetLastWin32Error());
                 }
-                uint dwFlags = 0u;
+                CRYPT_KEY_FLAGS dwFlags = 0u;
                 if (useOAEP)
                 {
-                    dwFlags = 64u;
+                    dwFlags = CRYPT_KEY_FLAGS.CRYPT_OAEP;
                 }
-                if (!NativeMethods.CryptImportKey(safeCryptProvHandle, sessionKey, sessionKey.Length, hKey, dwFlags, ref hEncryptKey))
+
+                fixed (byte* sessionPtr = sessionKey)
                 {
-                    throw new Win32Exception(Marshal.GetLastWin32Error());
-                }
-                int pdwDataLen = array.Length;
-                if (!NativeMethods.CryptEncrypt(hEncryptKey, IntPtr.Zero, Final: true, 0u, array, ref pdwDataLen, 0))
-                {
-                    int lastWin32Error = Marshal.GetLastWin32Error();
-                    if (lastWin32Error != 234)
+                    if (!Windows.Win32.PInvoke.CryptImportKey(handle, sessionPtr, (uint)sessionKey.Length, hKey, dwFlags, out hEncryptKey))
                     {
-                        throw new Win32Exception(lastWin32Error);
+                        throw new Win32Exception(Marshal.GetLastWin32Error());
                     }
                 }
+
+                uint pdwDataLen = (uint)array.Length;
+                fixed (byte* arrayPtr = array)
+                {
+                    if (!Windows.Win32.PInvoke.CryptEncrypt(hEncryptKey, 0, Final: true, 0u, arrayPtr, ref pdwDataLen, 0))
+                    {
+                        int lastWin32Error = Marshal.GetLastWin32Error();
+                        if (lastWin32Error != 234)
+                        {
+                            throw new Win32Exception(lastWin32Error);
+                        }
+                    }
+                }
+
                 byte[] array2 = new byte[pdwDataLen];
                 array.CopyTo(array2, 0);
-                pdwDataLen = array.Length;
-                if (!NativeMethods.CryptEncrypt(hEncryptKey, IntPtr.Zero, Final: true, 0u, array2, ref pdwDataLen, array2.Length))
+                pdwDataLen = (uint)array.Length;
+                fixed (byte* array2Ptr = array2)
                 {
-                    throw new Win32Exception(Marshal.GetLastWin32Error());
+                    if (!Windows.Win32.PInvoke.CryptEncrypt(hEncryptKey, 0, Final: true, 0u, array2Ptr, ref pdwDataLen, (uint)array2.Length))
+                    {
+                        throw new Win32Exception(Marshal.GetLastWin32Error());
+                    }
                 }
+
                 return array2;
             }
             finally
             {
-                if (hKey != IntPtr.Zero)
+                if (hKey != 0)
                 {
-                    NativeMethods.CryptDestroyKey(hKey);
+                    Windows.Win32.PInvoke.CryptDestroyKey(hKey);
                 }
-                if (hEncryptKey != IntPtr.Zero)
+                if (hEncryptKey != 0)
                 {
-                    NativeMethods.CryptDestroyKey(hEncryptKey);
+                    Windows.Win32.PInvoke.CryptDestroyKey(hEncryptKey);
                 }
             }
         }
 
-        private static byte[] PrepareInputData(string data, NativeMethods.SafeCryptProvHandle hProvider)
+        private unsafe static byte[] PrepareInputData(string data, NativeMethods.SafeCryptProvHandle hProvider)
         {
             byte[] array = new byte[1];
             byte[] bytes = Encoding.Unicode.GetBytes(data);
-            if (!NativeMethods.CryptGenRandom(hProvider, 1u, array))
+            nuint handle = NativeMethods.IntPtrToNUint(hProvider.DangerousGetHandle());
+            fixed (byte* arrayPtr = array)
             {
-                throw new Win32Exception(Marshal.GetLastWin32Error());
+                if (!Windows.Win32.PInvoke.CryptGenRandom(handle, 1u, arrayPtr))
+                {
+                    throw new Win32Exception(Marshal.GetLastWin32Error());
+                }
             }
             uint num = (uint)array[0] % 16u;
             byte[] array2 = new byte[4 + bytes.Length + num + 2];
             byte[] array3 = new byte[4];
-            if (!NativeMethods.CryptGenRandom(hProvider, 4u, array3))
+            fixed (byte* array3Ptr = array3)
             {
-                throw new Win32Exception(Marshal.GetLastWin32Error());
+                if (!Windows.Win32.PInvoke.CryptGenRandom(handle, 4u, array3Ptr))
+                {
+                    throw new Win32Exception(Marshal.GetLastWin32Error());
+                }
             }
             byte[] array4 = new byte[num + 2];
-            if (!NativeMethods.CryptGenRandom(hProvider, num + 2, array4))
+            fixed (byte* array4Ptr = array4)
             {
-                throw new Win32Exception(Marshal.GetLastWin32Error());
+                if (!Windows.Win32.PInvoke.CryptGenRandom(handle, num + 2, array4Ptr))
+                {
+                    throw new Win32Exception(Marshal.GetLastWin32Error());
+                }
             }
             array4[0] = 0;
             array4[1] = 0;

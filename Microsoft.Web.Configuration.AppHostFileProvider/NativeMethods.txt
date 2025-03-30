@@ -1,0 +1,14 @@
+CryptAcquireContextW
+CryptReleaseContext
+CryptDecrypt
+CryptDestroyKey
+CryptEncrypt
+CryptImportKey
+CryptGetUserKey
+CryptGenRandom
+PROV_RSA_AES
+AT_KEYEXCHANGE
+ERROR_MORE_DATA
+NTE_EXISTS
+CRYPT_NEWKEYSET
+CRYPT_MACHINE_KEYSET
