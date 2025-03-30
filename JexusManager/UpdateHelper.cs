@@ -13,8 +13,23 @@ namespace JexusManager
 
     internal static class UpdateHelper
     {
-        public static async Task FindUpdate()
+        public class UpdateInfo
         {
+            public bool UpdateAvailable { get; set; }
+            public Version CurrentVersion { get; set; }
+            public Version LatestVersion { get; set; }
+            public string ReleaseUrl { get; set; }
+            public string ErrorMessage { get; set; }
+        }
+
+        public static async Task<UpdateInfo> CheckForUpdate()
+        {
+            var updateInfo = new UpdateInfo
+            {
+                ReleaseUrl = "https://github.com/jexuswebserver/JexusManager/releases",
+                CurrentVersion = Assembly.GetExecutingAssembly().GetName().Version
+            };
+
             string version = null;
             var previous = ServicePointManager.SecurityProtocol;
             try
@@ -24,8 +39,8 @@ namespace JexusManager
                 var releases = await client.Repository.Release.GetAll("jexuswebserver", "JexusManager");
                 if (releases.Count == 0)
                 {
-                    DialogHelper.MessageBoxShow("No update is found.");
-                    return;
+                    updateInfo.ErrorMessage = "No update is found.";
+                    return updateInfo;
                 }
 
                 var recent = releases[0];
@@ -33,31 +48,24 @@ namespace JexusManager
             }
             catch (Exception)
             {
-                DialogHelper.MessageBoxShow("Cannot connect to GitHub. Will open https://github.com/jexuswebserver/JexusManager/releases.");
-                DialogHelper.ProcessStart("https://github.com/jexuswebserver/JexusManager/releases");
-                return;
+                updateInfo.ErrorMessage = "Cannot connect to GitHub.";
+                return updateInfo;
             }
             finally
             {
                 ServicePointManager.SecurityProtocol = previous;
             }
 
-            Version latest;
-            if (!Version.TryParse(version, out latest))
+            if (!Version.TryParse(version, out Version latest))
             {
-                DialogHelper.MessageBoxShow("No update is found.");
-                return;
+                updateInfo.ErrorMessage = "No update is found.";
+                return updateInfo;
             }
 
-            var current = Assembly.GetExecutingAssembly().GetName().Version;
-            if (current >= latest)
-            {
-                DialogHelper.MessageBoxShow($"{current} is in use. No update is found, and {latest} is latest release.");
-                return;
-            }
-
-            DialogHelper.MessageBoxShow($"{current} is in use. An update ({latest}) is available. Will open https://github.com/jexuswebserver/JexusManager/releases.");
-            DialogHelper.ProcessStart("https://github.com/jexuswebserver/JexusManager/releases");
+            updateInfo.LatestVersion = latest;
+            updateInfo.UpdateAvailable = updateInfo.CurrentVersion < latest;
+            
+            return updateInfo;
         }
     }
 }

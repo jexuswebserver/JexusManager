@@ -17,6 +17,8 @@ namespace JexusManager.Tree
 
     internal sealed class PlaceholderTreeNode : ManagerTreeNode
     {
+        private static HomePage _homePage;
+
         public PlaceholderTreeNode(string name, int image)
             : base(name, null)
         {
@@ -36,7 +38,12 @@ namespace JexusManager.Tree
 
         public override void LoadPanels(MainForm mainForm, ServiceContainer serviceContainer, List<ModuleProvider> moduleProviders)
         {
-            mainForm.LoadInner(new HomePage());
+            if (_homePage == null)
+            {
+                _homePage = new HomePage();
+            }
+            
+            mainForm.LoadInner(_homePage);
         }
 
         public override void HandleDoubleClick()

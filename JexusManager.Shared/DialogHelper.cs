@@ -393,7 +393,7 @@ namespace JexusManager
                 return;
             }
 
-            MessageBoxShow($"Windows Explorer cannot be located.", true);
+            Debug.WriteLine($"Windows Explorer cannot be located.");
         }
 
         public static void SiteStart(Site site)

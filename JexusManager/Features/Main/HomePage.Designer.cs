@@ -35,6 +35,10 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.lblCurrentVersion = new System.Windows.Forms.Label();
+            this.lblUpdateStatus = new System.Windows.Forms.Label();
+            this.btnDownloadUpdate = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -43,6 +47,7 @@
             this.btnSponsor = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -82,6 +87,7 @@
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.White;
+            this.panel2.Controls.Add(this.groupBox2);
             this.panel2.Controls.Add(this.label3);
             this.panel2.Controls.Add(this.panel3);
             this.panel2.Controls.Add(this.groupBox1);
@@ -91,6 +97,51 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(862, 489);
             this.panel2.TabIndex = 1;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Controls.Add(this.lblCurrentVersion);
+            this.groupBox2.Controls.Add(this.lblUpdateStatus);
+            this.groupBox2.Controls.Add(this.btnDownloadUpdate);
+            this.groupBox2.Location = new System.Drawing.Point(360, 32);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.groupBox2.Size = new System.Drawing.Size(478, 160);
+            this.groupBox2.TabIndex = 3;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Updates";
+            // 
+            // lblCurrentVersion
+            // 
+            this.lblCurrentVersion.AutoSize = true;
+            this.lblCurrentVersion.Location = new System.Drawing.Point(24, 33);
+            this.lblCurrentVersion.Name = "lblCurrentVersion";
+            this.lblCurrentVersion.Size = new System.Drawing.Size(92, 15);
+            this.lblCurrentVersion.TabIndex = 0;
+            this.lblCurrentVersion.Text = "Current Version:";
+            // 
+            // lblUpdateStatus
+            // 
+            this.lblUpdateStatus.AutoSize = true;
+            this.lblUpdateStatus.Location = new System.Drawing.Point(24, 76);
+            this.lblUpdateStatus.Name = "lblUpdateStatus";
+            this.lblUpdateStatus.Size = new System.Drawing.Size(153, 15);
+            this.lblUpdateStatus.TabIndex = 1;
+            this.lblUpdateStatus.Text = "Checking for updates...";
+            // 
+            // btnDownloadUpdate
+            // 
+            this.btnDownloadUpdate.Location = new System.Drawing.Point(24, 110);
+            this.btnDownloadUpdate.Name = "btnDownloadUpdate";
+            this.btnDownloadUpdate.Size = new System.Drawing.Size(200, 30);
+            this.btnDownloadUpdate.TabIndex = 2;
+            this.btnDownloadUpdate.Text = "Download Update";
+            this.btnDownloadUpdate.UseVisualStyleBackColor = true;
+            this.btnDownloadUpdate.Visible = false;
+            this.btnDownloadUpdate.Click += new System.EventHandler(this.btnDownloadUpdate_Click);
             // 
             // label3
             // 
@@ -175,6 +226,8 @@
             this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
@@ -193,5 +246,9 @@
         private Label label3;
         private LinkLabel txtStudio;
         private Button btnSponsor;
+        private GroupBox groupBox2;
+        private Label lblCurrentVersion;
+        private Label lblUpdateStatus;
+        private Button btnDownloadUpdate;
     }
 }

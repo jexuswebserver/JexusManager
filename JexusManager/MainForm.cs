@@ -68,6 +68,7 @@ namespace JexusManager
         private TreeNode IisExpressRoot { get; }
         private TreeNode IisRoot { get; }
         private TreeNode JexusRoot { get; }
+        private TreeNode StartPage { get; set; }
 
         public ManagementUIService UIService { get; }
 
@@ -97,7 +98,8 @@ namespace JexusManager
 
             actRunAsAdmin.Image = NativeMethods.GetShieldIcon();
             btnAbout.Text = string.Format("About Jexus Manager {0}", Assembly.GetExecutingAssembly().GetName().Version);
-            treeView1.Nodes.Add(new PlaceholderTreeNode("Start Page", 0) { ContextMenuStrip = cmsIis });
+            StartPage = new PlaceholderTreeNode("Start Page", 0) { ContextMenuStrip = cmsIis };
+            treeView1.Nodes.Add(StartPage);
             if (!Helper.IsRunningOnMono())
             {
                 IisExpressRoot = new PlaceholderTreeNode("IIS Express", 10) { ContextMenuStrip = cmsIis };
@@ -1100,7 +1102,8 @@ namespace JexusManager
 
         private async void btnUpdate_Click(object sender, EventArgs e)
         {
-            await UpdateHelper.FindUpdate();
+            // Navigate to the Start Page which will display update information
+            treeView1.SelectedNode = StartPage;
         }
 
         private void btnRemoveFarmServer_Click(object sender, EventArgs e)
