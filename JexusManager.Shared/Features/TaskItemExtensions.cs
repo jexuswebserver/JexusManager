@@ -8,6 +8,7 @@ using System.Reflection;
 namespace JexusManager.Features
 {
     using System.Collections;
+    using System.Diagnostics;
     using System.Drawing;
     using System.Windows.Forms;
 
@@ -94,7 +95,7 @@ namespace JexusManager.Features
                             if (ex.InnerException is UnauthorizedAccessException)
                             {
                                 MessageBox.Show($"{ex.InnerException.Message}. Running Jexus Manager as administrator might resolve it.", "Jexus Manager", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                Rollbar.RollbarLocator.RollbarInstance.Debug(ex.InnerException);
+                                Debug.WriteLine(ex.InnerException);
                                 return;
                             }
 
@@ -123,7 +124,7 @@ namespace JexusManager.Features
                                 if (ex.InnerException is UnauthorizedAccessException)
                                 {
                                     MessageBox.Show($"{ex.InnerException.Message}. Running Jexus Manager as administrator might resolve it.", "Jexus Manager", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                    Rollbar.RollbarLocator.RollbarInstance.Debug(ex.InnerException);
+                                    Debug.WriteLine(ex.InnerException);
                                     return;
                                 }
 

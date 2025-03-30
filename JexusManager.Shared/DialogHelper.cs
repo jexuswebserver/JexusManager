@@ -6,7 +6,6 @@ namespace JexusManager
 {
     using JexusManager.Services;
     using Microsoft.Web.Administration;
-    using Rollbar;
     using System;
     using System.ComponentModel;
     using System.Diagnostics;
@@ -275,7 +274,7 @@ namespace JexusManager
                 {
                     if (ex.HResult != Microsoft.Web.Administration.NativeMethods.NonExistingStore)
                     {
-                        RollbarLocator.RollbarInstance.Info($"CryptographicException {ex.HResult} from LoadCertificates MY");
+                        Debug.WriteLine($"CryptographicException {ex.HResult} from LoadCertificates MY");
                         throw;
                     }
                 }
@@ -308,7 +307,7 @@ namespace JexusManager
             {
                 if (ex.HResult != Microsoft.Web.Administration.NativeMethods.NonExistingStore)
                 {
-                    RollbarLocator.RollbarInstance.Info($"CryptographicException {ex.HResult} from LoadCertificates WebHosting");
+                    Debug.WriteLine($"CryptographicException {ex.HResult} from LoadCertificates WebHosting");
                     throw;
                 }
             }
@@ -344,7 +343,7 @@ namespace JexusManager
                 }
                 catch (IOException ex)
                 {
-                    RollbarLocator.RollbarInstance.Error(ex);
+                    Debug.WriteLine(ex);
                 }
             }
 

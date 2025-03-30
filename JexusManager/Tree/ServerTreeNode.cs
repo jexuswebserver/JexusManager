@@ -16,7 +16,6 @@ using JexusManager.Services;
 using Microsoft.Web.Administration;
 using Microsoft.Web.Management.Client;
 using Microsoft.Web.Management.Server;
-using Rollbar;
 
 namespace JexusManager.Tree
 {
@@ -234,7 +233,7 @@ namespace JexusManager.Tree
             }
             catch (Exception ex)
             {
-                RollbarLocator.RollbarInstance.Error(ex);
+                System.Diagnostics.Debug.WriteLine(ex);
                 File.WriteAllText(DialogHelper.DebugLog, ex.ToString());
                 var last = ex;
                 while (last is AggregateException)

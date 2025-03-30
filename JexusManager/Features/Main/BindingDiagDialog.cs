@@ -223,12 +223,12 @@ namespace JexusManager.Features.Main
                     catch (CryptographicException ex)
                     {
                         Debug(ex.ToString());
-                        Rollbar.RollbarLocator.RollbarInstance.Error(ex, custom: new Dictionary<string, object>{ { "hResult", ex.HResult } });
+                        System.Diagnostics.Debug.WriteLine(ex);
+                        System.Diagnostics.Debug.WriteLine($"hResult {ex.HResult}");
                     }
                     catch (Exception ex)
                     {
                         Debug(ex.ToString());
-                        Rollbar.RollbarLocator.RollbarInstance.Error(ex);
                     }
                 }));
 

@@ -102,7 +102,7 @@ namespace JexusManager.Features.Main
                     catch (Exception ex)
                     {
                         Debug(ex.ToString());
-                        Rollbar.RollbarLocator.RollbarInstance.Error(ex);
+                        System.Diagnostics.Debug.WriteLine(ex);
                     }
                 }));
 
@@ -300,7 +300,7 @@ namespace JexusManager.Features.Main
                 {
                     //TODO:  What?
                     Warn($"An unexpected condition hit.");
-                    Rollbar.RollbarLocator.RollbarInstance.Error("unexpected condition hit.");
+                    System.Diagnostics.Debug.WriteLine("unexpected condition hit.");
                     return;
                 }
             }

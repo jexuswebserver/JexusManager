@@ -57,7 +57,6 @@ namespace JexusManager
     using Features;
     using JexusManager.Features.Asp;
     using JexusManager.Features.TraceFailedRequests;
-    using Rollbar;
     using System.Diagnostics;
 
     public sealed partial class MainForm : Form
@@ -395,13 +394,13 @@ namespace JexusManager
 
             if (data.ServerManager == null)
             {
-                Rollbar.RollbarLocator.RollbarInstance.Error($"null server: {data.DisplayName} : {data.Mode} : {selected.Text} : {selected.GetType().FullName}");
+                Debug.WriteLine($"null server: {data.DisplayName} : {data.Mode} : {selected.Text} : {selected.GetType().FullName}");
                 return;
             }
 
             if (data.ServerManager.Sites == null)
             {
-                Rollbar.RollbarLocator.RollbarInstance.Error($"null sites collection: {data.DisplayName} : {data.Mode} : {selected.Text} : {selected.GetType().FullName} : {data.ServerManager.FileName}");
+                Debug.WriteLine($"null sites collection: {data.DisplayName} : {data.Mode} : {selected.Text} : {selected.GetType().FullName} : {data.ServerManager.FileName}");
                 return;
             }
 
@@ -516,7 +515,7 @@ namespace JexusManager
                 }
                 catch (Exception ex)
                 {
-                    RollbarLocator.RollbarInstance.Error(ex);
+                    Debug.WriteLine(ex);
                     var last = ex;
                     Exception previous = null;
                     while (last.InnerException != null)
@@ -665,7 +664,7 @@ namespace JexusManager
             {
                 if (e.Node.Text != ManagerTreeNode.TempNodeName)
                 {
-                    RollbarLocator.RollbarInstance.Error($"wrong node {e.Node.GetType().FullName} {e.Node.Text}");
+                    Debug.WriteLine($"wrong node {e.Node.GetType().FullName} {e.Node.Text}");
                 }
 
                 return;
@@ -940,7 +939,7 @@ namespace JexusManager
             }
             catch (Exception ex)
             {
-                RollbarLocator.RollbarInstance.Error(ex);
+                Debug.WriteLine(ex);
                 File.WriteAllText(DialogHelper.DebugLog, ex.ToString());
                 var last = ex;
                 while (last is AggregateException)

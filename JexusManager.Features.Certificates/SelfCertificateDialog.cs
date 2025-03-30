@@ -4,7 +4,6 @@
 
 using System.Collections.Generic;
 using Microsoft.Web.Administration;
-using Rollbar;
 
 namespace JexusManager.Features.Certificates
 {
@@ -184,7 +183,8 @@ namespace JexusManager.Features.Certificates
                             var message = Microsoft.Web.Administration.NativeMethods.KnownCases(ex.NativeErrorCode);
                             if (string.IsNullOrEmpty(message))
                             {
-                                RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> { { "native", ex.NativeErrorCode } });
+                                Debug.WriteLine(ex);
+                                Debug.WriteLine($"native {ex.NativeErrorCode}");
                                 // throw;
                             }
                             else
@@ -195,7 +195,7 @@ namespace JexusManager.Features.Certificates
                         catch (Exception ex)
                         {
                             ShowError(ex, $"unexpected exception", false);
-                            RollbarLocator.RollbarInstance.Error(ex);
+                            Debug.WriteLine(ex);
                         }
                         finally
                         {
@@ -209,7 +209,7 @@ namespace JexusManager.Features.Certificates
                     }
                     catch (Exception ex)
                     {
-                        RollbarLocator.RollbarInstance.Error(ex);
+                        Debug.WriteLine(ex);
                         ShowError(ex, Text, false);
                         return;
                     }

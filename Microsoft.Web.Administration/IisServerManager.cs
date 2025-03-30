@@ -6,7 +6,6 @@ using System;
 
 namespace Microsoft.Web.Administration
 {
-    using Rollbar;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;

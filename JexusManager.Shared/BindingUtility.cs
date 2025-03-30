@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using Rollbar;
 using Exception = System.Exception;
 
 namespace Microsoft.Web.Administration
@@ -157,7 +156,8 @@ namespace Microsoft.Web.Administration
                 var message = NativeMethods.KnownCases(ex.NativeErrorCode);
                 if (string.IsNullOrEmpty(message))
                 {
-                    RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> { { "native", ex.NativeErrorCode } });
+                    Debug.WriteLine(ex);
+                    Debug.WriteLine($"native {ex.NativeErrorCode}");
                     return (CertificateMappingState.Win32ErrorOccurred, $"Register new certificate failed: unknown (native {ex.NativeErrorCode})");
                 }
 
@@ -165,7 +165,7 @@ namespace Microsoft.Web.Administration
             }
             catch (Exception ex)
             {
-                RollbarLocator.RollbarInstance.Error(ex);
+                Debug.WriteLine(ex);
                 return (CertificateMappingState.GenericErrorOccurred, $"Register new certificate failed: unknown ({ex.Message})");
             }
         }
@@ -275,7 +275,8 @@ namespace Microsoft.Web.Administration
                 var message = NativeMethods.KnownCases(ex.NativeErrorCode);
                 if (string.IsNullOrEmpty(message))
                 {
-                    RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> { { "native", ex.NativeErrorCode } });
+                    Debug.WriteLine(ex);
+                    Debug.WriteLine($"native {ex.NativeErrorCode}");
                     return $"Remove SNI certificate failed: unknown (native {ex.NativeErrorCode})";
                 }
 
@@ -283,12 +284,13 @@ namespace Microsoft.Web.Administration
             }
             catch (NullReferenceException ex)
             {
-                RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> { { "binding", binding.ToString() }, { "endpointNull", binding.EndPoint == null } });
+                Debug.WriteLine(ex);
+                Debug.WriteLine($"binding {binding.ToString()} endpointNull {binding.EndPoint == null}");
                 return $"Remove SNI certificate failed: unknown ({ex.Message})";
             }
             catch (Exception ex)
             {
-                RollbarLocator.RollbarInstance.Error(ex);
+                Debug.WriteLine(ex);
                 return $"Remove SNI certificate failed: unknown ({ex.Message})";
             }
         }
@@ -330,7 +332,8 @@ namespace Microsoft.Web.Administration
                 var message = NativeMethods.KnownCases(ex.NativeErrorCode);
                 if (string.IsNullOrEmpty(message))
                 {
-                    RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> { { "native", ex.NativeErrorCode } });
+                    Debug.WriteLine(ex);
+                    Debug.WriteLine($"native {ex.NativeErrorCode}");
                     return $"failed to add reserved URL: unknown ({message})";
                 }
                 else
@@ -340,7 +343,7 @@ namespace Microsoft.Web.Administration
             }
             catch (Exception ex)
             {
-                RollbarLocator.RollbarInstance.Error(ex);
+                Debug.WriteLine(ex);
                 return $"failed to add reserved URL: unknown ({ex.Message})";
             }
         }

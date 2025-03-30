@@ -488,7 +488,8 @@ namespace JexusManager.Features.Main
                             catch (Exception ex)
                             {
                                 Error("Cannot analyze ASP.NET Core web app successfully.");
-                                Rollbar.RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> { { "source", "web app" } });
+                                System.Diagnostics.Debug.WriteLine(ex);
+                                System.Diagnostics.Debug.WriteLine("source web app");
                             }
                         }
                     }
@@ -497,12 +498,12 @@ namespace JexusManager.Features.Main
                         Error("A generic exception occurred.");
                         Error($"To run ASP.NET Core on IIS, please refer to https://docs.microsoft.com/aspnet/core/host-and-deploy/iis/index for more details.");
                         Debug(ex.ToString());
-                        Rollbar.RollbarLocator.RollbarInstance.Error(ex);
+                        System.Diagnostics.Debug.WriteLine(ex);
                     }
                     catch (Exception ex)
                     {
                         Debug(ex.ToString());
-                        Rollbar.RollbarLocator.RollbarInstance.Error(ex);
+                        System.Diagnostics.Debug.WriteLine(ex);
                     }
                 }));
 

@@ -2,7 +2,6 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using Rollbar;
 using System;
 using System.Diagnostics;
 using System.Xml.Linq;
@@ -101,12 +100,12 @@ namespace Microsoft.Web.Administration
                         // TODO: validation (example isCollectionDefault not equals: item C:\Windows\system32\inetsrv\config\schema\IISAdvancedLogging_schema.xml child True C:\Windows\system32\inetsrv\config\schema\Ftp_schema.xml)
                         if (item.Attribute("isCollectionDefault").LoadBoolean(false) != child.IsCollectionDefault)
                         {
-                            RollbarLocator.RollbarInstance.Error($"isCollectionDefault not equals: item {fileName} child {child.IsCollectionDefault} {child.FileName}");
+                            Debug.WriteLine($"isCollectionDefault not equals: item {fileName} child {child.IsCollectionDefault} {child.FileName}");
                         }
 
                         if (top.AllowUnrecognizedAttributes != child.AllowUnrecognizedAttributes)
                         {
-                            RollbarLocator.RollbarInstance.Error($"allowUnrecognizedAttributes not equals: {fileName} child {child.AllowUnrecognizedAttributes} {child.FileName}");
+                            Debug.WriteLine($"allowUnrecognizedAttributes not equals: {fileName} child {child.AllowUnrecognizedAttributes} {child.FileName}");
                         }
                     }
 

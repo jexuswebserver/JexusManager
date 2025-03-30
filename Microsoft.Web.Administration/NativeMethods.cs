@@ -1140,7 +1140,7 @@ namespace Microsoft.Web.Administration
         private static SOCKADDR_STORAGE CreateSockAddrStorageStructure(int port)
         {
             var address = new SOCKADDR_IN
-            {
+            {                
                 sin_family = ADDRESS_FAMILY.AF_INET,
                 sin_port = PInvoke.ntohs((ushort)port)
             };

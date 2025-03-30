@@ -11,7 +11,6 @@
  */
 
 using System.ComponentModel;
-using Rollbar;
 
 namespace JexusManager.Features.Certificates
 {
@@ -113,7 +112,7 @@ namespace JexusManager.Features.Certificates
                             {
                                 // TODO: add CNG support.
                                 // throw;
-                                RollbarLocator.RollbarInstance.Error($"ate exception in certificates feature {ex}");
+                                Debug.WriteLine($"ate exception in certificates feature {ex}");
                             }
                         }
                     }
@@ -288,7 +287,7 @@ namespace JexusManager.Features.Certificates
                     {
                         if (ex.HResult != NativeMethods.NonExistingStore)
                         {
-                            RollbarLocator.RollbarInstance.Info($"CryptographicException {ex.HResult} from CertificatesFeature.");
+                            Debug.WriteLine($"CryptographicException {ex.HResult} from CertificatesFeature.");
                             throw;
                         }
                     }
@@ -353,7 +352,8 @@ namespace JexusManager.Features.Certificates
                 var message = NativeMethods.KnownCases(ex.NativeErrorCode);
                 if (string.IsNullOrEmpty(message))
                 {
-                    RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> {{ "native", ex.NativeErrorCode } });
+                    Debug.WriteLine(ex);
+                    Debug.WriteLine($"native {ex.NativeErrorCode}");
                     // throw;
                 }
                 else
@@ -363,7 +363,7 @@ namespace JexusManager.Features.Certificates
             }
             catch (Exception ex)
             {
-                RollbarLocator.RollbarInstance.Error(ex);
+                Debug.WriteLine(ex);
             }
         }
 

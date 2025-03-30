@@ -9,7 +9,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using Rollbar;
 using Exception = System.Exception;
 
 namespace Microsoft.Web.Administration
@@ -108,7 +107,8 @@ namespace Microsoft.Web.Administration
                 // elevation is cancelled.
                 if (ex.NativeErrorCode != (int)Windows.Win32.Foundation.WIN32_ERROR.ERROR_CANCELLED)
                 {
-                    RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> {{"native", ex.NativeErrorCode}});
+                    Debug.WriteLine(ex);
+                    Debug.WriteLine($"native {ex.NativeErrorCode}");
                     // throw;
                 }
             }
@@ -116,12 +116,13 @@ namespace Microsoft.Web.Administration
             {
                 if (ex.HResult != NativeMethods.NoProcessAssociated)
                 {
-                    RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> { { "hresult", ex.HResult } });
+                    Debug.WriteLine(ex);
+                    Debug.WriteLine($"hresult {ex.HResult}");
                 }
             }
             catch (Exception ex)
             {
-                RollbarLocator.RollbarInstance.Error(ex);
+                Debug.WriteLine(ex);
             }
 
             return true;
@@ -235,13 +236,14 @@ namespace Microsoft.Web.Administration
                 // elevation is cancelled.
                 if (ex.NativeErrorCode != (int)Windows.Win32.Foundation.WIN32_ERROR.ERROR_CANCELLED)
                 {
-                    RollbarLocator.RollbarInstance.Error(ex,  new Dictionary<string, object> {{ "native", ex.NativeErrorCode } });
+                    Debug.WriteLine(ex);
+                    Debug.WriteLine($"native {ex.NativeErrorCode}");                    
                     // throw;
                 }
             }
             catch (Exception ex)
             {
-                RollbarLocator.RollbarInstance.Error(ex);
+                Debug.WriteLine(ex);
             }
         }
 

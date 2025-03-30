@@ -9,7 +9,6 @@ using System.Globalization;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
-using Rollbar;
 
 namespace Microsoft.Web.Administration
 {
@@ -221,7 +220,7 @@ namespace Microsoft.Web.Administration
             }
             catch (MissingMethodException)
             {
-                RollbarLocator.RollbarInstance.Error($"type: {ValidationType}; parameter: {ValidationParameter}; is null ? {ValidationParameter == null}");
+                Debug.WriteLine($"type: {ValidationType}; parameter: {ValidationParameter}; is null ? {ValidationParameter == null}");
                 throw;
             }
         }

@@ -21,7 +21,6 @@ namespace JexusManager.Features.Main
     using System.Reactive.Linq;
     using System.Collections.Generic;
     using EnumsNET;
-    using Rollbar;
 
     public partial class SslDiagDialog : DialogForm
     {
@@ -205,8 +204,7 @@ namespace JexusManager.Features.Main
                                                     else
                                                     {
                                                         Error("#You have a private key that corresponds to this certificate but CryptAcquireCertificatePrivateKey failed.");
-                                                        Rollbar.RollbarLocator.RollbarInstance.Error(
-                                                            "CryptAcquireCertificatePrivateKey failed");
+                                                        System.Diagnostics.Debug.WriteLine("CryptAcquireCertificatePrivateKey failed");
                                                     }
 
                                                     if (shouldRelease)
@@ -351,7 +349,7 @@ namespace JexusManager.Features.Main
                                         Error($"Problems detected on certificate store {binding.CertificateStoreName}.");
                                         if (ex.HResult != Microsoft.Web.Administration.NativeMethods.NonExistingStore)
                                         {
-                                            RollbarLocator.RollbarInstance.Info($"CryptographicException {ex.HResult} from SslDiag.");
+                                            System.Diagnostics.Debug.WriteLine($"CryptographicException {ex.HResult} from SslDiag.");
                                             throw;
                                         }
 
@@ -366,12 +364,12 @@ namespace JexusManager.Features.Main
                     catch (CryptographicException ex)
                     {
                         Debug(ex.ToString());
-                        Rollbar.RollbarLocator.RollbarInstance.Error(ex, custom: new Dictionary<string, object> { { "hResult", ex.HResult } });
+                        System.Diagnostics.Debug.WriteLine(ex);
+                        System.Diagnostics.Debug.WriteLine($"hResult {ex.HResult}");
                     }
                     catch (Exception ex)
                     {
                         Debug(ex.ToString());
-                        Rollbar.RollbarLocator.RollbarInstance.Error(ex);
                     }
                 }));
 

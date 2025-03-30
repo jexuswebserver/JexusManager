@@ -291,7 +291,7 @@ namespace JexusManager.Features.Main
                     catch (Exception ex)
                     {
                         Debug(ex.ToString());
-                        Rollbar.RollbarLocator.RollbarInstance.Error(ex);
+                        System.Diagnostics.Debug.WriteLine(ex);
                     }
                 }));
 

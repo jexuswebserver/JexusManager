@@ -5,6 +5,7 @@
 namespace JexusManager.Wizards.ConnectionWizard
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
     using System.Net.Security;
     using System.Text;
@@ -15,7 +16,6 @@ namespace JexusManager.Wizards.ConnectionWizard
 
     using Microsoft.Web.Administration;
     using Microsoft.Web.Management.Client.Win32;
-    using Rollbar;
 
     public partial class CredentialsPage : WizardPage
     {
@@ -138,7 +138,7 @@ namespace JexusManager.Wizards.ConnectionWizard
             }
             catch (Exception ex)
             {
-                RollbarLocator.RollbarInstance.Error(ex);
+                Debug.WriteLine(ex);
                 File.WriteAllText(DialogHelper.DebugLog, ex.ToString());
                 var last = ex;
                 while (last is AggregateException)

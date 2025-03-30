@@ -107,7 +107,7 @@ namespace JexusManager.Tree
                 }
                 catch (IOException ex)
                 {
-                    Rollbar.RollbarLocator.RollbarInstance.Error(ex);
+                    System.Diagnostics.Debug.WriteLine(ex);
                 }
             }
 

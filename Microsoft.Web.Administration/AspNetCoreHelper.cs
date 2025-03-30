@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Lex Li. All rights reserved. 
 //  
 // Licensed under the MIT license. See LICENSE file in the project root for full license information. 
-using Rollbar;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -199,7 +198,7 @@ namespace Microsoft.Web.Administration
                     .FirstOrDefault();
                 if (devServerVersion == null)
                 {
-                    RollbarLocator.RollbarInstance.Error($"Blazor dev server missing");
+                    Debug.WriteLine($"Blazor dev server missing");
                     return;
                 }
 
@@ -209,7 +208,7 @@ namespace Microsoft.Web.Administration
                 int index = input.IndexOf("net");
                 if (index == -1)
                 {
-                    RollbarLocator.RollbarInstance.Error($"Unknown framework {input}");
+                    Debug.WriteLine($"Unknown framework {input}");
                     return;
                 }
 
@@ -220,7 +219,7 @@ namespace Microsoft.Web.Administration
                 var devServerLibrary = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".nuget", "packages", "microsoft.aspnetcore.components.webassembly.devserver", devServerVersion, "tools", "blazor-devserver.dll");
                 if (!File.Exists(devServerLibrary))
                 {
-                    RollbarLocator.RollbarInstance.Error($"Cannot find Blazor dev server library {devServerVersion}");
+                    Debug.WriteLine($"Cannot find Blazor dev server library {devServerVersion}");
                     return;
                 }
 
@@ -237,7 +236,7 @@ namespace Microsoft.Web.Administration
                 int index = input.IndexOf("net");
                 if (index == -1)
                 {
-                    RollbarLocator.RollbarInstance.Error($"Unknown framework {input}");
+                    Debug.WriteLine($"Unknown framework {input}");
                     return;
                 }
 
@@ -256,7 +255,7 @@ namespace Microsoft.Web.Administration
                         }
                         else
                         {
-                            RollbarLocator.RollbarInstance.Error($"impossible ASP.NET Core version {version}");
+                            Debug.WriteLine($"impossible ASP.NET Core version {version}");
                         }
                     }
                     else
@@ -275,7 +274,7 @@ namespace Microsoft.Web.Administration
                     var files = Directory.GetFiles(Path.Combine(root, "bin", "Debug", input), "*.dll");
                     if (files.Length == 1)
                     {
-                        RollbarLocator.RollbarInstance.Error($"Didn't find the expected assembly. Choose another instead.");
+                        Debug.WriteLine($"Didn't find the expected assembly. Choose another instead.");
                         primary = files[0];
                     }
                     else
@@ -286,7 +285,7 @@ namespace Microsoft.Web.Administration
 
                 if (primary == null)
                 {
-                    RollbarLocator.RollbarInstance.Error($"Didn't find compiled assembly for {input}");
+                    Debug.WriteLine($"Didn't find compiled assembly for {input}");
                     return;
                 }
 
@@ -295,7 +294,7 @@ namespace Microsoft.Web.Administration
                 if (!File.Exists(file))
                 {
                     // Not VS 15.2 and above
-                    RollbarLocator.RollbarInstance.Error($"Didn't detect VS 15.2 or above");
+                    Debug.WriteLine($"Didn't detect VS 15.2 or above");
                     return;
                 }
 
@@ -312,7 +311,7 @@ namespace Microsoft.Web.Administration
                 var launcher = $@"{folder}\Common7\IDE\Extensions\Microsoft\Web Tools\ProjectSystem\VSIISExeLauncher.exe";
                 if (!File.Exists(launcher))
                 {
-                    RollbarLocator.RollbarInstance.Error($"Didn't detect VSIISExeLauncher");
+                    Debug.WriteLine($"Didn't detect VSIISExeLauncher");
                     return;
                 }
 

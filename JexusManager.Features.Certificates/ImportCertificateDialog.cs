@@ -3,7 +3,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Collections.Generic;
-using Rollbar;
 
 namespace JexusManager.Features.Certificates
 {
@@ -137,7 +136,8 @@ namespace JexusManager.Features.Certificates
                                 var message = NativeMethods.KnownCases(ex.NativeErrorCode);
                                 if (string.IsNullOrEmpty(message))
                                 {
-                                    RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> { { "native", ex.NativeErrorCode } });
+                                    Debug.WriteLine(ex);
+                                    Debug.WriteLine($"native {ex.NativeErrorCode}");
                                     // throw;
                                 }
                                 else
@@ -147,7 +147,7 @@ namespace JexusManager.Features.Certificates
                             }
                             catch (Exception ex)
                             {
-                                RollbarLocator.RollbarInstance.Error(ex);
+                                Debug.WriteLine(ex);
                             }
                         }
                     }

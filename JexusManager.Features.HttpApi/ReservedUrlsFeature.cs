@@ -14,7 +14,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
-using Rollbar;
 using Exception = System.Exception;
 
 namespace JexusManager.Features.HttpApi
@@ -122,8 +121,8 @@ namespace JexusManager.Features.HttpApi
                 var message = Microsoft.Web.Administration.NativeMethods.KnownCases(ex.NativeErrorCode);
                 if (string.IsNullOrEmpty(message))
                 {
-                    RollbarLocator.RollbarInstance.Error(ex, new Dictionary<string, object> { { "native", ex.NativeErrorCode } });
-                    // throw;
+                    Debug.WriteLine(ex);
+                    Debug.WriteLine($"native {ex.NativeErrorCode}");
                 }
                 else
                 {
@@ -132,7 +131,7 @@ namespace JexusManager.Features.HttpApi
             }
             catch (Exception ex)
             {
-                RollbarLocator.RollbarInstance.Error(ex);
+                Debug.WriteLine(ex);
             }
         }
 
