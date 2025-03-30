@@ -15,7 +15,7 @@
              UpgradeCode="$(var.UpgradeCode)">
 
         <Package Comments="$(var.ProductDescription)"
-                 InstallerVersion="300"
+                 InstallerVersion="500"
                  Compressed="yes"
                  Description="$(var.ProductName) $(var.ProductVersion)" />
 
