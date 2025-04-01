@@ -26,9 +26,11 @@ namespace JexusManager.Features.Main
     using Newtonsoft.Json;
     using System.Net;
     using NuGet.Versioning;
+    using Microsoft.Extensions.Logging;
 
     public partial class KestrelDiagDialog : DialogForm
     {
+        private static readonly ILogger _logger = LogHelper.GetLogger("KestrelDiagDialog");
         private static IDictionary<SemanticVersion, Tuple<Version, bool>> mappings = new Dictionary<SemanticVersion, Tuple<Version, bool>>();
         private static IDictionary<string, string> fileCaches = new Dictionary<string, string>();
 
@@ -488,8 +490,7 @@ namespace JexusManager.Features.Main
                             catch (Exception ex)
                             {
                                 Error("Cannot analyze ASP.NET Core web app successfully.");
-                                System.Diagnostics.Debug.WriteLine(ex);
-                                System.Diagnostics.Debug.WriteLine("source web app");
+                                _logger.LogError(ex, "Error loading web.config of source web app");
                             }
                         }
                     }
@@ -498,12 +499,12 @@ namespace JexusManager.Features.Main
                         Error("A generic exception occurred.");
                         Error($"To run ASP.NET Core on IIS, please refer to https://docs.microsoft.com/aspnet/core/host-and-deploy/iis/index for more details.");
                         Debug(ex.ToString());
-                        System.Diagnostics.Debug.WriteLine(ex);
+                        _logger.LogDebug(ex.ToString());
                     }
                     catch (Exception ex)
                     {
                         Debug(ex.ToString());
-                        System.Diagnostics.Debug.WriteLine(ex);
+                        _logger.LogDebug(ex.ToString());
                     }
                 }));
 

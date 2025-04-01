@@ -4,21 +4,20 @@
 
 using System;
 using System.Reflection;
+using Microsoft.Extensions.Logging;
+using JexusManager;
+using Microsoft.Web.Management.Client.Win32;
+using System.Windows.Forms;
+using System.Collections;
+using JexusManager.Properties;
+using System.Drawing;
 
-namespace JexusManager.Features
+namespace Microsoft.Web.Management.Client
 {
-    using System.Collections;
-    using System.Diagnostics;
-    using System.Drawing;
-    using System.Windows.Forms;
-
-    using JexusManager.Properties;
-
-    using Microsoft.Web.Management.Client;
-    using Microsoft.Web.Management.Client.Win32;
-
     public static class TaskItemExtensions
     {
+        private static readonly ILogger _logger = LogHelper.GetLogger("TaskItemExtensions");
+
         public static void Fill(this TaskListCollection tasks, ToolStrip actionPanel, ContextMenuStrip actionMenu, TaskList extra = null)
         {
             actionPanel.Items.Clear();
@@ -91,11 +90,11 @@ namespace JexusManager.Features
                             list.InvokeMethod(method.MethodName, method.UserData);
                         }
                         catch (TargetInvocationException ex)
-                        {
+                        {                           
                             if (ex.InnerException is UnauthorizedAccessException)
                             {
+                                _logger.LogError(ex.InnerException, "Error invoking task method {Method}", method.MethodName);
                                 MessageBox.Show($"{ex.InnerException.Message}. Running Jexus Manager as administrator might resolve it.", "Jexus Manager", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                Debug.WriteLine(ex.InnerException);
                                 return;
                             }
 
@@ -120,11 +119,11 @@ namespace JexusManager.Features
                                 list.InvokeMethod(method.MethodName, method.UserData);
                             }
                             catch (TargetInvocationException ex)
-                            {
+                            {   
                                 if (ex.InnerException is UnauthorizedAccessException)
                                 {
+                                    _logger.LogError(ex.InnerException, "Error invoking task method {Method}", method.MethodName);
                                     MessageBox.Show($"{ex.InnerException.Message}. Running Jexus Manager as administrator might resolve it.", "Jexus Manager", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                    Debug.WriteLine(ex.InnerException);
                                     return;
                                 }
 

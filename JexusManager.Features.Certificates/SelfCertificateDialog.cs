@@ -16,7 +16,7 @@ namespace JexusManager.Features.Certificates
     using System.Reactive.Linq;
     using System.Security.Cryptography.X509Certificates;
     using System.Windows.Forms;
-
+    using Microsoft.Extensions.Logging;
     using Microsoft.Web.Management.Client.Win32;
     using Org.BouncyCastle.Asn1;
     using Org.BouncyCastle.Asn1.X509;
@@ -33,6 +33,8 @@ namespace JexusManager.Features.Certificates
 
     internal partial class SelfCertificateDialog : DialogForm
     {
+        private static readonly ILogger _logger = LogHelper.GetLogger("SelfCertificateDialog");
+
         public SelfCertificateDialog(IServiceProvider serviceProvider, CertificatesFeature feature)
             : base(serviceProvider)
         {
@@ -183,9 +185,7 @@ namespace JexusManager.Features.Certificates
                             var message = Microsoft.Web.Administration.NativeMethods.KnownCases(ex.NativeErrorCode);
                             if (string.IsNullOrEmpty(message))
                             {
-                                Debug.WriteLine(ex);
-                                Debug.WriteLine($"native {ex.NativeErrorCode}");
-                                // throw;
+                                 _logger.LogError(ex, "Win32 error installing certificate. Native error code: {Code}", ex.NativeErrorCode);
                             }
                             else
                             {
@@ -195,7 +195,7 @@ namespace JexusManager.Features.Certificates
                         catch (Exception ex)
                         {
                             ShowError(ex, $"unexpected exception", false);
-                            Debug.WriteLine(ex);
+                            _logger.LogError(ex, "Error installing certificate");
                         }
                         finally
                         {
@@ -209,8 +209,8 @@ namespace JexusManager.Features.Certificates
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine(ex);
                         ShowError(ex, Text, false);
+                        _logger.LogError(ex, "Error validating certificate");
                         return;
                     }
                 }));

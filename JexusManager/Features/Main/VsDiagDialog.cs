@@ -19,9 +19,14 @@ namespace JexusManager.Features.Main
     using System.Xml.XPath;
     using Newtonsoft.Json.Linq;
     using System.Linq;
+    using System.Windows.Forms;
+    using Microsoft.Extensions.Logging;
+    using JexusManager;
 
     public partial class VsDiagDialog : DialogForm
     {
+        private static readonly ILogger _logger = LogHelper.GetLogger("VsDiagDialog");
+
         public VsDiagDialog(IServiceProvider provider, Site site)
             : base(provider)
         {
@@ -102,7 +107,7 @@ namespace JexusManager.Features.Main
                     catch (Exception ex)
                     {
                         Debug(ex.ToString());
-                        System.Diagnostics.Debug.WriteLine(ex);
+                        _logger.LogError(ex, "Error analyzing VS configuration");
                     }
                 }));
 
@@ -191,7 +196,7 @@ namespace JexusManager.Features.Main
                     Info($"applicationUrl is {rawUrl}.");
                     var iisUrl = sslPort == 0 ? rawUrl : $"https://localhost:{sslPort}/";
                     var matched = false;
-                    foreach (Binding binding in site.Bindings)
+                    foreach (Microsoft.Web.Administration.Binding binding in site.Bindings)
                     {
                         Info($"Binding {binding.ToShortString()}.");
                         if (string.Equals(binding.ToIisUrl(), iisUrl, StringComparison.OrdinalIgnoreCase))
@@ -229,92 +234,98 @@ namespace JexusManager.Features.Main
 
         private void AnalyzeWebProject(XDocument xml, XmlNamespaceManager namespaceManager, XNamespace name, Site site)
         {
-            Debug($"Analyze ASP.NET project.");
-            Debug($"Extract web project settings.");
-            var webSettings = xml.Root.XPathSelectElement("/x:Project/x:ProjectExtensions/x:VisualStudio/x:FlavorProperties/x:WebProjectProperties", namespaceManager);
-            var useIIS = webSettings.Element(name + "UseIIS")?.Value;
-            Info($"UseIIS: {useIIS}");
-            var autoAssignPort = webSettings.Element(name + "AutoAssignPort")?.Value;
-            Info($"AutoAssignPort: {autoAssignPort}");
-            var developmentServerPort = webSettings.Element(name + "DevelopmentServerPort")?.Value;
-            Info($"DevelopmentServerPort: {developmentServerPort}");
-            var developmentServerVPath = webSettings.Element(name + "DevelopmentServerVPath")?.Value;
-            Info($"DevelopmentServerVPath: {developmentServerVPath}");
-            var iisUrl = webSettings.Element(name + "IISUrl")?.Value;
-            Info($"IISUrl: {iisUrl}");
-            var ntlmAuthentication = webSettings.Element(name + "NTLMAuthentication")?.Value;
-            Info($"NTLMAuthentication: {ntlmAuthentication}");
-            var useCustomServer = webSettings.Element(name + "UseCustomServer")?.Value;
-            Info($"UseCustomServer: {useCustomServer}");
-            var customServerUrl = webSettings.Element(name + "CustomServerUrl")?.Value;
-            Info($"CustomServerUrl: {customServerUrl}");
-            var saveServerSettingsInUserFile = webSettings.Element(name + "SaveServerSettingsInUserFile")?.Value;
-            Info($"SaveServerSettingsInUserFile: {saveServerSettingsInUserFile}");
-
-            var useIISExpress = xml.Root.XPathSelectElement("/x:Project/x:PropertyGroup/x:UseIISExpress", namespaceManager)?.Value;
-            Info($"UseIISExpress: {useIISExpress}");
-            var iisExpressSSLPort = xml.Root.XPathSelectElement("/x:Project/x:PropertyGroup/x:IISExpressSSLPort", namespaceManager)?.Value;
-            Info($"IISExpressSSLPort: {iisExpressSSLPort}");
-            var iisExpressAnonymousAuthentication = xml.Root.XPathSelectElement("/x:Project/x:PropertyGroup/x:IISExpressAnonymousAuthentication", namespaceManager)?.Value;
-            Info($"IISExpressAnonymousAuthentication: {iisExpressAnonymousAuthentication}");
-            var iisExpressWindowsAuthentication = xml.Root.XPathSelectElement("/x:Project/x:PropertyGroup/x:IISExpressWindowsAuthentication", namespaceManager)?.Value;
-            Info($"IISExpressWindowsAuthentication: {iisExpressWindowsAuthentication}");
-            var iisExpressUseClassicPipelineMode = xml.Root.XPathSelectElement("/x:Project/x:PropertyGroup/x:IISExpressUseClassicPipelineMode", namespaceManager)?.Value;
-            Info($"IISExpressUseClassicPipelineMode: {iisExpressUseClassicPipelineMode}");
-            var useGlobalApplicationHostFile = xml.Root.XPathSelectElement("/x:Project/x:PropertyGroup/x:UseGlobalApplicationHostFile", namespaceManager)?.Value;
-            Info($"UseGlobalApplicationHostFile: {useGlobalApplicationHostFile}");
-
-            Info($"Scan all bindings.");
-            bool matched = false;
-            if (string.Equals(useIIS, "true", StringComparison.OrdinalIgnoreCase))
+            try
             {
-                if (string.Equals(useIISExpress, "true", StringComparison.OrdinalIgnoreCase))
+                Debug($"Analyze ASP.NET project.");
+                Debug($"Extract web project settings.");
+                var webSettings = xml.Root.XPathSelectElement("/x:Project/x:ProjectExtensions/x:VisualStudio/x:FlavorProperties/x:WebProjectProperties", namespaceManager);
+                var useIIS = webSettings.Element(name + "UseIIS")?.Value;
+                Info($"UseIIS: {useIIS}");
+                var autoAssignPort = webSettings.Element(name + "AutoAssignPort")?.Value;
+                Info($"AutoAssignPort: {autoAssignPort}");
+                var developmentServerPort = webSettings.Element(name + "DevelopmentServerPort")?.Value;
+                Info($"DevelopmentServerPort: {developmentServerPort}");
+                var developmentServerVPath = webSettings.Element(name + "DevelopmentServerVPath")?.Value;
+                Info($"DevelopmentServerVPath: {developmentServerVPath}");
+                var iisUrl = webSettings.Element(name + "IISUrl")?.Value;
+                Info($"IISUrl: {iisUrl}");
+                var ntlmAuthentication = webSettings.Element(name + "NTLMAuthentication")?.Value;
+                Info($"NTLMAuthentication: {ntlmAuthentication}");
+                var useCustomServer = webSettings.Element(name + "UseCustomServer")?.Value;
+                Info($"UseCustomServer: {useCustomServer}");
+                var customServerUrl = webSettings.Element(name + "CustomServerUrl")?.Value;
+                Info($"CustomServerUrl: {customServerUrl}");
+                var saveServerSettingsInUserFile = webSettings.Element(name + "SaveServerSettingsInUserFile")?.Value;
+                Info($"SaveServerSettingsInUserFile: {saveServerSettingsInUserFile}");
+
+                var useIISExpress = xml.Root.XPathSelectElement("/x:Project/x:PropertyGroup/x:UseIISExpress", namespaceManager)?.Value;
+                Info($"UseIISExpress: {useIISExpress}");
+                var iisExpressSSLPort = xml.Root.XPathSelectElement("/x:Project/x:PropertyGroup/x:IISExpressSSLPort", namespaceManager)?.Value;
+                Info($"IISExpressSSLPort: {iisExpressSSLPort}");
+                var iisExpressAnonymousAuthentication = xml.Root.XPathSelectElement("/x:Project/x:PropertyGroup/x:IISExpressAnonymousAuthentication", namespaceManager)?.Value;
+                Info($"IISExpressAnonymousAuthentication: {iisExpressAnonymousAuthentication}");
+                var iisExpressWindowsAuthentication = xml.Root.XPathSelectElement("/x:Project/x:PropertyGroup/x:IISExpressWindowsAuthentication", namespaceManager)?.Value;
+                Info($"IISExpressWindowsAuthentication: {iisExpressWindowsAuthentication}");
+                var iisExpressUseClassicPipelineMode = xml.Root.XPathSelectElement("/x:Project/x:PropertyGroup/x:IISExpressUseClassicPipelineMode", namespaceManager)?.Value;
+                Info($"IISExpressUseClassicPipelineMode: {iisExpressUseClassicPipelineMode}");
+                var useGlobalApplicationHostFile = xml.Root.XPathSelectElement("/x:Project/x:PropertyGroup/x:UseGlobalApplicationHostFile", namespaceManager)?.Value;
+                Info($"UseGlobalApplicationHostFile: {useGlobalApplicationHostFile}");
+
+                Info($"Scan all bindings.");
+                bool matched = false;
+                if (string.Equals(useIIS, "true", StringComparison.OrdinalIgnoreCase))
                 {
-                    // IIS Express
-                    Info($"IIS Express is used for this project.");
-                    foreach (Binding binding in site.Bindings)
+                    if (string.Equals(useIISExpress, "true", StringComparison.OrdinalIgnoreCase))
                     {
-                        Info($"Binding {binding.ToShortString()}.");
-                        if (string.Equals(binding.ToIisUrl(), iisUrl, StringComparison.OrdinalIgnoreCase))
+                        // IIS Express
+                        Info($"IIS Express is used for this project.");
+                        foreach (Microsoft.Web.Administration.Binding binding in site.Bindings)
                         {
-                            Info($"A matching binding is found for {iisUrl}.");
-                            matched = true;
+                            Info($"Binding {binding.ToShortString()}.");
+                            if (string.Equals(binding.ToIisUrl(), iisUrl, StringComparison.OrdinalIgnoreCase))
+                            {
+                                Info($"A matching binding is found for {iisUrl}.");
+                                matched = true;
+                            }
                         }
                     }
-                }
-                else if (string.Equals(useIISExpress, "false", StringComparison.OrdinalIgnoreCase))
-                {
-                    // IIS
-                    Info($"Full IIS is used for this project.");
-                    foreach (Binding binding in site.Bindings)
+                    else if (string.Equals(useIISExpress, "false", StringComparison.OrdinalIgnoreCase))
                     {
-                        Info($"Binding {binding.ToShortString()}.");
-                        if (string.Equals(binding.ToIisUrl(), iisUrl, StringComparison.OrdinalIgnoreCase))
+                        // IIS
+                        Info($"Full IIS is used for this project.");
+                        foreach (Microsoft.Web.Administration.Binding binding in site.Bindings)
                         {
-                            Info($"A matching binding is found for {iisUrl}.");
-                            matched = true;
+                            Info($"Binding {binding.ToShortString()}.");
+                            if (string.Equals(binding.ToIisUrl(), iisUrl, StringComparison.OrdinalIgnoreCase))
+                            {
+                                Info($"A matching binding is found for {iisUrl}.");
+                                matched = true;
+                            }
                         }
+                    }
+                    else
+                    {
+                        Warn($"An unexpected condition hit.");
+                        _logger.LogWarning("Unexpected condition hit");
+                        return;
                     }
                 }
                 else
                 {
-                    //TODO:  What?
-                    Warn($"An unexpected condition hit.");
-                    System.Diagnostics.Debug.WriteLine("unexpected condition hit.");
+                    // External server
+                    Warn($"External server is used.");
                     return;
                 }
-            }
-            else
-            {
-                // External server
-                Warn($"External server is used.");
-                return;
-            }
 
-            if (!matched)
+                if (!matched)
+                {
+                    Error($"No matching binding is found for {iisUrl}.");
+                    Error($"Please edit project file and IIS Express configuration file to match each other.");
+                }
+            }
+            catch (Exception ex)
             {
-                Error($"No matching binding is found for {iisUrl}.");
-                Error($"Please edit project file and IIS Express configuration file to match each other.");
+                _logger.LogError(ex, "Error analyzing web project");
             }
         }
 

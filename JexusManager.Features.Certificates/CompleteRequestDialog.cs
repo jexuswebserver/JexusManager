@@ -9,19 +9,23 @@ namespace JexusManager.Features.Certificates
 {
     using System;
     using System.ComponentModel;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Reactive.Disposables;
-    using System.Reactive.Linq;
-    using System.Security.Cryptography.X509Certificates;
     using System.Windows.Forms;
+    using Microsoft.Extensions.Logging;
+    using JexusManager;
 
     using Microsoft.Web.Management.Client.Win32;
     using Mono.Security.Authenticode;
     using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
+    using System.Security.Cryptography.X509Certificates;
+    using System.Reactive.Disposables;
+    using System.Reactive.Linq;
+    using System.IO;
+    using System.Diagnostics;
 
-    internal partial class CompleteRequestDialog : DialogForm
+    public partial class CompleteRequestDialog : DialogForm
     {
+        private static readonly ILogger _logger = LogHelper.GetLogger("CompleteRequestDialog");
+
         public CompleteRequestDialog(IServiceProvider serviceProvider, CertificatesFeature feature)
             : base(serviceProvider)
         {
@@ -102,48 +106,7 @@ namespace JexusManager.Features.Certificates
 
                     Store = cbStore.SelectedIndex == 0 ? "Personal" : "WebHosting";
 
-                    try
-                    {
-                        // add certificate
-                        using var process = new Process();
-                        var start = process.StartInfo;
-                        start.Verb = "runas";
-                        start.UseShellExecute = true;
-                        start.FileName = "cmd";
-                        start.Arguments = $"/c \"\"{CertificateInstallerLocator.FileName}\" /f:\"{p12File}\" /p:{p12pwd} /n:\"{txtName.Text}\" /s:{(cbStore.SelectedIndex == 0 ? "MY" : "WebHosting")}\"";
-                        start.CreateNoWindow = true;
-                        start.WindowStyle = ProcessWindowStyle.Hidden;
-                        process.Start();
-                        process.WaitForExit();
-                        File.Delete(p12File);
-                        if (process.ExitCode == 0)
-                        {
-                            DialogResult = DialogResult.OK;
-                        }
-                        else
-                        {
-                            MessageBox.Show(process.ExitCode.ToString());
-                        }
-                    }
-                    catch (Win32Exception ex)
-                    {
-                        // elevation is cancelled.
-                        var message = Microsoft.Web.Administration.NativeMethods.KnownCases(ex.NativeErrorCode);
-                        if (string.IsNullOrEmpty(message))
-                        {
-                            Debug.WriteLine(ex);
-                            Debug.WriteLine($"native {ex.NativeErrorCode}");
-                            // throw;
-                        }
-                        else
-                        {
-                            ShowError(ex, message, false);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine(ex);
-                    }
+                    Install(p12File, p12pwd);
                 }));
 
             container.Add(
@@ -166,5 +129,44 @@ namespace JexusManager.Features.Certificates
         public string Store { get; set; }
 
         public X509Certificate2 Item { get; set; }
+
+        private void Install(string p12File, string p12pwd)
+        {
+            try
+            {
+                // add certificate
+                using var process = new Process();
+                var start = process.StartInfo;
+                start.Verb = "runas";
+                start.UseShellExecute = true;
+                start.FileName = "cmd";
+                start.Arguments = $"/c \"\"{CertificateInstallerLocator.FileName}\" /f:\"{p12File}\" /p:{p12pwd} /n:\"{txtName.Text}\" /s:{(cbStore.SelectedIndex == 0 ? "MY" : "WebHosting")}\"";
+                start.CreateNoWindow = true;
+                start.WindowStyle = ProcessWindowStyle.Hidden;
+                process.Start();
+                process.WaitForExit();
+                File.Delete(p12File);
+                if (process.ExitCode == 0)
+                {
+                    DialogResult = DialogResult.OK;
+                }
+                else
+                {
+                    MessageBox.Show(process.ExitCode.ToString());
+                }
+            }
+            catch (Win32Exception ex)
+            {
+                // elevation is cancelled.
+                if (ex.NativeErrorCode != (int)Windows.Win32.Foundation.WIN32_ERROR.ERROR_CANCELLED)
+                {
+                    _logger.LogError(ex, "Win32 error during certificate installation. Native error code: {Code}", ex.NativeErrorCode);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error during certificate installation");
+            }
+        }
     }
 }

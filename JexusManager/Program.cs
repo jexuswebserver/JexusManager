@@ -9,15 +9,20 @@ using Microsoft.Win32;
 namespace JexusManager
 {
     using JexusManager.Dialogs;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Logging;
     using Mono.Options;
     using System;
     using System.Collections.Generic;
+    using System.Drawing;
     using System.IO;
     using System.Runtime.InteropServices;
     using System.Windows.Forms;
 
     internal static class Program
     {
+        public static IServiceProvider ServiceProvider { get; private set; }
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -50,12 +55,32 @@ namespace JexusManager
 
             Microsoft.Web.Administration.JexusServerManager.Enabled = jexus;
 
+            // UI initialization
             ApplicationConfiguration.Initialize();
-            
-            // TODO: set encryption support
-            // ProtectedConfigurationProvider.Provider = new WorkingEncryptionServiceProvider();
+            var textBox = new RichTextBox
+            {
+                Multiline = true,
+                ReadOnly = true,
+                Dock = DockStyle.Fill,
+                ScrollBars = RichTextBoxScrollBars.Vertical,
+                Font = new Font("Consolas", 9),
+                BackColor = Color.Black,
+                ForeColor = Color.LightGray
+            };
 
-            Application.Run(new MainForm(extra));
+            var provider = new TextBoxLoggerProvider(textBox);
+            var services = new ServiceCollection();
+            services.AddLogging(builder =>
+            {
+                builder.AddProvider(provider);
+            });
+
+            ServiceProvider = services.BuildServiceProvider();
+
+            var loggerFactory = ServiceProvider.GetRequiredService<ILoggerFactory>();
+            LogHelper.Initialize(loggerFactory);
+
+            Application.Run(new MainForm(extra, textBox));
         }
 
         private static void ShowHelp(OptionSet optionSet)

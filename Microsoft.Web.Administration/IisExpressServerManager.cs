@@ -9,12 +9,16 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using JexusManager;
+using Microsoft.Extensions.Logging;
 using Exception = System.Exception;
 
 namespace Microsoft.Web.Administration
 {
     public sealed class IisExpressServerManager : ServerManager
     {
+        private static readonly ILogger _logger = LogHelper.GetLogger("IisExpressServerManager");
+
         public Version Version { get; }
 
         public string PrimaryExecutable { get; }
@@ -87,12 +91,12 @@ namespace Microsoft.Web.Administration
                     StartInfo = new ProcessStartInfo
                     {
                         Verb = site.Bindings.ElevationRequired && !PublicNativeMethods.IsProcessElevated
-                    ? "runas"
-                    : null,
+                            ? "runas"
+                            : null,
                         UseShellExecute = true,
                         FileName = "cmd",
                         Arguments =
-                    $"/c \"\"{CertificateInstallerLocator.FileName}\" /config:\"{site.FileContext.FileName}\" /siteId:{site.Id}\"",
+                            $"/c \"\"{CertificateInstallerLocator.FileName}\" /config:\"{site.FileContext.FileName}\" /siteId:{site.Id}\"",
                         CreateNoWindow = true,
                         WindowStyle = ProcessWindowStyle.Hidden
                     }
@@ -107,22 +111,19 @@ namespace Microsoft.Web.Administration
                 // elevation is cancelled.
                 if (ex.NativeErrorCode != (int)Windows.Win32.Foundation.WIN32_ERROR.ERROR_CANCELLED)
                 {
-                    Debug.WriteLine(ex);
-                    Debug.WriteLine($"native {ex.NativeErrorCode}");
-                    // throw;
+                    _logger.LogWarning(ex, "Win32 error getting site state. Native error code: {Code}", ex.NativeErrorCode);
                 }
             }
             catch (InvalidOperationException ex)
             {
                 if (ex.HResult != NativeMethods.NoProcessAssociated)
                 {
-                    Debug.WriteLine(ex);
-                    Debug.WriteLine($"hresult {ex.HResult}");
+                    _logger.LogError(ex, "Error getting site state. HResult: {HResult}", ex.HResult);
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
+                _logger.LogError(ex, "Unexpected error getting site state");
             }
 
             return true;
@@ -236,14 +237,12 @@ namespace Microsoft.Web.Administration
                 // elevation is cancelled.
                 if (ex.NativeErrorCode != (int)Windows.Win32.Foundation.WIN32_ERROR.ERROR_CANCELLED)
                 {
-                    Debug.WriteLine(ex);
-                    Debug.WriteLine($"native {ex.NativeErrorCode}");                    
-                    // throw;
+                    _logger.LogError(ex, "Win32 error stopping site. Native error code: {Code}", ex.NativeErrorCode);
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
+                _logger.LogError(ex, "Error stopping site", ex);
             }
         }
 

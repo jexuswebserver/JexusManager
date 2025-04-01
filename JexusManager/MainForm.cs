@@ -58,9 +58,13 @@ namespace JexusManager
     using JexusManager.Features.Asp;
     using JexusManager.Features.TraceFailedRequests;
     using System.Diagnostics;
+    using Microsoft.Extensions.Logging;
+    using System.Drawing;
 
     public sealed partial class MainForm : Form
     {
+        private readonly Panel _logPanel;
+        private readonly RichTextBox _logTextBox;
         private const string expressGlobalInstanceName = "Global";
         private readonly List<ModuleProvider> _providers;
         private readonly ServiceContainer _serviceContainer;
@@ -72,9 +76,34 @@ namespace JexusManager
 
         public ManagementUIService UIService { get; }
 
-        public MainForm(List<string> files)
+        public MainForm(List<string> files, RichTextBox texBox)
         {
             InitializeComponent();
+
+            // Create logging panel
+            _logTextBox = texBox;
+
+            _logPanel = new Panel
+            {
+                Dock = DockStyle.Bottom,
+                Height = 200,
+                Visible = false
+            };
+            _logPanel.Controls.Add(_logTextBox);
+            Controls.Add(_logPanel);
+
+            LogHelper.GetLogger<MainForm>().LogInformation("Jexus Manager starting up. Version: {Version}", 
+                Assembly.GetExecutingAssembly().GetName().Version);
+
+            // Add toggle logging menu item
+            helpToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
+            var toggleLogItem = new ToolStripMenuItem("Show &Logs", null, (s, e) =>
+            {
+                _logPanel.Visible = !_logPanel.Visible;
+                ((ToolStripMenuItem)s).Text = _logPanel.Visible ? "Hide &Logs" : "Show &Logs";
+            });
+            helpToolStripMenuItem.DropDownItems.Add(toggleLogItem);
+
 
             removeToolStripMenuItem.Image = DefaultTaskList.RemoveImage;
             removeToolStripMenuItem1.Image = DefaultTaskList.RemoveImage;
@@ -219,8 +248,10 @@ namespace JexusManager
 
         private void LoadIisExpress()
         {
+            LogHelper.GetLogger<MainForm>().LogInformation("Loading IIS Express servers");
             if (!IisExpressServerManager.ServerInstalled)
             {
+                LogHelper.GetLogger<MainForm>().LogWarning("IIS Express is not installed on this machine");
                 return;
             }
 
@@ -329,6 +360,7 @@ namespace JexusManager
 
         private void RegisterServer(ServerTreeNode data)
         {
+            LogHelper.GetLogger<MainForm>().LogInformation("Registering server {Name} ({Mode})", data.DisplayName, data.Mode);
             data.ContextMenuStrip = cmsServer;
             if (data.Mode == WorkingMode.IisExpress)
             {
@@ -385,24 +417,28 @@ namespace JexusManager
             var selected = treeView1.SelectedNode;
             if (selected == null)
             {
+                LogHelper.GetLogger<MainForm>().LogWarning("Cannot create site: no node selected");
                 return;
             }
 
             var data = GetCurrentData(selected);
             if (data.IsBusy)
             {
+                LogHelper.GetLogger<MainForm>().LogWarning("Cannot create site: server {Name} is busy", data.DisplayName);
                 return;
             }
 
             if (data.ServerManager == null)
             {
-                Debug.WriteLine($"null server: {data.DisplayName} : {data.Mode} : {selected.Text} : {selected.GetType().FullName}");
+                LogHelper.GetLogger<MainForm>().LogWarning("Null server: {DisplayName} : {Mode} : {Text} : {Type}", 
+                    data.DisplayName, data.Mode, selected.Text, selected.GetType().FullName);
                 return;
             }
 
             if (data.ServerManager.Sites == null)
             {
-                Debug.WriteLine($"null sites collection: {data.DisplayName} : {data.Mode} : {selected.Text} : {selected.GetType().FullName} : {data.ServerManager.FileName}");
+                LogHelper.GetLogger<MainForm>().LogWarning("Null sites collection: {DisplayName} : {Mode} : {Text} : {Type} : {FileName}", 
+                    data.DisplayName, data.Mode, selected.Text, selected.GetType().FullName, data.ServerManager.FileName);
                 return;
             }
 
@@ -414,9 +450,11 @@ namespace JexusManager
                 return;
             }
 
+            LogHelper.GetLogger<MainForm>().LogInformation("Creating new site on server {Server}", data.DisplayName);
             data.ServerManager.Sites.Add(dialog.NewSite);
             dialog.NewSite.Applications[0].Save();
             data.ServerManager.CommitChanges();
+            LogHelper.GetLogger<MainForm>().LogInformation("Site {SiteName} created successfully", dialog.NewSite.Name);
             AddSiteNode(dialog.NewSite);
         }
 
@@ -494,6 +532,7 @@ namespace JexusManager
 
         private void Form1FormClosing(object sender, FormClosingEventArgs e)
         {
+            LogHelper.GetLogger<MainForm>().LogInformation("Application shutting down");
             if (actSave.Enabled)
             {
                 var result = UIService.ShowMessage("The connection list has changed. Do you want to save changes?", Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
@@ -517,7 +556,7 @@ namespace JexusManager
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine(ex);
+                    LogHelper.GetLogger<MainForm>().LogError(ex, "Error during server shutdown");
                     var last = ex;
                     Exception previous = null;
                     while (last.InnerException != null)
@@ -666,7 +705,7 @@ namespace JexusManager
             {
                 if (e.Node.Text != ManagerTreeNode.TempNodeName)
                 {
-                    Debug.WriteLine($"wrong node {e.Node.GetType().FullName} {e.Node.Text}");
+                    LogHelper.GetLogger<MainForm>().LogWarning("Wrong node type: {Type} Name: {Text}", e.Node.GetType().FullName, e.Node.Text);
                 }
 
                 return;
@@ -941,7 +980,7 @@ namespace JexusManager
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
+                LogHelper.GetLogger<MainForm>().LogError(ex, "Error during server shutdown");
                 File.WriteAllText(DialogHelper.DebugLog, ex.ToString());
                 var last = ex;
                 while (last is AggregateException)

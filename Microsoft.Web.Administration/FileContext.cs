@@ -3,20 +3,23 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
 using System.Xml;
 using System.Xml.Linq;
+using Microsoft.Extensions.Logging;
+using JexusManager;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using System.Linq;
 using System.Xml.XPath;
+using System.Diagnostics;
 
 namespace Microsoft.Web.Administration
 {
-    [DebuggerDisplay("{FileName}[{Location}]")]
     internal sealed class FileContext : IEquatable<FileContext>
     {
+        private static readonly ILogger _logger = LogHelper.GetLogger("FileContext");
+
         private readonly ServerManager _server;
         private readonly object _locker = new object();
         private readonly bool _doNotThrow;
@@ -135,51 +138,51 @@ namespace Microsoft.Web.Administration
 
             lock (_locker)
             {
-                if (AppHost)
+                try
                 {
-                    // TODO: load settings from applicationHost.config.
-                    var historyFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Jexus Manager",
-                        "history");
-                    int last = 0;
-                    if (!Directory.Exists(historyFolder))
+                    if (AppHost)
                     {
-                        Directory.CreateDirectory(historyFolder);
-                    }
-                    else
-                    {
-                        var existing = new DirectoryInfo(historyFolder).GetDirectories();
-                        last =
-                            existing.Select(found => found.Name.Substring("CFGHISTORY_".Length))
-                                .Select(int.Parse)
-                                .Concat(new[] { last })
-                                .Max();
+                        // TODO: load settings from applicationHost.config.
+                        var historyFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Jexus Manager",
+                            "history");
+                        int last = 0;
+                        if (!Directory.Exists(historyFolder))
+                        {
+                            Directory.CreateDirectory(historyFolder);
+                        }
+                        else
+                        {
+                            var existing = new DirectoryInfo(historyFolder).GetDirectories();
+                            last =
+                                existing.Select(found => found.Name.Substring("CFGHISTORY_".Length))
+                                    .Select(int.Parse)
+                                    .Concat(new[] { last })
+                                    .Max();
+                        }
+
+                        last++;
+                        var revisionFolder = Path.Combine(historyFolder, "CFGHISTORY_" + last.ToString("D10"));
+                        if (!Directory.Exists(revisionFolder))
+                        {
+                            Directory.CreateDirectory(revisionFolder);
+                        }
+
+                        var fileName = Path.GetFileName(FileName);
+                        if (fileName != null)
+                        {
+                            File.Copy(FileName, Path.Combine(revisionFolder, fileName));
+                        }
                     }
 
-                    last++;
-                    var revisionFolder = Path.Combine(historyFolder, "CFGHISTORY_" + last.ToString("D10"));
-                    if (!Directory.Exists(revisionFolder))
-                    {
-                        Directory.CreateDirectory(revisionFolder);
-                    }
-
-                    var fileName = Path.GetFileName(FileName);
-                    if (fileName != null)
-                    {
-                        File.Copy(FileName, Path.Combine(revisionFolder, fileName));
-                    }
-                }
-
-                if (_document != null)
-                {
-                    try
+                    if (_document != null)
                     {
                         using var stream = File.Open(FileName, FileMode.Create, FileAccess.Write, FileShare.None);
                         _document.Save(stream);
                     }
-                    catch (SystemException ex)
-                    {
-                        Debug.WriteLine(ex);
-                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error saving file {FileName}", FileName);
                 }
             }
         }
@@ -371,7 +374,7 @@ namespace Microsoft.Web.Administration
                 if (found == null)
                 {
                     found = new SectionSchema(name, element, fileName);
-                    Debug.Assert(name != null, nameof(name) + " != null");
+                    System.Diagnostics.Debug.Assert(name != null, nameof(name) + " != null");
                     _sectionSchemas.Add(name, found);
                 }
 

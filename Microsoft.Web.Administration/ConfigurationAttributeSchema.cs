@@ -4,17 +4,21 @@
 
 using System;
 using System.Xml.Linq;
+using Microsoft.Extensions.Logging;
+using JexusManager;
 using System.Diagnostics;
-using System.Globalization;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Reflection;
+using System.Globalization;
 
 namespace Microsoft.Web.Administration
 {
     [DebuggerDisplay("{Name}[{Type}]")]
     public sealed class ConfigurationAttributeSchema
     {
+        private static readonly ILogger _logger = LogHelper.GetLogger("ConfigurationAttributeSchema");
+
         private ConfigurationEnumValueCollection _collection;
 
         private ConfigurationValidatorBase _validator;
@@ -220,7 +224,7 @@ namespace Microsoft.Web.Administration
             }
             catch (MissingMethodException)
             {
-                Debug.WriteLine($"type: {ValidationType}; parameter: {ValidationParameter}; is null ? {ValidationParameter == null}");
+                _logger.LogDebug($"type: {ValidationType}; parameter: {ValidationParameter}; is null ? {ValidationParameter == null}");
                 throw;
             }
         }

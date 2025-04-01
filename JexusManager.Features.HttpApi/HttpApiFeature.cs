@@ -7,7 +7,7 @@ using System;
 
 namespace JexusManager.Features.HttpApi
 {
-    internal abstract class HttpApiFeature<T> : FeatureBase<T>, IHttpApiFeature
+    public abstract class HttpApiFeature<T> : FeatureBase<T>, IHttpApiFeature
         where T : class, IItem<T>
     {
         protected HttpApiFeature(Module module)

@@ -3,26 +3,28 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using JexusManager.Services;
-using Microsoft.Web.Administration;
-using Microsoft.Web.Management.Client;
-using Microsoft.Web.Management.Client.Win32;
-using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
-using System.Reflection;
 using System.Windows.Forms;
+using Microsoft.Extensions.Logging;
+using JexusManager;
+using System.Reflection;
+using System.Collections;
+using Microsoft.Web.Management.Client.Win32;
+using Microsoft.Web.Management.Client;
+using System.Collections.Generic;
 using Org.BouncyCastle.Utilities.Encoders;
+using System.Diagnostics;
+using Microsoft.Web.Administration;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography;
-using Exception = System.Exception;
+using JexusManager.Services;
 
 namespace JexusManager.Features.HttpApi
 {
     internal class IpMappingFeature : HttpApiFeature<IpMappingItem>
     {
+        private static readonly ILogger _logger = LogHelper.GetLogger("IpMappingFeature");
+
         private sealed class FeatureTaskList : DefaultTaskList
         {
             private readonly IpMappingFeature _owner;
@@ -93,6 +95,11 @@ namespace JexusManager.Features.HttpApi
                 return;
             }
 
+            DeleteMapping();
+        }
+
+        private void DeleteMapping()
+        {
             try
             {
                 // remove IP mapping
@@ -118,21 +125,14 @@ namespace JexusManager.Features.HttpApi
             catch (Win32Exception ex)
             {
                 // elevation is cancelled.
-                var message = Microsoft.Web.Administration.NativeMethods.KnownCases(ex.NativeErrorCode);
-                if (string.IsNullOrEmpty(message))
+                if (ex.NativeErrorCode != (int)Windows.Win32.Foundation.WIN32_ERROR.ERROR_CANCELLED)
                 {
-                    Debug.WriteLine(ex);
-                    Debug.WriteLine($"native {ex.NativeErrorCode}");
-                    // throw;
-                }
-                else
-                {
-                    dialog.ShowError(ex, message, Name, false);
+                    _logger.LogError(ex, "Win32 error deleting IP mapping. Native error code: {Code}", ex.NativeErrorCode);
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
+                _logger.LogError(ex, "Error deleting IP mapping");
             }
         }
 

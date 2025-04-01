@@ -3,15 +3,19 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using Microsoft.Extensions.Logging;
+using JexusManager;
 using System.Diagnostics;
-using System.Security.Cryptography;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 
 namespace Microsoft.Web.Administration
 {
     [DebuggerDisplay("{Name}")]
-    public class ConfigurationAttribute
+    public sealed class ConfigurationAttribute
     {
+        private static readonly ILogger _logger = LogHelper.GetLogger("ConfigurationAttribute");
+
         private object _value;
         private readonly ConfigurationElement _element;
 
@@ -240,26 +244,10 @@ namespace Microsoft.Web.Administration
                         }
                         catch (Exception ex)
                         {
-                            // If encryption fails with the selected provider, try a fallback approach
-                            System.Diagnostics.Debug.WriteLine($"Error encrypting with {selectedProvider}: {ex.Message}");
-                            
-                            // Create a temporary RSA provider and encrypt with it
-                            try
-                            {
-                                using var rsa = new RSACryptoServiceProvider(2048);
-                                byte[] dataBytes = System.Text.Encoding.Unicode.GetBytes(value);
-                                byte[] encryptedBytes = rsa.Encrypt(dataBytes, false);
-                                string encryptedValue = Convert.ToBase64String(encryptedBytes);
+                            _logger.LogError(ex, "Error encrypting with provider {Provider}", selectedProvider);
 
-                                // Just return the encrypted value without the [enc:] wrapper
-                                // This will treat it as cleartext later but at least it's obscured
-                                return value;
-                            }
-                            catch
-                            {
-                                // If all encryption attempts fail, return the original value
-                                return value;
-                            }
+                            // If all encryption attempts fail, return the original value
+                            return value;
                         }
                     }
                 }

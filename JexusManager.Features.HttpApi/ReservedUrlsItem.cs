@@ -6,7 +6,7 @@ using Microsoft.Web.Administration;
 
 namespace JexusManager.Features.HttpApi
 {
-    internal class ReservedUrlsItem : IItem<ReservedUrlsItem>
+    public class ReservedUrlsItem : IItem<ReservedUrlsItem>
     {
         public string UrlPrefix { get; set; }
         public string SecurityDescriptor { get; set; }

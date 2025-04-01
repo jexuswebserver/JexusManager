@@ -5,18 +5,22 @@
 namespace JexusManager.Tree
 {
     using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.Design;
     using System.IO;
-    using System.Windows.Forms;
+    using Microsoft.Extensions.Logging;
+    using JexusManager;
 
     using Microsoft.Web.Administration;
     using Microsoft.Web.Management.Server;
 
     using Application = Microsoft.Web.Administration.Application;
+    using System.Collections.Generic;
+    using System.Windows.Forms;
+    using System.ComponentModel.Design;
 
     internal abstract class ManagerTreeNode : TreeNode
     {
+        private static readonly ILogger _logger = LogHelper.GetLogger("ManagerTreeNode");
+
         public const string TempNodeName = "ManagerTreeNodeTemp";
 
         public IServiceProvider ServiceProvider { get; set; }
@@ -41,29 +45,29 @@ namespace JexusManager.Tree
 
         protected void LoadChildren(Application rootApp, int rootLevel, string rootFolder, string pathToSite, ContextMenuStrip phyMenu, ContextMenuStrip vDirMenu, ContextMenuStrip appMenu)
         {
-            var treeNodes = new List<TreeNode>();
-            foreach (VirtualDirectory virtualDirectory in rootApp.VirtualDirectories)
+            try
             {
-                var path = virtualDirectory.PathToSite();
-                if (!path.StartsWith(pathToSite))
+                var treeNodes = new List<TreeNode>();
+                foreach (VirtualDirectory virtualDirectory in rootApp.VirtualDirectories)
                 {
-                    continue;
+                    var path = virtualDirectory.PathToSite();
+                    if (!path.StartsWith(pathToSite))
+                    {
+                        continue;
+                    }
+
+                    if (GetLevel(path) != rootLevel + 1)
+                    {
+                        continue;
+                    }
+
+                    // IMPORTANT: only create level+1 vDir nodes.
+                    var virtualDirectoryNode = new VirtualDirectoryTreeNode(ServiceProvider, virtualDirectory, ServerNode) { ContextMenuStrip = vDirMenu };
+                    treeNodes.Add(virtualDirectoryNode);
                 }
 
-                if (GetLevel(path) != rootLevel + 1)
-                {
-                    continue;
-                }
-
-                // IMPORTANT: only create level+1 vDir nodes.
-                var virtualDirectoryNode = new VirtualDirectoryTreeNode(ServiceProvider, virtualDirectory, ServerNode) { ContextMenuStrip = vDirMenu };
-                treeNodes.Add(virtualDirectoryNode);
-            }
-
-            var loaded = new HashSet<string>();
-            if (Directory.Exists(rootFolder))
-            {
-                try
+                var loaded = new HashSet<string>();
+                if (Directory.Exists(rootFolder))
                 {
                     // IMPORTANT: only create level+1 physical nodes.
                     foreach (var folder in new DirectoryInfo(rootFolder).GetDirectories())
@@ -105,46 +109,46 @@ namespace JexusManager.Tree
                         treeNodes.Add(directory);
                     }
                 }
-                catch (IOException ex)
-                {
-                    System.Diagnostics.Debug.WriteLine(ex);
-                }
-            }
 
-            foreach (Application application in rootApp.Site.Applications)
+                foreach (Application application in rootApp.Site.Applications)
+                {
+                    if (application.IsRoot())
+                    {
+                        continue;
+                    }
+
+                    if (!application.Path.StartsWith(pathToSite))
+                    {
+                        continue;
+                    }
+
+                    if (loaded.Contains(application.Path))
+                    {
+                        continue;
+                    }
+
+                    if (GetLevel(application.Path) != rootLevel + 1)
+                    {
+                        continue;
+                    }
+
+                    if (application.VirtualDirectories.Count == 0)
+                    {
+                        continue;
+                    }
+
+                    // IMPORTANT: only create level+1 physical nodes.
+                    var appNode = new ApplicationTreeNode(ServiceProvider, application, ServerNode) { ContextMenuStrip = appMenu };
+                    treeNodes.Add(appNode);
+                }
+
+                treeNodes.Sort(s_comparer);
+                Nodes.AddRange(treeNodes.ToArray());
+            }
+            catch (IOException ex)
             {
-                if (application.IsRoot())
-                {
-                    continue;
-                }
-
-                if (!application.Path.StartsWith(pathToSite))
-                {
-                    continue;
-                }
-
-                if (loaded.Contains(application.Path))
-                {
-                    continue;
-                }
-
-                if (GetLevel(application.Path) != rootLevel + 1)
-                {
-                    continue;
-                }
-
-                if (application.VirtualDirectories.Count == 0)
-                {
-                    continue;
-                }
-
-                // IMPORTANT: only create level+1 physical nodes.
-                var appNode = new ApplicationTreeNode(ServiceProvider, application, ServerNode) { ContextMenuStrip = appMenu };
-                treeNodes.Add(appNode);
+                _logger.LogError(ex, "Error loading children");
             }
-
-            treeNodes.Sort(s_comparer);
-            Nodes.AddRange(treeNodes.ToArray());
         }
 
         private static readonly TreeNodeComparer s_comparer = new TreeNodeComparer();
@@ -168,7 +172,7 @@ namespace JexusManager.Tree
 
         public void EditPermissions()
         {
-            NativeMethods.ShowFileProperties(Folder);
+            Microsoft.Web.Administration.NativeMethods.ShowFileProperties(Folder);
         }
 
         public void Browse()

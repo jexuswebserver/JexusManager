@@ -8,14 +8,9 @@ namespace JexusManager.Features.Certificates
 {
     using System;
     using System.ComponentModel;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Reactive.Disposables;
-    using System.Reactive.Linq;
-    using System.Security.Cryptography;
-    using System.Security.Cryptography.X509Certificates;
-    using System.Text;
     using System.Windows.Forms;
+    using Microsoft.Extensions.Logging;
+    using JexusManager;
 
     using Services;
 
@@ -26,9 +21,17 @@ namespace JexusManager.Features.Certificates
     using Org.BouncyCastle.OpenSsl;
     using Org.BouncyCastle.Security;
     using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
+    using System.Security.Cryptography.X509Certificates;
+    using System.Diagnostics;
+    using System.Reactive.Linq;
+    using System.Reactive.Disposables;
+    using System.Text;
+    using System.IO;
 
     internal partial class ImportCertificateDialog : DialogForm
     {
+        private static readonly ILogger _logger = LogHelper.GetLogger("ImportCertificateDialog");
+
         public ImportCertificateDialog(IServiceProvider serviceProvider, CertificatesFeature feature)
             : base(serviceProvider)
         {
@@ -108,47 +111,7 @@ namespace JexusManager.Features.Certificates
                         }
                         else
                         {
-                            try
-                            {
-                                using var process = new Process();
-                                // add certificate
-                                var start = process.StartInfo;
-                                start.Verb = "runas";
-                                start.UseShellExecute = true;
-                                start.FileName = "cmd";
-                                start.Arguments = $"/c \"\"{CertificateInstallerLocator.FileName}\" /f:\"{txtFile.Text}\" /p:{txtPassword.Text} /n:\"{Item.FriendlyName}\" /s:{(cbStore.SelectedIndex == 0 ? "MY" : "WebHosting")}\"";
-                                start.CreateNoWindow = true;
-                                start.WindowStyle = ProcessWindowStyle.Hidden;
-                                process.Start();
-                                process.WaitForExit();
-                                if (process.ExitCode == 0)
-                                {
-                                    DialogResult = DialogResult.OK;
-                                }
-                                else
-                                {
-                                    MessageBox.Show(process.ExitCode.ToString());
-                                }
-                            }
-                            catch (Win32Exception ex)
-                            {
-                                // elevation is cancelled.
-                                var message = NativeMethods.KnownCases(ex.NativeErrorCode);
-                                if (string.IsNullOrEmpty(message))
-                                {
-                                    Debug.WriteLine(ex);
-                                    Debug.WriteLine($"native {ex.NativeErrorCode}");
-                                    // throw;
-                                }
-                                else
-                                {
-                                    ShowError(ex, message, false);
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                Debug.WriteLine(ex);
-                            }
+                            Install(txtFile.Text, txtPassword.Text);
                         }
                     }
                     catch (Exception ex)
@@ -169,5 +132,40 @@ namespace JexusManager.Features.Certificates
         public string Store { get; set; }
 
         public X509Certificate2 Item { get; set; }
+
+        private void Install(string fileName, string password)
+        {
+            try
+            {
+                // install certificate
+                using var process = new Process();
+                var start = process.StartInfo;
+                start.Verb = "runas";
+                start.UseShellExecute = true;
+                start.FileName = "cmd";
+                start.Arguments = $"/c \"\"{CertificateInstallerLocator.FileName}\" /f:\"{fileName}\" /p:\"{password}\" /n:\"{txtName.Text}\" /s:{(cbStore.SelectedIndex == 0 ? "MY" : "WebHosting")}\"";
+                start.CreateNoWindow = true;
+                start.WindowStyle = ProcessWindowStyle.Hidden;
+                process.Start();
+                process.WaitForExit();
+
+                if (process.ExitCode == 0)
+                {
+                    DialogResult = DialogResult.OK;
+                }
+            }
+            catch (Win32Exception ex)
+            {
+                // elevation is cancelled.
+                if (ex.NativeErrorCode != (int)Windows.Win32.Foundation.WIN32_ERROR.ERROR_CANCELLED)
+                {
+                    _logger.LogError(ex, "Win32 error during certificate installation. Native error code: {Code}", ex.NativeErrorCode);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error during certificate installation");
+            }
+        }
     }
 }

@@ -7,7 +7,7 @@ namespace JexusManager.Features.Certificates
     using System;
     using System.Security.Cryptography.X509Certificates;
 
-    internal class CertificatesItem : IEquatable<CertificatesItem>
+    public class CertificatesItem : IEquatable<CertificatesItem>
     {
         public CertificatesItem(X509Certificate2 certificate, string store, CertificatesFeature feature)
         {

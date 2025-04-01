@@ -10,16 +10,18 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
-using System.Reflection;
 using System.Windows.Forms;
-using Exception = System.Exception;
+using Microsoft.Extensions.Logging;
+using JexusManager;
+using System.Reflection;
+using System.Diagnostics;
 
 namespace JexusManager.Features.HttpApi
 {
-    internal class ReservedUrlsFeature : HttpApiFeature<ReservedUrlsItem>
+    public class ReservedUrlsFeature : HttpApiFeature<ReservedUrlsItem>
     {
+        private static readonly ILogger _logger = LogHelper.GetLogger("ReservedUrlsFeature");
+
         private sealed class FeatureTaskList : DefaultTaskList
         {
             private readonly ReservedUrlsFeature _owner;
@@ -94,6 +96,11 @@ namespace JexusManager.Features.HttpApi
                 return;
             }
 
+            DeleteReservedUrl();
+        }
+
+        private void DeleteReservedUrl()
+        {
             try
             {
                 // remove reserved URL
@@ -118,20 +125,14 @@ namespace JexusManager.Features.HttpApi
             catch (Win32Exception ex)
             {
                 // elevation is cancelled.
-                var message = Microsoft.Web.Administration.NativeMethods.KnownCases(ex.NativeErrorCode);
-                if (string.IsNullOrEmpty(message))
+                if (ex.NativeErrorCode != (int)Windows.Win32.Foundation.WIN32_ERROR.ERROR_CANCELLED)
                 {
-                    Debug.WriteLine(ex);
-                    Debug.WriteLine($"native {ex.NativeErrorCode}");
-                }
-                else
-                {
-                    dialog.ShowError(ex, message, Name, false);
+                    _logger.LogError(ex, "Win32 error deleting reserved URL. Native error code: {Code}", ex.NativeErrorCode);
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
+                _logger.LogError(ex, "Error deleting reserved URL");
             }
         }
 

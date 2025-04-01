@@ -1,5 +1,8 @@
 {
     "$schema": "https://aka.ms/CsWin32.schema.json",
     "public": false,
-    "emitSingleFile": true
+    "emitSingleFile": true,
+    "useSafeHandles": true,
+    "allowMarshaling": true,
+    "multiTargetingFriendlyAPIs": true
 }

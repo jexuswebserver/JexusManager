@@ -15,7 +15,7 @@ namespace Microsoft.Web.Administration
     using System.Net;
     using System.Security.Cryptography.X509Certificates;
     using System.Windows.Forms;
-
+    using Microsoft.Extensions.Logging;
     using JexusManager;
     using Org.BouncyCastle.Utilities.Encoders;
     using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
@@ -35,6 +35,8 @@ namespace Microsoft.Web.Administration
 
     public static class BindingUtility
     {
+        private static readonly ILogger _logger = LogHelper.GetLogger("BindingUtility");
+
         private const string AppIdIisExpress = "214124cd-d05b-4309-9af9-9caa44b2b74a";
 
         private const string AppIdIis = "4dc3e181-e14b-4a21-b022-59fc669b0914";
@@ -156,8 +158,7 @@ namespace Microsoft.Web.Administration
                 var message = NativeMethods.KnownCases(ex.NativeErrorCode);
                 if (string.IsNullOrEmpty(message))
                 {
-                    Debug.WriteLine(ex);
-                    Debug.WriteLine($"native {ex.NativeErrorCode}");
+                    _logger.LogWarning(ex, "Win32 error during certificate mapping. Native error code: {Code}", ex.NativeErrorCode);
                     return (CertificateMappingState.Win32ErrorOccurred, $"Register new certificate failed: unknown (native {ex.NativeErrorCode})");
                 }
 
@@ -165,7 +166,7 @@ namespace Microsoft.Web.Administration
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
+                _logger.LogError(ex, "Unhandled error during certificate mapping");
                 return (CertificateMappingState.GenericErrorOccurred, $"Register new certificate failed: unknown ({ex.Message})");
             }
         }
@@ -275,8 +276,7 @@ namespace Microsoft.Web.Administration
                 var message = NativeMethods.KnownCases(ex.NativeErrorCode);
                 if (string.IsNullOrEmpty(message))
                 {
-                    Debug.WriteLine(ex);
-                    Debug.WriteLine($"native {ex.NativeErrorCode}");
+                    _logger.LogWarning(ex, "Win32 error during mapping removal. Native error code: {Code}", ex.NativeErrorCode);
                     return $"Remove SNI certificate failed: unknown (native {ex.NativeErrorCode})";
                 }
 
@@ -284,13 +284,13 @@ namespace Microsoft.Web.Administration
             }
             catch (NullReferenceException ex)
             {
-                Debug.WriteLine(ex);
-                Debug.WriteLine($"binding {binding.ToString()} endpointNull {binding.EndPoint == null}");
+                _logger.LogError(ex, "Null reference during mapping removal. Binding: {Binding}, EndPoint null: {IsNull}", 
+                    binding.ToString(), binding.EndPoint == null);
                 return $"Remove SNI certificate failed: unknown ({ex.Message})";
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
+                _logger.LogError(ex, "Unhandled error during mapping removal");
                 return $"Remove SNI certificate failed: unknown ({ex.Message})";
             }
         }
@@ -332,8 +332,7 @@ namespace Microsoft.Web.Administration
                 var message = NativeMethods.KnownCases(ex.NativeErrorCode);
                 if (string.IsNullOrEmpty(message))
                 {
-                    Debug.WriteLine(ex);
-                    Debug.WriteLine($"native {ex.NativeErrorCode}");
+                    _logger.LogWarning(ex, "Win32 error adding reserved URL. Native error code: {Code}", ex.NativeErrorCode);
                     return $"failed to add reserved URL: unknown ({message})";
                 }
                 else
@@ -343,7 +342,7 @@ namespace Microsoft.Web.Administration
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
+                _logger.LogError(ex, "Error adding reserved URL: {Url}", url);
                 return $"failed to add reserved URL: unknown ({ex.Message})";
             }
         }

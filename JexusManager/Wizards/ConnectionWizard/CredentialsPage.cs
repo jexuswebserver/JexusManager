@@ -5,20 +5,20 @@
 namespace JexusManager.Wizards.ConnectionWizard
 {
     using System;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Net.Security;
-    using System.Text;
-    using System.Threading;
     using System.Windows.Forms;
-
-    using JexusManager.Dialogs;
-
-    using Microsoft.Web.Administration;
+    using Microsoft.Extensions.Logging;
+    using JexusManager;
     using Microsoft.Web.Management.Client.Win32;
+    using Microsoft.Web.Administration;
+    using System.Threading;
+    using System.Net.Security;
+    using JexusManager.Dialogs;
+    using System.Text;
 
     public partial class CredentialsPage : WizardPage
     {
+        private static readonly ILogger _logger = LogHelper.GetLogger("CredentialsPage");
+
         public CredentialsPage()
         {
             InitializeComponent();
@@ -138,21 +138,26 @@ namespace JexusManager.Wizards.ConnectionWizard
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
-                File.WriteAllText(DialogHelper.DebugLog, ex.ToString());
-                var last = ex;
-                while (last is AggregateException)
-                {
-                    last = last.InnerException;
-                }
-
-                var message = new StringBuilder();
-                message.AppendLine("Could not connect to the specified computer.")
-                                    .AppendLine()
-                                    .AppendFormat("Details: {0}", last?.Message);
-                service?.ShowMessage(message.ToString(), Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                RaiseError(ex);
                 return false;
             }
+        }
+
+        private void RaiseError(Exception ex)
+        {
+            _logger.LogError(ex, "Error in credentials page");
+            var service = (IManagementUIService)GetService(typeof(IManagementUIService));
+            var last = ex;
+            while (last is AggregateException)
+            {
+                last = last.InnerException;
+            }
+
+            var message = new StringBuilder();
+            message.AppendLine("Could not connect to the specified computer.")
+                                .AppendLine()
+                                .AppendFormat("Details: {0}", last?.Message);
+            service?.ShowMessage(message.ToString(), Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }

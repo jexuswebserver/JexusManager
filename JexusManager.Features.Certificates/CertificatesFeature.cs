@@ -10,35 +10,31 @@
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 
+using System;
 using System.ComponentModel;
+using System.Security.Cryptography;
+using System.Windows.Forms;
+using Microsoft.Extensions.Logging;
+using JexusManager;
+using System.Reflection;
+using System.Collections;
+using Microsoft.Web.Management.Client.Win32;
+using System.Security.Cryptography.X509Certificates;
+using Microsoft.Web.Management.Client;
+using System.Resources;
+using System.Collections.Generic;
+using JexusManager.Services;
+using Microsoft.Web.Administration;
+using System.Diagnostics;
+using JexusManager.Features.Certificates.Wizards.CertificateRequestWizard;
+using JexusManager.Features.Certificates.Wizards.CertificateRenewWizard;
 
 namespace JexusManager.Features.Certificates
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Reflection;
-    using System.Resources;
-    using System.Security.Cryptography;
-    using System.Security.Cryptography.X509Certificates;
-    using System.Windows.Forms;
-
-    using Services;
-    using Wizards.CertificateRenewWizard;
-    using Wizards.CertificateRequestWizard;
-
-    using Microsoft.Web.Administration;
-    using Microsoft.Web.Management.Client;
-    using Microsoft.Web.Management.Client.Win32;
-
-    using Module = Microsoft.Web.Management.Client.Module;
-
-    /// <summary>
-    /// Description of DefaultDocumentFeature.
-    /// </summary>
-    internal class CertificatesFeature
+    public class CertificatesFeature
     {
+        private static readonly ILogger _logger = LogHelper.GetLogger("CertificatesFeature");
+
         private sealed class FeatureTaskList : DefaultTaskList
         {
             private readonly CertificatesFeature _owner;
@@ -108,11 +104,10 @@ namespace JexusManager.Features.Certificates
                         }
                         catch (CryptographicException ex)
                         {
-                            if (ex.HResult != NativeMethods.BadKeySet)
+                            if (ex.HResult != Microsoft.Web.Administration.NativeMethods.BadKeySet)
                             {
                                 // TODO: add CNG support.
-                                // throw;
-                                Debug.WriteLine($"ate exception in certificates feature {ex}");
+                                _logger.LogError(ex, "Cryptographic error in certificates feature. HResult: {HResult}", ex.HResult);
                             }
                         }
                     }
@@ -218,7 +213,7 @@ namespace JexusManager.Features.Certificates
             }
         }
 
-        public CertificatesFeature(Module module)
+        public CertificatesFeature(Microsoft.Web.Management.Client.Module module)
         {
             Module = module;
         }
@@ -285,9 +280,9 @@ namespace JexusManager.Features.Certificates
                     }
                     catch (CryptographicException ex)
                     {
-                        if (ex.HResult != NativeMethods.NonExistingStore)
+                        if (ex.HResult != Microsoft.Web.Administration.NativeMethods.NonExistingStore)
                         {
-                            Debug.WriteLine($"CryptographicException {ex.HResult} from CertificatesFeature.");
+                            _logger.LogError(ex, "CryptographicException {HResult} from CertificatesFeature.", ex.HResult);
                             throw;
                         }
                     }
@@ -324,6 +319,11 @@ namespace JexusManager.Features.Certificates
                 return;
             }
 
+            DeleteCertificate();
+        }
+
+        private void DeleteCertificate()
+        {
             try
             {
                 // remove certificate and mapping
@@ -348,22 +348,20 @@ namespace JexusManager.Features.Certificates
             }
             catch (Win32Exception ex)
             {
-                // elevation is cancelled.
-                var message = NativeMethods.KnownCases(ex.NativeErrorCode);
+                var message = Microsoft.Web.Administration.NativeMethods.KnownCases(ex.NativeErrorCode);
                 if (string.IsNullOrEmpty(message))
-                {
-                    Debug.WriteLine(ex);
-                    Debug.WriteLine($"native {ex.NativeErrorCode}");
-                    // throw;
+                {                    
+                    _logger.LogError(ex, "Win32 error deleting certificate. Native error code: {Code}", ex.NativeErrorCode);
                 }
                 else
                 {
+                    var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
                     dialog.ShowError(ex, message, Name, false);
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
+                _logger.LogError(ex, "Error deleting certificate");
             }
         }
 
@@ -457,7 +455,7 @@ namespace JexusManager.Features.Certificates
                 }
                 catch (CryptographicException ex)
                 {
-                    if (ex.HResult != NativeMethods.UserCancelled)
+                    if (ex.HResult != Microsoft.Web.Administration.NativeMethods.UserCancelled)
                     {
                         var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
                         dialog.ShowMessage($"An unexpected error happened. HResult is {ex.HResult}. Contact your system administrator.", Name,
@@ -488,7 +486,7 @@ namespace JexusManager.Features.Certificates
             get { return FxVersionNotRequired; }
         }
 
-        public Module Module { get; }
+        public Microsoft.Web.Management.Client.Module Module { get; }
 
         public string Name
         {

@@ -3,24 +3,26 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.IO;
-using System.Text;
 using System.Windows.Forms;
-
-using JexusManager.Dialogs;
-using JexusManager.Features.Main;
-using JexusManager.Services;
-
+using Microsoft.Extensions.Logging;
+using JexusManager;
 using Microsoft.Web.Administration;
-using Microsoft.Web.Management.Client;
+using System.IO;
+using JexusManager.Dialogs;
+using System.ComponentModel.Design;
+using System.Text;
+using JexusManager.Services;
+using System.Collections.Generic;
 using Microsoft.Web.Management.Server;
+using JexusManager.Features.Main;
+using Microsoft.Web.Management.Client;
 
 namespace JexusManager.Tree
 {
-    internal sealed class ServerTreeNode : ManagerTreeNode
+    internal class ServerTreeNode : ManagerTreeNode
     {
+        private static readonly ILogger _logger = LogHelper.GetLogger("ServerTreeNode");
+
         private enum NodeStatus
         {
             Default = 0,
@@ -233,7 +235,7 @@ namespace JexusManager.Tree
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine(ex);
+                _logger.LogError(ex, "Error connecting to server");
                 File.WriteAllText(DialogHelper.DebugLog, ex.ToString());
                 var last = ex;
                 while (last is AggregateException)

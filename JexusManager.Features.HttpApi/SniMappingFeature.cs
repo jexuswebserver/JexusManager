@@ -10,8 +10,11 @@
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 
+using System;
 using System.ComponentModel;
-using System.IO;
+using System.Windows.Forms;
+using Microsoft.Extensions.Logging;
+using JexusManager;
 
 namespace JexusManager.Features.HttpApi
 {
@@ -37,6 +40,8 @@ namespace JexusManager.Features.HttpApi
     /// </summary>
     internal class SniMappingFeature : HttpApiFeature<SniMappingItem>
     {
+        private static readonly ILogger _logger = LogHelper.GetLogger("SniMappingFeature");
+
         private sealed class FeatureTaskList : DefaultTaskList
         {
             private readonly SniMappingFeature _owner;
@@ -110,6 +115,11 @@ namespace JexusManager.Features.HttpApi
                 return;
             }
 
+            DeleteMapping();
+        }
+
+        private void DeleteMapping()
+        {
             try
             {
                 // remove certificate and mapping
@@ -135,21 +145,14 @@ namespace JexusManager.Features.HttpApi
             catch (Win32Exception ex)
             {
                 // elevation is cancelled.
-                var message = NativeMethods.KnownCases(ex.NativeErrorCode);
-                if (string.IsNullOrEmpty(message))
+                if (ex.NativeErrorCode != (int)Windows.Win32.Foundation.WIN32_ERROR.ERROR_CANCELLED)
                 {
-                    Debug.WriteLine(ex);
-                    Debug.WriteLine($"native {ex.NativeErrorCode}");
-                    // throw;
-                }
-                else
-                {
-                    dialog.ShowError(ex, message, Name, false);
+                    _logger.LogError(ex, "Win32 error deleting SNI mapping. Native error code: {Code}", ex.NativeErrorCode);
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
+                _logger.LogError(ex, "Error deleting SNI mapping");
             }
         }
 

@@ -9,18 +9,21 @@ namespace JexusManager
     using System;
     using System.ComponentModel;
     using System.Diagnostics;
-    using System.Drawing;
     using System.IO;
     using System.Linq;
-    using System.Net;
     using System.Runtime.InteropServices;
     using System.Security.Cryptography;
     using System.Security.Cryptography.X509Certificates;
     using System.Windows.Forms;
+    using Microsoft.Extensions.Logging;
     using Tulpep.NotificationWindow;
+    using System.Net;
+    using System.Drawing;
 
     public static class DialogHelper
     {
+        private static readonly ILogger _logger = LogHelper.GetLogger("DialogHelper");
+
         public static string[] Conditions = new[]
                             {
                         "ALL_HTTP",
@@ -274,7 +277,7 @@ namespace JexusManager
                 {
                     if (ex.HResult != Microsoft.Web.Administration.NativeMethods.NonExistingStore)
                     {
-                        Debug.WriteLine($"CryptographicException {ex.HResult} from LoadCertificates MY");
+                        _logger.LogWarning(ex, "Error accessing MY certificate store. HResult: {HResult}", ex.HResult);
                         throw;
                     }
                 }
@@ -307,7 +310,7 @@ namespace JexusManager
             {
                 if (ex.HResult != Microsoft.Web.Administration.NativeMethods.NonExistingStore)
                 {
-                    Debug.WriteLine($"CryptographicException {ex.HResult} from LoadCertificates WebHosting");
+                    _logger.LogWarning(ex, "Error accessing WebHosting certificate store. HResult: {HResult}", ex.HResult);
                     throw;
                 }
             }
@@ -343,7 +346,7 @@ namespace JexusManager
                 }
                 catch (IOException ex)
                 {
-                    Debug.WriteLine(ex);
+                    _logger.LogError(ex, "Error creating directory {Path}", result);
                 }
             }
 
@@ -393,7 +396,7 @@ namespace JexusManager
                 return;
             }
 
-            Debug.WriteLine($"Windows Explorer cannot be located.");
+            _logger.LogWarning("Windows Explorer not found at {Path}", path);
         }
 
         public static void SiteStart(Site site)

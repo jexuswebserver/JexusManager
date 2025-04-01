@@ -21,9 +21,12 @@ namespace JexusManager.Features.Main
     using System.Reactive.Linq;
     using System.Collections.Generic;
     using EnumsNET;
+    using Microsoft.Extensions.Logging;
 
     public partial class SslDiagDialog : DialogForm
     {
+        private static readonly ILogger _logger = LogHelper.GetLogger("SslDiagDialog");
+
         public SslDiagDialog(IServiceProvider provider, ServerManager server)
             : base(provider)
         {
@@ -204,7 +207,7 @@ namespace JexusManager.Features.Main
                                                     else
                                                     {
                                                         Error("#You have a private key that corresponds to this certificate but CryptAcquireCertificatePrivateKey failed.");
-                                                        System.Diagnostics.Debug.WriteLine("CryptAcquireCertificatePrivateKey failed");
+                                                        _logger.LogWarning("CryptAcquireCertificatePrivateKey failed");
                                                     }
 
                                                     if (shouldRelease)
@@ -349,7 +352,7 @@ namespace JexusManager.Features.Main
                                         Error($"Problems detected on certificate store {binding.CertificateStoreName}.");
                                         if (ex.HResult != Microsoft.Web.Administration.NativeMethods.NonExistingStore)
                                         {
-                                            System.Diagnostics.Debug.WriteLine($"CryptographicException {ex.HResult} from SslDiag.");
+                                            _logger.LogError(ex, "CryptographicException {HResult} from SslDiag", ex.HResult);
                                             throw;
                                         }
 
@@ -364,12 +367,12 @@ namespace JexusManager.Features.Main
                     catch (CryptographicException ex)
                     {
                         Debug(ex.ToString());
-                        System.Diagnostics.Debug.WriteLine(ex);
-                        System.Diagnostics.Debug.WriteLine($"hResult {ex.HResult}");
+                        _logger.LogError(ex, "CryptographicException {HResult} from SslDiag", ex.HResult);
                     }
                     catch (Exception ex)
                     {
                         Debug(ex.ToString());
+                        _logger.LogError(ex, "Error analyzing certificate. HResult: {HResult}", ex.HResult);
                     }
                 }));
 

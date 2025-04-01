@@ -6,14 +6,21 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using JexusManager;
+using Microsoft.Extensions.Logging;
 
 namespace Microsoft.Web.Administration
 {
     internal static class AspNetCoreHelper
     {
-        public static void FixConfigFile(string fileName)
+        private static readonly ILogger _logger = LogHelper.GetLogger("AspNetCoreHelper");
+
+        internal static void FixConfigFile(string fileName)
         {
             var doc = XDocument.Load(fileName);
             var virturalDirectories = doc.Descendants("virtualDirectory");
@@ -198,7 +205,7 @@ namespace Microsoft.Web.Administration
                     .FirstOrDefault();
                 if (devServerVersion == null)
                 {
-                    Debug.WriteLine($"Blazor dev server missing");
+                    _logger.LogWarning("Blazor dev server missing in project {Project}", project);
                     return;
                 }
 
@@ -208,7 +215,7 @@ namespace Microsoft.Web.Administration
                 int index = input.IndexOf("net");
                 if (index == -1)
                 {
-                    Debug.WriteLine($"Unknown framework {input}");
+                    _logger.LogWarning("Unknown framework {Framework} in project {Project}", input, project);
                     return;
                 }
 
@@ -219,7 +226,7 @@ namespace Microsoft.Web.Administration
                 var devServerLibrary = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".nuget", "packages", "microsoft.aspnetcore.components.webassembly.devserver", devServerVersion, "tools", "blazor-devserver.dll");
                 if (!File.Exists(devServerLibrary))
                 {
-                    Debug.WriteLine($"Cannot find Blazor dev server library {devServerVersion}");
+                    _logger.LogWarning("Cannot find Blazor dev server library version {Version}", devServerVersion);
                     return;
                 }
 
@@ -236,7 +243,7 @@ namespace Microsoft.Web.Administration
                 int index = input.IndexOf("net");
                 if (index == -1)
                 {
-                    Debug.WriteLine($"Unknown framework {input}");
+                    _logger.LogWarning("Unknown framework {Framework} in project {Project}", input, project);
                     return;
                 }
 
@@ -255,7 +262,7 @@ namespace Microsoft.Web.Administration
                         }
                         else
                         {
-                            Debug.WriteLine($"impossible ASP.NET Core version {version}");
+                            _logger.LogInformation("ASP.NET Core {Version} is older than baseline {Baseline}", version, baseVersion);
                         }
                     }
                     else
@@ -274,7 +281,7 @@ namespace Microsoft.Web.Administration
                     var files = Directory.GetFiles(Path.Combine(root, "bin", "Debug", input), "*.dll");
                     if (files.Length == 1)
                     {
-                        Debug.WriteLine($"Didn't find the expected assembly. Choose another instead.");
+                        _logger.LogDebug("Expected assembly not found, using alternative: {Assembly}", files[0]);
                         primary = files[0];
                     }
                     else
@@ -285,7 +292,7 @@ namespace Microsoft.Web.Administration
 
                 if (primary == null)
                 {
-                    Debug.WriteLine($"Didn't find compiled assembly for {input}");
+                    _logger.LogWarning("Could not find compiled assembly for framework {Framework} in {Path}", input, root);
                     return;
                 }
 
@@ -294,7 +301,7 @@ namespace Microsoft.Web.Administration
                 if (!File.Exists(file))
                 {
                     // Not VS 15.2 and above
-                    Debug.WriteLine($"Didn't detect VS 15.2 or above");
+                    _logger.LogWarning("Visual Studio 15.2 or above not detected. VSWhere not found at {Path}", file);
                     return;
                 }
 
@@ -311,7 +318,7 @@ namespace Microsoft.Web.Administration
                 var launcher = $@"{folder}\Common7\IDE\Extensions\Microsoft\Web Tools\ProjectSystem\VSIISExeLauncher.exe";
                 if (!File.Exists(launcher))
                 {
-                    Debug.WriteLine($"Didn't detect VSIISExeLauncher");
+                    _logger.LogWarning("VSIISExeLauncher not found at {Path}", launcher);
                     return;
                 }
 
@@ -325,6 +332,7 @@ namespace Microsoft.Web.Administration
         private static string RestoreAndBuild(string root)
         {
             var dotnet = Environment.ExpandEnvironmentVariables(@"%ProgramFiles%\dotnet\dotnet.exe");
+            _logger.LogInformation("Running dotnet restore in {Path}", root);
             var restore = Process.Start(new ProcessStartInfo
             {
                 FileName = dotnet,
@@ -333,6 +341,8 @@ namespace Microsoft.Web.Administration
             });
             Debug.Assert(restore != null, nameof(restore) + " != null");
             restore.WaitForExit();
+
+            _logger.LogInformation("Running dotnet build in {Path}", root);
             var build = Process.Start(new ProcessStartInfo
             {
                 FileName = dotnet,

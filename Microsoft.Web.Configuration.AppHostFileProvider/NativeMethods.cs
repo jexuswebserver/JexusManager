@@ -88,6 +88,7 @@ namespace Microsoft.ApplicationHost
             uint pcbData = (uint)encrypted.Length;
             byte[] array = new byte[pcbData];
             encrypted.CopyTo(array, 0);
+            if (IisCngDecrypt(keyContainer, array, ref pcbData) != 0L)
             {
                 throw new Win32Exception(Marshal.GetLastWin32Error());
             }
