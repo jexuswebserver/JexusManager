@@ -23,10 +23,11 @@ namespace JexusManager.Features.TraceFailedRequests.Wizards.AddTraceWizard
                 .Merge(Observable.FromEventPattern<EventArgs>(rbAspNet, "Click"))
                 .Merge(Observable.FromEventPattern<EventArgs>(rbAsp, "Click"))
                 .Merge(Observable.FromEventPattern<EventArgs>(rbCustom, "Click"))
+                .Merge(Observable.FromEventPattern<EventArgs>(txtContent, "TextChanged"))
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    txtContent.Enabled = rbCustom.Checked;
+                    txtContent.Enabled = rbCustom.Checked && rbCustom.Enabled;
                     UpdateWizard();
                 }));
         }

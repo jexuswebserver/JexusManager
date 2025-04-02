@@ -109,6 +109,14 @@ namespace JexusManager.Features.TraceFailedRequests
             Refresh();
         }
 
+        private void ListView1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (listView1.SelectedItems.Count > 0)
+            {
+                _feature.Edit();
+            }
+        }
+
         protected override bool ShowHelp()
         {
             _feature.ShowHelp();

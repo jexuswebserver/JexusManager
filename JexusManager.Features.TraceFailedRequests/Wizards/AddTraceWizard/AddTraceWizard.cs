@@ -27,6 +27,7 @@ namespace JexusManager.Features.TraceFailedRequests.Wizards.AddTraceWizard
             _wizardData = new AddTraceWizardData(config, existing);
             InitializeComponent();
             TaskGlyph = Resources.trace_failed_requests_48;
+            Text = existing == null ? "Add Failed Request Tracing Rule" : "Edit Failed Request Tracing Rule";
         }
 
         protected override object WizardData
@@ -40,7 +41,7 @@ namespace JexusManager.Features.TraceFailedRequests.Wizards.AddTraceWizard
         {
             Item = _existing == null ? new TraceFailedRequestsItem(null) : _existing;
             _wizardData.Apply(Item);
-            if (_feature.Items.Any(item => item.Match(Item)))
+            if (_existing == null && _feature.Items.Any(item => item.Match(Item)))
             {
                 ShowMessage(
                     "A failed request trace for this content already exists.",
@@ -76,7 +77,7 @@ namespace JexusManager.Features.TraceFailedRequests.Wizards.AddTraceWizard
             conditionsPage.SetPreviousPage(contentPage);
             conditionsPage.SetNextPage(providersPage);
             providersPage.SetPreviousPage(conditionsPage);
-            return new WizardPage[] { contentPage, conditionsPage, providersPage };
+            return [contentPage, conditionsPage, providersPage];
         }
 
         protected override void ShowHelp()
