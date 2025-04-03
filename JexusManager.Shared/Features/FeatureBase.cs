@@ -247,15 +247,13 @@ namespace JexusManager.Features
             Edit(item.Item);
         }
 
-        public void HandleSelectedIndexChanged(ListView listView, ModuleListPage page)
+        public void HandleSelectedIndexChanged(ListView listView)
         {
             if (listView.SelectedItems.Count > 0)
             {
                 var item = (IFeatureListViewItem<T>)listView.SelectedItems[0];
                 SelectedItem = item.Item;
             }
-
-            page.Refresh();
         }
         #endregion
     }

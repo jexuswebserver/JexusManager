@@ -66,7 +66,7 @@ namespace JexusManager.Features.DefaultDocument
 
                 if (_owner.CanRevert)
                 {
-                    result.Add(new MethodTaskItem("Revert", "Revert To Parent", string.Empty).SetUsage());
+                    result.Add(RevertTaskItem);
                 }
 
                 return result.ToArray(typeof(TaskItem)) as TaskItem[];

@@ -65,7 +65,7 @@ namespace JexusManager.Features.Modules
                     result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     if (_owner.CanRevert)
                     {
-                        result.Add(new MethodTaskItem("Revert", "Revert to Parent", string.Empty).SetUsage());
+                        result.Add(RevertTaskItem);
                     }
 
                     result.Add(new MethodTaskItem("InOrder", "View Ordered List...", string.Empty).SetUsage());

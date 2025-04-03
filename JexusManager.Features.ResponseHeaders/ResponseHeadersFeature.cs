@@ -135,13 +135,18 @@ namespace JexusManager.Features.ResponseHeaders
 
         public void Edit()
         {
+            Edit(SelectedItem);
+        }
+
+        protected override void Edit(ResponseHeadersItem item)
+        {
             using var dialog = new NewHeaderDialog(Module, SelectedItem, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
-            this.EditItem(dialog.Item);
+            EditItem(dialog.Item);
         }
 
         public void Set()

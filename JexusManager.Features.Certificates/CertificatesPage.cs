@@ -16,7 +16,7 @@ namespace JexusManager.Features.Certificates
     using Microsoft.Web.Management.Client;
     using Microsoft.Web.Management.Client.Win32;
 
-    internal partial class CertificatesPage : ModuleListPage
+    public partial class CertificatesPage : ModuleListPage
     {
         private sealed class PageTaskList : ShowHelpTaskList
         {
@@ -108,7 +108,8 @@ namespace JexusManager.Features.Certificates
 
         private void listView1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _feature.HandleSelectedIndexChanged(listView1, this);
+            _feature.HandleSelectedIndexChanged(listView1);
+            Refresh();
         }
 
         protected override bool ShowHelp()

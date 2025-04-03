@@ -57,7 +57,7 @@ namespace JexusManager.Features.IpSecurity
                 result.Add(new MethodTaskItem("Set", "Edit Feature Settings...", string.Empty).SetUsage());
                 if (_owner.CanRevert)
                 {
-                    result.Add(new MethodTaskItem("Revert", "Revert To Parent", string.Empty).SetUsage());
+                    result.Add(RevertTaskItem);
                 }
 
                 result.Add(new MethodTaskItem("View", "View Ordered List...", string.Empty).SetUsage());

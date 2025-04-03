@@ -31,7 +31,7 @@ namespace JexusManager.Features.Rewrite.Inbound
     /// <summary>
     /// Description of DefaultDocumentFeature.
     /// </summary>
-    internal class MapsFeature
+    internal class MapsFeature : FeatureBase<MapItem>
     {
         private sealed class FeatureTaskList : DefaultTaskList
         {
@@ -76,8 +76,8 @@ namespace JexusManager.Features.Rewrite.Inbound
         }
 
         public MapsFeature(Module module)
+            : base(module)
         {
-            Module = module;
         }
 
         protected static readonly Version FxVersion10 = new Version("1.0");
@@ -86,20 +86,9 @@ namespace JexusManager.Features.Rewrite.Inbound
         protected static readonly Version FxVersionNotRequired = new Version();
         private FeatureTaskList _taskList;
 
-        protected void DisplayErrorMessage(Exception ex, ResourceManager resourceManager)
-        {
-            var service = (IManagementUIService)GetService(typeof(IManagementUIService));
-            service.ShowError(ex, resourceManager.GetString("General"), string.Empty, false);
-        }
-
-        protected object GetService(Type type)
-        {
-            return (Module as IServiceProvider).GetService(type);
-        }
-
         public TaskList GetTaskList()
         {
-            return _taskList ?? (_taskList = new FeatureTaskList(this));
+            return _taskList ??= new FeatureTaskList(this);
         }
 
         public void Load()
@@ -116,8 +105,6 @@ namespace JexusManager.Features.Rewrite.Inbound
 
             OnRewriteSettingsSaved();
         }
-
-        public List<MapItem> Items { get; set; }
 
         public void Add()
         {
@@ -152,37 +139,6 @@ namespace JexusManager.Features.Rewrite.Inbound
             Edit();
         }
 
-        public void AddRule()
-        {
-            using (var dialog = new AddMapDialog(Module, null, this))
-            {
-                if (dialog.ShowDialog() != DialogResult.OK)
-                {
-                    return;
-                }
-
-                var newItem = dialog.Item;
-                var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-                ConfigurationElementCollection rulesCollection = SelectedItem.Element.GetCollection();
-
-                if (SelectedItem.SelectedItem != newItem)
-                {
-                    SelectedItem.Items.Add(newItem);
-                    SelectedItem.SelectedItem = newItem;
-                }
-                else if (newItem.Flag != "Local")
-                {
-                    rulesCollection.Remove(newItem.Element);
-                    newItem.Flag = "Local";
-                }
-
-                newItem.AppendTo(rulesCollection);
-                service.ServerManager.CommitChanges();
-            }
-            OnRewriteSettingsSaved();
-            SelectedItem.OnRewriteSettingsSaved();
-        }
-
         public void Remove()
         {
             var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
@@ -205,28 +161,6 @@ namespace JexusManager.Features.Rewrite.Inbound
             OnRewriteSettingsSaved();
         }
 
-        public void RemoveRule()
-        {
-            var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
-            if (
-                dialog.ShowMessage("Are you sure that you want to remove the selected entry?", "Confirm Remove",
-                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) !=
-                DialogResult.Yes)
-            {
-                return;
-            }
-
-            SelectedItem.Items.Remove(SelectedItem.SelectedItem);
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            ConfigurationElementCollection collection = SelectedItem.Element.GetCollection();
-            collection.Remove(SelectedItem.SelectedItem.Element);
-            service.ServerManager.CommitChanges();
-
-            SelectedItem.SelectedItem = null;
-            OnRewriteSettingsSaved();
-            SelectedItem.OnRewriteSettingsSaved();
-        }
-
         internal protected void OnRewriteSettingsSaved()
         {
             RewriteSettingsUpdated?.Invoke();
@@ -240,71 +174,57 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         internal void Edit()
         {
-            var service = (INavigationService)GetService(typeof(INavigationService));
-            service.Navigate(null, null, typeof(MapPage), new Tuple<MapsFeature, MapItem>(this, SelectedItem));
-            OnRewriteSettingsSaved();
+            Edit(SelectedItem);
         }
 
-        public void EditRule()
+        protected override void Edit(MapItem item)
         {
-            using (var dialog = new AddMapDialog(Module, SelectedItem.SelectedItem, this))
-            {
-                if (dialog.ShowDialog() != DialogResult.OK)
-                {
-                    return;
-                }
-
-                var newItem = dialog.Item;
-                var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-                ConfigurationElementCollection rulesCollection = SelectedItem.Element.GetCollection();
-
-                if (SelectedItem.SelectedItem != newItem)
-                {
-                    SelectedItem.Items.Add(newItem);
-                    SelectedItem.SelectedItem = newItem;
-                }
-                else if (newItem.Flag != "Local")
-                {
-                    rulesCollection.Remove(newItem.Element);
-                    newItem.Flag = "Local";
-                }
-
-                newItem.AppendTo(rulesCollection);
-                service.ServerManager.CommitChanges();
-            }
+            var service = (INavigationService)GetService(typeof(INavigationService));
+            service.Navigate(null, null, typeof(MapPage), SelectedItem);
             OnRewriteSettingsSaved();
-            SelectedItem.OnRewriteSettingsSaved();
         }
 
-        public MapItem SelectedItem { get; internal set; }
-        public bool CanRevert { get; private set; }
+        public void Revert()
+        {
+            if (!CanRevert)
+            {
+                throw new InvalidOperationException("Revert operation cannot be done at server level");
+            }
+
+            var service = (IManagementUIService)GetService(typeof(IManagementUIService));
+            var result =
+                service.ShowMessage(
+                    "Reverting to the parent configuration will result in the loss of all settings in the local configuration file for this feature. Are you sure you want to continue?",
+                    Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning,
+                    MessageBoxDefaultButton.Button1);
+            if (result != DialogResult.Yes)
+            {
+                return;
+            }
+
+            RevertItems();
+        }
+
+        public bool CanRevert { get; private set; } = true;
 
         public RewriteSettingsSavedEventHandler RewriteSettingsUpdated { get; set; }
         public string Description { get; }
 
-        public virtual bool IsFeatureEnabled
-        {
-            get { return true; }
-        }
 
         public virtual Version MinimumFrameworkVersion
         {
             get { return FxVersionNotRequired; }
         }
 
-        public Module Module { get; }
         public string Name { get; }
 
-        public void Set()
+        protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
         {
-            using (var dialog = new MapSettingsDialog(Module, SelectedItem))
-            {
-                if (dialog.ShowDialog() != DialogResult.OK)
-                {
-                    return;
-                }
-            }
+            return null;
+        }
 
+        protected override void OnSettingsSaved()
+        {
             OnRewriteSettingsSaved();
         }
     }

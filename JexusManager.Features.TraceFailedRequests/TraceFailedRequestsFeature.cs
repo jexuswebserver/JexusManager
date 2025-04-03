@@ -67,7 +67,7 @@ namespace JexusManager.Features.TraceFailedRequests
                     result.Add(MethodTaskItem.CreateSeparator().SetUsage(true, MethodTaskItemUsages.TaskList));
                     if (_owner.CanRevert)
                     {
-                        result.Add(new MethodTaskItem("Revert", "Revert to Parent", string.Empty).SetUsage());
+                        result.Add(RevertTaskItem);
                     }
 
                     result.Add(new MethodTaskItem("InOrder", "View Ordered List...", string.Empty).SetUsage());

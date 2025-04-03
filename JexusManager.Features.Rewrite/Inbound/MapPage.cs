@@ -37,7 +37,7 @@ namespace JexusManager.Features.Rewrite.Inbound
                 var result = new ArrayList();
                 result.Add(new MethodTaskItem("Add", "Add Mapping Entry...", string.Empty).SetUsage());
                 result.Add(new MethodTaskItem("Set", "Edit Map Settings...", string.Empty).SetUsage());
-                if (_owner.Map.SelectedItem != null)
+                if (_owner._feature.SelectedItem != null)
                 {
                     //result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     result.Add(new MethodTaskItem("Edit", "Edit Mapping Entry...", string.Empty).SetUsage());
@@ -95,7 +95,7 @@ namespace JexusManager.Features.Rewrite.Inbound
             }
         }
 
-        private sealed class MapListViewItem : ListViewItem
+        private sealed class MapListViewItem : ListViewItem, IFeatureListViewItem<MapRule>
         {
             public MapRule Item { get; }
             private readonly MapPage _page;
@@ -110,7 +110,7 @@ namespace JexusManager.Features.Rewrite.Inbound
         }
 
         private TaskList _taskList;
-        private MapsFeature _feature;
+        private MapItem _feature;
 
         public MapPage()
         {
@@ -120,33 +120,30 @@ namespace JexusManager.Features.Rewrite.Inbound
         protected override void Initialize(object navigationData)
         {
             base.Initialize(navigationData);
-            var info = (Tuple<MapsFeature, MapItem>)navigationData;
+            var info = (MapItem)navigationData;
 
             // TODO: pictureBox1.Image = service.Scope.GetImage();
 
-            _feature = info.Item1;
-            this.Map = info.Item2;
-            txtName.ReadOnly = this.Map != null;
-            if (this.Map != null)
+            _feature = info;
+            txtName.ReadOnly = this._feature != null;
+            if (this._feature != null)
             {
-                this.Map.MapSettingsUpdated = this.InitializeListPage;
-                txtName.Text = this.Map.Name;
+                this._feature.MapSettingsUpdated = this.InitializeListPage;
+                txtName.Text = this._feature.Name;
             }
 
-            this.Map?.OnRewriteSettingsSaved();
+            this._feature?.OnRewriteSettingsSaved();
         }
-
-        public MapItem Map { get; set; }
 
         protected override void InitializeListPage()
         {
             listView1.Items.Clear();
-            foreach (var file in this.Map.Items)
+            foreach (var file in this._feature.Items)
             {
                 listView1.Items.Add(new MapListViewItem(file, this));
             }
 
-            if (this.Map.SelectedItem == null)
+            if (this._feature.SelectedItem == null)
             {
                 this.Refresh();
                 return;
@@ -154,26 +151,29 @@ namespace JexusManager.Features.Rewrite.Inbound
 
             foreach (MapListViewItem item in listView1.Items)
             {
-                if (item.Item == this.Map.SelectedItem)
+                if (item.Item == this._feature.SelectedItem)
                 {
                     item.Selected = true;
                 }
             }
         }
 
+        public void ListView1MouseDoubleClick(object sender, EventArgs e)
+        {
+            _feature.HandleMouseDoubleClick(listView1);
+        }
+
         private void ListView1SelectedIndexChanged(object sender, EventArgs e)
         {
-            this.Map.SelectedItem = listView1.SelectedItems.Count > 0
-                ? ((MapListViewItem)listView1.SelectedItems[0]).Item
-                : null;
-            this.Refresh();
+            _feature.HandleSelectedIndexChanged(listView1);
+            Refresh();
         }
 
         private void ListView1KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Delete)
             {
-                _feature.Remove();
+                _feature.RemoveRule();
             }
         }
 
@@ -201,7 +201,7 @@ namespace JexusManager.Features.Rewrite.Inbound
         {
             var service = (INavigationService)GetService(typeof(INavigationService));
             service?.NavigateBack(2);
-            _feature.SelectedItem = this.Map;
+            _feature.Select();
             _feature.OnRewriteSettingsSaved();
         }
 

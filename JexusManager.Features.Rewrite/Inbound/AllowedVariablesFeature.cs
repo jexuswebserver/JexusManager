@@ -55,7 +55,7 @@ namespace JexusManager.Features.Rewrite.Inbound
                 if (_owner.CanRevert)
                 {
                     result.Add(MethodTaskItem.CreateSeparator().SetUsage());
-                    result.Add(new MethodTaskItem("Revert", "Revert to Parent", string.Empty).SetUsage());
+                    result.Add(RevertTaskItem);
                 }
 
                 return result.ToArray(typeof(TaskItem)) as TaskItem[];

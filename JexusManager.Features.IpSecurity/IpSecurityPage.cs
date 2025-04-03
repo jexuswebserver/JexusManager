@@ -103,7 +103,8 @@ namespace JexusManager.Features.IpSecurity
 
         private void listView1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _feature.HandleSelectedIndexChanged(listView1, this);
+            _feature.HandleSelectedIndexChanged(listView1);
+            Refresh();
         }
 
         protected override bool ShowHelp()

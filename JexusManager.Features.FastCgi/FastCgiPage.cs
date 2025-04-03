@@ -31,7 +31,7 @@ namespace JexusManager.Features.FastCgi
             }
         }
 
-        private sealed class FastCgiListViewItem : ListViewItem
+        private sealed class FastCgiListViewItem : ListViewItem, IFeatureListViewItem<FastCgiItem>
         {
             public FastCgiItem Item { get; }
 
@@ -96,12 +96,14 @@ namespace JexusManager.Features.FastCgi
             base.Refresh();
         }
 
+        private void ListView1MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            _feature.HandleMouseDoubleClick(listView1);
+        }
+
         private void ListView1SelectedIndexChanged(object sender, EventArgs e)
         {
-            _feature.SelectedItem = listView1.SelectedItems.Count > 0
-                ? ((FastCgiListViewItem)listView1.SelectedItems[0]).Item
-                : null;
-            // TODO: optimize refresh when null to not null (vice versa)
+            _feature.HandleSelectedIndexChanged(listView1);
             Refresh();
         }
 
@@ -124,11 +126,6 @@ namespace JexusManager.Features.FastCgi
                 base.Tasks.Add(_taskList);
                 return base.Tasks;
             }
-        }
-
-        private void ListView1MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            _feature.Edit();
         }
     }
 }

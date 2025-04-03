@@ -101,7 +101,8 @@ namespace JexusManager.Features.TraceFailedRequests
 
         private void ListView1SelectedIndexChanged(object sender, EventArgs e)
         {
-            _feature.HandleSelectedIndexChanged(listView1, this);
+            _feature.HandleSelectedIndexChanged(listView1);
+            Refresh();
         }
 
         private void ListView1_MouseDoubleClick(object sender, MouseEventArgs e)

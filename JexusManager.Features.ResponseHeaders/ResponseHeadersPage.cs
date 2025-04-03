@@ -33,7 +33,7 @@ namespace JexusManager.Features.ResponseHeaders
             }
         }
 
-        private sealed class ResponseHeadersListViewItem : ListViewItem
+        private sealed class ResponseHeadersListViewItem : ListViewItem, IFeatureListViewItem<ResponseHeadersItem>
         {
             public ResponseHeadersItem Item { get; }
             private readonly ResponseHeadersPage _page;
@@ -96,17 +96,15 @@ namespace JexusManager.Features.ResponseHeaders
             base.Refresh();
         }
 
-        private void ListView1SelectedIndexChanged(object sender, EventArgs e)
-        {
-            _feature.SelectedItem = listView1.SelectedItems.Count > 0
-                ? ((ResponseHeadersListViewItem)listView1.SelectedItems[0]).Item
-                : null;
-            Refresh();
-        }
-
         private void ListView1MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            _feature.Edit();
+            _feature.HandleMouseDoubleClick(listView1);
+        }
+
+        private void ListView1SelectedIndexChanged(object sender, EventArgs e)
+        {
+            _feature.HandleSelectedIndexChanged(listView1);
+            Refresh();
         }
 
         protected override bool ShowHelp()

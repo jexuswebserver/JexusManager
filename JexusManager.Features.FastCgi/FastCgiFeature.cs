@@ -127,6 +127,11 @@ namespace JexusManager.Features.FastCgi
 
         public void Edit()
         {
+            Edit(SelectedItem);
+        }
+
+        protected override void Edit(FastCgiItem item)
+        {
             using var dialog = new NewApplicationDialog(Module, SelectedItem, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {

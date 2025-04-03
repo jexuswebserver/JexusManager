@@ -46,6 +46,14 @@ namespace JexusManager.Features
             }
         }
 
+        public MethodTaskItem RevertTaskItem
+        {
+            get
+            {
+                return new MethodTaskItem("Revert", "Revert To Parent", string.Empty).SetUsage();
+            }
+        }
+
         public MethodTaskItem HelpTaskItem
         {
             get

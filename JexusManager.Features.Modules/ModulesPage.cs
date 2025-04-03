@@ -106,7 +106,8 @@ namespace JexusManager.Features.Modules
 
         private void ListView1SelectedIndexChanged(object sender, EventArgs e)
         {
-            _feature.HandleSelectedIndexChanged(listView1, this);
+            _feature.HandleSelectedIndexChanged(listView1);
+            Refresh();
         }
 
         protected override bool ShowHelp()

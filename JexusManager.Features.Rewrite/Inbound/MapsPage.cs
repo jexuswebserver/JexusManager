@@ -36,8 +36,10 @@ namespace JexusManager.Features.Rewrite.Inbound
             public override ICollection GetTaskItems()
             {
                 return new TaskItem[]
-                           {
+                           {                               
                                GetBackTaskItem("Back", "Back to Rules"),
+                               MethodTaskItem.CreateSeparator().SetUsage(),
+                               RevertTaskItem,
                                MethodTaskItem.CreateSeparator().SetUsage(),
                                HelpTaskItem
                            };
@@ -54,9 +56,15 @@ namespace JexusManager.Features.Rewrite.Inbound
             {
                 _owner.Back();
             }
+
+            [Obfuscation(Exclude = true)]
+            public void Revert()
+            {
+                _owner.Revert();
+            }
         }
 
-        private sealed class MapsListViewItem : ListViewItem
+        private sealed class MapsListViewItem : ListViewItem, IFeatureListViewItem<MapItem>
         {
             public MapItem Item { get; }
             private readonly MapsPage _page;
@@ -115,14 +123,13 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         private void ListView1SelectedIndexChanged(object sender, EventArgs e)
         {
-            _feature.SelectedItem = listView1.SelectedItems.Count > 0
-                ? ((MapsListViewItem)listView1.SelectedItems[0]).Item
-                : null;
-            this.Refresh();
+            _feature.HandleSelectedIndexChanged(listView1);
+            Refresh();
         }
 
         private void ListView1KeyDown(object sender, KeyEventArgs e)
         {
+            // TODO: use it in other windows?
             if (e.KeyCode == Keys.Delete)
             {
                 _feature.Remove();
@@ -131,7 +138,7 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         private void ListView1MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            _feature.Edit();
+            _feature.HandleMouseDoubleClick(listView1);
         }
 
         protected override void Refresh()
@@ -158,6 +165,11 @@ namespace JexusManager.Features.Rewrite.Inbound
         {
             var service = (INavigationService)GetService(typeof(INavigationService));
             service?.NavigateBack(1);
+        }
+
+        private void Revert()
+        {
+            _feature.Revert();
         }
 
         protected override TaskListCollection Tasks
