@@ -56,7 +56,7 @@ namespace JexusManager.Features.Rewrite.Outbound
             }
         }
 
-        private sealed class CustomTagsListViewItem : ListViewItem
+        private sealed class CustomTagsListViewItem : ListViewItem, IFeatureListViewItem<CustomTagsItem>
         {
             public CustomTagsItem Item { get; }
             private readonly CustomTagsPage _page;
@@ -118,20 +118,23 @@ namespace JexusManager.Features.Rewrite.Outbound
             }
         }
 
-        private void ListView1SelectedIndexChanged(object sender, EventArgs e)
+        private void ListView1MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            _feature.SelectedItem = listView1.SelectedItems.Count > 0
-                ? ((CustomTagsListViewItem)listView1.SelectedItems[0]).Item
-                : null;
-            this.Refresh();
+            _feature.HandleMouseDoubleClick(listView1);
         }
-
+        
         private void ListView1KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Delete)
             {
                 _feature.Remove();
             }
+        }
+
+        private void ListView1SelectedIndexChanged(object sender, EventArgs e)
+        {
+            _feature.HandleSelectedIndexChanged(listView1);
+            Refresh();
         }
 
         protected override void Refresh()
@@ -176,13 +179,5 @@ namespace JexusManager.Features.Rewrite.Outbound
         }
 
         public IModulePage ParentPage { get; set; }
-
-        private void ListView1MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            if (listView1.SelectedItems.Count > 0)
-            {
-                _feature.Rename();
-            }
-        }
     }
 }

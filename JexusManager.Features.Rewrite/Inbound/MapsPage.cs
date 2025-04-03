@@ -121,15 +121,8 @@ namespace JexusManager.Features.Rewrite.Inbound
             }
         }
 
-        private void ListView1SelectedIndexChanged(object sender, EventArgs e)
-        {
-            _feature.HandleSelectedIndexChanged(listView1);
-            Refresh();
-        }
-
         private void ListView1KeyDown(object sender, KeyEventArgs e)
         {
-            // TODO: use it in other windows?
             if (e.KeyCode == Keys.Delete)
             {
                 _feature.Remove();
@@ -139,6 +132,12 @@ namespace JexusManager.Features.Rewrite.Inbound
         private void ListView1MouseDoubleClick(object sender, MouseEventArgs e)
         {
             _feature.HandleMouseDoubleClick(listView1);
+        }
+
+        private void ListView1SelectedIndexChanged(object sender, EventArgs e)
+        {
+            _feature.HandleSelectedIndexChanged(listView1);
+            Refresh();
         }
 
         protected override void Refresh()

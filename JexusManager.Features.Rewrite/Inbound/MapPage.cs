@@ -157,6 +157,14 @@ namespace JexusManager.Features.Rewrite.Inbound
                 }
             }
         }
+        
+        private void ListView1KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                _feature.Remove();
+            }
+        }
 
         public void ListView1MouseDoubleClick(object sender, EventArgs e)
         {
@@ -169,13 +177,7 @@ namespace JexusManager.Features.Rewrite.Inbound
             Refresh();
         }
 
-        private void ListView1KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Delete)
-            {
-                _feature.RemoveRule();
-            }
-        }
+
 
         protected override void Refresh()
         {
@@ -213,17 +215,17 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         public void Add()
         {
-            _feature.AddRule();
+            _feature.Add();
         }
 
         public void Remove()
         {
-            _feature.RemoveRule();
+            _feature.Remove();
         }
 
         private void Edit()
         {
-            _feature.EditRule();
+            _feature.Edit();
         }
 
         private void Set()

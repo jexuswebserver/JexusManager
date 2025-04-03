@@ -97,11 +97,19 @@ namespace JexusManager.Features.MimeMap
             base.Refresh();
         }
 
+        private void ListView1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                _feature.Remove();
+            }
+        }
+
         private void ListView1_MouseDoubleClick(object sender, EventArgs e)
         {
             _feature.HandleMouseDoubleClick(listView1);
         }
-
+        
         private void listView1_SelectedIndexChanged(object sender, EventArgs e)
         {
             _feature.HandleSelectedIndexChanged(listView1);

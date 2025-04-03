@@ -80,7 +80,7 @@ namespace JexusManager.Features.Rewrite.Inbound
             OnRewriteSettingsSaved();
         }
 
-        public void AddRule()
+        public void Add()
         {
             using (var dialog = new AddMapDialog(Module, null, _feature))
             {
@@ -111,7 +111,7 @@ namespace JexusManager.Features.Rewrite.Inbound
             OnRewriteSettingsSaved();
         }
 
-        public void EditRule()
+        public void Edit()
         {
             using (var dialog = new AddMapDialog(Module, SelectedItem, _feature))
             {
@@ -160,7 +160,7 @@ namespace JexusManager.Features.Rewrite.Inbound
             _feature.SelectedItem = this;
         }
 
-        internal void RemoveRule()
+        internal void Remove()
         {
             var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
             if (

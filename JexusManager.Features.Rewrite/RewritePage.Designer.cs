@@ -158,8 +158,9 @@
             this.lvIn.UseCompatibleStateImageBehavior = false;
             this.lvIn.View = System.Windows.Forms.View.Details;
             this.lvIn.AfterLabelEdit += new System.Windows.Forms.LabelEditEventHandler(this.LvInAfterLabelEdit);
-            this.lvIn.SelectedIndexChanged += new System.EventHandler(this.LvInSelectedIndexChanged);
+            this.lvIn.KeyDown += new System.Windows.Forms.KeyEventHandler(this.LvInKeyDown);
             this.lvIn.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.LvInMouseDoubleClick);
+            this.lvIn.SelectedIndexChanged += new System.EventHandler(this.LvInSelectedIndexChanged);
             // 
             // chNameIn
             // 
@@ -223,8 +224,9 @@
             this.lvOut.TabIndex = 0;
             this.lvOut.UseCompatibleStateImageBehavior = false;
             this.lvOut.View = System.Windows.Forms.View.Details;
-            this.lvOut.SelectedIndexChanged += new System.EventHandler(this.LvOutSelectedIndexChanged);
+            this.lvOut.KeyDown += new System.Windows.Forms.KeyEventHandler(this.LvInKeyDown);
             this.lvOut.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.LvOutMouseDoubleClick);
+            this.lvOut.SelectedIndexChanged += new System.EventHandler(this.LvOutSelectedIndexChanged);
             // 
             // chNameOut
             // 

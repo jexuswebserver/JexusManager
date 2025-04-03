@@ -30,7 +30,7 @@ namespace JexusManager.Features.Rewrite.Outbound
     /// <summary>
     /// Description of DefaultDocumentFeature.
     /// </summary>
-    internal class CustomTagsFeature
+    internal class CustomTagsFeature : FeatureBase<CustomTagsItem>
     {
         private sealed class FeatureTaskList : DefaultTaskList
         {
@@ -77,13 +77,13 @@ namespace JexusManager.Features.Rewrite.Outbound
             [Obfuscation(Exclude = true)]
             public void Rename()
             {
-                _owner.Rename();
+                _owner.Edit();
             }
         }
 
         public CustomTagsFeature(Module module)
+            : base(module)
         {
-            Module = module;
         }
 
         protected static readonly Version FxVersion10 = new Version("1.0");
@@ -91,17 +91,6 @@ namespace JexusManager.Features.Rewrite.Outbound
         protected static readonly Version FxVersion20 = new Version("2.0");
         protected static readonly Version FxVersionNotRequired = new Version();
         private FeatureTaskList _taskList;
-
-        protected void DisplayErrorMessage(Exception ex, ResourceManager resourceManager)
-        {
-            var service = (IManagementUIService)GetService(typeof(IManagementUIService));
-            service.ShowError(ex, resourceManager.GetString("General"), string.Empty, false);
-        }
-
-        protected object GetService(Type type)
-        {
-            return (Module as IServiceProvider).GetService(type);
-        }
 
         public TaskList GetTaskList()
         {
@@ -123,8 +112,6 @@ namespace JexusManager.Features.Rewrite.Outbound
             CanRevert = section.CanRevert();
             OnRewriteSettingsSaved();
         }
-
-        public List<CustomTagsItem> Items { get; set; }
 
         public void AddGroup()
         {
@@ -196,8 +183,9 @@ namespace JexusManager.Features.Rewrite.Outbound
             OnRewriteSettingsSaved();
         }
 
-        public void Rename()
+        public void Edit()
         {
+            // TODO:
         }
 
         internal protected void OnRewriteSettingsSaved()
@@ -211,23 +199,26 @@ namespace JexusManager.Features.Rewrite.Outbound
             return false;
         }
 
-        public CustomTagsItem SelectedItem { get; internal set; }
+        protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
+        {
+            return null;
+        }
+
+        protected override void OnSettingsSaved()
+        {
+            OnRewriteSettingsSaved();
+        }
+
         public bool CanRevert { get; private set; }
 
         public RewriteSettingsSavedEventHandler RewriteSettingsUpdated { get; set; }
         public string Description { get; }
-
-        public virtual bool IsFeatureEnabled
-        {
-            get { return true; }
-        }
 
         public virtual Version MinimumFrameworkVersion
         {
             get { return FxVersionNotRequired; }
         }
 
-        public Module Module { get; }
         public string Name { get; }
     }
 }

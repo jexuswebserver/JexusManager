@@ -97,12 +97,23 @@ namespace JexusManager.Features.DefaultDocument
             base.Refresh();
         }
 
-        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
+        private void ListView1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                _feature.Remove();
+            }
+        }
+
+        private void ListView1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            _feature.HandleMouseDoubleClick(listView1);
+        }
+
+        private void ListView1_SelectedIndexChanged(object sender, EventArgs e)
         {
             // TODO: use WatchDog to suppress extra refresh (one selection triggers this event twice)
-            _feature.SelectedItem = listView1.SelectedItems.Count > 0
-                ? ((DefaultDocumentListViewItem)listView1.SelectedItems[0]).Item
-                : null;
+            _feature.HandleSelectedIndexChanged(listView1);
             Refresh();
         }
 

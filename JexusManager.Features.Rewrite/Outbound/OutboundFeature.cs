@@ -78,8 +78,13 @@ namespace JexusManager.Features.Rewrite.Outbound
 
         public void Edit()
         {
+            Edit(SelectedItem);
+        }
+
+        protected override void Edit(OutboundRule item)
+        {
             var service = (INavigationService)GetService(typeof(INavigationService));
-            service.Navigate(null, null, typeof(OutboundRulePage), new Tuple<OutboundFeature, OutboundRule>(this, SelectedItem));
+            service.Navigate(null, null, typeof(OutboundRulePage), new Tuple<OutboundFeature, OutboundRule>(this, item));
             OnSettingsSaved();
         }
 

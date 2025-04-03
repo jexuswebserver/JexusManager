@@ -35,7 +35,7 @@ namespace JexusManager.Features.Rewrite
             }
         }
 
-        private sealed class InboundRuleListViewItem : ListViewItem
+        private sealed class InboundRuleListViewItem : ListViewItem, IFeatureListViewItem<InboundRule>
         {
             public InboundRule Item { get; }
             private readonly RewritePage _page;
@@ -72,7 +72,7 @@ namespace JexusManager.Features.Rewrite
             }
         }
 
-        private sealed class OutboundRuleListViewItem : ListViewItem
+        private sealed class OutboundRuleListViewItem : ListViewItem, IFeatureListViewItem<OutboundRule>
         {
             public OutboundRule Item { get; private set; }
 
@@ -188,12 +188,22 @@ namespace JexusManager.Features.Rewrite
             base.Refresh();
         }
 
+        private void LvInMouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            _feature.Inbound.HandleMouseDoubleClick(lvIn);
+        }
+
+        private void LvInKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                _feature.Inbound.Remove();
+            }
+        }
+
         private void LvInSelectedIndexChanged(object sender, EventArgs e)
         {
-            _feature.Inbound.SelectedItem = lvIn.SelectedItems.Count > 0
-                ? ((InboundRuleListViewItem)lvIn.SelectedItems[0]).Item
-                : null;
-            // TODO: optimize refresh when null to not null (vice versa)
+            _feature.Inbound.HandleSelectedIndexChanged(lvIn);
             Refresh();
         }
 
@@ -243,29 +253,23 @@ namespace JexusManager.Features.Rewrite
             element.Name = e.Label;
         }
 
-        private void LvInMouseDoubleClick(object sender, MouseEventArgs e)
+        private void LvOutMouseDoubleClick(object sender, MouseEventArgs e)
         {
-            if (lvIn.SelectedItems.Count > 0)
+            _feature.Outbound.HandleMouseDoubleClick(lvOut);
+        }
+
+        private void LvOutKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
             {
-                _feature.Inbound.Edit();
+                _feature.Outbound.Remove();
             }
         }
 
         private void LvOutSelectedIndexChanged(object sender, EventArgs e)
         {
-            _feature.Outbound.SelectedItem = lvOut.SelectedItems.Count > 0
-    ? ((OutboundRuleListViewItem)lvOut.SelectedItems[0]).Item
-    : null;
-            // TODO: optimize refresh when null to not null (vice versa)
+            _feature.Outbound.HandleSelectedIndexChanged(lvOut);
             Refresh();
-        }
-
-        private void LvOutMouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            if (lvIn.SelectedItems.Count > 0)
-            {
-                _feature.Outbound.Edit();
-            }
         }
     }
 }

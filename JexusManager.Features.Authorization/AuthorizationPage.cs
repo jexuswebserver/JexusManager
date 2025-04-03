@@ -107,13 +107,23 @@ namespace JexusManager.Features.Authorization
             base.Refresh();
         }
 
-        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
+        private void ListView1_KeyDown(object sender, KeyEventArgs e)
         {
-            _feature.SelectedItem = listView1.SelectedItems.Count > 0
-                ? ((AuthorizationListViewItem)listView1.SelectedItems[0]).Item
-                : null;
-            // TODO: optimize refresh when null to not null (vice versa)
-            this.Refresh();
+            if (e.KeyCode == Keys.Delete)
+            {
+                _feature.Remove();
+            }
+        }
+
+        private void ListView1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            _feature.HandleMouseDoubleClick(listView1);
+        }
+
+        private void ListView1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            _feature.HandleSelectedIndexChanged(listView1);
+            Refresh();
         }
 
         protected override bool ShowHelp()

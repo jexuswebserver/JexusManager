@@ -97,17 +97,27 @@ namespace JexusManager.Features.Handlers
 
         protected override void Refresh()
         {
-            this.Tasks.Fill(tsActionPanel, cmsActionPanel);
+            Tasks.Fill(tsActionPanel, cmsActionPanel);
             base.Refresh();
+        }
+
+        private void ListView1KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                _feature.Remove();
+            }
+        }
+
+        private void ListView1MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            _feature.HandleMouseDoubleClick(listView1);
         }
 
         private void ListView1SelectedIndexChanged(object sender, EventArgs e)
         {
-            _feature.SelectedItem = listView1.SelectedItems.Count > 0
-                ? ((HandlersListViewItem)listView1.SelectedItems[0]).Item
-                : null;
-            // TODO: optimize refresh when null to not null (vice versa)
-            this.Refresh();
+            _feature.HandleSelectedIndexChanged(listView1);
+            Refresh();
         }
 
         protected override bool ShowHelp()

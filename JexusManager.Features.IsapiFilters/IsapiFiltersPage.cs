@@ -96,10 +96,18 @@ namespace JexusManager.Features.IsapiFilters
             base.Refresh();
         }
 
+        private void ListView1KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                _feature.Remove();
+            }
+        }
+
         private void ListView1MouseDoubleClick(object sender, MouseEventArgs e)
         {
             _feature.HandleMouseDoubleClick(listView1);
-        }
+        }        
 
         private void ListView1SelectedIndexChanged(object sender, EventArgs e)
         {

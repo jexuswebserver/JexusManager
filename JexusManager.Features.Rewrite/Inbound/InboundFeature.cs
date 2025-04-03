@@ -177,8 +177,13 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         public void Edit()
         {
+            Edit(SelectedItem);
+        }
+
+        protected override void Edit(InboundRule item)
+        {
             var service = (INavigationService)GetService(typeof(INavigationService));
-            service.Navigate(null, null, typeof(InboundRulePage), new Tuple<InboundFeature, InboundRule>(this, SelectedItem));
+            service.Navigate(null, null, typeof(InboundRulePage), new Tuple<InboundFeature, InboundRule>(this, item));
             OnSettingsSaved();
         }
     }

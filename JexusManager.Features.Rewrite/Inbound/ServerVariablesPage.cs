@@ -56,7 +56,7 @@ namespace JexusManager.Features.Rewrite.Inbound
             }
         }
 
-        private sealed class VariableListViewItem : ListViewItem
+        private sealed class VariableListViewItem : ListViewItem, IFeatureListViewItem<AllowedVariableItem>
         {
             public AllowedVariableItem Item { get; }
             private readonly ServerVariablesPage _page;
@@ -112,20 +112,23 @@ namespace JexusManager.Features.Rewrite.Inbound
             }
         }
 
-        private void ListView1SelectedIndexChanged(object sender, EventArgs e)
-        {
-            _feature.SelectedItem = listView1.SelectedItems.Count > 0
-                ? ((VariableListViewItem)listView1.SelectedItems[0]).Item
-                : null;
-            this.Refresh();
-        }
-
         private void ListView1KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Delete)
             {
                 _feature.Remove();
             }
+        }
+
+        private void ListView1MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            _feature.HandleMouseDoubleClick(listView1);
+        }
+
+        private void ListView1SelectedIndexChanged(object sender, EventArgs e)
+        {
+            _feature.HandleSelectedIndexChanged(listView1);
+            Refresh();
         }
 
         protected override void Refresh()
