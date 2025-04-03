@@ -33,7 +33,7 @@ namespace JexusManager.Features.MimeMap
             }
         }
 
-        private sealed class MimeMapListViewItem : ListViewItem
+        private sealed class MimeMapListViewItem : ListViewItem, IFeatureListViewItem<MimeMapItem>
         {
             public MimeMapItem Item { get; }
 
@@ -42,10 +42,10 @@ namespace JexusManager.Features.MimeMap
             public MimeMapListViewItem(MimeMapItem item, MimeMapPage page)
                 : base(item.FileExtension)
             {
-                this.Item = item;
+                Item = item;
                 _page = page;
-                this.SubItems.Add(new ListViewSubItem(this, item.MimeType));
-                this.SubItems.Add(new ListViewSubItem(this, item.Flag));
+                SubItems.Add(new ListViewSubItem(this, item.MimeType));
+                SubItems.Add(new ListViewSubItem(this, item.Flag));
             }
         }
 
@@ -54,17 +54,17 @@ namespace JexusManager.Features.MimeMap
 
         public MimeMapPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         protected override void Initialize(object navigationData)
         {
             base.Initialize(navigationData);
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             pictureBox1.Image = service.Scope.GetImage();
 
-            _feature = new MimeMapFeature(this.Module);
-            _feature.MimeMapSettingsUpdated = this.InitializeListPage;
+            _feature = new MimeMapFeature(Module);
+            _feature.MimeMapSettingsUpdated = InitializeListPage;
             _feature.Load();
         }
 
@@ -78,7 +78,7 @@ namespace JexusManager.Features.MimeMap
 
             if (_feature.SelectedItem == null)
             {
-                this.Refresh();
+                Refresh();
                 return;
             }
 
@@ -93,17 +93,18 @@ namespace JexusManager.Features.MimeMap
 
         protected override void Refresh()
         {
-            this.Tasks.Fill(tsActionPanel, cmsActionPanel);
+            Tasks.Fill(tsActionPanel, cmsActionPanel);
             base.Refresh();
+        }
+
+        private void ListView1_MouseDoubleClick(object sender, EventArgs e)
+        {
+            _feature.HandleMouseDoubleClick(listView1);
         }
 
         private void listView1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _feature.SelectedItem = listView1.SelectedItems.Count > 0
-                ? ((MimeMapListViewItem)listView1.SelectedItems[0]).Item
-                : null;
-            // TODO: optimize refresh when null to not null (vice versa)
-            this.Refresh();
+            _feature.HandleSelectedIndexChanged(listView1, this);
         }
 
         protected override bool ShowHelp()

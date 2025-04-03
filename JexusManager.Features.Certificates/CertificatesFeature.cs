@@ -31,7 +31,7 @@ using JexusManager.Features.Certificates.Wizards.CertificateRenewWizard;
 
 namespace JexusManager.Features.Certificates
 {
-    public class CertificatesFeature
+    public class CertificatesFeature : FeatureBase<CertificatesItem>
     {
         private static readonly ILogger _logger = LogHelper.GetLogger("CertificatesFeature");
 
@@ -62,7 +62,7 @@ namespace JexusManager.Features.Certificates
                 {
                     result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     result.Add(new MethodTaskItem("View", "View...", string.Empty).SetUsage());
-                    X509Certificate2 certificate = _owner.SelectedItem.Certificate;
+                    X509Certificate2 certificate = _owner.SelectedItem.Item;
                     if (certificate.HasPrivateKey)
                     {
                         try
@@ -214,8 +214,8 @@ namespace JexusManager.Features.Certificates
         }
 
         public CertificatesFeature(Microsoft.Web.Management.Client.Module module)
+            : base(module)
         {
-            Module = module;
         }
 
         protected static readonly Version FxVersion10 = new Version("1.0");
@@ -223,17 +223,6 @@ namespace JexusManager.Features.Certificates
         protected static readonly Version FxVersion20 = new Version("2.0");
         protected static readonly Version FxVersionNotRequired = new Version();
         private FeatureTaskList _taskList;
-
-        protected void DisplayErrorMessage(Exception ex, ResourceManager resourceManager)
-        {
-            var service = (IManagementUIService)GetService(typeof(IManagementUIService));
-            service.ShowError(ex, resourceManager.GetString("General"), "", false);
-        }
-
-        protected object GetService(Type type)
-        {
-            return (Module as IServiceProvider).GetService(type);
-        }
 
         public TaskList GetTaskList()
         {
@@ -333,7 +322,7 @@ namespace JexusManager.Features.Certificates
                 start.UseShellExecute = true;
                 start.FileName = "cmd";
                 start.Arguments =
-                    $"/c \"\"{CertificateInstallerLocator.FileName}\" /h:\"{SelectedItem.Certificate.Thumbprint}\" /s:{(SelectedItem.Store == "Personal" ? "MY" : "WebHosting")}\"";
+                    $"/c \"\"{CertificateInstallerLocator.FileName}\" /h:\"{SelectedItem.Item.Thumbprint}\" /s:{(SelectedItem.Store == "Personal" ? "MY" : "WebHosting")}\"";
                 start.CreateNoWindow = true;
                 start.WindowStyle = ProcessWindowStyle.Hidden;
                 process.Start();
@@ -424,25 +413,29 @@ namespace JexusManager.Features.Certificates
 
         private void Export()
         {
-            using var dialog = new ExportCertificateDialog(SelectedItem.Certificate, Module, this);
+            using var dialog = new ExportCertificateDialog(SelectedItem.Item, Module, this);
             dialog.ShowDialog();
         }
 
         private void Renew()
         {
-            using var wizard = new CertificateRenewWizard(SelectedItem.Certificate, Module, this);
+            using var wizard = new CertificateRenewWizard(SelectedItem.Item, Module, this);
             wizard.ShowDialog();
         }
 
         internal void View()
         {
-            var cert = SelectedItem.Certificate;
-            DialogHelper.DisplayCertificate(cert, IntPtr.Zero);
+            Edit(SelectedItem);
+        }
+
+        protected override void Edit(CertificatesItem item)
+        {
+            DialogHelper.DisplayCertificate(item.Item, IntPtr.Zero);
         }
 
         private void Trust()
         {
-            var cert = SelectedItem.Certificate;
+            var cert = SelectedItem.Item;
             var store = new X509Store(StoreName.Root, StoreLocation.CurrentUser);
             store.Open(OpenFlags.ReadWrite);
             if (store.Certificates.Find(X509FindType.FindByThumbprint, cert.Thumbprint, false).Count == 0)
@@ -469,24 +462,24 @@ namespace JexusManager.Features.Certificates
             store.Close();
         }
 
-        public bool AutomicRebindEnabled { get; set; }
+        protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
+        {
+            throw new NotImplementedException();
+        }
 
-        public CertificatesItem SelectedItem { get; internal set; }
+        protected override void OnSettingsSaved()
+        {
+        }
+
+        public bool AutomicRebindEnabled { get; set; }
 
         public CertificatesSettingsSavedEventHandler CertificatesSettingsUpdated { get; set; }
         public string Description { get; }
-
-        public virtual bool IsFeatureEnabled
-        {
-            get { return true; }
-        }
 
         public virtual Version MinimumFrameworkVersion
         {
             get { return FxVersionNotRequired; }
         }
-
-        public Microsoft.Web.Management.Client.Module Module { get; }
 
         public string Name
         {

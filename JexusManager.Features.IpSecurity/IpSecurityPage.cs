@@ -33,7 +33,7 @@ namespace JexusManager.Features.IpSecurity
             }
         }
 
-        private sealed class IpSecurityListViewItem : ListViewItem
+        private sealed class IpSecurityListViewItem : ListViewItem, IFeatureListViewItem<IpSecurityItem>
         {
             public IpSecurityItem Item { get; }
             private readonly IpSecurityPage _page;
@@ -96,13 +96,14 @@ namespace JexusManager.Features.IpSecurity
             base.Refresh();
         }
 
+        private void ListView1_MouseDoubleClick(object sender, EventArgs e)
+        {
+            _feature.HandleMouseDoubleClick(listView1);
+        }
+
         private void listView1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _feature.SelectedItem = listView1.SelectedItems.Count > 0
-                ? ((IpSecurityListViewItem)listView1.SelectedItems[0]).Item
-                : null;
-            // TODO: optimize refresh when null to not null (vice versa)
-            Refresh();
+            _feature.HandleSelectedIndexChanged(listView1, this);
         }
 
         protected override bool ShowHelp()

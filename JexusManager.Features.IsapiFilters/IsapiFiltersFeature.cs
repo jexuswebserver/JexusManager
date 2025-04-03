@@ -186,7 +186,12 @@ namespace JexusManager.Features.IsapiFilters
 
         public void Edit()
         {
-            using var dialog = new NewFilterDialog(Module, SelectedItem, this);
+            Edit(SelectedItem);
+        }
+
+        protected override void Edit(IsapiFiltersItem item)
+        {
+            using var dialog = new NewFilterDialog(Module, item, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;

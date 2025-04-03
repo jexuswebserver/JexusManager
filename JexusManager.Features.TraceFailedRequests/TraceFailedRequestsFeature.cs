@@ -207,16 +207,21 @@ namespace JexusManager.Features.TraceFailedRequests
             RemoveItem();
         }
 
-        public void Edit()
+        protected override void Edit(TraceFailedRequestsItem item)
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            using var dialog = new AddTraceWizard(Module, SelectedItem, service.GetSection("system.webServer/tracing/traceProviderDefinitions"), this);
+            using var dialog = new AddTraceWizard(Module, item, service.GetSection("system.webServer/tracing/traceProviderDefinitions"), this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
             EditItem(dialog.Item);
+        }
+
+        public void Edit()
+        {
+            Edit(SelectedItem);
         }
 
         public void Rename()

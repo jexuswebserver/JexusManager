@@ -34,20 +34,20 @@ namespace JexusManager.Features.Certificates
             }
         }
 
-        private sealed class CertificatesListViewItem : ListViewItem
+        private sealed class CertificatesListViewItem : ListViewItem, IFeatureListViewItem<CertificatesItem>
         {
             public CertificatesItem Item { get; }
             private readonly CertificatesPage _page;
 
             public CertificatesListViewItem(CertificatesItem item, CertificatesPage page)
-                : base(item.Certificate.FriendlyName)
+                : base(item.Item.FriendlyName)
             {
                 Item = item;
                 _page = page;
-                SubItems.Add(new ListViewSubItem(this, item.Certificate.GetNameInfo(X509NameType.SimpleName, false)));
-                SubItems.Add(new ListViewSubItem(this, item.Certificate.GetNameInfo(X509NameType.SimpleName, true)));
-                SubItems.Add(new ListViewSubItem(this, item.Certificate.GetExpirationDateString()));
-                SubItems.Add(new ListViewSubItem(this, item.Certificate.GetCertHashString()));
+                SubItems.Add(new ListViewSubItem(this, item.Item.GetNameInfo(X509NameType.SimpleName, false)));
+                SubItems.Add(new ListViewSubItem(this, item.Item.GetNameInfo(X509NameType.SimpleName, true)));
+                SubItems.Add(new ListViewSubItem(this, item.Item.GetExpirationDateString()));
+                SubItems.Add(new ListViewSubItem(this, item.Item.GetCertHashString()));
                 SubItems.Add(new ListViewSubItem(this, item.Store));
             }
         }
@@ -101,13 +101,14 @@ namespace JexusManager.Features.Certificates
             Tasks.Fill(tsActionPanel, cmsActionPanel);
             base.Refresh();
         }
+        private void ListView1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            _feature.HandleMouseDoubleClick(listView1);
+        }
 
         private void listView1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _feature.SelectedItem = listView1.SelectedItems.Count > 0
-                ? ((CertificatesListViewItem)listView1.SelectedItems[0]).Item
-                : null;
-            Refresh();
+            _feature.HandleSelectedIndexChanged(listView1, this);
         }
 
         protected override bool ShowHelp()
@@ -136,14 +137,6 @@ namespace JexusManager.Features.Certificates
                 base.Tasks.Add(_feature.GetTaskList());
                 base.Tasks.Add(_taskList);
                 return base.Tasks;
-            }
-        }
-
-        private void ListView1_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            if (listView1.SelectedItems.Count > 0)
-            {
-                _feature.View();
             }
         }
     }

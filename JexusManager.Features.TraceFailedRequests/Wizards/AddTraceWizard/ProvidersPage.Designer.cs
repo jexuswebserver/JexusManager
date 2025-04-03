@@ -52,6 +52,7 @@
             // 
             // clbProviders
             // 
+            this.clbProviders.CheckOnClick = true;
             this.clbProviders.FormattingEnabled = true;
             this.clbProviders.Location = new System.Drawing.Point(19, 32);
             this.clbProviders.Name = "clbProviders";
@@ -82,6 +83,7 @@
             // 
             // clbAreas
             // 
+            this.clbAreas.CheckOnClick = true;
             this.clbAreas.FormattingEnabled = true;
             this.clbAreas.Location = new System.Drawing.Point(26, 96);
             this.clbAreas.Name = "clbAreas";

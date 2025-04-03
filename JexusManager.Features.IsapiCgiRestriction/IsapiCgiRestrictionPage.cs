@@ -33,7 +33,7 @@ namespace JexusManager.Features.IsapiCgiRestriction
             }
         }
 
-        private sealed class IsapiCgiRestrictionListViewItem : ListViewItem
+        private sealed class IsapiCgiRestrictionListViewItem : ListViewItem, IFeatureListViewItem<IsapiCgiRestrictionItem>
         {
             public IsapiCgiRestrictionItem Item { get; }
 
@@ -97,13 +97,14 @@ namespace JexusManager.Features.IsapiCgiRestriction
             base.Refresh();
         }
 
+        private void ListView1MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            _feature.HandleMouseDoubleClick(listView1);
+        }
+
         private void ListView1SelectedIndexChanged(object sender, EventArgs e)
         {
-            _feature.SelectedItem = listView1.SelectedItems.Count > 0
-                ? ((IsapiCgiRestrictionListViewItem)listView1.SelectedItems[0]).Item
-                : null;
-            // TODO: optimize refresh when null to not null (vice versa)
-            Refresh();
+            _feature.HandleSelectedIndexChanged(listView1, this);
         }
 
         protected override bool ShowHelp()

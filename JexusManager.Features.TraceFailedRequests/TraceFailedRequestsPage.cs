@@ -14,6 +14,7 @@ namespace JexusManager.Features.TraceFailedRequests
 
     using Microsoft.Web.Management.Client;
     using Microsoft.Web.Management.Client.Win32;
+    using static System.Windows.Forms.ListViewItem;
 
     internal partial class TraceFailedRequestsPage : ModuleListPage
     {
@@ -33,13 +34,11 @@ namespace JexusManager.Features.TraceFailedRequests
             }
         }
 
-        private sealed class IsapiFiltersListViewItem : ListViewItem
+        private sealed class TraceFailedRequestsListViewItem : ListViewItem, IFeatureListViewItem<TraceFailedRequestsItem>
         {
             public TraceFailedRequestsItem Item { get; }
-
             private readonly TraceFailedRequestsPage _page;
-
-            public IsapiFiltersListViewItem(TraceFailedRequestsItem item, TraceFailedRequestsPage page)
+            public TraceFailedRequestsListViewItem(TraceFailedRequestsItem item, TraceFailedRequestsPage page)
                 : base(item.Path)
             {
                 Item = item;
@@ -76,7 +75,7 @@ namespace JexusManager.Features.TraceFailedRequests
             listView1.Items.Clear();
             foreach (var file in _feature.Items)
             {
-                listView1.Items.Add(new IsapiFiltersListViewItem(file, this));
+                listView1.Items.Add(new TraceFailedRequestsListViewItem(file, this));
             }
 
             if (_feature.SelectedItem == null)
@@ -85,7 +84,7 @@ namespace JexusManager.Features.TraceFailedRequests
                 return;
             }
 
-            foreach (IsapiFiltersListViewItem item in listView1.Items)
+            foreach (TraceFailedRequestsListViewItem item in listView1.Items)
             {
                 if (item.Item == _feature.SelectedItem)
                 {
@@ -102,19 +101,12 @@ namespace JexusManager.Features.TraceFailedRequests
 
         private void ListView1SelectedIndexChanged(object sender, EventArgs e)
         {
-            _feature.SelectedItem = listView1.SelectedItems.Count > 0
-                ? ((IsapiFiltersListViewItem)listView1.SelectedItems[0]).Item
-                : null;
-            // TODO: optimize refresh when null to not null (vice versa)
-            Refresh();
+            _feature.HandleSelectedIndexChanged(listView1, this);
         }
 
         private void ListView1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            if (listView1.SelectedItems.Count > 0)
-            {
-                _feature.Edit();
-            }
+            _feature.HandleMouseDoubleClick(listView1);
         }
 
         protected override bool ShowHelp()

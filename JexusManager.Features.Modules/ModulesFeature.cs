@@ -265,6 +265,11 @@ namespace JexusManager.Features.Modules
 
         public void Edit()
         {
+            Edit(SelectedItem);
+        }
+
+        protected override void Edit(ModulesItem item)
+        {
             using var dialog = new NewModuleDialog(Module, SelectedItem, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {

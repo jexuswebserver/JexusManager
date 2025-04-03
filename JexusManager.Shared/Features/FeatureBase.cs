@@ -10,7 +10,7 @@ namespace JexusManager.Features
     using System.Linq;
     using System.Reflection;
     using System.Resources;
-
+    using System.Windows.Forms;
     using JexusManager.Services;
 
     using Microsoft.Web.Administration;
@@ -23,7 +23,7 @@ namespace JexusManager.Features
     {
         protected FeatureBase(Module module)
         {
-            this.Module = module;
+            Module = module;
             Items = new List<T>();
         }
 
@@ -41,16 +41,16 @@ namespace JexusManager.Features
         {
             get
             {
-                return this.SelectedItem != null && this.Items.IndexOf(this.SelectedItem) > 0
-                       && this.Items.All(item => item.Element.IsLocked == "false" && item.Element.LockAttributes.Count == 0);
+                return SelectedItem != null && Items.IndexOf(SelectedItem) > 0
+                       && Items.All(item => item.Element.IsLocked == "false" && item.Element.LockAttributes.Count == 0);
             }
         }
         public bool CanMoveDown
         {
             get
             {
-                return this.SelectedItem != null && this.Items.IndexOf(this.SelectedItem) < this.Items.Count - 1
-                       && this.Items.All(item => item.Element.IsLocked == "false" && item.Element.LockAttributes.Count == 0);
+                return SelectedItem != null && Items.IndexOf(SelectedItem) < Items.Count - 1
+                       && Items.All(item => item.Element.IsLocked == "false" && item.Element.LockAttributes.Count == 0);
             }
         }
 
@@ -58,12 +58,12 @@ namespace JexusManager.Features
 
         protected object GetService(Type type)
         {
-            return (this.Module as IServiceProvider).GetService(type);
+            return (Module as IServiceProvider).GetService(type);
         }
 
         protected void DisplayErrorMessage(Exception ex, ResourceManager resourceManager)
         {
-            var service = (IManagementUIService)this.GetService(typeof(IManagementUIService));
+            var service = (IManagementUIService)GetService(typeof(IManagementUIService));
             service.ShowError(ex, resourceManager?.GetString("General"), "", false);
         }
 
@@ -71,9 +71,9 @@ namespace JexusManager.Features
 
         public virtual void LoadItems()
         {
-            this.Items.Clear();
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
-            ConfigurationElementCollection collection = this.GetCollection(service);
+            Items.Clear();
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+            ConfigurationElementCollection collection = GetCollection(service);
             foreach (ConfigurationElement addElement in collection)
             {
                 var type = typeof(T);
@@ -84,8 +84,8 @@ namespace JexusManager.Features
                     constructorInfo.Invoke(
                         constructorInfo.GetParameters().Length == 1
                             ? new object[] { addElement }
-                            : new object[] { addElement, true });
-                this.Items.Add(item);
+                            : [addElement, true]);
+                Items.Add(item);
             }
 
             var secondary = GetSecondaryCollection(service);
@@ -101,23 +101,23 @@ namespace JexusManager.Features
                         constructorInfo.Invoke(
                             constructorInfo.GetParameters().Length == 1
                                 ? new object[] { addElement }
-                                : new object[] { addElement, false });
-                    this.Items.Add(item);
+                                : [addElement, false]);
+                    Items.Add(item);
                 }
             }
 
-            this.OnSettingsSaved();
+            OnSettingsSaved();
         }
 
         public virtual void AddItem(T item)
         {
-            this.Items.Add(item);
-            this.SelectedItem = item;
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
-            var collection = this.GetCollection(service, item);
+            Items.Add(item);
+            SelectedItem = item;
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+            var collection = GetCollection(service, item);
             item.AppendTo(collection);
             service.ServerManager.CommitChanges();
-            this.OnSettingsSaved();
+            OnSettingsSaved();
         }
 
         private ConfigurationElementCollection GetCollection(IConfigurationService service, T item)
@@ -133,23 +133,23 @@ namespace JexusManager.Features
 
         public virtual void InsertItem(int index, T item)
         {
-            this.Items.Insert(index, item);
-            this.SelectedItem = item;
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
-            var collection = this.GetCollection(service);
+            Items.Insert(index, item);
+            SelectedItem = item;
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+            var collection = GetCollection(service);
             item.Element = collection.CreateElement();
             item.Apply();
             collection.AddAt(index, item.Element);
             service.ServerManager.CommitChanges();
-            this.OnSettingsSaved();
+            OnSettingsSaved();
         }
 
         public virtual void EditItem(T newItem)
         {
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             if (newItem.Flag != "Local")
             {
-                ConfigurationElementCollection collection = this.GetCollection(service);
+                ConfigurationElementCollection collection = GetCollection(service);
                 collection.Remove(newItem.Element);
                 newItem.AppendTo(collection);
                 newItem.Flag = "Local";
@@ -160,17 +160,17 @@ namespace JexusManager.Features
             }
 
             service.ServerManager.CommitChanges();
-            this.OnSettingsSaved();
+            OnSettingsSaved();
         }
 
         public virtual void RemoveItem()
         {
-            this.Items.Remove(this.SelectedItem);
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            Items.Remove(SelectedItem);
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             ConfigurationElementCollection collection = GetCollection(service, SelectedItem);
             try
             {
-                collection.Remove(this.SelectedItem.Element);
+                collection.Remove(SelectedItem.Element);
             }
             catch (FileLoadException ex)
             {
@@ -180,50 +180,50 @@ namespace JexusManager.Features
 
             service.ServerManager.CommitChanges();
 
-            this.SelectedItem = default(T);
-            this.OnSettingsSaved();
+            SelectedItem = default;
+            OnSettingsSaved();
         }
 
         public virtual void MoveUpItem()
         {
-            int index = this.Items.IndexOf(this.SelectedItem);
-            this.Items.Remove(this.SelectedItem);
-            this.Items.Insert(index - 1, this.SelectedItem);
+            int index = Items.IndexOf(SelectedItem);
+            Items.Remove(SelectedItem);
+            Items.Insert(index - 1, SelectedItem);
 
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var collection = GetCollection(service);
             var element = collection[index];
             collection.Remove(element);
             collection.AddAt(index - 1, element);
 
             service.ServerManager.CommitChanges();
-            this.OnSettingsSaved();
+            OnSettingsSaved();
         }
 
         public virtual void MoveDownItem()
         {
-            int index = this.Items.IndexOf(this.SelectedItem);
-            this.Items.Remove(this.SelectedItem);
-            this.Items.Insert(index + 1, this.SelectedItem);
+            int index = Items.IndexOf(SelectedItem);
+            Items.Remove(SelectedItem);
+            Items.Insert(index + 1, SelectedItem);
 
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var collection = GetCollection(service);
             var element = collection[index];
             collection.Remove(element);
             collection.AddAt(index + 1, element);
 
             service.ServerManager.CommitChanges();
-            this.OnSettingsSaved();
+            OnSettingsSaved();
         }
 
         public virtual void RevertItems()
         {
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var collection = GetCollection(service);
             collection.Revert();
 
             service.ServerManager.CommitChanges();
-            this.SelectedItem = null;
+            SelectedItem = null;
             LoadItems();
         }
 
@@ -231,5 +231,32 @@ namespace JexusManager.Features
         {
             return null;
         }
+
+        #region Event handlers
+        protected virtual void Edit(T item)
+        { }
+
+        public void HandleMouseDoubleClick(ListView listView)
+        {
+            if (listView.SelectedItems.Count == 0)
+            {
+                return;
+            }
+
+            var item = (IFeatureListViewItem<T>)listView.SelectedItems[0];
+            Edit(item.Item);
+        }
+
+        public void HandleSelectedIndexChanged(ListView listView, ModuleListPage page)
+        {
+            if (listView.SelectedItems.Count > 0)
+            {
+                var item = (IFeatureListViewItem<T>)listView.SelectedItems[0];
+                SelectedItem = item.Item;
+            }
+
+            page.Refresh();
+        }
+        #endregion
     }
 }

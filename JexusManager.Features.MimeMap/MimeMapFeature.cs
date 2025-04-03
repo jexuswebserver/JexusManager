@@ -131,6 +131,11 @@ namespace JexusManager.Features.MimeMap
 
         public void Edit()
         {
+            Edit(SelectedItem);
+        }
+
+        protected override void Edit(MimeMapItem item)
+        {            
             using var dialog = new NewMapItemDialog(Module, SelectedItem, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
