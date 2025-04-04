@@ -6,6 +6,7 @@ namespace JexusManager.Features
 {
     using System;
     using System.Collections.Generic;
+    using System.Drawing;
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -21,6 +22,10 @@ namespace JexusManager.Features
     public abstract class FeatureBase<T>
         where T : class, IItem<T>
     {
+        private TextBox _editBox;
+        private ListView _listView;
+        private ListViewItem? _lastSelectedItem = null;
+
         protected FeatureBase(Module module)
         {
             Module = module;
@@ -254,6 +259,106 @@ namespace JexusManager.Features
                 var item = (IFeatureListViewItem<T>)listView.SelectedItems[0];
                 SelectedItem = item.Item;
             }
+            else
+            {
+                _lastSelectedItem = null;
+                SelectedItem = null;
+            }
+        }
+
+        public void HandleMouseClick(ListView listView1, Action<T, string> updatePropertyAction)
+        {
+            _editBox = new TextBox
+            {
+                Visible = false
+            };
+            listView1.Controls.Add(_editBox);
+            _listView = listView1;
+
+            listView1.MouseClick += (s, e) =>
+            {
+                var info = listView1.HitTest(e.Location);
+                if (info?.Item == null)
+                {
+                    return;
+                }
+
+                var clickedItem = info.Item;
+                if (_lastSelectedItem == clickedItem)
+                {
+                    BeginEditAt(info);
+                }
+
+                _lastSelectedItem = clickedItem;
+            };
+
+            _editBox.Leave += (s, e) => CommitEdit(updatePropertyAction);
+            _editBox.KeyDown += (s, e) =>
+            {
+                if (e.KeyCode == Keys.Enter)
+                {
+                    CommitEdit(updatePropertyAction);
+                }
+                else if (e.KeyCode == Keys.Escape)
+                {
+                    _editBox.Visible = false;
+                }
+            };
+        }
+
+        public void EditInline(T item)
+        {
+            var index = Items.IndexOf(SelectedItem);
+            if (index < 0)
+            {
+                return;
+            }
+
+            ListViewItem row = _listView.Items[index];
+            _listView.Focus();
+            row.Selected = true;
+            row.Focused = true;
+
+            Rectangle bounds = row.Bounds;
+            Point clickPoint = new Point(bounds.Left + 2, bounds.Top + 2);
+            var hitTest = _listView.HitTest(clickPoint);
+            BeginEditAt(hitTest);
+        }
+
+        public void BeginEditAt(ListViewHitTestInfo hitTest)
+        {
+            if (hitTest.Item == null)
+            {
+                return;
+            }
+
+            if (hitTest.SubItem == null)
+            {
+                return;
+            }
+
+            var itemBounds = hitTest.Item.Bounds;
+            var columnWidth = hitTest.Item.ListView.Columns[0].Width;
+
+            var editBounds = new Rectangle(itemBounds.Left, itemBounds.Top, columnWidth, itemBounds.Height);
+
+            _editBox.Bounds = editBounds;
+            _editBox.Text = hitTest.Item.Text;
+            _editBox.Tag = hitTest; // Store the item info in the tag
+            _editBox.Visible = true;
+            _editBox.Focus();
+            _editBox.SelectAll();
+        }
+
+        private void CommitEdit(Action<T, string> updatePropertyAction)
+        {
+            if (_editBox.Visible && _editBox.Tag is ListViewHitTestInfo info)
+            {
+                info.Item.Text = _editBox.Text;
+                updatePropertyAction?.Invoke(SelectedItem, _editBox.Text);
+            }
+
+            _editBox.Visible = false;
         }
         #endregion
     }

@@ -14,6 +14,7 @@ namespace JexusManager.Features.Rewrite.Inbound
     using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Drawing;
     using System.Reflection;
     using System.Resources;
     using System.Windows.Forms;
@@ -216,7 +217,12 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         private void Edit()
         {
-            // TODO:
+            Edit(SelectedItem);
+        }
+
+        protected override void Edit(AllowedVariableItem item)
+        {
+            EditInline(item);
         }
 
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)

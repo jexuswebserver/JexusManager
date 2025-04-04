@@ -75,7 +75,7 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         public ServerVariablesPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         protected override void Initialize(object navigationData)
@@ -87,6 +87,12 @@ namespace JexusManager.Features.Rewrite.Inbound
             _feature = new AllowedVariablesFeature(Module);
             _feature.RewriteSettingsUpdated = this.InitializeListPage;
             _feature.Load();
+
+            _feature.HandleMouseClick(listView1, (item, text) =>
+            {
+                item.Name = text;
+                item.Apply();
+            });
         }
 
         protected override void InitializeListPage()
@@ -118,11 +124,6 @@ namespace JexusManager.Features.Rewrite.Inbound
             {
                 _feature.Remove();
             }
-        }
-
-        private void ListView1MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            _feature.HandleMouseDoubleClick(listView1);
         }
 
         private void ListView1SelectedIndexChanged(object sender, EventArgs e)
