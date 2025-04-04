@@ -13,7 +13,7 @@
 namespace JexusManager.Features.RequestFiltering
 {
     using System;
-
+    using Microsoft.Web.Administration;
     using Microsoft.Web.Management.Client;
 
     /// <summary>

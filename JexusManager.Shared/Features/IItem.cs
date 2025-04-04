@@ -4,20 +4,7 @@
 
 namespace JexusManager.Features
 {
-    using System;
-
     using Microsoft.Web.Administration;
-
-    public interface IItem<T> : IEquatable<T>
-    {
-        string Flag { get; set; }
-
-        void Apply();
-
-        ConfigurationElement Element { get; set; }
-
-        bool Match(T other);
-    }
 
     public static class ItemExtensions
     {

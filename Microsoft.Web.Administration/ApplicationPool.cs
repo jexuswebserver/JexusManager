@@ -6,7 +6,7 @@ using System;
 
 namespace Microsoft.Web.Administration
 {
-    public sealed class ApplicationPool : ConfigurationElement
+    public sealed class ApplicationPool : ConfigurationElement, IItem<ApplicationPool>
     {
         private ApplicationPoolProcessModel _processModel;
         private ApplicationPoolRecycling _recycling;
@@ -154,6 +154,27 @@ namespace Microsoft.Web.Administration
             return Name;
         }
 
+        public void Apply()
+        {
+        }
+
+        public bool Match(ApplicationPool other)
+        {
+            return Equals(other);
+        }
+
+        public bool Equals(ApplicationPool other)
+        {
+            return other != null && Name.Equals(other.Name, StringComparison.OrdinalIgnoreCase);
+        }
+
         internal int ApplicationCount { get; set; }
+        public string Flag { get; set; } = "Local";
+
+        public ConfigurationElement Element
+        {
+            get { return this; }
+            set { }
+        }
     }
 }

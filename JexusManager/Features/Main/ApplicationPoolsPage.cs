@@ -42,7 +42,7 @@ namespace JexusManager.Features.Main
             }
         }
 
-        private sealed class ApplicationPoolsListViewItem : ListViewItem
+        private sealed class ApplicationPoolsListViewItem : ListViewItem, IFeatureListViewItem<ApplicationPool>
         {
             public ApplicationPool Item { get; }
             private readonly ApplicationPoolsPage _page;
@@ -141,15 +141,7 @@ namespace JexusManager.Features.Main
             }
         }
 
-        private void listView2_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            _feature.SelectedItem = listView1.SelectedItems.Count > 0
-                ? ((ApplicationPoolsListViewItem)listView1.SelectedItems[0]).Item
-                : null;
-            Refresh();
-        }
-
-        private void listView1_KeyDown(object sender, KeyEventArgs e)
+        private void ListView1_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Delete)
             {
@@ -157,9 +149,15 @@ namespace JexusManager.Features.Main
             }
         }
 
-        private void listView1_MouseDoubleClick(object sender, MouseEventArgs e)
+        private void ListView1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            _feature.Basic();
+            _feature.HandleMouseDoubleClick(listView1);
         }
+
+        private void ListView1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            _feature.HandleSelectedIndexChanged(listView1);
+            Refresh();
+        }        
     }
 }

@@ -7,6 +7,7 @@ namespace JexusManager.Features.Main
     using System;
     using System.Collections;
     using System.Diagnostics;
+    using System.Linq;
     using System.Reflection;
     using System.Resources;
     using System.Windows.Forms;
@@ -23,7 +24,7 @@ namespace JexusManager.Features.Main
     /// <summary>
     /// Description of DefaultDocumentFeature.
     /// </summary>
-    internal class ApplicationPoolsFeature
+    internal class ApplicationPoolsFeature : FeatureBase<ApplicationPool>
     {
         private sealed class FeatureTaskList : DefaultTaskList
         {
@@ -99,7 +100,7 @@ namespace JexusManager.Features.Main
             [Obfuscation(Exclude = true)]
             public void Basic()
             {
-                _owner.Basic();
+                _owner.Edit();
             }
 
             [Obfuscation(Exclude = true)]
@@ -140,8 +141,8 @@ namespace JexusManager.Features.Main
         }
 
         public ApplicationPoolsFeature(Module module)
+            : base(module)
         {
-            Module = module;
         }
 
         protected static readonly Version FxVersion10 = new Version("1.0");
@@ -149,17 +150,7 @@ namespace JexusManager.Features.Main
         protected static readonly Version FxVersion20 = new Version("2.0");
         protected static readonly Version FxVersionNotRequired = new Version();
         private FeatureTaskList _taskList;
-
-        protected void DisplayErrorMessage(Exception ex, ResourceManager resourceManager)
-        {
-            var service = (IManagementUIService)GetService(typeof(IManagementUIService));
-            service.ShowError(ex, resourceManager.GetString("General"), "", false);
-        }
-
-        protected object GetService(Type type)
-        {
-            return (Module as IServiceProvider).GetService(type);
-        }
+        private ServerManager _serverManager;
 
         public TaskList GetTaskList()
         {
@@ -169,12 +160,10 @@ namespace JexusManager.Features.Main
         public void Load()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            Items = service.Server.ApplicationPools;
+            Items = service.Server.ApplicationPools.ToList();
+            _serverManager = service.Server;
             OnApplicationPoolsSettingsSaved();
         }
-
-        public ApplicationPoolCollection Items { get; set; }
-        public ApplicationPool SelectedItem { get; set; }
 
         protected void OnApplicationPoolsSettingsSaved()
         {
@@ -189,24 +178,25 @@ namespace JexusManager.Features.Main
 
         private void Add()
         {
-            using (var dialog = new ApplicationPoolBasicSettingsDialog(Module, null, Items.Parent.ApplicationPoolDefaults, Items))
+            using (var dialog = new ApplicationPoolBasicSettingsDialog(Module, null, _serverManager.ApplicationPoolDefaults, _serverManager.ApplicationPools))
             {
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
-                    Items.Parent.CommitChanges();
+                    _serverManager.CommitChanges();
                 }
 
                 SelectedItem = dialog.Pool;
+                Items = _serverManager.ApplicationPools.ToList();
             }
             OnApplicationPoolsSettingsSaved();
         }
 
         private void Set()
         {
-            using var dialog = new ApplicationPoolDefaultsSettingsDialog(Module, Items.Parent.ApplicationPoolDefaults);
+            using var dialog = new ApplicationPoolDefaultsSettingsDialog(Module, _serverManager.ApplicationPoolDefaults);
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                Items.Parent.CommitChanges();
+                _serverManager.CommitChanges();
             }
         }
 
@@ -228,18 +218,19 @@ namespace JexusManager.Features.Main
                 return;
             }
 
-            var index = Items.IndexOf(SelectedItem);
-            Items.RemoveAt(index);
-            if (Items.Count == 0)
+            var index = _serverManager.ApplicationPools.IndexOf(SelectedItem);
+            _serverManager.ApplicationPools.RemoveAt(index);
+            if (_serverManager.ApplicationPools.Count == 0)
             {
                 SelectedItem = null;
             }
             else
             {
-                SelectedItem = index > Items.Count - 1 ? Items[Items.Count - 1] : Items[index];
+                SelectedItem = index > _serverManager.ApplicationPools.Count - 1 ? _serverManager.ApplicationPools[_serverManager.ApplicationPools.Count - 1] : _serverManager.ApplicationPools[index];
             }
 
-            Items.Parent.CommitChanges();
+            _serverManager.CommitChanges();
+            Items = _serverManager.ApplicationPools.ToList();
             OnApplicationPoolsSettingsSaved();
         }
 
@@ -252,7 +243,7 @@ namespace JexusManager.Features.Main
             using var dialog = new ApplicationPoolAdvancedSettingsDialog(Module, SelectedItem);
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                SelectedItem.Parent.Parent.CommitChanges();
+                _serverManager.CommitChanges();
             }
         }
 
@@ -302,21 +293,31 @@ namespace JexusManager.Features.Main
         {
         }
 
-        internal void Basic()
+        internal void Edit()
         {
-            if (SelectedItem == null)
-            {
-                return;
-            }
+            Edit(SelectedItem);
+        }
 
-            using (var dialog = new ApplicationPoolBasicSettingsDialog(Module, SelectedItem, null, Items))
+        protected override void Edit(ApplicationPool item)
+        {
+            using (var dialog = new ApplicationPoolBasicSettingsDialog(Module, item, null, _serverManager.ApplicationPools))
             {
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
-                    SelectedItem.Parent.Parent.CommitChanges();
+                    _serverManager.CommitChanges();
                 }
             }
 
+            OnApplicationPoolsSettingsSaved();
+        }
+
+        protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
+        {
+            return null;
+        }
+
+        protected override void OnSettingsSaved()
+        {
             OnApplicationPoolsSettingsSaved();
         }
 
@@ -325,17 +326,11 @@ namespace JexusManager.Features.Main
         public ApplicationPoolsSettingsSavedEventHandler ApplicationPoolsSettingsUpdated { get; set; }
         public string Description { get; }
 
-        public virtual bool IsFeatureEnabled
-        {
-            get { return true; }
-        }
-
         public virtual Version MinimumFrameworkVersion
         {
             get { return FxVersionNotRequired; }
         }
 
-        public Module Module { get; }
         public string Name { get; }
     }
 }

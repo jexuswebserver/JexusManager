@@ -48,7 +48,7 @@ namespace JexusManager.Features.Main
             }
         }
 
-        private sealed class SitesListViewItem : ListViewItem
+        private sealed class SitesListViewItem : ListViewItem, IFeatureListViewItem<Site>
         {
             public Site Item { get; }
             private readonly SitesPage _page;
@@ -208,28 +208,23 @@ namespace JexusManager.Features.Main
             cbFilter.Text = string.Empty;
         }
 
-        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            _feature.SelectedItem = listView1.SelectedItems.Count > 0
-                ? ((SitesListViewItem)listView1.SelectedItems[0]).Item
-                : null;
-            Refresh();
-        }
-
-        private void listView1_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            if (listView1.SelectedItems.Count > 0)
-            {
-                _form.ShowSite((Site)listView1.SelectedItems[0].Tag);
-            }
-        }
-
-        private void listView1_KeyDown(object sender, KeyEventArgs e)
+        private void ListView1_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Delete)
             {
                 _feature.Remove();
             }
+        }
+
+        private void ListView1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            _feature.HandleMouseDoubleClick(listView1);
+        }
+
+        private void ListView1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            _feature.HandleSelectedIndexChanged(listView1);
+            Refresh();
         }
     }
 }

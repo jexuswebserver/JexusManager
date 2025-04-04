@@ -5,11 +5,12 @@
 namespace Microsoft.Web.Administration
 {
     using System.Collections.Generic;
+    using System.Drawing.Design;
     using System.IO;
     using System.Threading.Tasks;
     using System.Xml;
 
-    public sealed class Site : ConfigurationElement
+    public sealed class Site : ConfigurationElement, IItem<Site>
     {
         private const string Command = "/config:\"{0}\" /siteid:{1} /systray:false /trace:error";
         private ApplicationCollection _collection;
@@ -185,6 +186,20 @@ namespace Microsoft.Web.Administration
             }
         }
 
+        public void Apply()
+        {            
+        }
+
+        public bool Match(Site other)
+        {
+            return Equals(other);
+        }
+
+        public bool Equals(Site other)
+        {
+            return other != null && Id == other.Id;
+        }
+
         internal string PhysicalPath
         {
             get
@@ -197,6 +212,14 @@ namespace Microsoft.Web.Administration
                 var path = Applications[0].PhysicalPath;
                 return path;
             }
+        }
+
+        public string Flag { get; set; } = "Local";
+
+        public ConfigurationElement Element
+        {
+            get { return this; }
+            set { }
         }
     }
 }

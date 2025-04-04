@@ -30,11 +30,11 @@ namespace JexusManager.Features.Main
     using Binding = Microsoft.Web.Administration.Binding;
     using Module = Microsoft.Web.Management.Client.Module;
     using System.Linq;
-
+ 
     /// <summary>
     /// Description of DefaultDocumentFeature.
     /// </summary>
-    internal class SitesFeature
+    internal class SitesFeature : FeatureBase<Site>
     {
         private sealed class FeatureTaskList : DefaultTaskList
         {
@@ -219,8 +219,8 @@ namespace JexusManager.Features.Main
         }
 
         public SitesFeature(Module module)
+            : base(module)
         {
-            Module = module;
         }
 
         protected static readonly Version FxVersion10 = new Version("1.0");
@@ -228,17 +228,7 @@ namespace JexusManager.Features.Main
         protected static readonly Version FxVersion20 = new Version("2.0");
         protected static readonly Version FxVersionNotRequired = new Version();
         private FeatureTaskList _taskList;
-
-        protected void DisplayErrorMessage(Exception ex, ResourceManager resourceManager)
-        {
-            var service = (IManagementUIService)GetService(typeof(IManagementUIService));
-            service.ShowError(ex, resourceManager.GetString("General"), "", false);
-        }
-
-        protected object GetService(Type type)
-        {
-            return (Module as IServiceProvider).GetService(type);
-        }
+        private ServerManager _serverManager;
 
         public TaskList GetTaskList()
         {
@@ -248,12 +238,10 @@ namespace JexusManager.Features.Main
         public void Load()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            Items = service.Server.Sites;
+            _serverManager = service.ServerManager;
+            Items = service.Server.Sites.ToList();
             OnSitesSettingsSaved();
         }
-
-        public SiteCollection Items { get; set; }
-        public Site SelectedItem { get; set; }
 
         protected void OnSitesSettingsSaved()
         {
@@ -268,7 +256,7 @@ namespace JexusManager.Features.Main
 
         private void Add()
         {
-            using var dialog = new NewSiteDialog(Module, Items);
+            using var dialog = new NewSiteDialog(Module, _serverManager.Sites);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
@@ -278,6 +266,7 @@ namespace JexusManager.Features.Main
             dialog.NewSite.Applications[0].Save();
             SelectedItem = dialog.NewSite;
             SelectedItem.Server.CommitChanges();
+            Items = _serverManager.Sites.ToList();
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             ((MainForm)service.Form).AddSiteNode(dialog.NewSite);
         }
@@ -301,7 +290,7 @@ namespace JexusManager.Features.Main
                 return;
             }
 
-            var index = Items.IndexOf(SelectedItem);
+            var index = _serverManager.Sites.IndexOf(SelectedItem);
             Items.Remove(SelectedItem);
             SelectedItem.Server.CommitChanges();
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
@@ -465,6 +454,13 @@ namespace JexusManager.Features.Main
             OnSitesSettingsSaved();
         }
 
+        protected override void Edit(Site item)
+        {
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+            var mainForm = service.Form as MainForm;
+            mainForm?.ShowSite(item);
+        }
+
         private void Permissions()
         {
             var path = SelectedItem.PhysicalPath.ExpandIisExpressEnvironmentVariables(SelectedItem.Applications[0].GetActualExecutable());
@@ -497,22 +493,26 @@ namespace JexusManager.Features.Main
             OnSitesSettingsSaved();
         }
 
+        protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
+        {
+            return null;
+        }
+
+        protected override void OnSettingsSaved()
+        {
+            OnSitesSettingsSaved();
+        }
+
         public bool IsBusy { get; set; }
 
         public SitesSettingsSavedEventHandler SitesSettingsUpdated { get; set; }
         public string Description { get; }
-
-        public virtual bool IsFeatureEnabled
-        {
-            get { return true; }
-        }
 
         public virtual Version MinimumFrameworkVersion
         {
             get { return FxVersionNotRequired; }
         }
 
-        public Module Module { get; }
         public string Name { get; }
     }
 
