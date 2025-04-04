@@ -57,13 +57,13 @@ namespace JexusManager.Features.Handlers
 
         public HandlersPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         protected override void Initialize(object navigationData)
         {
             base.Initialize(navigationData);
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             pictureBox1.Image = service.Scope.GetImage();
 
             _feature = new HandlersFeature(Module);
@@ -74,6 +74,17 @@ namespace JexusManager.Features.Handlers
             {
                 item.Name = text;
                 item.Apply();
+            },
+            text =>
+            {
+                if (_feature.FindDuplicate(item => item.Name, text))
+                {
+                    var service = (IManagementUIService)GetService(typeof(IManagementUIService));
+                    service.ShowMessage("A handler with this name already exists.", Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    return false;
+                }
+
+                return true;
             });
         }
 

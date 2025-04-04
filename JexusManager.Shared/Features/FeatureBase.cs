@@ -266,99 +266,59 @@ namespace JexusManager.Features
             }
         }
 
-        public void HandleMouseClick(ListView listView1, Action<T, string> updatePropertyAction)
+        public void HandleMouseClick(ListView listView1, Action<T, string> updatePropertyAction, Func<string, bool> validateAction)
         {
-            _editBox = new TextBox
-            {
-                Visible = false
-            };
-            listView1.Controls.Add(_editBox);
             _listView = listView1;
+            listView1.LabelEdit = true;
+            listView1.AfterLabelEdit += (s, e) =>
+            {
+                if (string.IsNullOrEmpty(e.Label))
+                {
+                    e.CancelEdit = true;
+                    return;
+                }
+
+                if (validateAction != null && !validateAction(e.Label))
+                {
+                    e.CancelEdit = true;
+                    return;
+                }
+
+                if (SelectedItem == null)
+                {
+                    e.CancelEdit = true;
+                    return;
+                }
+
+                updatePropertyAction(SelectedItem, e.Label);
+            };
 
             listView1.MouseClick += (s, e) =>
             {
                 var info = listView1.HitTest(e.Location);
                 if (info?.Item == null)
-                {
                     return;
-                }
 
-                var clickedItem = info.Item;
-                if (_lastSelectedItem == clickedItem)
+                if (info.Item.Selected)
                 {
-                    BeginEditAt(info);
-                }
-
-                _lastSelectedItem = clickedItem;
-            };
-
-            _editBox.Leave += (s, e) => CommitEdit(updatePropertyAction);
-            _editBox.KeyDown += (s, e) =>
-            {
-                if (e.KeyCode == Keys.Enter)
-                {
-                    CommitEdit(updatePropertyAction);
-                }
-                else if (e.KeyCode == Keys.Escape)
-                {
-                    _editBox.Visible = false;
+                    info.Item.BeginEdit();
                 }
             };
         }
 
         public void RenameInline(T item)
         {
-            var index = Items.IndexOf(SelectedItem);
-            if (index < 0)
+            var index = Items.IndexOf(item);
+            if (index >= 0 && index < _listView.Items.Count)
             {
-                return;
+                _listView.Items[index].BeginEdit();
             }
-
-            ListViewItem row = _listView.Items[index];
-            _listView.Focus();
-            row.Selected = true;
-            row.Focused = true;
-
-            Rectangle bounds = row.Bounds;
-            Point clickPoint = new Point(bounds.Left + 2, bounds.Top + 2);
-            var hitTest = _listView.HitTest(clickPoint);
-            BeginEditAt(hitTest);
         }
 
-        public void BeginEditAt(ListViewHitTestInfo hitTest)
+        public bool FindDuplicate(Func<T, string> value, string text)
         {
-            if (hitTest.Item == null)
-            {
-                return;
-            }
-
-            if (hitTest.SubItem == null)
-            {
-                return;
-            }
-
-            var itemBounds = hitTest.Item.Bounds;
-            var columnWidth = hitTest.Item.ListView.Columns[0].Width;
-
-            var editBounds = new Rectangle(itemBounds.Left, itemBounds.Top, columnWidth, itemBounds.Height);
-
-            _editBox.Bounds = editBounds;
-            _editBox.Text = hitTest.Item.Text;
-            _editBox.Tag = hitTest; // Store the item info in the tag
-            _editBox.Visible = true;
-            _editBox.Focus();
-            _editBox.SelectAll();
-        }
-
-        private void CommitEdit(Action<T, string> updatePropertyAction)
-        {
-            if (_editBox.Visible && _editBox.Tag is ListViewHitTestInfo info)
-            {
-                info.Item.Text = _editBox.Text;
-                updatePropertyAction?.Invoke(SelectedItem, _editBox.Text);
-            }
-
-            _editBox.Visible = false;
+            return Items.Where(item => item != SelectedItem)
+                .Any(item => string.Equals(value(item), text, StringComparison.Ordinal));
         }
         #endregion
     }

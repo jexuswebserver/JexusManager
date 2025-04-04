@@ -69,6 +69,17 @@ namespace JexusManager.Features.IsapiFilters
             {
                 item.Name = text;
                 item.Apply();
+            },            
+            text =>
+            {
+                if (_feature.FindDuplicate(item => item.Name, text))
+                {
+                    var service = (IManagementUIService)GetService(typeof(IManagementUIService));
+                    service.ShowMessage("An ISAPI filter with this name already exists.", Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    return false;
+                }
+
+                return true;
             });
         }
 

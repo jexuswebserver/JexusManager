@@ -133,12 +133,34 @@ namespace JexusManager.Features.Rewrite
             {
                 item.Name = text;
                 item.Apply();
+            },
+            text =>
+            {
+                if (_feature.Inbound.FindDuplicate(item => item.Name, text))
+                {
+                    var service = (IManagementUIService)GetService(typeof(IManagementUIService));
+                    service.ShowMessage("The specific rule already exists", Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    return false;
+                }
+
+                return true;
             });
 
             _feature.Outbound.HandleMouseClick(lvOut, (item, text) =>
             {
                 item.Name = text;
                 item.Apply();
+            },
+            text =>
+            {
+                if (_feature.Outbound.FindDuplicate(item => item.Name, text))
+                {
+                    var service = (IManagementUIService)GetService(typeof(IManagementUIService));
+                    service.ShowMessage("The specific rule already exists", Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    return false;
+                }
+
+                return true;
             });
         }
 
@@ -251,18 +273,6 @@ namespace JexusManager.Features.Rewrite
         private void btnRenameIn_Click(object sender, EventArgs e)
         {
             lvIn.SelectedItems[0].BeginEdit();
-        }
-
-        private void LvInAfterLabelEdit(object sender, LabelEditEventArgs e)
-        {
-            if (string.IsNullOrEmpty(e.Label))
-            {
-                e.CancelEdit = true;
-                return;
-            }
-
-            var element = (InboundRuleListViewItem)lvIn.Items[e.Item];
-            element.Name = e.Label;
         }
 
         private void LvOutMouseDoubleClick(object sender, MouseEventArgs e)

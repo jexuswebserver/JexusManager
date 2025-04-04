@@ -157,7 +157,6 @@
             this.lvIn.TabIndex = 1;
             this.lvIn.UseCompatibleStateImageBehavior = false;
             this.lvIn.View = System.Windows.Forms.View.Details;
-            this.lvIn.AfterLabelEdit += new System.Windows.Forms.LabelEditEventHandler(this.LvInAfterLabelEdit);
             this.lvIn.KeyDown += new System.Windows.Forms.KeyEventHandler(this.LvInKeyDown);
             this.lvIn.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.LvInMouseDoubleClick);
             this.lvIn.SelectedIndexChanged += new System.EventHandler(this.LvInSelectedIndexChanged);

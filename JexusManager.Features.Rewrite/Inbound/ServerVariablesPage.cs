@@ -92,6 +92,17 @@ namespace JexusManager.Features.Rewrite.Inbound
             {
                 item.Name = text;
                 item.Apply();
+            },
+            text =>
+            {
+                if (_feature.FindDuplicate(item => item.Name, text))
+                {
+                    var service = (IManagementUIService)GetService(typeof(IManagementUIService));
+                    service.ShowMessage("A server variable with this name already exists.", Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    return false;
+                }
+
+                return true;
             });
         }
 

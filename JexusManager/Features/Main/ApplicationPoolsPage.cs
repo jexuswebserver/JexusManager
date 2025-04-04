@@ -88,6 +88,32 @@ namespace JexusManager.Features.Main
             {
                 item.Name = text;
                 item.Apply();
+            },
+            text =>
+            {
+                var service = (IManagementUIService)GetService(typeof(IManagementUIService));
+                if (_feature.FindDuplicate(item => item.Name, text))
+                {
+                    service.ShowMessage("An application pool with this name already exists",
+                        Text,
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Exclamation);
+                    return false;
+                }
+
+                var forbidden = ApplicationPoolCollection.InvalidApplicationPoolNameCharacters();
+                foreach (var ch in forbidden)
+                {
+                    if (text.Contains(ch))
+                    {
+                        service.ShowMessage(
+                            $"The application pool name cannot contain the following characters: '{string.Join(", ", forbidden)}'.",
+                            Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        return false;
+                    }
+                }
+
+                return true;
             });
         }
 

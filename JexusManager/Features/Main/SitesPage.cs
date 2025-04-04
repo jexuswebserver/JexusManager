@@ -101,6 +101,49 @@ namespace JexusManager.Features.Main
             {
                 item.Name = text;
                 item.Apply();
+                _form.UpdateSiteNode(item);
+                item.Server.CommitChanges();
+            },
+            text =>
+            {
+                var service = (IManagementUIService)GetService(typeof(IManagementUIService));
+                Debug.Assert(service != null, "service != null");
+                if (_feature.FindDuplicate(item => item.Name, text))
+                {
+                    service.ShowMessage(
+                        "A site with this name already exists.",
+                        Text,
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Exclamation);
+                    return false;
+                }
+
+                var forbidden = SiteCollection.InvalidSiteNameCharacters();
+                foreach (var ch in forbidden)
+                {
+                    if (text.Contains(ch))
+                    {
+                        service.ShowMessage(
+                            $"The site name cannot contain the following characters: '{string.Join(", ", forbidden)}'.",
+                            "Sites", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        return false;
+                    }
+                }
+
+                if (_feature.SelectedItem.Server.Mode == WorkingMode.Jexus)
+                {
+                    foreach (var ch in SiteCollection.InvalidSiteNameCharactersJexus())
+                    {
+                        if (text.Contains(ch) || text.StartsWith("~"))
+                        {
+                            service.ShowMessage("The site name cannot contain the following characters: '~,  '.", Text,
+                                MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            return false;
+                        }
+                    }
+                }
+
+                return true;
             });
         }
 
@@ -158,50 +201,6 @@ namespace JexusManager.Features.Main
                 base.Tasks.Add(_taskList);
                 return base.Tasks;
             }
-        }
-
-        private void actRename_Execute(object sender, EventArgs e)
-        {
-            listView1.SelectedItems[0].BeginEdit();
-        }
-
-        private void ListView1_AfterLabelEdit(object sender, LabelEditEventArgs e)
-        {
-            if (string.IsNullOrEmpty(e.Label))
-            {
-                e.CancelEdit = true;
-                return;
-            }
-
-            var service = (IManagementUIService)GetService(typeof(IManagementUIService));
-            Debug.Assert(service != null, "service != null");
-            foreach (var ch in SiteCollection.InvalidSiteNameCharacters())
-            {
-                if (e.Label.Contains(ch))
-                {
-                    service.ShowMessage(
-                        "The site name cannot contain the following characters: '\\, /, ?, ;, :, @, &, =, +, $, ,, |, \", <, >'.",
-                        "Sites", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    e.CancelEdit = true;
-                    return;
-                }
-            }
-
-            foreach (var ch in SiteCollection.InvalidSiteNameCharactersJexus())
-            {
-                if (e.Label.Contains(ch) || e.Label.StartsWith("~"))
-                {
-                    service.ShowMessage("The site name cannot contain the following characters: '~,  '.", "Sites",
-                        MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    e.CancelEdit = true;
-                    return;
-                }
-            }
-
-            var site = (Site)listView1.Items[e.Item].Tag;
-            site.Name = e.Label;
-            _form.UpdateSiteNode(site);
-            site.Server.CommitChanges();
         }
 
         private void cbFilter_TextChanged(object sender, EventArgs e)
