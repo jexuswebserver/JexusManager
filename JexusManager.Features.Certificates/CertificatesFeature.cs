@@ -425,10 +425,10 @@ namespace JexusManager.Features.Certificates
 
         internal void View()
         {
-            Edit(SelectedItem);
+            DoubleClick(SelectedItem);
         }
 
-        protected override void Edit(CertificatesItem item)
+        protected override void DoubleClick(CertificatesItem item)
         {
             DialogHelper.DisplayCertificate(item.Item, IntPtr.Zero);
         }

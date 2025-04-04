@@ -96,6 +96,12 @@ namespace JexusManager.Features.Main
             _feature = new SitesFeature(Module);
             _feature.SitesSettingsUpdated = InitializeListPage;
             _feature.Load();
+
+            _feature.HandleMouseClick(listView1, (item, text) =>
+            {
+                item.Name = text;
+                item.Apply();
+            });
         }
 
         protected override void InitializeListPage()
@@ -159,7 +165,7 @@ namespace JexusManager.Features.Main
             listView1.SelectedItems[0].BeginEdit();
         }
 
-        private void listView1_AfterLabelEdit(object sender, LabelEditEventArgs e)
+        private void ListView1_AfterLabelEdit(object sender, LabelEditEventArgs e)
         {
             if (string.IsNullOrEmpty(e.Label))
             {

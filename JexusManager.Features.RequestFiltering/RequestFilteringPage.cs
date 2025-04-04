@@ -48,7 +48,7 @@ namespace JexusManager.Features.RequestFiltering
             }
         }
 
-        private sealed class ExtensionListViewItem : ListViewItem
+        private sealed class ExtensionListViewItem : ListViewItem, IFeatureListViewItem<FileExtensionsItem>
         {
             public FileExtensionsItem Item { get; }
             private readonly RequestFilteringPage _page;
@@ -62,7 +62,7 @@ namespace JexusManager.Features.RequestFiltering
             }
         }
 
-        private sealed class RuleListViewItem : ListViewItem
+        private sealed class RuleListViewItem : ListViewItem, IFeatureListViewItem<FilteringRulesItem>
         {
             public FilteringRulesItem Item { get; }
             private readonly RequestFilteringPage _page;
@@ -78,7 +78,7 @@ namespace JexusManager.Features.RequestFiltering
             }
         }
 
-        private sealed class SegmentListViewItem : ListViewItem
+        private sealed class SegmentListViewItem : ListViewItem, IFeatureListViewItem<HiddenSegmentsItem>
         {
             public HiddenSegmentsItem Item { get; }
             private readonly RequestFilteringPage _page;
@@ -91,7 +91,7 @@ namespace JexusManager.Features.RequestFiltering
             }
         }
 
-        private sealed class UrlListViewItem : ListViewItem
+        private sealed class UrlListViewItem : ListViewItem, IFeatureListViewItem<UrlsItem>
         {
             public UrlsItem Item { get; }
             private readonly RequestFilteringPage _page;
@@ -105,7 +105,7 @@ namespace JexusManager.Features.RequestFiltering
             }
         }
 
-        private sealed class VerbListViewItem : ListViewItem
+        private sealed class VerbListViewItem : ListViewItem, IFeatureListViewItem<VerbsItem>
         {
             public VerbsItem Item { get; }
             private readonly RequestFilteringPage _page;
@@ -119,7 +119,7 @@ namespace JexusManager.Features.RequestFiltering
             }
         }
 
-        private sealed class HeaderListViewItem : ListViewItem
+        private sealed class HeaderListViewItem : ListViewItem, IFeatureListViewItem<HeadersItem>
         {
             public HeadersItem Item { get; }
             private readonly RequestFilteringPage _page;
@@ -133,7 +133,7 @@ namespace JexusManager.Features.RequestFiltering
             }
         }
 
-        private sealed class QueryListViewItem : ListViewItem
+        private sealed class QueryListViewItem : ListViewItem, IFeatureListViewItem<QueryStringsItem>
         {
             public QueryStringsItem Item { get; }
             private readonly RequestFilteringPage _page;

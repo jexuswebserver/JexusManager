@@ -83,6 +83,12 @@ namespace JexusManager.Features.Main
             _feature = new ApplicationPoolsFeature(Module);
             _feature.ApplicationPoolsSettingsUpdated = InitializeListPage;
             _feature.Load();
+
+            _feature.HandleMouseClick(listView1, (item, text) =>
+            {
+                item.Name = text;
+                item.Apply();
+            });
         }
 
         protected override void InitializeListPage()

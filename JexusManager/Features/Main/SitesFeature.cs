@@ -309,7 +309,7 @@ namespace JexusManager.Features.Main
 
         private void Rename()
         {
-            // TODO: use service to find node and trigger rename.
+            RenameInline(SelectedItem);
         }
 
         private void Limits()
@@ -454,7 +454,7 @@ namespace JexusManager.Features.Main
             OnSitesSettingsSaved();
         }
 
-        protected override void Edit(Site item)
+        protected override void DoubleClick(Site item)
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var mainForm = service.Form as MainForm;

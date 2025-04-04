@@ -193,10 +193,10 @@ namespace JexusManager.Features.IsapiCgiRestriction
 
         public void Edit()
         {
-            Edit(SelectedItem);
+            DoubleClick(SelectedItem);
         }
 
-        protected override void Edit(IsapiCgiRestrictionItem item)
+        protected override void DoubleClick(IsapiCgiRestrictionItem item)
         {
             using var dialog = new NewRestrictionDialog(Module, item, this);
             if (dialog.ShowDialog() != DialogResult.OK)

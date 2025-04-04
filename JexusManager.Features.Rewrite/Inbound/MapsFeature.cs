@@ -174,10 +174,10 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         internal void Edit()
         {
-            Edit(SelectedItem);
+            DoubleClick(SelectedItem);
         }
 
-        protected override void Edit(MapItem item)
+        protected override void DoubleClick(MapItem item)
         {
             var service = (INavigationService)GetService(typeof(INavigationService));
             service.Navigate(null, null, typeof(MapPage), SelectedItem);

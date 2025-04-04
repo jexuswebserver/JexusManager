@@ -217,12 +217,12 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         private void Edit()
         {
-            Edit(SelectedItem);
+            DoubleClick(SelectedItem);
         }
 
-        protected override void Edit(AllowedVariableItem item)
+        protected override void DoubleClick(AllowedVariableItem item)
         {
-            EditInline(item);
+            RenameInline(item);
         }
 
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)

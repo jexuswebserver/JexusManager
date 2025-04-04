@@ -236,6 +236,7 @@ namespace JexusManager.Features.Main
 
         private void Rename()
         {
+            RenameInline(SelectedItem);
         }
 
         private void Advanced()
@@ -295,10 +296,10 @@ namespace JexusManager.Features.Main
 
         internal void Edit()
         {
-            Edit(SelectedItem);
+            DoubleClick(SelectedItem);
         }
 
-        protected override void Edit(ApplicationPool item)
+        protected override void DoubleClick(ApplicationPool item)
         {
             using (var dialog = new ApplicationPoolBasicSettingsDialog(Module, item, null, _serverManager.ApplicationPools))
             {

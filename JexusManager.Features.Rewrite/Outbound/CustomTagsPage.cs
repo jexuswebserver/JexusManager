@@ -93,6 +93,12 @@ namespace JexusManager.Features.Rewrite.Outbound
             _feature = new CustomTagsFeature(Module);
             _feature.RewriteSettingsUpdated = this.InitializeListPage;
             _feature.Load();
+
+            _feature.HandleMouseClick(listView1, (item, text) =>
+            {
+                item.Name = text;
+                item.Apply();
+            });
         }
 
         protected override void InitializeListPage()

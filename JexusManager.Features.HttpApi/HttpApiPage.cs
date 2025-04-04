@@ -34,7 +34,7 @@ namespace JexusManager.Features.HttpApi
             }
         }
 
-        private sealed class SniMappingListViewItem : ListViewItem
+        private sealed class SniMappingListViewItem : ListViewItem, IFeatureListViewItem<SniMappingItem>
         {
             public SniMappingItem Item { get; }
             private readonly HttpApiPage _page;
@@ -72,7 +72,7 @@ namespace JexusManager.Features.HttpApi
             }
         }
 
-        private sealed class IpMappingListViewItem : ListViewItem
+        private sealed class IpMappingListViewItem : ListViewItem, IFeatureListViewItem<IpMappingItem>
         {
             public IpMappingItem Item { get; }
             private readonly HttpApiPage _page;
@@ -110,7 +110,7 @@ namespace JexusManager.Features.HttpApi
             }
         }
 
-        private sealed class ReservedUrlListViewItem : ListViewItem
+        private sealed class ReservedUrlListViewItem : ListViewItem, IFeatureListViewItem<ReservedUrlsItem>
         {
             public ReservedUrlsItem Item { get; }
             private readonly HttpApiPage _page;

@@ -138,7 +138,7 @@ namespace JexusManager.Features.Rewrite
             [Obfuscation(Exclude = true)]
             public void Rename()
             {
-                _owner.Rename();
+                _owner.RenameIn();
             }
 
             [Obfuscation(Exclude = true)]
@@ -186,7 +186,7 @@ namespace JexusManager.Features.Rewrite
             [Obfuscation(Exclude = true)]
             public void RenameOut()
             {
-                _owner.Rename();
+                _owner.RenameOut();
             }
 
             [Obfuscation(Exclude = true)]
@@ -376,8 +376,14 @@ namespace JexusManager.Features.Rewrite
         {
         }
 
-        private void Rename()
+        private void RenameIn()
         {
+            Inbound.RenameInline(Inbound.SelectedItem);
+        }
+
+        private void RenameOut()
+        {
+            Outbound.RenameInline(Outbound.SelectedItem);
         }
 
         public string Description { get; }

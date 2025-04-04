@@ -128,6 +128,18 @@ namespace JexusManager.Features.Rewrite
             _feature.Inbound.RewriteSettingsUpdated = InitializeInbound;
             _feature.Outbound.RewriteSettingsUpdated = InitializeOutbound;
             _feature.Load();
+
+            _feature.Inbound.HandleMouseClick(lvIn, (item, text) =>
+            {
+                item.Name = text;
+                item.Apply();
+            });
+
+            _feature.Outbound.HandleMouseClick(lvOut, (item, text) =>
+            {
+                item.Name = text;
+                item.Apply();
+            });
         }
 
         protected override void InitializeListPage()

@@ -135,10 +135,10 @@ namespace JexusManager.Features.HttpErrors
 
         public void Edit()
         {
-            Edit(SelectedItem);
+            DoubleClick(SelectedItem);
         }
 
-        protected override void Edit(HttpErrorsItem item)
+        protected override void DoubleClick(HttpErrorsItem item)
         {
             using var dialog = new NewErrorDialog(Module, item, this);
             if (dialog.ShowDialog() != DialogResult.OK)

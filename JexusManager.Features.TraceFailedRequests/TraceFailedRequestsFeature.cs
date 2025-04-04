@@ -60,7 +60,6 @@ namespace JexusManager.Features.TraceFailedRequests
                     {
                         result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                         result.Add(new MethodTaskItem("Edit", "Edit...", string.Empty).SetUsage());
-                        result.Add(new MethodTaskItem("Rename", "Rename", string.Empty).SetUsage());
                         result.Add(RemoveTaskItem);
                     }
 
@@ -99,12 +98,6 @@ namespace JexusManager.Features.TraceFailedRequests
             public void Edit()
             {
                 _owner.Edit();
-            }
-
-            [Obfuscation(Exclude = true)]
-            public void Rename()
-            {
-                _owner.Rename();
             }
 
             [Obfuscation(Exclude = true)]
@@ -207,7 +200,7 @@ namespace JexusManager.Features.TraceFailedRequests
             RemoveItem();
         }
 
-        protected override void Edit(TraceFailedRequestsItem item)
+        protected override void DoubleClick(TraceFailedRequestsItem item)
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             using var dialog = new AddTraceWizard(Module, item, service.GetSection("system.webServer/tracing/traceProviderDefinitions"), this);
@@ -221,11 +214,7 @@ namespace JexusManager.Features.TraceFailedRequests
 
         public void Edit()
         {
-            Edit(SelectedItem);
-        }
-
-        public void Rename()
-        {
+            DoubleClick(SelectedItem);
         }
 
         public void MoveUp()

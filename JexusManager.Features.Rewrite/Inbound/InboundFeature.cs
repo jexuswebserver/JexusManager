@@ -177,10 +177,10 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         public void Edit()
         {
-            Edit(SelectedItem);
+            DoubleClick(SelectedItem);
         }
 
-        protected override void Edit(InboundRule item)
+        protected override void DoubleClick(InboundRule item)
         {
             var service = (INavigationService)GetService(typeof(INavigationService));
             service.Navigate(null, null, typeof(InboundRulePage), new Tuple<InboundFeature, InboundRule>(this, item));

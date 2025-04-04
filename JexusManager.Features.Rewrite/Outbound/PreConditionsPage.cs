@@ -91,8 +91,14 @@ namespace JexusManager.Features.Rewrite.Outbound
             pictureBox1.Image = service.Scope.GetImage();
 
             _feature = new PreConditionsFeature(Module);
-            _feature.RewriteSettingsUpdated = this.InitializeListPage;
+            _feature.RewriteSettingsUpdated = InitializeListPage;
             _feature.Load();
+
+            _feature.HandleMouseClick(listView1, (item, text) =>
+            {
+                item.Name = text;
+                item.Apply();
+            });
         }
 
         protected override void InitializeListPage()

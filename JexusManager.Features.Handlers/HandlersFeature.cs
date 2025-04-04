@@ -64,6 +64,7 @@ namespace JexusManager.Features.Handlers
                     {
                         result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                         result.Add(new MethodTaskItem("Edit", "Edit...", string.Empty).SetUsage());
+                        result.Add(new MethodTaskItem("Rename", "Rename", string.Empty).SetUsage());
                         result.Add(RemoveTaskItem);
                     }
 
@@ -303,6 +304,7 @@ namespace JexusManager.Features.Handlers
 
         public void Rename()
         {
+            RenameInline(SelectedItem);
         }
 
         public void MoveUp()

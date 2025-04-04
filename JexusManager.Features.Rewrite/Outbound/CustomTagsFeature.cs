@@ -185,7 +185,7 @@ namespace JexusManager.Features.Rewrite.Outbound
 
         public void Edit()
         {
-            // TODO:
+            RenameInline(SelectedItem);
         }
 
         internal protected void OnRewriteSettingsSaved()

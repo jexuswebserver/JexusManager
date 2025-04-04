@@ -265,10 +265,10 @@ namespace JexusManager.Features.Modules
 
         public void Edit()
         {
-            Edit(SelectedItem);
+            DoubleClick(SelectedItem);
         }
 
-        protected override void Edit(ModulesItem item)
+        protected override void DoubleClick(ModulesItem item)
         {
             using var dialog = new NewModuleDialog(Module, SelectedItem, this);
             if (dialog.ShowDialog() != DialogResult.OK)

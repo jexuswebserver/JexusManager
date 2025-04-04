@@ -33,7 +33,7 @@ namespace JexusManager.Features.DefaultDocument
             }
         }
 
-        private sealed class DefaultDocumentListViewItem : ListViewItem
+        private sealed class DefaultDocumentListViewItem : ListViewItem, IFeatureListViewItem<DocumentItem>
         {
             public DocumentItem Item { get; }
             private readonly DefaultDocumentPage _page;

@@ -135,10 +135,10 @@ namespace JexusManager.Features.ResponseHeaders
 
         public void Edit()
         {
-            Edit(SelectedItem);
+            DoubleClick(SelectedItem);
         }
 
-        protected override void Edit(ResponseHeadersItem item)
+        protected override void DoubleClick(ResponseHeadersItem item)
         {
             using var dialog = new NewHeaderDialog(Module, SelectedItem, this);
             if (dialog.ShowDialog() != DialogResult.OK)

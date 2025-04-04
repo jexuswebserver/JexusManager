@@ -64,6 +64,12 @@ namespace JexusManager.Features.IsapiFilters
             _feature = new IsapiFiltersFeature(Module);
             _feature.IsapiFiltersSettingsUpdated = InitializeListPage;
             _feature.Load();
+
+            _feature.HandleMouseClick(listView1, (item, text) =>
+            {
+                item.Name = text;
+                item.Apply();
+            });
         }
 
         protected override void InitializeListPage()

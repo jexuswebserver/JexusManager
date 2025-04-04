@@ -33,7 +33,7 @@ namespace JexusManager.Features.Caching
             }
         }
 
-        private sealed class CachingListViewItem : ListViewItem
+        private sealed class CachingListViewItem : ListViewItem, IFeatureListViewItem<CachingItem>
         {
             public CachingItem Item { get; }
 

@@ -5,7 +5,6 @@
 namespace JexusManager.Features.TraceFailedRequests
 {
     using System;
-    using System.Collections;
     using System.Reflection;
     using System.Windows.Forms;
 
@@ -14,7 +13,6 @@ namespace JexusManager.Features.TraceFailedRequests
 
     using Microsoft.Web.Management.Client;
     using Microsoft.Web.Management.Client.Win32;
-    using static System.Windows.Forms.ListViewItem;
 
     internal partial class TraceFailedRequestsPage : ModuleListPage
     {

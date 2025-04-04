@@ -158,10 +158,10 @@ namespace JexusManager.Features.Rewrite.Outbound
 
         public void Edit()
         {
-            Edit(SelectedItem);
+            DoubleClick(SelectedItem);
         }
 
-        protected override void Edit(PreConditionItem item)
+        protected override void DoubleClick(PreConditionItem item)
         {
             // TODO: how to edit.
             using (var dialog = new AddPreConditionDialog(Module, item))
@@ -261,7 +261,7 @@ namespace JexusManager.Features.Rewrite.Outbound
 
         private void Rename()
         {
-            // TODO:
+            RenameInline(SelectedItem);
         }
 
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)

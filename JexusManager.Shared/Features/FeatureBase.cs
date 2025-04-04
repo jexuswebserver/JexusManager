@@ -238,7 +238,7 @@ namespace JexusManager.Features
         }
 
         #region Event handlers
-        protected virtual void Edit(T item)
+        protected virtual void DoubleClick(T item)
         { }
 
         public void HandleMouseDoubleClick(ListView listView)
@@ -249,7 +249,7 @@ namespace JexusManager.Features
             }
 
             var item = (IFeatureListViewItem<T>)listView.SelectedItems[0];
-            Edit(item.Item);
+            DoubleClick(item.Item);
         }
 
         public void HandleSelectedIndexChanged(ListView listView)
@@ -306,7 +306,7 @@ namespace JexusManager.Features
             };
         }
 
-        public void EditInline(T item)
+        public void RenameInline(T item)
         {
             var index = Items.IndexOf(SelectedItem);
             if (index < 0)

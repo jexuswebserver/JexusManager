@@ -33,7 +33,7 @@ namespace JexusManager.Features.Authorization
             }
         }
 
-        private sealed class AuthorizationListViewItem : ListViewItem
+        private sealed class AuthorizationListViewItem : ListViewItem, IFeatureListViewItem<AuthorizationRule>
         {
             public AuthorizationRule Item { get; }
 

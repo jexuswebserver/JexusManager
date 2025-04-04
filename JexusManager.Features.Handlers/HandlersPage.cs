@@ -33,7 +33,7 @@ namespace JexusManager.Features.Handlers
             }
         }
 
-        private sealed class HandlersListViewItem : ListViewItem
+        private sealed class HandlersListViewItem : ListViewItem, IFeatureListViewItem<HandlersItem>
         {
             public HandlersItem Item { get; }
 
@@ -66,9 +66,15 @@ namespace JexusManager.Features.Handlers
             var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
             pictureBox1.Image = service.Scope.GetImage();
 
-            _feature = new HandlersFeature(this.Module);
-            _feature.HandlersSettingsUpdated = this.InitializeListPage;
+            _feature = new HandlersFeature(Module);
+            _feature.HandlersSettingsUpdated = InitializeListPage;
             _feature.Load();
+
+            _feature.HandleMouseClick(listView1, (item, text) =>
+            {
+                item.Name = text;
+                item.Apply();
+            });
         }
 
         protected override void InitializeListPage()

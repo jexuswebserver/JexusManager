@@ -186,10 +186,10 @@ namespace JexusManager.Features.IsapiFilters
 
         public void Edit()
         {
-            Edit(SelectedItem);
+            DoubleClick(SelectedItem);
         }
 
-        protected override void Edit(IsapiFiltersItem item)
+        protected override void DoubleClick(IsapiFiltersItem item)
         {
             using var dialog = new NewFilterDialog(Module, item, this);
             if (dialog.ShowDialog() != DialogResult.OK)
@@ -202,6 +202,7 @@ namespace JexusManager.Features.IsapiFilters
 
         public void Rename()
         {
+            RenameInline(SelectedItem);
         }
 
         public void MoveUp()
