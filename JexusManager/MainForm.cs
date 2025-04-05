@@ -1305,5 +1305,224 @@ namespace JexusManager
             actBack.Enabled = _navigationService.CanNavigateBack;
             actForward.Enabled = _navigationService.CanNavigateForward;
         }
+
+        /// <summary>
+        /// Selects the corresponding tree node for a given page, synchronizing the tree view with program navigation.
+        /// </summary>
+        /// <param name="page">The page that is being displayed</param>
+        /// <param name="navigationData">The data associated with the page (e.g., Application, Site, etc.)</param>
+        public void SelectNodeForPage(IModulePage page, object navigationData)
+        {
+            // Temporarily suspend the AfterSelect event to prevent duplicate loading
+            bool wasHandlingEvents = _handleEvents;
+            _handleEvents = false;
+            
+            try
+            {
+                // Find the appropriate node based on page type and navigation data
+                TreeNode targetNode = FindNodeForPage(page, navigationData);
+                if (targetNode != null)
+                {
+                    // Expand parent nodes to make the target node visible
+                    EnsureNodeVisible(targetNode);
+                    
+                    // Select the node
+                    treeView1.SelectedNode = targetNode;
+                }
+            }
+            finally
+            {
+                // Restore event handling
+                _handleEvents = wasHandlingEvents;
+            }
+        }
+
+        /// <summary>
+        /// Makes sure a node is visible by expanding all its parent nodes.
+        /// </summary>
+        /// <param name="node">The node to make visible</param>
+        private void EnsureNodeVisible(TreeNode node)
+        {
+            if (node == null)
+                return;
+                
+            TreeNode parent = node.Parent;
+            while (parent != null)
+            {
+                parent.Expand();
+                parent = parent.Parent;
+            }
+        }
+
+        /// <summary>
+        /// Finds the tree node that corresponds to a specific page and navigation data.
+        /// </summary>
+        /// <param name="page">The page being displayed</param>
+        /// <param name="navigationData">The data associated with the page</param>
+        /// <returns>The matching tree node, or null if no match is found</returns>
+        private TreeNode FindNodeForPage(IModulePage page, object navigationData)
+        {
+            if (page == null || navigationData == null)
+                return null;
+                
+            // Handle ApplicationsPage
+            if (page is ApplicationsPage && navigationData is Site site)
+            {
+                return FindSiteNode(site);
+            }
+            // Handle ApplicationPoolsPage
+            else if (page is ApplicationPoolsPage)
+            {
+                return FindAppPoolsNode();
+            }
+            // Handle VirtualDirectoriesPage
+            else if (page is VirtualDirectoriesPage && navigationData is Application application)
+            {
+                // First find the application node
+                TreeNode appNode = FindApplicationNode(application);
+                if (appNode != null)
+                {
+                    // Then find the virtual directories node under it
+                    foreach (TreeNode node in appNode.Nodes)
+                    {
+                        if (node.Text == "Virtual Directories")
+                        {
+                            return node;
+                        }
+                    }
+                }
+                return appNode; // Fall back to application node if virtual directories node not found
+            }
+            // Handle SitesPage
+            else if (page is SitesPage)
+            {
+                return FindSitesNode();
+            }
+                
+            return null;
+        }
+
+        /// <summary>
+        /// Finds the "Sites" node under the active server.
+        /// </summary>
+        private TreeNode FindSitesNode()
+        {
+            // Look for the currently selected server node
+            foreach (TreeNode serverNode in treeView1.Nodes)
+            {
+                if (serverNode is ServerTreeNode)
+                {
+                    // Find the Sites node under the server
+                    foreach (TreeNode node in serverNode.Nodes)
+                    {
+                        if (node is SitesTreeNode)
+                        {
+                            return node;
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Finds the "Application Pools" node under the active server.
+        /// </summary>
+        private TreeNode FindAppPoolsNode()
+        {
+            // Look for the currently selected server node
+            foreach (TreeNode serverNode in treeView1.Nodes)
+            {
+                if (serverNode is ServerTreeNode)
+                {
+                    // Find the Application Pools node under the server
+                    foreach (TreeNode node in serverNode.Nodes)
+                    {
+                        if (node is ApplicationPoolsTreeNode)
+                        {
+                            return node;
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Finds the node for a specific site.
+        /// </summary>
+        /// <param name="site">The site to find in the tree</param>
+        private TreeNode FindSiteNode(Site site)
+        {
+            if (site == null)
+                return null;
+                
+            // Look through all server nodes
+            foreach (TreeNode serverNode in treeView1.Nodes)
+            {
+                if (serverNode is ServerTreeNode)
+                {
+                    // Find the sites node
+                    foreach (TreeNode sitesNode in serverNode.Nodes)
+                    {
+                        if (sitesNode is SitesTreeNode)
+                        {
+                            // Look through all site nodes
+                            foreach (TreeNode siteNode in sitesNode.Nodes)
+                            {
+                                if (siteNode is SiteTreeNode && ((SiteTreeNode)siteNode).Site.Id == site.Id)
+                                {
+                                    return siteNode;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Finds the node for a specific application.
+        /// </summary>
+        /// <param name="application">The application to find in the tree</param>
+        private TreeNode FindApplicationNode(Application application)
+        {
+            if (application == null)
+                return null;
+                
+            // First find the site node
+            TreeNode siteNode = FindSiteNode(application.Site);
+            if (siteNode == null)
+                return null;
+                
+            // Expand to make sure the application nodes are loaded
+            siteNode.Expand();
+            
+            // Look for the application node by path
+            foreach (TreeNode node in siteNode.Nodes)
+            {
+                if (node is ApplicationTreeNode applicationNode && 
+                    applicationNode.Application.Path == application.Path)
+                {
+                    return node;
+                }
+            }
+            
+            return null;
+        }
+
+        /// <summary>
+        /// Enhanced LoadPage method that also synchronizes the tree view selection.
+        /// </summary>
+        /// <param name="page">The page to load</param>
+        public void LoadPageAndSelectNode(IModulePage page, object navigationData)
+        {
+            // First load the page
+            LoadPage(page);
+            
+            // Then select the corresponding node in the tree view
+            SelectNodeForPage(page, navigationData);
+        }
     }
 }

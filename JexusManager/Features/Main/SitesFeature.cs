@@ -427,27 +427,39 @@ namespace JexusManager.Features.Main
             OnSitesSettingsSaved();
         }
 
+        [Obfuscation(Exclude = true)]
         private void VirtualDirectories()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+            var mainForm = (MainForm)service.Form;
+            
+            // Create a new VirtualDirectoriesPage and initialize it with the application
             var application = SelectedItem.Applications[0];
-
-            IModulePage page = new VirtualDirectoriesPage();
-            page.Initialize(Module, null, application);
-            ((MainForm)service.Form).LoadPage(page);
+            var module = new MainModule();
+            module.Initialize(service.ServiceProvider, null);
+            
+            var page = new VirtualDirectoriesPage();
+            ((IModulePage)page).Initialize(module, null, application);
+            
+            // Load the page in the main form and synchronize tree selection
+            mainForm.LoadPageAndSelectNode(page, application);
         }
 
+        [Obfuscation(Exclude = true)]
         private void Applications()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var mainForm = (MainForm)service.Form;
             
-            // Create a new ApplicationsPage and initialize it with the site         
-            var page = new ApplicationsPage();
-            ((IModulePage)page).Initialize(Module, null, SelectedItem);
+            // Create a new ApplicationsPage and initialize it with the site
+            var module = new MainModule();
+            module.Initialize(service.ServiceProvider, null);
             
-            // Load the page in the main form
-            mainForm.LoadPage(page);
+            var page = new ApplicationsPage();
+            ((IModulePage)page).Initialize(module, null, SelectedItem);
+            
+            // Load the page in the main form and synchronize tree selection
+            mainForm.LoadPageAndSelectNode(page, SelectedItem);
         }
 
         private void Basic()

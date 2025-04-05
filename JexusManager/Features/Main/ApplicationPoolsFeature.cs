@@ -11,6 +11,7 @@ namespace JexusManager.Features.Main
     using System.Reflection;
     using System.Resources;
     using System.Windows.Forms;
+    using System.Collections.Generic;
 
     using JexusManager.Main.Properties;
     using JexusManager.Services;
@@ -292,6 +293,57 @@ namespace JexusManager.Features.Main
 
         private void Applications()
         {
+            if (SelectedItem == null)
+            {
+                return;
+            }
+            
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+            var mainForm = (MainForm)service.Form;
+            
+            // Find all applications using this pool
+            var applications = new List<Application>();
+            foreach (Site site in _serverManager.Sites)
+            {
+                foreach (Application app in site.Applications)
+                {
+                    if (app.ApplicationPoolName == SelectedItem.Name)
+                    {
+                        applications.Add(app);
+                    }
+                }
+            }
+            
+            if (applications.Count == 0)
+            {
+                var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
+                dialog.ShowMessage("No applications are using this application pool.", "Applications", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            
+            // If only one application is using this pool, navigate to it directly
+            if (applications.Count == 1)
+            {
+                var module = new MainModule();
+                module.Initialize(service.ServiceProvider, null);
+                
+                var page = new ApplicationPage();
+                ((IModulePage)page).Initialize(module, null, applications[0]);
+                
+                mainForm.LoadPageAndSelectNode(page, applications[0]);
+                return;
+            }
+            
+            // Otherwise, show a list of applications using this pool
+            // For now, just navigate to the first site that has applications using this pool
+            var site = applications[0].Site;
+            var sitePage = new ApplicationsPage();
+            var siteModule = new MainModule();
+            siteModule.Initialize(service.ServiceProvider, null);
+            ((IModulePage)sitePage).Initialize(siteModule, null, site);
+            
+            mainForm.LoadPageAndSelectNode(sitePage, site);
         }
 
         internal void Edit()
