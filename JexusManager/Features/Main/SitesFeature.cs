@@ -30,7 +30,9 @@ namespace JexusManager.Features.Main
     using Binding = Microsoft.Web.Administration.Binding;
     using Module = Microsoft.Web.Management.Client.Module;
     using System.Linq;
- 
+    using System.Collections.Generic;
+    using Application = Microsoft.Web.Administration.Application;
+
     /// <summary>
     /// Description of DefaultDocumentFeature.
     /// </summary>
@@ -435,11 +437,9 @@ namespace JexusManager.Features.Main
             
             // Create a new VirtualDirectoriesPage and initialize it with the application
             var application = SelectedItem.Applications[0];
-            var module = new MainModule();
-            module.Initialize(service.ServiceProvider, null);
             
             var page = new VirtualDirectoriesPage();
-            ((IModulePage)page).Initialize(module, null, application);
+            ((IModulePage)page).Initialize(Module, null, application);
             
             // Load the page in the main form and synchronize tree selection
             mainForm.LoadPageAndSelectNode(page, application);
@@ -451,12 +451,9 @@ namespace JexusManager.Features.Main
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var mainForm = (MainForm)service.Form;
             
-            // Create a new ApplicationsPage and initialize it with the site
-            var module = new MainModule();
-            module.Initialize(service.ServiceProvider, null);
-            
+            // Create a new ApplicationsPage and initialize it with the site         
             var page = new ApplicationsPage();
-            ((IModulePage)page).Initialize(module, null, SelectedItem);
+            ((IModulePage)page).Initialize(Module, null, new Tuple<List<Application>, Site>(null, SelectedItem));
             
             // Load the page in the main form and synchronize tree selection
             mainForm.LoadPageAndSelectNode(page, SelectedItem);

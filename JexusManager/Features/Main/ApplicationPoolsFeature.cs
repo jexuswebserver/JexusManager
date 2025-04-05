@@ -21,6 +21,7 @@ namespace JexusManager.Features.Main
     using Microsoft.Web.Management.Client.Win32;
 
     using Module = Microsoft.Web.Management.Client.Module;
+    using Application = Microsoft.Web.Administration.Application;
 
     /// <summary>
     /// Description of DefaultDocumentFeature.
@@ -303,9 +304,9 @@ namespace JexusManager.Features.Main
             
             // Find all applications using this pool
             var applications = new List<Application>();
-            foreach (Site site in _serverManager.Sites)
+            foreach (Site container in _serverManager.Sites)
             {
-                foreach (Application app in site.Applications)
+                foreach (Application app in container.Applications)
                 {
                     if (app.ApplicationPoolName == SelectedItem.Name)
                     {
@@ -320,30 +321,12 @@ namespace JexusManager.Features.Main
                 dialog.ShowMessage("No applications are using this application pool.", "Applications", 
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
-            }
+            }            
+           
+            var page = new ApplicationsPage();
+            ((IModulePage)page).Initialize(Module, null, new Tuple<List<Application>, Site>(applications, null));
             
-            // If only one application is using this pool, navigate to it directly
-            if (applications.Count == 1)
-            {
-                var module = new MainModule();
-                module.Initialize(service.ServiceProvider, null);
-                
-                var page = new ApplicationPage();
-                ((IModulePage)page).Initialize(module, null, applications[0]);
-                
-                mainForm.LoadPageAndSelectNode(page, applications[0]);
-                return;
-            }
-            
-            // Otherwise, show a list of applications using this pool
-            // For now, just navigate to the first site that has applications using this pool
-            var site = applications[0].Site;
-            var sitePage = new ApplicationsPage();
-            var siteModule = new MainModule();
-            siteModule.Initialize(service.ServiceProvider, null);
-            ((IModulePage)sitePage).Initialize(siteModule, null, site);
-            
-            mainForm.LoadPageAndSelectNode(sitePage, site);
+            mainForm.LoadPageAndSelectNode(page, service.Server);
         }
 
         internal void Edit()

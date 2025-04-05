@@ -45,7 +45,7 @@ namespace JexusManager.Dialogs
                 txtPool.Text = Application.ApplicationPoolName;
                 foreach (VirtualDirectory directory in Application.VirtualDirectories)
                 {
-                    if (directory.Path == Application.Path)
+                    if (directory.Path == "/")
                     {
                         txtPhysicalPath.Text = directory.PhysicalPath;
                     }

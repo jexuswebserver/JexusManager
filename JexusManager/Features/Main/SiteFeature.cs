@@ -31,6 +31,7 @@ namespace JexusManager.Features.Main
     using Module = Microsoft.Web.Management.Client.Module;
     using System.Linq;
     using JexusManager.Features.TraceFailedRequests;
+    using Application = Microsoft.Web.Administration.Application;
 
     /// <summary>
     /// Description of DefaultDocumentFeature.
@@ -363,7 +364,7 @@ namespace JexusManager.Features.Main
             var site = service.Site;
 
             IModulePage page = new ApplicationsPage();
-            page.Initialize(Module, null, site);
+            page.Initialize(Module, null, new Tuple<List<Application>, Site>(null, site));
             ((MainForm)service.Form).LoadPage(page);
         }
 

@@ -63,6 +63,7 @@ namespace JexusManager
 
     public sealed partial class MainForm : Form
     {
+        private bool _handleEvents = true;
         private const string expressGlobalInstanceName = "Global";
         private readonly List<ModuleProvider> _providers;
         private readonly ServiceContainer _serviceContainer;
@@ -676,6 +677,11 @@ namespace JexusManager
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
             if (IsDisposed)
+            {
+                return;
+            }
+
+            if (!_handleEvents)
             {
                 return;
             }

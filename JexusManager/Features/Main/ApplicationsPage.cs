@@ -6,6 +6,7 @@ namespace JexusManager.Features.Main
 {
     using System;
     using System.Collections;
+    using System.Collections.Generic;
     using System.Reflection;
     using System.Windows.Forms;
 
@@ -49,18 +50,20 @@ namespace JexusManager.Features.Main
             private readonly ApplicationsPage _page;
 
             public ApplicationsListViewItem(Application item, ApplicationsPage page)
-                : base(item.Path)
+                : base(page._site == null && item.Path == "/" ? "Root Application" : item.Path)
             {
                 Item = item;
                 _page = page;
-                SubItems.Add(new ListViewSubItem(this, Item.ApplicationPoolName));
                 SubItems.Add(new ListViewSubItem(this, Item.PhysicalPath));
+                SubItems.Add(new ListViewSubItem(this, Item.Site.Name));
+                SubItems.Add(new ListViewSubItem(this, item.GetPoolName()));
                 ImageIndex = 0;
             }
         }
 
         private ApplicationsFeature _feature;
         private PageTaskList _taskList;
+        private List<Application> _applications;
         private Site _site;
 
         public ApplicationsPage()
@@ -78,15 +81,17 @@ namespace JexusManager.Features.Main
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             pictureBox1.Image = service.Scope.GetImage();
 
-            _site = navigationData as Site;
-            if (_site == null)
+            var data = navigationData as Tuple<List<Application>, Site>;
+            _applications = data.Item1;
+            _site = data.Item2;
+            if (_applications == null && _site == null)
             {
                 throw new InvalidOperationException("Site object required");
             }
 
             _feature = new ApplicationsFeature(Module);
             _feature.ApplicationsSettingsUpdated = InitializeListPage;
-            _feature.Load(_site);
+            _feature.Load(_applications, _site);
         }
 
         protected override void InitializeListPage()

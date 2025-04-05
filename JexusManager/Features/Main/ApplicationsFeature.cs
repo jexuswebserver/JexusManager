@@ -38,52 +38,60 @@ namespace JexusManager.Features.Main
 
             public override ICollection GetTaskItems()
             {
-                var result = new ArrayList
+                var result = new ArrayList();
+                if (_owner._site == null)
                 {
-                    new MethodTaskItem("Add", "Add Application...", string.Empty, string.Empty, Resources.application_new_16)
-                        .SetUsage(),
-                    new MethodTaskItem("Set", "Set Application Defaults...", string.Empty).SetUsage()
-                };
-                
-                if (_owner.SelectedItem != null)
+                    if (_owner.SelectedItem != null)
+                    {
+                        result.Add(new MethodTaskItem("Change", "Change Application Pool...", string.Empty).SetUsage());
+                    }
+                }
+                else
                 {
-                    result.Add(MethodTaskItem.CreateSeparator().SetUsage());
-
-                    result.Add(new TextTaskItem("Manage Application", string.Empty, true));
-                    result.Add(
-                        new MethodTaskItem("Explore", "Explore", string.Empty, string.Empty, Resources.explore_16)
+                    result.Add(new MethodTaskItem("Add", "Add Application...", string.Empty, string.Empty, Resources.application_new_16)
                             .SetUsage());
-                    result.Add(new MethodTaskItem("Permissions", "Edit Permissions...", string.Empty).SetUsage());
-                    result.Add(RemoveTaskItem);
-                    
-                    var canBrowse = _owner.SelectedItem.Site.Bindings.Any(binding => binding.CanBrowse);
-                    if (canBrowse)
+                    result.Add(new MethodTaskItem("Set", "Set Application Defaults...", string.Empty).SetUsage());
+
+                    if (_owner.SelectedItem != null)
                     {
                         result.Add(MethodTaskItem.CreateSeparator().SetUsage());
-                        
-                        result.Add(new TextTaskItem("Browse Application", string.Empty, true));
-                        foreach (Binding binding in _owner.SelectedItem.Site.Bindings)
+
+                        result.Add(new TextTaskItem("Manage Application", string.Empty, true));
+                        result.Add(
+                            new MethodTaskItem("Explore", "Explore", string.Empty, string.Empty, Resources.explore_16)
+                                .SetUsage());
+                        result.Add(new MethodTaskItem("Permissions", "Edit Permissions...", string.Empty).SetUsage());
+                        result.Add(RemoveTaskItem);
+
+                        var canBrowse = _owner.SelectedItem.Site.Bindings.Any(binding => binding.CanBrowse);
+                        if (canBrowse)
                         {
-                            if (binding.CanBrowse)
+                            result.Add(MethodTaskItem.CreateSeparator().SetUsage());
+
+                            result.Add(new TextTaskItem("Browse Application", string.Empty, true));
+                            foreach (Binding binding in _owner.SelectedItem.Site.Bindings)
                             {
-                                var uri = binding.ToUri();
-                                result.Add(
-                                    new MethodTaskItem("Browse", $"Browse {uri}", string.Empty, string.Empty,
-                                        Resources.browse_16, uri).SetUsage());
+                                if (binding.CanBrowse)
+                                {
+                                    var uri = binding.ToUri();
+                                    result.Add(
+                                        new MethodTaskItem("Browse", $"Browse {uri}", string.Empty, string.Empty,
+                                            Resources.browse_16, uri).SetUsage());
+                                }
                             }
                         }
+
+                        result.Add(MethodTaskItem.CreateSeparator().SetUsage());
+                        result.Add(new TextTaskItem("Edit Application", string.Empty, true));
+                        result.Add(
+                            new MethodTaskItem("Basic", "Basic Settings...", string.Empty, string.Empty,
+                                Resources.basic_settings_16).SetUsage());
+                        result.Add(
+                            new MethodTaskItem("Advanced", "Advanced Settings...", string.Empty).SetUsage());
+
+                        result.Add(MethodTaskItem.CreateSeparator().SetUsage());
+                        result.Add(new MethodTaskItem("VirtualDirectories", "View Virtual Directories", string.Empty).SetUsage());
                     }
-
-                    result.Add(MethodTaskItem.CreateSeparator().SetUsage());
-                    result.Add(new TextTaskItem("Edit Application", string.Empty, true));
-                    result.Add(
-                        new MethodTaskItem("Basic", "Basic Settings...", string.Empty, string.Empty,
-                            Resources.basic_settings_16).SetUsage());
-                    result.Add(
-                        new MethodTaskItem("Advanced", "Advanced Settings...", string.Empty).SetUsage());
-
-                    result.Add(MethodTaskItem.CreateSeparator().SetUsage());
-                    result.Add(new MethodTaskItem("VirtualDirectories", "View Virtual Directories", string.Empty).SetUsage());
                 }
 
                 return result.ToArray(typeof(TaskItem)) as TaskItem[];
@@ -136,6 +144,12 @@ namespace JexusManager.Features.Main
             {
                 _owner.VirtualDirectories();
             }
+
+            [Obfuscation(Exclude = true)]
+            public void Change()
+            {
+                _owner.Change();
+            }
         }
 
         public ApplicationsFeature(Module module)
@@ -152,11 +166,11 @@ namespace JexusManager.Features.Main
             return _taskList ?? (_taskList = new FeatureTaskList(this));
         }
 
-        public void Load(Site site)
+        public void Load(List<Application> applications, Site site)
         {
             _site = site;
             // Filter out the root application if needed
-            Items = site.Applications.Where(app => app.Path != "/").ToList();
+            Items = site == null ? applications : site.Applications.Where(app => app.Path != "/").ToList();
             OnApplicationsSettingsSaved();
         }
 
@@ -167,8 +181,21 @@ namespace JexusManager.Features.Main
 
         public virtual bool ShowHelp()
         {
-            DialogHelper.ProcessStart("https://docs.microsoft.com/en-us/iis/configuration/system.applicationhost/sites/site/application");
+            DialogHelper.ProcessStart("https://go.microsoft.com/fwlink/?LinkId=210458");
             return false;
+        }
+
+        private void Change()
+        {
+            using var dialog = new NewApplicationDialog(Module, SelectedItem.Site, SelectedItem.Path, SelectedItem.ApplicationPoolName, SelectedItem);
+            if (dialog.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
+
+            SelectedItem.Apply();
+            SelectedItem.Site.Server.CommitChanges();
+            OnApplicationsSettingsSaved();
         }
 
         private void Add()

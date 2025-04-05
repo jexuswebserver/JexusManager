@@ -4,6 +4,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Security.Authentication.ExtendedProtection;
 using System.Xml;
 
 namespace Microsoft.Web.Administration

@@ -38,6 +38,7 @@ namespace JexusManager.Features.Main
             this.panel2 = new System.Windows.Forms.Panel();
             this.listView1 = new System.Windows.Forms.ListView();
             this.chPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chSite = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chPool = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chPhysicalPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
@@ -118,8 +119,9 @@ namespace JexusManager.Features.Main
             // 
             this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.chPath,
-            this.chPool,
-            this.chPhysicalPath});
+            this.chPhysicalPath,
+            this.chSite,
+            this.chPool});
             this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listView1.FullRowSelect = true;
             this.listView1.LabelEdit = true;
@@ -137,8 +139,13 @@ namespace JexusManager.Features.Main
             // 
             // chPath
             // 
-            this.chPath.Text = "Path";
+            this.chPath.Text = "Virtual Path";
             this.chPath.Width = 200;
+            //
+            // chSite
+            //
+            this.chSite.Text = "Site";
+            this.chSite.Width = 200;
             // 
             // chPool
             // 
@@ -342,6 +349,7 @@ namespace JexusManager.Features.Main
         private ToolStrip tsActionPanel;
         private ListView listView1;
         private ColumnHeader chPath;
+        private ColumnHeader chSite;
         private ColumnHeader chPool;
         private ColumnHeader chPhysicalPath;
         private ToolStrip toolStrip2;
