@@ -12,36 +12,11 @@ namespace JexusManager
         private readonly ConcurrentQueue<(string text, Color color)> _pendingMessages = new ConcurrentQueue<(string, Color)>();
         private readonly object _lock = new object();
         private bool _isInitialized;
-        private Timer _initCheckTimer;
 
         public TextBoxLoggerProvider(RichTextBox textBox)
         {
             _textBox = textBox;
-            
-            // Start a timer to check for control initialization
-            _initCheckTimer = new Timer();
-            _initCheckTimer.Interval = 100; // Check every 100ms
-            _initCheckTimer.Tick += (s, e) => {
-                if (_textBox.IsHandleCreated && !_isInitialized)
-                {
-                    lock (_lock)
-                    {
-                        if (!_isInitialized)
-                        {
-                            _isInitialized = true;
-                            // Process any pending messages
-                            while (_pendingMessages.TryDequeue(out var message))
-                            {
-                                AppendTextSafe(message.text, message.color);
-                            }
-                            _initCheckTimer.Stop();
-                            _initCheckTimer.Dispose();
-                            _initCheckTimer = null;
-                        }
-                    }
-                }
-            };
-            _initCheckTimer.Start();
+            _textBox.HandleCreated += (s, e) => Initialize();
         }
 
         public ILogger CreateLogger(string categoryName)
@@ -51,7 +26,7 @@ namespace JexusManager
 
         public void Dispose()
         {
-            _initCheckTimer?.Dispose();
+            // No resources to dispose
         }
 
         internal void LogMessage(string message, Color color)
@@ -63,6 +38,22 @@ namespace JexusManager
             }
 
             AppendTextSafe(message + Environment.NewLine, color);
+        }
+
+        private void Initialize()
+        {
+            lock (_lock)
+            {
+                if (!_isInitialized)
+                {
+                    _isInitialized = true;
+                    // Process any pending messages
+                    while (_pendingMessages.TryDequeue(out var message))
+                    {
+                        AppendTextSafe(message.text, message.color);
+                    }
+                }
+            }
         }
 
         private void AppendTextSafe(string text, Color color)
@@ -100,7 +91,7 @@ namespace JexusManager
                 if (length > 0)
                     _textBox.Text = _textBox.Text.Remove(index, length);
             }
-            
+
             _textBox.SelectionStart = _textBox.TextLength;
             _textBox.ScrollToCaret();
         }

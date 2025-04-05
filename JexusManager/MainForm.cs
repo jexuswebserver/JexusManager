@@ -171,10 +171,8 @@ namespace JexusManager
             };
 
             _navigationService = new NavigationService(this);
-            _navigationService.NavigationPerformed += (sender, args) =>
-                {
+            _navigationService.NavigationPerformed += OnNavigationPerformed;
 
-                };
             UIService = new ManagementUIService(this);
             _serviceContainer = new ServiceContainer();
             _serviceContainer.AddService(typeof(INavigationService), _navigationService);
@@ -463,7 +461,7 @@ namespace JexusManager
             var item = new NavigationItem(null, null, page.GetType(), null);
             item.Page = page;
             var info = page.PageInfo;
-            _navigationService.NavigateToItem(item, false);
+            _navigationService.NavigateToItem(item, true);
         }
 
         public void LoadInner(IModulePage page)
@@ -1303,6 +1301,22 @@ namespace JexusManager
             {
 
             }
+        }
+
+        private void actBack_Execute(object sender, EventArgs e)
+        {
+            _navigationService.NavigateBack(1);
+        }
+
+        private void actForward_Execute(object sender, EventArgs e)
+        {
+            _navigationService.NavigateForward();
+        }
+
+        private void OnNavigationPerformed(object sender, NavigationEventArgs e)
+        {
+            actBack.Enabled = _navigationService.CanNavigateBack;
+            actForward.Enabled = _navigationService.CanNavigateForward;
         }
     }
 }

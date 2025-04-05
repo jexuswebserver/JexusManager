@@ -73,6 +73,7 @@ namespace JexusManager
             services.AddLogging(builder =>
             {
                 builder.AddProvider(provider);
+                builder.SetMinimumLevel(LogLevel.Trace); // Set minimum logging level to Trace
             });
 
             ServiceProvider = services.BuildServiceProvider();

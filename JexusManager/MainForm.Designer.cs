@@ -136,6 +136,8 @@
             this.btnAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.actionList1 = new Crad.Windows.Forms.Actions.ActionList();
             this.actConnectServer = new Crad.Windows.Forms.Actions.Action();
+            this.actBack = new Crad.Windows.Forms.Actions.Action();
+            this.actForward = new Crad.Windows.Forms.Actions.Action();
             this.actSave = new Crad.Windows.Forms.Actions.Action();
             this.actUp = new Crad.Windows.Forms.Actions.Action();
             this.actDisconnect = new Crad.Windows.Forms.Actions.Action();
@@ -963,6 +965,7 @@
             // 
             // backToolStripMenuItem
             // 
+            this.actionList1.SetAction(this.backToolStripMenuItem, this.actBack);
             this.backToolStripMenuItem.Enabled = false;
             this.backToolStripMenuItem.Name = "backToolStripMenuItem";
             this.backToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
@@ -970,6 +973,7 @@
             // 
             // forwardToolStripMenuItem
             // 
+            this.actionList1.SetAction(this.forwardToolStripMenuItem, this.actForward);
             this.forwardToolStripMenuItem.Enabled = false;
             this.forwardToolStripMenuItem.Name = "forwardToolStripMenuItem";
             this.forwardToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
@@ -1122,6 +1126,8 @@
             this.actionList1.Actions.Add(this.actEditPermissions);
             this.actionList1.Actions.Add(this.actBrowse);
             this.actionList1.Actions.Add(this.actRunAsAdmin);
+            this.actionList1.Actions.Add(this.actBack);
+            this.actionList1.Actions.Add(this.actForward);
             this.actionList1.ContainerControl = this;
             // 
             // actConnectServer
@@ -1209,6 +1215,16 @@
             // 
             this.actRunAsAdmin.Text = "Run as Administrator";
             this.actRunAsAdmin.Execute += new System.EventHandler(this.actRunAsAdmin_Execute);
+            // 
+            // actBack
+            // 
+            this.actBack.Text = "Back";
+            this.actBack.Execute += new System.EventHandler(this.actBack_Execute);
+            // 
+            // actForward
+            // 
+            this.actForward.Text = "Forward";
+            this.actForward.Execute += new System.EventHandler(this.actForward_Execute);
             // 
             // connectToAServerToolStripMenuItem1
             // 
@@ -2031,6 +2047,8 @@
         private ToolStripSeparator toolStripMenuItem40;
         private Action actRunAsAdmin;
         private ToolStripMenuItem runAsAdministratorToolStripMenuItem;
+        private Action actBack;
+        private Action actForward;
     }
 }
 
