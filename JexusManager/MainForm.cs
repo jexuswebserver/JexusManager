@@ -714,7 +714,7 @@ namespace JexusManager
                 actDisconnect.Enabled = !serverNode.IsBusy && !serverNode.IgnoreInCache;
                 EnableServerMenuItems(serverNode.ServerManager != null);
                 serverNode.LoadPanels(this, _serviceContainer, _providers);
-                ShowInfo("Ready");
+                ShowInfo($"Ready. {node.FullPath}");
                 return;
             }
 
@@ -724,7 +724,7 @@ namespace JexusManager
                 toolStripMenuItem12.Visible = canBrowse;
                 manageWebsiteToolStripMenuItem.Visible = canBrowse;
                 siteNode.LoadPanels(this, _serviceContainer, _providers);
-                ShowInfo("Ready");
+                ShowInfo($"Ready. {node.FullPath}");
                 return;
             }
 
@@ -734,7 +734,7 @@ namespace JexusManager
                 toolStripMenuItem15.Visible = canBrowse;
                 manageApplicationToolStripMenuItem.Visible = canBrowse;
                 appNode.LoadPanels(this, _serviceContainer, _providers);
-                ShowInfo("Ready");
+                ShowInfo($"Ready. {node.FullPath}");
                 return;
             }
 
@@ -744,7 +744,7 @@ namespace JexusManager
                 toolStripSeparator4.Visible = canBrowse;
                 manageVirtualDirectoryToolStripMenuItem.Visible = canBrowse;
                 vdirNode.LoadPanels(this, _serviceContainer, _providers);
-                ShowInfo("Ready");
+                ShowInfo($"Ready. {node.FullPath}");
                 return;
             }
 
@@ -754,12 +754,12 @@ namespace JexusManager
                 toolStripSeparator9.Visible = canBrowse;
                 manageFolderToolStripMenuItem.Visible = canBrowse;
                 physNode.LoadPanels(this, _serviceContainer, _providers);
-                ShowInfo("Ready");
+                ShowInfo($"Ready. {node.FullPath}");
                 return;
             }
 
             node.LoadPanels(this, _serviceContainer, _providers);
-            ShowInfo("Ready");
+            ShowInfo($"Ready. {node.FullPath}");
         }
 
         internal void EnableServerMenuItems(bool enabled)
@@ -1319,6 +1319,7 @@ namespace JexusManager
         /// <param name="navigationData">The data associated with the page (e.g., Application, Site, etc.)</param>
         public void SelectNodeForPage(IModulePage page, object navigationData)
         {
+            // TODO: doesn't really work. for Application Pools | View Applications, where the server node should be selected.
             // Temporarily suspend the AfterSelect event to prevent duplicate loading
             bool wasHandlingEvents = _handleEvents;
             _handleEvents = false;
@@ -1364,8 +1365,7 @@ namespace JexusManager
         /// Finds the tree node that corresponds to a specific page and navigation data.
         /// </summary>
         /// <param name="page">The page being displayed</param>
-        /// <param name="navigationData">The data associated with the page</param>
-        /// <returns>The matching tree node, or null if no match is found</returns>
+        /// <param name="navigationData">The data associated with the page</returns>
         private TreeNode FindNodeForPage(IModulePage page, object navigationData)
         {
             if (page == null || navigationData == null)

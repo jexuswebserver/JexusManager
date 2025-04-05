@@ -2093,6 +2093,7 @@
         private Action actForward;
         private SplitContainer _logSplitter;
         private Panel _logPanel;
+        private ToolStripStatusLabel txtPathToSite;
     }
 }
 

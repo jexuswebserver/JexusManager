@@ -8,6 +8,7 @@ namespace JexusManager.Tree
     using System.IO;
     using Microsoft.Extensions.Logging;
     using JexusManager;
+    using JexusManager.Tree.Hierarchy;
 
     using Microsoft.Web.Administration;
     using Microsoft.Web.Management.Server;
@@ -16,6 +17,7 @@ namespace JexusManager.Tree
     using System.Collections.Generic;
     using System.Windows.Forms;
     using System.ComponentModel.Design;
+    using Microsoft.Web.Management.Client;
 
     internal abstract class ManagerTreeNode : TreeNode
     {
@@ -28,6 +30,7 @@ namespace JexusManager.Tree
         protected ManagerTreeNode(string text, IServiceProvider serviceProvider) : base(text)
         {
             ServiceProvider = serviceProvider;
+            HierarchyInfo = new ManagerHierarchyInfo(this);
         }
 
         public abstract string PathToSite { get; }
@@ -193,5 +196,7 @@ namespace JexusManager.Tree
             parentNode.Nodes.Add(appNode);
             parentNode.TreeView.SelectedNode = appNode;
         }
+
+        public HierarchyInfo HierarchyInfo { get; set; }
     }
 }
