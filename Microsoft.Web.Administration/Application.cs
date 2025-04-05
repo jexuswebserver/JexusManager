@@ -8,7 +8,7 @@ using System.Xml;
 
 namespace Microsoft.Web.Administration
 {
-    public sealed class Application : ConfigurationElement
+    public sealed class Application : ConfigurationElement, IItem<Application>
     {
         private Configuration _configuration;
 
@@ -249,6 +249,20 @@ namespace Microsoft.Web.Administration
                 new VirtualDirectory(null, VirtualDirectories) { Path = path, PhysicalPath = physicalPath });
         }
 
+        public void Apply()
+        {
+        }
+
+        public bool Match(Application other)
+        {
+            return Equals(other);
+        }
+
+        public bool Equals(Application other)
+        {
+            return other != null && other.Path != Path;
+        }
+
         internal string PhysicalPath
         {
             get
@@ -270,6 +284,13 @@ namespace Microsoft.Web.Administration
 
                 VirtualDirectories[0].PhysicalPath = value;
             }
+        }
+
+        public string Flag { get; set; } = "Local";
+        public ConfigurationElement Element
+        {
+            get { return this; }
+            set { }
         }
     }
 }

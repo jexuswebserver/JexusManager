@@ -359,6 +359,12 @@ namespace JexusManager.Features.Main
 
         private void Applications()
         {
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+            var site = service.Site;
+
+            IModulePage page = new ApplicationsPage();
+            page.Initialize(Module, null, site);
+            ((MainForm)service.Form).LoadPage(page);
         }
 
         private void Basic()
