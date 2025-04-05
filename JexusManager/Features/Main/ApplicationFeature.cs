@@ -215,6 +215,12 @@ namespace JexusManager.Features.Main
 
         private void VirtualDirectories()
         {
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+            var application = service.Application;
+
+            IModulePage page = new VirtualDirectoriesPage();
+            page.Initialize(Module, null, application);
+            ((MainForm)service.Form).LoadPage(page);
         }
 
         private void Basic()

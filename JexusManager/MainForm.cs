@@ -92,7 +92,6 @@ namespace JexusManager
             });
             helpToolStripMenuItem.DropDownItems.Add(toggleLogItem);
 
-
             removeToolStripMenuItem.Image = DefaultTaskList.RemoveImage;
             removeToolStripMenuItem1.Image = DefaultTaskList.RemoveImage;
             btnRemoveFarmServer.Image = DefaultTaskList.RemoveImage;

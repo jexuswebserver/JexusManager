@@ -299,10 +299,12 @@ namespace JexusManager.Features
                 if (info?.Item == null)
                     return;
 
-                if (info.Item.Selected)
+                if (_lastSelectedItem == info.Item)
                 {
                     info.Item.BeginEdit();
                 }
+
+                _lastSelectedItem = info.Item;
             };
         }
 

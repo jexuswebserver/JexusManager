@@ -6,11 +6,25 @@ using System;
 
 namespace Microsoft.Web.Administration
 {
-    public sealed class VirtualDirectory : ConfigurationElement
+    public sealed class VirtualDirectory : ConfigurationElement, IItem<VirtualDirectory>
     {
         public override string ToString()
         {
             return Path;
+        }
+
+        public void Apply()
+        {
+        }
+
+        public bool Match(VirtualDirectory other)
+        {
+            return Equals(other);
+        }
+
+        public bool Equals(VirtualDirectory other)
+        {
+            return other != null && string.Equals(Path, other.Path, StringComparison.OrdinalIgnoreCase);
         }
 
         public AuthenticationLogonMethod LogonMethod
@@ -60,6 +74,13 @@ namespace Microsoft.Web.Administration
         internal Application Application
         {
             get { return Parent.Parent; }
+        }
+
+        public string Flag { get; set; } = "Local";
+        public ConfigurationElement Element
+        {
+            get { return this; }
+            set { }
         }
     }
 }
