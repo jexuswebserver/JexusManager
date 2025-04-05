@@ -224,6 +224,8 @@
             this.toolStripMenuItem54 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem56 = new System.Windows.Forms.ToolStripMenuItem();
+            this._logSplitter = new System.Windows.Forms.SplitContainer();
+            this._logPanel = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.scMain)).BeginInit();
             this.scMain.Panel1.SuspendLayout();
             this.scMain.SuspendLayout();
@@ -245,12 +247,17 @@
             this.cmsServers.SuspendLayout();
             this.cmsVirtualDirectory.SuspendLayout();
             this.cmsPhysicalDirectory.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this._logSplitter)).BeginInit();
+            this._logSplitter.Panel1.SuspendLayout();
+            this._logSplitter.Panel2.SuspendLayout();
+            this._logSplitter.SuspendLayout();
+            this._logPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // scMain
             // 
             this.scMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.scMain.Location = new System.Drawing.Point(0, 24);
+            this.scMain.Location = new System.Drawing.Point(0, 0);
             this.scMain.Name = "scMain";
             // 
             // scMain.Panel1
@@ -1811,12 +1818,42 @@
             this.toolStripMenuItem56.Size = new System.Drawing.Size(213, 38);
             this.toolStripMenuItem56.Text = "Switch to Content View";
             // 
+            // _logSplitter
+            // 
+            this._logSplitter.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._logSplitter.Location = new System.Drawing.Point(0, 24);
+            this._logSplitter.Name = "_logSplitter";
+            this._logSplitter.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // _logSplitter.Panel1
+            // 
+            this._logSplitter.Panel1.Controls.Add(this.scMain);
+            this._logSplitter.Panel1MinSize = 100;
+            // 
+            // _logSplitter.Panel2
+            // 
+            this._logSplitter.Panel2.Controls.Add(this._logPanel);
+            this._logSplitter.Panel2Collapsed = true;
+            this._logSplitter.Panel2MinSize = 50;
+            this._logSplitter.Size = new System.Drawing.Size(915, 451);
+            this._logSplitter.SplitterDistance = 350;
+            this._logSplitter.SplitterWidth = 5;
+            this._logSplitter.TabIndex = 6;
+            // 
+            // _logPanel
+            // 
+            this._logPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._logPanel.Location = new System.Drawing.Point(0, 0);
+            this._logPanel.Name = "_logPanel";
+            this._logPanel.Size = new System.Drawing.Size(915, 96);
+            this._logPanel.TabIndex = 0;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(915, 497);
-            this.Controls.Add(this.scMain);
+            this.Controls.Add(this._logSplitter);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
             this.KeyPreview = true;
@@ -1852,6 +1889,11 @@
             this.cmsServers.ResumeLayout(false);
             this.cmsVirtualDirectory.ResumeLayout(false);
             this.cmsPhysicalDirectory.ResumeLayout(false);
+            this._logSplitter.Panel1.ResumeLayout(false);
+            this._logSplitter.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this._logSplitter)).EndInit();
+            this._logSplitter.ResumeLayout(false);
+            this._logPanel.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2049,6 +2091,8 @@
         private ToolStripMenuItem runAsAdministratorToolStripMenuItem;
         private Action actBack;
         private Action actForward;
+        private SplitContainer _logSplitter;
+        private Panel _logPanel;
     }
 }
 

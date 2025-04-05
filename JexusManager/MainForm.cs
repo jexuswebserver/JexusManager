@@ -63,8 +63,6 @@ namespace JexusManager
 
     public sealed partial class MainForm : Form
     {
-        private readonly Panel _logPanel;
-        private readonly RichTextBox _logTextBox;
         private const string expressGlobalInstanceName = "Global";
         private readonly List<ModuleProvider> _providers;
         private readonly ServiceContainer _serviceContainer;
@@ -76,21 +74,11 @@ namespace JexusManager
 
         public ManagementUIService UIService { get; }
 
-        public MainForm(List<string> files, RichTextBox texBox)
+        public MainForm(List<string> files, RichTextBox textBox)
         {
             InitializeComponent();
 
-            // Create logging panel
-            _logTextBox = texBox;
-
-            _logPanel = new Panel
-            {
-                Dock = DockStyle.Bottom,
-                Height = 200,
-                Visible = false
-            };
-            _logPanel.Controls.Add(_logTextBox);
-            Controls.Add(_logPanel);
+            _logPanel.Controls.Add(textBox);
 
             LogHelper.GetLogger<MainForm>().LogInformation("Jexus Manager starting up. Version: {Version}", 
                 Assembly.GetExecutingAssembly().GetName().Version);
@@ -99,8 +87,8 @@ namespace JexusManager
             helpToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
             var toggleLogItem = new ToolStripMenuItem("Show &Logs", null, (s, e) =>
             {
-                _logPanel.Visible = !_logPanel.Visible;
-                ((ToolStripMenuItem)s).Text = _logPanel.Visible ? "Hide &Logs" : "Show &Logs";
+                _logSplitter.Panel2Collapsed = !_logSplitter.Panel2Collapsed;
+                ((ToolStripMenuItem)s).Text = _logSplitter.Panel2Collapsed ? "Show &Logs" : "Hide &Logs";
             });
             helpToolStripMenuItem.DropDownItems.Add(toggleLogItem);
 
