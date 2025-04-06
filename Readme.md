@@ -2,7 +2,6 @@ Jexus Manager from LeXtudio
 ===========================
 
 [![Github All Releases](https://img.shields.io/github/downloads/jexuswebserver/JexusManager/total.svg)](https://github.com/jexuswebserver/JexusManager/releases)
-[![Gitter](https://img.shields.io/gitter/room/jexuswebserver/JexusManager.svg?style=flat-square)](https://gitter.im/jexuswebserver/JexusManager?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 [![Build status](https://img.shields.io/github/actions/workflow/status/jexuswebserver/JexusManager/dotnetcore.yml?style=flat-square)](https://github.com/jexuswebserver/JexusManager/actions/workflows/dotnetcore.yml)
 
 Jexus Manager was designed to be the cross platform manager for Jexus web server, which can also work with IIS and IIS Express.

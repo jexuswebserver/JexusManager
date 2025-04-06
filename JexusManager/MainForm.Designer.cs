@@ -356,7 +356,6 @@
             // btnServer
             // 
             this.actionList1.SetAction(this.btnServer, this.actConnectServer);
-            this.btnServer.Image = global::JexusManager.Main.Properties.Resources.server_16;
             this.btnServer.Name = "btnServer";
             this.btnServer.Size = new System.Drawing.Size(222, 22);
             this.btnServer.Text = "Connect to a Server...";
@@ -384,8 +383,6 @@
             this.btnSave.AutoToolTip = false;
             this.btnSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.btnSave.Enabled = false;
-            this.btnSave.Image = global::JexusManager.Main.Properties.Resources.save_16;
-            this.btnSave.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(36, 36);
             this.btnSave.Text = "Save Connections";
@@ -402,8 +399,6 @@
             this.btnUp.AutoToolTip = false;
             this.btnUp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.btnUp.Enabled = false;
-            this.btnUp.Image = global::JexusManager.Main.Properties.Resources.up_16;
-            this.btnUp.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnUp.Name = "btnUp";
             this.btnUp.Size = new System.Drawing.Size(36, 36);
             this.btnUp.Text = "Up One Level";
@@ -420,8 +415,6 @@
             this.btnDisconnect.AutoToolTip = false;
             this.btnDisconnect.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.btnDisconnect.Enabled = false;
-            this.btnDisconnect.Image = global::JexusManager.Main.Properties.Resources.disconnected_16;
-            this.btnDisconnect.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnDisconnect.Name = "btnDisconnect";
             this.btnDisconnect.Size = new System.Drawing.Size(36, 36);
             this.btnDisconnect.Text = "Disconnect";
@@ -486,7 +479,6 @@
             // 
             this.actionList1.SetAction(this.removeConnectionToolStripMenuItem, this.actDisconnect);
             this.removeConnectionToolStripMenuItem.Enabled = false;
-            this.removeConnectionToolStripMenuItem.Image = global::JexusManager.Main.Properties.Resources.disconnected_16;
             this.removeConnectionToolStripMenuItem.Name = "removeConnectionToolStripMenuItem";
             this.removeConnectionToolStripMenuItem.Size = new System.Drawing.Size(217, 38);
             this.removeConnectionToolStripMenuItem.Text = "Disconnect";
@@ -501,7 +493,6 @@
             // 
             this.actionList1.SetAction(this.addWebsiteToolStripMenuItem, this.actCreateSite);
             this.addWebsiteToolStripMenuItem.AutoToolTip = true;
-            this.addWebsiteToolStripMenuItem.Image = global::JexusManager.Main.Properties.Resources.site_new_16;
             this.addWebsiteToolStripMenuItem.Name = "addWebsiteToolStripMenuItem";
             this.addWebsiteToolStripMenuItem.Size = new System.Drawing.Size(217, 38);
             this.addWebsiteToolStripMenuItem.Text = "Add Website...";
@@ -610,7 +601,6 @@
             // 
             this.actionList1.SetAction(this.addWebsiteToolStripMenuItem1, this.actCreateSite);
             this.addWebsiteToolStripMenuItem1.AutoToolTip = true;
-            this.addWebsiteToolStripMenuItem1.Image = global::JexusManager.Main.Properties.Resources.site_new_16;
             this.addWebsiteToolStripMenuItem1.Name = "addWebsiteToolStripMenuItem1";
             this.addWebsiteToolStripMenuItem1.Size = new System.Drawing.Size(213, 38);
             this.addWebsiteToolStripMenuItem1.Text = "Add Website...";
@@ -666,7 +656,6 @@
             // 
             this.actionList1.SetAction(this.exploreToolStripMenuItem, this.actExplore);
             this.exploreToolStripMenuItem.AutoToolTip = true;
-            this.exploreToolStripMenuItem.Image = global::JexusManager.Main.Properties.Resources.explore_16;
             this.exploreToolStripMenuItem.Name = "exploreToolStripMenuItem";
             this.exploreToolStripMenuItem.Size = new System.Drawing.Size(213, 38);
             this.exploreToolStripMenuItem.Text = "Explore";
@@ -688,7 +677,6 @@
             // 
             this.actionList1.SetAction(this.btnApplication, this.actCreateApplication);
             this.btnApplication.AutoToolTip = true;
-            this.btnApplication.Image = global::JexusManager.Main.Properties.Resources.application_new_16;
             this.btnApplication.Name = "btnApplication";
             this.btnApplication.Size = new System.Drawing.Size(213, 38);
             this.btnApplication.Text = "Add Application...";
@@ -697,7 +685,6 @@
             // 
             this.actionList1.SetAction(this.addVirtualDirectoryToolStripMenuItem, this.actCreateVirtualDirectory);
             this.addVirtualDirectoryToolStripMenuItem.AutoToolTip = true;
-            this.addVirtualDirectoryToolStripMenuItem.Image = global::JexusManager.Main.Properties.Resources.virtual_directory_new_16;
             this.addVirtualDirectoryToolStripMenuItem.Name = "addVirtualDirectoryToolStripMenuItem";
             this.addVirtualDirectoryToolStripMenuItem.Size = new System.Drawing.Size(213, 38);
             this.addVirtualDirectoryToolStripMenuItem.Text = "Add Virtual Directory...";
@@ -766,7 +753,6 @@
             // 
             this.actionList1.SetAction(this.btnBrowseSite, this.actBrowse);
             this.btnBrowseSite.AutoToolTip = true;
-            this.btnBrowseSite.Image = global::JexusManager.Main.Properties.Resources.browse_16;
             this.btnBrowseSite.Name = "btnBrowseSite";
             this.btnBrowseSite.Size = new System.Drawing.Size(181, 22);
             this.btnBrowseSite.Text = "Browse";
@@ -881,7 +867,6 @@
             // connectToAServerToolStripMenuItem
             // 
             this.actionList1.SetAction(this.connectToAServerToolStripMenuItem, this.actConnectServer);
-            this.connectToAServerToolStripMenuItem.Image = global::JexusManager.Main.Properties.Resources.server_16;
             this.connectToAServerToolStripMenuItem.Name = "connectToAServerToolStripMenuItem";
             this.connectToAServerToolStripMenuItem.Size = new System.Drawing.Size(238, 38);
             this.connectToAServerToolStripMenuItem.Text = "Connect to a Server...";
@@ -891,7 +876,6 @@
             // 
             this.actionList1.SetAction(this.connectToAWebsiteToolStripMenuItem, this.actConnectSite);
             this.connectToAWebsiteToolStripMenuItem.Enabled = false;
-            this.connectToAWebsiteToolStripMenuItem.Image = global::JexusManager.Main.Properties.Resources.site_16;
             this.connectToAWebsiteToolStripMenuItem.Name = "connectToAWebsiteToolStripMenuItem";
             this.connectToAWebsiteToolStripMenuItem.Size = new System.Drawing.Size(238, 38);
             this.connectToAWebsiteToolStripMenuItem.Text = "Connect to a Website...";
@@ -901,7 +885,6 @@
             // 
             this.actionList1.SetAction(this.connectToAnApplicationToolStripMenuItem, this.actConnectionApplication);
             this.connectToAnApplicationToolStripMenuItem.Enabled = false;
-            this.connectToAnApplicationToolStripMenuItem.Image = global::JexusManager.Main.Properties.Resources.application_16;
             this.connectToAnApplicationToolStripMenuItem.Name = "connectToAnApplicationToolStripMenuItem";
             this.connectToAnApplicationToolStripMenuItem.Size = new System.Drawing.Size(238, 38);
             this.connectToAnApplicationToolStripMenuItem.Text = "Connect to an Application...";
@@ -916,7 +899,6 @@
             // 
             this.actionList1.SetAction(this.saveConnectionsToolStripMenuItem, this.actSave);
             this.saveConnectionsToolStripMenuItem.Enabled = false;
-            this.saveConnectionsToolStripMenuItem.Image = global::JexusManager.Main.Properties.Resources.save_16;
             this.saveConnectionsToolStripMenuItem.Name = "saveConnectionsToolStripMenuItem";
             this.saveConnectionsToolStripMenuItem.Size = new System.Drawing.Size(238, 38);
             this.saveConnectionsToolStripMenuItem.Text = "Save Connections";
@@ -926,7 +908,6 @@
             // 
             this.actionList1.SetAction(this.disconnectToolStripMenuItem, this.actDisconnect);
             this.disconnectToolStripMenuItem.Enabled = false;
-            this.disconnectToolStripMenuItem.Image = global::JexusManager.Main.Properties.Resources.disconnected_16;
             this.disconnectToolStripMenuItem.Name = "disconnectToolStripMenuItem";
             this.disconnectToolStripMenuItem.Size = new System.Drawing.Size(238, 38);
             this.disconnectToolStripMenuItem.Text = "Disconnect";
@@ -990,7 +971,6 @@
             // 
             this.actionList1.SetAction(this.upOneLevelToolStripMenuItem, this.actUp);
             this.upOneLevelToolStripMenuItem.Enabled = false;
-            this.upOneLevelToolStripMenuItem.Image = global::JexusManager.Main.Properties.Resources.up_16;
             this.upOneLevelToolStripMenuItem.Name = "upOneLevelToolStripMenuItem";
             this.upOneLevelToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.upOneLevelToolStripMenuItem.Text = "Up One Level";
@@ -1228,19 +1208,20 @@
             // actBack
             // 
             this.actBack.Text = "Back";
+            this.actBack.Image = global::JexusManager.Main.Properties.Resources.back_16;
             this.actBack.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.Left)));
             this.actBack.Execute += new System.EventHandler(this.actBack_Execute);
             // 
             // actForward
             // 
             this.actForward.Text = "Forward";
+            this.actForward.Image = global::JexusManager.Main.Properties.Resources.forward_16;
             this.actForward.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.Right)));
             this.actForward.Execute += new System.EventHandler(this.actForward_Execute);
             // 
             // connectToAServerToolStripMenuItem1
             // 
             this.actionList1.SetAction(this.connectToAServerToolStripMenuItem1, this.actConnectServer);
-            this.connectToAServerToolStripMenuItem1.Image = global::JexusManager.Main.Properties.Resources.server_16;
             this.connectToAServerToolStripMenuItem1.Name = "connectToAServerToolStripMenuItem1";
             this.connectToAServerToolStripMenuItem1.Size = new System.Drawing.Size(238, 38);
             this.connectToAServerToolStripMenuItem1.Text = "Connect to a Server...";
@@ -1250,7 +1231,6 @@
             // 
             this.actionList1.SetAction(this.connectToAWebsiteToolStripMenuItem1, this.actConnectSite);
             this.connectToAWebsiteToolStripMenuItem1.Enabled = false;
-            this.connectToAWebsiteToolStripMenuItem1.Image = global::JexusManager.Main.Properties.Resources.site_16;
             this.connectToAWebsiteToolStripMenuItem1.Name = "connectToAWebsiteToolStripMenuItem1";
             this.connectToAWebsiteToolStripMenuItem1.Size = new System.Drawing.Size(238, 38);
             this.connectToAWebsiteToolStripMenuItem1.Text = "Connect to a Website...";
@@ -1260,7 +1240,6 @@
             // 
             this.actionList1.SetAction(this.connectToAnApplicationToolStripMenuItem1, this.actConnectionApplication);
             this.connectToAnApplicationToolStripMenuItem1.Enabled = false;
-            this.connectToAnApplicationToolStripMenuItem1.Image = global::JexusManager.Main.Properties.Resources.application_16;
             this.connectToAnApplicationToolStripMenuItem1.Name = "connectToAnApplicationToolStripMenuItem1";
             this.connectToAnApplicationToolStripMenuItem1.Size = new System.Drawing.Size(238, 38);
             this.connectToAnApplicationToolStripMenuItem1.Text = "Connect to an Application...";
@@ -1270,7 +1249,6 @@
             // 
             this.actionList1.SetAction(this.addApplicationToolStripMenuItem, this.actCreateApplication);
             this.addApplicationToolStripMenuItem.AutoToolTip = true;
-            this.addApplicationToolStripMenuItem.Image = global::JexusManager.Main.Properties.Resources.application_new_16;
             this.addApplicationToolStripMenuItem.Name = "addApplicationToolStripMenuItem";
             this.addApplicationToolStripMenuItem.Size = new System.Drawing.Size(213, 38);
             this.addApplicationToolStripMenuItem.Text = "Add Application...";
@@ -1278,7 +1256,6 @@
             // toolStripMenuItem38
             // 
             this.actionList1.SetAction(this.toolStripMenuItem38, this.actCreateApplication);
-            this.toolStripMenuItem38.Image = global::JexusManager.Main.Properties.Resources.application_new_16;
             this.toolStripMenuItem38.Name = "toolStripMenuItem38";
             this.toolStripMenuItem38.Size = new System.Drawing.Size(221, 38);
             this.toolStripMenuItem38.Text = "Add Application...";
@@ -1287,7 +1264,6 @@
             // 
             this.actionList1.SetAction(this.toolStripMenuItem49, this.actCreateApplication);
             this.toolStripMenuItem49.AutoToolTip = true;
-            this.toolStripMenuItem49.Image = global::JexusManager.Main.Properties.Resources.application_new_16;
             this.toolStripMenuItem49.Name = "toolStripMenuItem49";
             this.toolStripMenuItem49.Size = new System.Drawing.Size(213, 38);
             this.toolStripMenuItem49.Text = "Add Application...";
@@ -1296,7 +1272,6 @@
             // 
             this.actionList1.SetAction(this.exploreToolStripMenuItem1, this.actExplore);
             this.exploreToolStripMenuItem1.AutoToolTip = true;
-            this.exploreToolStripMenuItem1.Image = global::JexusManager.Main.Properties.Resources.explore_16;
             this.exploreToolStripMenuItem1.Name = "exploreToolStripMenuItem1";
             this.exploreToolStripMenuItem1.Size = new System.Drawing.Size(213, 38);
             this.exploreToolStripMenuItem1.Text = "Explore";
@@ -1313,7 +1288,6 @@
             // 
             this.actionList1.SetAction(this.addVirtualDirectoryToolStripMenuItem1, this.actCreateVirtualDirectory);
             this.addVirtualDirectoryToolStripMenuItem1.AutoToolTip = true;
-            this.addVirtualDirectoryToolStripMenuItem1.Image = global::JexusManager.Main.Properties.Resources.virtual_directory_new_16;
             this.addVirtualDirectoryToolStripMenuItem1.Name = "addVirtualDirectoryToolStripMenuItem1";
             this.addVirtualDirectoryToolStripMenuItem1.Size = new System.Drawing.Size(213, 38);
             this.addVirtualDirectoryToolStripMenuItem1.Text = "Add Virtual Directory...";
@@ -1322,7 +1296,6 @@
             // 
             this.actionList1.SetAction(this.btnBrowseApplication, this.actBrowse);
             this.btnBrowseApplication.AutoToolTip = true;
-            this.btnBrowseApplication.Image = global::JexusManager.Main.Properties.Resources.browse_16;
             this.btnBrowseApplication.Name = "btnBrowseApplication";
             this.btnBrowseApplication.Size = new System.Drawing.Size(181, 22);
             this.btnBrowseApplication.Text = "Browse";
@@ -1331,7 +1304,6 @@
             // 
             this.actionList1.SetAction(this.toolStripMenuItem36, this.actExplore);
             this.toolStripMenuItem36.AutoToolTip = true;
-            this.toolStripMenuItem36.Image = global::JexusManager.Main.Properties.Resources.explore_16;
             this.toolStripMenuItem36.Name = "toolStripMenuItem36";
             this.toolStripMenuItem36.Size = new System.Drawing.Size(221, 38);
             this.toolStripMenuItem36.Text = "Explore";
@@ -1348,7 +1320,6 @@
             // 
             this.actionList1.SetAction(this.toolStripMenuItem39, this.actCreateVirtualDirectory);
             this.toolStripMenuItem39.AutoToolTip = true;
-            this.toolStripMenuItem39.Image = global::JexusManager.Main.Properties.Resources.virtual_directory_new_16;
             this.toolStripMenuItem39.Name = "toolStripMenuItem39";
             this.toolStripMenuItem39.Size = new System.Drawing.Size(221, 38);
             this.toolStripMenuItem39.Text = "Add Virtual Directory...";
@@ -1357,7 +1328,6 @@
             // 
             this.actionList1.SetAction(this.toolStripMenuItem41, this.actBrowse);
             this.toolStripMenuItem41.AutoToolTip = true;
-            this.toolStripMenuItem41.Image = global::JexusManager.Main.Properties.Resources.browse_16;
             this.toolStripMenuItem41.Name = "toolStripMenuItem41";
             this.toolStripMenuItem41.Size = new System.Drawing.Size(181, 22);
             this.toolStripMenuItem41.Text = "Browse";
@@ -1366,7 +1336,6 @@
             // 
             this.actionList1.SetAction(this.toolStripMenuItem46, this.actExplore);
             this.toolStripMenuItem46.AutoToolTip = true;
-            this.toolStripMenuItem46.Image = global::JexusManager.Main.Properties.Resources.explore_16;
             this.toolStripMenuItem46.Name = "toolStripMenuItem46";
             this.toolStripMenuItem46.Size = new System.Drawing.Size(213, 38);
             this.toolStripMenuItem46.Text = "Explore";
@@ -1383,7 +1352,6 @@
             // 
             this.actionList1.SetAction(this.toolStripMenuItem50, this.actCreateVirtualDirectory);
             this.toolStripMenuItem50.AutoToolTip = true;
-            this.toolStripMenuItem50.Image = global::JexusManager.Main.Properties.Resources.virtual_directory_new_16;
             this.toolStripMenuItem50.Name = "toolStripMenuItem50";
             this.toolStripMenuItem50.Size = new System.Drawing.Size(213, 38);
             this.toolStripMenuItem50.Text = "Add Virtual Directory...";
@@ -1392,7 +1360,6 @@
             // 
             this.actionList1.SetAction(this.toolStripMenuItem52, this.actBrowse);
             this.toolStripMenuItem52.AutoToolTip = true;
-            this.toolStripMenuItem52.Image = global::JexusManager.Main.Properties.Resources.browse_16;
             this.toolStripMenuItem52.Name = "toolStripMenuItem52";
             this.toolStripMenuItem52.Size = new System.Drawing.Size(112, 22);
             this.toolStripMenuItem52.Text = "Browse";
