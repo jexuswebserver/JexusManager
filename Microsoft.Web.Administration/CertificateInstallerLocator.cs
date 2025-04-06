@@ -23,13 +23,13 @@ namespace Microsoft.Web.Administration
                 return defaultPath;
             }
 
-            var debugBuild = Path.Combine(Environment.CurrentDirectory, $@"..\..\..\..\CertificateInstaller\bin\Debug\net8.0-windows\{executable}");
+            var debugBuild = Path.Combine(Environment.CurrentDirectory, $@"..\..\..\..\CertificateInstaller\bin\Debug\net9.0-windows\{executable}");
             if (File.Exists(debugBuild))
             {
                 return debugBuild;
             }
 
-            var releaseBuild = Path.Combine(Environment.CurrentDirectory, $@"..\..\..\..\CertificateInstaller\bin\Release\net8.0-windows\{executable}");
+            var releaseBuild = Path.Combine(Environment.CurrentDirectory, $@"..\..\..\..\CertificateInstaller\bin\Release\net9.0-windows\{executable}");
             if (File.Exists(releaseBuild))
             {
                 return releaseBuild;
