@@ -164,6 +164,8 @@
             this.lvIP.TabIndex = 1;
             this.lvIP.UseCompatibleStateImageBehavior = false;
             this.lvIP.View = System.Windows.Forms.View.Details;
+            this.lvIP.KeyDown += new System.Windows.Forms.KeyEventHandler(this.LvIPKeyDown);
+            this.lvIP.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.LvIPMouseDoubleClick);
             this.lvIP.SelectedIndexChanged += new System.EventHandler(this.LvIPSelectedIndexChanged);
             // 
             // chAddress
@@ -233,6 +235,8 @@
             this.lvSni.TabIndex = 2;
             this.lvSni.UseCompatibleStateImageBehavior = false;
             this.lvSni.View = System.Windows.Forms.View.Details;
+            this.lvSni.KeyDown += new System.Windows.Forms.KeyEventHandler(this.LvSniKeyDown);
+            this.lvSni.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.LvSniMouseDoubleClick);
             this.lvSni.SelectedIndexChanged += new System.EventHandler(this.LvSniSelectedIndexChanged);
             // 
             // columnHeader1
@@ -297,6 +301,8 @@
             this.lvURL.TabIndex = 2;
             this.lvURL.UseCompatibleStateImageBehavior = false;
             this.lvURL.View = System.Windows.Forms.View.Details;
+            this.lvURL.KeyDown += new System.Windows.Forms.KeyEventHandler(this.LvURLKeyDown);
+            this.lvURL.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.LvURLMouseDoubleClick);
             this.lvURL.SelectedIndexChanged += new System.EventHandler(this.LvURLSelectedIndexChanged);
             // 
             // columnHeader7

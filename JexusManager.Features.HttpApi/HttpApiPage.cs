@@ -253,30 +253,69 @@ namespace JexusManager.Features.HttpApi
             base.Refresh();
         }
 
+        private void LvSniKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete && lvSni.SelectedItems.Count > 0)
+            {
+                var feature = (SniMappingFeature)tpSNI.Tag;
+                feature.Remove();
+            }
+        }
+
+        private void LvSniMouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            var feature = (SniMappingFeature)tpSNI.Tag;
+            feature.HandleMouseDoubleClick(lvSni);
+        }
+
         private void LvSniSelectedIndexChanged(object sender, EventArgs e)
         {
             var feature = (SniMappingFeature)tpSNI.Tag;
-            feature.SelectedItem = lvSni.SelectedItems.Count > 0
-                ? ((SniMappingListViewItem)lvSni.SelectedItems[0]).Item
-                : null;
+            feature.HandleSelectedIndexChanged(lvSni);
             Refresh();
+        }
+
+        private void LvIPKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete && lvIP.SelectedItems.Count > 0)
+            {
+                var feature = (IpMappingFeature)tpIP.Tag;
+                feature.Remove();
+            }
+        }
+
+        private void LvIPMouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            var feature = (IpMappingFeature)tpIP.Tag;
+            feature.HandleMouseDoubleClick(lvIP);
         }
 
         private void LvIPSelectedIndexChanged(object sender, EventArgs e)
         {
             var feature = (IpMappingFeature)tpIP.Tag;
-            feature.SelectedItem = lvIP.SelectedItems.Count > 0
-                ? ((IpMappingListViewItem)lvIP.SelectedItems[0]).Item
-                : null;
+            feature.HandleSelectedIndexChanged(lvIP);
             Refresh();
+        }
+
+        private void LvURLKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete && lvURL.SelectedItems.Count > 0)
+            {
+                var feature = (ReservedUrlsFeature)tpURL.Tag;
+                feature.Remove();
+            }
+        }
+
+        private void LvURLMouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            var feature = (ReservedUrlsFeature)tpURL.Tag;
+            feature.HandleMouseDoubleClick(lvURL);
         }
 
         private void LvURLSelectedIndexChanged(object sender, EventArgs e)
         {
             var feature = (ReservedUrlsFeature)tpURL.Tag;
-            feature.SelectedItem = lvURL.SelectedItems.Count > 0
-                ? ((ReservedUrlListViewItem)lvURL.SelectedItems[0]).Item
-                : null;
+            feature.HandleSelectedIndexChanged(lvURL);
             Refresh();
         }
 
