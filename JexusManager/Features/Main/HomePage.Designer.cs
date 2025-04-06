@@ -31,219 +31,249 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.btnRetry = new System.Windows.Forms.Button();
-            this.lblCurrentVersion = new System.Windows.Forms.Label();
-            this.lblUpdateStatus = new System.Windows.Forms.Label();
-            this.btnDownloadUpdate = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.txtStudio = new System.Windows.Forms.LinkLabel();
-            this.txtHome = new System.Windows.Forms.LinkLabel();
-            this.btnSponsor = new System.Windows.Forms.Button();
-            this.panel1.SuspendLayout();
-            this.panel2.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            this.groupBox1.SuspendLayout();
-            this.SuspendLayout();
+            panel1 = new Panel();
+            label2 = new Label();
+            label1 = new Label();
+            panel2 = new Panel();
+            tableLayoutPanel = new TableLayoutPanel();
+            groupBox1 = new GroupBox();
+            btnSponsor = new Button();
+            txtStudio = new LinkLabel();
+            txtHome = new LinkLabel();
+            groupBox2 = new GroupBox();
+            lblManualUpdate = new LinkLabel();
+            btnRetry = new Button();
+            lblCurrentVersion = new Label();
+            lblUpdateStatus = new Label();
+            btnDownloadUpdate = new Button();
+            label3 = new Label();
+            panel3 = new Panel();
+            panel1.SuspendLayout();
+            panel2.SuspendLayout();
+            tableLayoutPanel.SuspendLayout();
+            groupBox1.SuspendLayout();
+            groupBox2.SuspendLayout();
+            SuspendLayout();
             // 
             // panel1
             // 
-            this.panel1.BackColor = System.Drawing.Color.White;
-            this.panel1.Controls.Add(this.label2);
-            this.panel1.Controls.Add(this.label1);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(862, 69);
-            this.panel1.TabIndex = 0;
+            panel1.BackColor = System.Drawing.Color.White;
+            panel1.Controls.Add(label2);
+            panel1.Controls.Add(label1);
+            panel1.Dock = DockStyle.Top;
+            panel1.Location = new System.Drawing.Point(0, 0);
+            panel1.Margin = new Padding(4, 3, 4, 3);
+            panel1.Name = "panel1";
+            panel1.Size = new System.Drawing.Size(862, 69);
+            panel1.TabIndex = 0;
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(244, 33);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(70, 15);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "by LeXtudio";
+            label2.AutoSize = true;
+            label2.Location = new System.Drawing.Point(244, 33);
+            label2.Margin = new Padding(4, 0, 4, 0);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(70, 15);
+            label2.TabIndex = 0;
+            label2.Text = "by LeXtudio";
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label1.Location = new System.Drawing.Point(16, 20);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(189, 29);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Jexus Manager";
+            label1.AutoSize = true;
+            label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold);
+            label1.Location = new System.Drawing.Point(16, 20);
+            label1.Margin = new Padding(4, 0, 4, 0);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(189, 29);
+            label1.TabIndex = 0;
+            label1.Text = "Jexus Manager";
             // 
             // panel2
             // 
-            this.panel2.BackColor = System.Drawing.Color.White;
-            this.panel2.Controls.Add(this.groupBox2);
-            this.panel2.Controls.Add(this.label3);
-            this.panel2.Controls.Add(this.panel3);
-            this.panel2.Controls.Add(this.groupBox1);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(0, 69);
-            this.panel2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(862, 489);
-            this.panel2.TabIndex = 1;
+            panel2.BackColor = System.Drawing.Color.White;
+            panel2.Controls.Add(tableLayoutPanel);
+            panel2.Controls.Add(label3);
+            panel2.Controls.Add(panel3);
+            panel2.Dock = DockStyle.Fill;
+            panel2.Location = new System.Drawing.Point(0, 69);
+            panel2.Margin = new Padding(4, 3, 4, 3);
+            panel2.Name = "panel2";
+            panel2.Size = new System.Drawing.Size(862, 489);
+            panel2.TabIndex = 1;
             // 
-            // groupBox2
+            // tableLayoutPanel
             // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox2.Controls.Add(this.btnRetry);
-            this.groupBox2.Controls.Add(this.lblCurrentVersion);
-            this.groupBox2.Controls.Add(this.lblUpdateStatus);
-            this.groupBox2.Controls.Add(this.btnDownloadUpdate);
-            this.groupBox2.Location = new System.Drawing.Point(360, 32);
-            this.groupBox2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.groupBox2.Size = new System.Drawing.Size(478, 160);
-            this.groupBox2.TabIndex = 3;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Updates";
-            // 
-            // btnRetry
-            // 
-            this.btnRetry.Location = new System.Drawing.Point(240, 110);
-            this.btnRetry.Name = "btnRetry";
-            this.btnRetry.Size = new System.Drawing.Size(200, 30);
-            this.btnRetry.TabIndex = 3;
-            this.btnRetry.Text = "Retry";
-            this.btnRetry.UseVisualStyleBackColor = true;
-            this.btnRetry.Visible = false;
-            this.btnRetry.Click += new System.EventHandler(this.btnRetry_Click);
-            // 
-            // lblCurrentVersion
-            // 
-            this.lblCurrentVersion.AutoSize = true;
-            this.lblCurrentVersion.Location = new System.Drawing.Point(24, 33);
-            this.lblCurrentVersion.Name = "lblCurrentVersion";
-            this.lblCurrentVersion.Size = new System.Drawing.Size(92, 15);
-            this.lblCurrentVersion.TabIndex = 0;
-            this.lblCurrentVersion.Text = "Current Version:";
-            // 
-            // lblUpdateStatus
-            // 
-            this.lblUpdateStatus.AutoSize = true;
-            this.lblUpdateStatus.Location = new System.Drawing.Point(24, 76);
-            this.lblUpdateStatus.Name = "lblUpdateStatus";
-            this.lblUpdateStatus.Size = new System.Drawing.Size(153, 15);
-            this.lblUpdateStatus.TabIndex = 1;
-            this.lblUpdateStatus.Text = "Checking for updates...";
-            // 
-            // btnDownloadUpdate
-            // 
-            this.btnDownloadUpdate.Location = new System.Drawing.Point(24, 110);
-            this.btnDownloadUpdate.Name = "btnDownloadUpdate";
-            this.btnDownloadUpdate.Size = new System.Drawing.Size(200, 30);
-            this.btnDownloadUpdate.TabIndex = 2;
-            this.btnDownloadUpdate.Text = "Download Update";
-            this.btnDownloadUpdate.UseVisualStyleBackColor = true;
-            this.btnDownloadUpdate.Visible = false;
-            this.btnDownloadUpdate.Click += new System.EventHandler(this.btnDownloadUpdate_Click);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(19, 32);
-            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(0, 15);
-            this.label3.TabIndex = 2;
-            // 
-            // panel3
-            // 
-            this.panel3.BackColor = System.Drawing.SystemColors.MenuHighlight;
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel3.Location = new System.Drawing.Point(0, 0);
-            this.panel3.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(862, 6);
-            this.panel3.TabIndex = 1;
+            tableLayoutPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            tableLayoutPanel.ColumnCount = 2;
+            tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel.Controls.Add(groupBox1, 0, 0);
+            tableLayoutPanel.Controls.Add(groupBox2, 1, 0);
+            tableLayoutPanel.Location = new System.Drawing.Point(20, 32);
+            tableLayoutPanel.Name = "tableLayoutPanel";
+            tableLayoutPanel.Padding = new Padding(12);
+            tableLayoutPanel.RowCount = 1;
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel.Size = new System.Drawing.Size(820, 442);
+            tableLayoutPanel.TabIndex = 4;
             // 
             // groupBox1
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.groupBox1.Controls.Add(this.btnSponsor);
-            this.groupBox1.Controls.Add(this.txtStudio);
-            this.groupBox1.Controls.Add(this.txtHome);
-            this.groupBox1.Location = new System.Drawing.Point(22, 32);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.groupBox1.Size = new System.Drawing.Size(295, 432);
-            this.groupBox1.TabIndex = 0;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Online Resources";
-            // 
-            // txtStudio
-            // 
-            this.txtStudio.AutoSize = true;
-            this.txtStudio.Location = new System.Drawing.Point(24, 76);
-            this.txtStudio.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.txtStudio.Name = "txtStudio";
-            this.txtStudio.Size = new System.Drawing.Size(116, 15);
-            this.txtStudio.TabIndex = 4;
-            this.txtStudio.TabStop = true;
-            this.txtStudio.Text = "LeXtudio Homepage";
-            this.txtStudio.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.txtStudio_LinkClicked);
-            // 
-            // txtHome
-            // 
-            this.txtHome.AutoSize = true;
-            this.txtHome.Location = new System.Drawing.Point(24, 33);
-            this.txtHome.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.txtHome.Name = "txtHome";
-            this.txtHome.Size = new System.Drawing.Size(147, 15);
-            this.txtHome.TabIndex = 3;
-            this.txtHome.TabStop = true;
-            this.txtHome.Text = "Jexus Manager Homepage";
-            this.txtHome.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.txtHome_LinkClicked);
+            groupBox1.Controls.Add(btnSponsor);
+            groupBox1.Controls.Add(txtStudio);
+            groupBox1.Controls.Add(txtHome);
+            groupBox1.Dock = DockStyle.Fill;
+            groupBox1.Location = new System.Drawing.Point(26, 26);
+            groupBox1.Margin = new Padding(14);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Padding = new Padding(4, 3, 4, 3);
+            groupBox1.Size = new System.Drawing.Size(370, 390);
+            groupBox1.TabIndex = 0;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Online Resources";
             // 
             // btnSponsor
             // 
-            this.btnSponsor.Image = global::JexusManager.Main.Properties.Resources.iis_16;
-            this.btnSponsor.Location = new System.Drawing.Point(24, 120);
-            this.btnSponsor.Name = "btnSponsor";
-            this.btnSponsor.Size = new System.Drawing.Size(200, 60);
-            this.btnSponsor.TabIndex = 3;
-            this.btnSponsor.Text = "Support This Project";
-            this.btnSponsor.TextImageRelation = System.Windows.Forms.TextImageRelation.TextAboveImage;
-            this.btnSponsor.UseVisualStyleBackColor = true;
-            this.btnSponsor.Click += new System.EventHandler(this.btnSponsor_Click);
+            btnSponsor.Image = JexusManager.Main.Properties.Resources.iis_16;
+            btnSponsor.Location = new System.Drawing.Point(24, 120);
+            btnSponsor.Name = "btnSponsor";
+            btnSponsor.Size = new System.Drawing.Size(200, 60);
+            btnSponsor.TabIndex = 3;
+            btnSponsor.Text = "Support This Project";
+            btnSponsor.TextImageRelation = TextImageRelation.TextAboveImage;
+            btnSponsor.UseVisualStyleBackColor = true;
+            btnSponsor.Click += btnSponsor_Click;
+            // 
+            // txtStudio
+            // 
+            txtStudio.AutoSize = true;
+            txtStudio.Location = new System.Drawing.Point(24, 76);
+            txtStudio.Margin = new Padding(4, 0, 4, 0);
+            txtStudio.Name = "txtStudio";
+            txtStudio.Size = new System.Drawing.Size(116, 15);
+            txtStudio.TabIndex = 4;
+            txtStudio.TabStop = true;
+            txtStudio.Text = "LeXtudio Homepage";
+            txtStudio.LinkClicked += txtStudio_LinkClicked;
+            // 
+            // txtHome
+            // 
+            txtHome.AutoSize = true;
+            txtHome.Location = new System.Drawing.Point(24, 33);
+            txtHome.Margin = new Padding(4, 0, 4, 0);
+            txtHome.Name = "txtHome";
+            txtHome.Size = new System.Drawing.Size(146, 15);
+            txtHome.TabIndex = 3;
+            txtHome.TabStop = true;
+            txtHome.Text = "Jexus Manager Homepage";
+            txtHome.LinkClicked += txtHome_LinkClicked;
+            // 
+            // groupBox2
+            // 
+            groupBox2.Controls.Add(lblManualUpdate);
+            groupBox2.Controls.Add(btnRetry);
+            groupBox2.Controls.Add(lblCurrentVersion);
+            groupBox2.Controls.Add(lblUpdateStatus);
+            groupBox2.Controls.Add(btnDownloadUpdate);
+            groupBox2.Dock = DockStyle.Fill;
+            groupBox2.Location = new System.Drawing.Point(424, 26);
+            groupBox2.Margin = new Padding(14);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Padding = new Padding(4, 3, 4, 3);
+            groupBox2.Size = new System.Drawing.Size(370, 390);
+            groupBox2.TabIndex = 3;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "Updates";
+            // 
+            // lblManualUpdate
+            // 
+            lblManualUpdate.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            lblManualUpdate.Location = new System.Drawing.Point(24, 96);
+            lblManualUpdate.Name = "lblManualUpdate";
+            lblManualUpdate.Size = new System.Drawing.Size(328, 15);
+            lblManualUpdate.TabIndex = 4;
+            lblManualUpdate.TabStop = true;
+            lblManualUpdate.Text = "https://github.com/jexuswebserver/JexusManager/releases";
+            lblManualUpdate.Visible = false;
+            lblManualUpdate.LinkClicked += lblManualUpdate_LinkClicked;
+            // 
+            // btnRetry
+            // 
+            btnRetry.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnRetry.Location = new System.Drawing.Point(152, 135);
+            btnRetry.Name = "btnRetry";
+            btnRetry.Size = new System.Drawing.Size(200, 30);
+            btnRetry.TabIndex = 3;
+            btnRetry.Text = "Retry";
+            btnRetry.UseVisualStyleBackColor = true;
+            btnRetry.Visible = false;
+            btnRetry.Click += btnRetry_Click;
+            // 
+            // lblCurrentVersion
+            // 
+            lblCurrentVersion.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            lblCurrentVersion.Location = new System.Drawing.Point(24, 33);
+            lblCurrentVersion.Name = "lblCurrentVersion";
+            lblCurrentVersion.Size = new System.Drawing.Size(328, 20);
+            lblCurrentVersion.TabIndex = 0;
+            lblCurrentVersion.Text = "Current Version:";
+            // 
+            // lblUpdateStatus
+            // 
+            lblUpdateStatus.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            lblUpdateStatus.Location = new System.Drawing.Point(24, 63);
+            lblUpdateStatus.Name = "lblUpdateStatus";
+            lblUpdateStatus.Size = new System.Drawing.Size(328, 30);
+            lblUpdateStatus.TabIndex = 1;
+            lblUpdateStatus.Text = "Checking for updates...";
+            // 
+            // btnDownloadUpdate
+            // 
+            btnDownloadUpdate.Location = new System.Drawing.Point(24, 135);
+            btnDownloadUpdate.Name = "btnDownloadUpdate";
+            btnDownloadUpdate.Size = new System.Drawing.Size(140, 30);
+            btnDownloadUpdate.TabIndex = 2;
+            btnDownloadUpdate.Text = "Download Update";
+            btnDownloadUpdate.UseVisualStyleBackColor = true;
+            btnDownloadUpdate.Visible = false;
+            btnDownloadUpdate.Click += btnDownloadUpdate_Click;
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new System.Drawing.Point(19, 32);
+            label3.Margin = new Padding(4, 0, 4, 0);
+            label3.Name = "label3";
+            label3.Size = new System.Drawing.Size(0, 15);
+            label3.TabIndex = 2;
+            // 
+            // panel3
+            // 
+            panel3.BackColor = System.Drawing.SystemColors.MenuHighlight;
+            panel3.Dock = DockStyle.Top;
+            panel3.Location = new System.Drawing.Point(0, 0);
+            panel3.Margin = new Padding(4, 3, 4, 3);
+            panel3.Name = "panel3";
+            panel3.Size = new System.Drawing.Size(862, 6);
+            panel3.TabIndex = 1;
             // 
             // HomePage
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.panel2);
-            this.Controls.Add(this.panel1);
-            this.Name = "HomePage";
-            this.Size = new System.Drawing.Size(862, 558);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.ResumeLayout(false);
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(panel2);
+            Controls.Add(panel1);
+            Name = "HomePage";
+            Size = new System.Drawing.Size(862, 558);
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
+            panel2.ResumeLayout(false);
+            panel2.PerformLayout();
+            tableLayoutPanel.ResumeLayout(false);
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
+            groupBox2.ResumeLayout(false);
+            ResumeLayout(false);
 
         }
 
@@ -264,5 +294,7 @@
         private Label lblUpdateStatus;
         private Button btnDownloadUpdate;
         private Button btnRetry;
+        private LinkLabel lblManualUpdate;
+        private TableLayoutPanel tableLayoutPanel;
     }
 }

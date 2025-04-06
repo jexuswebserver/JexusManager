@@ -53,12 +53,30 @@ namespace JexusManager.Features.Main
 
             if (!string.IsNullOrEmpty(_updateInfo.ErrorMessage))
             {
-                lblUpdateStatus.Text = _updateInfo.ErrorMessage;
-                lblUpdateStatus.ForeColor = Color.Red;
+                if (_updateInfo.ErrorType == UpdateHelper.UpdateErrorType.ConnectionError)
+                {
+                    // Create a more helpful message for connectivity issues
+                    lblUpdateStatus.Text = "Cannot connect to GitHub. You can check for updates manually at:";
+                    lblUpdateStatus.ForeColor = Color.Red;
+                    
+                    // Show link label for manual update check
+                    lblManualUpdate.Text = _updateInfo.ReleaseUrl;
+                    lblManualUpdate.Visible = true;
+                }
+                else
+                {
+                    lblUpdateStatus.Text = _updateInfo.ErrorMessage;
+                    lblUpdateStatus.ForeColor = Color.Red;
+                    lblManualUpdate.Visible = false;
+                }
+                
                 btnDownloadUpdate.Visible = false;
                 btnRetry.Visible = true;
                 return;
             }
+
+            // Reset manual update link visibility
+            lblManualUpdate.Visible = false;
 
             if (_updateInfo.UpdateAvailable)
             {
@@ -103,7 +121,42 @@ namespace JexusManager.Features.Main
 
         private void btnRetry_Click(object sender, EventArgs e)
         {
+            // Hide the manual update link when retrying
+            lblManualUpdate.Visible = false;
+            
+            // Reload update info
             LoadUpdateInfo();
+        }
+
+        private void lblManualUpdate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(_updateInfo?.ReleaseUrl))
+            {
+                DialogHelper.ProcessStart(_updateInfo.ReleaseUrl);
+            }
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            
+            // Configure ManualUpdate link label text wrapping
+            ConfigureManualUpdateLink();
+        }
+
+        private void ConfigureManualUpdateLink()
+        {
+            // Enable text wrapping for the manual update link
+            lblManualUpdate.MaximumSize = new System.Drawing.Size(
+                groupBox2.Width - lblManualUpdate.Left - 30, 0);
+            lblManualUpdate.AutoSize = true;
+            
+            // Ensure the link resizes when the container resizes
+            groupBox2.SizeChanged += (sender, e) => 
+            {
+                lblManualUpdate.MaximumSize = new System.Drawing.Size(
+                    groupBox2.Width - lblManualUpdate.Left - 30, 0);
+            };
         }
     }
 }

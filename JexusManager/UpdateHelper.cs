@@ -13,6 +13,14 @@ namespace JexusManager
 
     internal static class UpdateHelper
     {
+        public enum UpdateErrorType
+        {
+            None,
+            ConnectionError,
+            NoReleaseFound,
+            Other
+        }
+
         public class UpdateInfo
         {
             public bool UpdateAvailable { get; set; }
@@ -20,6 +28,7 @@ namespace JexusManager
             public Version LatestVersion { get; set; }
             public string ReleaseUrl { get; set; }
             public string ErrorMessage { get; set; }
+            public UpdateErrorType ErrorType { get; set; } = UpdateErrorType.None;
         }
 
         public static async Task<UpdateInfo> CheckForUpdate()
@@ -40,6 +49,7 @@ namespace JexusManager
                 if (releases.Count == 0)
                 {
                     updateInfo.ErrorMessage = "No update is found.";
+                    updateInfo.ErrorType = UpdateErrorType.NoReleaseFound;
                     return updateInfo;
                 }
 
@@ -49,6 +59,7 @@ namespace JexusManager
             catch (Exception)
             {
                 updateInfo.ErrorMessage = "Cannot connect to GitHub.";
+                updateInfo.ErrorType = UpdateErrorType.ConnectionError;
                 return updateInfo;
             }
             finally
@@ -59,6 +70,7 @@ namespace JexusManager
             if (!Version.TryParse(version, out Version latest))
             {
                 updateInfo.ErrorMessage = "No update is found.";
+                updateInfo.ErrorType = UpdateErrorType.NoReleaseFound;
                 return updateInfo;
             }
 
