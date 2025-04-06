@@ -69,7 +69,7 @@ namespace JexusManager.Tree
         {
             serviceContainer.RemoveService(typeof(IConfigurationService));
             serviceContainer.RemoveService(typeof(IControlPanel));
-            var panel = new PhysicalDirectoryPage(PhysicalDirectory, mainForm);
+            var panel = new PhysicalDirectoryPage(PhysicalDirectory);
             var scope = ManagementScope.Application;
             serviceContainer.AddService(typeof(IControlPanel), new ControlPanel());
             serviceContainer.AddService(typeof(IConfigurationService),

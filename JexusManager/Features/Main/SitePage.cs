@@ -10,7 +10,7 @@ namespace JexusManager.Features.Main
     using System.Windows.Forms;
 
     using JexusManager.Properties;
-
+    using JexusManager.Services;
     using Microsoft.Web.Administration;
     using Microsoft.Web.Management.Client;
     using Microsoft.Web.Management.Client.Win32;
@@ -43,18 +43,16 @@ namespace JexusManager.Features.Main
 
         private PageTaskList _taskList;
 
-        private readonly MainForm _main;
         private readonly Site _site;
         private SiteFeature _feature;
 
-        public SitePage(Site site, MainForm main)
+        public SitePage(Site site)
         {
             InitializeComponent();
             btnView.Image = DefaultTaskList.ViewImage;
             btnGo.Image = DefaultTaskList.GoImage;
             btnShowAll.Image = DefaultTaskList.ShowAllImage;
 
-            _main = main;
             _site = site;
         }
 
@@ -97,7 +95,8 @@ namespace JexusManager.Features.Main
             }
 
             var item = (ModulePageInfoListViewItem)listView1.SelectedItems[0];
-            _main.LoadPage(item.Page);
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+            ((MainForm)service.Form).LoadPage(item.Page);
         }
 
         private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)

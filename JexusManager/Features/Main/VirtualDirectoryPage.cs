@@ -10,7 +10,7 @@ namespace JexusManager.Features.Main
     using System.Windows.Forms;
 
     using JexusManager.Properties;
-
+    using JexusManager.Services;
     using Microsoft.Web.Administration;
     using Microsoft.Web.Management.Client;
     using Microsoft.Web.Management.Client.Win32;
@@ -43,10 +43,9 @@ namespace JexusManager.Features.Main
 
         private PageTaskList _taskList;
         private readonly VirtualDirectory _virtualDirectory;
-        private MainForm _main;
         private VirtualDirectoryFeature _feature;
 
-        public VirtualDirectoryPage(VirtualDirectory virtualDirectory, MainForm main)
+        public VirtualDirectoryPage(VirtualDirectory virtualDirectory)
         {
             InitializeComponent();
             btnView.Image = DefaultTaskList.ViewImage;
@@ -54,7 +53,6 @@ namespace JexusManager.Features.Main
             btnShowAll.Image = DefaultTaskList.ShowAllImage;
 
             _virtualDirectory = virtualDirectory;
-            _main = main;
         }
 
         protected override void Initialize(object navigationData)
@@ -96,7 +94,8 @@ namespace JexusManager.Features.Main
             }
 
             var item = (ModulePageInfoListViewItem)listView1.SelectedItems[0];
-            _main.LoadPage(item.Page);
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+            ((MainForm)service.Form).LoadPage(item.Page);
         }
 
         private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)

@@ -70,7 +70,7 @@ namespace JexusManager.Tree
 
             serviceContainer.RemoveService(typeof(IConfigurationService));
             serviceContainer.RemoveService(typeof(IControlPanel));
-            var panel = new SitePage(Site, mainForm);
+            var panel = new SitePage(Site);
 
             var scope = ManagementScope.Site;
             serviceContainer.AddService(typeof(IControlPanel), new ControlPanel());
