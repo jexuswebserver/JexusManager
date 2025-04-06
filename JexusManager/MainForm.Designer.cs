@@ -1002,6 +1002,7 @@
             this.homeToolStripMenuItem.Name = "homeToolStripMenuItem";
             this.homeToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.homeToolStripMenuItem.Text = "Home";
+            this.homeToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.Home)));
             // 
             // toolStripMenuItem19
             // 
@@ -1158,6 +1159,7 @@
             this.actUp.Image = global::JexusManager.Main.Properties.Resources.up_16;
             this.actUp.Text = "Up One Level";
             this.actUp.ToolTipText = "Up One Level";
+            this.actUp.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.Up)));
             this.actUp.Execute += new System.EventHandler(this.actUp_Execute);
             // 
             // actDisconnect
@@ -1226,11 +1228,13 @@
             // actBack
             // 
             this.actBack.Text = "Back";
+            this.actBack.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.Left)));
             this.actBack.Execute += new System.EventHandler(this.actBack_Execute);
             // 
             // actForward
             // 
             this.actForward.Text = "Forward";
+            this.actForward.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.Right)));
             this.actForward.Execute += new System.EventHandler(this.actForward_Execute);
             // 
             // connectToAServerToolStripMenuItem1
@@ -2096,4 +2100,3 @@
         private ToolStripStatusLabel txtPathToSite;
     }
 }
-
