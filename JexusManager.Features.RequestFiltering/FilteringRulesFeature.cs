@@ -83,19 +83,23 @@ namespace JexusManager.Features.RequestFiltering
                 return;
             }
 
-            this.AddItem(dialog.Item);
+            AddItem(dialog.Item);
         }
 
         public void Edit()
         {
-            using var dialog = new NewRuleDialog(this.Module, this.SelectedItem);
+            DoubleClick(SelectedItem);
+        }
+
+        protected override void DoubleClick(FilteringRulesItem item)
+        {
+            using var dialog = new NewRuleDialog(Module, item);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
-            var newItem = dialog.Item;
-            this.EditItem(newItem);
+            EditItem(dialog.Item);
         }
 
         public void Remove()

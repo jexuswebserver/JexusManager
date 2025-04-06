@@ -13,6 +13,12 @@ namespace JexusManager.Dialogs
 
     public partial class ConnectAsDialog : DialogForm
     {
+#if DESIGN
+        public ConnectAsDialog()
+        {
+            InitializeComponent();
+        }
+#endif
         public ConnectAsDialog(IServiceProvider serviceProvider, ConnectAsItem item)
             : base(serviceProvider)
         {

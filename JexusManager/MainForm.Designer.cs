@@ -33,1841 +33,1685 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.scMain = new System.Windows.Forms.SplitContainer();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.treeView1 = new System.Windows.Forms.TreeView();
-            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.toolStrip2 = new System.Windows.Forms.ToolStrip();
-            this.toolStripButton3 = new System.Windows.Forms.ToolStripSplitButton();
-            this.btnServer = new System.Windows.Forms.ToolStripMenuItem();
-            this.connectToWebsiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.connectToApplicationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnSave = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.btnUp = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.btnDisconnect = new System.Windows.Forms.ToolStripButton();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.cmsServer = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
-            this.removeConnectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
-            this.addWebsiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
-            this.btnStartServer = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnStopServer = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
-            this.btnRenameServer = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
-            this.btnOpenConfig = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem40 = new System.Windows.Forms.ToolStripSeparator();
-            this.switchToContentViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.cmsApplicationPools = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.addApplicationPoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripSeparator();
-            this.refreshToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.cmsSites = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.addWebsiteToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem7 = new System.Windows.Forms.ToolStripSeparator();
-            this.refreshToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem8 = new System.Windows.Forms.ToolStripSeparator();
-            this.switchToContentViewToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.cmsSite = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.exploreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.editPermissionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem10 = new System.Windows.Forms.ToolStripSeparator();
-            this.btnApplication = new System.Windows.Forms.ToolStripMenuItem();
-            this.addVirtualDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem11 = new System.Windows.Forms.ToolStripSeparator();
-            this.editBindingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem12 = new System.Windows.Forms.ToolStripSeparator();
-            this.manageWebsiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnRestartSite = new System.Windows.Forms.ToolStripMenuItem();
-            this.startToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.stopToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem26 = new System.Windows.Forms.ToolStripSeparator();
-            this.btnBrowseSite = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem27 = new System.Windows.Forms.ToolStripSeparator();
-            this.advancedSettingsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem13 = new System.Windows.Forms.ToolStripSeparator();
-            this.refreshToolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem14 = new System.Windows.Forms.ToolStripSeparator();
-            this.renameToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem17 = new System.Windows.Forms.ToolStripSeparator();
-            this.switchToContentViewToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.txtInfo = new System.Windows.Forms.ToolStripStatusLabel();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.connectToAServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.connectToAWebsiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.connectToAnApplicationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem22 = new System.Windows.Forms.ToolStripSeparator();
-            this.saveConnectionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.disconnectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem21 = new System.Windows.Forms.ToolStripSeparator();
-            this.runAsAdministratorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.backToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.forwardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.upOneLevelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.homeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem19 = new System.Windows.Forms.ToolStripSeparator();
-            this.stopToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.refreshToolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem20 = new System.Windows.Forms.ToolStripSeparator();
-            this.groupByToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.sortByToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.viewToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.iISHelpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.iISOnMSDNOnlineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.iISNETOnlineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.iISKBsOnlineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem28 = new System.Windows.Forms.ToolStripSeparator();
-            this.btnUpdate = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem18 = new System.Windows.Forms.ToolStripSeparator();
-            this.btnAbout = new System.Windows.Forms.ToolStripMenuItem();
-            this.actionList1 = new Crad.Windows.Forms.Actions.ActionList();
-            this.actConnectServer = new Crad.Windows.Forms.Actions.Action();
-            this.actBack = new Crad.Windows.Forms.Actions.Action();
-            this.actForward = new Crad.Windows.Forms.Actions.Action();
-            this.actSave = new Crad.Windows.Forms.Actions.Action();
-            this.actUp = new Crad.Windows.Forms.Actions.Action();
-            this.actDisconnect = new Crad.Windows.Forms.Actions.Action();
-            this.actCreateSite = new Crad.Windows.Forms.Actions.Action();
-            this.actExplore = new Crad.Windows.Forms.Actions.Action();
-            this.actEditPermissions = new Crad.Windows.Forms.Actions.Action();
-            this.actCreateApplication = new Crad.Windows.Forms.Actions.Action();
-            this.actCreateVirtualDirectory = new Crad.Windows.Forms.Actions.Action();
-            this.actBrowse = new Crad.Windows.Forms.Actions.Action();
-            this.actConnectSite = new Crad.Windows.Forms.Actions.Action();
-            this.actConnectionApplication = new Crad.Windows.Forms.Actions.Action();
-            this.actRunAsAdmin = new Crad.Windows.Forms.Actions.Action();
-            this.connectToAServerToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.connectToAWebsiteToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.connectToAnApplicationToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.addApplicationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem38 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem49 = new System.Windows.Forms.ToolStripMenuItem();
-            this.exploreToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.editPermissionsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.addVirtualDirectoryToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnBrowseApplication = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem36 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem37 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem39 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem41 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem46 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem47 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem50 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem52 = new System.Windows.Forms.ToolStripMenuItem();
-            this.cmsIis = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.refreshToolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem23 = new System.Windows.Forms.ToolStripSeparator();
-            this.cmsApplication = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripMenuItem9 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItem15 = new System.Windows.Forms.ToolStripSeparator();
-            this.manageApplicationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem25 = new System.Windows.Forms.ToolStripSeparator();
-            this.advancedSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem16 = new System.Windows.Forms.ToolStripSeparator();
-            this.refreshToolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
-            this.removeToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem24 = new System.Windows.Forms.ToolStripSeparator();
-            this.switchToContentViewToolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.cmsFarm = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.refreshToolStripMenuItem7 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem29 = new System.Windows.Forms.ToolStripSeparator();
-            this.btnCreateFarm = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem30 = new System.Windows.Forms.ToolStripSeparator();
-            this.switchToContentViewToolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
-            this.cmsFarmServer = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.refreshToolStripMenuItem8 = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnRemoveFarmServer = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem31 = new System.Windows.Forms.ToolStripSeparator();
-            this.btnAddFarmServer = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem32 = new System.Windows.Forms.ToolStripSeparator();
-            this.btnRenameFarmServer = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem33 = new System.Windows.Forms.ToolStripSeparator();
-            this.switchToContentViewToolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
-            this.cmsServers = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.refreshToolStripMenuItem9 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem34 = new System.Windows.Forms.ToolStripSeparator();
-            this.addServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem35 = new System.Windows.Forms.ToolStripSeparator();
-            this.switchToContentViewToolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
-            this.cmsVirtualDirectory = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.convertToApplicationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.manageVirtualDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItem42 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItem43 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem44 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItem45 = new System.Windows.Forms.ToolStripMenuItem();
-            this.cmsPhysicalDirectory = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItem48 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
-            this.manageFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItem54 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItem56 = new System.Windows.Forms.ToolStripMenuItem();
-            this._logSplitter = new System.Windows.Forms.SplitContainer();
-            this._logPanel = new System.Windows.Forms.Panel();
-            ((System.ComponentModel.ISupportInitialize)(this.scMain)).BeginInit();
-            this.scMain.Panel1.SuspendLayout();
-            this.scMain.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.panel2.SuspendLayout();
-            this.toolStrip2.SuspendLayout();
-            this.panel1.SuspendLayout();
-            this.cmsServer.SuspendLayout();
-            this.cmsApplicationPools.SuspendLayout();
-            this.cmsSites.SuspendLayout();
-            this.cmsSite.SuspendLayout();
-            this.statusStrip1.SuspendLayout();
-            this.menuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.actionList1)).BeginInit();
-            this.cmsIis.SuspendLayout();
-            this.cmsApplication.SuspendLayout();
-            this.cmsFarm.SuspendLayout();
-            this.cmsFarmServer.SuspendLayout();
-            this.cmsServers.SuspendLayout();
-            this.cmsVirtualDirectory.SuspendLayout();
-            this.cmsPhysicalDirectory.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this._logSplitter)).BeginInit();
-            this._logSplitter.Panel1.SuspendLayout();
-            this._logSplitter.Panel2.SuspendLayout();
-            this._logSplitter.SuspendLayout();
-            this._logPanel.SuspendLayout();
-            this.SuspendLayout();
+            components = new Container();
+            scMain = new SplitContainer();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            panel2 = new Panel();
+            treeView1 = new TreeView();
+            imageList1 = new ImageList(components);
+            toolStrip2 = new ToolStrip();
+            toolStripButton3 = new ToolStripSplitButton();
+            btnServer = new ToolStripMenuItem();
+            connectToWebsiteToolStripMenuItem = new ToolStripMenuItem();
+            connectToApplicationToolStripMenuItem = new ToolStripMenuItem();
+            btnSave = new ToolStripButton();
+            toolStripSeparator2 = new ToolStripSeparator();
+            btnUp = new ToolStripButton();
+            toolStripSeparator1 = new ToolStripSeparator();
+            btnDisconnect = new ToolStripButton();
+            panel1 = new Panel();
+            label1 = new Label();
+            cmsServer = new ContextMenuStrip(components);
+            refreshToolStripMenuItem = new ToolStripMenuItem();
+            toolStripMenuItem1 = new ToolStripSeparator();
+            removeConnectionToolStripMenuItem = new ToolStripMenuItem();
+            toolStripMenuItem4 = new ToolStripSeparator();
+            addWebsiteToolStripMenuItem = new ToolStripMenuItem();
+            toolStripMenuItem2 = new ToolStripSeparator();
+            btnStartServer = new ToolStripMenuItem();
+            btnStopServer = new ToolStripMenuItem();
+            toolStripMenuItem3 = new ToolStripSeparator();
+            btnRenameServer = new ToolStripMenuItem();
+            toolStripMenuItem5 = new ToolStripSeparator();
+            btnOpenConfig = new ToolStripMenuItem();
+            toolStripMenuItem40 = new ToolStripSeparator();
+            switchToContentViewToolStripMenuItem = new ToolStripMenuItem();
+            cmsApplicationPools = new ContextMenuStrip(components);
+            addApplicationPoolToolStripMenuItem = new ToolStripMenuItem();
+            toolStripMenuItem6 = new ToolStripSeparator();
+            refreshToolStripMenuItem1 = new ToolStripMenuItem();
+            cmsSites = new ContextMenuStrip(components);
+            addWebsiteToolStripMenuItem1 = new ToolStripMenuItem();
+            toolStripMenuItem7 = new ToolStripSeparator();
+            refreshToolStripMenuItem2 = new ToolStripMenuItem();
+            toolStripMenuItem8 = new ToolStripSeparator();
+            switchToContentViewToolStripMenuItem1 = new ToolStripMenuItem();
+            cmsSite = new ContextMenuStrip(components);
+            exploreToolStripMenuItem = new ToolStripMenuItem();
+            editPermissionsToolStripMenuItem = new ToolStripMenuItem();
+            toolStripMenuItem10 = new ToolStripSeparator();
+            btnApplication = new ToolStripMenuItem();
+            addVirtualDirectoryToolStripMenuItem = new ToolStripMenuItem();
+            toolStripMenuItem11 = new ToolStripSeparator();
+            editBindingsToolStripMenuItem = new ToolStripMenuItem();
+            toolStripMenuItem12 = new ToolStripSeparator();
+            manageWebsiteToolStripMenuItem = new ToolStripMenuItem();
+            btnRestartSite = new ToolStripMenuItem();
+            startToolStripMenuItem1 = new ToolStripMenuItem();
+            stopToolStripMenuItem2 = new ToolStripMenuItem();
+            toolStripMenuItem26 = new ToolStripSeparator();
+            btnBrowseSite = new ToolStripMenuItem();
+            toolStripMenuItem27 = new ToolStripSeparator();
+            advancedSettingsToolStripMenuItem1 = new ToolStripMenuItem();
+            toolStripMenuItem13 = new ToolStripSeparator();
+            refreshToolStripMenuItem3 = new ToolStripMenuItem();
+            removeToolStripMenuItem = new ToolStripMenuItem();
+            toolStripMenuItem14 = new ToolStripSeparator();
+            renameToolStripMenuItem1 = new ToolStripMenuItem();
+            toolStripMenuItem17 = new ToolStripSeparator();
+            switchToContentViewToolStripMenuItem2 = new ToolStripMenuItem();
+            statusStrip1 = new StatusStrip();
+            txtInfo = new ToolStripStatusLabel();
+            menuStrip1 = new MenuStrip();
+            fileToolStripMenuItem = new ToolStripMenuItem();
+            connectToAServerToolStripMenuItem = new ToolStripMenuItem();
+            connectToAWebsiteToolStripMenuItem = new ToolStripMenuItem();
+            connectToAnApplicationToolStripMenuItem = new ToolStripMenuItem();
+            toolStripMenuItem22 = new ToolStripSeparator();
+            saveConnectionsToolStripMenuItem = new ToolStripMenuItem();
+            disconnectToolStripMenuItem = new ToolStripMenuItem();
+            toolStripMenuItem21 = new ToolStripSeparator();
+            runAsAdministratorToolStripMenuItem = new ToolStripMenuItem();
+            exitToolStripMenuItem = new ToolStripMenuItem();
+            viewToolStripMenuItem = new ToolStripMenuItem();
+            backToolStripMenuItem = new ToolStripMenuItem();
+            forwardToolStripMenuItem = new ToolStripMenuItem();
+            upOneLevelToolStripMenuItem = new ToolStripMenuItem();
+            homeToolStripMenuItem = new ToolStripMenuItem();
+            toolStripMenuItem19 = new ToolStripSeparator();
+            stopToolStripMenuItem1 = new ToolStripMenuItem();
+            refreshToolStripMenuItem4 = new ToolStripMenuItem();
+            toolStripMenuItem20 = new ToolStripSeparator();
+            groupByToolStripMenuItem = new ToolStripMenuItem();
+            sortByToolStripMenuItem = new ToolStripMenuItem();
+            viewToolStripMenuItem1 = new ToolStripMenuItem();
+            helpToolStripMenuItem = new ToolStripMenuItem();
+            iISHelpToolStripMenuItem = new ToolStripMenuItem();
+            iISOnMSDNOnlineToolStripMenuItem = new ToolStripMenuItem();
+            iISNETOnlineToolStripMenuItem = new ToolStripMenuItem();
+            iISKBsOnlineToolStripMenuItem = new ToolStripMenuItem();
+            toolStripMenuItem28 = new ToolStripSeparator();
+            btnUpdate = new ToolStripMenuItem();
+            toolStripMenuItem18 = new ToolStripSeparator();
+            btnAbout = new ToolStripMenuItem();
+            actionList1 = new ActionList();
+            actConnectServer = new Action();
+            actSave = new Action();
+            actUp = new Action();
+            actDisconnect = new Action();
+            actCreateSite = new Action();
+            actExplore = new Action();
+            actEditPermissions = new Action();
+            actCreateApplication = new Action();
+            actCreateVirtualDirectory = new Action();
+            actBrowse = new Action();
+            actConnectSite = new Action();
+            actConnectionApplication = new Action();
+            actRunAsAdmin = new Action();
+            actBack = new Action();
+            actForward = new Action();
+            connectToAServerToolStripMenuItem1 = new ToolStripMenuItem();
+            connectToAWebsiteToolStripMenuItem1 = new ToolStripMenuItem();
+            connectToAnApplicationToolStripMenuItem1 = new ToolStripMenuItem();
+            addApplicationToolStripMenuItem = new ToolStripMenuItem();
+            toolStripMenuItem38 = new ToolStripMenuItem();
+            toolStripMenuItem49 = new ToolStripMenuItem();
+            exploreToolStripMenuItem1 = new ToolStripMenuItem();
+            editPermissionsToolStripMenuItem1 = new ToolStripMenuItem();
+            addVirtualDirectoryToolStripMenuItem1 = new ToolStripMenuItem();
+            btnBrowseApplication = new ToolStripMenuItem();
+            toolStripMenuItem36 = new ToolStripMenuItem();
+            toolStripMenuItem37 = new ToolStripMenuItem();
+            toolStripMenuItem39 = new ToolStripMenuItem();
+            toolStripMenuItem41 = new ToolStripMenuItem();
+            toolStripMenuItem46 = new ToolStripMenuItem();
+            toolStripMenuItem47 = new ToolStripMenuItem();
+            toolStripMenuItem50 = new ToolStripMenuItem();
+            toolStripMenuItem52 = new ToolStripMenuItem();
+            cmsIis = new ContextMenuStrip(components);
+            refreshToolStripMenuItem5 = new ToolStripMenuItem();
+            toolStripMenuItem23 = new ToolStripSeparator();
+            cmsApplication = new ContextMenuStrip(components);
+            toolStripMenuItem9 = new ToolStripSeparator();
+            toolStripMenuItem15 = new ToolStripSeparator();
+            manageApplicationToolStripMenuItem = new ToolStripMenuItem();
+            toolStripMenuItem25 = new ToolStripSeparator();
+            advancedSettingsToolStripMenuItem = new ToolStripMenuItem();
+            toolStripMenuItem16 = new ToolStripSeparator();
+            refreshToolStripMenuItem6 = new ToolStripMenuItem();
+            removeToolStripMenuItem1 = new ToolStripMenuItem();
+            toolStripMenuItem24 = new ToolStripSeparator();
+            switchToContentViewToolStripMenuItem3 = new ToolStripMenuItem();
+            cmsFarm = new ContextMenuStrip(components);
+            refreshToolStripMenuItem7 = new ToolStripMenuItem();
+            toolStripMenuItem29 = new ToolStripSeparator();
+            btnCreateFarm = new ToolStripMenuItem();
+            toolStripMenuItem30 = new ToolStripSeparator();
+            switchToContentViewToolStripMenuItem4 = new ToolStripMenuItem();
+            cmsFarmServer = new ContextMenuStrip(components);
+            refreshToolStripMenuItem8 = new ToolStripMenuItem();
+            btnRemoveFarmServer = new ToolStripMenuItem();
+            toolStripMenuItem31 = new ToolStripSeparator();
+            btnAddFarmServer = new ToolStripMenuItem();
+            toolStripMenuItem32 = new ToolStripSeparator();
+            btnRenameFarmServer = new ToolStripMenuItem();
+            toolStripMenuItem33 = new ToolStripSeparator();
+            switchToContentViewToolStripMenuItem5 = new ToolStripMenuItem();
+            cmsServers = new ContextMenuStrip(components);
+            refreshToolStripMenuItem9 = new ToolStripMenuItem();
+            toolStripMenuItem34 = new ToolStripSeparator();
+            addServerToolStripMenuItem = new ToolStripMenuItem();
+            toolStripMenuItem35 = new ToolStripSeparator();
+            switchToContentViewToolStripMenuItem6 = new ToolStripMenuItem();
+            cmsVirtualDirectory = new ContextMenuStrip(components);
+            toolStripSeparator3 = new ToolStripSeparator();
+            convertToApplicationToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparator4 = new ToolStripSeparator();
+            manageVirtualDirectoryToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparator5 = new ToolStripSeparator();
+            toolStripMenuItem42 = new ToolStripMenuItem();
+            toolStripSeparator6 = new ToolStripSeparator();
+            toolStripMenuItem43 = new ToolStripMenuItem();
+            toolStripMenuItem44 = new ToolStripMenuItem();
+            toolStripSeparator7 = new ToolStripSeparator();
+            toolStripMenuItem45 = new ToolStripMenuItem();
+            cmsPhysicalDirectory = new ContextMenuStrip(components);
+            toolStripSeparator8 = new ToolStripSeparator();
+            toolStripMenuItem48 = new ToolStripMenuItem();
+            toolStripSeparator9 = new ToolStripSeparator();
+            manageFolderToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparator11 = new ToolStripSeparator();
+            toolStripMenuItem54 = new ToolStripMenuItem();
+            toolStripSeparator12 = new ToolStripSeparator();
+            toolStripMenuItem56 = new ToolStripMenuItem();
+            _logSplitter = new SplitContainer();
+            _logPanel = new Panel();
+            ((ISupportInitialize)scMain).BeginInit();
+            scMain.Panel1.SuspendLayout();
+            scMain.SuspendLayout();
+            tableLayoutPanel1.SuspendLayout();
+            panel2.SuspendLayout();
+            toolStrip2.SuspendLayout();
+            panel1.SuspendLayout();
+            cmsServer.SuspendLayout();
+            cmsApplicationPools.SuspendLayout();
+            cmsSites.SuspendLayout();
+            cmsSite.SuspendLayout();
+            statusStrip1.SuspendLayout();
+            menuStrip1.SuspendLayout();
+            ((ISupportInitialize)actionList1).BeginInit();
+            cmsIis.SuspendLayout();
+            cmsApplication.SuspendLayout();
+            cmsFarm.SuspendLayout();
+            cmsFarmServer.SuspendLayout();
+            cmsServers.SuspendLayout();
+            cmsVirtualDirectory.SuspendLayout();
+            cmsPhysicalDirectory.SuspendLayout();
+            ((ISupportInitialize)_logSplitter).BeginInit();
+            _logSplitter.Panel1.SuspendLayout();
+            _logSplitter.Panel2.SuspendLayout();
+            _logSplitter.SuspendLayout();
+            SuspendLayout();
             // 
             // scMain
             // 
-            this.scMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.scMain.Location = new System.Drawing.Point(0, 0);
-            this.scMain.Name = "scMain";
+            scMain.Dock = DockStyle.Fill;
+            scMain.Location = new System.Drawing.Point(0, 0);
+            scMain.Name = "scMain";
             // 
             // scMain.Panel1
             // 
-            this.scMain.Panel1.Controls.Add(this.tableLayoutPanel1);
-            this.scMain.Panel1MinSize = 150;
-            this.scMain.Size = new System.Drawing.Size(915, 451);
-            this.scMain.SplitterDistance = 175;
-            this.scMain.SplitterWidth = 5;
-            this.scMain.TabIndex = 0;
-            this.scMain.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.scMain_SplitterMoved);
+            scMain.Panel1.Controls.Add(tableLayoutPanel1);
+            scMain.Panel1MinSize = 150;
+            scMain.Size = new System.Drawing.Size(915, 451);
+            scMain.SplitterDistance = 175;
+            scMain.SplitterWidth = 5;
+            scMain.TabIndex = 0;
+            scMain.SplitterMoved += scMain_SplitterMoved;
             // 
             // tableLayoutPanel1
             // 
-            this.tableLayoutPanel1.ColumnCount = 1;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.panel2, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.panel1, 0, 0);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(175, 451);
-            this.tableLayoutPanel1.TabIndex = 3;
+            tableLayoutPanel1.ColumnCount = 1;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.Controls.Add(panel2, 0, 1);
+            tableLayoutPanel1.Controls.Add(panel1, 0, 0);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 2;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 27F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 23F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 23F));
+            tableLayoutPanel1.Size = new System.Drawing.Size(175, 451);
+            tableLayoutPanel1.TabIndex = 3;
             // 
             // panel2
             // 
-            this.panel2.Controls.Add(this.treeView1);
-            this.panel2.Controls.Add(this.toolStrip2);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(3, 30);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(169, 418);
-            this.panel2.TabIndex = 0;
+            panel2.Controls.Add(treeView1);
+            panel2.Controls.Add(toolStrip2);
+            panel2.Dock = DockStyle.Fill;
+            panel2.Location = new System.Drawing.Point(3, 30);
+            panel2.Name = "panel2";
+            panel2.Size = new System.Drawing.Size(169, 418);
+            panel2.TabIndex = 0;
             // 
             // treeView1
             // 
-            this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeView1.HideSelection = false;
-            this.treeView1.ImageIndex = 0;
-            this.treeView1.ImageList = this.imageList1;
-            this.treeView1.LabelEdit = true;
-            this.treeView1.Location = new System.Drawing.Point(0, 39);
-            this.treeView1.Name = "treeView1";
-            this.treeView1.SelectedImageIndex = 0;
-            this.treeView1.Size = new System.Drawing.Size(169, 379);
-            this.treeView1.TabIndex = 0;
-            this.treeView1.BeforeLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.treeView1_BeforeLabelEdit);
-            this.treeView1.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.treeView1_AfterLabelEdit);
-            this.treeView1.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.treeView1_BeforeExpand);
-            this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
-            this.treeView1.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView1_NodeMouseClick);
-            this.treeView1.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView1_NodeMouseDoubleClick);
+            treeView1.Dock = DockStyle.Fill;
+            treeView1.HideSelection = false;
+            treeView1.ImageIndex = 0;
+            treeView1.ImageList = imageList1;
+            treeView1.LabelEdit = true;
+            treeView1.Location = new System.Drawing.Point(0, 39);
+            treeView1.Name = "treeView1";
+            treeView1.SelectedImageIndex = 0;
+            treeView1.Size = new System.Drawing.Size(169, 379);
+            treeView1.TabIndex = 0;
+            treeView1.BeforeLabelEdit += treeView1_BeforeLabelEdit;
+            treeView1.AfterLabelEdit += treeView1_AfterLabelEdit;
+            treeView1.BeforeExpand += treeView1_BeforeExpand;
+            treeView1.AfterSelect += treeView1_AfterSelect;
+            treeView1.NodeMouseClick += treeView1_NodeMouseClick;
+            treeView1.NodeMouseDoubleClick += treeView1_NodeMouseDoubleClick;
             // 
             // imageList1
             // 
-            this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
-            this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
-            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            imageList1.ColorDepth = ColorDepth.Depth32Bit;
+            imageList1.ImageSize = new System.Drawing.Size(16, 16);
+            imageList1.TransparentColor = System.Drawing.Color.Transparent;
             // 
             // toolStrip2
             // 
-            this.toolStrip2.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.toolStrip2.ImageScalingSize = new System.Drawing.Size(32, 32);
-            this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripButton3,
-            this.btnSave,
-            this.toolStripSeparator2,
-            this.btnUp,
-            this.toolStripSeparator1,
-            this.btnDisconnect});
-            this.toolStrip2.Location = new System.Drawing.Point(0, 0);
-            this.toolStrip2.Name = "toolStrip2";
-            this.toolStrip2.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
-            this.toolStrip2.Size = new System.Drawing.Size(169, 39);
-            this.toolStrip2.TabIndex = 6;
-            this.toolStrip2.Text = "toolStrip2";
+            toolStrip2.GripStyle = ToolStripGripStyle.Hidden;
+            toolStrip2.ImageScalingSize = new System.Drawing.Size(32, 32);
+            toolStrip2.Items.AddRange(new ToolStripItem[] { toolStripButton3, btnSave, toolStripSeparator2, btnUp, toolStripSeparator1, btnDisconnect });
+            toolStrip2.Location = new System.Drawing.Point(0, 0);
+            toolStrip2.Name = "toolStrip2";
+            toolStrip2.Padding = new Padding(0, 0, 2, 0);
+            toolStrip2.Size = new System.Drawing.Size(169, 39);
+            toolStrip2.TabIndex = 6;
+            toolStrip2.Text = "toolStrip2";
             // 
             // toolStripButton3
             // 
-            this.toolStripButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton3.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.btnServer,
-            this.connectToWebsiteToolStripMenuItem,
-            this.connectToApplicationToolStripMenuItem});
-            this.toolStripButton3.Image = global::JexusManager.Main.Properties.Resources.connect_16;
-            this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton3.Name = "toolStripButton3";
-            this.toolStripButton3.Size = new System.Drawing.Size(48, 36);
-            this.toolStripButton3.Text = "Create New Connection";
+            toolStripButton3.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            toolStripButton3.DropDownItems.AddRange(new ToolStripItem[] { btnServer, connectToWebsiteToolStripMenuItem, connectToApplicationToolStripMenuItem });
+            toolStripButton3.Image = Main.Properties.Resources.connect_16;
+            toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
+            toolStripButton3.Name = "toolStripButton3";
+            toolStripButton3.Size = new System.Drawing.Size(48, 36);
+            toolStripButton3.Text = "Create New Connection";
             // 
             // btnServer
             // 
-            this.actionList1.SetAction(this.btnServer, this.actConnectServer);
-            this.btnServer.Name = "btnServer";
-            this.btnServer.Size = new System.Drawing.Size(222, 22);
-            this.btnServer.Text = "Connect to a Server...";
-            this.btnServer.ToolTipText = "Connect to a Server...";
+            actionList1.SetAction(btnServer, actConnectServer);
+            btnServer.Name = "btnServer";
+            btnServer.Size = new System.Drawing.Size(222, 22);
+            btnServer.Text = "Connect to a Server...";
+            btnServer.ToolTipText = "Connect to a Server...";
             // 
             // connectToWebsiteToolStripMenuItem
             // 
-            this.connectToWebsiteToolStripMenuItem.Enabled = false;
-            this.connectToWebsiteToolStripMenuItem.Image = global::JexusManager.Main.Properties.Resources.site_16;
-            this.connectToWebsiteToolStripMenuItem.Name = "connectToWebsiteToolStripMenuItem";
-            this.connectToWebsiteToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
-            this.connectToWebsiteToolStripMenuItem.Text = "Connect to a Website...";
+            connectToWebsiteToolStripMenuItem.Enabled = false;
+            connectToWebsiteToolStripMenuItem.Image = Main.Properties.Resources.site_16;
+            connectToWebsiteToolStripMenuItem.Name = "connectToWebsiteToolStripMenuItem";
+            connectToWebsiteToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            connectToWebsiteToolStripMenuItem.Text = "Connect to a Website...";
             // 
             // connectToApplicationToolStripMenuItem
             // 
-            this.connectToApplicationToolStripMenuItem.Enabled = false;
-            this.connectToApplicationToolStripMenuItem.Image = global::JexusManager.Main.Properties.Resources.application_16;
-            this.connectToApplicationToolStripMenuItem.Name = "connectToApplicationToolStripMenuItem";
-            this.connectToApplicationToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
-            this.connectToApplicationToolStripMenuItem.Text = "Connect to an Application...";
+            connectToApplicationToolStripMenuItem.Enabled = false;
+            connectToApplicationToolStripMenuItem.Image = Main.Properties.Resources.application_16;
+            connectToApplicationToolStripMenuItem.Name = "connectToApplicationToolStripMenuItem";
+            connectToApplicationToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            connectToApplicationToolStripMenuItem.Text = "Connect to an Application...";
             // 
             // btnSave
             // 
-            this.actionList1.SetAction(this.btnSave, this.actSave);
-            this.btnSave.AutoToolTip = false;
-            this.btnSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnSave.Enabled = false;
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(36, 36);
-            this.btnSave.Text = "Save Connections";
-            this.btnSave.ToolTipText = "Save Connections";
+            actionList1.SetAction(btnSave, actSave);
+            btnSave.AutoToolTip = false;
+            btnSave.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            btnSave.Enabled = false;
+            btnSave.Name = "btnSave";
+            btnSave.Size = new System.Drawing.Size(36, 36);
+            btnSave.Text = "Save Connections";
+            btnSave.ToolTipText = "Save Connections";
             // 
             // toolStripSeparator2
             // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 39);
+            toolStripSeparator2.Name = "toolStripSeparator2";
+            toolStripSeparator2.Size = new System.Drawing.Size(6, 39);
             // 
             // btnUp
             // 
-            this.actionList1.SetAction(this.btnUp, this.actUp);
-            this.btnUp.AutoToolTip = false;
-            this.btnUp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnUp.Enabled = false;
-            this.btnUp.Name = "btnUp";
-            this.btnUp.Size = new System.Drawing.Size(36, 36);
-            this.btnUp.Text = "Up One Level";
-            this.btnUp.ToolTipText = "Up One Level";
+            actionList1.SetAction(btnUp, actUp);
+            btnUp.AutoToolTip = false;
+            btnUp.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            btnUp.Enabled = false;
+            btnUp.Name = "btnUp";
+            btnUp.Size = new System.Drawing.Size(36, 36);
+            btnUp.Text = "Up One Level";
+            btnUp.ToolTipText = "Up One Level";
             // 
             // toolStripSeparator1
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 39);
+            toolStripSeparator1.Name = "toolStripSeparator1";
+            toolStripSeparator1.Size = new System.Drawing.Size(6, 39);
             // 
             // btnDisconnect
             // 
-            this.actionList1.SetAction(this.btnDisconnect, this.actDisconnect);
-            this.btnDisconnect.AutoToolTip = false;
-            this.btnDisconnect.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnDisconnect.Enabled = false;
-            this.btnDisconnect.Name = "btnDisconnect";
-            this.btnDisconnect.Size = new System.Drawing.Size(36, 36);
-            this.btnDisconnect.Text = "Disconnect";
-            this.btnDisconnect.ToolTipText = "Disconnect";
+            actionList1.SetAction(btnDisconnect, actDisconnect);
+            btnDisconnect.AutoToolTip = false;
+            btnDisconnect.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            btnDisconnect.Enabled = false;
+            btnDisconnect.Name = "btnDisconnect";
+            btnDisconnect.Size = new System.Drawing.Size(36, 36);
+            btnDisconnect.Text = "Disconnect";
+            btnDisconnect.ToolTipText = "Disconnect";
             // 
             // panel1
             // 
-            this.panel1.BackColor = System.Drawing.SystemColors.ActiveBorder;
-            this.panel1.Controls.Add(this.label1);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Margin = new System.Windows.Forms.Padding(0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(175, 27);
-            this.panel1.TabIndex = 1;
+            panel1.BackColor = System.Drawing.SystemColors.ActiveBorder;
+            panel1.Controls.Add(label1);
+            panel1.Dock = DockStyle.Fill;
+            panel1.Location = new System.Drawing.Point(0, 0);
+            panel1.Margin = new Padding(0);
+            panel1.Name = "panel1";
+            panel1.Size = new System.Drawing.Size(175, 27);
+            panel1.TabIndex = 1;
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label1.Location = new System.Drawing.Point(3, 6);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(77, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Connections";
+            label1.AutoSize = true;
+            label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            label1.Location = new System.Drawing.Point(3, 6);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(77, 13);
+            label1.TabIndex = 0;
+            label1.Text = "Connections";
             // 
             // cmsServer
             // 
-            this.cmsServer.ImageScalingSize = new System.Drawing.Size(32, 32);
-            this.cmsServer.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.refreshToolStripMenuItem,
-            this.toolStripMenuItem1,
-            this.removeConnectionToolStripMenuItem,
-            this.toolStripMenuItem4,
-            this.addWebsiteToolStripMenuItem,
-            this.toolStripMenuItem2,
-            this.btnStartServer,
-            this.btnStopServer,
-            this.toolStripMenuItem3,
-            this.btnRenameServer,
-            this.toolStripMenuItem5,
-            this.btnOpenConfig,
-            this.toolStripMenuItem40,
-            this.switchToContentViewToolStripMenuItem});
-            this.cmsServer.Name = "cmsServer";
-            this.cmsServer.Size = new System.Drawing.Size(218, 344);
+            cmsServer.ImageScalingSize = new System.Drawing.Size(32, 32);
+            cmsServer.Items.AddRange(new ToolStripItem[] { refreshToolStripMenuItem, toolStripMenuItem1, removeConnectionToolStripMenuItem, toolStripMenuItem4, addWebsiteToolStripMenuItem, toolStripMenuItem2, btnStartServer, btnStopServer, toolStripMenuItem3, btnRenameServer, toolStripMenuItem5, btnOpenConfig, toolStripMenuItem40, switchToContentViewToolStripMenuItem });
+            cmsServer.Name = "cmsServer";
+            cmsServer.Size = new System.Drawing.Size(218, 344);
             // 
             // refreshToolStripMenuItem
             // 
-            this.refreshToolStripMenuItem.Enabled = false;
-            this.refreshToolStripMenuItem.Image = global::JexusManager.Main.Properties.Resources.refresh_16;
-            this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
-            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(217, 38);
-            this.refreshToolStripMenuItem.Text = "Refresh";
+            refreshToolStripMenuItem.Enabled = false;
+            refreshToolStripMenuItem.Image = Main.Properties.Resources.refresh_16;
+            refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
+            refreshToolStripMenuItem.Size = new System.Drawing.Size(217, 38);
+            refreshToolStripMenuItem.Text = "Refresh";
             // 
             // toolStripMenuItem1
             // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(214, 6);
+            toolStripMenuItem1.Name = "toolStripMenuItem1";
+            toolStripMenuItem1.Size = new System.Drawing.Size(214, 6);
             // 
             // removeConnectionToolStripMenuItem
             // 
-            this.actionList1.SetAction(this.removeConnectionToolStripMenuItem, this.actDisconnect);
-            this.removeConnectionToolStripMenuItem.Enabled = false;
-            this.removeConnectionToolStripMenuItem.Name = "removeConnectionToolStripMenuItem";
-            this.removeConnectionToolStripMenuItem.Size = new System.Drawing.Size(217, 38);
-            this.removeConnectionToolStripMenuItem.Text = "Disconnect";
-            this.removeConnectionToolStripMenuItem.ToolTipText = "Disconnect";
+            actionList1.SetAction(removeConnectionToolStripMenuItem, actDisconnect);
+            removeConnectionToolStripMenuItem.Enabled = false;
+            removeConnectionToolStripMenuItem.Name = "removeConnectionToolStripMenuItem";
+            removeConnectionToolStripMenuItem.Size = new System.Drawing.Size(217, 38);
+            removeConnectionToolStripMenuItem.Text = "Disconnect";
+            removeConnectionToolStripMenuItem.ToolTipText = "Disconnect";
             // 
             // toolStripMenuItem4
             // 
-            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(214, 6);
+            toolStripMenuItem4.Name = "toolStripMenuItem4";
+            toolStripMenuItem4.Size = new System.Drawing.Size(214, 6);
             // 
             // addWebsiteToolStripMenuItem
             // 
-            this.actionList1.SetAction(this.addWebsiteToolStripMenuItem, this.actCreateSite);
-            this.addWebsiteToolStripMenuItem.AutoToolTip = true;
-            this.addWebsiteToolStripMenuItem.Name = "addWebsiteToolStripMenuItem";
-            this.addWebsiteToolStripMenuItem.Size = new System.Drawing.Size(217, 38);
-            this.addWebsiteToolStripMenuItem.Text = "Add Website...";
+            actionList1.SetAction(addWebsiteToolStripMenuItem, actCreateSite);
+            addWebsiteToolStripMenuItem.AutoToolTip = true;
+            addWebsiteToolStripMenuItem.Name = "addWebsiteToolStripMenuItem";
+            addWebsiteToolStripMenuItem.Size = new System.Drawing.Size(217, 38);
+            addWebsiteToolStripMenuItem.Text = "Add Website...";
             // 
             // toolStripMenuItem2
             // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(214, 6);
+            toolStripMenuItem2.Name = "toolStripMenuItem2";
+            toolStripMenuItem2.Size = new System.Drawing.Size(214, 6);
             // 
             // btnStartServer
             // 
-            this.btnStartServer.Enabled = false;
-            this.btnStartServer.Image = global::JexusManager.Main.Properties.Resources.start_16;
-            this.btnStartServer.Name = "btnStartServer";
-            this.btnStartServer.Size = new System.Drawing.Size(217, 38);
-            this.btnStartServer.Text = "Start";
+            btnStartServer.Enabled = false;
+            btnStartServer.Image = Main.Properties.Resources.start_16;
+            btnStartServer.Name = "btnStartServer";
+            btnStartServer.Size = new System.Drawing.Size(217, 38);
+            btnStartServer.Text = "Start";
             // 
             // btnStopServer
             // 
-            this.btnStopServer.Enabled = false;
-            this.btnStopServer.Image = global::JexusManager.Main.Properties.Resources.stop_16;
-            this.btnStopServer.Name = "btnStopServer";
-            this.btnStopServer.Size = new System.Drawing.Size(217, 38);
-            this.btnStopServer.Text = "Stop";
+            btnStopServer.Enabled = false;
+            btnStopServer.Image = Main.Properties.Resources.stop_16;
+            btnStopServer.Name = "btnStopServer";
+            btnStopServer.Size = new System.Drawing.Size(217, 38);
+            btnStopServer.Text = "Stop";
             // 
             // toolStripMenuItem3
             // 
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(214, 6);
+            toolStripMenuItem3.Name = "toolStripMenuItem3";
+            toolStripMenuItem3.Size = new System.Drawing.Size(214, 6);
             // 
             // btnRenameServer
             // 
-            this.btnRenameServer.Enabled = false;
-            this.btnRenameServer.Name = "btnRenameServer";
-            this.btnRenameServer.Size = new System.Drawing.Size(217, 38);
-            this.btnRenameServer.Text = "Rename";
+            btnRenameServer.Enabled = false;
+            btnRenameServer.Name = "btnRenameServer";
+            btnRenameServer.Size = new System.Drawing.Size(217, 38);
+            btnRenameServer.Text = "Rename";
             // 
             // toolStripMenuItem5
             // 
-            this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(214, 6);
+            toolStripMenuItem5.Name = "toolStripMenuItem5";
+            toolStripMenuItem5.Size = new System.Drawing.Size(214, 6);
             // 
             // btnOpenConfig
             // 
-            this.btnOpenConfig.Name = "btnOpenConfig";
-            this.btnOpenConfig.Size = new System.Drawing.Size(217, 38);
-            this.btnOpenConfig.Text = "Open Configuration File";
-            this.btnOpenConfig.Click += new System.EventHandler(this.btnOpenConfig_Click);
+            btnOpenConfig.Name = "btnOpenConfig";
+            btnOpenConfig.Size = new System.Drawing.Size(217, 38);
+            btnOpenConfig.Text = "Open Configuration File";
+            btnOpenConfig.Click += btnOpenConfig_Click;
             // 
             // toolStripMenuItem40
             // 
-            this.toolStripMenuItem40.Name = "toolStripMenuItem40";
-            this.toolStripMenuItem40.Size = new System.Drawing.Size(214, 6);
+            toolStripMenuItem40.Name = "toolStripMenuItem40";
+            toolStripMenuItem40.Size = new System.Drawing.Size(214, 6);
             // 
             // switchToContentViewToolStripMenuItem
             // 
-            this.switchToContentViewToolStripMenuItem.Enabled = false;
-            this.switchToContentViewToolStripMenuItem.Image = global::JexusManager.Main.Properties.Resources.switch_16;
-            this.switchToContentViewToolStripMenuItem.Name = "switchToContentViewToolStripMenuItem";
-            this.switchToContentViewToolStripMenuItem.Size = new System.Drawing.Size(217, 38);
-            this.switchToContentViewToolStripMenuItem.Text = "Switch to Content View";
+            switchToContentViewToolStripMenuItem.Enabled = false;
+            switchToContentViewToolStripMenuItem.Image = Main.Properties.Resources.switch_16;
+            switchToContentViewToolStripMenuItem.Name = "switchToContentViewToolStripMenuItem";
+            switchToContentViewToolStripMenuItem.Size = new System.Drawing.Size(217, 38);
+            switchToContentViewToolStripMenuItem.Text = "Switch to Content View";
             // 
             // cmsApplicationPools
             // 
-            this.cmsApplicationPools.ImageScalingSize = new System.Drawing.Size(32, 32);
-            this.cmsApplicationPools.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addApplicationPoolToolStripMenuItem,
-            this.toolStripMenuItem6,
-            this.refreshToolStripMenuItem1});
-            this.cmsApplicationPools.Name = "cmsApplicationPools";
-            this.cmsApplicationPools.Size = new System.Drawing.Size(213, 86);
+            cmsApplicationPools.ImageScalingSize = new System.Drawing.Size(32, 32);
+            cmsApplicationPools.Items.AddRange(new ToolStripItem[] { addApplicationPoolToolStripMenuItem, toolStripMenuItem6, refreshToolStripMenuItem1 });
+            cmsApplicationPools.Name = "cmsApplicationPools";
+            cmsApplicationPools.Size = new System.Drawing.Size(213, 86);
             // 
             // addApplicationPoolToolStripMenuItem
             // 
-            this.addApplicationPoolToolStripMenuItem.Enabled = false;
-            this.addApplicationPoolToolStripMenuItem.Name = "addApplicationPoolToolStripMenuItem";
-            this.addApplicationPoolToolStripMenuItem.Size = new System.Drawing.Size(212, 38);
-            this.addApplicationPoolToolStripMenuItem.Text = "Add Application Pool...";
+            addApplicationPoolToolStripMenuItem.Enabled = false;
+            addApplicationPoolToolStripMenuItem.Name = "addApplicationPoolToolStripMenuItem";
+            addApplicationPoolToolStripMenuItem.Size = new System.Drawing.Size(212, 38);
+            addApplicationPoolToolStripMenuItem.Text = "Add Application Pool...";
             // 
             // toolStripMenuItem6
             // 
-            this.toolStripMenuItem6.Name = "toolStripMenuItem6";
-            this.toolStripMenuItem6.Size = new System.Drawing.Size(209, 6);
+            toolStripMenuItem6.Name = "toolStripMenuItem6";
+            toolStripMenuItem6.Size = new System.Drawing.Size(209, 6);
             // 
             // refreshToolStripMenuItem1
             // 
-            this.refreshToolStripMenuItem1.Enabled = false;
-            this.refreshToolStripMenuItem1.Image = global::JexusManager.Main.Properties.Resources.refresh_16;
-            this.refreshToolStripMenuItem1.Name = "refreshToolStripMenuItem1";
-            this.refreshToolStripMenuItem1.Size = new System.Drawing.Size(212, 38);
-            this.refreshToolStripMenuItem1.Text = "Refresh";
+            refreshToolStripMenuItem1.Enabled = false;
+            refreshToolStripMenuItem1.Image = Main.Properties.Resources.refresh_16;
+            refreshToolStripMenuItem1.Name = "refreshToolStripMenuItem1";
+            refreshToolStripMenuItem1.Size = new System.Drawing.Size(212, 38);
+            refreshToolStripMenuItem1.Text = "Refresh";
             // 
             // cmsSites
             // 
-            this.cmsSites.ImageScalingSize = new System.Drawing.Size(32, 32);
-            this.cmsSites.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addWebsiteToolStripMenuItem1,
-            this.toolStripMenuItem7,
-            this.refreshToolStripMenuItem2,
-            this.toolStripMenuItem8,
-            this.switchToContentViewToolStripMenuItem1});
-            this.cmsSites.Name = "cmsSites";
-            this.cmsSites.Size = new System.Drawing.Size(214, 130);
+            cmsSites.ImageScalingSize = new System.Drawing.Size(32, 32);
+            cmsSites.Items.AddRange(new ToolStripItem[] { addWebsiteToolStripMenuItem1, toolStripMenuItem7, refreshToolStripMenuItem2, toolStripMenuItem8, switchToContentViewToolStripMenuItem1 });
+            cmsSites.Name = "cmsSites";
+            cmsSites.Size = new System.Drawing.Size(214, 130);
             // 
             // addWebsiteToolStripMenuItem1
             // 
-            this.actionList1.SetAction(this.addWebsiteToolStripMenuItem1, this.actCreateSite);
-            this.addWebsiteToolStripMenuItem1.AutoToolTip = true;
-            this.addWebsiteToolStripMenuItem1.Name = "addWebsiteToolStripMenuItem1";
-            this.addWebsiteToolStripMenuItem1.Size = new System.Drawing.Size(213, 38);
-            this.addWebsiteToolStripMenuItem1.Text = "Add Website...";
+            actionList1.SetAction(addWebsiteToolStripMenuItem1, actCreateSite);
+            addWebsiteToolStripMenuItem1.AutoToolTip = true;
+            addWebsiteToolStripMenuItem1.Name = "addWebsiteToolStripMenuItem1";
+            addWebsiteToolStripMenuItem1.Size = new System.Drawing.Size(213, 38);
+            addWebsiteToolStripMenuItem1.Text = "Add Website...";
             // 
             // toolStripMenuItem7
             // 
-            this.toolStripMenuItem7.Name = "toolStripMenuItem7";
-            this.toolStripMenuItem7.Size = new System.Drawing.Size(210, 6);
+            toolStripMenuItem7.Name = "toolStripMenuItem7";
+            toolStripMenuItem7.Size = new System.Drawing.Size(210, 6);
             // 
             // refreshToolStripMenuItem2
             // 
-            this.refreshToolStripMenuItem2.Enabled = false;
-            this.refreshToolStripMenuItem2.Name = "refreshToolStripMenuItem2";
-            this.refreshToolStripMenuItem2.Size = new System.Drawing.Size(213, 38);
-            this.refreshToolStripMenuItem2.Text = "Refresh";
+            refreshToolStripMenuItem2.Enabled = false;
+            refreshToolStripMenuItem2.Name = "refreshToolStripMenuItem2";
+            refreshToolStripMenuItem2.Size = new System.Drawing.Size(213, 38);
+            refreshToolStripMenuItem2.Text = "Refresh";
             // 
             // toolStripMenuItem8
             // 
-            this.toolStripMenuItem8.Name = "toolStripMenuItem8";
-            this.toolStripMenuItem8.Size = new System.Drawing.Size(210, 6);
+            toolStripMenuItem8.Name = "toolStripMenuItem8";
+            toolStripMenuItem8.Size = new System.Drawing.Size(210, 6);
             // 
             // switchToContentViewToolStripMenuItem1
             // 
-            this.switchToContentViewToolStripMenuItem1.Enabled = false;
-            this.switchToContentViewToolStripMenuItem1.Name = "switchToContentViewToolStripMenuItem1";
-            this.switchToContentViewToolStripMenuItem1.Size = new System.Drawing.Size(213, 38);
-            this.switchToContentViewToolStripMenuItem1.Text = "Switch to Content View";
+            switchToContentViewToolStripMenuItem1.Enabled = false;
+            switchToContentViewToolStripMenuItem1.Name = "switchToContentViewToolStripMenuItem1";
+            switchToContentViewToolStripMenuItem1.Size = new System.Drawing.Size(213, 38);
+            switchToContentViewToolStripMenuItem1.Text = "Switch to Content View";
             // 
             // cmsSite
             // 
-            this.cmsSite.ImageScalingSize = new System.Drawing.Size(32, 32);
-            this.cmsSite.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.exploreToolStripMenuItem,
-            this.editPermissionsToolStripMenuItem,
-            this.toolStripMenuItem10,
-            this.btnApplication,
-            this.addVirtualDirectoryToolStripMenuItem,
-            this.toolStripMenuItem11,
-            this.editBindingsToolStripMenuItem,
-            this.toolStripMenuItem12,
-            this.manageWebsiteToolStripMenuItem,
-            this.toolStripMenuItem13,
-            this.refreshToolStripMenuItem3,
-            this.removeToolStripMenuItem,
-            this.toolStripMenuItem14,
-            this.renameToolStripMenuItem1,
-            this.toolStripMenuItem17,
-            this.switchToContentViewToolStripMenuItem2});
-            this.cmsSite.Name = "cmsSite";
-            this.cmsSite.Size = new System.Drawing.Size(214, 420);
+            cmsSite.ImageScalingSize = new System.Drawing.Size(32, 32);
+            cmsSite.Items.AddRange(new ToolStripItem[] { exploreToolStripMenuItem, editPermissionsToolStripMenuItem, toolStripMenuItem10, btnApplication, addVirtualDirectoryToolStripMenuItem, toolStripMenuItem11, editBindingsToolStripMenuItem, toolStripMenuItem12, manageWebsiteToolStripMenuItem, toolStripMenuItem13, refreshToolStripMenuItem3, removeToolStripMenuItem, toolStripMenuItem14, renameToolStripMenuItem1, toolStripMenuItem17, switchToContentViewToolStripMenuItem2 });
+            cmsSite.Name = "cmsSite";
+            cmsSite.Size = new System.Drawing.Size(214, 420);
             // 
             // exploreToolStripMenuItem
             // 
-            this.actionList1.SetAction(this.exploreToolStripMenuItem, this.actExplore);
-            this.exploreToolStripMenuItem.AutoToolTip = true;
-            this.exploreToolStripMenuItem.Name = "exploreToolStripMenuItem";
-            this.exploreToolStripMenuItem.Size = new System.Drawing.Size(213, 38);
-            this.exploreToolStripMenuItem.Text = "Explore";
+            actionList1.SetAction(exploreToolStripMenuItem, actExplore);
+            exploreToolStripMenuItem.AutoToolTip = true;
+            exploreToolStripMenuItem.Name = "exploreToolStripMenuItem";
+            exploreToolStripMenuItem.Size = new System.Drawing.Size(213, 38);
+            exploreToolStripMenuItem.Text = "Explore";
             // 
             // editPermissionsToolStripMenuItem
             // 
-            this.actionList1.SetAction(this.editPermissionsToolStripMenuItem, this.actEditPermissions);
-            this.editPermissionsToolStripMenuItem.AutoToolTip = true;
-            this.editPermissionsToolStripMenuItem.Name = "editPermissionsToolStripMenuItem";
-            this.editPermissionsToolStripMenuItem.Size = new System.Drawing.Size(213, 38);
-            this.editPermissionsToolStripMenuItem.Text = "Edit Permissions...";
+            actionList1.SetAction(editPermissionsToolStripMenuItem, actEditPermissions);
+            editPermissionsToolStripMenuItem.AutoToolTip = true;
+            editPermissionsToolStripMenuItem.Name = "editPermissionsToolStripMenuItem";
+            editPermissionsToolStripMenuItem.Size = new System.Drawing.Size(213, 38);
+            editPermissionsToolStripMenuItem.Text = "Edit Permissions...";
             // 
             // toolStripMenuItem10
             // 
-            this.toolStripMenuItem10.Name = "toolStripMenuItem10";
-            this.toolStripMenuItem10.Size = new System.Drawing.Size(210, 6);
+            toolStripMenuItem10.Name = "toolStripMenuItem10";
+            toolStripMenuItem10.Size = new System.Drawing.Size(210, 6);
             // 
             // btnApplication
             // 
-            this.actionList1.SetAction(this.btnApplication, this.actCreateApplication);
-            this.btnApplication.AutoToolTip = true;
-            this.btnApplication.Name = "btnApplication";
-            this.btnApplication.Size = new System.Drawing.Size(213, 38);
-            this.btnApplication.Text = "Add Application...";
+            actionList1.SetAction(btnApplication, actCreateApplication);
+            btnApplication.AutoToolTip = true;
+            btnApplication.Name = "btnApplication";
+            btnApplication.Size = new System.Drawing.Size(213, 38);
+            btnApplication.Text = "Add Application...";
             // 
             // addVirtualDirectoryToolStripMenuItem
             // 
-            this.actionList1.SetAction(this.addVirtualDirectoryToolStripMenuItem, this.actCreateVirtualDirectory);
-            this.addVirtualDirectoryToolStripMenuItem.AutoToolTip = true;
-            this.addVirtualDirectoryToolStripMenuItem.Name = "addVirtualDirectoryToolStripMenuItem";
-            this.addVirtualDirectoryToolStripMenuItem.Size = new System.Drawing.Size(213, 38);
-            this.addVirtualDirectoryToolStripMenuItem.Text = "Add Virtual Directory...";
+            actionList1.SetAction(addVirtualDirectoryToolStripMenuItem, actCreateVirtualDirectory);
+            addVirtualDirectoryToolStripMenuItem.AutoToolTip = true;
+            addVirtualDirectoryToolStripMenuItem.Name = "addVirtualDirectoryToolStripMenuItem";
+            addVirtualDirectoryToolStripMenuItem.Size = new System.Drawing.Size(213, 38);
+            addVirtualDirectoryToolStripMenuItem.Text = "Add Virtual Directory...";
             // 
             // toolStripMenuItem11
             // 
-            this.toolStripMenuItem11.Name = "toolStripMenuItem11";
-            this.toolStripMenuItem11.Size = new System.Drawing.Size(210, 6);
+            toolStripMenuItem11.Name = "toolStripMenuItem11";
+            toolStripMenuItem11.Size = new System.Drawing.Size(210, 6);
             // 
             // editBindingsToolStripMenuItem
             // 
-            this.editBindingsToolStripMenuItem.Name = "editBindingsToolStripMenuItem";
-            this.editBindingsToolStripMenuItem.Size = new System.Drawing.Size(213, 38);
-            this.editBindingsToolStripMenuItem.Text = "Edit Bindings...";
-            this.editBindingsToolStripMenuItem.Click += new System.EventHandler(this.editBindingsToolStripMenuItem_Click);
+            editBindingsToolStripMenuItem.Name = "editBindingsToolStripMenuItem";
+            editBindingsToolStripMenuItem.Size = new System.Drawing.Size(213, 38);
+            editBindingsToolStripMenuItem.Text = "Edit Bindings...";
+            editBindingsToolStripMenuItem.Click += editBindingsToolStripMenuItem_Click;
             // 
             // toolStripMenuItem12
             // 
-            this.toolStripMenuItem12.Name = "toolStripMenuItem12";
-            this.toolStripMenuItem12.Size = new System.Drawing.Size(210, 6);
+            toolStripMenuItem12.Name = "toolStripMenuItem12";
+            toolStripMenuItem12.Size = new System.Drawing.Size(210, 6);
             // 
             // manageWebsiteToolStripMenuItem
             // 
-            this.manageWebsiteToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.btnRestartSite,
-            this.startToolStripMenuItem1,
-            this.stopToolStripMenuItem2,
-            this.toolStripMenuItem26,
-            this.btnBrowseSite,
-            this.toolStripMenuItem27,
-            this.advancedSettingsToolStripMenuItem1});
-            this.manageWebsiteToolStripMenuItem.Name = "manageWebsiteToolStripMenuItem";
-            this.manageWebsiteToolStripMenuItem.Size = new System.Drawing.Size(213, 38);
-            this.manageWebsiteToolStripMenuItem.Text = "Manage Website";
+            manageWebsiteToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { btnRestartSite, startToolStripMenuItem1, stopToolStripMenuItem2, toolStripMenuItem26, btnBrowseSite, toolStripMenuItem27, advancedSettingsToolStripMenuItem1 });
+            manageWebsiteToolStripMenuItem.Name = "manageWebsiteToolStripMenuItem";
+            manageWebsiteToolStripMenuItem.Size = new System.Drawing.Size(213, 38);
+            manageWebsiteToolStripMenuItem.Text = "Manage Website";
             // 
             // btnRestartSite
             // 
-            this.btnRestartSite.Image = global::JexusManager.Main.Properties.Resources.restart_16;
-            this.btnRestartSite.Name = "btnRestartSite";
-            this.btnRestartSite.Size = new System.Drawing.Size(181, 22);
-            this.btnRestartSite.Text = "Restart";
-            this.btnRestartSite.Click += new System.EventHandler(this.btnRestartSite_Click);
+            btnRestartSite.Image = Main.Properties.Resources.restart_16;
+            btnRestartSite.Name = "btnRestartSite";
+            btnRestartSite.Size = new System.Drawing.Size(181, 22);
+            btnRestartSite.Text = "Restart";
+            btnRestartSite.Click += btnRestartSite_Click;
             // 
             // startToolStripMenuItem1
             // 
-            this.startToolStripMenuItem1.Enabled = false;
-            this.startToolStripMenuItem1.Image = global::JexusManager.Main.Properties.Resources.start_16;
-            this.startToolStripMenuItem1.Name = "startToolStripMenuItem1";
-            this.startToolStripMenuItem1.Size = new System.Drawing.Size(181, 22);
-            this.startToolStripMenuItem1.Text = "Start";
+            startToolStripMenuItem1.Enabled = false;
+            startToolStripMenuItem1.Image = Main.Properties.Resources.start_16;
+            startToolStripMenuItem1.Name = "startToolStripMenuItem1";
+            startToolStripMenuItem1.Size = new System.Drawing.Size(181, 22);
+            startToolStripMenuItem1.Text = "Start";
             // 
             // stopToolStripMenuItem2
             // 
-            this.stopToolStripMenuItem2.Enabled = false;
-            this.stopToolStripMenuItem2.Image = global::JexusManager.Main.Properties.Resources.stop_16;
-            this.stopToolStripMenuItem2.Name = "stopToolStripMenuItem2";
-            this.stopToolStripMenuItem2.Size = new System.Drawing.Size(181, 22);
-            this.stopToolStripMenuItem2.Text = "Stop";
+            stopToolStripMenuItem2.Enabled = false;
+            stopToolStripMenuItem2.Image = Main.Properties.Resources.stop_16;
+            stopToolStripMenuItem2.Name = "stopToolStripMenuItem2";
+            stopToolStripMenuItem2.Size = new System.Drawing.Size(181, 22);
+            stopToolStripMenuItem2.Text = "Stop";
             // 
             // toolStripMenuItem26
             // 
-            this.toolStripMenuItem26.Name = "toolStripMenuItem26";
-            this.toolStripMenuItem26.Size = new System.Drawing.Size(178, 6);
+            toolStripMenuItem26.Name = "toolStripMenuItem26";
+            toolStripMenuItem26.Size = new System.Drawing.Size(178, 6);
             // 
             // btnBrowseSite
             // 
-            this.actionList1.SetAction(this.btnBrowseSite, this.actBrowse);
-            this.btnBrowseSite.AutoToolTip = true;
-            this.btnBrowseSite.Name = "btnBrowseSite";
-            this.btnBrowseSite.Size = new System.Drawing.Size(181, 22);
-            this.btnBrowseSite.Text = "Browse";
+            actionList1.SetAction(btnBrowseSite, actBrowse);
+            btnBrowseSite.AutoToolTip = true;
+            btnBrowseSite.Name = "btnBrowseSite";
+            btnBrowseSite.Size = new System.Drawing.Size(181, 22);
+            btnBrowseSite.Text = "Browse";
             // 
             // toolStripMenuItem27
             // 
-            this.toolStripMenuItem27.Name = "toolStripMenuItem27";
-            this.toolStripMenuItem27.Size = new System.Drawing.Size(178, 6);
+            toolStripMenuItem27.Name = "toolStripMenuItem27";
+            toolStripMenuItem27.Size = new System.Drawing.Size(178, 6);
             // 
             // advancedSettingsToolStripMenuItem1
             // 
-            this.advancedSettingsToolStripMenuItem1.Enabled = false;
-            this.advancedSettingsToolStripMenuItem1.Name = "advancedSettingsToolStripMenuItem1";
-            this.advancedSettingsToolStripMenuItem1.Size = new System.Drawing.Size(181, 22);
-            this.advancedSettingsToolStripMenuItem1.Text = "Advanced Settings...";
+            advancedSettingsToolStripMenuItem1.Enabled = false;
+            advancedSettingsToolStripMenuItem1.Name = "advancedSettingsToolStripMenuItem1";
+            advancedSettingsToolStripMenuItem1.Size = new System.Drawing.Size(181, 22);
+            advancedSettingsToolStripMenuItem1.Text = "Advanced Settings...";
             // 
             // toolStripMenuItem13
             // 
-            this.toolStripMenuItem13.Name = "toolStripMenuItem13";
-            this.toolStripMenuItem13.Size = new System.Drawing.Size(210, 6);
+            toolStripMenuItem13.Name = "toolStripMenuItem13";
+            toolStripMenuItem13.Size = new System.Drawing.Size(210, 6);
             // 
             // refreshToolStripMenuItem3
             // 
-            this.refreshToolStripMenuItem3.Enabled = false;
-            this.refreshToolStripMenuItem3.Image = global::JexusManager.Main.Properties.Resources.refresh_16;
-            this.refreshToolStripMenuItem3.Name = "refreshToolStripMenuItem3";
-            this.refreshToolStripMenuItem3.Size = new System.Drawing.Size(213, 38);
-            this.refreshToolStripMenuItem3.Text = "Refresh";
+            refreshToolStripMenuItem3.Enabled = false;
+            refreshToolStripMenuItem3.Image = Main.Properties.Resources.refresh_16;
+            refreshToolStripMenuItem3.Name = "refreshToolStripMenuItem3";
+            refreshToolStripMenuItem3.Size = new System.Drawing.Size(213, 38);
+            refreshToolStripMenuItem3.Text = "Refresh";
             // 
             // removeToolStripMenuItem
             // 
-            this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
-            this.removeToolStripMenuItem.Size = new System.Drawing.Size(213, 38);
-            this.removeToolStripMenuItem.Text = "Remove";
-            this.removeToolStripMenuItem.Click += new System.EventHandler(this.btnRemoveSite_Click);
+            removeToolStripMenuItem.Name = "removeToolStripMenuItem";
+            removeToolStripMenuItem.Size = new System.Drawing.Size(213, 38);
+            removeToolStripMenuItem.Text = "Remove";
+            removeToolStripMenuItem.Click += btnRemoveSite_Click;
             // 
             // toolStripMenuItem14
             // 
-            this.toolStripMenuItem14.Name = "toolStripMenuItem14";
-            this.toolStripMenuItem14.Size = new System.Drawing.Size(210, 6);
+            toolStripMenuItem14.Name = "toolStripMenuItem14";
+            toolStripMenuItem14.Size = new System.Drawing.Size(210, 6);
             // 
             // renameToolStripMenuItem1
             // 
-            this.renameToolStripMenuItem1.Name = "renameToolStripMenuItem1";
-            this.renameToolStripMenuItem1.Size = new System.Drawing.Size(213, 38);
-            this.renameToolStripMenuItem1.Text = "Rename";
-            this.renameToolStripMenuItem1.Click += new System.EventHandler(this.renameToolStripMenuItem1_Click);
+            renameToolStripMenuItem1.Name = "renameToolStripMenuItem1";
+            renameToolStripMenuItem1.Size = new System.Drawing.Size(213, 38);
+            renameToolStripMenuItem1.Text = "Rename";
+            renameToolStripMenuItem1.Click += renameToolStripMenuItem1_Click;
             // 
             // toolStripMenuItem17
             // 
-            this.toolStripMenuItem17.Name = "toolStripMenuItem17";
-            this.toolStripMenuItem17.Size = new System.Drawing.Size(210, 6);
+            toolStripMenuItem17.Name = "toolStripMenuItem17";
+            toolStripMenuItem17.Size = new System.Drawing.Size(210, 6);
             // 
             // switchToContentViewToolStripMenuItem2
             // 
-            this.switchToContentViewToolStripMenuItem2.Enabled = false;
-            this.switchToContentViewToolStripMenuItem2.Image = global::JexusManager.Main.Properties.Resources.switch_16;
-            this.switchToContentViewToolStripMenuItem2.Name = "switchToContentViewToolStripMenuItem2";
-            this.switchToContentViewToolStripMenuItem2.Size = new System.Drawing.Size(213, 38);
-            this.switchToContentViewToolStripMenuItem2.Text = "Switch to Content View";
+            switchToContentViewToolStripMenuItem2.Enabled = false;
+            switchToContentViewToolStripMenuItem2.Image = Main.Properties.Resources.switch_16;
+            switchToContentViewToolStripMenuItem2.Name = "switchToContentViewToolStripMenuItem2";
+            switchToContentViewToolStripMenuItem2.Size = new System.Drawing.Size(213, 38);
+            switchToContentViewToolStripMenuItem2.Text = "Switch to Content View";
             // 
             // statusStrip1
             // 
-            this.statusStrip1.ImageScalingSize = new System.Drawing.Size(32, 32);
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.txtInfo});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 475);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
-            this.statusStrip1.Size = new System.Drawing.Size(915, 22);
-            this.statusStrip1.TabIndex = 0;
-            this.statusStrip1.Text = "statusStrip1";
+            statusStrip1.ImageScalingSize = new System.Drawing.Size(32, 32);
+            statusStrip1.Items.AddRange(new ToolStripItem[] { txtInfo });
+            statusStrip1.Location = new System.Drawing.Point(0, 475);
+            statusStrip1.Name = "statusStrip1";
+            statusStrip1.Padding = new Padding(1, 0, 16, 0);
+            statusStrip1.Size = new System.Drawing.Size(915, 22);
+            statusStrip1.TabIndex = 0;
+            statusStrip1.Text = "statusStrip1";
             // 
             // txtInfo
             // 
-            this.txtInfo.Image = global::JexusManager.Main.Properties.Resources.info_16;
-            this.txtInfo.Name = "txtInfo";
-            this.txtInfo.Size = new System.Drawing.Size(150, 32);
-            this.txtInfo.Text = "toolStripStatusLabel1";
-            this.txtInfo.Visible = false;
+            txtInfo.Image = Main.Properties.Resources.info_16;
+            txtInfo.Name = "txtInfo";
+            txtInfo.Size = new System.Drawing.Size(150, 32);
+            txtInfo.Text = "toolStripStatusLabel1";
+            txtInfo.Visible = false;
             // 
             // menuStrip1
             // 
-            this.menuStrip1.ImageScalingSize = new System.Drawing.Size(32, 32);
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem,
-            this.viewToolStripMenuItem,
-            this.helpToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Padding = new System.Windows.Forms.Padding(7, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(915, 24);
-            this.menuStrip1.TabIndex = 5;
-            this.menuStrip1.Text = "menuStrip1";
+            menuStrip1.ImageScalingSize = new System.Drawing.Size(32, 32);
+            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, viewToolStripMenuItem, helpToolStripMenuItem });
+            menuStrip1.Location = new System.Drawing.Point(0, 0);
+            menuStrip1.Name = "menuStrip1";
+            menuStrip1.Padding = new Padding(7, 2, 0, 2);
+            menuStrip1.Size = new System.Drawing.Size(915, 24);
+            menuStrip1.TabIndex = 5;
+            menuStrip1.Text = "menuStrip1";
             // 
             // fileToolStripMenuItem
             // 
-            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.connectToAServerToolStripMenuItem,
-            this.connectToAWebsiteToolStripMenuItem,
-            this.connectToAnApplicationToolStripMenuItem,
-            this.toolStripMenuItem22,
-            this.saveConnectionsToolStripMenuItem,
-            this.disconnectToolStripMenuItem,
-            this.toolStripMenuItem21,
-            this.runAsAdministratorToolStripMenuItem,
-            this.exitToolStripMenuItem});
-            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
-            this.fileToolStripMenuItem.Text = "File";
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { connectToAServerToolStripMenuItem, connectToAWebsiteToolStripMenuItem, connectToAnApplicationToolStripMenuItem, toolStripMenuItem22, saveConnectionsToolStripMenuItem, disconnectToolStripMenuItem, toolStripMenuItem21, runAsAdministratorToolStripMenuItem, exitToolStripMenuItem });
+            fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            fileToolStripMenuItem.Text = "File";
             // 
             // connectToAServerToolStripMenuItem
             // 
-            this.actionList1.SetAction(this.connectToAServerToolStripMenuItem, this.actConnectServer);
-            this.connectToAServerToolStripMenuItem.Name = "connectToAServerToolStripMenuItem";
-            this.connectToAServerToolStripMenuItem.Size = new System.Drawing.Size(238, 38);
-            this.connectToAServerToolStripMenuItem.Text = "Connect to a Server...";
-            this.connectToAServerToolStripMenuItem.ToolTipText = "Connect to a Server...";
+            actionList1.SetAction(connectToAServerToolStripMenuItem, actConnectServer);
+            connectToAServerToolStripMenuItem.Name = "connectToAServerToolStripMenuItem";
+            connectToAServerToolStripMenuItem.Size = new System.Drawing.Size(238, 38);
+            connectToAServerToolStripMenuItem.Text = "Connect to a Server...";
+            connectToAServerToolStripMenuItem.ToolTipText = "Connect to a Server...";
             // 
             // connectToAWebsiteToolStripMenuItem
             // 
-            this.actionList1.SetAction(this.connectToAWebsiteToolStripMenuItem, this.actConnectSite);
-            this.connectToAWebsiteToolStripMenuItem.Enabled = false;
-            this.connectToAWebsiteToolStripMenuItem.Name = "connectToAWebsiteToolStripMenuItem";
-            this.connectToAWebsiteToolStripMenuItem.Size = new System.Drawing.Size(238, 38);
-            this.connectToAWebsiteToolStripMenuItem.Text = "Connect to a Website...";
-            this.connectToAWebsiteToolStripMenuItem.ToolTipText = "Connect to a Website...";
+            actionList1.SetAction(connectToAWebsiteToolStripMenuItem, actConnectSite);
+            connectToAWebsiteToolStripMenuItem.Enabled = false;
+            connectToAWebsiteToolStripMenuItem.Name = "connectToAWebsiteToolStripMenuItem";
+            connectToAWebsiteToolStripMenuItem.Size = new System.Drawing.Size(238, 38);
+            connectToAWebsiteToolStripMenuItem.Text = "Connect to a Website...";
+            connectToAWebsiteToolStripMenuItem.ToolTipText = "Connect to a Website...";
             // 
             // connectToAnApplicationToolStripMenuItem
             // 
-            this.actionList1.SetAction(this.connectToAnApplicationToolStripMenuItem, this.actConnectionApplication);
-            this.connectToAnApplicationToolStripMenuItem.Enabled = false;
-            this.connectToAnApplicationToolStripMenuItem.Name = "connectToAnApplicationToolStripMenuItem";
-            this.connectToAnApplicationToolStripMenuItem.Size = new System.Drawing.Size(238, 38);
-            this.connectToAnApplicationToolStripMenuItem.Text = "Connect to an Application...";
-            this.connectToAnApplicationToolStripMenuItem.ToolTipText = "Connect to an Application...";
+            actionList1.SetAction(connectToAnApplicationToolStripMenuItem, actConnectionApplication);
+            connectToAnApplicationToolStripMenuItem.Enabled = false;
+            connectToAnApplicationToolStripMenuItem.Name = "connectToAnApplicationToolStripMenuItem";
+            connectToAnApplicationToolStripMenuItem.Size = new System.Drawing.Size(238, 38);
+            connectToAnApplicationToolStripMenuItem.Text = "Connect to an Application...";
+            connectToAnApplicationToolStripMenuItem.ToolTipText = "Connect to an Application...";
             // 
             // toolStripMenuItem22
             // 
-            this.toolStripMenuItem22.Name = "toolStripMenuItem22";
-            this.toolStripMenuItem22.Size = new System.Drawing.Size(235, 6);
+            toolStripMenuItem22.Name = "toolStripMenuItem22";
+            toolStripMenuItem22.Size = new System.Drawing.Size(235, 6);
             // 
             // saveConnectionsToolStripMenuItem
             // 
-            this.actionList1.SetAction(this.saveConnectionsToolStripMenuItem, this.actSave);
-            this.saveConnectionsToolStripMenuItem.Enabled = false;
-            this.saveConnectionsToolStripMenuItem.Name = "saveConnectionsToolStripMenuItem";
-            this.saveConnectionsToolStripMenuItem.Size = new System.Drawing.Size(238, 38);
-            this.saveConnectionsToolStripMenuItem.Text = "Save Connections";
-            this.saveConnectionsToolStripMenuItem.ToolTipText = "Save Connections";
+            actionList1.SetAction(saveConnectionsToolStripMenuItem, actSave);
+            saveConnectionsToolStripMenuItem.Enabled = false;
+            saveConnectionsToolStripMenuItem.Name = "saveConnectionsToolStripMenuItem";
+            saveConnectionsToolStripMenuItem.Size = new System.Drawing.Size(238, 38);
+            saveConnectionsToolStripMenuItem.Text = "Save Connections";
+            saveConnectionsToolStripMenuItem.ToolTipText = "Save Connections";
             // 
             // disconnectToolStripMenuItem
             // 
-            this.actionList1.SetAction(this.disconnectToolStripMenuItem, this.actDisconnect);
-            this.disconnectToolStripMenuItem.Enabled = false;
-            this.disconnectToolStripMenuItem.Name = "disconnectToolStripMenuItem";
-            this.disconnectToolStripMenuItem.Size = new System.Drawing.Size(238, 38);
-            this.disconnectToolStripMenuItem.Text = "Disconnect";
-            this.disconnectToolStripMenuItem.ToolTipText = "Disconnect";
+            actionList1.SetAction(disconnectToolStripMenuItem, actDisconnect);
+            disconnectToolStripMenuItem.Enabled = false;
+            disconnectToolStripMenuItem.Name = "disconnectToolStripMenuItem";
+            disconnectToolStripMenuItem.Size = new System.Drawing.Size(238, 38);
+            disconnectToolStripMenuItem.Text = "Disconnect";
+            disconnectToolStripMenuItem.ToolTipText = "Disconnect";
             // 
             // toolStripMenuItem21
             // 
-            this.toolStripMenuItem21.Name = "toolStripMenuItem21";
-            this.toolStripMenuItem21.Size = new System.Drawing.Size(235, 6);
+            toolStripMenuItem21.Name = "toolStripMenuItem21";
+            toolStripMenuItem21.Size = new System.Drawing.Size(235, 6);
             // 
             // runAsAdministratorToolStripMenuItem
             // 
-            this.actionList1.SetAction(this.runAsAdministratorToolStripMenuItem, this.actRunAsAdmin);
-            this.runAsAdministratorToolStripMenuItem.AutoToolTip = true;
-            this.runAsAdministratorToolStripMenuItem.Name = "runAsAdministratorToolStripMenuItem";
-            this.runAsAdministratorToolStripMenuItem.Size = new System.Drawing.Size(238, 38);
-            this.runAsAdministratorToolStripMenuItem.Text = "Run as Administrator";
+            actionList1.SetAction(runAsAdministratorToolStripMenuItem, actRunAsAdmin);
+            runAsAdministratorToolStripMenuItem.AutoToolTip = true;
+            runAsAdministratorToolStripMenuItem.Name = "runAsAdministratorToolStripMenuItem";
+            runAsAdministratorToolStripMenuItem.Size = new System.Drawing.Size(238, 38);
+            runAsAdministratorToolStripMenuItem.Text = "Run as Administrator";
             // 
             // exitToolStripMenuItem
             // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(238, 38);
-            this.exitToolStripMenuItem.Text = "Exit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            exitToolStripMenuItem.Size = new System.Drawing.Size(238, 38);
+            exitToolStripMenuItem.Text = "Exit";
+            exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
             // 
             // viewToolStripMenuItem
             // 
-            this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.backToolStripMenuItem,
-            this.forwardToolStripMenuItem,
-            this.upOneLevelToolStripMenuItem,
-            this.homeToolStripMenuItem,
-            this.toolStripMenuItem19,
-            this.stopToolStripMenuItem1,
-            this.refreshToolStripMenuItem4,
-            this.toolStripMenuItem20,
-            this.groupByToolStripMenuItem,
-            this.sortByToolStripMenuItem,
-            this.viewToolStripMenuItem1});
-            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
-            this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-            this.viewToolStripMenuItem.Text = "View";
+            viewToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { backToolStripMenuItem, forwardToolStripMenuItem, upOneLevelToolStripMenuItem, homeToolStripMenuItem, toolStripMenuItem19, stopToolStripMenuItem1, refreshToolStripMenuItem4, toolStripMenuItem20, groupByToolStripMenuItem, sortByToolStripMenuItem, viewToolStripMenuItem1 });
+            viewToolStripMenuItem.Name = "viewToolStripMenuItem";
+            viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            viewToolStripMenuItem.Text = "View";
             // 
             // backToolStripMenuItem
             // 
-            this.actionList1.SetAction(this.backToolStripMenuItem, this.actBack);
-            this.backToolStripMenuItem.Enabled = false;
-            this.backToolStripMenuItem.Name = "backToolStripMenuItem";
-            this.backToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
-            this.backToolStripMenuItem.Text = "Back";
+            actionList1.SetAction(backToolStripMenuItem, actBack);
+            backToolStripMenuItem.Name = "backToolStripMenuItem";
+            backToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            backToolStripMenuItem.Text = "Back";
             // 
             // forwardToolStripMenuItem
             // 
-            this.actionList1.SetAction(this.forwardToolStripMenuItem, this.actForward);
-            this.forwardToolStripMenuItem.Enabled = false;
-            this.forwardToolStripMenuItem.Name = "forwardToolStripMenuItem";
-            this.forwardToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
-            this.forwardToolStripMenuItem.Text = "Forward";
+            actionList1.SetAction(forwardToolStripMenuItem, actForward);
+            forwardToolStripMenuItem.Name = "forwardToolStripMenuItem";
+            forwardToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            forwardToolStripMenuItem.Text = "Forward";
             // 
             // upOneLevelToolStripMenuItem
             // 
-            this.actionList1.SetAction(this.upOneLevelToolStripMenuItem, this.actUp);
-            this.upOneLevelToolStripMenuItem.Enabled = false;
-            this.upOneLevelToolStripMenuItem.Name = "upOneLevelToolStripMenuItem";
-            this.upOneLevelToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
-            this.upOneLevelToolStripMenuItem.Text = "Up One Level";
-            this.upOneLevelToolStripMenuItem.ToolTipText = "Up One Level";
+            actionList1.SetAction(upOneLevelToolStripMenuItem, actUp);
+            upOneLevelToolStripMenuItem.Enabled = false;
+            upOneLevelToolStripMenuItem.Name = "upOneLevelToolStripMenuItem";
+            upOneLevelToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            upOneLevelToolStripMenuItem.Text = "Up One Level";
+            upOneLevelToolStripMenuItem.ToolTipText = "Up One Level";
             // 
             // homeToolStripMenuItem
             // 
-            this.homeToolStripMenuItem.Enabled = false;
-            this.homeToolStripMenuItem.Name = "homeToolStripMenuItem";
-            this.homeToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
-            this.homeToolStripMenuItem.Text = "Home";
-            this.homeToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.Home)));
+            homeToolStripMenuItem.Enabled = false;
+            homeToolStripMenuItem.Name = "homeToolStripMenuItem";
+            homeToolStripMenuItem.ShortcutKeys = Keys.Alt | Keys.Home;
+            homeToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            homeToolStripMenuItem.Text = "Home";
             // 
             // toolStripMenuItem19
             // 
-            this.toolStripMenuItem19.Name = "toolStripMenuItem19";
-            this.toolStripMenuItem19.Size = new System.Drawing.Size(141, 6);
+            toolStripMenuItem19.Name = "toolStripMenuItem19";
+            toolStripMenuItem19.Size = new System.Drawing.Size(141, 6);
             // 
             // stopToolStripMenuItem1
             // 
-            this.stopToolStripMenuItem1.Enabled = false;
-            this.stopToolStripMenuItem1.Name = "stopToolStripMenuItem1";
-            this.stopToolStripMenuItem1.Size = new System.Drawing.Size(144, 22);
-            this.stopToolStripMenuItem1.Text = "Stop";
+            stopToolStripMenuItem1.Enabled = false;
+            stopToolStripMenuItem1.Name = "stopToolStripMenuItem1";
+            stopToolStripMenuItem1.Size = new System.Drawing.Size(144, 22);
+            stopToolStripMenuItem1.Text = "Stop";
             // 
             // refreshToolStripMenuItem4
             // 
-            this.refreshToolStripMenuItem4.Enabled = false;
-            this.refreshToolStripMenuItem4.Image = global::JexusManager.Main.Properties.Resources.refresh_16;
-            this.refreshToolStripMenuItem4.Name = "refreshToolStripMenuItem4";
-            this.refreshToolStripMenuItem4.Size = new System.Drawing.Size(144, 22);
-            this.refreshToolStripMenuItem4.Text = "Refresh";
+            refreshToolStripMenuItem4.Enabled = false;
+            refreshToolStripMenuItem4.Image = Main.Properties.Resources.refresh_16;
+            refreshToolStripMenuItem4.Name = "refreshToolStripMenuItem4";
+            refreshToolStripMenuItem4.Size = new System.Drawing.Size(144, 22);
+            refreshToolStripMenuItem4.Text = "Refresh";
             // 
             // toolStripMenuItem20
             // 
-            this.toolStripMenuItem20.Name = "toolStripMenuItem20";
-            this.toolStripMenuItem20.Size = new System.Drawing.Size(141, 6);
+            toolStripMenuItem20.Name = "toolStripMenuItem20";
+            toolStripMenuItem20.Size = new System.Drawing.Size(141, 6);
             // 
             // groupByToolStripMenuItem
             // 
-            this.groupByToolStripMenuItem.Enabled = false;
-            this.groupByToolStripMenuItem.Name = "groupByToolStripMenuItem";
-            this.groupByToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
-            this.groupByToolStripMenuItem.Text = "Group By";
+            groupByToolStripMenuItem.Enabled = false;
+            groupByToolStripMenuItem.Name = "groupByToolStripMenuItem";
+            groupByToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            groupByToolStripMenuItem.Text = "Group By";
             // 
             // sortByToolStripMenuItem
             // 
-            this.sortByToolStripMenuItem.Enabled = false;
-            this.sortByToolStripMenuItem.Name = "sortByToolStripMenuItem";
-            this.sortByToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
-            this.sortByToolStripMenuItem.Text = "Sort By";
+            sortByToolStripMenuItem.Enabled = false;
+            sortByToolStripMenuItem.Name = "sortByToolStripMenuItem";
+            sortByToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            sortByToolStripMenuItem.Text = "Sort By";
             // 
             // viewToolStripMenuItem1
             // 
-            this.viewToolStripMenuItem1.Enabled = false;
-            this.viewToolStripMenuItem1.Name = "viewToolStripMenuItem1";
-            this.viewToolStripMenuItem1.Size = new System.Drawing.Size(144, 22);
-            this.viewToolStripMenuItem1.Text = "View";
+            viewToolStripMenuItem1.Enabled = false;
+            viewToolStripMenuItem1.Name = "viewToolStripMenuItem1";
+            viewToolStripMenuItem1.Size = new System.Drawing.Size(144, 22);
+            viewToolStripMenuItem1.Text = "View";
             // 
             // helpToolStripMenuItem
             // 
-            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.iISHelpToolStripMenuItem,
-            this.iISOnMSDNOnlineToolStripMenuItem,
-            this.iISNETOnlineToolStripMenuItem,
-            this.iISKBsOnlineToolStripMenuItem,
-            this.toolStripMenuItem28,
-            this.btnUpdate,
-            this.toolStripMenuItem18,
-            this.btnAbout});
-            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-            this.helpToolStripMenuItem.Text = "Help";
+            helpToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { iISHelpToolStripMenuItem, iISOnMSDNOnlineToolStripMenuItem, iISNETOnlineToolStripMenuItem, iISKBsOnlineToolStripMenuItem, toolStripMenuItem28, btnUpdate, toolStripMenuItem18, btnAbout });
+            helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            helpToolStripMenuItem.Text = "Help";
             // 
             // iISHelpToolStripMenuItem
             // 
-            this.iISHelpToolStripMenuItem.Image = global::JexusManager.Main.Properties.Resources.help_16;
-            this.iISHelpToolStripMenuItem.Name = "iISHelpToolStripMenuItem";
-            this.iISHelpToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F1;
-            this.iISHelpToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
-            this.iISHelpToolStripMenuItem.Text = "IIS Help";
+            iISHelpToolStripMenuItem.Image = Main.Properties.Resources.help_16;
+            iISHelpToolStripMenuItem.Name = "iISHelpToolStripMenuItem";
+            iISHelpToolStripMenuItem.ShortcutKeys = Keys.F1;
+            iISHelpToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+            iISHelpToolStripMenuItem.Text = "IIS Help";
             // 
             // iISOnMSDNOnlineToolStripMenuItem
             // 
-            this.iISOnMSDNOnlineToolStripMenuItem.Name = "iISOnMSDNOnlineToolStripMenuItem";
-            this.iISOnMSDNOnlineToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
-            this.iISOnMSDNOnlineToolStripMenuItem.Text = "IIS on MSDN Online";
-            this.iISOnMSDNOnlineToolStripMenuItem.Click += new System.EventHandler(this.iISOnMSDNOnlineToolStripMenuItem_Click);
+            iISOnMSDNOnlineToolStripMenuItem.Name = "iISOnMSDNOnlineToolStripMenuItem";
+            iISOnMSDNOnlineToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+            iISOnMSDNOnlineToolStripMenuItem.Text = "IIS on MSDN Online";
+            iISOnMSDNOnlineToolStripMenuItem.Click += iISOnMSDNOnlineToolStripMenuItem_Click;
             // 
             // iISNETOnlineToolStripMenuItem
             // 
-            this.iISNETOnlineToolStripMenuItem.Name = "iISNETOnlineToolStripMenuItem";
-            this.iISNETOnlineToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
-            this.iISNETOnlineToolStripMenuItem.Text = "IIS.NET Online";
-            this.iISNETOnlineToolStripMenuItem.Click += new System.EventHandler(this.iISNETOnlineToolStripMenuItem_Click);
+            iISNETOnlineToolStripMenuItem.Name = "iISNETOnlineToolStripMenuItem";
+            iISNETOnlineToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+            iISNETOnlineToolStripMenuItem.Text = "IIS.NET Online";
+            iISNETOnlineToolStripMenuItem.Click += iISNETOnlineToolStripMenuItem_Click;
             // 
             // iISKBsOnlineToolStripMenuItem
             // 
-            this.iISKBsOnlineToolStripMenuItem.Name = "iISKBsOnlineToolStripMenuItem";
-            this.iISKBsOnlineToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
-            this.iISKBsOnlineToolStripMenuItem.Text = "IIS KBs Online";
-            this.iISKBsOnlineToolStripMenuItem.Click += new System.EventHandler(this.iISKBsOnlineToolStripMenuItem_Click);
+            iISKBsOnlineToolStripMenuItem.Name = "iISKBsOnlineToolStripMenuItem";
+            iISKBsOnlineToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+            iISKBsOnlineToolStripMenuItem.Text = "IIS KBs Online";
+            iISKBsOnlineToolStripMenuItem.Click += iISKBsOnlineToolStripMenuItem_Click;
             // 
             // toolStripMenuItem28
             // 
-            this.toolStripMenuItem28.Name = "toolStripMenuItem28";
-            this.toolStripMenuItem28.Size = new System.Drawing.Size(185, 6);
+            toolStripMenuItem28.Name = "toolStripMenuItem28";
+            toolStripMenuItem28.Size = new System.Drawing.Size(185, 6);
             // 
             // btnUpdate
             // 
-            this.btnUpdate.Image = global::JexusManager.Main.Properties.Resources.update_16;
-            this.btnUpdate.Name = "btnUpdate";
-            this.btnUpdate.Size = new System.Drawing.Size(188, 22);
-            this.btnUpdate.Text = "Check Update";
-            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
+            btnUpdate.Image = Main.Properties.Resources.update_16;
+            btnUpdate.Name = "btnUpdate";
+            btnUpdate.Size = new System.Drawing.Size(188, 22);
+            btnUpdate.Text = "Check Update";
+            btnUpdate.Click += btnUpdate_Click;
             // 
             // toolStripMenuItem18
             // 
-            this.toolStripMenuItem18.Name = "toolStripMenuItem18";
-            this.toolStripMenuItem18.Size = new System.Drawing.Size(185, 6);
+            toolStripMenuItem18.Name = "toolStripMenuItem18";
+            toolStripMenuItem18.Size = new System.Drawing.Size(185, 6);
             // 
             // btnAbout
             // 
-            this.btnAbout.Name = "btnAbout";
-            this.btnAbout.Size = new System.Drawing.Size(188, 22);
-            this.btnAbout.Text = "About Jexus Manager";
-            this.btnAbout.Click += new System.EventHandler(this.btnAbout_Click);
+            btnAbout.Name = "btnAbout";
+            btnAbout.Size = new System.Drawing.Size(188, 22);
+            btnAbout.Text = "About Jexus Manager";
+            btnAbout.Click += btnAbout_Click;
             // 
             // actionList1
             // 
-            this.actionList1.Actions.Add(this.actDisconnect);
-            this.actionList1.Actions.Add(this.actUp);
-            this.actionList1.Actions.Add(this.actConnectServer);
-            this.actionList1.Actions.Add(this.actConnectSite);
-            this.actionList1.Actions.Add(this.actConnectionApplication);
-            this.actionList1.Actions.Add(this.actSave);
-            this.actionList1.Actions.Add(this.actCreateSite);
-            this.actionList1.Actions.Add(this.actCreateApplication);
-            this.actionList1.Actions.Add(this.actCreateVirtualDirectory);
-            this.actionList1.Actions.Add(this.actExplore);
-            this.actionList1.Actions.Add(this.actEditPermissions);
-            this.actionList1.Actions.Add(this.actBrowse);
-            this.actionList1.Actions.Add(this.actRunAsAdmin);
-            this.actionList1.Actions.Add(this.actBack);
-            this.actionList1.Actions.Add(this.actForward);
-            this.actionList1.ContainerControl = this;
+            actionList1.Actions.Add(actDisconnect);
+            actionList1.Actions.Add(actUp);
+            actionList1.Actions.Add(actConnectServer);
+            actionList1.Actions.Add(actConnectSite);
+            actionList1.Actions.Add(actConnectionApplication);
+            actionList1.Actions.Add(actSave);
+            actionList1.Actions.Add(actCreateSite);
+            actionList1.Actions.Add(actCreateApplication);
+            actionList1.Actions.Add(actCreateVirtualDirectory);
+            actionList1.Actions.Add(actExplore);
+            actionList1.Actions.Add(actEditPermissions);
+            actionList1.Actions.Add(actBrowse);
+            actionList1.Actions.Add(actRunAsAdmin);
+            actionList1.Actions.Add(actBack);
+            actionList1.Actions.Add(actForward);
+            actionList1.ContainerControl = this;
             // 
             // actConnectServer
             // 
-            this.actConnectServer.Image = global::JexusManager.Main.Properties.Resources.server_16;
-            this.actConnectServer.Text = "Connect to a Server...";
-            this.actConnectServer.ToolTipText = "Connect to a Server...";
-            this.actConnectServer.Execute += new System.EventHandler(this.actConnectServer_Execute);
+            actConnectServer.Image = Main.Properties.Resources.server_16;
+            actConnectServer.Text = "Connect to a Server...";
+            actConnectServer.ToolTipText = "Connect to a Server...";
+            actConnectServer.Execute += actConnectServer_Execute;
             // 
             // actSave
             // 
-            this.actSave.Enabled = false;
-            this.actSave.Image = global::JexusManager.Main.Properties.Resources.save_16;
-            this.actSave.Text = "Save Connections";
-            this.actSave.ToolTipText = "Save Connections";
-            this.actSave.Execute += new System.EventHandler(this.actSave_Execute);
+            actSave.Enabled = false;
+            actSave.Image = Main.Properties.Resources.save_16;
+            actSave.Text = "Save Connections";
+            actSave.ToolTipText = "Save Connections";
+            actSave.Execute += actSave_Execute;
             // 
             // actUp
             // 
-            this.actUp.Enabled = false;
-            this.actUp.Image = global::JexusManager.Main.Properties.Resources.up_16;
-            this.actUp.Text = "Up One Level";
-            this.actUp.ToolTipText = "Up One Level";
-            this.actUp.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.Up)));
-            this.actUp.Execute += new System.EventHandler(this.actUp_Execute);
+            actUp.Enabled = false;
+            actUp.Image = Main.Properties.Resources.up_16;
+            actUp.ShortcutKeys = Keys.Alt | Keys.Up;
+            actUp.Text = "Up One Level";
+            actUp.ToolTipText = "Up One Level";
+            actUp.Execute += actUp_Execute;
             // 
             // actDisconnect
             // 
-            this.actDisconnect.Enabled = false;
-            this.actDisconnect.Image = global::JexusManager.Main.Properties.Resources.disconnected_16;
-            this.actDisconnect.Text = "Disconnect";
-            this.actDisconnect.ToolTipText = "Disconnect";
-            this.actDisconnect.Execute += new System.EventHandler(this.actDisconnect_Execute);
+            actDisconnect.Enabled = false;
+            actDisconnect.Image = Main.Properties.Resources.disconnected_16;
+            actDisconnect.Text = "Disconnect";
+            actDisconnect.ToolTipText = "Disconnect";
+            actDisconnect.Execute += actDisconnect_Execute;
             // 
             // actCreateSite
             // 
-            this.actCreateSite.Image = global::JexusManager.Main.Properties.Resources.site_new_16;
-            this.actCreateSite.Text = "Add Website...";
-            this.actCreateSite.Execute += new System.EventHandler(this.actCreateSite_Execute);
+            actCreateSite.Image = Main.Properties.Resources.site_new_16;
+            actCreateSite.Text = "Add Website...";
+            actCreateSite.Execute += actCreateSite_Execute;
             // 
             // actExplore
             // 
-            this.actExplore.Image = global::JexusManager.Main.Properties.Resources.explore_16;
-            this.actExplore.Text = "Explore";
-            this.actExplore.Execute += new System.EventHandler(this.actExplore_Execute);
+            actExplore.Image = Main.Properties.Resources.explore_16;
+            actExplore.Text = "Explore";
+            actExplore.Execute += actExplore_Execute;
             // 
             // actEditPermissions
             // 
-            this.actEditPermissions.Text = "Edit Permissions...";
-            this.actEditPermissions.Execute += new System.EventHandler(this.actEditPermissions_Execute);
+            actEditPermissions.Text = "Edit Permissions...";
+            actEditPermissions.Execute += actEditPermissions_Execute;
             // 
             // actCreateApplication
             // 
-            this.actCreateApplication.Image = global::JexusManager.Main.Properties.Resources.application_new_16;
-            this.actCreateApplication.Text = "Add Application...";
-            this.actCreateApplication.Execute += new System.EventHandler(this.actCreateApplication_Execute);
+            actCreateApplication.Image = Main.Properties.Resources.application_new_16;
+            actCreateApplication.Text = "Add Application...";
+            actCreateApplication.Execute += actCreateApplication_Execute;
             // 
             // actCreateVirtualDirectory
             // 
-            this.actCreateVirtualDirectory.Image = global::JexusManager.Main.Properties.Resources.virtual_directory_new_16;
-            this.actCreateVirtualDirectory.Text = "Add Virtual Directory...";
-            this.actCreateVirtualDirectory.Execute += new System.EventHandler(this.actCreateVirtualDirectory_Execute);
+            actCreateVirtualDirectory.Image = Main.Properties.Resources.virtual_directory_new_16;
+            actCreateVirtualDirectory.Text = "Add Virtual Directory...";
+            actCreateVirtualDirectory.Execute += actCreateVirtualDirectory_Execute;
             // 
             // actBrowse
             // 
-            this.actBrowse.Image = global::JexusManager.Main.Properties.Resources.browse_16;
-            this.actBrowse.Text = "Browse";
-            this.actBrowse.Execute += new System.EventHandler(this.actBrowse_Execute);
+            actBrowse.Image = Main.Properties.Resources.browse_16;
+            actBrowse.Text = "Browse";
+            actBrowse.Execute += actBrowse_Execute;
             // 
             // actConnectSite
             // 
-            this.actConnectSite.Enabled = false;
-            this.actConnectSite.Image = global::JexusManager.Main.Properties.Resources.site_16;
-            this.actConnectSite.Text = "Connect to a Website...";
-            this.actConnectSite.ToolTipText = "Connect to a Website...";
-            this.actConnectSite.Execute += new System.EventHandler(this.actConnectSite_Execute);
+            actConnectSite.Enabled = false;
+            actConnectSite.Image = Main.Properties.Resources.site_16;
+            actConnectSite.Text = "Connect to a Website...";
+            actConnectSite.ToolTipText = "Connect to a Website...";
+            actConnectSite.Execute += actConnectSite_Execute;
             // 
             // actConnectionApplication
             // 
-            this.actConnectionApplication.Enabled = false;
-            this.actConnectionApplication.Image = global::JexusManager.Main.Properties.Resources.application_16;
-            this.actConnectionApplication.Text = "Connect to an Application...";
-            this.actConnectionApplication.ToolTipText = "Connect to an Application...";
+            actConnectionApplication.Enabled = false;
+            actConnectionApplication.Image = Main.Properties.Resources.application_16;
+            actConnectionApplication.Text = "Connect to an Application...";
+            actConnectionApplication.ToolTipText = "Connect to an Application...";
             // 
             // actRunAsAdmin
             // 
-            this.actRunAsAdmin.Text = "Run as Administrator";
-            this.actRunAsAdmin.Execute += new System.EventHandler(this.actRunAsAdmin_Execute);
+            actRunAsAdmin.Text = "Run as Administrator";
+            actRunAsAdmin.Execute += actRunAsAdmin_Execute;
             // 
             // actBack
             // 
-            this.actBack.Text = "Back";
-            this.actBack.Image = global::JexusManager.Main.Properties.Resources.back_16;
-            this.actBack.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.Left)));
-            this.actBack.Execute += new System.EventHandler(this.actBack_Execute);
+            actBack.Image = Main.Properties.Resources.back_16;
+            actBack.ShortcutKeys = Keys.Alt | Keys.Left;
+            actBack.Text = "Back";
+            actBack.Execute += actBack_Execute;
             // 
             // actForward
             // 
-            this.actForward.Text = "Forward";
-            this.actForward.Image = global::JexusManager.Main.Properties.Resources.forward_16;
-            this.actForward.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.Right)));
-            this.actForward.Execute += new System.EventHandler(this.actForward_Execute);
+            actForward.Image = Main.Properties.Resources.forward_16;
+            actForward.ShortcutKeys = Keys.Alt | Keys.Right;
+            actForward.Text = "Forward";
+            actForward.Execute += actForward_Execute;
             // 
             // connectToAServerToolStripMenuItem1
             // 
-            this.actionList1.SetAction(this.connectToAServerToolStripMenuItem1, this.actConnectServer);
-            this.connectToAServerToolStripMenuItem1.Name = "connectToAServerToolStripMenuItem1";
-            this.connectToAServerToolStripMenuItem1.Size = new System.Drawing.Size(238, 38);
-            this.connectToAServerToolStripMenuItem1.Text = "Connect to a Server...";
-            this.connectToAServerToolStripMenuItem1.ToolTipText = "Connect to a Server...";
+            actionList1.SetAction(connectToAServerToolStripMenuItem1, actConnectServer);
+            connectToAServerToolStripMenuItem1.Image = Main.Properties.Resources.server_16;
+            connectToAServerToolStripMenuItem1.Name = "connectToAServerToolStripMenuItem1";
+            connectToAServerToolStripMenuItem1.Size = new System.Drawing.Size(238, 38);
+            connectToAServerToolStripMenuItem1.Text = "Connect to a Server...";
+            connectToAServerToolStripMenuItem1.ToolTipText = "Connect to a Server...";
             // 
             // connectToAWebsiteToolStripMenuItem1
             // 
-            this.actionList1.SetAction(this.connectToAWebsiteToolStripMenuItem1, this.actConnectSite);
-            this.connectToAWebsiteToolStripMenuItem1.Enabled = false;
-            this.connectToAWebsiteToolStripMenuItem1.Name = "connectToAWebsiteToolStripMenuItem1";
-            this.connectToAWebsiteToolStripMenuItem1.Size = new System.Drawing.Size(238, 38);
-            this.connectToAWebsiteToolStripMenuItem1.Text = "Connect to a Website...";
-            this.connectToAWebsiteToolStripMenuItem1.ToolTipText = "Connect to a Website...";
+            actionList1.SetAction(connectToAWebsiteToolStripMenuItem1, actConnectSite);
+            connectToAWebsiteToolStripMenuItem1.Enabled = false;
+            connectToAWebsiteToolStripMenuItem1.Image = Main.Properties.Resources.site_16;
+            connectToAWebsiteToolStripMenuItem1.Name = "connectToAWebsiteToolStripMenuItem1";
+            connectToAWebsiteToolStripMenuItem1.Size = new System.Drawing.Size(238, 38);
+            connectToAWebsiteToolStripMenuItem1.Text = "Connect to a Website...";
+            connectToAWebsiteToolStripMenuItem1.ToolTipText = "Connect to a Website...";
             // 
             // connectToAnApplicationToolStripMenuItem1
             // 
-            this.actionList1.SetAction(this.connectToAnApplicationToolStripMenuItem1, this.actConnectionApplication);
-            this.connectToAnApplicationToolStripMenuItem1.Enabled = false;
-            this.connectToAnApplicationToolStripMenuItem1.Name = "connectToAnApplicationToolStripMenuItem1";
-            this.connectToAnApplicationToolStripMenuItem1.Size = new System.Drawing.Size(238, 38);
-            this.connectToAnApplicationToolStripMenuItem1.Text = "Connect to an Application...";
-            this.connectToAnApplicationToolStripMenuItem1.ToolTipText = "Connect to an Application...";
+            actionList1.SetAction(connectToAnApplicationToolStripMenuItem1, actConnectionApplication);
+            connectToAnApplicationToolStripMenuItem1.Enabled = false;
+            connectToAnApplicationToolStripMenuItem1.Image = Main.Properties.Resources.application_16;
+            connectToAnApplicationToolStripMenuItem1.Name = "connectToAnApplicationToolStripMenuItem1";
+            connectToAnApplicationToolStripMenuItem1.Size = new System.Drawing.Size(238, 38);
+            connectToAnApplicationToolStripMenuItem1.Text = "Connect to an Application...";
+            connectToAnApplicationToolStripMenuItem1.ToolTipText = "Connect to an Application...";
             // 
             // addApplicationToolStripMenuItem
             // 
-            this.actionList1.SetAction(this.addApplicationToolStripMenuItem, this.actCreateApplication);
-            this.addApplicationToolStripMenuItem.AutoToolTip = true;
-            this.addApplicationToolStripMenuItem.Name = "addApplicationToolStripMenuItem";
-            this.addApplicationToolStripMenuItem.Size = new System.Drawing.Size(213, 38);
-            this.addApplicationToolStripMenuItem.Text = "Add Application...";
+            actionList1.SetAction(addApplicationToolStripMenuItem, actCreateApplication);
+            addApplicationToolStripMenuItem.Image = Main.Properties.Resources.application_new_16;
+            addApplicationToolStripMenuItem.Name = "addApplicationToolStripMenuItem";
+            addApplicationToolStripMenuItem.Size = new System.Drawing.Size(213, 38);
+            addApplicationToolStripMenuItem.Text = "Add Application...";
             // 
             // toolStripMenuItem38
             // 
-            this.actionList1.SetAction(this.toolStripMenuItem38, this.actCreateApplication);
-            this.toolStripMenuItem38.Name = "toolStripMenuItem38";
-            this.toolStripMenuItem38.Size = new System.Drawing.Size(221, 38);
-            this.toolStripMenuItem38.Text = "Add Application...";
+            actionList1.SetAction(toolStripMenuItem38, actCreateApplication);
+            toolStripMenuItem38.AutoToolTip = true;
+            toolStripMenuItem38.Image = Main.Properties.Resources.application_new_16;
+            toolStripMenuItem38.Name = "toolStripMenuItem38";
+            toolStripMenuItem38.Size = new System.Drawing.Size(221, 38);
+            toolStripMenuItem38.Text = "Add Application...";
             // 
             // toolStripMenuItem49
             // 
-            this.actionList1.SetAction(this.toolStripMenuItem49, this.actCreateApplication);
-            this.toolStripMenuItem49.AutoToolTip = true;
-            this.toolStripMenuItem49.Name = "toolStripMenuItem49";
-            this.toolStripMenuItem49.Size = new System.Drawing.Size(213, 38);
-            this.toolStripMenuItem49.Text = "Add Application...";
+            actionList1.SetAction(toolStripMenuItem49, actCreateApplication);
+            toolStripMenuItem49.Image = Main.Properties.Resources.application_new_16;
+            toolStripMenuItem49.Name = "toolStripMenuItem49";
+            toolStripMenuItem49.Size = new System.Drawing.Size(213, 38);
+            toolStripMenuItem49.Text = "Add Application...";
             // 
             // exploreToolStripMenuItem1
             // 
-            this.actionList1.SetAction(this.exploreToolStripMenuItem1, this.actExplore);
-            this.exploreToolStripMenuItem1.AutoToolTip = true;
-            this.exploreToolStripMenuItem1.Name = "exploreToolStripMenuItem1";
-            this.exploreToolStripMenuItem1.Size = new System.Drawing.Size(213, 38);
-            this.exploreToolStripMenuItem1.Text = "Explore";
+            actionList1.SetAction(exploreToolStripMenuItem1, actExplore);
+            exploreToolStripMenuItem1.Image = Main.Properties.Resources.explore_16;
+            exploreToolStripMenuItem1.Name = "exploreToolStripMenuItem1";
+            exploreToolStripMenuItem1.Size = new System.Drawing.Size(213, 38);
+            exploreToolStripMenuItem1.Text = "Explore";
             // 
             // editPermissionsToolStripMenuItem1
             // 
-            this.actionList1.SetAction(this.editPermissionsToolStripMenuItem1, this.actEditPermissions);
-            this.editPermissionsToolStripMenuItem1.AutoToolTip = true;
-            this.editPermissionsToolStripMenuItem1.Name = "editPermissionsToolStripMenuItem1";
-            this.editPermissionsToolStripMenuItem1.Size = new System.Drawing.Size(213, 38);
-            this.editPermissionsToolStripMenuItem1.Text = "Edit Permissions...";
+            actionList1.SetAction(editPermissionsToolStripMenuItem1, actEditPermissions);
+            editPermissionsToolStripMenuItem1.Name = "editPermissionsToolStripMenuItem1";
+            editPermissionsToolStripMenuItem1.Size = new System.Drawing.Size(213, 38);
+            editPermissionsToolStripMenuItem1.Text = "Edit Permissions...";
             // 
             // addVirtualDirectoryToolStripMenuItem1
             // 
-            this.actionList1.SetAction(this.addVirtualDirectoryToolStripMenuItem1, this.actCreateVirtualDirectory);
-            this.addVirtualDirectoryToolStripMenuItem1.AutoToolTip = true;
-            this.addVirtualDirectoryToolStripMenuItem1.Name = "addVirtualDirectoryToolStripMenuItem1";
-            this.addVirtualDirectoryToolStripMenuItem1.Size = new System.Drawing.Size(213, 38);
-            this.addVirtualDirectoryToolStripMenuItem1.Text = "Add Virtual Directory...";
+            actionList1.SetAction(addVirtualDirectoryToolStripMenuItem1, actCreateVirtualDirectory);
+            addVirtualDirectoryToolStripMenuItem1.Image = Main.Properties.Resources.virtual_directory_new_16;
+            addVirtualDirectoryToolStripMenuItem1.Name = "addVirtualDirectoryToolStripMenuItem1";
+            addVirtualDirectoryToolStripMenuItem1.Size = new System.Drawing.Size(213, 38);
+            addVirtualDirectoryToolStripMenuItem1.Text = "Add Virtual Directory...";
             // 
             // btnBrowseApplication
             // 
-            this.actionList1.SetAction(this.btnBrowseApplication, this.actBrowse);
-            this.btnBrowseApplication.AutoToolTip = true;
-            this.btnBrowseApplication.Name = "btnBrowseApplication";
-            this.btnBrowseApplication.Size = new System.Drawing.Size(181, 22);
-            this.btnBrowseApplication.Text = "Browse";
+            actionList1.SetAction(btnBrowseApplication, actBrowse);
+            btnBrowseApplication.Image = Main.Properties.Resources.browse_16;
+            btnBrowseApplication.Name = "btnBrowseApplication";
+            btnBrowseApplication.Size = new System.Drawing.Size(181, 22);
+            btnBrowseApplication.Text = "Browse";
             // 
             // toolStripMenuItem36
             // 
-            this.actionList1.SetAction(this.toolStripMenuItem36, this.actExplore);
-            this.toolStripMenuItem36.AutoToolTip = true;
-            this.toolStripMenuItem36.Name = "toolStripMenuItem36";
-            this.toolStripMenuItem36.Size = new System.Drawing.Size(221, 38);
-            this.toolStripMenuItem36.Text = "Explore";
+            actionList1.SetAction(toolStripMenuItem36, actExplore);
+            toolStripMenuItem36.Image = Main.Properties.Resources.explore_16;
+            toolStripMenuItem36.Name = "toolStripMenuItem36";
+            toolStripMenuItem36.Size = new System.Drawing.Size(221, 38);
+            toolStripMenuItem36.Text = "Explore";
             // 
             // toolStripMenuItem37
             // 
-            this.actionList1.SetAction(this.toolStripMenuItem37, this.actEditPermissions);
-            this.toolStripMenuItem37.AutoToolTip = true;
-            this.toolStripMenuItem37.Name = "toolStripMenuItem37";
-            this.toolStripMenuItem37.Size = new System.Drawing.Size(221, 38);
-            this.toolStripMenuItem37.Text = "Edit Permissions...";
+            actionList1.SetAction(toolStripMenuItem37, actEditPermissions);
+            toolStripMenuItem37.Name = "toolStripMenuItem37";
+            toolStripMenuItem37.Size = new System.Drawing.Size(221, 38);
+            toolStripMenuItem37.Text = "Edit Permissions...";
             // 
             // toolStripMenuItem39
             // 
-            this.actionList1.SetAction(this.toolStripMenuItem39, this.actCreateVirtualDirectory);
-            this.toolStripMenuItem39.AutoToolTip = true;
-            this.toolStripMenuItem39.Name = "toolStripMenuItem39";
-            this.toolStripMenuItem39.Size = new System.Drawing.Size(221, 38);
-            this.toolStripMenuItem39.Text = "Add Virtual Directory...";
+            actionList1.SetAction(toolStripMenuItem39, actCreateVirtualDirectory);
+            toolStripMenuItem39.Image = Main.Properties.Resources.virtual_directory_new_16;
+            toolStripMenuItem39.Name = "toolStripMenuItem39";
+            toolStripMenuItem39.Size = new System.Drawing.Size(221, 38);
+            toolStripMenuItem39.Text = "Add Virtual Directory...";
             // 
             // toolStripMenuItem41
             // 
-            this.actionList1.SetAction(this.toolStripMenuItem41, this.actBrowse);
-            this.toolStripMenuItem41.AutoToolTip = true;
-            this.toolStripMenuItem41.Name = "toolStripMenuItem41";
-            this.toolStripMenuItem41.Size = new System.Drawing.Size(181, 22);
-            this.toolStripMenuItem41.Text = "Browse";
+            actionList1.SetAction(toolStripMenuItem41, actBrowse);
+            toolStripMenuItem41.Image = Main.Properties.Resources.browse_16;
+            toolStripMenuItem41.Name = "toolStripMenuItem41";
+            toolStripMenuItem41.Size = new System.Drawing.Size(181, 22);
+            toolStripMenuItem41.Text = "Browse";
             // 
             // toolStripMenuItem46
             // 
-            this.actionList1.SetAction(this.toolStripMenuItem46, this.actExplore);
-            this.toolStripMenuItem46.AutoToolTip = true;
-            this.toolStripMenuItem46.Name = "toolStripMenuItem46";
-            this.toolStripMenuItem46.Size = new System.Drawing.Size(213, 38);
-            this.toolStripMenuItem46.Text = "Explore";
+            actionList1.SetAction(toolStripMenuItem46, actExplore);
+            toolStripMenuItem46.Image = Main.Properties.Resources.explore_16;
+            toolStripMenuItem46.Name = "toolStripMenuItem46";
+            toolStripMenuItem46.Size = new System.Drawing.Size(213, 38);
+            toolStripMenuItem46.Text = "Explore";
             // 
             // toolStripMenuItem47
             // 
-            this.actionList1.SetAction(this.toolStripMenuItem47, this.actEditPermissions);
-            this.toolStripMenuItem47.AutoToolTip = true;
-            this.toolStripMenuItem47.Name = "toolStripMenuItem47";
-            this.toolStripMenuItem47.Size = new System.Drawing.Size(213, 38);
-            this.toolStripMenuItem47.Text = "Edit Permissions...";
+            actionList1.SetAction(toolStripMenuItem47, actEditPermissions);
+            toolStripMenuItem47.Name = "toolStripMenuItem47";
+            toolStripMenuItem47.Size = new System.Drawing.Size(213, 38);
+            toolStripMenuItem47.Text = "Edit Permissions...";
             // 
             // toolStripMenuItem50
             // 
-            this.actionList1.SetAction(this.toolStripMenuItem50, this.actCreateVirtualDirectory);
-            this.toolStripMenuItem50.AutoToolTip = true;
-            this.toolStripMenuItem50.Name = "toolStripMenuItem50";
-            this.toolStripMenuItem50.Size = new System.Drawing.Size(213, 38);
-            this.toolStripMenuItem50.Text = "Add Virtual Directory...";
+            actionList1.SetAction(toolStripMenuItem50, actCreateVirtualDirectory);
+            toolStripMenuItem50.Image = Main.Properties.Resources.virtual_directory_new_16;
+            toolStripMenuItem50.Name = "toolStripMenuItem50";
+            toolStripMenuItem50.Size = new System.Drawing.Size(213, 38);
+            toolStripMenuItem50.Text = "Add Virtual Directory...";
             // 
             // toolStripMenuItem52
             // 
-            this.actionList1.SetAction(this.toolStripMenuItem52, this.actBrowse);
-            this.toolStripMenuItem52.AutoToolTip = true;
-            this.toolStripMenuItem52.Name = "toolStripMenuItem52";
-            this.toolStripMenuItem52.Size = new System.Drawing.Size(112, 22);
-            this.toolStripMenuItem52.Text = "Browse";
+            actionList1.SetAction(toolStripMenuItem52, actBrowse);
+            toolStripMenuItem52.Image = Main.Properties.Resources.browse_16;
+            toolStripMenuItem52.Name = "toolStripMenuItem52";
+            toolStripMenuItem52.Size = new System.Drawing.Size(112, 22);
+            toolStripMenuItem52.Text = "Browse";
             // 
             // cmsIis
             // 
-            this.cmsIis.ImageScalingSize = new System.Drawing.Size(32, 32);
-            this.cmsIis.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.refreshToolStripMenuItem5,
-            this.toolStripMenuItem23,
-            this.connectToAServerToolStripMenuItem1,
-            this.connectToAWebsiteToolStripMenuItem1,
-            this.connectToAnApplicationToolStripMenuItem1});
-            this.cmsIis.Name = "cmsIis";
-            this.cmsIis.Size = new System.Drawing.Size(239, 162);
+            cmsIis.ImageScalingSize = new System.Drawing.Size(32, 32);
+            cmsIis.Items.AddRange(new ToolStripItem[] { refreshToolStripMenuItem5, toolStripMenuItem23, connectToAServerToolStripMenuItem1, connectToAWebsiteToolStripMenuItem1, connectToAnApplicationToolStripMenuItem1 });
+            cmsIis.Name = "cmsIis";
+            cmsIis.Size = new System.Drawing.Size(239, 162);
             // 
             // refreshToolStripMenuItem5
             // 
-            this.refreshToolStripMenuItem5.Enabled = false;
-            this.refreshToolStripMenuItem5.Image = global::JexusManager.Main.Properties.Resources.refresh_16;
-            this.refreshToolStripMenuItem5.Name = "refreshToolStripMenuItem5";
-            this.refreshToolStripMenuItem5.Size = new System.Drawing.Size(238, 38);
-            this.refreshToolStripMenuItem5.Text = "Refresh";
+            refreshToolStripMenuItem5.Enabled = false;
+            refreshToolStripMenuItem5.Image = Main.Properties.Resources.refresh_16;
+            refreshToolStripMenuItem5.Name = "refreshToolStripMenuItem5";
+            refreshToolStripMenuItem5.Size = new System.Drawing.Size(238, 38);
+            refreshToolStripMenuItem5.Text = "Refresh";
             // 
             // toolStripMenuItem23
             // 
-            this.toolStripMenuItem23.Name = "toolStripMenuItem23";
-            this.toolStripMenuItem23.Size = new System.Drawing.Size(235, 6);
+            toolStripMenuItem23.Name = "toolStripMenuItem23";
+            toolStripMenuItem23.Size = new System.Drawing.Size(235, 6);
             // 
             // cmsApplication
             // 
-            this.cmsApplication.ImageScalingSize = new System.Drawing.Size(32, 32);
-            this.cmsApplication.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.exploreToolStripMenuItem1,
-            this.editPermissionsToolStripMenuItem1,
-            this.toolStripMenuItem9,
-            this.addApplicationToolStripMenuItem,
-            this.addVirtualDirectoryToolStripMenuItem1,
-            this.toolStripMenuItem15,
-            this.manageApplicationToolStripMenuItem,
-            this.toolStripMenuItem16,
-            this.refreshToolStripMenuItem6,
-            this.removeToolStripMenuItem1,
-            this.toolStripMenuItem24,
-            this.switchToContentViewToolStripMenuItem3});
-            this.cmsApplication.Name = "cmsApplication";
-            this.cmsApplication.Size = new System.Drawing.Size(214, 332);
+            cmsApplication.ImageScalingSize = new System.Drawing.Size(32, 32);
+            cmsApplication.Items.AddRange(new ToolStripItem[] { exploreToolStripMenuItem1, editPermissionsToolStripMenuItem1, toolStripMenuItem9, addApplicationToolStripMenuItem, addVirtualDirectoryToolStripMenuItem1, toolStripMenuItem15, manageApplicationToolStripMenuItem, toolStripMenuItem16, refreshToolStripMenuItem6, removeToolStripMenuItem1, toolStripMenuItem24, switchToContentViewToolStripMenuItem3 });
+            cmsApplication.Name = "cmsApplication";
+            cmsApplication.Size = new System.Drawing.Size(214, 332);
             // 
             // toolStripMenuItem9
             // 
-            this.toolStripMenuItem9.Name = "toolStripMenuItem9";
-            this.toolStripMenuItem9.Size = new System.Drawing.Size(210, 6);
+            toolStripMenuItem9.Name = "toolStripMenuItem9";
+            toolStripMenuItem9.Size = new System.Drawing.Size(210, 6);
             // 
             // toolStripMenuItem15
             // 
-            this.toolStripMenuItem15.Name = "toolStripMenuItem15";
-            this.toolStripMenuItem15.Size = new System.Drawing.Size(210, 6);
+            toolStripMenuItem15.Name = "toolStripMenuItem15";
+            toolStripMenuItem15.Size = new System.Drawing.Size(210, 6);
             // 
             // manageApplicationToolStripMenuItem
             // 
-            this.manageApplicationToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.btnBrowseApplication,
-            this.toolStripMenuItem25,
-            this.advancedSettingsToolStripMenuItem});
-            this.manageApplicationToolStripMenuItem.Name = "manageApplicationToolStripMenuItem";
-            this.manageApplicationToolStripMenuItem.Size = new System.Drawing.Size(213, 38);
-            this.manageApplicationToolStripMenuItem.Text = "Manage Application";
+            manageApplicationToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { btnBrowseApplication, toolStripMenuItem25, advancedSettingsToolStripMenuItem });
+            manageApplicationToolStripMenuItem.Name = "manageApplicationToolStripMenuItem";
+            manageApplicationToolStripMenuItem.Size = new System.Drawing.Size(213, 38);
+            manageApplicationToolStripMenuItem.Text = "Manage Application";
             // 
             // toolStripMenuItem25
             // 
-            this.toolStripMenuItem25.Name = "toolStripMenuItem25";
-            this.toolStripMenuItem25.Size = new System.Drawing.Size(178, 6);
+            toolStripMenuItem25.Name = "toolStripMenuItem25";
+            toolStripMenuItem25.Size = new System.Drawing.Size(178, 6);
             // 
             // advancedSettingsToolStripMenuItem
             // 
-            this.advancedSettingsToolStripMenuItem.Enabled = false;
-            this.advancedSettingsToolStripMenuItem.Name = "advancedSettingsToolStripMenuItem";
-            this.advancedSettingsToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
-            this.advancedSettingsToolStripMenuItem.Text = "Advanced Settings...";
+            advancedSettingsToolStripMenuItem.Enabled = false;
+            advancedSettingsToolStripMenuItem.Name = "advancedSettingsToolStripMenuItem";
+            advancedSettingsToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            advancedSettingsToolStripMenuItem.Text = "Advanced Settings...";
             // 
             // toolStripMenuItem16
             // 
-            this.toolStripMenuItem16.Name = "toolStripMenuItem16";
-            this.toolStripMenuItem16.Size = new System.Drawing.Size(210, 6);
+            toolStripMenuItem16.Name = "toolStripMenuItem16";
+            toolStripMenuItem16.Size = new System.Drawing.Size(210, 6);
             // 
             // refreshToolStripMenuItem6
             // 
-            this.refreshToolStripMenuItem6.Enabled = false;
-            this.refreshToolStripMenuItem6.Image = global::JexusManager.Main.Properties.Resources.refresh_16;
-            this.refreshToolStripMenuItem6.Name = "refreshToolStripMenuItem6";
-            this.refreshToolStripMenuItem6.Size = new System.Drawing.Size(213, 38);
-            this.refreshToolStripMenuItem6.Text = "Refresh";
+            refreshToolStripMenuItem6.Enabled = false;
+            refreshToolStripMenuItem6.Image = Main.Properties.Resources.refresh_16;
+            refreshToolStripMenuItem6.Name = "refreshToolStripMenuItem6";
+            refreshToolStripMenuItem6.Size = new System.Drawing.Size(213, 38);
+            refreshToolStripMenuItem6.Text = "Refresh";
             // 
             // removeToolStripMenuItem1
             // 
-            this.removeToolStripMenuItem1.Name = "removeToolStripMenuItem1";
-            this.removeToolStripMenuItem1.Size = new System.Drawing.Size(213, 38);
-            this.removeToolStripMenuItem1.Text = "Remove";
-            this.removeToolStripMenuItem1.Click += new System.EventHandler(this.btnRemoveApplication_Click);
+            removeToolStripMenuItem1.Name = "removeToolStripMenuItem1";
+            removeToolStripMenuItem1.Size = new System.Drawing.Size(213, 38);
+            removeToolStripMenuItem1.Text = "Remove";
+            removeToolStripMenuItem1.Click += btnRemoveApplication_Click;
             // 
             // toolStripMenuItem24
             // 
-            this.toolStripMenuItem24.Name = "toolStripMenuItem24";
-            this.toolStripMenuItem24.Size = new System.Drawing.Size(210, 6);
+            toolStripMenuItem24.Name = "toolStripMenuItem24";
+            toolStripMenuItem24.Size = new System.Drawing.Size(210, 6);
             // 
             // switchToContentViewToolStripMenuItem3
             // 
-            this.switchToContentViewToolStripMenuItem3.Enabled = false;
-            this.switchToContentViewToolStripMenuItem3.Image = global::JexusManager.Main.Properties.Resources.switch_16;
-            this.switchToContentViewToolStripMenuItem3.Name = "switchToContentViewToolStripMenuItem3";
-            this.switchToContentViewToolStripMenuItem3.Size = new System.Drawing.Size(213, 38);
-            this.switchToContentViewToolStripMenuItem3.Text = "Switch to Content View";
+            switchToContentViewToolStripMenuItem3.Enabled = false;
+            switchToContentViewToolStripMenuItem3.Image = Main.Properties.Resources.switch_16;
+            switchToContentViewToolStripMenuItem3.Name = "switchToContentViewToolStripMenuItem3";
+            switchToContentViewToolStripMenuItem3.Size = new System.Drawing.Size(213, 38);
+            switchToContentViewToolStripMenuItem3.Text = "Switch to Content View";
             // 
             // cmsFarm
             // 
-            this.cmsFarm.ImageScalingSize = new System.Drawing.Size(32, 32);
-            this.cmsFarm.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.refreshToolStripMenuItem7,
-            this.toolStripMenuItem29,
-            this.btnCreateFarm,
-            this.toolStripMenuItem30,
-            this.switchToContentViewToolStripMenuItem4});
-            this.cmsFarm.Name = "cmsFarm";
-            this.cmsFarm.Size = new System.Drawing.Size(214, 130);
+            cmsFarm.ImageScalingSize = new System.Drawing.Size(32, 32);
+            cmsFarm.Items.AddRange(new ToolStripItem[] { refreshToolStripMenuItem7, toolStripMenuItem29, btnCreateFarm, toolStripMenuItem30, switchToContentViewToolStripMenuItem4 });
+            cmsFarm.Name = "cmsFarm";
+            cmsFarm.Size = new System.Drawing.Size(214, 130);
             // 
             // refreshToolStripMenuItem7
             // 
-            this.refreshToolStripMenuItem7.Enabled = false;
-            this.refreshToolStripMenuItem7.Image = global::JexusManager.Main.Properties.Resources.refresh_16;
-            this.refreshToolStripMenuItem7.Name = "refreshToolStripMenuItem7";
-            this.refreshToolStripMenuItem7.Size = new System.Drawing.Size(213, 38);
-            this.refreshToolStripMenuItem7.Text = "Refresh";
+            refreshToolStripMenuItem7.Enabled = false;
+            refreshToolStripMenuItem7.Image = Main.Properties.Resources.refresh_16;
+            refreshToolStripMenuItem7.Name = "refreshToolStripMenuItem7";
+            refreshToolStripMenuItem7.Size = new System.Drawing.Size(213, 38);
+            refreshToolStripMenuItem7.Text = "Refresh";
             // 
             // toolStripMenuItem29
             // 
-            this.toolStripMenuItem29.Name = "toolStripMenuItem29";
-            this.toolStripMenuItem29.Size = new System.Drawing.Size(210, 6);
+            toolStripMenuItem29.Name = "toolStripMenuItem29";
+            toolStripMenuItem29.Size = new System.Drawing.Size(210, 6);
             // 
             // btnCreateFarm
             // 
-            this.btnCreateFarm.Name = "btnCreateFarm";
-            this.btnCreateFarm.Size = new System.Drawing.Size(213, 38);
-            this.btnCreateFarm.Text = "Create Server Farm...";
-            this.btnCreateFarm.Click += new System.EventHandler(this.btnCreateFarm_Click);
+            btnCreateFarm.Name = "btnCreateFarm";
+            btnCreateFarm.Size = new System.Drawing.Size(213, 38);
+            btnCreateFarm.Text = "Create Server Farm...";
+            btnCreateFarm.Click += btnCreateFarm_Click;
             // 
             // toolStripMenuItem30
             // 
-            this.toolStripMenuItem30.Name = "toolStripMenuItem30";
-            this.toolStripMenuItem30.Size = new System.Drawing.Size(210, 6);
+            toolStripMenuItem30.Name = "toolStripMenuItem30";
+            toolStripMenuItem30.Size = new System.Drawing.Size(210, 6);
             // 
             // switchToContentViewToolStripMenuItem4
             // 
-            this.switchToContentViewToolStripMenuItem4.Enabled = false;
-            this.switchToContentViewToolStripMenuItem4.Image = global::JexusManager.Main.Properties.Resources.switch_16;
-            this.switchToContentViewToolStripMenuItem4.Name = "switchToContentViewToolStripMenuItem4";
-            this.switchToContentViewToolStripMenuItem4.Size = new System.Drawing.Size(213, 38);
-            this.switchToContentViewToolStripMenuItem4.Text = "Switch to Content View";
+            switchToContentViewToolStripMenuItem4.Enabled = false;
+            switchToContentViewToolStripMenuItem4.Image = Main.Properties.Resources.switch_16;
+            switchToContentViewToolStripMenuItem4.Name = "switchToContentViewToolStripMenuItem4";
+            switchToContentViewToolStripMenuItem4.Size = new System.Drawing.Size(213, 38);
+            switchToContentViewToolStripMenuItem4.Text = "Switch to Content View";
             // 
             // cmsFarmServer
             // 
-            this.cmsFarmServer.ImageScalingSize = new System.Drawing.Size(32, 32);
-            this.cmsFarmServer.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.refreshToolStripMenuItem8,
-            this.btnRemoveFarmServer,
-            this.toolStripMenuItem31,
-            this.btnAddFarmServer,
-            this.toolStripMenuItem32,
-            this.btnRenameFarmServer,
-            this.toolStripMenuItem33,
-            this.switchToContentViewToolStripMenuItem5});
-            this.cmsFarmServer.Name = "cmsFarmServer";
-            this.cmsFarmServer.Size = new System.Drawing.Size(214, 212);
+            cmsFarmServer.ImageScalingSize = new System.Drawing.Size(32, 32);
+            cmsFarmServer.Items.AddRange(new ToolStripItem[] { refreshToolStripMenuItem8, btnRemoveFarmServer, toolStripMenuItem31, btnAddFarmServer, toolStripMenuItem32, btnRenameFarmServer, toolStripMenuItem33, switchToContentViewToolStripMenuItem5 });
+            cmsFarmServer.Name = "cmsFarmServer";
+            cmsFarmServer.Size = new System.Drawing.Size(214, 212);
             // 
             // refreshToolStripMenuItem8
             // 
-            this.refreshToolStripMenuItem8.Enabled = false;
-            this.refreshToolStripMenuItem8.Image = global::JexusManager.Main.Properties.Resources.refresh_16;
-            this.refreshToolStripMenuItem8.Name = "refreshToolStripMenuItem8";
-            this.refreshToolStripMenuItem8.Size = new System.Drawing.Size(213, 38);
-            this.refreshToolStripMenuItem8.Text = "Refresh";
+            refreshToolStripMenuItem8.Enabled = false;
+            refreshToolStripMenuItem8.Image = Main.Properties.Resources.refresh_16;
+            refreshToolStripMenuItem8.Name = "refreshToolStripMenuItem8";
+            refreshToolStripMenuItem8.Size = new System.Drawing.Size(213, 38);
+            refreshToolStripMenuItem8.Text = "Refresh";
             // 
             // btnRemoveFarmServer
             // 
-            this.btnRemoveFarmServer.Name = "btnRemoveFarmServer";
-            this.btnRemoveFarmServer.Size = new System.Drawing.Size(213, 38);
-            this.btnRemoveFarmServer.Text = "Remove";
-            this.btnRemoveFarmServer.Click += new System.EventHandler(this.btnRemoveFarmServer_Click);
+            btnRemoveFarmServer.Name = "btnRemoveFarmServer";
+            btnRemoveFarmServer.Size = new System.Drawing.Size(213, 38);
+            btnRemoveFarmServer.Text = "Remove";
+            btnRemoveFarmServer.Click += btnRemoveFarmServer_Click;
             // 
             // toolStripMenuItem31
             // 
-            this.toolStripMenuItem31.Name = "toolStripMenuItem31";
-            this.toolStripMenuItem31.Size = new System.Drawing.Size(210, 6);
+            toolStripMenuItem31.Name = "toolStripMenuItem31";
+            toolStripMenuItem31.Size = new System.Drawing.Size(210, 6);
             // 
             // btnAddFarmServer
             // 
-            this.btnAddFarmServer.Name = "btnAddFarmServer";
-            this.btnAddFarmServer.Size = new System.Drawing.Size(213, 38);
-            this.btnAddFarmServer.Text = "Add Server...";
-            this.btnAddFarmServer.Click += new System.EventHandler(this.btnAddFarmServer_Click);
+            btnAddFarmServer.Name = "btnAddFarmServer";
+            btnAddFarmServer.Size = new System.Drawing.Size(213, 38);
+            btnAddFarmServer.Text = "Add Server...";
+            btnAddFarmServer.Click += btnAddFarmServer_Click;
             // 
             // toolStripMenuItem32
             // 
-            this.toolStripMenuItem32.Name = "toolStripMenuItem32";
-            this.toolStripMenuItem32.Size = new System.Drawing.Size(210, 6);
+            toolStripMenuItem32.Name = "toolStripMenuItem32";
+            toolStripMenuItem32.Size = new System.Drawing.Size(210, 6);
             // 
             // btnRenameFarmServer
             // 
-            this.btnRenameFarmServer.Enabled = false;
-            this.btnRenameFarmServer.Name = "btnRenameFarmServer";
-            this.btnRenameFarmServer.Size = new System.Drawing.Size(213, 38);
-            this.btnRenameFarmServer.Text = "Rename";
+            btnRenameFarmServer.Enabled = false;
+            btnRenameFarmServer.Name = "btnRenameFarmServer";
+            btnRenameFarmServer.Size = new System.Drawing.Size(213, 38);
+            btnRenameFarmServer.Text = "Rename";
             // 
             // toolStripMenuItem33
             // 
-            this.toolStripMenuItem33.Name = "toolStripMenuItem33";
-            this.toolStripMenuItem33.Size = new System.Drawing.Size(210, 6);
+            toolStripMenuItem33.Name = "toolStripMenuItem33";
+            toolStripMenuItem33.Size = new System.Drawing.Size(210, 6);
             // 
             // switchToContentViewToolStripMenuItem5
             // 
-            this.switchToContentViewToolStripMenuItem5.Enabled = false;
-            this.switchToContentViewToolStripMenuItem5.Image = global::JexusManager.Main.Properties.Resources.switch_16;
-            this.switchToContentViewToolStripMenuItem5.Name = "switchToContentViewToolStripMenuItem5";
-            this.switchToContentViewToolStripMenuItem5.Size = new System.Drawing.Size(213, 38);
-            this.switchToContentViewToolStripMenuItem5.Text = "Switch to Content View";
+            switchToContentViewToolStripMenuItem5.Enabled = false;
+            switchToContentViewToolStripMenuItem5.Image = Main.Properties.Resources.switch_16;
+            switchToContentViewToolStripMenuItem5.Name = "switchToContentViewToolStripMenuItem5";
+            switchToContentViewToolStripMenuItem5.Size = new System.Drawing.Size(213, 38);
+            switchToContentViewToolStripMenuItem5.Text = "Switch to Content View";
             // 
             // cmsServers
             // 
-            this.cmsServers.ImageScalingSize = new System.Drawing.Size(32, 32);
-            this.cmsServers.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.refreshToolStripMenuItem9,
-            this.toolStripMenuItem34,
-            this.addServerToolStripMenuItem,
-            this.toolStripMenuItem35,
-            this.switchToContentViewToolStripMenuItem6});
-            this.cmsServers.Name = "cmsServers";
-            this.cmsServers.Size = new System.Drawing.Size(214, 130);
+            cmsServers.ImageScalingSize = new System.Drawing.Size(32, 32);
+            cmsServers.Items.AddRange(new ToolStripItem[] { refreshToolStripMenuItem9, toolStripMenuItem34, addServerToolStripMenuItem, toolStripMenuItem35, switchToContentViewToolStripMenuItem6 });
+            cmsServers.Name = "cmsServers";
+            cmsServers.Size = new System.Drawing.Size(214, 130);
             // 
             // refreshToolStripMenuItem9
             // 
-            this.refreshToolStripMenuItem9.Image = global::JexusManager.Main.Properties.Resources.refresh_16;
-            this.refreshToolStripMenuItem9.Name = "refreshToolStripMenuItem9";
-            this.refreshToolStripMenuItem9.Size = new System.Drawing.Size(213, 38);
-            this.refreshToolStripMenuItem9.Text = "Refresh";
+            refreshToolStripMenuItem9.Image = Main.Properties.Resources.refresh_16;
+            refreshToolStripMenuItem9.Name = "refreshToolStripMenuItem9";
+            refreshToolStripMenuItem9.Size = new System.Drawing.Size(213, 38);
+            refreshToolStripMenuItem9.Text = "Refresh";
             // 
             // toolStripMenuItem34
             // 
-            this.toolStripMenuItem34.Name = "toolStripMenuItem34";
-            this.toolStripMenuItem34.Size = new System.Drawing.Size(210, 6);
+            toolStripMenuItem34.Name = "toolStripMenuItem34";
+            toolStripMenuItem34.Size = new System.Drawing.Size(210, 6);
             // 
             // addServerToolStripMenuItem
             // 
-            this.addServerToolStripMenuItem.Name = "addServerToolStripMenuItem";
-            this.addServerToolStripMenuItem.Size = new System.Drawing.Size(213, 38);
-            this.addServerToolStripMenuItem.Text = "Add Server...";
+            addServerToolStripMenuItem.Name = "addServerToolStripMenuItem";
+            addServerToolStripMenuItem.Size = new System.Drawing.Size(213, 38);
+            addServerToolStripMenuItem.Text = "Add Server...";
             // 
             // toolStripMenuItem35
             // 
-            this.toolStripMenuItem35.Name = "toolStripMenuItem35";
-            this.toolStripMenuItem35.Size = new System.Drawing.Size(210, 6);
+            toolStripMenuItem35.Name = "toolStripMenuItem35";
+            toolStripMenuItem35.Size = new System.Drawing.Size(210, 6);
             // 
             // switchToContentViewToolStripMenuItem6
             // 
-            this.switchToContentViewToolStripMenuItem6.Image = global::JexusManager.Main.Properties.Resources.switch_16;
-            this.switchToContentViewToolStripMenuItem6.Name = "switchToContentViewToolStripMenuItem6";
-            this.switchToContentViewToolStripMenuItem6.Size = new System.Drawing.Size(213, 38);
-            this.switchToContentViewToolStripMenuItem6.Text = "Switch to Content View";
+            switchToContentViewToolStripMenuItem6.Image = Main.Properties.Resources.switch_16;
+            switchToContentViewToolStripMenuItem6.Name = "switchToContentViewToolStripMenuItem6";
+            switchToContentViewToolStripMenuItem6.Size = new System.Drawing.Size(213, 38);
+            switchToContentViewToolStripMenuItem6.Text = "Switch to Content View";
             // 
             // cmsVirtualDirectory
             // 
-            this.cmsVirtualDirectory.ImageScalingSize = new System.Drawing.Size(32, 32);
-            this.cmsVirtualDirectory.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem36,
-            this.toolStripMenuItem37,
-            this.toolStripSeparator3,
-            this.convertToApplicationToolStripMenuItem,
-            this.toolStripMenuItem38,
-            this.toolStripMenuItem39,
-            this.toolStripSeparator4,
-            this.manageVirtualDirectoryToolStripMenuItem,
-            this.toolStripSeparator6,
-            this.toolStripMenuItem43,
-            this.toolStripMenuItem44,
-            this.toolStripSeparator7,
-            this.toolStripMenuItem45});
-            this.cmsVirtualDirectory.Name = "cmsApplication";
-            this.cmsVirtualDirectory.Size = new System.Drawing.Size(222, 370);
+            cmsVirtualDirectory.ImageScalingSize = new System.Drawing.Size(32, 32);
+            cmsVirtualDirectory.Items.AddRange(new ToolStripItem[] { toolStripMenuItem36, toolStripMenuItem37, toolStripSeparator3, convertToApplicationToolStripMenuItem, toolStripMenuItem38, toolStripMenuItem39, toolStripSeparator4, manageVirtualDirectoryToolStripMenuItem, toolStripSeparator6, toolStripMenuItem43, toolStripMenuItem44, toolStripSeparator7, toolStripMenuItem45 });
+            cmsVirtualDirectory.Name = "cmsApplication";
+            cmsVirtualDirectory.Size = new System.Drawing.Size(222, 370);
             // 
             // toolStripSeparator3
             // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(218, 6);
+            toolStripSeparator3.Name = "toolStripSeparator3";
+            toolStripSeparator3.Size = new System.Drawing.Size(218, 6);
             // 
             // convertToApplicationToolStripMenuItem
             // 
-            this.convertToApplicationToolStripMenuItem.Image = global::JexusManager.Main.Properties.Resources.application_new_16;
-            this.convertToApplicationToolStripMenuItem.Name = "convertToApplicationToolStripMenuItem";
-            this.convertToApplicationToolStripMenuItem.Size = new System.Drawing.Size(221, 38);
-            this.convertToApplicationToolStripMenuItem.Text = "Convert to Application";
+            convertToApplicationToolStripMenuItem.Image = Main.Properties.Resources.application_new_16;
+            convertToApplicationToolStripMenuItem.Name = "convertToApplicationToolStripMenuItem";
+            convertToApplicationToolStripMenuItem.Size = new System.Drawing.Size(221, 38);
+            convertToApplicationToolStripMenuItem.Text = "Convert to Application";
             // 
             // toolStripSeparator4
             // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(218, 6);
+            toolStripSeparator4.Name = "toolStripSeparator4";
+            toolStripSeparator4.Size = new System.Drawing.Size(218, 6);
             // 
             // manageVirtualDirectoryToolStripMenuItem
             // 
-            this.manageVirtualDirectoryToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem41,
-            this.toolStripSeparator5,
-            this.toolStripMenuItem42});
-            this.manageVirtualDirectoryToolStripMenuItem.Name = "manageVirtualDirectoryToolStripMenuItem";
-            this.manageVirtualDirectoryToolStripMenuItem.Size = new System.Drawing.Size(221, 38);
-            this.manageVirtualDirectoryToolStripMenuItem.Text = "Manage Virtual Directory";
+            manageVirtualDirectoryToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { toolStripMenuItem41, toolStripSeparator5, toolStripMenuItem42 });
+            manageVirtualDirectoryToolStripMenuItem.Name = "manageVirtualDirectoryToolStripMenuItem";
+            manageVirtualDirectoryToolStripMenuItem.Size = new System.Drawing.Size(221, 38);
+            manageVirtualDirectoryToolStripMenuItem.Text = "Manage Virtual Directory";
             // 
             // toolStripSeparator5
             // 
-            this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(178, 6);
+            toolStripSeparator5.Name = "toolStripSeparator5";
+            toolStripSeparator5.Size = new System.Drawing.Size(178, 6);
             // 
             // toolStripMenuItem42
             // 
-            this.toolStripMenuItem42.Enabled = false;
-            this.toolStripMenuItem42.Name = "toolStripMenuItem42";
-            this.toolStripMenuItem42.Size = new System.Drawing.Size(181, 22);
-            this.toolStripMenuItem42.Text = "Advanced Settings...";
+            toolStripMenuItem42.Enabled = false;
+            toolStripMenuItem42.Name = "toolStripMenuItem42";
+            toolStripMenuItem42.Size = new System.Drawing.Size(181, 22);
+            toolStripMenuItem42.Text = "Advanced Settings...";
             // 
             // toolStripSeparator6
             // 
-            this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(218, 6);
+            toolStripSeparator6.Name = "toolStripSeparator6";
+            toolStripSeparator6.Size = new System.Drawing.Size(218, 6);
             // 
             // toolStripMenuItem43
             // 
-            this.toolStripMenuItem43.Enabled = false;
-            this.toolStripMenuItem43.Image = global::JexusManager.Main.Properties.Resources.refresh_16;
-            this.toolStripMenuItem43.Name = "toolStripMenuItem43";
-            this.toolStripMenuItem43.Size = new System.Drawing.Size(221, 38);
-            this.toolStripMenuItem43.Text = "Refresh";
+            toolStripMenuItem43.Enabled = false;
+            toolStripMenuItem43.Image = Main.Properties.Resources.refresh_16;
+            toolStripMenuItem43.Name = "toolStripMenuItem43";
+            toolStripMenuItem43.Size = new System.Drawing.Size(221, 38);
+            toolStripMenuItem43.Text = "Refresh";
             // 
             // toolStripMenuItem44
             // 
-            this.toolStripMenuItem44.Name = "toolStripMenuItem44";
-            this.toolStripMenuItem44.Size = new System.Drawing.Size(221, 38);
-            this.toolStripMenuItem44.Text = "Remove";
-            this.toolStripMenuItem44.Click += new System.EventHandler(this.btnRemoveVirtualDirectory_Click);
+            toolStripMenuItem44.Name = "toolStripMenuItem44";
+            toolStripMenuItem44.Size = new System.Drawing.Size(221, 38);
+            toolStripMenuItem44.Text = "Remove";
+            toolStripMenuItem44.Click += btnRemoveVirtualDirectory_Click;
             // 
             // toolStripSeparator7
             // 
-            this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(218, 6);
+            toolStripSeparator7.Name = "toolStripSeparator7";
+            toolStripSeparator7.Size = new System.Drawing.Size(218, 6);
             // 
             // toolStripMenuItem45
             // 
-            this.toolStripMenuItem45.Enabled = false;
-            this.toolStripMenuItem45.Image = global::JexusManager.Main.Properties.Resources.switch_16;
-            this.toolStripMenuItem45.Name = "toolStripMenuItem45";
-            this.toolStripMenuItem45.Size = new System.Drawing.Size(221, 38);
-            this.toolStripMenuItem45.Text = "Switch to Content View";
+            toolStripMenuItem45.Enabled = false;
+            toolStripMenuItem45.Image = Main.Properties.Resources.switch_16;
+            toolStripMenuItem45.Name = "toolStripMenuItem45";
+            toolStripMenuItem45.Size = new System.Drawing.Size(221, 38);
+            toolStripMenuItem45.Text = "Switch to Content View";
             // 
             // cmsPhysicalDirectory
             // 
-            this.cmsPhysicalDirectory.ImageScalingSize = new System.Drawing.Size(32, 32);
-            this.cmsPhysicalDirectory.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem46,
-            this.toolStripMenuItem47,
-            this.toolStripSeparator8,
-            this.toolStripMenuItem48,
-            this.toolStripMenuItem49,
-            this.toolStripMenuItem50,
-            this.toolStripSeparator9,
-            this.manageFolderToolStripMenuItem,
-            this.toolStripSeparator11,
-            this.toolStripMenuItem54,
-            this.toolStripSeparator12,
-            this.toolStripMenuItem56});
-            this.cmsPhysicalDirectory.Name = "cmsPhysicalDirectory";
-            this.cmsPhysicalDirectory.Size = new System.Drawing.Size(214, 332);
+            cmsPhysicalDirectory.ImageScalingSize = new System.Drawing.Size(32, 32);
+            cmsPhysicalDirectory.Items.AddRange(new ToolStripItem[] { toolStripMenuItem46, toolStripMenuItem47, toolStripSeparator8, toolStripMenuItem48, toolStripMenuItem49, toolStripMenuItem50, toolStripSeparator9, manageFolderToolStripMenuItem, toolStripSeparator11, toolStripMenuItem54, toolStripSeparator12, toolStripMenuItem56 });
+            cmsPhysicalDirectory.Name = "cmsPhysicalDirectory";
+            cmsPhysicalDirectory.Size = new System.Drawing.Size(214, 332);
             // 
             // toolStripSeparator8
             // 
-            this.toolStripSeparator8.Name = "toolStripSeparator8";
-            this.toolStripSeparator8.Size = new System.Drawing.Size(210, 6);
+            toolStripSeparator8.Name = "toolStripSeparator8";
+            toolStripSeparator8.Size = new System.Drawing.Size(210, 6);
             // 
             // toolStripMenuItem48
             // 
-            this.toolStripMenuItem48.Image = global::JexusManager.Main.Properties.Resources.application_new_16;
-            this.toolStripMenuItem48.Name = "toolStripMenuItem48";
-            this.toolStripMenuItem48.Size = new System.Drawing.Size(213, 38);
-            this.toolStripMenuItem48.Text = "Convert to Application";
+            toolStripMenuItem48.Image = Main.Properties.Resources.application_new_16;
+            toolStripMenuItem48.Name = "toolStripMenuItem48";
+            toolStripMenuItem48.Size = new System.Drawing.Size(213, 38);
+            toolStripMenuItem48.Text = "Convert to Application";
             // 
             // toolStripSeparator9
             // 
-            this.toolStripSeparator9.Name = "toolStripSeparator9";
-            this.toolStripSeparator9.Size = new System.Drawing.Size(210, 6);
+            toolStripSeparator9.Name = "toolStripSeparator9";
+            toolStripSeparator9.Size = new System.Drawing.Size(210, 6);
             // 
             // manageFolderToolStripMenuItem
             // 
-            this.manageFolderToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem52});
-            this.manageFolderToolStripMenuItem.Name = "manageFolderToolStripMenuItem";
-            this.manageFolderToolStripMenuItem.Size = new System.Drawing.Size(213, 38);
-            this.manageFolderToolStripMenuItem.Text = "Manage Folder";
+            manageFolderToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { toolStripMenuItem52 });
+            manageFolderToolStripMenuItem.Name = "manageFolderToolStripMenuItem";
+            manageFolderToolStripMenuItem.Size = new System.Drawing.Size(213, 38);
+            manageFolderToolStripMenuItem.Text = "Manage Folder";
             // 
             // toolStripSeparator11
             // 
-            this.toolStripSeparator11.Name = "toolStripSeparator11";
-            this.toolStripSeparator11.Size = new System.Drawing.Size(210, 6);
+            toolStripSeparator11.Name = "toolStripSeparator11";
+            toolStripSeparator11.Size = new System.Drawing.Size(210, 6);
             // 
             // toolStripMenuItem54
             // 
-            this.toolStripMenuItem54.Enabled = false;
-            this.toolStripMenuItem54.Image = global::JexusManager.Main.Properties.Resources.refresh_16;
-            this.toolStripMenuItem54.Name = "toolStripMenuItem54";
-            this.toolStripMenuItem54.Size = new System.Drawing.Size(213, 38);
-            this.toolStripMenuItem54.Text = "Refresh";
+            toolStripMenuItem54.Enabled = false;
+            toolStripMenuItem54.Image = Main.Properties.Resources.refresh_16;
+            toolStripMenuItem54.Name = "toolStripMenuItem54";
+            toolStripMenuItem54.Size = new System.Drawing.Size(213, 38);
+            toolStripMenuItem54.Text = "Refresh";
             // 
             // toolStripSeparator12
             // 
-            this.toolStripSeparator12.Name = "toolStripSeparator12";
-            this.toolStripSeparator12.Size = new System.Drawing.Size(210, 6);
+            toolStripSeparator12.Name = "toolStripSeparator12";
+            toolStripSeparator12.Size = new System.Drawing.Size(210, 6);
             // 
             // toolStripMenuItem56
             // 
-            this.toolStripMenuItem56.Enabled = false;
-            this.toolStripMenuItem56.Image = global::JexusManager.Main.Properties.Resources.switch_16;
-            this.toolStripMenuItem56.Name = "toolStripMenuItem56";
-            this.toolStripMenuItem56.Size = new System.Drawing.Size(213, 38);
-            this.toolStripMenuItem56.Text = "Switch to Content View";
+            toolStripMenuItem56.Enabled = false;
+            toolStripMenuItem56.Image = Main.Properties.Resources.switch_16;
+            toolStripMenuItem56.Name = "toolStripMenuItem56";
+            toolStripMenuItem56.Size = new System.Drawing.Size(213, 38);
+            toolStripMenuItem56.Text = "Switch to Content View";
             // 
             // _logSplitter
             // 
-            this._logSplitter.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._logSplitter.Location = new System.Drawing.Point(0, 24);
-            this._logSplitter.Name = "_logSplitter";
-            this._logSplitter.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            _logSplitter.Dock = DockStyle.Fill;
+            _logSplitter.Location = new System.Drawing.Point(0, 24);
+            _logSplitter.Name = "_logSplitter";
+            _logSplitter.Orientation = Orientation.Horizontal;
             // 
             // _logSplitter.Panel1
             // 
-            this._logSplitter.Panel1.Controls.Add(this.scMain);
-            this._logSplitter.Panel1MinSize = 100;
+            _logSplitter.Panel1.Controls.Add(scMain);
+            _logSplitter.Panel1MinSize = 100;
             // 
             // _logSplitter.Panel2
             // 
-            this._logSplitter.Panel2.Controls.Add(this._logPanel);
-            this._logSplitter.Panel2Collapsed = true;
-            this._logSplitter.Panel2MinSize = 50;
-            this._logSplitter.Size = new System.Drawing.Size(915, 451);
-            this._logSplitter.SplitterDistance = 350;
-            this._logSplitter.SplitterWidth = 5;
-            this._logSplitter.TabIndex = 6;
+            _logSplitter.Panel2.Controls.Add(_logPanel);
+            _logSplitter.Panel2Collapsed = true;
+            _logSplitter.Panel2MinSize = 50;
+            _logSplitter.Size = new System.Drawing.Size(915, 451);
+            _logSplitter.SplitterDistance = 100;
+            _logSplitter.SplitterWidth = 5;
+            _logSplitter.TabIndex = 6;
             // 
             // _logPanel
             // 
-            this._logPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._logPanel.Location = new System.Drawing.Point(0, 0);
-            this._logPanel.Name = "_logPanel";
-            this._logPanel.Size = new System.Drawing.Size(915, 96);
-            this._logPanel.TabIndex = 0;
+            _logPanel.Dock = DockStyle.Fill;
+            _logPanel.Location = new System.Drawing.Point(0, 0);
+            _logPanel.Name = "_logPanel";
+            _logPanel.Size = new System.Drawing.Size(915, 100);
+            _logPanel.TabIndex = 0;
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(915, 497);
-            this.Controls.Add(this._logSplitter);
-            this.Controls.Add(this.statusStrip1);
-            this.Controls.Add(this.menuStrip1);
-            this.KeyPreview = true;
-            this.MainMenuStrip = this.menuStrip1;
-            this.MinimumSize = new System.Drawing.Size(738, 504);
-            this.Name = "MainForm";
-            this.Text = "Jexus Manager";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1FormClosing);
-            this.Load += new System.EventHandler(this.MainForm_Load);
-            this.scMain.Panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.scMain)).EndInit();
-            this.scMain.ResumeLayout(false);
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
-            this.toolStrip2.ResumeLayout(false);
-            this.toolStrip2.PerformLayout();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
-            this.cmsServer.ResumeLayout(false);
-            this.cmsApplicationPools.ResumeLayout(false);
-            this.cmsSites.ResumeLayout(false);
-            this.cmsSite.ResumeLayout(false);
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.actionList1)).EndInit();
-            this.cmsIis.ResumeLayout(false);
-            this.cmsApplication.ResumeLayout(false);
-            this.cmsFarm.ResumeLayout(false);
-            this.cmsFarmServer.ResumeLayout(false);
-            this.cmsServers.ResumeLayout(false);
-            this.cmsVirtualDirectory.ResumeLayout(false);
-            this.cmsPhysicalDirectory.ResumeLayout(false);
-            this._logSplitter.Panel1.ResumeLayout(false);
-            this._logSplitter.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this._logSplitter)).EndInit();
-            this._logSplitter.ResumeLayout(false);
-            this._logPanel.ResumeLayout(false);
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new System.Drawing.Size(915, 497);
+            Controls.Add(_logSplitter);
+            Controls.Add(statusStrip1);
+            Controls.Add(menuStrip1);
+            KeyPreview = true;
+            MainMenuStrip = menuStrip1;
+            MinimumSize = new System.Drawing.Size(738, 504);
+            Name = "MainForm";
+            Text = "Jexus Manager";
+            FormClosing += Form1FormClosing;
+            Load += MainForm_Load;
+            scMain.Panel1.ResumeLayout(false);
+            ((ISupportInitialize)scMain).EndInit();
+            scMain.ResumeLayout(false);
+            tableLayoutPanel1.ResumeLayout(false);
+            panel2.ResumeLayout(false);
+            panel2.PerformLayout();
+            toolStrip2.ResumeLayout(false);
+            toolStrip2.PerformLayout();
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
+            cmsServer.ResumeLayout(false);
+            cmsApplicationPools.ResumeLayout(false);
+            cmsSites.ResumeLayout(false);
+            cmsSite.ResumeLayout(false);
+            statusStrip1.ResumeLayout(false);
+            statusStrip1.PerformLayout();
+            menuStrip1.ResumeLayout(false);
+            menuStrip1.PerformLayout();
+            ((ISupportInitialize)actionList1).EndInit();
+            cmsIis.ResumeLayout(false);
+            cmsApplication.ResumeLayout(false);
+            cmsFarm.ResumeLayout(false);
+            cmsFarmServer.ResumeLayout(false);
+            cmsServers.ResumeLayout(false);
+            cmsVirtualDirectory.ResumeLayout(false);
+            cmsPhysicalDirectory.ResumeLayout(false);
+            _logSplitter.Panel1.ResumeLayout(false);
+            _logSplitter.Panel2.ResumeLayout(false);
+            ((ISupportInitialize)_logSplitter).EndInit();
+            _logSplitter.ResumeLayout(false);
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion

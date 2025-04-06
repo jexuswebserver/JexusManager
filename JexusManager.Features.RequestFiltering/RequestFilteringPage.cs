@@ -430,66 +430,157 @@ namespace JexusManager.Features.RequestFiltering
             base.Refresh();
         }
 
+        private void LvExtensions_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                var feature = (FileExtensionsFeature)tpExtensions.Tag;
+                feature.Remove();
+            }
+        }
+
+        private void LvExtensions_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            var feature = (FileExtensionsFeature)tpExtensions.Tag;
+            feature.HandleMouseDoubleClick(lvExtensions);
+        }
+
         private void LvExtensionsSelectedIndexChanged(object sender, EventArgs e)
         {
             var feature = (FileExtensionsFeature)tpExtensions.Tag;
-            feature.SelectedItem = lvExtensions.SelectedItems.Count > 0
-                ? ((ExtensionListViewItem)lvExtensions.SelectedItems[0]).Item
-                : null;
+            feature.HandleSelectedIndexChanged(lvExtensions);
             Refresh();
         }
 
-        private void LvRuleSelectedIndexChanged(object sender, EventArgs e)
+        private void LvRules_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                var feature = (FilteringRulesFeature)tpRules.Tag;
+                feature.Remove();
+            }
+        }
+
+        private void LvRules_MouseDoubleClick(Object sender, MouseEventArgs e)
         {
             var feature = (FilteringRulesFeature)tpRules.Tag;
-            feature.SelectedItem = lvRules.SelectedItems.Count > 0
-                ? ((RuleListViewItem)lvRules.SelectedItems[0]).Item
-                : null;
+            feature.HandleMouseDoubleClick(lvRules);
+        }
+
+        private void LvRulesSelectedIndexChanged(object sender, EventArgs e)
+        {
+            var feature = (FilteringRulesFeature)tpRules.Tag;
+            feature.HandleSelectedIndexChanged(lvRules);
             Refresh();
+        }
+
+        private void LvSegments_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                var feature = (HiddenSegmentsFeature)tpSegments.Tag;
+                feature.Remove();
+            }
+        }
+
+        private void LvSegments_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            var feature = (HiddenSegmentsFeature)tpSegments.Tag;
+            feature.HandleMouseDoubleClick(lvSegments);
         }
 
         private void LvSegmentsSelectedIndexChanged(object sender, EventArgs e)
         {
             var feature = (HiddenSegmentsFeature)tpSegments.Tag;
-            feature.SelectedItem = lvSegments.SelectedItems.Count > 0
-                ? ((SegmentListViewItem)lvSegments.SelectedItems[0]).Item
-                : null;
+            feature.HandleSelectedIndexChanged(lvSegments);
             Refresh();
+        }
+
+        private void LvUrls_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                var feature = (UrlsFeature)tpUrl.Tag;
+                feature.Remove();
+            }
+        }
+
+        private void LvUrls_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            var feature = (UrlsFeature)tpUrl.Tag;
+            feature.HandleMouseDoubleClick(lvUrls);
         }
 
         private void LvUrlsSelectedIndexChanged(object sender, EventArgs e)
         {
             var feature = (UrlsFeature)tpUrl.Tag;
-            feature.SelectedItem = lvUrls.SelectedItems.Count > 0
-                                       ? ((UrlListViewItem)lvUrls.SelectedItems[0]).Item
-                                       : null;
+            feature.HandleSelectedIndexChanged(lvUrls);
             Refresh();
+        }
+
+        private void LvVerbs_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                var feature = (VerbsFeature)tpVerbs.Tag;
+                feature.Remove();
+            }
+        }
+
+        private void LvVerbs_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            var feature = (VerbsFeature)tpVerbs.Tag;
+            feature.HandleMouseDoubleClick(lvVerbs);
         }
 
         private void LvVerbsSelectedIndexChanged(object sender, EventArgs e)
         {
             var feature = (VerbsFeature)tpVerbs.Tag;
-            feature.SelectedItem = lvVerbs.SelectedItems.Count > 0
-                ? ((VerbListViewItem)lvVerbs.SelectedItems[0]).Item
-                : null;
+            feature.HandleSelectedIndexChanged(lvVerbs);
             Refresh();
+        }
+
+        private void LvHeaders_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                var feature = (HeadersFeature)tpHeaders.Tag;
+                feature.Remove();
+            }
+        }
+
+        private void LvHeaders_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            var feature = (HeadersFeature)tpHeaders.Tag;
+            feature.HandleMouseDoubleClick(lvHeaders);
         }
 
         private void LvHeadersSelectedIndexChanged(object sender, EventArgs e)
         {
             var feature = (HeadersFeature)tpHeaders.Tag;
-            feature.SelectedItem = lvHeaders.SelectedItems.Count > 0
-                ? ((HeaderListViewItem)lvHeaders.SelectedItems[0]).Item
-                : null;
+            feature.HandleSelectedIndexChanged(lvHeaders);
             Refresh();
+        }
+
+        private void LvQueries_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                var feature = (QueryStringsFeature)tpQuery.Tag;
+                feature.Remove();
+            }
+        }
+
+        private void LvQueries_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            var feature = (QueryStringsFeature)tpQuery.Tag;
+            feature.HandleMouseDoubleClick(lvQueries);
         }
 
         private void LvQueriesSelectedIndexChanged(object sender, EventArgs e)
         {
             var feature = (QueryStringsFeature)tpQuery.Tag;
-            feature.SelectedItem = lvQueries.SelectedItems.Count > 0
-                ? ((QueryListViewItem)lvQueries.SelectedItems[0]).Item
-                : null;
+            feature.HandleSelectedIndexChanged(lvQueries);
             Refresh();
         }
 
