@@ -324,7 +324,6 @@
             // toolStrip2
             // 
             toolStrip2.GripStyle = ToolStripGripStyle.Hidden;
-            toolStrip2.ImageScalingSize = new System.Drawing.Size(32, 32);
             toolStrip2.Items.AddRange(new ToolStripItem[] { toolStripButton3, btnSave, toolStripSeparator2, btnUp, toolStripSeparator1, btnDisconnect });
             toolStrip2.Location = new System.Drawing.Point(0, 0);
             toolStrip2.Name = "toolStrip2";
@@ -433,7 +432,6 @@
             // 
             // cmsServer
             // 
-            cmsServer.ImageScalingSize = new System.Drawing.Size(32, 32);
             cmsServer.Items.AddRange(new ToolStripItem[] { refreshToolStripMenuItem, toolStripMenuItem1, removeConnectionToolStripMenuItem, toolStripMenuItem4, addWebsiteToolStripMenuItem, toolStripMenuItem2, btnStartServer, btnStopServer, toolStripMenuItem3, btnRenameServer, toolStripMenuItem5, btnOpenConfig, toolStripMenuItem40, switchToContentViewToolStripMenuItem });
             cmsServer.Name = "cmsServer";
             cmsServer.Size = new System.Drawing.Size(218, 344);
@@ -443,7 +441,7 @@
             refreshToolStripMenuItem.Enabled = false;
             refreshToolStripMenuItem.Image = Main.Properties.Resources.refresh_16;
             refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
-            refreshToolStripMenuItem.Size = new System.Drawing.Size(217, 38);
+            refreshToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
             refreshToolStripMenuItem.Text = "Refresh";
             // 
             // toolStripMenuItem1
@@ -456,7 +454,7 @@
             actionList1.SetAction(removeConnectionToolStripMenuItem, actDisconnect);
             removeConnectionToolStripMenuItem.Enabled = false;
             removeConnectionToolStripMenuItem.Name = "removeConnectionToolStripMenuItem";
-            removeConnectionToolStripMenuItem.Size = new System.Drawing.Size(217, 38);
+            removeConnectionToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
             removeConnectionToolStripMenuItem.Text = "Disconnect";
             removeConnectionToolStripMenuItem.ToolTipText = "Disconnect";
             // 
@@ -470,7 +468,7 @@
             actionList1.SetAction(addWebsiteToolStripMenuItem, actCreateSite);
             addWebsiteToolStripMenuItem.AutoToolTip = true;
             addWebsiteToolStripMenuItem.Name = "addWebsiteToolStripMenuItem";
-            addWebsiteToolStripMenuItem.Size = new System.Drawing.Size(217, 38);
+            addWebsiteToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
             addWebsiteToolStripMenuItem.Text = "Add Website...";
             // 
             // toolStripMenuItem2
@@ -483,7 +481,7 @@
             btnStartServer.Enabled = false;
             btnStartServer.Image = Main.Properties.Resources.start_16;
             btnStartServer.Name = "btnStartServer";
-            btnStartServer.Size = new System.Drawing.Size(217, 38);
+            btnStartServer.Size = new System.Drawing.Size(217, 22);
             btnStartServer.Text = "Start";
             // 
             // btnStopServer
@@ -491,7 +489,7 @@
             btnStopServer.Enabled = false;
             btnStopServer.Image = Main.Properties.Resources.stop_16;
             btnStopServer.Name = "btnStopServer";
-            btnStopServer.Size = new System.Drawing.Size(217, 38);
+            btnStopServer.Size = new System.Drawing.Size(217, 22);
             btnStopServer.Text = "Stop";
             // 
             // toolStripMenuItem3
@@ -503,7 +501,7 @@
             // 
             btnRenameServer.Enabled = false;
             btnRenameServer.Name = "btnRenameServer";
-            btnRenameServer.Size = new System.Drawing.Size(217, 38);
+            btnRenameServer.Size = new System.Drawing.Size(217, 22);
             btnRenameServer.Text = "Rename";
             // 
             // toolStripMenuItem5
@@ -514,7 +512,7 @@
             // btnOpenConfig
             // 
             btnOpenConfig.Name = "btnOpenConfig";
-            btnOpenConfig.Size = new System.Drawing.Size(217, 38);
+            btnOpenConfig.Size = new System.Drawing.Size(217, 22);
             btnOpenConfig.Text = "Open Configuration File";
             btnOpenConfig.Click += btnOpenConfig_Click;
             // 
@@ -528,12 +526,11 @@
             switchToContentViewToolStripMenuItem.Enabled = false;
             switchToContentViewToolStripMenuItem.Image = Main.Properties.Resources.switch_16;
             switchToContentViewToolStripMenuItem.Name = "switchToContentViewToolStripMenuItem";
-            switchToContentViewToolStripMenuItem.Size = new System.Drawing.Size(217, 38);
+            switchToContentViewToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
             switchToContentViewToolStripMenuItem.Text = "Switch to Content View";
             // 
             // cmsApplicationPools
             // 
-            cmsApplicationPools.ImageScalingSize = new System.Drawing.Size(32, 32);
             cmsApplicationPools.Items.AddRange(new ToolStripItem[] { addApplicationPoolToolStripMenuItem, toolStripMenuItem6, refreshToolStripMenuItem1 });
             cmsApplicationPools.Name = "cmsApplicationPools";
             cmsApplicationPools.Size = new System.Drawing.Size(213, 86);
@@ -542,7 +539,7 @@
             // 
             addApplicationPoolToolStripMenuItem.Enabled = false;
             addApplicationPoolToolStripMenuItem.Name = "addApplicationPoolToolStripMenuItem";
-            addApplicationPoolToolStripMenuItem.Size = new System.Drawing.Size(212, 38);
+            addApplicationPoolToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
             addApplicationPoolToolStripMenuItem.Text = "Add Application Pool...";
             // 
             // toolStripMenuItem6
@@ -555,12 +552,11 @@
             refreshToolStripMenuItem1.Enabled = false;
             refreshToolStripMenuItem1.Image = Main.Properties.Resources.refresh_16;
             refreshToolStripMenuItem1.Name = "refreshToolStripMenuItem1";
-            refreshToolStripMenuItem1.Size = new System.Drawing.Size(212, 38);
+            refreshToolStripMenuItem1.Size = new System.Drawing.Size(212, 22);
             refreshToolStripMenuItem1.Text = "Refresh";
             // 
             // cmsSites
             // 
-            cmsSites.ImageScalingSize = new System.Drawing.Size(32, 32);
             cmsSites.Items.AddRange(new ToolStripItem[] { addWebsiteToolStripMenuItem1, toolStripMenuItem7, refreshToolStripMenuItem2, toolStripMenuItem8, switchToContentViewToolStripMenuItem1 });
             cmsSites.Name = "cmsSites";
             cmsSites.Size = new System.Drawing.Size(214, 130);
@@ -570,7 +566,7 @@
             actionList1.SetAction(addWebsiteToolStripMenuItem1, actCreateSite);
             addWebsiteToolStripMenuItem1.AutoToolTip = true;
             addWebsiteToolStripMenuItem1.Name = "addWebsiteToolStripMenuItem1";
-            addWebsiteToolStripMenuItem1.Size = new System.Drawing.Size(213, 38);
+            addWebsiteToolStripMenuItem1.Size = new System.Drawing.Size(213, 22);
             addWebsiteToolStripMenuItem1.Text = "Add Website...";
             // 
             // toolStripMenuItem7
@@ -582,7 +578,7 @@
             // 
             refreshToolStripMenuItem2.Enabled = false;
             refreshToolStripMenuItem2.Name = "refreshToolStripMenuItem2";
-            refreshToolStripMenuItem2.Size = new System.Drawing.Size(213, 38);
+            refreshToolStripMenuItem2.Size = new System.Drawing.Size(213, 22);
             refreshToolStripMenuItem2.Text = "Refresh";
             // 
             // toolStripMenuItem8
@@ -594,12 +590,11 @@
             // 
             switchToContentViewToolStripMenuItem1.Enabled = false;
             switchToContentViewToolStripMenuItem1.Name = "switchToContentViewToolStripMenuItem1";
-            switchToContentViewToolStripMenuItem1.Size = new System.Drawing.Size(213, 38);
+            switchToContentViewToolStripMenuItem1.Size = new System.Drawing.Size(213, 22);
             switchToContentViewToolStripMenuItem1.Text = "Switch to Content View";
             // 
             // cmsSite
             // 
-            cmsSite.ImageScalingSize = new System.Drawing.Size(32, 32);
             cmsSite.Items.AddRange(new ToolStripItem[] { exploreToolStripMenuItem, editPermissionsToolStripMenuItem, toolStripMenuItem10, btnApplication, addVirtualDirectoryToolStripMenuItem, toolStripMenuItem11, editBindingsToolStripMenuItem, toolStripMenuItem12, manageWebsiteToolStripMenuItem, toolStripMenuItem13, refreshToolStripMenuItem3, removeToolStripMenuItem, toolStripMenuItem14, renameToolStripMenuItem1, toolStripMenuItem17, switchToContentViewToolStripMenuItem2 });
             cmsSite.Name = "cmsSite";
             cmsSite.Size = new System.Drawing.Size(214, 420);
@@ -609,7 +604,7 @@
             actionList1.SetAction(exploreToolStripMenuItem, actExplore);
             exploreToolStripMenuItem.AutoToolTip = true;
             exploreToolStripMenuItem.Name = "exploreToolStripMenuItem";
-            exploreToolStripMenuItem.Size = new System.Drawing.Size(213, 38);
+            exploreToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             exploreToolStripMenuItem.Text = "Explore";
             // 
             // editPermissionsToolStripMenuItem
@@ -617,7 +612,7 @@
             actionList1.SetAction(editPermissionsToolStripMenuItem, actEditPermissions);
             editPermissionsToolStripMenuItem.AutoToolTip = true;
             editPermissionsToolStripMenuItem.Name = "editPermissionsToolStripMenuItem";
-            editPermissionsToolStripMenuItem.Size = new System.Drawing.Size(213, 38);
+            editPermissionsToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             editPermissionsToolStripMenuItem.Text = "Edit Permissions...";
             // 
             // toolStripMenuItem10
@@ -630,7 +625,7 @@
             actionList1.SetAction(btnApplication, actCreateApplication);
             btnApplication.AutoToolTip = true;
             btnApplication.Name = "btnApplication";
-            btnApplication.Size = new System.Drawing.Size(213, 38);
+            btnApplication.Size = new System.Drawing.Size(213, 22);
             btnApplication.Text = "Add Application...";
             // 
             // addVirtualDirectoryToolStripMenuItem
@@ -638,7 +633,7 @@
             actionList1.SetAction(addVirtualDirectoryToolStripMenuItem, actCreateVirtualDirectory);
             addVirtualDirectoryToolStripMenuItem.AutoToolTip = true;
             addVirtualDirectoryToolStripMenuItem.Name = "addVirtualDirectoryToolStripMenuItem";
-            addVirtualDirectoryToolStripMenuItem.Size = new System.Drawing.Size(213, 38);
+            addVirtualDirectoryToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             addVirtualDirectoryToolStripMenuItem.Text = "Add Virtual Directory...";
             // 
             // toolStripMenuItem11
@@ -649,7 +644,7 @@
             // editBindingsToolStripMenuItem
             // 
             editBindingsToolStripMenuItem.Name = "editBindingsToolStripMenuItem";
-            editBindingsToolStripMenuItem.Size = new System.Drawing.Size(213, 38);
+            editBindingsToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             editBindingsToolStripMenuItem.Text = "Edit Bindings...";
             editBindingsToolStripMenuItem.Click += editBindingsToolStripMenuItem_Click;
             // 
@@ -662,7 +657,7 @@
             // 
             manageWebsiteToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { btnRestartSite, startToolStripMenuItem1, stopToolStripMenuItem2, toolStripMenuItem26, btnBrowseSite, toolStripMenuItem27, advancedSettingsToolStripMenuItem1 });
             manageWebsiteToolStripMenuItem.Name = "manageWebsiteToolStripMenuItem";
-            manageWebsiteToolStripMenuItem.Size = new System.Drawing.Size(213, 38);
+            manageWebsiteToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             manageWebsiteToolStripMenuItem.Text = "Manage Website";
             // 
             // btnRestartSite
@@ -724,13 +719,13 @@
             refreshToolStripMenuItem3.Enabled = false;
             refreshToolStripMenuItem3.Image = Main.Properties.Resources.refresh_16;
             refreshToolStripMenuItem3.Name = "refreshToolStripMenuItem3";
-            refreshToolStripMenuItem3.Size = new System.Drawing.Size(213, 38);
+            refreshToolStripMenuItem3.Size = new System.Drawing.Size(213, 22);
             refreshToolStripMenuItem3.Text = "Refresh";
             // 
             // removeToolStripMenuItem
             // 
             removeToolStripMenuItem.Name = "removeToolStripMenuItem";
-            removeToolStripMenuItem.Size = new System.Drawing.Size(213, 38);
+            removeToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             removeToolStripMenuItem.Text = "Remove";
             removeToolStripMenuItem.Click += btnRemoveSite_Click;
             // 
@@ -742,7 +737,7 @@
             // renameToolStripMenuItem1
             // 
             renameToolStripMenuItem1.Name = "renameToolStripMenuItem1";
-            renameToolStripMenuItem1.Size = new System.Drawing.Size(213, 38);
+            renameToolStripMenuItem1.Size = new System.Drawing.Size(213, 22);
             renameToolStripMenuItem1.Text = "Rename";
             renameToolStripMenuItem1.Click += renameToolStripMenuItem1_Click;
             // 
@@ -756,12 +751,11 @@
             switchToContentViewToolStripMenuItem2.Enabled = false;
             switchToContentViewToolStripMenuItem2.Image = Main.Properties.Resources.switch_16;
             switchToContentViewToolStripMenuItem2.Name = "switchToContentViewToolStripMenuItem2";
-            switchToContentViewToolStripMenuItem2.Size = new System.Drawing.Size(213, 38);
+            switchToContentViewToolStripMenuItem2.Size = new System.Drawing.Size(213, 22);
             switchToContentViewToolStripMenuItem2.Text = "Switch to Content View";
             // 
             // statusStrip1
             // 
-            statusStrip1.ImageScalingSize = new System.Drawing.Size(32, 32);
             statusStrip1.Items.AddRange(new ToolStripItem[] { txtInfo });
             statusStrip1.Location = new System.Drawing.Point(0, 475);
             statusStrip1.Name = "statusStrip1";
@@ -780,7 +774,6 @@
             // 
             // menuStrip1
             // 
-            menuStrip1.ImageScalingSize = new System.Drawing.Size(32, 32);
             menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, viewToolStripMenuItem, helpToolStripMenuItem });
             menuStrip1.Location = new System.Drawing.Point(0, 0);
             menuStrip1.Name = "menuStrip1";
@@ -800,7 +793,7 @@
             // 
             actionList1.SetAction(connectToAServerToolStripMenuItem, actConnectServer);
             connectToAServerToolStripMenuItem.Name = "connectToAServerToolStripMenuItem";
-            connectToAServerToolStripMenuItem.Size = new System.Drawing.Size(238, 38);
+            connectToAServerToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
             connectToAServerToolStripMenuItem.Text = "Connect to a Server...";
             connectToAServerToolStripMenuItem.ToolTipText = "Connect to a Server...";
             // 
@@ -809,7 +802,7 @@
             actionList1.SetAction(connectToAWebsiteToolStripMenuItem, actConnectSite);
             connectToAWebsiteToolStripMenuItem.Enabled = false;
             connectToAWebsiteToolStripMenuItem.Name = "connectToAWebsiteToolStripMenuItem";
-            connectToAWebsiteToolStripMenuItem.Size = new System.Drawing.Size(238, 38);
+            connectToAWebsiteToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
             connectToAWebsiteToolStripMenuItem.Text = "Connect to a Website...";
             connectToAWebsiteToolStripMenuItem.ToolTipText = "Connect to a Website...";
             // 
@@ -818,7 +811,7 @@
             actionList1.SetAction(connectToAnApplicationToolStripMenuItem, actConnectionApplication);
             connectToAnApplicationToolStripMenuItem.Enabled = false;
             connectToAnApplicationToolStripMenuItem.Name = "connectToAnApplicationToolStripMenuItem";
-            connectToAnApplicationToolStripMenuItem.Size = new System.Drawing.Size(238, 38);
+            connectToAnApplicationToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
             connectToAnApplicationToolStripMenuItem.Text = "Connect to an Application...";
             connectToAnApplicationToolStripMenuItem.ToolTipText = "Connect to an Application...";
             // 
@@ -832,7 +825,7 @@
             actionList1.SetAction(saveConnectionsToolStripMenuItem, actSave);
             saveConnectionsToolStripMenuItem.Enabled = false;
             saveConnectionsToolStripMenuItem.Name = "saveConnectionsToolStripMenuItem";
-            saveConnectionsToolStripMenuItem.Size = new System.Drawing.Size(238, 38);
+            saveConnectionsToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
             saveConnectionsToolStripMenuItem.Text = "Save Connections";
             saveConnectionsToolStripMenuItem.ToolTipText = "Save Connections";
             // 
@@ -841,7 +834,7 @@
             actionList1.SetAction(disconnectToolStripMenuItem, actDisconnect);
             disconnectToolStripMenuItem.Enabled = false;
             disconnectToolStripMenuItem.Name = "disconnectToolStripMenuItem";
-            disconnectToolStripMenuItem.Size = new System.Drawing.Size(238, 38);
+            disconnectToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
             disconnectToolStripMenuItem.Text = "Disconnect";
             disconnectToolStripMenuItem.ToolTipText = "Disconnect";
             // 
@@ -855,13 +848,13 @@
             actionList1.SetAction(runAsAdministratorToolStripMenuItem, actRunAsAdmin);
             runAsAdministratorToolStripMenuItem.AutoToolTip = true;
             runAsAdministratorToolStripMenuItem.Name = "runAsAdministratorToolStripMenuItem";
-            runAsAdministratorToolStripMenuItem.Size = new System.Drawing.Size(238, 38);
+            runAsAdministratorToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
             runAsAdministratorToolStripMenuItem.Text = "Run as Administrator";
             // 
             // exitToolStripMenuItem
             // 
             exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            exitToolStripMenuItem.Size = new System.Drawing.Size(238, 38);
+            exitToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
             exitToolStripMenuItem.Text = "Exit";
             exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
             // 
@@ -1133,9 +1126,8 @@
             // connectToAServerToolStripMenuItem1
             // 
             actionList1.SetAction(connectToAServerToolStripMenuItem1, actConnectServer);
-            connectToAServerToolStripMenuItem1.Image = Main.Properties.Resources.server_16;
             connectToAServerToolStripMenuItem1.Name = "connectToAServerToolStripMenuItem1";
-            connectToAServerToolStripMenuItem1.Size = new System.Drawing.Size(238, 38);
+            connectToAServerToolStripMenuItem1.Size = new System.Drawing.Size(238, 22);
             connectToAServerToolStripMenuItem1.Text = "Connect to a Server...";
             connectToAServerToolStripMenuItem1.ToolTipText = "Connect to a Server...";
             // 
@@ -1143,9 +1135,8 @@
             // 
             actionList1.SetAction(connectToAWebsiteToolStripMenuItem1, actConnectSite);
             connectToAWebsiteToolStripMenuItem1.Enabled = false;
-            connectToAWebsiteToolStripMenuItem1.Image = Main.Properties.Resources.site_16;
             connectToAWebsiteToolStripMenuItem1.Name = "connectToAWebsiteToolStripMenuItem1";
-            connectToAWebsiteToolStripMenuItem1.Size = new System.Drawing.Size(238, 38);
+            connectToAWebsiteToolStripMenuItem1.Size = new System.Drawing.Size(238, 22);
             connectToAWebsiteToolStripMenuItem1.Text = "Connect to a Website...";
             connectToAWebsiteToolStripMenuItem1.ToolTipText = "Connect to a Website...";
             // 
@@ -1153,64 +1144,56 @@
             // 
             actionList1.SetAction(connectToAnApplicationToolStripMenuItem1, actConnectionApplication);
             connectToAnApplicationToolStripMenuItem1.Enabled = false;
-            connectToAnApplicationToolStripMenuItem1.Image = Main.Properties.Resources.application_16;
             connectToAnApplicationToolStripMenuItem1.Name = "connectToAnApplicationToolStripMenuItem1";
-            connectToAnApplicationToolStripMenuItem1.Size = new System.Drawing.Size(238, 38);
+            connectToAnApplicationToolStripMenuItem1.Size = new System.Drawing.Size(238, 22);
             connectToAnApplicationToolStripMenuItem1.Text = "Connect to an Application...";
             connectToAnApplicationToolStripMenuItem1.ToolTipText = "Connect to an Application...";
             // 
             // addApplicationToolStripMenuItem
             // 
             actionList1.SetAction(addApplicationToolStripMenuItem, actCreateApplication);
-            addApplicationToolStripMenuItem.Image = Main.Properties.Resources.application_new_16;
             addApplicationToolStripMenuItem.Name = "addApplicationToolStripMenuItem";
-            addApplicationToolStripMenuItem.Size = new System.Drawing.Size(213, 38);
+            addApplicationToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             addApplicationToolStripMenuItem.Text = "Add Application...";
             // 
             // toolStripMenuItem38
             // 
             actionList1.SetAction(toolStripMenuItem38, actCreateApplication);
-            toolStripMenuItem38.AutoToolTip = true;
-            toolStripMenuItem38.Image = Main.Properties.Resources.application_new_16;
             toolStripMenuItem38.Name = "toolStripMenuItem38";
-            toolStripMenuItem38.Size = new System.Drawing.Size(221, 38);
+            toolStripMenuItem38.Size = new System.Drawing.Size(221, 22);
             toolStripMenuItem38.Text = "Add Application...";
             // 
             // toolStripMenuItem49
             // 
             actionList1.SetAction(toolStripMenuItem49, actCreateApplication);
-            toolStripMenuItem49.Image = Main.Properties.Resources.application_new_16;
             toolStripMenuItem49.Name = "toolStripMenuItem49";
-            toolStripMenuItem49.Size = new System.Drawing.Size(213, 38);
+            toolStripMenuItem49.Size = new System.Drawing.Size(213, 22);
             toolStripMenuItem49.Text = "Add Application...";
             // 
             // exploreToolStripMenuItem1
             // 
             actionList1.SetAction(exploreToolStripMenuItem1, actExplore);
-            exploreToolStripMenuItem1.Image = Main.Properties.Resources.explore_16;
             exploreToolStripMenuItem1.Name = "exploreToolStripMenuItem1";
-            exploreToolStripMenuItem1.Size = new System.Drawing.Size(213, 38);
+            exploreToolStripMenuItem1.Size = new System.Drawing.Size(213, 22);
             exploreToolStripMenuItem1.Text = "Explore";
             // 
             // editPermissionsToolStripMenuItem1
             // 
             actionList1.SetAction(editPermissionsToolStripMenuItem1, actEditPermissions);
             editPermissionsToolStripMenuItem1.Name = "editPermissionsToolStripMenuItem1";
-            editPermissionsToolStripMenuItem1.Size = new System.Drawing.Size(213, 38);
+            editPermissionsToolStripMenuItem1.Size = new System.Drawing.Size(213, 22);
             editPermissionsToolStripMenuItem1.Text = "Edit Permissions...";
             // 
             // addVirtualDirectoryToolStripMenuItem1
             // 
             actionList1.SetAction(addVirtualDirectoryToolStripMenuItem1, actCreateVirtualDirectory);
-            addVirtualDirectoryToolStripMenuItem1.Image = Main.Properties.Resources.virtual_directory_new_16;
             addVirtualDirectoryToolStripMenuItem1.Name = "addVirtualDirectoryToolStripMenuItem1";
-            addVirtualDirectoryToolStripMenuItem1.Size = new System.Drawing.Size(213, 38);
+            addVirtualDirectoryToolStripMenuItem1.Size = new System.Drawing.Size(213, 22);
             addVirtualDirectoryToolStripMenuItem1.Text = "Add Virtual Directory...";
             // 
             // btnBrowseApplication
             // 
             actionList1.SetAction(btnBrowseApplication, actBrowse);
-            btnBrowseApplication.Image = Main.Properties.Resources.browse_16;
             btnBrowseApplication.Name = "btnBrowseApplication";
             btnBrowseApplication.Size = new System.Drawing.Size(181, 22);
             btnBrowseApplication.Text = "Browse";
@@ -1218,30 +1201,27 @@
             // toolStripMenuItem36
             // 
             actionList1.SetAction(toolStripMenuItem36, actExplore);
-            toolStripMenuItem36.Image = Main.Properties.Resources.explore_16;
             toolStripMenuItem36.Name = "toolStripMenuItem36";
-            toolStripMenuItem36.Size = new System.Drawing.Size(221, 38);
+            toolStripMenuItem36.Size = new System.Drawing.Size(221, 22);
             toolStripMenuItem36.Text = "Explore";
             // 
             // toolStripMenuItem37
             // 
             actionList1.SetAction(toolStripMenuItem37, actEditPermissions);
             toolStripMenuItem37.Name = "toolStripMenuItem37";
-            toolStripMenuItem37.Size = new System.Drawing.Size(221, 38);
+            toolStripMenuItem37.Size = new System.Drawing.Size(221, 22);
             toolStripMenuItem37.Text = "Edit Permissions...";
             // 
             // toolStripMenuItem39
             // 
             actionList1.SetAction(toolStripMenuItem39, actCreateVirtualDirectory);
-            toolStripMenuItem39.Image = Main.Properties.Resources.virtual_directory_new_16;
             toolStripMenuItem39.Name = "toolStripMenuItem39";
-            toolStripMenuItem39.Size = new System.Drawing.Size(221, 38);
+            toolStripMenuItem39.Size = new System.Drawing.Size(221, 22);
             toolStripMenuItem39.Text = "Add Virtual Directory...";
             // 
             // toolStripMenuItem41
             // 
             actionList1.SetAction(toolStripMenuItem41, actBrowse);
-            toolStripMenuItem41.Image = Main.Properties.Resources.browse_16;
             toolStripMenuItem41.Name = "toolStripMenuItem41";
             toolStripMenuItem41.Size = new System.Drawing.Size(181, 22);
             toolStripMenuItem41.Text = "Browse";
@@ -1249,37 +1229,33 @@
             // toolStripMenuItem46
             // 
             actionList1.SetAction(toolStripMenuItem46, actExplore);
-            toolStripMenuItem46.Image = Main.Properties.Resources.explore_16;
             toolStripMenuItem46.Name = "toolStripMenuItem46";
-            toolStripMenuItem46.Size = new System.Drawing.Size(213, 38);
+            toolStripMenuItem46.Size = new System.Drawing.Size(213, 22);
             toolStripMenuItem46.Text = "Explore";
             // 
             // toolStripMenuItem47
             // 
             actionList1.SetAction(toolStripMenuItem47, actEditPermissions);
             toolStripMenuItem47.Name = "toolStripMenuItem47";
-            toolStripMenuItem47.Size = new System.Drawing.Size(213, 38);
+            toolStripMenuItem47.Size = new System.Drawing.Size(213, 22);
             toolStripMenuItem47.Text = "Edit Permissions...";
             // 
             // toolStripMenuItem50
             // 
             actionList1.SetAction(toolStripMenuItem50, actCreateVirtualDirectory);
-            toolStripMenuItem50.Image = Main.Properties.Resources.virtual_directory_new_16;
             toolStripMenuItem50.Name = "toolStripMenuItem50";
-            toolStripMenuItem50.Size = new System.Drawing.Size(213, 38);
+            toolStripMenuItem50.Size = new System.Drawing.Size(213, 22);
             toolStripMenuItem50.Text = "Add Virtual Directory...";
             // 
             // toolStripMenuItem52
             // 
             actionList1.SetAction(toolStripMenuItem52, actBrowse);
-            toolStripMenuItem52.Image = Main.Properties.Resources.browse_16;
             toolStripMenuItem52.Name = "toolStripMenuItem52";
             toolStripMenuItem52.Size = new System.Drawing.Size(112, 22);
             toolStripMenuItem52.Text = "Browse";
             // 
             // cmsIis
             // 
-            cmsIis.ImageScalingSize = new System.Drawing.Size(32, 32);
             cmsIis.Items.AddRange(new ToolStripItem[] { refreshToolStripMenuItem5, toolStripMenuItem23, connectToAServerToolStripMenuItem1, connectToAWebsiteToolStripMenuItem1, connectToAnApplicationToolStripMenuItem1 });
             cmsIis.Name = "cmsIis";
             cmsIis.Size = new System.Drawing.Size(239, 162);
@@ -1289,7 +1265,7 @@
             refreshToolStripMenuItem5.Enabled = false;
             refreshToolStripMenuItem5.Image = Main.Properties.Resources.refresh_16;
             refreshToolStripMenuItem5.Name = "refreshToolStripMenuItem5";
-            refreshToolStripMenuItem5.Size = new System.Drawing.Size(238, 38);
+            refreshToolStripMenuItem5.Size = new System.Drawing.Size(238, 22);
             refreshToolStripMenuItem5.Text = "Refresh";
             // 
             // toolStripMenuItem23
@@ -1299,7 +1275,6 @@
             // 
             // cmsApplication
             // 
-            cmsApplication.ImageScalingSize = new System.Drawing.Size(32, 32);
             cmsApplication.Items.AddRange(new ToolStripItem[] { exploreToolStripMenuItem1, editPermissionsToolStripMenuItem1, toolStripMenuItem9, addApplicationToolStripMenuItem, addVirtualDirectoryToolStripMenuItem1, toolStripMenuItem15, manageApplicationToolStripMenuItem, toolStripMenuItem16, refreshToolStripMenuItem6, removeToolStripMenuItem1, toolStripMenuItem24, switchToContentViewToolStripMenuItem3 });
             cmsApplication.Name = "cmsApplication";
             cmsApplication.Size = new System.Drawing.Size(214, 332);
@@ -1318,7 +1293,7 @@
             // 
             manageApplicationToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { btnBrowseApplication, toolStripMenuItem25, advancedSettingsToolStripMenuItem });
             manageApplicationToolStripMenuItem.Name = "manageApplicationToolStripMenuItem";
-            manageApplicationToolStripMenuItem.Size = new System.Drawing.Size(213, 38);
+            manageApplicationToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             manageApplicationToolStripMenuItem.Text = "Manage Application";
             // 
             // toolStripMenuItem25
@@ -1343,13 +1318,13 @@
             refreshToolStripMenuItem6.Enabled = false;
             refreshToolStripMenuItem6.Image = Main.Properties.Resources.refresh_16;
             refreshToolStripMenuItem6.Name = "refreshToolStripMenuItem6";
-            refreshToolStripMenuItem6.Size = new System.Drawing.Size(213, 38);
+            refreshToolStripMenuItem6.Size = new System.Drawing.Size(213, 22);
             refreshToolStripMenuItem6.Text = "Refresh";
             // 
             // removeToolStripMenuItem1
             // 
             removeToolStripMenuItem1.Name = "removeToolStripMenuItem1";
-            removeToolStripMenuItem1.Size = new System.Drawing.Size(213, 38);
+            removeToolStripMenuItem1.Size = new System.Drawing.Size(213, 22);
             removeToolStripMenuItem1.Text = "Remove";
             removeToolStripMenuItem1.Click += btnRemoveApplication_Click;
             // 
@@ -1363,12 +1338,11 @@
             switchToContentViewToolStripMenuItem3.Enabled = false;
             switchToContentViewToolStripMenuItem3.Image = Main.Properties.Resources.switch_16;
             switchToContentViewToolStripMenuItem3.Name = "switchToContentViewToolStripMenuItem3";
-            switchToContentViewToolStripMenuItem3.Size = new System.Drawing.Size(213, 38);
+            switchToContentViewToolStripMenuItem3.Size = new System.Drawing.Size(213, 22);
             switchToContentViewToolStripMenuItem3.Text = "Switch to Content View";
             // 
             // cmsFarm
             // 
-            cmsFarm.ImageScalingSize = new System.Drawing.Size(32, 32);
             cmsFarm.Items.AddRange(new ToolStripItem[] { refreshToolStripMenuItem7, toolStripMenuItem29, btnCreateFarm, toolStripMenuItem30, switchToContentViewToolStripMenuItem4 });
             cmsFarm.Name = "cmsFarm";
             cmsFarm.Size = new System.Drawing.Size(214, 130);
@@ -1378,7 +1352,7 @@
             refreshToolStripMenuItem7.Enabled = false;
             refreshToolStripMenuItem7.Image = Main.Properties.Resources.refresh_16;
             refreshToolStripMenuItem7.Name = "refreshToolStripMenuItem7";
-            refreshToolStripMenuItem7.Size = new System.Drawing.Size(213, 38);
+            refreshToolStripMenuItem7.Size = new System.Drawing.Size(213, 22);
             refreshToolStripMenuItem7.Text = "Refresh";
             // 
             // toolStripMenuItem29
@@ -1389,7 +1363,7 @@
             // btnCreateFarm
             // 
             btnCreateFarm.Name = "btnCreateFarm";
-            btnCreateFarm.Size = new System.Drawing.Size(213, 38);
+            btnCreateFarm.Size = new System.Drawing.Size(213, 22);
             btnCreateFarm.Text = "Create Server Farm...";
             btnCreateFarm.Click += btnCreateFarm_Click;
             // 
@@ -1403,12 +1377,11 @@
             switchToContentViewToolStripMenuItem4.Enabled = false;
             switchToContentViewToolStripMenuItem4.Image = Main.Properties.Resources.switch_16;
             switchToContentViewToolStripMenuItem4.Name = "switchToContentViewToolStripMenuItem4";
-            switchToContentViewToolStripMenuItem4.Size = new System.Drawing.Size(213, 38);
+            switchToContentViewToolStripMenuItem4.Size = new System.Drawing.Size(213, 22);
             switchToContentViewToolStripMenuItem4.Text = "Switch to Content View";
             // 
             // cmsFarmServer
             // 
-            cmsFarmServer.ImageScalingSize = new System.Drawing.Size(32, 32);
             cmsFarmServer.Items.AddRange(new ToolStripItem[] { refreshToolStripMenuItem8, btnRemoveFarmServer, toolStripMenuItem31, btnAddFarmServer, toolStripMenuItem32, btnRenameFarmServer, toolStripMenuItem33, switchToContentViewToolStripMenuItem5 });
             cmsFarmServer.Name = "cmsFarmServer";
             cmsFarmServer.Size = new System.Drawing.Size(214, 212);
@@ -1418,13 +1391,13 @@
             refreshToolStripMenuItem8.Enabled = false;
             refreshToolStripMenuItem8.Image = Main.Properties.Resources.refresh_16;
             refreshToolStripMenuItem8.Name = "refreshToolStripMenuItem8";
-            refreshToolStripMenuItem8.Size = new System.Drawing.Size(213, 38);
+            refreshToolStripMenuItem8.Size = new System.Drawing.Size(213, 22);
             refreshToolStripMenuItem8.Text = "Refresh";
             // 
             // btnRemoveFarmServer
             // 
             btnRemoveFarmServer.Name = "btnRemoveFarmServer";
-            btnRemoveFarmServer.Size = new System.Drawing.Size(213, 38);
+            btnRemoveFarmServer.Size = new System.Drawing.Size(213, 22);
             btnRemoveFarmServer.Text = "Remove";
             btnRemoveFarmServer.Click += btnRemoveFarmServer_Click;
             // 
@@ -1436,7 +1409,7 @@
             // btnAddFarmServer
             // 
             btnAddFarmServer.Name = "btnAddFarmServer";
-            btnAddFarmServer.Size = new System.Drawing.Size(213, 38);
+            btnAddFarmServer.Size = new System.Drawing.Size(213, 22);
             btnAddFarmServer.Text = "Add Server...";
             btnAddFarmServer.Click += btnAddFarmServer_Click;
             // 
@@ -1449,7 +1422,7 @@
             // 
             btnRenameFarmServer.Enabled = false;
             btnRenameFarmServer.Name = "btnRenameFarmServer";
-            btnRenameFarmServer.Size = new System.Drawing.Size(213, 38);
+            btnRenameFarmServer.Size = new System.Drawing.Size(213, 22);
             btnRenameFarmServer.Text = "Rename";
             // 
             // toolStripMenuItem33
@@ -1462,12 +1435,11 @@
             switchToContentViewToolStripMenuItem5.Enabled = false;
             switchToContentViewToolStripMenuItem5.Image = Main.Properties.Resources.switch_16;
             switchToContentViewToolStripMenuItem5.Name = "switchToContentViewToolStripMenuItem5";
-            switchToContentViewToolStripMenuItem5.Size = new System.Drawing.Size(213, 38);
+            switchToContentViewToolStripMenuItem5.Size = new System.Drawing.Size(213, 22);
             switchToContentViewToolStripMenuItem5.Text = "Switch to Content View";
             // 
             // cmsServers
             // 
-            cmsServers.ImageScalingSize = new System.Drawing.Size(32, 32);
             cmsServers.Items.AddRange(new ToolStripItem[] { refreshToolStripMenuItem9, toolStripMenuItem34, addServerToolStripMenuItem, toolStripMenuItem35, switchToContentViewToolStripMenuItem6 });
             cmsServers.Name = "cmsServers";
             cmsServers.Size = new System.Drawing.Size(214, 130);
@@ -1476,7 +1448,7 @@
             // 
             refreshToolStripMenuItem9.Image = Main.Properties.Resources.refresh_16;
             refreshToolStripMenuItem9.Name = "refreshToolStripMenuItem9";
-            refreshToolStripMenuItem9.Size = new System.Drawing.Size(213, 38);
+            refreshToolStripMenuItem9.Size = new System.Drawing.Size(213, 22);
             refreshToolStripMenuItem9.Text = "Refresh";
             // 
             // toolStripMenuItem34
@@ -1487,7 +1459,7 @@
             // addServerToolStripMenuItem
             // 
             addServerToolStripMenuItem.Name = "addServerToolStripMenuItem";
-            addServerToolStripMenuItem.Size = new System.Drawing.Size(213, 38);
+            addServerToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             addServerToolStripMenuItem.Text = "Add Server...";
             // 
             // toolStripMenuItem35
@@ -1499,12 +1471,11 @@
             // 
             switchToContentViewToolStripMenuItem6.Image = Main.Properties.Resources.switch_16;
             switchToContentViewToolStripMenuItem6.Name = "switchToContentViewToolStripMenuItem6";
-            switchToContentViewToolStripMenuItem6.Size = new System.Drawing.Size(213, 38);
+            switchToContentViewToolStripMenuItem6.Size = new System.Drawing.Size(213, 22);
             switchToContentViewToolStripMenuItem6.Text = "Switch to Content View";
             // 
             // cmsVirtualDirectory
             // 
-            cmsVirtualDirectory.ImageScalingSize = new System.Drawing.Size(32, 32);
             cmsVirtualDirectory.Items.AddRange(new ToolStripItem[] { toolStripMenuItem36, toolStripMenuItem37, toolStripSeparator3, convertToApplicationToolStripMenuItem, toolStripMenuItem38, toolStripMenuItem39, toolStripSeparator4, manageVirtualDirectoryToolStripMenuItem, toolStripSeparator6, toolStripMenuItem43, toolStripMenuItem44, toolStripSeparator7, toolStripMenuItem45 });
             cmsVirtualDirectory.Name = "cmsApplication";
             cmsVirtualDirectory.Size = new System.Drawing.Size(222, 370);
@@ -1518,7 +1489,7 @@
             // 
             convertToApplicationToolStripMenuItem.Image = Main.Properties.Resources.application_new_16;
             convertToApplicationToolStripMenuItem.Name = "convertToApplicationToolStripMenuItem";
-            convertToApplicationToolStripMenuItem.Size = new System.Drawing.Size(221, 38);
+            convertToApplicationToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
             convertToApplicationToolStripMenuItem.Text = "Convert to Application";
             // 
             // toolStripSeparator4
@@ -1530,7 +1501,7 @@
             // 
             manageVirtualDirectoryToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { toolStripMenuItem41, toolStripSeparator5, toolStripMenuItem42 });
             manageVirtualDirectoryToolStripMenuItem.Name = "manageVirtualDirectoryToolStripMenuItem";
-            manageVirtualDirectoryToolStripMenuItem.Size = new System.Drawing.Size(221, 38);
+            manageVirtualDirectoryToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
             manageVirtualDirectoryToolStripMenuItem.Text = "Manage Virtual Directory";
             // 
             // toolStripSeparator5
@@ -1555,13 +1526,13 @@
             toolStripMenuItem43.Enabled = false;
             toolStripMenuItem43.Image = Main.Properties.Resources.refresh_16;
             toolStripMenuItem43.Name = "toolStripMenuItem43";
-            toolStripMenuItem43.Size = new System.Drawing.Size(221, 38);
+            toolStripMenuItem43.Size = new System.Drawing.Size(221, 22);
             toolStripMenuItem43.Text = "Refresh";
             // 
             // toolStripMenuItem44
             // 
             toolStripMenuItem44.Name = "toolStripMenuItem44";
-            toolStripMenuItem44.Size = new System.Drawing.Size(221, 38);
+            toolStripMenuItem44.Size = new System.Drawing.Size(221, 22);
             toolStripMenuItem44.Text = "Remove";
             toolStripMenuItem44.Click += btnRemoveVirtualDirectory_Click;
             // 
@@ -1575,12 +1546,11 @@
             toolStripMenuItem45.Enabled = false;
             toolStripMenuItem45.Image = Main.Properties.Resources.switch_16;
             toolStripMenuItem45.Name = "toolStripMenuItem45";
-            toolStripMenuItem45.Size = new System.Drawing.Size(221, 38);
+            toolStripMenuItem45.Size = new System.Drawing.Size(221, 22);
             toolStripMenuItem45.Text = "Switch to Content View";
             // 
             // cmsPhysicalDirectory
             // 
-            cmsPhysicalDirectory.ImageScalingSize = new System.Drawing.Size(32, 32);
             cmsPhysicalDirectory.Items.AddRange(new ToolStripItem[] { toolStripMenuItem46, toolStripMenuItem47, toolStripSeparator8, toolStripMenuItem48, toolStripMenuItem49, toolStripMenuItem50, toolStripSeparator9, manageFolderToolStripMenuItem, toolStripSeparator11, toolStripMenuItem54, toolStripSeparator12, toolStripMenuItem56 });
             cmsPhysicalDirectory.Name = "cmsPhysicalDirectory";
             cmsPhysicalDirectory.Size = new System.Drawing.Size(214, 332);
@@ -1594,7 +1564,7 @@
             // 
             toolStripMenuItem48.Image = Main.Properties.Resources.application_new_16;
             toolStripMenuItem48.Name = "toolStripMenuItem48";
-            toolStripMenuItem48.Size = new System.Drawing.Size(213, 38);
+            toolStripMenuItem48.Size = new System.Drawing.Size(213, 22);
             toolStripMenuItem48.Text = "Convert to Application";
             // 
             // toolStripSeparator9
@@ -1606,7 +1576,7 @@
             // 
             manageFolderToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { toolStripMenuItem52 });
             manageFolderToolStripMenuItem.Name = "manageFolderToolStripMenuItem";
-            manageFolderToolStripMenuItem.Size = new System.Drawing.Size(213, 38);
+            manageFolderToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             manageFolderToolStripMenuItem.Text = "Manage Folder";
             // 
             // toolStripSeparator11
@@ -1619,7 +1589,7 @@
             toolStripMenuItem54.Enabled = false;
             toolStripMenuItem54.Image = Main.Properties.Resources.refresh_16;
             toolStripMenuItem54.Name = "toolStripMenuItem54";
-            toolStripMenuItem54.Size = new System.Drawing.Size(213, 38);
+            toolStripMenuItem54.Size = new System.Drawing.Size(213, 22);
             toolStripMenuItem54.Text = "Refresh";
             // 
             // toolStripSeparator12
@@ -1632,7 +1602,7 @@
             toolStripMenuItem56.Enabled = false;
             toolStripMenuItem56.Image = Main.Properties.Resources.switch_16;
             toolStripMenuItem56.Name = "toolStripMenuItem56";
-            toolStripMenuItem56.Size = new System.Drawing.Size(213, 38);
+            toolStripMenuItem56.Size = new System.Drawing.Size(213, 22);
             toolStripMenuItem56.Text = "Switch to Content View";
             // 
             // _logSplitter
@@ -1667,8 +1637,7 @@
             // 
             // MainForm
             // 
-            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleMode = AutoScaleMode.Dpi;
             ClientSize = new System.Drawing.Size(915, 497);
             Controls.Add(_logSplitter);
             Controls.Add(statusStrip1);
