@@ -36,6 +36,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.btnRetry = new System.Windows.Forms.Button();
             this.lblCurrentVersion = new System.Windows.Forms.Label();
             this.lblUpdateStatus = new System.Windows.Forms.Label();
             this.btnDownloadUpdate = new System.Windows.Forms.Button();
@@ -102,6 +103,7 @@
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Controls.Add(this.btnRetry);
             this.groupBox2.Controls.Add(this.lblCurrentVersion);
             this.groupBox2.Controls.Add(this.lblUpdateStatus);
             this.groupBox2.Controls.Add(this.btnDownloadUpdate);
@@ -113,6 +115,17 @@
             this.groupBox2.TabIndex = 3;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Updates";
+            // 
+            // btnRetry
+            // 
+            this.btnRetry.Location = new System.Drawing.Point(240, 110);
+            this.btnRetry.Name = "btnRetry";
+            this.btnRetry.Size = new System.Drawing.Size(200, 30);
+            this.btnRetry.TabIndex = 3;
+            this.btnRetry.Text = "Retry";
+            this.btnRetry.UseVisualStyleBackColor = true;
+            this.btnRetry.Visible = false;
+            this.btnRetry.Click += new System.EventHandler(this.btnRetry_Click);
             // 
             // lblCurrentVersion
             // 
@@ -250,5 +263,6 @@
         private Label lblCurrentVersion;
         private Label lblUpdateStatus;
         private Button btnDownloadUpdate;
+        private Button btnRetry;
     }
 }

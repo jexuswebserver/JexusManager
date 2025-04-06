@@ -26,6 +26,12 @@ namespace JexusManager.Features.Main
         {
             try
             {
+                // Update UI to show checking state
+                lblUpdateStatus.Text = "Checking for updates...";
+                lblUpdateStatus.ForeColor = Color.Black;
+                btnDownloadUpdate.Visible = false;
+                btnRetry.Visible = false;
+                
                 _updateInfo = await UpdateHelper.CheckForUpdate();
                 UpdateVersionDisplay();
             }
@@ -33,6 +39,7 @@ namespace JexusManager.Features.Main
             {
                 lblUpdateStatus.Text = $"Error checking for updates: {ex.Message}";
                 lblUpdateStatus.ForeColor = Color.Red;
+                btnRetry.Visible = true;
             }
         }
 
@@ -49,6 +56,7 @@ namespace JexusManager.Features.Main
                 lblUpdateStatus.Text = _updateInfo.ErrorMessage;
                 lblUpdateStatus.ForeColor = Color.Red;
                 btnDownloadUpdate.Visible = false;
+                btnRetry.Visible = true;
                 return;
             }
 
@@ -57,12 +65,14 @@ namespace JexusManager.Features.Main
                 lblUpdateStatus.Text = $"An update is available: {_updateInfo.LatestVersion}";
                 lblUpdateStatus.ForeColor = Color.Green;
                 btnDownloadUpdate.Visible = true;
+                btnRetry.Visible = false;
             }
             else
             {
                 lblUpdateStatus.Text = "You are using the latest version.";
                 lblUpdateStatus.ForeColor = Color.Green;
                 btnDownloadUpdate.Visible = false;
+                btnRetry.Visible = false;
             }
         }
 
@@ -89,6 +99,11 @@ namespace JexusManager.Features.Main
             {
                 DialogHelper.ProcessStart(_updateInfo.ReleaseUrl);
             }
+        }
+
+        private void btnRetry_Click(object sender, EventArgs e)
+        {
+            LoadUpdateInfo();
         }
     }
 }
