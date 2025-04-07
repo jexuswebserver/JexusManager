@@ -2,6 +2,9 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Collections.Generic;
+using System.Windows.Forms;
+
 namespace JexusManager.Features
 {
     using System;
@@ -266,7 +269,7 @@ namespace JexusManager.Features
             }
         }
 
-        public void HandleMouseClick(ListView listView1, Action<T, string> updatePropertyAction, Func<string, bool> validateAction)
+        public void InitializeMouseClick(ListView listView1, Action<T, string> updatePropertyAction, Func<string, bool> validateAction)
         {
             _listView = listView1;
             listView1.LabelEdit = true;
@@ -321,6 +324,20 @@ namespace JexusManager.Features
         {
             return Items.Where(item => item != SelectedItem)
                 .Any(item => string.Equals(value(item), text, StringComparison.Ordinal));
+        }
+
+        public virtual string GetGroupKey(ListViewItem item, string selectedGroup)
+        {
+            return "Unknown";
+        }
+
+        public virtual void InitializeGrouping(ToolStripComboBox cbGroup)
+        { }
+
+        public void InitializeColumnClick(ListView listView)
+        {
+            var hook = new ColumnClickHook();
+            hook.HandleColumnClick(listView);
         }
         #endregion
     }

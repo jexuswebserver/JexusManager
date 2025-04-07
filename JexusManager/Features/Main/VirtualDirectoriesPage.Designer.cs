@@ -13,7 +13,7 @@ namespace JexusManager.Features.Main
         /// <summary> 
         /// Clean up any resources being used.
         /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -37,18 +37,10 @@ namespace JexusManager.Features.Main
             this.cmsActionPanel = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.panel2 = new System.Windows.Forms.Panel();
             this.listView1 = new System.Windows.Forms.ListView();
+            this.chAppPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chPhysicalPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.toolStrip2 = new System.Windows.Forms.ToolStrip();
-            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
-            this.cbFilter = new System.Windows.Forms.ToolStripComboBox();
-            this.btnGo = new System.Windows.Forms.ToolStripSplitButton();
-            this.pathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.physicalPathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnShowAll = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
-            this.cbGroup = new System.Windows.Forms.ToolStripComboBox();
+            this.chIdentity = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.label2 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
@@ -60,7 +52,6 @@ namespace JexusManager.Features.Main
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.panel2.SuspendLayout();
-            this.toolStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -106,7 +97,6 @@ namespace JexusManager.Features.Main
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel2.Controls.Add(this.listView1);
-            this.panel2.Controls.Add(this.toolStrip2);
             this.panel2.Location = new System.Drawing.Point(10, 50);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(560, 540);
@@ -115,15 +105,17 @@ namespace JexusManager.Features.Main
             // listView1
             // 
             this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.chAppPath,
             this.chPath,
-            this.chPhysicalPath});
+            this.chPhysicalPath,
+            this.chIdentity});
             this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listView1.FullRowSelect = true;
             this.listView1.LabelEdit = true;
-            this.listView1.Location = new System.Drawing.Point(0, 25);
+            this.listView1.Location = new System.Drawing.Point(0, 0);
             this.listView1.Margin = new System.Windows.Forms.Padding(5);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(560, 515);
+            this.listView1.Size = new System.Drawing.Size(560, 540);
             this.listView1.SmallImageList = this.imageList1;
             this.listView1.TabIndex = 0;
             this.listView1.UseCompatibleStateImageBehavior = false;
@@ -132,95 +124,25 @@ namespace JexusManager.Features.Main
             this.listView1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.ListView1_MouseDoubleClick);
             this.listView1.SelectedIndexChanged += new System.EventHandler(this.ListView1_SelectedIndexChanged);
             // 
+            // chAppPath
+            // 
+            this.chAppPath.Text = "Application Path";
+            this.chAppPath.Width = 150;
+            // 
             // chPath
             // 
-            this.chPath.Text = "Path";
-            this.chPath.Width = 200;
+            this.chPath.Text = "Virtual Path";
+            this.chPath.Width = 150;
             // 
             // chPhysicalPath
             // 
             this.chPhysicalPath.Text = "Physical Path";
-            this.chPhysicalPath.Width = 350;
+            this.chPhysicalPath.Width = 250;
             // 
-            // toolStrip2
+            // chIdentity
             // 
-            this.toolStrip2.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripLabel1,
-            this.cbFilter,
-            this.btnGo,
-            this.btnShowAll,
-            this.toolStripSeparator1,
-            this.toolStripLabel2,
-            this.cbGroup});
-            this.toolStrip2.Location = new System.Drawing.Point(0, 0);
-            this.toolStrip2.Name = "toolStrip2";
-            this.toolStrip2.Size = new System.Drawing.Size(560, 25);
-            this.toolStrip2.TabIndex = 3;
-            this.toolStrip2.Text = "toolStrip2";
-            // 
-            // toolStripLabel1
-            // 
-            this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(36, 22);
-            this.toolStripLabel1.Text = "Filter:";
-            // 
-            // cbFilter
-            // 
-            this.cbFilter.Name = "cbFilter";
-            this.cbFilter.Size = new System.Drawing.Size(121, 25);
-            this.cbFilter.TextChanged += new System.EventHandler(this.cbFilter_TextChanged);
-            // 
-            // btnGo
-            // 
-            this.btnGo.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.pathToolStripMenuItem,
-            this.physicalPathToolStripMenuItem});
-            this.btnGo.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnGo.Name = "btnGo";
-            this.btnGo.Size = new System.Drawing.Size(54, 22);
-            this.btnGo.Text = "Go";
-            this.btnGo.ToolTipText = "Go";
-            // 
-            // pathToolStripMenuItem
-            // 
-            this.pathToolStripMenuItem.Name = "pathToolStripMenuItem";
-            this.pathToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
-            this.pathToolStripMenuItem.Text = "Path";
-            // 
-            // physicalPathToolStripMenuItem
-            // 
-            this.physicalPathToolStripMenuItem.Name = "physicalPathToolStripMenuItem";
-            this.physicalPathToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
-            this.physicalPathToolStripMenuItem.Text = "Physical Path";
-            // 
-            // btnShowAll
-            // 
-            this.btnShowAll.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnShowAll.Name = "btnShowAll";
-            this.btnShowAll.Size = new System.Drawing.Size(73, 22);
-            this.btnShowAll.Text = "Show All";
-            this.btnShowAll.Click += new System.EventHandler(this.btnShowAll_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
-            // 
-            // toolStripLabel2
-            // 
-            this.toolStripLabel2.Name = "toolStripLabel2";
-            this.toolStripLabel2.Size = new System.Drawing.Size(59, 22);
-            this.toolStripLabel2.Text = "Group by:";
-            // 
-            // cbGroup
-            // 
-            this.cbGroup.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbGroup.Items.AddRange(new object[] {
-            "No Grouping",
-            "Path"});
-            this.cbGroup.Name = "cbGroup";
-            this.cbGroup.Size = new System.Drawing.Size(121, 25);
+            this.chIdentity.Text = "Identity";
+            this.chIdentity.Width = 150;
             // 
             // label2
             // 
@@ -302,9 +224,6 @@ namespace JexusManager.Features.Main
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
-            this.toolStrip2.ResumeLayout(false);
-            this.toolStrip2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
@@ -325,18 +244,10 @@ namespace JexusManager.Features.Main
         private Label label2;
         private ToolStrip tsActionPanel;
         private ListView listView1;
+        private ColumnHeader chAppPath;
         private ColumnHeader chPath;
         private ColumnHeader chPhysicalPath;
-        private ToolStrip toolStrip2;
-        private ToolStripLabel toolStripLabel1;
-        private ToolStripComboBox cbFilter;
-        private ToolStripSplitButton btnGo;
-        private ToolStripMenuItem pathToolStripMenuItem;
-        private ToolStripMenuItem physicalPathToolStripMenuItem;
-        private ToolStripButton btnShowAll;
-        private ToolStripSeparator toolStripSeparator1;
-        private ToolStripLabel toolStripLabel2;
-        private ToolStripComboBox cbGroup;
+        private ColumnHeader chIdentity;
         private ContextMenuStrip cmsActionPanel;
     }
 }

@@ -281,8 +281,6 @@ namespace JexusManager.Features.Certificates
             OnCertificatesSettingsSaved();
         }
 
-        public List<CertificatesItem> Items { get; set; }
-
         public void Import()
         {
             using (var dialog = new ImportCertificateDialog(Module, this))
@@ -431,6 +429,26 @@ namespace JexusManager.Features.Certificates
         protected override void DoubleClick(CertificatesItem item)
         {
             DialogHelper.DisplayCertificate(item.Item, IntPtr.Zero);
+        }
+
+        public override void InitializeGrouping(ToolStripComboBox cbGroup)
+        {
+            cbGroup.Items.AddRange(["No Grouping", "Expiration Date", "Issued By", "Certificate Store"]);
+        }
+
+        public override string GetGroupKey(ListViewItem item, string selectedGroup)
+        {
+            switch (selectedGroup)
+            {
+                case "Expiration Date":
+                    return item.SubItems[3].Text;
+                case "Issued By":
+                    return item.SubItems[2].Text;
+                case "Certificate Store":
+                    return item.SubItems[5].Text;
+                default:
+                    return "Unknown";
+            }
         }
 
         private void Trust()

@@ -65,7 +65,7 @@ namespace JexusManager.Features.IsapiFilters
             _feature.IsapiFiltersSettingsUpdated = InitializeListPage;
             _feature.Load();
 
-            _feature.HandleMouseClick(listView1, (item, text) =>
+            _feature.InitializeMouseClick(listView1, (item, text) =>
             {
                 item.Name = text;
                 item.Apply();
@@ -91,6 +91,9 @@ namespace JexusManager.Features.IsapiFilters
             {
                 listView1.Items.Add(new IsapiFiltersListViewItem(file, this));
             }
+
+            _feature.InitializeColumnClick(listView1);
+            _feature.InitializeGrouping(cbGroup);
 
             if (_feature.SelectedItem == null)
             {
@@ -130,6 +133,11 @@ namespace JexusManager.Features.IsapiFilters
         {
             _feature.HandleSelectedIndexChanged(listView1);
             Refresh();
+        }
+
+        private void CbGroupSelectedIndexChanged(object sender, EventArgs e)
+        {
+            DialogHelper.HandleGrouping(listView1, cbGroup.SelectedItem.ToString(), _feature.GetGroupKey);
         }
 
         protected override bool ShowHelp()

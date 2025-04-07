@@ -39,20 +39,6 @@
             this.listView1 = new System.Windows.Forms.ListView();
             this.chName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.toolStrip2 = new System.Windows.Forms.ToolStrip();
-            this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
-            this.cbFilter = new System.Windows.Forms.ToolStripComboBox();
-            this.btnGo = new System.Windows.Forms.ToolStripSplitButton();
-            this.protocolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnShowAll = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
-            this.cbGroup = new System.Windows.Forms.ToolStripComboBox();
-            this.btnView = new System.Windows.Forms.ToolStripSplitButton();
-            this.detailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.iconsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.listToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
@@ -65,7 +51,6 @@
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel2.SuspendLayout();
-            this.toolStrip2.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -112,7 +97,6 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel2.Controls.Add(this.listView1);
-            this.panel2.Controls.Add(this.toolStrip2);
             this.panel2.Controls.Add(this.label2);
             this.panel2.Location = new System.Drawing.Point(10, 50);
             this.panel2.Name = "panel2";
@@ -127,11 +111,11 @@
             this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listView1.FullRowSelect = true;
             this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(0, 38);
+            this.listView1.Location = new System.Drawing.Point(0, 13);
             this.listView1.Margin = new System.Windows.Forms.Padding(5);
             this.listView1.MultiSelect = false;
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(560, 502);
+            this.listView1.Size = new System.Drawing.Size(560, 527);
             this.listView1.TabIndex = 0;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -148,116 +132,6 @@
             // 
             this.chType.Text = "Entry Type";
             this.chType.Width = 80;
-            // 
-            // toolStrip2
-            // 
-            this.toolStrip2.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripLabel2,
-            this.cbFilter,
-            this.btnGo,
-            this.btnShowAll,
-            this.toolStripSeparator4,
-            this.toolStripLabel3,
-            this.cbGroup,
-            this.btnView});
-            this.toolStrip2.Location = new System.Drawing.Point(0, 13);
-            this.toolStrip2.Name = "toolStrip2";
-            this.toolStrip2.Size = new System.Drawing.Size(560, 25);
-            this.toolStrip2.TabIndex = 3;
-            this.toolStrip2.Text = "toolStrip2";
-            // 
-            // toolStripLabel2
-            // 
-            this.toolStripLabel2.Name = "toolStripLabel2";
-            this.toolStripLabel2.Size = new System.Drawing.Size(36, 22);
-            this.toolStripLabel2.Text = "Filter:";
-            // 
-            // cbFilter
-            // 
-            this.cbFilter.Name = "cbFilter";
-            this.cbFilter.Size = new System.Drawing.Size(121, 25);
-            // 
-            // btnGo
-            // 
-            this.btnGo.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.protocolToolStripMenuItem});
-            this.btnGo.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnGo.Name = "btnGo";
-            this.btnGo.Size = new System.Drawing.Size(54, 22);
-            this.btnGo.Text = "Go";
-            this.btnGo.ToolTipText = "Go";
-            // 
-            // protocolToolStripMenuItem
-            // 
-            this.protocolToolStripMenuItem.Name = "protocolToolStripMenuItem";
-            this.protocolToolStripMenuItem.Size = new System.Drawing.Size(88, 22);
-            this.protocolToolStripMenuItem.Text = "All";
-            // 
-            // btnShowAll
-            // 
-            this.btnShowAll.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnShowAll.Name = "btnShowAll";
-            this.btnShowAll.Size = new System.Drawing.Size(73, 22);
-            this.btnShowAll.Text = "Show All";
-            // 
-            // toolStripSeparator4
-            // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
-            // 
-            // toolStripLabel3
-            // 
-            this.toolStripLabel3.Name = "toolStripLabel3";
-            this.toolStripLabel3.Size = new System.Drawing.Size(59, 22);
-            this.toolStripLabel3.Text = "Group by:";
-            // 
-            // cbGroup
-            // 
-            this.cbGroup.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbGroup.Items.AddRange(new object[] {
-            "No Grouping",
-            "Category",
-            "Area"});
-            this.cbGroup.Name = "cbGroup";
-            this.cbGroup.Size = new System.Drawing.Size(121, 25);
-            // 
-            // btnView
-            // 
-            this.btnView.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.detailsToolStripMenuItem,
-            this.iconsToolStripMenuItem,
-            this.tilesToolStripMenuItem,
-            this.listToolStripMenuItem});
-            this.btnView.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnView.Name = "btnView";
-            this.btnView.Size = new System.Drawing.Size(32, 22);
-            this.btnView.Text = "toolStripButton1";
-            // 
-            // detailsToolStripMenuItem
-            // 
-            this.detailsToolStripMenuItem.Name = "detailsToolStripMenuItem";
-            this.detailsToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
-            this.detailsToolStripMenuItem.Text = "Details";
-            // 
-            // iconsToolStripMenuItem
-            // 
-            this.iconsToolStripMenuItem.Name = "iconsToolStripMenuItem";
-            this.iconsToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
-            this.iconsToolStripMenuItem.Text = "Icons";
-            // 
-            // tilesToolStripMenuItem
-            // 
-            this.tilesToolStripMenuItem.Name = "tilesToolStripMenuItem";
-            this.tilesToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
-            this.tilesToolStripMenuItem.Text = "Tiles";
-            // 
-            // listToolStripMenuItem
-            // 
-            this.listToolStripMenuItem.Name = "listToolStripMenuItem";
-            this.listToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
-            this.listToolStripMenuItem.Text = "List";
             // 
             // label2
             // 
@@ -344,8 +218,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
-            this.toolStrip2.ResumeLayout(false);
-            this.toolStrip2.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.panel1.ResumeLayout(false);
@@ -368,20 +240,6 @@
         private Label label3;
         private PictureBox pictureBox1;
         private Panel panel2;
-        private ToolStrip toolStrip2;
-        private ToolStripLabel toolStripLabel2;
-        private ToolStripComboBox cbFilter;
-        private ToolStripSplitButton btnGo;
-        private ToolStripMenuItem protocolToolStripMenuItem;
-        private ToolStripButton btnShowAll;
-        private ToolStripSeparator toolStripSeparator4;
-        private ToolStripLabel toolStripLabel3;
-        private ToolStripComboBox cbGroup;
-        private ToolStripSplitButton btnView;
-        private ToolStripMenuItem detailsToolStripMenuItem;
-        private ToolStripMenuItem iconsToolStripMenuItem;
-        private ToolStripMenuItem tilesToolStripMenuItem;
-        private ToolStripMenuItem listToolStripMenuItem;
         private ContextMenuStrip cmsActionPanel;
     }
 }

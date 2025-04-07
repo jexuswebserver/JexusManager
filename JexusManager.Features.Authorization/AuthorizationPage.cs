@@ -86,6 +86,8 @@ namespace JexusManager.Features.Authorization
                 listView1.Items.Add(new AuthorizationListViewItem(file, this));
             }
 
+            _feature.InitializeColumnClick(listView1);
+
             if (_feature.SelectedItem == null)
             {
                 this.Refresh();

@@ -350,14 +350,19 @@ namespace JexusManager.Features.Rewrite
 
         private void ViewTags()
         {
+            var service = (INavigationService)GetService(typeof(INavigationService));
+            service.Navigate(null, null, typeof(CustomTagsPage), null);
         }
 
         private void ViewPreconditions()
         {
+            var service = (INavigationService)GetService(typeof(INavigationService));
+            service.Navigate(null, null, typeof(PreConditionsPage), null);
         }
 
         private void ViewProviders()
         {
+            // TODO:
         }
 
         private void ViewMaps()

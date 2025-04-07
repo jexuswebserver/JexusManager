@@ -107,6 +107,8 @@ namespace JexusManager.Features.Rewrite.Inbound
                 listView1.Items.Add(new MapsListViewItem(file, this));
             }
 
+            _feature.InitializeColumnClick(listView1);
+
             if (_feature.SelectedItem == null)
             {
                 this.Refresh();

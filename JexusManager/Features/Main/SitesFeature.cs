@@ -485,6 +485,36 @@ namespace JexusManager.Features.Main
             mainForm?.ShowSite(item);
         }
 
+        public override void InitializeGrouping(ToolStripComboBox cbGroup)
+        {
+            cbGroup.Items.AddRange(new object[] {
+            "No Grouping",
+            "Status",
+            //"IP Address",
+            //"Protocol",
+            //"Port"
+            });
+        }
+
+        public override string GetGroupKey(ListViewItem item, string selectedGroup)
+        {
+            Site site = item.Tag as Site;
+            switch (selectedGroup)
+            {
+                case "Status":
+                    return item.SubItems[2].Text;
+                    // TODO:
+                //case "IP Address":
+                //    return site.Bindings;
+                //case "Protocol":
+                //    return item.SubItems[3].Text;
+                //case "Port":
+                //    return item.SubItems[4].Text;
+                default:
+                    return string.Empty;
+            }
+        }
+
         private void Permissions()
         {
             var path = SelectedItem.PhysicalPath.ExpandIisExpressEnvironmentVariables(SelectedItem.Applications[0].GetActualExecutable());

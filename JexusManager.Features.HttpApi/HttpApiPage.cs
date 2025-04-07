@@ -140,17 +140,21 @@ namespace JexusManager.Features.HttpApi
             var ip = new IpMappingFeature(Module);
             ip.HttpApiSettingsUpdate = RefreshIp;
             ip.Load();
+            ip.InitializeColumnClick(lvIP);
+            // TODO: add grouping?
             tpIP.Tag = ip;
             RefreshIp();
 
             var sni = new SniMappingFeature(Module);
             sni.HttpApiSettingsUpdate = RefreshSni;
             sni.Load();
+            sni.InitializeColumnClick(lvSni);
             tpSNI.Tag = sni;
 
             var url = new ReservedUrlsFeature(Module);
             url.HttpApiSettingsUpdate = RefreshUrl;
             url.Load();
+            url.InitializeColumnClick(lvURL);
             tpURL.Tag = url;
         }
 

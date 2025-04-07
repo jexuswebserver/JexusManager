@@ -129,7 +129,7 @@ namespace JexusManager.Features.Rewrite
             _feature.Outbound.RewriteSettingsUpdated = InitializeOutbound;
             _feature.Load();
 
-            _feature.Inbound.HandleMouseClick(lvIn, (item, text) =>
+            _feature.Inbound.InitializeMouseClick(lvIn, (item, text) =>
             {
                 item.Name = text;
                 item.Apply();
@@ -146,7 +146,7 @@ namespace JexusManager.Features.Rewrite
                 return true;
             });
 
-            _feature.Outbound.HandleMouseClick(lvOut, (item, text) =>
+            _feature.Outbound.InitializeMouseClick(lvOut, (item, text) =>
             {
                 item.Name = text;
                 item.Apply();
@@ -178,6 +178,8 @@ namespace JexusManager.Features.Rewrite
                 lvIn.Items.Add(new InboundRuleListViewItem(file, this));
             }
 
+            _feature.Inbound.InitializeColumnClick(lvIn);
+
             if (_feature.Inbound.SelectedItem == null)
             {
                 this.Refresh();
@@ -200,6 +202,8 @@ namespace JexusManager.Features.Rewrite
             {
                 lvOut.Items.Add(new OutboundRuleListViewItem(file, this));
             }
+
+            _feature.Outbound.InitializeColumnClick(lvOut);
 
             if (_feature.Outbound.SelectedItem == null)
             {

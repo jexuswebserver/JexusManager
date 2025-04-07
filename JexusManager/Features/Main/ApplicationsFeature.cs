@@ -305,6 +305,27 @@ namespace JexusManager.Features.Main
             Basic();
         }
 
+        public override void InitializeGrouping(ToolStripComboBox cbGroup)
+        {
+            cbGroup.Items.AddRange(new object[] {
+            "No Grouping",
+            "Site",
+            "Application Pool"});
+        }
+
+        public override string GetGroupKey(ListViewItem item, string selectedGroup)
+        {
+            switch (selectedGroup)
+            {
+                case "Site":
+                    return item.SubItems[1].Name;
+                case "Application Pool":
+                    return item.SubItems[2].Name;
+                default:
+                    return string.Empty;
+            }
+        }
+
         private void Permissions()
         {
             var path = SelectedItem.PhysicalPath.ExpandIisExpressEnvironmentVariables(SelectedItem.GetActualExecutable());

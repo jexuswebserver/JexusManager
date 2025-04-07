@@ -75,6 +75,8 @@ namespace JexusManager.Features.FastCgi
                 listView1.Items.Add(new FastCgiListViewItem(file, this));
             }
 
+            _feature.InitializeColumnClick(listView1);
+
             if (_feature.SelectedItem == null)
             {
                 Refresh();

@@ -149,6 +149,22 @@ namespace JexusManager.Features.ResponseHeaders
             EditItem(dialog.Item);
         }
 
+        public override void InitializeGrouping(ToolStripComboBox cbGroup)
+        {
+            cbGroup.Items.AddRange(["No Grouping", "Entry Type"]);
+        }
+
+        public override string GetGroupKey(ListViewItem item, string selectedGroup)
+        {
+            switch (selectedGroup)
+            {
+                case "Entry Type":
+                    return item.SubItems[2].Text; 
+                default:
+                    return "Unknown";
+            }
+        }
+
         public void Set()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));

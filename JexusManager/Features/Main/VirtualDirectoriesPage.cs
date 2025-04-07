@@ -49,11 +49,13 @@ namespace JexusManager.Features.Main
             private readonly VirtualDirectoriesPage _page;
 
             public VirtualDirectoriesListViewItem(VirtualDirectory item, VirtualDirectoriesPage page)
-                : base(item.Path)
+                : base(item.Application.IsRoot() ? "Root Application": item.Application.Path) // TODO: miss the icon in this column.
             {
                 Item = item;
                 _page = page;
+                SubItems.Add(new ListViewSubItem(this, Item.Path));
                 SubItems.Add(new ListViewSubItem(this, Item.PhysicalPath));
+                SubItems.Add(new ListViewSubItem(this, Item.UserName ?? string.Empty));
                 ImageIndex = 0;
             }
         }
@@ -65,9 +67,6 @@ namespace JexusManager.Features.Main
         public VirtualDirectoriesPage()
         {
             InitializeComponent();
-            btnGo.Image = DefaultTaskList.GoImage;
-            btnShowAll.Image = DefaultTaskList.ShowAllImage;
-
             imageList1.Images.Add(Resources.virtual_directory_16);
         }
 
@@ -95,6 +94,8 @@ namespace JexusManager.Features.Main
             {
                 listView1.Items.Add(new VirtualDirectoriesListViewItem(vdir, this));
             }
+            
+            _feature.InitializeColumnClick(listView1);
 
             if (_feature.SelectedItem != null)
             {
@@ -142,16 +143,6 @@ namespace JexusManager.Features.Main
                 base.Tasks.Add(_taskList);
                 return base.Tasks;
             }
-        }
-
-        private void cbFilter_TextChanged(object sender, EventArgs e)
-        {
-            btnGo.Enabled = !string.IsNullOrWhiteSpace(cbFilter.Text);
-        }
-
-        private void btnShowAll_Click(object sender, EventArgs e)
-        {
-            cbFilter.Text = string.Empty;
         }
 
         private void ListView1_KeyDown(object sender, KeyEventArgs e)

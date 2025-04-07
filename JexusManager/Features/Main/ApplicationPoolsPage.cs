@@ -84,7 +84,7 @@ namespace JexusManager.Features.Main
             _feature.ApplicationPoolsSettingsUpdated = InitializeListPage;
             _feature.Load();
 
-            _feature.HandleMouseClick(listView1, (item, text) =>
+            _feature.InitializeMouseClick(listView1, (item, text) =>
             {
                 item.Name = text;
                 item.Apply();
@@ -125,6 +125,9 @@ namespace JexusManager.Features.Main
                 listView1.Items.Add(new ApplicationPoolsListViewItem(file, this));
             }
 
+            _feature.InitializeGrouping(cbGroup);
+            _feature.InitializeColumnClick(listView1);
+
             if (_feature.SelectedItem != null)
             {
                 foreach (ApplicationPoolsListViewItem item in listView1.Items)
@@ -156,6 +159,11 @@ namespace JexusManager.Features.Main
             {
                 splitContainer1.SplitterDistance = splitContainer1.Width - 500;
             }
+        }
+
+        private void CbGroup_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DialogHelper.HandleGrouping(listView1, cbGroup.SelectedItem.ToString(), _feature.GetGroupKey);
         }
 
         protected override TaskListCollection Tasks

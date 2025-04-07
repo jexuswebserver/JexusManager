@@ -151,6 +151,8 @@ namespace JexusManager.Features.Authentication
                 extra = item.Feature.GetTaskList();
             }
 
+            new ColumnClickHook().HandleColumnClick(listView1);
+
             Tasks.Fill(tsActionPanel, cmsActionPanel, extra);
         }
 
@@ -176,6 +178,23 @@ namespace JexusManager.Features.Authentication
             {
                 splitContainer1.SplitterDistance = splitContainer1.Width - 500;
             }
+        }
+
+        private void CbGroup_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DialogHelper.HandleGrouping(listView1, cbGroup.SelectedItem.ToString(), (item, selectedGroup) =>
+            {
+                // Determine the group key based on the selected grouping option
+                switch (selectedGroup)
+                {
+                    case "Response Type":
+                        return item.SubItems[2].Text;
+                    case "Status":
+                        return item.SubItems[1].Text;
+                    default:
+                        return "Unknown";
+                }
+            });
         }
 
         protected override TaskListCollection Tasks

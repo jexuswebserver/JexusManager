@@ -76,6 +76,9 @@ namespace JexusManager.Features.HttpErrors
                 listView1.Items.Add(new CustomErrorsListViewItem(file, this));
             }
 
+            _feature.InitializeColumnClick(listView1);
+            _feature.InitializeGrouping(cbGroup);
+
             if (_feature.SelectedItem != null)
             {
                 foreach (CustomErrorsListViewItem item in listView1.Items)
@@ -113,6 +116,11 @@ namespace JexusManager.Features.HttpErrors
         {
             _feature.HandleSelectedIndexChanged(listView1);
             Refresh();
+        }
+
+        private void CbGroup_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DialogHelper.HandleGrouping(listView1, cbGroup.SelectedItem.ToString(), _feature.GetGroupKey);
         }
 
         protected override bool ShowHelp()

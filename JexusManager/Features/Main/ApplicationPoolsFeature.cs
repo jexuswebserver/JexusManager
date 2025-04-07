@@ -347,6 +347,29 @@ namespace JexusManager.Features.Main
             OnApplicationPoolsSettingsSaved();
         }
 
+        public override void InitializeGrouping(ToolStripComboBox groupBox)
+        {
+            groupBox.Items.AddRange(["No Grouping", "Status", ".NET CLR Version", "Managed Pipeline Mode", "Identity"]);
+        }
+
+        public override string GetGroupKey(ListViewItem item, string selectedGroup)
+        {
+            // Determine the group key based on the selected grouping option
+            switch (selectedGroup)
+            {
+                case "Status":
+                    return item.SubItems[1].Text;
+                case ".NET CLR Version":
+                    return item.SubItems[2].Text;
+                case "Managed Pipeline Mode":
+                    return item.SubItems[3].Text;
+                case "Identity":
+                    return item.SubItems[4].Text;
+                default:
+                    return "Unknown";
+            }
+        }
+
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
         {
             return null;

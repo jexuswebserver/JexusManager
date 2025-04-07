@@ -76,6 +76,9 @@ namespace JexusManager.Features.IsapiCgiRestriction
                 listView1.Items.Add(new IsapiCgiRestrictionListViewItem(file, this));
             }
 
+            _feature.InitializeColumnClick(listView1);
+            _feature.InitializeGrouping(cbGroup);
+
             if (_feature.SelectedItem == null)
             {
                 Refresh();
@@ -114,6 +117,11 @@ namespace JexusManager.Features.IsapiCgiRestriction
         {
             _feature.HandleSelectedIndexChanged(listView1);
             Refresh();
+        }
+
+        private void CbGroupSelectedIndexChanged(object sender, EventArgs e)
+        {
+            DialogHelper.HandleGrouping(listView1, cbGroup.SelectedItem.ToString(), _feature.GetGroupKey);
         }
 
         protected override bool ShowHelp()

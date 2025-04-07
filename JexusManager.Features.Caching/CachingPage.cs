@@ -94,6 +94,9 @@ namespace JexusManager.Features.Caching
                 listView1.Items.Add(new CachingListViewItem(file, this));
             }
 
+            _feature.InitializeColumnClick(listView1);
+            _feature.InitializeGrouping(cbGroup);
+
             if (_feature.SelectedItem == null)
             {
                 Refresh();
@@ -130,11 +133,16 @@ namespace JexusManager.Features.Caching
 
         private void ListView1SelectedIndexChanged(object sender, EventArgs e)
         {
-            _feature.SelectedItem = listView1.SelectedItems.Count > 0
-                ? ((CachingListViewItem)listView1.SelectedItems[0]).Item
-                : null;
-            // TODO: optimize refresh when null to not null (vice versa)
+            _feature.HandleSelectedIndexChanged(listView1);
             Refresh();
+        }
+
+        private void CbGroupSelectedIndexChanged(object sender, EventArgs e)
+        {
+            DialogHelper.HandleGrouping(
+                listView1,
+                cbGroup.SelectedItem.ToString(),
+                _feature.GetGroupKey);
         }
 
         protected override bool ShowHelp()

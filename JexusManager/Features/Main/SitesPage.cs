@@ -97,7 +97,7 @@ namespace JexusManager.Features.Main
             _feature.SitesSettingsUpdated = InitializeListPage;
             _feature.Load();
 
-            _feature.HandleMouseClick(listView1, (item, text) =>
+            _feature.InitializeMouseClick(listView1, (item, text) =>
             {
                 item.Name = text;
                 item.Apply();
@@ -154,6 +154,9 @@ namespace JexusManager.Features.Main
             {
                 listView1.Items.Add(new SitesListViewItem(file, this));
             }
+
+            _feature.InitializeGrouping(cbGroup);
+            _feature.InitializeColumnClick(listView1);
 
             if (_feature.SelectedItem != null)
             {
@@ -230,6 +233,11 @@ namespace JexusManager.Features.Main
         {
             _feature.HandleSelectedIndexChanged(listView1);
             Refresh();
+        }
+
+        private void CbGroup_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DialogHelper.HandleGrouping(listView1, cbGroup.SelectedItem.ToString(), _feature.GetGroupKey);
         }
     }
 }

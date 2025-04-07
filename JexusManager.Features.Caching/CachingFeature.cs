@@ -146,13 +146,34 @@ namespace JexusManager.Features.Caching
 
         public void Edit()
         {
-            using var dialog = new NewCachingDialog(Module, SelectedItem, this);
+            DoubleClick(SelectedItem);
+        }
+
+        protected override void DoubleClick(CachingItem item)
+        {
+            using var dialog = new NewCachingDialog(Module, item, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
             EditItem(dialog.Item);
+        }
+
+        public override void InitializeGrouping(ToolStripComboBox cbGroup)
+        {
+            cbGroup.Items.AddRange(["No Grouping", "Entry Type"]);
+        }
+
+        public override string GetGroupKey(ListViewItem item, string selectedGroup)
+        {
+            switch (selectedGroup)
+            {
+                case "Entry Type":
+                    return item.SubItems[3].Text;
+                default:
+                    return "Unknown";
+            }
         }
 
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)

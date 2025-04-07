@@ -95,7 +95,7 @@ namespace JexusManager.Features.Rewrite.Outbound
             _feature.RewriteSettingsUpdated = this.InitializeListPage;
             _feature.Load();
 
-            _feature.HandleMouseClick(listView1, (item, text) =>
+            _feature.InitializeMouseClick(listView1, (item, text) =>
             {
                 item.Name = text;
                 item.Apply();

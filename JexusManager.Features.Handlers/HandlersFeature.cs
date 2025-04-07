@@ -266,11 +266,16 @@ namespace JexusManager.Features.Handlers
 
         public void Edit()
         {
+            DoubleClick(SelectedItem);
+        }
+
+        protected override void DoubleClick(HandlersItem item)
+        {
             HandlersItem newItem;
 
-            if (!string.IsNullOrWhiteSpace(SelectedItem.Type))
+            if (!string.IsNullOrWhiteSpace(item.Type))
             {
-                using var dialog = new NewHandlerDialog(Module, SelectedItem, this);
+                using var dialog = new NewHandlerDialog(Module, item, this);
                 if (dialog.ShowDialog() != DialogResult.OK)
                 {
                     return;
@@ -278,9 +283,9 @@ namespace JexusManager.Features.Handlers
 
                 newItem = dialog.Item;
             }
-            else if (SelectedItem.Modules == "IsapiModule" && !string.IsNullOrWhiteSpace(SelectedItem.ScriptProcessor))
+            else if (SelectedItem.Modules == "IsapiModule" && !string.IsNullOrWhiteSpace(item.ScriptProcessor))
             {
-                using var dialog = new NewScriptMapDialog(Module, SelectedItem, this);
+                using var dialog = new NewScriptMapDialog(Module, item, this);
                 if (dialog.ShowDialog() != DialogResult.OK)
                 {
                     return;
@@ -290,7 +295,7 @@ namespace JexusManager.Features.Handlers
             }
             else
             {
-                using var dialog = new NewMappingDialog(Module, SelectedItem, this);
+                using var dialog = new NewMappingDialog(Module, item, this);
                 if (dialog.ShowDialog() != DialogResult.OK)
                 {
                     return;
@@ -300,6 +305,26 @@ namespace JexusManager.Features.Handlers
             }
 
             EditItem(newItem);
+        }
+
+        public override void InitializeGrouping(ToolStripComboBox cbGroup)
+        {
+            cbGroup.Items.AddRange(["No Grouping", "Entry Type", "Path Type", "State"]);
+        }
+
+        public override string GetGroupKey(ListViewItem item, string selectedGroup)
+        {
+            switch (selectedGroup)
+            {
+                case "Entry Type":
+                    return item.SubItems[5].Text;
+                case "Path Type":
+                    return item.SubItems[3].Text;
+                case "State":
+                    return item.SubItems[2].Text;
+                default:
+                    return "Unknown";
+            }
         }
 
         public void Rename()

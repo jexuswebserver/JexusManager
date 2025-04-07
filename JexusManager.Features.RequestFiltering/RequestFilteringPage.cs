@@ -178,36 +178,43 @@ namespace JexusManager.Features.RequestFiltering
             extensions.RequestFilteringSettingsUpdate = RefreshExtensions;
             extensions.Load();
             tpExtensions.Tag = extensions;
+            extensions.InitializeColumnClick(lvExtensions);
             RefreshExtensions();
 
             var rules = new FilteringRulesFeature(Module);
             rules.RequestFilteringSettingsUpdate = RefreshRules;
             rules.Load();
+            rules.InitializeColumnClick(lvRules);
             tpRules.Tag = rules;
 
             var segments = new HiddenSegmentsFeature(Module);
             segments.RequestFilteringSettingsUpdate = RefreshSegments;
             segments.Load();
+            segments.InitializeColumnClick(lvSegments);
             tpSegments.Tag = segments;
 
             var urls = new UrlsFeature(Module);
             urls.RequestFilteringSettingsUpdate = RefreshUrls;
             urls.Load();
+            urls.InitializeColumnClick(lvUrls);
             tpUrl.Tag = urls;
 
             var verbs = new VerbsFeature(Module);
             verbs.RequestFilteringSettingsUpdate = RefreshVerbs;
             verbs.Load();
+            verbs.InitializeColumnClick(lvVerbs);
             tpVerbs.Tag = verbs;
 
             var headers = new HeadersFeature(Module);
             headers.RequestFilteringSettingsUpdate = RefreshHeaders;
             headers.Load();
+            headers.InitializeColumnClick(lvHeaders);
             tpHeaders.Tag = headers;
 
             var queries = new QueryStringsFeature(Module);
             queries.RequestFilteringSettingsUpdate = RefreshQueries;
             queries.Load();
+            queries.InitializeColumnClick(lvQueries);
             tpQuery.Tag = queries;
         }
 

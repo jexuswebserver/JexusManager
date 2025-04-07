@@ -81,6 +81,9 @@ namespace JexusManager.Features.Certificates
                 listView1.Items.Add(new CertificatesListViewItem(file, this));
             }
 
+            _feature.InitializeColumnClick(listView1);
+            _feature.InitializeGrouping(cbGroup);
+
             if (_feature.SelectedItem == null)
             {
                 Refresh();
@@ -119,6 +122,11 @@ namespace JexusManager.Features.Certificates
         {
             _feature.HandleSelectedIndexChanged(listView1);
             Refresh();
+        }
+
+        private void CbGroup_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DialogHelper.HandleGrouping(listView1, cbGroup.SelectedItem.ToString(), _feature.GetGroupKey);
         }
 
         protected override bool ShowHelp()

@@ -207,6 +207,22 @@ namespace JexusManager.Features.IsapiCgiRestriction
             EditItem(dialog.Item);
         }
 
+        public override void InitializeGrouping(ToolStripComboBox cbGroup)
+        {
+            cbGroup.Items.AddRange(["No Grouping", "Restriction"]);
+        }
+
+        public override string GetGroupKey(ListViewItem item, string selectedGroup)
+        {
+            switch (selectedGroup)
+            {
+                case "Restriction":
+                    return item.SubItems[1].Text;
+                default:
+                    return "Unknown";
+            }
+        }
+
         protected override void OnSettingsSaved()
         {
             IsapiCgiRestrictionSettingsUpdated?.Invoke();

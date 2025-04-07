@@ -145,6 +145,24 @@ namespace JexusManager.Features.MimeMap
             EditItem(dialog.Item);
         }
 
+        public override void InitializeGrouping(ToolStripComboBox cbGroup)
+        {
+            cbGroup.Items.AddRange("No Grouping", "Entry Type", "Content Type");
+        }
+
+        public override string GetGroupKey(ListViewItem item, string selectedGroup)
+        {
+            switch (selectedGroup)
+            {
+                case "Entry Type":
+                    return item.SubItems[2].Text;
+                case "Content Type":
+                    return item.SubItems[1].Text;
+                default:
+                    return "Unknown";
+            }
+        }
+
         protected override void OnSettingsSaved()
         {
             MimeMapSettingsUpdated?.Invoke();

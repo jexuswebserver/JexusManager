@@ -226,6 +226,24 @@ namespace JexusManager.Features.IpSecurity
             service.ServerManager.CommitChanges();
         }
 
+        public override void InitializeGrouping(ToolStripComboBox cbGroup)
+        {
+            cbGroup.Items.AddRange("No Grouping", "Entry Type", "Mode");
+        }
+
+        public override string GetGroupKey(ListViewItem item, string selectedGroup)
+        {
+            switch (selectedGroup)
+            {
+                case "Entry Type":
+                    return item.SubItems[2].Text;
+                case "Mode":
+                    return item.Text;
+                default:
+                    return "Unknown";
+            }
+        }
+
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
         {
             ConfigurationSection section = service.GetSection("system.webServer/security/ipSecurity", null, false);

@@ -89,7 +89,7 @@ namespace JexusManager.Features.Rewrite.Inbound
             _feature.RewriteSettingsUpdated = this.InitializeListPage;
             _feature.Load();
 
-            _feature.HandleMouseClick(listView1, (item, text) =>
+            _feature.InitializeMouseClick(listView1, (item, text) =>
             {
                 item.Name = text;
                 item.Apply();
@@ -114,6 +114,9 @@ namespace JexusManager.Features.Rewrite.Inbound
             {
                 listView1.Items.Add(new VariableListViewItem(file, this));
             }
+
+            _feature.InitializeColumnClick(listView1);
+            _feature.InitializeGrouping(cbGroup);
 
             if (_feature.SelectedItem == null)
             {
@@ -142,6 +145,11 @@ namespace JexusManager.Features.Rewrite.Inbound
         {
             _feature.HandleSelectedIndexChanged(listView1);
             Refresh();
+        }
+
+        private void CbGroup_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DialogHelper.HandleGrouping(listView1, cbGroup.SelectedItem.ToString(), _feature.GetGroupKey);
         }
 
         protected override void Refresh()

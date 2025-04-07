@@ -102,6 +102,9 @@ namespace JexusManager.Features.Main
                 listView1.Items.Add(new ApplicationsListViewItem(app, this));
             }
 
+            _feature.InitializeGrouping(cbGroup);
+            _feature.InitializeColumnClick(listView1);
+
             if (_feature.SelectedItem != null)
             {
                 foreach (ApplicationsListViewItem item in listView1.Items)
@@ -177,6 +180,11 @@ namespace JexusManager.Features.Main
         {
             _feature.HandleSelectedIndexChanged(listView1);
             Refresh();
+        }
+
+        private void CbGroup_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DialogHelper.HandleGrouping(listView1, cbGroup.SelectedItem.ToString(), _feature.GetGroupKey);
         }
     }
 }

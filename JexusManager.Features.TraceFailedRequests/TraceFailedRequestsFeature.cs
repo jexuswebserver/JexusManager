@@ -331,6 +331,23 @@ namespace JexusManager.Features.TraceFailedRequests
             return false;
         }
 
+        public override string GetGroupKey(ListViewItem item, string selectedGroup)
+        {
+            // Determine the group key based on the selected grouping option
+            switch (selectedGroup)
+            {
+                case "Entry Type":
+                    return item.SubItems[4].Text;
+                default:
+                    return "Unknown";
+            }
+        }
+
+        public override void InitializeGrouping(ToolStripComboBox cbGroup)
+        {
+            cbGroup.Items.AddRange(["No Grouping", "Entry Type"]);
+        }
+
         public bool IsInOrder { get; private set; }
 
         public bool CanRevert { get; private set; }

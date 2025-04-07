@@ -53,9 +53,6 @@ namespace JexusManager.Features.DefaultDocument
         public DefaultDocumentPage()
         {
             InitializeComponent();
-            btnView.Image = DefaultTaskList.ViewImage;
-            btnGo.Image = DefaultTaskList.GoImage;
-            btnShowAll.Image = DefaultTaskList.ShowAllImage;
         }
 
         protected override void Initialize(object navigationData)
@@ -76,6 +73,8 @@ namespace JexusManager.Features.DefaultDocument
             {
                 listView1.Items.Add(new DefaultDocumentListViewItem(file, this));
             }
+
+            _feature.InitializeColumnClick(listView1);
 
             if (_feature.SelectedItem != null)
             {

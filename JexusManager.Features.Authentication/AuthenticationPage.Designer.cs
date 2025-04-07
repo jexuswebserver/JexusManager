@@ -166,10 +166,11 @@
             this.cbGroup.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbGroup.Items.AddRange(new object[] {
             "No Grouping",
-            "Category",
-            "Area"});
+            "Response Type",
+            "Status"});
             this.cbGroup.Name = "cbGroup";
             this.cbGroup.Size = new System.Drawing.Size(121, 25);
+            this.cbGroup.SelectedIndexChanged += new System.EventHandler(this.CbGroup_SelectedIndexChanged);
             // 
             // label3
             // 

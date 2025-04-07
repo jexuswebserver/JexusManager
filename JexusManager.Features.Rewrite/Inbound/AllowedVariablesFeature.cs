@@ -225,6 +225,22 @@ namespace JexusManager.Features.Rewrite.Inbound
             RenameInline(item);
         }
 
+        public override void InitializeGrouping(ToolStripComboBox cbGroup)
+        {
+            cbGroup.Items.AddRange(["No Grouping", "Entry Type"]);
+        }
+
+        public override string GetGroupKey(ListViewItem item, string selectedGroup)
+        {
+            switch (selectedGroup)
+            {
+                case "Entry Type":
+                    return item.SubItems[1].Text;
+                default:
+                    return "Unknown";
+            }
+        }
+
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
         {
             return null;

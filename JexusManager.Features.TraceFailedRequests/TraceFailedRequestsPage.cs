@@ -5,6 +5,7 @@
 namespace JexusManager.Features.TraceFailedRequests
 {
     using System;
+    using System.Collections.Generic;
     using System.Reflection;
     using System.Windows.Forms;
 
@@ -76,6 +77,9 @@ namespace JexusManager.Features.TraceFailedRequests
                 listView1.Items.Add(new TraceFailedRequestsListViewItem(file, this));
             }
 
+            _feature.InitializeGrouping(cbGroup);
+            _feature.InitializeColumnClick(listView1);
+
             if (_feature.SelectedItem == null)
             {
                 Refresh();
@@ -114,6 +118,11 @@ namespace JexusManager.Features.TraceFailedRequests
         private void ListView1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             _feature.HandleMouseDoubleClick(listView1);
+        }
+
+        private void CbGroup_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DialogHelper.HandleGrouping(listView1, cbGroup.SelectedItem.ToString(), _feature.GetGroupKey);
         }
 
         protected override bool ShowHelp()

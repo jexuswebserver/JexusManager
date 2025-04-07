@@ -178,14 +178,9 @@
             // cbGroup
             // 
             this.cbGroup.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbGroup.Items.AddRange(new object[] {
-            "No Grouping",
-            "Status",
-            "IP Address",
-            "Protocol",
-            "Port"});
             this.cbGroup.Name = "cbGroup";
             this.cbGroup.Size = new System.Drawing.Size(121, 25);
+            this.cbGroup.SelectedIndexChanged += new System.EventHandler(this.CbGroupSelectedIndexChanged);
             // 
             // label2
             // 

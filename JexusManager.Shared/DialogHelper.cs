@@ -19,6 +19,7 @@ namespace JexusManager
     using Tulpep.NotificationWindow;
     using System.Net;
     using System.Drawing;
+    using System.Collections.Generic;
 
     public static class DialogHelper
     {
@@ -425,5 +426,43 @@ namespace JexusManager
             };
             popupNotifier.Popup();
         }
+
+        public static void HandleGrouping(ListView listView1, string selectedGroup, Func<ListViewItem, string, string> GetGroupKey)
+        {
+            // Clear existing groups and items
+            listView1.Groups.Clear();
+            foreach (ListViewItem item in listView1.Items)
+            {
+                item.Group = null;
+            }
+
+            if (selectedGroup == "No Grouping")
+            {
+                // No grouping, return
+                return;
+            }
+
+            // Create groups based on the selected option
+            Dictionary<string, ListViewGroup> groups = new Dictionary<string, ListViewGroup>();
+            foreach (ListViewItem item in listView1.Items)
+            {
+                string groupKey = GetGroupKey(item, selectedGroup);
+                if (string.IsNullOrWhiteSpace(groupKey))
+                {
+                    groupKey = "Other";
+                }
+
+                if (!groups.ContainsKey(groupKey))
+                {
+                    // Create a new group if it doesn't exist
+                    ListViewGroup group = new ListViewGroup(groupKey, groupKey);
+                    groups[groupKey] = group;
+                    listView1.Groups.Add(group);
+                }
+
+                // Assign the item to the appropriate group
+                item.Group = groups[groupKey];
+            }
+        }        
     }
 }
