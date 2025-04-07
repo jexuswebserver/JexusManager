@@ -195,6 +195,7 @@ namespace JexusManager.Features.Handlers
                 }));
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public HandlersItem Item { get; set; }
 
         private void NewRestrictionDialogHelpButtonClicked(object sender, CancelEventArgs e)

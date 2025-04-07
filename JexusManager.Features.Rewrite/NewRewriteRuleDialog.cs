@@ -147,6 +147,7 @@ namespace JexusManager.Features.Rewrite
                 }));
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public int SelectedIndex { get; private set; }
 
         private void NewRewriteRuleDialogHelpButtonClicked(object sender, CancelEventArgs e)

@@ -104,6 +104,7 @@ namespace JexusManager.Features.IsapiFilters
                 }));
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public IsapiFiltersItem Item { get; set; }
     }
 }

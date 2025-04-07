@@ -60,6 +60,7 @@ namespace JexusManager.Features.HttpApi
                 }));
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ReservedUrlsItem Item { get; set; }
     }
 }

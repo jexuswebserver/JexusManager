@@ -59,8 +59,10 @@ namespace JexusManager.Features.Authentication
                 }));
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string Password { get; set; }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string UserName { get; set; }
     }
 }

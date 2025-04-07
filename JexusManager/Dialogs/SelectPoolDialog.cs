@@ -63,6 +63,7 @@ namespace JexusManager.Dialogs
             DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=210458");
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         internal ApplicationPool Selected { get; set; }
     }
 }

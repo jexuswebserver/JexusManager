@@ -64,6 +64,7 @@ namespace JexusManager.Features.Rewrite.Inbound
             DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkId=163108");
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public MapItem Item { get; set; }
     }
 }

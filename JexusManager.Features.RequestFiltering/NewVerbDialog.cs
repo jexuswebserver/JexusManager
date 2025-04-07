@@ -43,6 +43,7 @@ namespace JexusManager.Features.RequestFiltering
                 }));
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public VerbsItem Item { get; set; }
 
         private void NewHiddenSegmentDialogHelpButtonClicked(object sender, CancelEventArgs e)

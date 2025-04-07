@@ -323,6 +323,7 @@ namespace JexusManager.Dialogs
             return Binding.PortIsValid(txtPort.Text, out port, Text, showDialog);
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Site NewSite { get; set; }
 
         private void NewSiteDialogHelpButtonClicked(object sender, CancelEventArgs e)

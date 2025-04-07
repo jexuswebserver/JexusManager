@@ -134,6 +134,7 @@ namespace JexusManager.Features.IpSecurity
                 }));
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public IpSecurityItem Item { get; set; }
     }
 }

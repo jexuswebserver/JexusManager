@@ -15,6 +15,7 @@ namespace JexusManager.Features.Logging
 
     internal partial class AddFieldDialog : DialogForm
     {
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public CustomLogField Custom { get; private set; }
 
         public AddFieldDialog(IServiceProvider serviceProvider, CustomLogField custom, Fields logFile)

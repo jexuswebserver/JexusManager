@@ -130,6 +130,7 @@ namespace JexusManager.Features.Modules
                 }));
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public List<ModulesItem> Items { get; set; }
     }
 }

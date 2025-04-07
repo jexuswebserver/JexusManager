@@ -66,6 +66,7 @@ namespace JexusManager.Features.ResponseHeaders
                 }));
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ResponseHeadersItem Item { get; set; }
     }
 }

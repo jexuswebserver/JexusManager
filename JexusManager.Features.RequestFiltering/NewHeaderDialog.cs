@@ -44,6 +44,7 @@ namespace JexusManager.Features.RequestFiltering
                 }));
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public HeadersItem Item { get; set; }
 
         private void NewHiddenSegmentDialogHelpButtonClicked(object sender, CancelEventArgs e)

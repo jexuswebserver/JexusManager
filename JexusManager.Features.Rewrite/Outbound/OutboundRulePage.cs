@@ -1,4 +1,5 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+﻿using System.ComponentModel;
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -196,6 +197,7 @@ namespace JexusManager.Features.Rewrite.Outbound
             InformChanges();
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public OutboundRule Rule { get; set; }
 
         private void BtnTestClick(object sender, EventArgs e)
@@ -389,6 +391,7 @@ namespace JexusManager.Features.Rewrite.Outbound
             Tasks.Fill(tsActionPanel, cmsActionPanel);
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public IModulePage ParentPage { get; set; }
 
         private void CbActionSelectedIndexChanged(object sender, EventArgs e)

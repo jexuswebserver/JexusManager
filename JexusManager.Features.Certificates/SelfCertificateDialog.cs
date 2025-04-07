@@ -224,8 +224,10 @@ namespace JexusManager.Features.Certificates
                 }));
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string Store { get; set; }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public X509Certificate2 Item { get; set; }
     }
 }

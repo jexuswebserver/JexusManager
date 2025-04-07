@@ -130,6 +130,7 @@ namespace JexusManager.Features.Authorization
                 }));
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public AuthorizationRule Item { get; private set; }
     }
 }

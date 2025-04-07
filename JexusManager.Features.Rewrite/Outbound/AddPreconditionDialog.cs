@@ -168,6 +168,7 @@ namespace JexusManager.Features.Rewrite.Outbound
                 }));
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public PreConditionItem Item { get; set; }
 
         private void AddPreconditionDialogHelpButtonClicked(object sender, CancelEventArgs e)

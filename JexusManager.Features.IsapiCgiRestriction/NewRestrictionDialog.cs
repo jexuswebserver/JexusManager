@@ -78,6 +78,7 @@ namespace JexusManager.Features.IsapiCgiRestriction
                 }));
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public IsapiCgiRestrictionItem Item { get; set; }
     }
 }

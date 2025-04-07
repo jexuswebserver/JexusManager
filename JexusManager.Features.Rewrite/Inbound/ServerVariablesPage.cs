@@ -12,6 +12,7 @@ namespace JexusManager.Features.Rewrite.Inbound
 {
     using System;
     using System.Collections;
+    using System.ComponentModel;
     using System.Diagnostics;
     using System.Reflection;
     using System.Windows.Forms;
@@ -184,6 +185,7 @@ namespace JexusManager.Features.Rewrite.Inbound
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public IModulePage ParentPage { get; set; }
     }
 }

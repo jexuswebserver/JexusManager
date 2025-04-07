@@ -297,6 +297,7 @@ namespace JexusManager.Features.Main
                 }));
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         internal Binding Binding { get; private set; }
 
         private void BindingDialogHelpButtonClicked(object sender, CancelEventArgs e)

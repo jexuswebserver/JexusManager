@@ -50,6 +50,7 @@ namespace JexusManager.Features.Rewrite.Outbound
                 }));
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public CustomTagItem Item { get; set; }
 
         private void AddCustomTagDialogHelpButtonClicked(object sender, CancelEventArgs e)

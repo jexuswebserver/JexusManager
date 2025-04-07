@@ -76,6 +76,7 @@ namespace JexusManager.Features.FastCgi
                 }));
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public FastCgiItem Item { get; set; }
     }
 }

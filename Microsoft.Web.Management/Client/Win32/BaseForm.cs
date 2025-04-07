@@ -5,6 +5,7 @@
 using System;
 using System.Resources;
 using System.Windows.Forms;
+using System.ComponentModel;
 
 namespace Microsoft.Web.Management.Client.Win32
 {
@@ -86,6 +87,7 @@ namespace Microsoft.Web.Management.Client.Win32
 
         protected virtual bool CanShowHelp { get; } = true;
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         protected internal IServiceProvider ServiceProvider { get; private set; }
     }
 }

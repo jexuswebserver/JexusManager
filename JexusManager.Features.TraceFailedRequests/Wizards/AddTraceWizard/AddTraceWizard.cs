@@ -1,4 +1,5 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+﻿using System.ComponentModel;
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -35,6 +36,7 @@ namespace JexusManager.Features.TraceFailedRequests.Wizards.AddTraceWizard
             get { return _wizardData; }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public TraceFailedRequestsItem Item { get; private set; }
 
         protected override void CompleteWizard()

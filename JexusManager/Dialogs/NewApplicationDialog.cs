@@ -196,6 +196,7 @@ namespace JexusManager.Dialogs
             btnOK.Enabled = !string.IsNullOrWhiteSpace(txtAlias.Text) && !string.IsNullOrWhiteSpace(txtPhysicalPath.Text);
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Application Application { get; private set; }
 
         private void NewApplicationDialog_HelpButtonClicked(object sender, CancelEventArgs e)

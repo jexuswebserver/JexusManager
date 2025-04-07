@@ -92,6 +92,7 @@ namespace JexusManager.Features.Rewrite.Inbound
                 }));
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ConditionItem Item { get; private set; }
 
         private void AddConditionDialogHelpButtonClicked(object sender, CancelEventArgs e)

@@ -171,6 +171,7 @@ namespace JexusManager.Dialogs
             btnOK.Enabled = !string.IsNullOrWhiteSpace(txtAlias.Text) && !string.IsNullOrWhiteSpace(txtPhysicalPath.Text);
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public VirtualDirectory VirtualDirectory { get; private set; }
 
         private void NewVirtualDirectoryDialog_HelpButtonClicked(object sender, CancelEventArgs e)

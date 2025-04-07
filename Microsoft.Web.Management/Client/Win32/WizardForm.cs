@@ -218,10 +218,14 @@ namespace Microsoft.Web.Management.Client.Win32
         }
 
         protected virtual int StartPageIndex { get { return 0; } }
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string TaskCaption { get; set; }
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public BorderStyle TaskCaptionBorderStyle { get; set; }
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string TaskDescription { get; set; }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Image TaskGlyph
         {
             get
@@ -236,9 +240,13 @@ namespace Microsoft.Web.Management.Client.Win32
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Color TaskProgressEndColor { get; set; }
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public int TaskProgressGradientSpeed { get; set; }
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public int TaskProgressScrollSpeed { get; set; }
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Color TaskProgressStartColor { get; set; }
         protected internal virtual object WizardData { get; }
 

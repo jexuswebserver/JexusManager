@@ -16,6 +16,7 @@ namespace JexusManager.Features.Main
 
     public sealed partial class ApplicationPoolBasicSettingsDialog : DialogForm
     {
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ApplicationPool Pool { get; private set; }
 
         public ApplicationPoolBasicSettingsDialog(IServiceProvider serviceProvider, ApplicationPool pool, ApplicationPoolDefaults defaults, ApplicationPoolCollection collection)

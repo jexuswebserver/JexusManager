@@ -71,6 +71,7 @@ namespace JexusManager.Features.DefaultDocument
                 }));
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public DocumentItem Item { get; set; }
     }
 }

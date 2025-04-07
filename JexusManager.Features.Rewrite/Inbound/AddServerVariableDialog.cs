@@ -64,6 +64,7 @@ namespace JexusManager.Features.Rewrite.Inbound
                 }));
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ServerVariableItem Item { get; set; }
 
         private void AddServerVariableDialogHelpButtonClicked(object sender, CancelEventArgs e)

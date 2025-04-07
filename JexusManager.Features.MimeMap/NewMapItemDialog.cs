@@ -70,6 +70,7 @@ namespace JexusManager.Features.MimeMap
                 }));
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public MimeMapItem Item { get; set; }
     }
 }

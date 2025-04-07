@@ -69,6 +69,7 @@ namespace JexusManager.Features.TraceFailedRequests
                 }));
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public TraceFailedRequestsItem Item { get; set; }
 
         private void NewRestrictionDialogHelpButtonClicked(object sender, CancelEventArgs e)

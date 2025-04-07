@@ -1,4 +1,5 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+﻿using System.ComponentModel;
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -93,6 +94,7 @@ namespace JexusManager.Features.Modules
                 }));
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public GlobalModule Item { get; set; }
     }
 }

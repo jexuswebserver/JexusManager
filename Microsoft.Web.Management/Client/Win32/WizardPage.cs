@@ -103,6 +103,7 @@ namespace Microsoft.Web.Management.Client.Win32
 
         [Category("Appearance"), DefaultValue("")]
         public string Description { get; set; }
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         protected internal virtual WizardPage NextPage { get; private set; }
 
         protected IList Pages
@@ -110,7 +111,9 @@ namespace Microsoft.Web.Management.Client.Win32
             get { return Wizard.Pages; }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         protected internal virtual WizardPage PreviousPage { get; private set; }
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool RightToLeftLayout { get; set; }
 
         protected IServiceProvider ServiceProvider

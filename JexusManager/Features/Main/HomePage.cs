@@ -20,6 +20,8 @@ namespace JexusManager.Features.Main
         {
             InitializeComponent();
             LoadUpdateInfo();
+            // Configure ManualUpdate link label text wrapping
+            ConfigureManualUpdateLink();
         }
 
         private async void LoadUpdateInfo()
@@ -134,14 +136,6 @@ namespace JexusManager.Features.Main
             {
                 DialogHelper.ProcessStart(_updateInfo.ReleaseUrl);
             }
-        }
-
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
-            
-            // Configure ManualUpdate link label text wrapping
-            ConfigureManualUpdateLink();
         }
 
         private void ConfigureManualUpdateLink()

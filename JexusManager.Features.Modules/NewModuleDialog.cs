@@ -74,6 +74,7 @@ namespace JexusManager.Features.Modules
                 }));
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ModulesItem Item { get; set; }
     }
 }

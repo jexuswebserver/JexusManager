@@ -219,6 +219,7 @@ namespace JexusManager.Features.HttpErrors
             cbLocalize.Enabled = btnSet.Enabled = txtStatic.Enabled = mode == "File";
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public HttpErrorsItem Item { get; set; }
     }
 }

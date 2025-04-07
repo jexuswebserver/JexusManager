@@ -5,6 +5,7 @@
 using System;
 using System.Collections;
 using System.Windows.Forms;
+using System.ComponentModel;
 
 namespace Microsoft.Web.Management.Client.Win32
 {
@@ -169,6 +170,7 @@ namespace Microsoft.Web.Management.Client.Win32
         protected ListView ListView { get; private set; }
         protected Control ListViewContainer { get; private set; }
         protected virtual ModuleListPageSearchField[] SearchFields { get; }
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ModuleListPageGrouping SelectedGrouping { get; set; }
 
         protected ImageList SmallImageList

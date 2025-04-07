@@ -123,6 +123,7 @@ namespace JexusManager.Features.Caching
                 }));
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public CachingItem Item { get; set; }
     }
 }

@@ -20,6 +20,7 @@ namespace JexusManager.Features.Rewrite.Inbound
 
     internal partial class AddMapDialog : DialogForm
     {
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public MapRule Item { get; set; }
 
         public AddMapDialog(IServiceProvider serviceProvider, MapRule existing, MapsFeature feature)

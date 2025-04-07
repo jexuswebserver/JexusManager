@@ -294,6 +294,7 @@ namespace Microsoft.Web.Management.Client.Win32
         }
 
         protected Connection Connection { get; }
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public override ContextMenuStrip ContextMenuStrip { get; set; }
         protected override CreateParams CreateParams
         {
@@ -316,6 +317,7 @@ namespace Microsoft.Web.Management.Client.Win32
         protected virtual Guid PreferenceKey { get; }
         protected virtual bool ReadOnly { get; }
         protected virtual string ReadOnlyDescription { get; }
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool RightToLeftLayout { get; set; }
         public virtual string ScopeStatusSummary { get; }
 
