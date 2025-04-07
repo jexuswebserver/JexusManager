@@ -1111,6 +1111,7 @@
             // 
             // actBack
             // 
+            actBack.Enabled = false;
             actBack.Image = Main.Properties.Resources.back_16;
             actBack.ShortcutKeys = Keys.Alt | Keys.Left;
             actBack.Text = "Back";
@@ -1118,6 +1119,7 @@
             // 
             // actForward
             // 
+            actForward.Enabled = false;
             actForward.Image = Main.Properties.Resources.forward_16;
             actForward.ShortcutKeys = Keys.Alt | Keys.Right;
             actForward.Text = "Forward";
