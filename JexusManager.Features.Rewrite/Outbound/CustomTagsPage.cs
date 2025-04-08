@@ -120,6 +120,8 @@ namespace JexusManager.Features.Rewrite.Outbound
                 listView1.Items.Add(new CustomTagsListViewItem(file, this));
             }
 
+            _feature.InitializeColumnClick(listView1);
+
             if (_feature.SelectedItem == null)
             {
                 this.Refresh();

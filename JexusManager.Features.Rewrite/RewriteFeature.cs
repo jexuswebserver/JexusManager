@@ -362,7 +362,8 @@ namespace JexusManager.Features.Rewrite
 
         private void ViewProviders()
         {
-            // TODO:
+            var service = (INavigationService)GetService(typeof(INavigationService));
+            service.Navigate(null, null, typeof(ProvidersPage), null);
         }
 
         private void ViewMaps()

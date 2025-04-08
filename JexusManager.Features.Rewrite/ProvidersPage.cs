@@ -1,19 +1,12 @@
-﻿using System.ComponentModel;
 // Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="InboundRulePage.cs" company="LeXtudio">
-//   
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace JexusManager.Features.Rewrite.Outbound
+namespace JexusManager.Features.Rewrite
 {
     using System;
     using System.Collections;
-    using System.Diagnostics;
+    using System.ComponentModel;
     using System.Reflection;
     using System.Windows.Forms;
 
@@ -23,13 +16,13 @@ namespace JexusManager.Features.Rewrite.Outbound
     using Microsoft.Web.Management.Client;
     using Microsoft.Web.Management.Client.Win32;
 
-    internal partial class PreConditionsPage : ModuleListPage, IModuleChildPage
+    internal partial class ProvidersPage : ModuleListPage, IModuleChildPage
     {
-        private sealed class PageTaskList : DefaultTaskList
+        private sealed class PageTaskList : ShowHelpTaskList
         {
-            private readonly PreConditionsPage _owner;
+            private readonly ProvidersPage _owner;
 
-            public PageTaskList(PreConditionsPage owner)
+            public PageTaskList(ProvidersPage owner)
             {
                 _owner = owner;
             }
@@ -45,7 +38,7 @@ namespace JexusManager.Features.Rewrite.Outbound
             }
 
             [Obfuscation(Exclude = true)]
-            public void ShowHelp()
+            public override void ShowHelp()
             {
                 _owner.ShowHelp();
             }
@@ -57,32 +50,32 @@ namespace JexusManager.Features.Rewrite.Outbound
             }
         }
 
-        private sealed class PreConditionListViewItem : ListViewItem, IFeatureListViewItem<PreConditionItem>
+        private sealed class ProviderListViewItem : ListViewItem, IFeatureListViewItem<ProviderItem>
         {
-            public PreConditionItem Item { get; }
-            private readonly PreConditionsPage _page;
+            public ProviderItem Item { get; }
+            private readonly ProvidersPage _page;
 
-            public PreConditionListViewItem(PreConditionItem item, PreConditionsPage page)
+            public ProviderListViewItem(ProviderItem item, ProvidersPage page)
                 : base(item.Name)
             {
-                this.Item = item;
+                Item = item;
                 _page = page;
-                this.SubItems.Add(new ListViewSubItem(this, item.Conditions.Count.ToString()));
-                this.SubItems.Add(new ListViewSubItem(this, item.Flag));
-            }
-
-            public void Update()
-            {
-                // TODO: how to update.
+                SubItems.Add(new ListViewSubItem(this, string.Empty /*item.Value*/)); // TODO:
+                SubItems.Add(new ListViewSubItem(this, item.Type));
+                SubItems.Add(new ListViewSubItem(this, item.Flag));
             }
         }
 
-        private TaskList _taskList;
-        private PreConditionsFeature _feature;
+        private ProvidersFeature _feature;
+        private PageTaskList _taskList;
 
-        public PreConditionsPage()
+        public ProvidersPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
+            
+            // Set the labels from resources if needed
+            label3.Text = "Rewrite Providers";
+            label2.Text = "Providers implement custom rewrite logic and can be invoked from inbound and outbound rewrite rules.";
         }
 
         protected override void Initialize(object navigationData)
@@ -91,7 +84,7 @@ namespace JexusManager.Features.Rewrite.Outbound
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             pictureBox1.Image = service.Scope.GetImage();
 
-            _feature = new PreConditionsFeature(Module);
+            _feature = new ProvidersFeature(Module);
             _feature.RewriteSettingsUpdated = InitializeListPage;
             _feature.Load();
 
@@ -99,13 +92,13 @@ namespace JexusManager.Features.Rewrite.Outbound
             {
                 item.Name = text;
                 item.Apply();
-            },
+            },            
             text =>
             {
                 if (_feature.FindDuplicate(item => item.Name, text))
                 {
                     var service = (IManagementUIService)GetService(typeof(IManagementUIService));
-                    service.ShowMessage("A precondition with this name already exists.", Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    service.ShowMessage("A rewrite provider with this name already exists.", Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     return false;
                 }
 
@@ -116,29 +109,34 @@ namespace JexusManager.Features.Rewrite.Outbound
         protected override void InitializeListPage()
         {
             listView1.Items.Clear();
-            foreach (var file in _feature.Items)
+            foreach (var provider in _feature.Items)
             {
-                listView1.Items.Add(new PreConditionListViewItem(file, this));
+                listView1.Items.Add(new ProviderListViewItem(provider, this));
             }
 
             _feature.InitializeColumnClick(listView1);
 
-            if (_feature.SelectedItem == null)
+            if (_feature.SelectedItem != null)
             {
-                this.Refresh();
-                return;
-            }
-
-            foreach (PreConditionListViewItem item in listView1.Items)
-            {
-                if (item.Item == _feature.SelectedItem)
+                foreach (ProviderListViewItem item in listView1.Items)
                 {
-                    item.Selected = true;
+                    if (item.Item == _feature.SelectedItem)
+                    {
+                        item.Selected = true;
+                    }
                 }
             }
+
+            Refresh();
         }
 
-        private void ListView1KeyDown(object sender, KeyEventArgs e)
+        protected override void Refresh()
+        {
+            Tasks.Fill(tsActionPanel, cmsActionPanel);
+            base.Refresh();
+        }
+
+        private void ListView1_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Delete)
             {
@@ -146,35 +144,28 @@ namespace JexusManager.Features.Rewrite.Outbound
             }
         }
 
-        private void ListView1MouseDoubleClick(object sender, MouseEventArgs e)
+        private void ListView1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             _feature.HandleMouseDoubleClick(listView1);
         }
 
-        private void ListView1SelectedIndexChanged(object sender, EventArgs e)
+        private void ListView1_SelectedIndexChanged(object sender, EventArgs e)
         {
             _feature.HandleSelectedIndexChanged(listView1);
             Refresh();
         }
-
-        protected override void Refresh()
-        {
-            this.Tasks.Fill(tsActionPanel, cmsActionPanel);
-            base.Refresh();
-        }
-
-        protected override bool ShowHelp()
-        {
-            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkID=130425&amp;clcid=0x409");
-            return true;
-        }
-
-        private void SplitContainer1SplitterMoved(object sender, SplitterEventArgs e)
+        
+        private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
         {
             if (splitContainer1.Panel2.Width > 500)
             {
                 splitContainer1.SplitterDistance = splitContainer1.Width - 500;
             }
+        }
+
+        protected override bool ShowHelp()
+        {
+            return _feature.ShowHelp();
         }
 
         private void Back()

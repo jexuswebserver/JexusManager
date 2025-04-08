@@ -1,0 +1,43 @@
+<Solution>
+  <Folder Name="/.nuget/" />
+  <Folder Name="/Controls/">
+    <Project Path="lib/CheckBoxComboBox/CheckBoxComboBox.csproj" />
+  </Folder>
+  <Folder Name="/Features/">
+    <Project Path="JexusManager.Features.Access/JexusManager.Features.Access.csproj" />
+    <Project Path="JexusManager.Features.Asp/JexusManager.Features.Asp.csproj" />
+    <Project Path="JexusManager.Features.Authentication/JexusManager.Features.Authentication.csproj" />
+    <Project Path="JexusManager.Features.Authorization/JexusManager.Features.Authorization.csproj" />
+    <Project Path="JexusManager.Features.Caching/JexusManager.Features.Caching.csproj" />
+    <Project Path="JexusManager.Features.Certificates/JexusManager.Features.Certificates.csproj" />
+    <Project Path="JexusManager.Features.Cgi/JexusManager.Features.Cgi.csproj" />
+    <Project Path="JexusManager.Features.Compression/JexusManager.Features.Compression.csproj" />
+    <Project Path="JexusManager.Features.DefaultDocument/JexusManager.Features.DefaultDocument.csproj" />
+    <Project Path="JexusManager.Features.DirectoryBrowse/JexusManager.Features.DirectoryBrowse.csproj" />
+    <Project Path="JexusManager.Features.FastCgi/JexusManager.Features.FastCgi.csproj" />
+    <Project Path="JexusManager.Features.Handlers/JexusManager.Features.Handlers.csproj" />
+    <Project Path="JexusManager.Features.HttpApi/JexusManager.Features.HttpApi.csproj" />
+    <Project Path="JexusManager.Features.HttpErrors/JexusManager.Features.HttpErrors.csproj" />
+    <Project Path="JexusManager.Features.HttpRedirect/JexusManager.Features.HttpRedirect.csproj" />
+    <Project Path="JexusManager.Features.IpSecurity/JexusManager.Features.IpSecurity.csproj" />
+    <Project Path="JexusManager.Features.IsapiCgiRestriction/JexusManager.Features.IsapiCgiRestriction.csproj" />
+    <Project Path="JexusManager.Features.IsapiFilters/JexusManager.Features.IsapiFilters.csproj" />
+    <Project Path="JexusManager.Features.Jexus/JexusManager.Features.Jexus.csproj" />
+    <Project Path="JexusManager.Features.Logging/JexusManager.Features.Logging.csproj" />
+    <Project Path="JexusManager.Features.MimeMap/JexusManager.Features.MimeMap.csproj" />
+    <Project Path="JexusManager.Features.Modules/JexusManager.Features.Modules.csproj" />
+    <Project Path="JexusManager.Features.RequestFiltering/JexusManager.Features.RequestFiltering.csproj" />
+    <Project Path="JexusManager.Features.ResponseHeaders/JexusManager.Features.ResponseHeaders.csproj" />
+    <Project Path="JexusManager.Features.Rewrite/JexusManager.Features.Rewrite.csproj" />
+    <Project Path="JexusManager.Features.TraceFailedRequests/JexusManager.Features.TraceFailedRequests.csproj" />
+  </Folder>
+  <Project Path="CertificateInstaller/CertificateInstaller.csproj" />
+  <Project Path="JexusManager.Shared/JexusManager.Shared.csproj" />
+  <Project Path="JexusManager/JexusManager.csproj" />
+  <Project Path="Microsoft.Web.Administration/Microsoft.Web.Administration.csproj" />
+  <Project Path="Microsoft.Web.Configuration.AppHostFileProvider/Microsoft.Web.Configuration.AppHostFileProvider.csproj" />
+  <Project Path="Microsoft.Web.Management/Microsoft.Web.Management.csproj" />
+  <!-- <Project Path="Tests.IIS/Tests.IIS.csproj" /> -->
+  <Project Path="Tests.JexusManager/Tests.JexusManager.csproj" />
+  <Project Path="Tests/Tests.csproj" />
+</Solution>
