@@ -9,8 +9,6 @@ namespace JexusManager.Features.Rewrite
     using System.Reactive.Disposables;
     using System.Reactive.Linq;
     using System.Windows.Forms;
-    using JexusManager.Services;
-    using Microsoft.Web.Administration;
     using Microsoft.Web.Management.Client;
     using Microsoft.Web.Management.Client.Win32;
 
@@ -50,7 +48,7 @@ namespace JexusManager.Features.Rewrite
                 cbManagedType.SelectedIndex = 0;
             }
 
-            ProviderItem = existing;
+            Item = existing;
 
             var container = new CompositeDisposable();
             FormClosed += (sender, args) => container.Dispose();
@@ -69,42 +67,19 @@ namespace JexusManager.Features.Rewrite
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    if (string.IsNullOrEmpty(txtName.Text))
+                    if (feature.FindDuplicate(item => item.Name, txtName.Text))
                     {
-                        ShowMessage("Provider name cannot be empty.", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                        ShowMessage(
+                            "A rewrite provider with this name already exists.",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error,
+                            MessageBoxDefaultButton.Button1);
                         return;
                     }
 
-                    // Check for duplicate provider names
-                    if (ProviderItem == null && _feature.Items.Exists(item => item.Name == txtName.Text))
-                    {
-                        ShowMessage("A provider with this name already exists.", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                        return;
-                    }
-
-                    if (ProviderItem == null)
-                    {
-                        // Create a new provider
-                        var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-                        var section = service.GetSection("system.webServer/rewrite/providers");
-                        var collection = section.GetCollection();
-
-                        var element = collection.CreateElement();
-                        ProviderItem = new ProviderItem(element);
-                        ProviderItem.Name = txtName.Text;
-                        ProviderItem.Type = cbManagedType.Text;
-
-                        _feature.AddProvider(ProviderItem);
-                    }
-                    else
-                    {
-                        // Update existing provider
-                        ProviderItem.Type = cbManagedType.Text;
-                        ProviderItem.Apply();
-
-                        var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-                        service.ServerManager.CommitChanges();
-                    }
+                    Item ??= new ProviderItem(null);
+                    Item.Name = txtName.Text;
+                    Item.Type = cbManagedType.Text;
 
                     DialogResult = DialogResult.OK;
                 }));
@@ -119,6 +94,6 @@ namespace JexusManager.Features.Rewrite
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public ProviderItem ProviderItem { get; private set; }
+        public ProviderItem Item { get; private set; }
     }
 }

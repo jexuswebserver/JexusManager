@@ -77,46 +77,38 @@ namespace JexusManager.Features.Rewrite
 
         public void Load()
         {
-            Items = _provider.Settings.ToList();
-            OnSettingsUpdated();
+            LoadItems();
         }
 
         public void Add()
         {
-            using var dialog = new AddProviderSettingDialog(Module, _provider);
+            using var dialog = new AddProviderSettingDialog(Module, this, null);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
-            _provider.Settings.Add(dialog.SettingItem);
-            Items = new List<SettingItem>(_provider.Settings);
-            OnSettingsUpdated();
+            AddItem(dialog.Item);
         }
 
         public void Edit()
         {
-            if (SelectedItem == null)
-            {
-                return;
-            }
+            DoubleClick(SelectedItem);
+        }
 
-            using var dialog = new AddProviderSettingDialog(Module, _provider, SelectedItem);
+        protected override void DoubleClick(SettingItem item)
+        {
+            using var dialog = new AddProviderSettingDialog(Module, this, item);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
-            OnSettingsUpdated();
+            EditItem(dialog.Item);
         }
 
         public void Remove()
         {
-            if (SelectedItem == null)
-            {
-                return;
-            }
-
             var service = (IManagementUIService)GetService(typeof(IManagementUIService));
             if (service.ShowMessage(
                     "Are you sure you want to remove this setting?",
@@ -128,21 +120,12 @@ namespace JexusManager.Features.Rewrite
                 return;
             }
 
-            _provider.Settings.Remove(SelectedItem);
-            Items.Remove(SelectedItem);
-            SelectedItem = null;
-            OnSettingsUpdated();
-        }
-
-        protected override void DoubleClick(SettingItem item)
-        {
-            Edit();
+            RemoveItem();
         }
 
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
         {
-            // Settings are managed through the provider's Settings collection
-            return null;
+            return _provider.Element.GetCollection("settings");
         }
 
         protected override void OnSettingsSaved()
@@ -152,7 +135,7 @@ namespace JexusManager.Features.Rewrite
 
         public bool ShowHelp()
         {
-            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkID=130403");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkID=183852");
             return false;
         }
 

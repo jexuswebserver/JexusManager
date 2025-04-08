@@ -2,28 +2,25 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
+using System.ComponentModel;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
+using System.Windows.Forms;
+using Microsoft.Web.Management.Client;
+using Microsoft.Web.Management.Client.Win32;
+
 namespace JexusManager.Features.Rewrite
 {
-    using System;
-    using System.ComponentModel;
-    using System.Linq;
-    using System.Reactive.Disposables;
-    using System.Reactive.Linq;
-    using System.Windows.Forms;
-    using JexusManager.Services;
-    using Microsoft.Web.Administration;
-    using Microsoft.Web.Management.Client;
-    using Microsoft.Web.Management.Client.Win32;
-
     internal partial class AddProviderSettingDialog : DialogForm
     {
-        private readonly ProviderItem _provider;
+        private readonly SettingsFeature _feature;
 
-        public AddProviderSettingDialog(Module module, ProviderItem provider, SettingItem existing = null)
+        public AddProviderSettingDialog(Module module, SettingsFeature feature, SettingItem existing = null)
             : base(module)
         {
             InitializeComponent();
-            _provider = provider;
+            _feature = feature;
 
             Text = existing == null ? "Add Provider Setting" : "Edit Provider Setting";
 
@@ -35,10 +32,8 @@ namespace JexusManager.Features.Rewrite
             if (existing != null)
             {
                 cbName.Text = existing.Key;
-                cbName.Enabled = false;
                 txtValue.Text = existing.Value;
-                // Note: SettingItem doesn't have an Encrypted property
-                // So we'll disable this feature when editing existing items
+                // TODO: disabled temp
                 cbEncrypt.Enabled = false;
             }
             else
@@ -46,7 +41,7 @@ namespace JexusManager.Features.Rewrite
                 cbName.SelectedIndex = 0;
             }
 
-            SettingItem = existing;
+            Item = existing;
 
             var container = new CompositeDisposable();
             FormClosed += (sender, args) => container.Dispose();
@@ -66,48 +61,20 @@ namespace JexusManager.Features.Rewrite
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    if (string.IsNullOrEmpty(cbName.Text))
+                    if (_feature.FindDuplicate(item => item.Key, cbName.Text))
                     {
-                        ShowMessage("Setting name cannot be empty.", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                        return;
-                    }
-                    // Check for duplicate setting names if adding a new setting
-                    if (SettingItem == null && _provider != null &&
-                        _provider.Settings != null &&
-                        _provider.Settings.Any(item => item.Key == cbName.Text))
-                    {
-                        ShowMessage("A setting with this name already exists.", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                        ShowMessage(
+                            "A rewrite provider setting with this name already exists.",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error,
+                            MessageBoxDefaultButton.Button1);
                         return;
                     }
 
-                    var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-                    if (SettingItem == null)
-                    {
-                        var settingsCollection = _provider.Element.GetCollection("settings");
-                        var element = settingsCollection.CreateElement();
-
-                        SettingItem = new SettingItem(element);
-                        SettingItem.Key = cbName.Text;
-                        SettingItem.Value = txtValue.Text;
-
-                        // Handle encryption if needed
-                        if (cbEncrypt.Checked)
-                        {
-                            // TODO: Implement encryption logic if required
-                            // Since SettingItem doesn't have built-in encryption support
-                        }
-
-                        SettingItem.Apply();
-                        settingsCollection.Add(element);
-                        service.ServerManager.CommitChanges();
-                    }
-                    else
-                    {
-                        // Update existing setting
-                        SettingItem.Value = txtValue.Text;
-                        SettingItem.Apply();
-                        service.ServerManager.CommitChanges();
-                    }
+                    Item ??= new SettingItem(null);
+                    Item.Key = cbName.Text;
+                    Item.Value = txtValue.Text;
+                    Item.Encrypted = cbEncrypt.Checked;
 
                     DialogResult = DialogResult.OK;
                 }));
@@ -115,11 +82,11 @@ namespace JexusManager.Features.Rewrite
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkID=130403&amp;clcid=0x409");
+                    _feature.ShowHelp();
                 }));
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public SettingItem SettingItem { get; private set; }
+        public SettingItem Item { get; private set; }
     }
 }

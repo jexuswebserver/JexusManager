@@ -322,6 +322,7 @@ namespace JexusManager.Features
 
         public bool FindDuplicate(Func<T, string> value, string text)
         {
+            // TODO: seem to be duplicate to the Match pattern. 
             return Items.Where(item => item != SelectedItem)
                 .Any(item => string.Equals(value(item), text, StringComparison.Ordinal));
         }

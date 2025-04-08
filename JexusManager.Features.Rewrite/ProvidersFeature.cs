@@ -112,28 +112,7 @@ namespace JexusManager.Features.Rewrite
 
         public void Load()
         {
-            Items = new List<ProviderItem>();
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-
-            try
-            {
-                var section = service.GetSection("system.webServer/rewrite/providers");
-                CanRevert = section.CanRevert();
-
-                var collection = section.GetCollection();
-                foreach (ConfigurationElement providerElement in collection)
-                {
-                    var item = new ProviderItem(providerElement);
-                    Items.Add(item);
-                }
-            }
-            catch (Exception ex)
-            {
-                var managementUIService = (IManagementUIService)GetService(typeof(IManagementUIService));
-                managementUIService.ShowError(ex, "Error loading rewrite providers", Name, false);
-            }
-
-            OnRewriteSettingsSaved();
+            LoadItems();
         }
 
         internal protected void OnRewriteSettingsSaved()
@@ -143,17 +122,19 @@ namespace JexusManager.Features.Rewrite
 
         public bool ShowHelp()
         {
-            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkID=130403&amp;clcid=0x409");
+            DialogHelper.ProcessStart("http://go.microsoft.com/fwlink/?LinkID=183852");
             return false;
         }
 
         public void Add()
         {
             using var dialog = new AddProviderDialog(Module, this, null);
-            if (dialog.ShowDialog() == DialogResult.OK)
+            if (dialog.ShowDialog() != DialogResult.OK)
             {
-                OnRewriteSettingsSaved();
+                return;
             }
+
+            AddItem(dialog.Item);
         }
 
         public void ViewSettings()
@@ -169,16 +150,13 @@ namespace JexusManager.Features.Rewrite
 
         protected override void DoubleClick(ProviderItem item)
         {
-            if (item == null)
+            using var dialog = new AddProviderDialog(Module, this, item);
+            if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
-            using var dialog = new AddProviderDialog(Module, this, item);
-            if (dialog.ShowDialog() == DialogResult.OK)
-            {
-                OnRewriteSettingsSaved();
-            }
+            EditItem(dialog.Item);
         }
 
         public void Rename()
@@ -188,11 +166,6 @@ namespace JexusManager.Features.Rewrite
 
         public void Remove()
         {
-            if (SelectedItem == null)
-            {
-                return;
-            }
-
             var service = (IManagementUIService)GetService(typeof(IManagementUIService));
             if (service.ShowMessage(
                     "Are you sure you want to remove this provider?",
@@ -204,36 +177,11 @@ namespace JexusManager.Features.Rewrite
                 return;
             }
 
-            var configService = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = configService.GetSection("system.webServer/rewrite/providers");
-            var collection = section.GetCollection();
-
-            // Find and remove the item from the configuration
-            foreach (ConfigurationElement element in collection)
-            {
-                if ((string)element["name"] == SelectedItem.Name)
-                {
-                    collection.Remove(element);
-                    break;
-                }
-            }
-
-            configService.ServerManager.CommitChanges();
-
-            // Remove from the UI
-            Items.Remove(SelectedItem);
-            SelectedItem = null;
-
-            OnRewriteSettingsSaved();
+            RemoveItem();
         }
 
         public void Revert()
         {
-            if (!CanRevert)
-            {
-                throw new InvalidOperationException("Revert operation cannot be done at server level");
-            }
-
             var service = (IManagementUIService)GetService(typeof(IManagementUIService));
             var result =
                 service.ShowMessage(
@@ -246,29 +194,6 @@ namespace JexusManager.Features.Rewrite
             }
 
             this.RevertItems();
-        }
-
-
-        public void AddProvider(ProviderItem provider)
-        {
-            if (provider == null)
-            {
-                return;
-            }
-
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.webServer/rewrite/providers");
-            var collection = section.GetCollection();
-
-            ConfigurationElement element = collection.CreateElement();
-            provider.Element = element;
-            provider.Apply();
-            collection.Add(element);
-
-            service.ServerManager.CommitChanges();
-
-            Items.Add(provider);
-            OnRewriteSettingsSaved();
         }
 
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)

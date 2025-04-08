@@ -37,7 +37,6 @@ namespace JexusManager.Features.Rewrite
             this.panel2 = new System.Windows.Forms.Panel();
             this.listView1 = new System.Windows.Forms.ListView();
             this.chName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.chValue = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chProviderType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chEntryType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.label2 = new System.Windows.Forms.Label();
@@ -87,8 +86,8 @@ namespace JexusManager.Features.Rewrite
             // 
             // panel2
             // 
-            this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel2.Controls.Add(this.listView1);
             this.panel2.Controls.Add(this.label2);
@@ -98,10 +97,8 @@ namespace JexusManager.Features.Rewrite
             this.panel2.TabIndex = 8;
             // 
             // listView1
-            // 
-            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            //            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.chName,
-            this.chValue,
             this.chProviderType,
             this.chEntryType});
             this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -239,12 +236,9 @@ namespace JexusManager.Features.Rewrite
 
         }
 
-        #endregion
-
-        private SplitContainer splitContainer1;
+        #endregion        private SplitContainer splitContainer1;
         private ListView listView1;
         private ColumnHeader chName;
-        private ColumnHeader chValue;
         private ColumnHeader chProviderType;
         private ColumnHeader chEntryType;
         private TableLayoutPanel tableLayoutPanel1;

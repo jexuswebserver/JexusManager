@@ -12,6 +12,7 @@ namespace JexusManager.Features.Rewrite
 
         public SettingItem(ConfigurationElement element)
         {
+            Flag = element == null || element.IsLocallyStored ? "Local" : "Inherited";
             Element = element;
             if (element == null)
             {
@@ -49,7 +50,7 @@ namespace JexusManager.Features.Rewrite
             }
             else
             {
-                Element["encryptedValue"] = null;
+                //Element["encryptedValue"] = null;
                 Element["value"] = Value;
             }
         }

@@ -36,7 +36,7 @@ namespace JexusManager.Features.ResponseHeaders
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    if (feature.Items.Any(item => item != Item && txtName.Text == item.Name))
+                    if (feature.FindDuplicate(item => item.Name, txtName.Text))
                     {
                         ShowMessage(
                             "A header with this name already exists.",
@@ -46,11 +46,7 @@ namespace JexusManager.Features.ResponseHeaders
                         return;
                     }
 
-                    if (Item == null)
-                    {
-                        Item = new ResponseHeadersItem(null);
-                    }
-
+                    Item ??= new ResponseHeadersItem(null);
                     Item.Name = txtName.Text;
                     Item.Value = txtValue.Text;
 
