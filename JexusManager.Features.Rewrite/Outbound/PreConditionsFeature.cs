@@ -111,49 +111,21 @@ namespace JexusManager.Features.Rewrite.Outbound
 
         public void Load()
         {
-            Items = new List<PreConditionItem>();
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.webServer/rewrite/outboundRules");
-            ConfigurationElementCollection rulesCollection = section.GetCollection("preConditions");
-            foreach (ConfigurationElement ruleElement in rulesCollection)
-            {
-                var node = new PreConditionItem(ruleElement);
-                Items.Add(node);
-            }
-
+            var section = service.GetSection("system.webServer/rewrite/outboundRules"); 
             CanRevert = section.CanRevert();
-            OnRewriteSettingsSaved();
+            LoadItems();
         }
 
         public void Add()
         {
-            using (var dialog = new AddPreConditionDialog(Module, null))
+            using var dialog = new AddPreConditionDialog(Module, null);
+            if (dialog.ShowDialog() != DialogResult.OK)
             {
-                if (dialog.ShowDialog() != DialogResult.OK)
-                {
-                    return;
-                }
-
-                var newItem = dialog.Item;
-                var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-                var rulesSection = service.GetSection("system.webServer/rewrite/outboundRules");
-                ConfigurationElementCollection rulesCollection = rulesSection.GetCollection("preConditions");
-
-                if (SelectedItem != newItem)
-                {
-                    Items.Add(newItem);
-                    SelectedItem = newItem;
-                }
-                else if (newItem.Flag != "Local")
-                {
-                    rulesCollection.Remove(newItem.Element);
-                    newItem.Flag = "Local";
-                }
-
-                newItem.AppendTo(rulesCollection);
-                service.ServerManager.CommitChanges();
+                return;
             }
-            OnRewriteSettingsSaved();
+
+            AddItem(dialog.Item);
         }
 
         public void Edit()
@@ -164,34 +136,13 @@ namespace JexusManager.Features.Rewrite.Outbound
         protected override void DoubleClick(PreConditionItem item)
         {
             // TODO: how to edit.
-            using (var dialog = new AddPreConditionDialog(Module, item))
+            using var dialog = new AddPreConditionDialog(Module, item);
+            if (dialog.ShowDialog() != DialogResult.OK)
             {
-                if (dialog.ShowDialog() != DialogResult.OK)
-                {
-                    return;
-                }
-
-                var newItem = dialog.Item;
-                var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-                var rulesSection = service.GetSection("system.webServer/rewrite/outboundRules");
-                ConfigurationElementCollection rulesCollection = rulesSection.GetCollection("preConditions");
-
-                if (SelectedItem != newItem)
-                {
-                    Items.Add(newItem);
-                    SelectedItem = newItem;
-                }
-                else if (newItem.Flag != "Local")
-                {
-                    rulesCollection.Remove(newItem.Element);
-                    newItem.Flag = "Local";
-                }
-
-                newItem.AppendTo(rulesCollection);
-
-                service.ServerManager.CommitChanges();
+                return;
             }
-            OnRewriteSettingsSaved();
+
+            EditItem(dialog.Item);
         }
 
         public void Remove()
@@ -205,15 +156,7 @@ namespace JexusManager.Features.Rewrite.Outbound
                 return;
             }
 
-            Items.Remove(SelectedItem);
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.webServer/rewrite/outboundRules");
-            ConfigurationElementCollection collection = section.GetCollection("preConditions");
-            collection.Remove(SelectedItem.Element);
-            service.ServerManager.CommitChanges();
-
-            SelectedItem = null;
-            OnRewriteSettingsSaved();
+            RemoveItem();
         }
 
         internal protected void OnRewriteSettingsSaved()
@@ -240,23 +183,7 @@ namespace JexusManager.Features.Rewrite.Outbound
                 return;
             }
 
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.webServer/rewrite/outboundRules");
-            ConfigurationElementCollection collection = section.GetCollection("preConditions");
-            collection.Clear();
-            collection.Delete();
-            collection = section.GetCollection();
-
-            SelectedItem = null;
-            Items.Clear();
-            foreach (ConfigurationElement ruleElement in collection)
-            {
-                var node = new PreConditionItem(ruleElement);
-                Items.Add(node);
-            }
-
-            service.ServerManager.CommitChanges();
-            OnRewriteSettingsSaved();
+            RevertItems();
         }
 
         private void Rename()
@@ -266,7 +193,8 @@ namespace JexusManager.Features.Rewrite.Outbound
 
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
         {
-            return null;
+            var section = service.GetSection("system.webServer/rewrite/outboundRules");
+            return section.GetCollection("preConditions");
         }
 
         protected override void OnSettingsSaved()

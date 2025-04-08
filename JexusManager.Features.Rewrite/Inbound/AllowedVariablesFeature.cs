@@ -105,18 +105,10 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         public void Load()
         {
-            Items = new List<AllowedVariableItem>();
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var section = service.GetSection("system.webServer/rewrite/allowedServerVariables");
-            ConfigurationElementCollection rulesCollection = section.GetCollection();
-            foreach (ConfigurationElement ruleElement in rulesCollection)
-            {
-                var node = new AllowedVariableItem(ruleElement, this);
-                Items.Add(node);
-            }
-
             CanRevert = section.CanRevert();
-            OnRewriteSettingsSaved();
+            LoadItems();
         }
 
         public void Add()
@@ -128,26 +120,8 @@ namespace JexusManager.Features.Rewrite.Inbound
                     return;
                 }
 
-                var newItem = dialog.Item;
-                var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-                var rulesSection = service.GetSection("system.webServer/rewrite/allowedServerVariables");
-                ConfigurationElementCollection rulesCollection = rulesSection.GetCollection();
-
-                if (SelectedItem != newItem)
-                {
-                    Items.Add(newItem);
-                    SelectedItem = newItem;
-                }
-                else if (newItem.Flag != "Local")
-                {
-                    rulesCollection.Remove(newItem.Element);
-                    newItem.Flag = "Local";
-                }
-
-                newItem.AppendTo(rulesCollection);
-                service.ServerManager.CommitChanges();
+                AddItem(dialog.Item);
             }
-            OnRewriteSettingsSaved();
         }
 
         public void Remove()
@@ -161,15 +135,7 @@ namespace JexusManager.Features.Rewrite.Inbound
                 return;
             }
 
-            Items.Remove(SelectedItem);
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.webServer/rewrite/allowedServerVariables");
-            ConfigurationElementCollection collection = section.GetCollection();
-            collection.Remove(SelectedItem.Element);
-            service.ServerManager.CommitChanges();
-
-            SelectedItem = null;
-            OnRewriteSettingsSaved();
+            RemoveItem();
         }
 
         internal protected void OnRewriteSettingsSaved()
@@ -196,23 +162,7 @@ namespace JexusManager.Features.Rewrite.Inbound
                 return;
             }
 
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.webServer/rewrite/allowedServerVariables");
-            ConfigurationElementCollection collection = section.GetCollection();
-            collection.Clear();
-            collection.Delete();
-            collection = section.GetCollection();
-
-            SelectedItem = null;
-            Items.Clear();
-            foreach (ConfigurationElement ruleElement in collection)
-            {
-                var node = new AllowedVariableItem(ruleElement, this);
-                Items.Add(node);
-            }
-
-            service.ServerManager.CommitChanges();
-            OnRewriteSettingsSaved();
+            RevertItems();
         }
 
         private void Edit()
@@ -243,7 +193,8 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
         {
-            return null;
+            var section = service.GetSection("system.webServer/rewrite/allowedServerVariables");
+            return section.GetCollection();
         }
 
         protected override void OnSettingsSaved()

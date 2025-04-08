@@ -93,50 +93,21 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         public void Load()
         {
-            Items = new List<MapItem>();
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var rulesSection = service.GetSection("system.webServer/rewrite/rewriteMaps");
-            ConfigurationElementCollection rulesCollection = rulesSection.GetCollection();
-            foreach (ConfigurationElement ruleElement in rulesCollection)
-            {
-                var node = new MapItem(ruleElement, this);
-                Items.Add(node);
-            }
-
-            OnRewriteSettingsSaved();
+            CanRevert = rulesSection.CanRevert();
+            LoadItems();
         }
 
         public void Add()
         {
-            using (var dialog = new AddMapsDialog(Module, this))
+            using var dialog = new AddMapsDialog(Module, this);
+            if (dialog.ShowDialog() != DialogResult.OK)
             {
-                if (dialog.ShowDialog() != DialogResult.OK)
-                {
-                    return;
-                }
-
-                var newItem = dialog.Item;
-                var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-                var rulesSection = service.GetSection("system.webServer/rewrite/rewriteMaps");
-                ConfigurationElementCollection rulesCollection = rulesSection.GetCollection();
-
-                if (SelectedItem != newItem)
-                {
-                    Items.Add(newItem);
-                    SelectedItem = newItem;
-                }
-                else if (newItem.Flag != "Local")
-                {
-                    rulesCollection.Remove(newItem.Element);
-                    newItem.Flag = "Local";
-                }
-
-                newItem.AppendTo(rulesCollection);
-                service.ServerManager.CommitChanges();
+                return;
             }
-            OnRewriteSettingsSaved();
 
-            Edit();
+            AddItem(dialog.Item);
         }
 
         public void Remove()
@@ -150,15 +121,7 @@ namespace JexusManager.Features.Rewrite.Inbound
                 return;
             }
 
-            Items.Remove(SelectedItem);
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.webServer/rewrite/rewriteMaps");
-            ConfigurationElementCollection collection = section.GetCollection();
-            collection.Remove(SelectedItem.Element);
-            service.ServerManager.CommitChanges();
-
-            SelectedItem = null;
-            OnRewriteSettingsSaved();
+            RemoveItem();
         }
 
         internal protected void OnRewriteSettingsSaved()
@@ -186,11 +149,6 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         public void Revert()
         {
-            if (!CanRevert)
-            {
-                throw new InvalidOperationException("Revert operation cannot be done at server level");
-            }
-
             var service = (IManagementUIService)GetService(typeof(IManagementUIService));
             var result =
                 service.ShowMessage(
@@ -220,7 +178,8 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
         {
-            return null;
+            var section = service.GetSection("system.webServer/rewrite/rewriteMaps");
+            return section.GetCollection();
         }
 
         protected override void OnSettingsSaved()
