@@ -201,7 +201,7 @@ namespace Tests.Caching
                             new XAttribute("duration", "00:00:00"),
                             new XAttribute("extension", ".xslt")))));
             document.Save(expected);
-            
+
             var item = new CachingItem(null);
             item.Extension = ".xls";
             _feature.AddItem(item);

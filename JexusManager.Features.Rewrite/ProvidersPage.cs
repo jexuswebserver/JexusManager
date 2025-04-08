@@ -72,7 +72,7 @@ namespace JexusManager.Features.Rewrite
         public ProvidersPage()
         {
             InitializeComponent();
-            
+
             // Set the labels from resources if needed
             label3.Text = "Rewrite Providers";
             label2.Text = "Providers implement custom rewrite logic and can be invoked from inbound and outbound rewrite rules.";
@@ -92,7 +92,7 @@ namespace JexusManager.Features.Rewrite
             {
                 item.Name = text;
                 item.Apply();
-            },            
+            },
             text =>
             {
                 if (_feature.FindDuplicate(item => item.Name, text))
@@ -154,7 +154,7 @@ namespace JexusManager.Features.Rewrite
             _feature.HandleSelectedIndexChanged(listView1);
             Refresh();
         }
-        
+
         private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
         {
             if (splitContainer1.Panel2.Width > 500)

@@ -55,7 +55,7 @@ namespace Microsoft.Web.Administration
             _initialized = true;
             if (Parent != null)
             {
-                foreach(var item in Parent.DefinitionCache)
+                foreach (var item in Parent.DefinitionCache)
                 {
                     DefinitionCache.Add(item);
                 }
@@ -217,7 +217,7 @@ namespace Microsoft.Web.Administration
                 {
                     _effective.Sections.Add(item);
                 }
-                
+
                 core = core.Parent;
             }
 
@@ -712,7 +712,7 @@ namespace Microsoft.Web.Administration
                             locationPath,
                             core,
                             null)
-                        {OverrideMode = OverrideMode.Inherit};
+                    { OverrideMode = OverrideMode.Inherit };
                     if (locationPath == null)
                     {
                         section.OverrideModeEffective = (OverrideMode)Enum.Parse(typeof(OverrideMode), definition.OverrideModeDefault);

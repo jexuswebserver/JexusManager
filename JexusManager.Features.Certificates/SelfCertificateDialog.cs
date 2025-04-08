@@ -138,7 +138,7 @@ namespace JexusManager.Features.Certificates
 
                     string hashName = cbHashing.SelectedIndex == 0 ? "SHA1WithRSA" : "SHA256WithRSA";
                     var factory = new Asn1SignatureFactory(hashName, cerKp.Private, random);
-                                       
+
                     string p12File = Path.GetTempFileName();
                     string p12pwd = "test";
 
@@ -185,7 +185,7 @@ namespace JexusManager.Features.Certificates
                             var message = Microsoft.Web.Administration.NativeMethods.KnownCases(ex.NativeErrorCode);
                             if (string.IsNullOrEmpty(message))
                             {
-                                 _logger.LogError(ex, "Win32 error installing certificate. Native error code: {Code}", ex.NativeErrorCode);
+                                _logger.LogError(ex, "Win32 error installing certificate. Native error code: {Code}", ex.NativeErrorCode);
                             }
                             else
                             {

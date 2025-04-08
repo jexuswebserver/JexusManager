@@ -90,7 +90,7 @@ namespace Microsoft.Web.Management.Client
                             list.InvokeMethod(method.MethodName, method.UserData);
                         }
                         catch (TargetInvocationException ex)
-                        {                           
+                        {
                             if (ex.InnerException is UnauthorizedAccessException)
                             {
                                 _logger.LogError(ex.InnerException, "Error invoking task method {Method}", method.MethodName);
@@ -119,7 +119,7 @@ namespace Microsoft.Web.Management.Client
                                 list.InvokeMethod(method.MethodName, method.UserData);
                             }
                             catch (TargetInvocationException ex)
-                            {   
+                            {
                                 if (ex.InnerException is UnauthorizedAccessException)
                                 {
                                     _logger.LogError(ex.InnerException, "Error invoking task method {Method}", method.MethodName);

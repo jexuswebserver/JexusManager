@@ -44,7 +44,7 @@ namespace JexusManager.Features.TraceFailedRequests
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    if (uint.TryParse(txtNumber.Text, out uint number) && number > 0 && number <=10000)
+                    if (uint.TryParse(txtNumber.Text, out uint number) && number > 0 && number <= 10000)
                     {
                         element.MaxLogFiles = number;
                         element.Enabled = cbEnabled.Checked;

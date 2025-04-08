@@ -64,7 +64,7 @@ namespace Microsoft.Web.Administration
             _useMachineContainer = value2 != null && bool.Parse(value2.ToString());
             _cspProviderName = (string)ps["cspProviderName"];
             _providerType = (string)ps["type"];
-            
+
             try
             {
                 // Determine which type to use - if providerType is empty, try to use cspProviderName
@@ -106,26 +106,26 @@ namespace Microsoft.Web.Administration
                         {
                             // Find the constructors
                             var constructors = _providerClassType.GetConstructors(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
-                            
+
                             if (constructors.Length > 0)
                             {
                                 // Try to find a constructor that takes parameters matching what we have
                                 foreach (var constructor in constructors)
                                 {
                                     var parameters = constructor.GetParameters();
-                                    
+
                                     // Look for the constructor with 5 parameters (sessionKey, keyContainerName, cspProviderName, useOAEP, useMachineContainer)
                                     // as seen in the CngEncryptionProvider class
                                     if (parameters.Length == 5)
                                     {
-                                        _nativeProvider = (IEncryptionProvider)constructor.Invoke(new object[] { 
-                                            _sessionKey, 
-                                            _keyContainerName, 
-                                            _cspProviderName, 
-                                            _useOAEP, 
-                                            _useMachineContainer 
+                                        _nativeProvider = (IEncryptionProvider)constructor.Invoke(new object[] {
+                                            _sessionKey,
+                                            _keyContainerName,
+                                            _cspProviderName,
+                                            _useOAEP,
+                                            _useMachineContainer
                                         });
-                                        
+
                                         System.Diagnostics.Debug.WriteLine($"Successfully loaded native provider: {_providerType}");
                                         break;
                                     }

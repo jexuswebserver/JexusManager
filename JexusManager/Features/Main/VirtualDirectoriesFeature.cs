@@ -71,7 +71,7 @@ namespace JexusManager.Features.Main
                                         Resources.browse_16, uri).SetUsage());
                             }
                         }
-                    }                    
+                    }
 
                     result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     result.Add(new TextTaskItem("Edit Virtual Directory", string.Empty, true));
@@ -80,7 +80,7 @@ namespace JexusManager.Features.Main
                             Resources.basic_settings_16).SetUsage());
                     result.Add(
                         new MethodTaskItem("Advanced", "Advanced Settings...", string.Empty).SetUsage());
-          
+
                 }
 
                 return result.ToArray(typeof(TaskItem)) as TaskItem[];
@@ -203,9 +203,9 @@ namespace JexusManager.Features.Main
             }
 
             var service = (IManagementUIService)GetService(typeof(IManagementUIService));
-            var result = service.ShowMessage("Are you sure that you want to remove the selected virtual directory?", 
+            var result = service.ShowMessage("Are you sure that you want to remove the selected virtual directory?",
                 "Confirm Remove",
-                MessageBoxButtons.YesNoCancel, 
+                MessageBoxButtons.YesNoCancel,
                 MessageBoxIcon.Question);
             if (result != DialogResult.Yes)
             {
@@ -214,15 +214,15 @@ namespace JexusManager.Features.Main
 
             var index = _application.VirtualDirectories.IndexOf(SelectedItem);
             _application.VirtualDirectories.Remove(SelectedItem);
-            
+
             if (_application.VirtualDirectories.Count == 0)
             {
                 SelectedItem = null;
             }
             else
             {
-                SelectedItem = index > _application.VirtualDirectories.Count - 1 
-                    ? _application.VirtualDirectories[_application.VirtualDirectories.Count - 1] 
+                SelectedItem = index > _application.VirtualDirectories.Count - 1
+                    ? _application.VirtualDirectories[_application.VirtualDirectories.Count - 1]
                     : _application.VirtualDirectories[index];
             }
 

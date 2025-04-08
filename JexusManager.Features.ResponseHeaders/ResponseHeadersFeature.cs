@@ -159,7 +159,7 @@ namespace JexusManager.Features.ResponseHeaders
             switch (selectedGroup)
             {
                 case "Entry Type":
-                    return item.SubItems[2].Text; 
+                    return item.SubItems[2].Text;
                 default:
                     return "Unknown";
             }

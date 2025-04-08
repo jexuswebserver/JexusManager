@@ -147,7 +147,7 @@ namespace PresentationControls
         public ObjectSelectionWrapper<T> FindObjectWithItem(T Object)
         {
             return Find(new Predicate<ObjectSelectionWrapper<T>>(
-                            delegate(ObjectSelectionWrapper<T> target)
+                            delegate (ObjectSelectionWrapper<T> target)
                             {
                                 return target.Item.Equals(Object);
                             }));

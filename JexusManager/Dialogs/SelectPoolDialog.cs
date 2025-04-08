@@ -26,7 +26,7 @@ namespace JexusManager.Dialogs
                 {
                     continue;
                 }
-                
+
                 selected = index;
                 btnOK.Enabled = true;
             }

@@ -69,7 +69,7 @@ namespace PresentationControls
         /// </summary>
         public string Name
         {
-            get 
+            get
             {
                 string Name = null;
                 if (string.IsNullOrEmpty(_Container.DisplayNameProperty))
@@ -112,7 +112,7 @@ namespace PresentationControls
         public bool Selected
         {
             get { return _Selected; }
-            set 
+            set
             {
                 if (_Selected != value)
                 {

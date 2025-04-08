@@ -160,16 +160,16 @@ namespace PresentationControls
             Size = content.Size;
             content.Location = Point.Empty;
             Items.Add(host);
-            content.Disposed += delegate(object sender, EventArgs e)
+            content.Disposed += delegate (object sender, EventArgs e)
             {
                 content = null;
                 Dispose(true);
             };
-            content.RegionChanged += delegate(object sender, EventArgs e)
+            content.RegionChanged += delegate (object sender, EventArgs e)
             {
                 UpdateRegion();
             };
-            content.Paint += delegate(object sender, PaintEventArgs e)
+            content.Paint += delegate (object sender, PaintEventArgs e)
             {
                 PaintSizeGrip(e);
             };

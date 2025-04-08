@@ -22,19 +22,36 @@ namespace JexusManager.Features.Rewrite
 
             Key = (string)element["key"];
             Value = (string)element["value"];
-            // TODO: encryptedValue
+            // TODO:
+            //var temp = (string)element["encryptedValue"];
+            //if (temp != null)
+            //{
+            //    Encrypted = true;
+            //    Value = temp;
+            //}
         }
 
         public string Key { get; set; }
 
         public string Value { get; set; }
 
+        public bool Encrypted { get; set; }
+
         public string Flag { get; set; }
 
         public void Apply()
         {
             Element["key"] = Key;
-            Element["value"] = Value;
+            if (Encrypted)
+            {
+                Element["encryptedValue"] = Value;
+                Element["value"] = null;
+            }
+            else
+            {
+                Element["encryptedValue"] = null;
+                Element["value"] = Value;
+            }
         }
 
         public bool Match(SettingItem other)

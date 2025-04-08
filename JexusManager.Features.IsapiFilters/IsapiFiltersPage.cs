@@ -69,7 +69,7 @@ namespace JexusManager.Features.IsapiFilters
             {
                 item.Name = text;
                 item.Apply();
-            },            
+            },
             text =>
             {
                 if (_feature.FindDuplicate(item => item.Name, text))
@@ -127,7 +127,7 @@ namespace JexusManager.Features.IsapiFilters
         private void ListView1MouseDoubleClick(object sender, MouseEventArgs e)
         {
             _feature.HandleMouseDoubleClick(listView1);
-        }        
+        }
 
         private void ListView1SelectedIndexChanged(object sender, EventArgs e)
         {

@@ -186,19 +186,19 @@ namespace Microsoft.Web.Administration
             if (IsProtected)
             {
                 var protectedInfo = _element.FileContext.ProtectedConfiguration;
-                
+
                 // Get all available providers
                 var providers = protectedInfo.Providers.Items;
-                
+
                 if (providers.Count > 0)
                 {
                     string selectedProvider = null;
-                    
+
                     // Determine which provider to use based on the element context
-                    bool isAppPoolPassword = _element.ParentElement != null && 
-                                            _element.ParentElement.ElementTagName == "processModel" && 
+                    bool isAppPoolPassword = _element.ParentElement != null &&
+                                            _element.ParentElement.ElementTagName == "processModel" &&
                                             Name == "password";
-                    
+
                     if (isAppPoolPassword)
                     {
                         // For application pool passwords, prefer IISWASOnlyCngProvider
@@ -223,7 +223,7 @@ namespace Microsoft.Web.Administration
                             selectedProvider = "IISWASOnlyCngProvider";
                         }
                     }
-                    
+
                     // If no preferred provider is found, fall back to any available provider
                     if (selectedProvider == null)
                     {
@@ -233,7 +233,7 @@ namespace Microsoft.Web.Administration
                             break;
                         }
                     }
-                    
+
                     if (selectedProvider != null)
                     {
                         try
@@ -255,7 +255,7 @@ namespace Microsoft.Web.Administration
 
             return value;
         }
-    
+
         private object Decrypt(object value)
         {
             if (value is string && IsProtected)

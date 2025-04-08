@@ -82,7 +82,7 @@ namespace PresentationControls
         {
             string ListText = String.Empty;
             int StartIndex =
-                DropDownStyle == ComboBoxStyle.DropDownList 
+                DropDownStyle == ComboBoxStyle.DropDownList
                 && DataSource == null
                 && skipFirstItem
                     ? 1
@@ -110,13 +110,13 @@ namespace PresentationControls
         [Browsable(false)]
         public CheckBoxComboBoxItemList CheckBoxItems
         {
-            get 
-            { 
+            get
+            {
                 // Added to ensure the CheckBoxItems are ALWAYS
                 // available for modification via code.
                 if (_CheckBoxComboBoxListControl.Items.Count != Items.Count)
                     _CheckBoxComboBoxListControl.SynchroniseControlsWithComboBoxItems();
-                return _CheckBoxComboBoxListControl.Items; 
+                return _CheckBoxComboBoxListControl.Items;
             }
         }
         /// <summary>
@@ -246,10 +246,10 @@ namespace PresentationControls
         {
             this.Items.Clear();
             if (DropDownStyle == ComboBoxStyle.DropDownList && DataSource == null)
-                _MustAddHiddenItem = true;                
+                _MustAddHiddenItem = true;
         }        /// <summary>
-        /// Uncheck all items.
-        /// </summary>
+                 /// Uncheck all items.
+                 /// </summary>
         public void ClearSelection()
         {
             foreach (CheckBoxComboBoxItem Item in CheckBoxItems)
@@ -292,7 +292,7 @@ namespace PresentationControls
             {
                 _MustAddHiddenItem = true;
             }
-            
+
             base.WndProc(ref m);
         }
     }
@@ -433,13 +433,13 @@ namespace PresentationControls
             #endregion
             #region Recreate the list in the same order of the combo box items
 
-            bool HasHiddenItem = 
+            bool HasHiddenItem =
                 _CheckBoxComboBox.DropDownStyle == ComboBoxStyle.DropDownList
                 && _CheckBoxComboBox.DataSource == null
                 && !DesignMode;
 
             CheckBoxComboBoxItemList NewList = new CheckBoxComboBoxItemList(_CheckBoxComboBox);
-            for(int Index0 = 0; Index0 <= _CheckBoxComboBox.Items.Count - 1; Index0 ++)
+            for (int Index0 = 0; Index0 <= _CheckBoxComboBox.Items.Count - 1; Index0++)
             {
                 object Object = _CheckBoxComboBox.Items[Index0];
                 CheckBoxComboBoxItem Item = null;
@@ -492,8 +492,8 @@ namespace PresentationControls
             if (_CheckBoxComboBox.DropDownStyle == ComboBoxStyle.DropDownList
                 && _CheckBoxComboBox.DataSource == null
                 && !DesignMode)
-                _CheckBoxComboBox.CheckBoxItems[0].Visible = false; 
-            
+                _CheckBoxComboBox.CheckBoxItems[0].Visible = false;
+
             ResumeLayout();
         }
 
@@ -579,7 +579,7 @@ namespace PresentationControls
             // Helps to maintain the Checked status of this
             // checkbox before the control is visible
             if (_ComboBoxItem is INotifyPropertyChanged)
-                ((INotifyPropertyChanged)_ComboBoxItem).PropertyChanged += 
+                ((INotifyPropertyChanged)_ComboBoxItem).PropertyChanged +=
                     new PropertyChangedEventHandler(
                         CheckBoxComboBoxItem_PropertyChanged);
         }
@@ -644,7 +644,7 @@ namespace PresentationControls
         private void CheckBoxComboBoxItem_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == _CheckBoxComboBox.ValueMember)
-                Checked = 
+                Checked =
                     (bool)_ComboBoxItem
                         .GetType()
                         .GetProperty(_CheckBoxComboBox.ValueMember)
@@ -740,11 +740,11 @@ namespace PresentationControls
                 int StartIndex =
                     // An invisible item exists in this scenario to help 
                     // with the Text displayed in the TextBox of the Combo
-                    _CheckBoxComboBox.DropDownStyle == ComboBoxStyle.DropDownList 
+                    _CheckBoxComboBox.DropDownStyle == ComboBoxStyle.DropDownList
                     && _CheckBoxComboBox.DataSource == null
                         ? 1 // Ubiklou : 2008-04-28 : Ignore first item. (http://www.codeproject.com/KB/combobox/extending_combobox.aspx?fid=476622&df=90&mpp=25&noise=3&sort=Position&view=Quick&select=2526813&fr=1#xx2526813xx)
                         : 0;
-                for(int Index = StartIndex; Index <= Count - 1; Index ++)
+                for (int Index = StartIndex; Index <= Count - 1; Index++)
                 {
                     CheckBoxComboBoxItem Item = this[Index];
 
@@ -752,7 +752,7 @@ namespace PresentationControls
                     // The binding might not be active yet
                     if (string.IsNullOrEmpty(Item.Text)
                         // Ubiklou : 2008-04-28 : No databinding
-                        && Item.DataBindings != null 
+                        && Item.DataBindings != null
                         && Item.DataBindings["Text"] != null
                         )
                     {
@@ -769,7 +769,7 @@ namespace PresentationControls
                 throw new ArgumentOutOfRangeException(String.Format("\"{0}\" does not exist in this combo box.", displayName));
             }
         }
-        
+
         #endregion
     }
 

@@ -115,7 +115,7 @@ namespace JexusManager.Tree.Hierarchy
         {
             // Refresh the tree node
             _treeNode.Nodes.Clear();
-            
+
             if (_treeNode.TreeView != null && _treeNode.TreeView.IsHandleCreated)
             {
                 // Add a temporary node to ensure the node can be expanded

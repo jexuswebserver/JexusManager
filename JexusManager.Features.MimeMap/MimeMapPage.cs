@@ -112,7 +112,7 @@ namespace JexusManager.Features.MimeMap
         {
             _feature.HandleMouseDoubleClick(listView1);
         }
-        
+
         private void listView1_SelectedIndexChanged(object sender, EventArgs e)
         {
             _feature.HandleSelectedIndexChanged(listView1);

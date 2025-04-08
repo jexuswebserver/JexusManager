@@ -207,7 +207,7 @@ namespace Tests
                 Assert.Null(binding.CertificateStoreName);
                 Assert.Equal("localhost (net.pipe)", binding.ToShortString());
             }
-            
+
             Assert.True(site.Bindings.AllowsAdd);
             Assert.True(site.Bindings.AllowsClear);
             Assert.False(site.Bindings.AllowsRemove);
@@ -534,7 +534,7 @@ namespace Tests
                 error["statusCode"] = 500;
                 error["subStatusCode"] = 55;
                 error["prefixLanguageFilePath"] = string.Empty;
-                
+
                 error["responseMode"] = 0;
                 error["responseMode"] = ResponseMode.Test;
 #if IIS
@@ -780,7 +780,7 @@ $"Filename: \\\\?\\{config.FileContext.FileName}\r\nLine number: 0\r\nError: Can
                     filesCollection.Add(lastElement);
                     Assert.Equal(7, filesCollection.Count);
                 }
-                
+
                 var errorsSection = config.GetSection("system.webServer/httpErrors");
                 var errorsCollection = errorsSection.GetCollection();
                 var error = errorsCollection.CreateElement();
@@ -790,10 +790,10 @@ $"Filename: \\\\?\\{config.FileContext.FileName}\r\nLine number: 0\r\nError: Can
                 error["responseMode"] = "File";
                 error["path"] = "test.htm";
                 errorsCollection.Add(error);
-                
+
                 var staticContent = config.GetSection("system.webServer/staticContent").GetChildElement("clientCache");
                 staticContent["cacheControlMode"] = "DisableCache";
-                
+
                 ConfigurationSection requestFilteringSection =
                     config.GetSection("system.webServer/security/requestFiltering");
                 ConfigurationElement hiddenSegmentsElement = requestFilteringSection.GetChildElement("hiddenSegments");
@@ -806,7 +806,7 @@ $"Filename: \\\\?\\{config.FileContext.FileName}\r\nLine number: 0\r\nError: Can
 
                 var section = config.GetSection("system.webServer/rewrite/rules");
                 ConfigurationElementCollection collection = section.GetCollection();
-                collection.Clear();           
+                collection.Clear();
                 var newElement = collection.CreateElement();
                 newElement["name"] = "test";
                 collection.Add(newElement);
@@ -818,7 +818,7 @@ $"Filename: \\\\?\\{config.FileContext.FileName}\r\nLine number: 0\r\nError: Can
                 // enable Windows authentication
                 var windowsSection = config.GetSection("system.webServer/security/authentication/windowsAuthentication",
                     "WebSite1");
-                var windowsEnabled = (bool) windowsSection["enabled"];
+                var windowsEnabled = (bool)windowsSection["enabled"];
             }
             {
                 Configuration config = server.GetApplicationHostConfiguration();

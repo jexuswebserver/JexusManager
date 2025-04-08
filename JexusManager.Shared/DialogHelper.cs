@@ -375,7 +375,7 @@ namespace JexusManager
                 {
                     StartInfo = new ProcessStartInfo
                     {
-                        FileName = useDefault ? url: browser,
+                        FileName = useDefault ? url : browser,
                         Arguments = useDefault ? string.Empty : url,
                         UseShellExecute = true
                     }
@@ -463,6 +463,6 @@ namespace JexusManager
                 // Assign the item to the appropriate group
                 item.Group = groups[groupKey];
             }
-        }        
+        }
     }
 }

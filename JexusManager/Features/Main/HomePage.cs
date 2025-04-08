@@ -33,7 +33,7 @@ namespace JexusManager.Features.Main
                 lblUpdateStatus.ForeColor = Color.Black;
                 btnDownloadUpdate.Visible = false;
                 btnRetry.Visible = false;
-                
+
                 _updateInfo = await UpdateHelper.CheckForUpdate();
                 UpdateVersionDisplay();
             }
@@ -60,7 +60,7 @@ namespace JexusManager.Features.Main
                     // Create a more helpful message for connectivity issues
                     lblUpdateStatus.Text = "Cannot connect to GitHub. You can check for updates manually at:";
                     lblUpdateStatus.ForeColor = Color.Red;
-                    
+
                     // Show link label for manual update check
                     lblManualUpdate.Text = _updateInfo.ReleaseUrl;
                     lblManualUpdate.Visible = true;
@@ -71,7 +71,7 @@ namespace JexusManager.Features.Main
                     lblUpdateStatus.ForeColor = Color.Red;
                     lblManualUpdate.Visible = false;
                 }
-                
+
                 btnDownloadUpdate.Visible = false;
                 btnRetry.Visible = true;
                 return;
@@ -125,7 +125,7 @@ namespace JexusManager.Features.Main
         {
             // Hide the manual update link when retrying
             lblManualUpdate.Visible = false;
-            
+
             // Reload update info
             LoadUpdateInfo();
         }
@@ -144,9 +144,9 @@ namespace JexusManager.Features.Main
             lblManualUpdate.MaximumSize = new System.Drawing.Size(
                 groupBox2.Width - lblManualUpdate.Left - 30, 0);
             lblManualUpdate.AutoSize = true;
-            
+
             // Ensure the link resizes when the container resizes
-            groupBox2.SizeChanged += (sender, e) => 
+            groupBox2.SizeChanged += (sender, e) =>
             {
                 lblManualUpdate.MaximumSize = new System.Drawing.Size(
                     groupBox2.Width - lblManualUpdate.Left - 30, 0);

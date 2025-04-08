@@ -99,7 +99,7 @@ namespace JexusManager.Features.TraceFailedRequests.Wizards.AddTraceWizard
             data.Time = time;
             if (cbEventSeverity.Checked)
             {
-                switch(cbSeverity.SelectedIndex)
+                switch (cbSeverity.SelectedIndex)
                 {
                     case 0:
                         data.Verbosity = 2;

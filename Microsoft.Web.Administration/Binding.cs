@@ -227,8 +227,8 @@ namespace Microsoft.Web.Administration
                 return $"{Protocol}://{domain}";
             }
 
-            domain = !string.IsNullOrWhiteSpace(host) 
-                ? host 
+            domain = !string.IsNullOrWhiteSpace(host)
+                ? host
                 : address == "*" || address == "0.0.0.0"
                     ? Parent.Parent.Parent.Parent.HostName.ExtractName()
                     : address;
@@ -360,7 +360,7 @@ namespace Microsoft.Web.Administration
                 CertificateStoreName = string.Empty;
                 return;
             }
-            
+
             CertificateHash = certificate.Hash;
             CertificateStoreName = certificate.StoreName;
         }

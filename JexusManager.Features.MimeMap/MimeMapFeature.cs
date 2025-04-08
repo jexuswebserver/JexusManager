@@ -135,7 +135,7 @@ namespace JexusManager.Features.MimeMap
         }
 
         protected override void DoubleClick(MimeMapItem item)
-        {            
+        {
             using var dialog = new NewMapItemDialog(Module, SelectedItem, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {

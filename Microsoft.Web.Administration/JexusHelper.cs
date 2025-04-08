@@ -37,47 +37,41 @@ namespace Microsoft.Web.Administration
 
         public async Task<string> SaveKeyAsync(string key)
         {
-            using (var client = GetClient())
+            using var client = GetClient();
+            HttpResponseMessage response = await client.PostAsJsonAsync("api/server/key/save", key);
+            if (response.IsSuccessStatusCode)
             {
-                HttpResponseMessage response = await client.PostAsJsonAsync("api/server/key/save", key);
-                if (response.IsSuccessStatusCode)
-                {
-                    var result = (string)await response.Content.ReadAsAsync(typeof(string));
-                    return result;
-                }
-
-                return string.Empty;
+                var result = (string)await response.Content.ReadAsAsync(typeof(string));
+                return result;
             }
+
+            return string.Empty;
         }
 
         public async Task<string> SaveCertificateAsync(string text)
         {
-            using (var client = GetClient())
+            using var client = GetClient();
+            HttpResponseMessage response = await client.PostAsJsonAsync("api/server/cert/save", text);
+            if (response.IsSuccessStatusCode)
             {
-                HttpResponseMessage response = await client.PostAsJsonAsync("api/server/cert/save", text);
-                if (response.IsSuccessStatusCode)
-                {
-                    var result = (string)await response.Content.ReadAsAsync(typeof(string));
-                    return result;
-                }
-
-                return string.Empty;
+                var result = (string)await response.Content.ReadAsAsync(typeof(string));
+                return result;
             }
+
+            return string.Empty;
         }
 
         public async Task<X509Certificate2> GetCertificateAsync()
         {
-            using (var client = GetClient())
+            using var client = GetClient();
+            HttpResponseMessage response = await client.PostAsJsonAsync("api/server/cert", _certificateCache);
+            if (response.IsSuccessStatusCode)
             {
-                HttpResponseMessage response = await client.PostAsJsonAsync("api/server/cert", _certificateCache);
-                if (response.IsSuccessStatusCode)
-                {
-                    var result = (X509Certificate2)await response.Content.ReadAsAsync(typeof(X509Certificate2));
-                    return result;
-                }
-
-                return null;
+                var result = (X509Certificate2)await response.Content.ReadAsAsync(typeof(X509Certificate2));
+                return result;
             }
+
+            return null;
         }
 
         public void SetCertificate(string certificate)
@@ -94,7 +88,7 @@ namespace Microsoft.Web.Administration
         {
             var requestHandler = new HttpClientHandler();
             requestHandler.ServerCertificateCustomValidationCallback = ServerCertificateValidationCallback;
-            var client = new HttpClient(requestHandler) {BaseAddress = new Uri($"{s_protocol}://{HostName}/")};
+            var client = new HttpClient(requestHandler) { BaseAddress = new Uri($"{s_protocol}://{HostName}/") };
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             client.DefaultRequestHeaders.Add("X-HTTP-Authorization", Credentials);
@@ -104,62 +98,54 @@ namespace Microsoft.Web.Administration
 
         public async Task<Version> GetVersionAsync()
         {
-            using (var client = GetClient())
+            using var client = GetClient();
+            HttpResponseMessage response = await client.GetAsync("api/server/version");
+            if (response.IsSuccessStatusCode)
             {
-                HttpResponseMessage response = await client.GetAsync("api/server/version");
-                if (response.IsSuccessStatusCode)
-                {
-                    var succeeded = (string)await response.Content.ReadAsAsync(typeof(string));
-                    return new Version(succeeded);
-                }
-
-                return null;
+                var succeeded = (string)await response.Content.ReadAsAsync(typeof(string));
+                return new Version(succeeded);
             }
+
+            return null;
         }
 
         public async Task<string> HelloAsync()
         {
-            using (var client = GetClient())
+            using var client = GetClient();
+            HttpResponseMessage response = await client.PostAsJsonAsync("api/server/hello", Environment.MachineName);
+            if (response.IsSuccessStatusCode)
             {
-                HttpResponseMessage response = await client.PostAsJsonAsync("api/server/hello", Environment.MachineName);
-                if (response.IsSuccessStatusCode)
-                {
-                    var succeeded = (string)await response.Content.ReadAsAsync(typeof(string));
-                    return succeeded;
-                }
-
-                return string.Empty;
+                var succeeded = (string)await response.Content.ReadAsAsync(typeof(string));
+                return succeeded;
             }
+
+            return string.Empty;
         }
 
         public async Task<string> ByeAsync()
         {
-            using (var client = GetClient())
+            using var client = GetClient();
+            HttpResponseMessage response = await client.PostAsJsonAsync("api/server/bye", Environment.MachineName);
+            if (response.IsSuccessStatusCode)
             {
-                HttpResponseMessage response = await client.PostAsJsonAsync("api/server/bye", Environment.MachineName);
-                if (response.IsSuccessStatusCode)
-                {
-                    var succeeded = (string)await response.Content.ReadAsAsync(typeof(string));
-                    return succeeded;
-                }
-
-                return string.Empty;
+                var succeeded = (string)await response.Content.ReadAsAsync(typeof(string));
+                return succeeded;
             }
+
+            return string.Empty;
         }
 
         public async Task<bool> LocalhostTestAsync(string path, string random)
         {
-            using (var client = GetClient())
+            using var client = GetClient();
+            HttpResponseMessage response = await client.PostAsJsonAsync("api/server/test", path);
+            if (response.IsSuccessStatusCode)
             {
-                HttpResponseMessage response = await client.PostAsJsonAsync("api/server/test", path);
-                if (response.IsSuccessStatusCode)
-                {
-                    var value = (string)await response.Content.ReadAsAsync(typeof(string));
-                    return value == random;
-                }
-
-                return false;
+                var value = (string)await response.Content.ReadAsAsync(typeof(string));
+                return value == random;
             }
+
+            return false;
         }
 
         internal override bool Verify(string path, string executable)
@@ -169,17 +155,15 @@ namespace Microsoft.Web.Administration
 
         private async Task<bool> VerifyAsync(string path)
         {
-            using (var client = GetClient())
+            using var client = GetClient();
+            HttpResponseMessage response = await client.PostAsJsonAsync("api/site/verify", path);
+            if (response.IsSuccessStatusCode)
             {
-                HttpResponseMessage response = await client.PostAsJsonAsync("api/site/verify", path);
-                if (response.IsSuccessStatusCode)
-                {
-                    var succeeded = (bool)await response.Content.ReadAsAsync(typeof(bool));
-                    return succeeded;
-                }
-
-                return false;
+                var succeeded = (bool)await response.Content.ReadAsAsync(typeof(bool));
+                return succeeded;
             }
+
+            return false;
         }
 
         public async Task LoadAsync()
@@ -213,20 +197,18 @@ namespace Microsoft.Web.Administration
             }
             else
             {
-                using (var client = GetClient())
+                using var client = GetClient();
+                HttpResponseMessage response = await client.GetAsync("api/server/");
+                if (response.IsSuccessStatusCode)
                 {
-                    HttpResponseMessage response = await client.GetAsync("api/server/");
-                    if (response.IsSuccessStatusCode)
-                    {
-                        variables = (SortedDictionary<string, List<string>>)await response.Content.ReadAsAsync(typeof(SortedDictionary<string, List<string>>));
-                    }
+                    variables = (SortedDictionary<string, List<string>>)await response.Content.ReadAsAsync(typeof(SortedDictionary<string, List<string>>));
                 }
             }
 
             var newPool = new ApplicationPool(null, ApplicationPools)
             {
                 Name = "DefaultAppPool",
-                ManagedRuntimeVersion = variables.Load(new List<string> {ApplicationPool.ManagedRuntimeVersion20}, "runtime")[0]
+                ManagedRuntimeVersion = variables.Load(new List<string> { ApplicationPool.ManagedRuntimeVersion20 }, "runtime")[0]
             };
             newPool.ProcessModel.MaxProcesses = long.Parse(variables.Load(new List<string> { "1" }, "httpd.processes")[0]);
             newPool.ProcessModel.UserName = variables.Load(new List<string> { string.Empty }, "httpd.user")[0];
@@ -245,13 +227,11 @@ namespace Microsoft.Web.Administration
             }
             else
             {
-                using (var client = GetClient())
+                using var client = GetClient();
+                HttpResponseMessage response = await client.GetAsync("api/site/");
+                if (response.IsSuccessStatusCode)
                 {
-                    HttpResponseMessage response = await client.GetAsync("api/site/");
-                    if (response.IsSuccessStatusCode)
-                    {
-                        sites = (List<string>)await response.Content.ReadAsAsync(typeof(List<string>));
-                    }
+                    sites = (List<string>)await response.Content.ReadAsAsync(typeof(List<string>));
                 }
             }
 
@@ -300,60 +280,52 @@ namespace Microsoft.Web.Administration
             }
             else
             {
-                using (var client = GetClient())
+                using var client = GetClient();
+                HttpResponseMessage response = await client.PutAsJsonAsync("api/server/", variables);
+                var content = await response.Content.ReadAsStringAsync();
+                if (response.IsSuccessStatusCode)
                 {
-                    HttpResponseMessage response = await client.PutAsJsonAsync("api/server/", variables);
-                    var content = await response.Content.ReadAsStringAsync();
-                    if (response.IsSuccessStatusCode)
-                    {
-                    }
                 }
             }
         }
 
         public async Task<bool> GetStatusAsync()
         {
-            using (var client = GetClient())
+            using var client = GetClient();
+            HttpResponseMessage response = await client.GetAsync("api/server/state");
+            if (response.IsSuccessStatusCode)
             {
-                HttpResponseMessage response = await client.GetAsync("api/server/state");
-                if (response.IsSuccessStatusCode)
-                {
-                    var result = (bool)await response.Content.ReadAsAsync(typeof(bool));
-                    return result;
-                }
-
-                return false;
+                var result = (bool)await response.Content.ReadAsAsync(typeof(bool));
+                return result;
             }
+
+            return false;
         }
 
         public async Task<bool> StopAsync()
         {
-            using (var client = GetClient())
+            using var client = GetClient();
+            HttpResponseMessage response = await client.GetAsync("api/server/stop");
+            if (response.IsSuccessStatusCode)
             {
-                HttpResponseMessage response = await client.GetAsync("api/server/stop");
-                if (response.IsSuccessStatusCode)
-                {
-                    var succeeded = (bool)await response.Content.ReadAsAsync(typeof(bool));
-                    return succeeded;
-                }
-
-                return false;
+                var succeeded = (bool)await response.Content.ReadAsAsync(typeof(bool));
+                return succeeded;
             }
+
+            return false;
         }
 
         public async Task<bool> StartAsync()
         {
-            using (var client = GetClient())
+            using var client = GetClient();
+            HttpResponseMessage response = await client.GetAsync("api/server/start");
+            if (response.IsSuccessStatusCode)
             {
-                HttpResponseMessage response = await client.GetAsync("api/server/start");
-                if (response.IsSuccessStatusCode)
-                {
-                    var succeeded = (bool)await response.Content.ReadAsAsync(typeof(bool));
-                    return succeeded;
-                }
-
-                return false;
+                var succeeded = (bool)await response.Content.ReadAsAsync(typeof(bool));
+                return succeeded;
             }
+
+            return false;
         }
 
         public async Task<long> LoadAsync(Site site, long count, string file, string siteFolder)
@@ -386,13 +358,11 @@ namespace Microsoft.Web.Administration
             }
             else
             {
-                using (var client = GetClient())
+                using var client = GetClient();
+                HttpResponseMessage response = await client.GetAsync($"api/site/{file}");
+                if (response.IsSuccessStatusCode)
                 {
-                    HttpResponseMessage response = await client.GetAsync($"api/site/{file}");
-                    if (response.IsSuccessStatusCode)
-                    {
-                        siteVariables = (SortedDictionary<string, List<string>>)await response.Content.ReadAsAsync(typeof(SortedDictionary<string, List<string>>));
-                    }
+                    siteVariables = (SortedDictionary<string, List<string>>)await response.Content.ReadAsAsync(typeof(SortedDictionary<string, List<string>>));
                 }
             }
 
@@ -434,13 +404,11 @@ namespace Microsoft.Web.Administration
             }
             else
             {
-                using (var client = GetClient())
+                using var client = GetClient();
+                HttpResponseMessage response = await client.GetAsync($"api/app/{site.Name}");
+                if (response.IsSuccessStatusCode)
                 {
-                    HttpResponseMessage response = await client.GetAsync($"api/app/{site.Name}");
-                    if (response.IsSuccessStatusCode)
-                    {
-                        appNames = (IEnumerable<string>)await response.Content.ReadAsAsync(typeof(IEnumerable<string>));
-                    }
+                    appNames = (IEnumerable<string>)await response.Content.ReadAsAsync(typeof(IEnumerable<string>));
                 }
             }
 
@@ -492,13 +460,11 @@ namespace Microsoft.Web.Administration
                 }
                 else
                 {
-                    using (var client = GetClient())
+                    using var client = GetClient();
+                    HttpResponseMessage response = await client.GetAsync($"api/app/get/{appName}");
+                    if (response.IsSuccessStatusCode)
                     {
-                        HttpResponseMessage response = await client.GetAsync($"api/app/get/{appName}");
-                        if (response.IsSuccessStatusCode)
-                        {
-                            variables = (SortedDictionary<string, List<string>>)await response.Content.ReadAsAsync(typeof(SortedDictionary<string, List<string>>));
-                        }
+                        variables = (SortedDictionary<string, List<string>>)await response.Content.ReadAsAsync(typeof(SortedDictionary<string, List<string>>));
                     }
                 }
             }
@@ -699,7 +665,7 @@ namespace Microsoft.Web.Administration
             variables.Add("addr", new List<string> { application.Site.Bindings[0].EndPoint.Address.ToString() });
             variables.Add("port", new List<string> { application.Site.Bindings[0].EndPoint.Port.ToString() });
             variables.Add("hosts", new List<string> { application.Site.Bindings[0].Host });
-            variables.Add("root", new List<string> {$"{vDir.Path} {vDir.PhysicalPath}"});
+            variables.Add("root", new List<string> { $"{vDir.Path} {vDir.PhysicalPath}" });
             variables.Add("nolog", new List<string> { httpLoggingSection["dontLog"].ToString() });
             variables.Add("keep_alive", new List<string> { httpProtocolSection["allowKeepAlive"].ToString() });
 
@@ -770,12 +736,10 @@ namespace Microsoft.Web.Administration
             }
             else
             {
-                using (var client = GetClient())
+                using var client = GetClient();
+                HttpResponseMessage response = await client.PutAsJsonAsync($"api/site/{application.ToFileName()}", variables);
+                if (response.IsSuccessStatusCode)
                 {
-                    HttpResponseMessage response = await client.PutAsJsonAsync($"api/site/{application.ToFileName()}", variables);
-                    if (response.IsSuccessStatusCode)
-                    {
-                    }
                 }
             }
         }

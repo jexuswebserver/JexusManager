@@ -310,7 +310,7 @@ namespace Microsoft.Web.Administration
             {
                 return value;
             }
-            
+
             var valueType = value.GetType();
             if (Type == "enum" && valueType.BaseType?.FullName == "System.Enum")
             {

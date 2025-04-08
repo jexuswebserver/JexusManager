@@ -204,12 +204,10 @@ namespace JexusManager.Features.Logging
 
         internal bool SelectFields()
         {
-            using (var dialog = new FieldsDialog(Module, Fields))
+            using var dialog = new FieldsDialog(Module, Fields);
+            if (dialog.ShowDialog() != DialogResult.OK)
             {
-                if (dialog.ShowDialog() != DialogResult.OK)
-                {
-                    return false;
-                }
+                return false;
             }
 
             return true;

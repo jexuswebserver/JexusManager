@@ -177,7 +177,7 @@ namespace JexusManager.Features.Main
             pool.ProcessModel.PingingEnabled = PingingEnabled;
             pool.ProcessModel.PingResponseTime = TimeSpan.FromSeconds(PingResponseTime);
             pool.ProcessModel.PingInterval = TimeSpan.FromSeconds(PingInterval);
-            pool.ProcessModel.ShutdownTimeLimit = TimeSpan.FromSeconds( ShutdownTimeLimit);
+            pool.ProcessModel.ShutdownTimeLimit = TimeSpan.FromSeconds(ShutdownTimeLimit);
             pool.ProcessModel.StartupTimeLimit = TimeSpan.FromSeconds(StartupTimeLimit);
 
             pool.Failure.OrphanWorkerProcess = OrphanWorkerProcess;

@@ -44,7 +44,7 @@ namespace Microsoft.Web.Administration
             : HostName.ExtractName();
 
         public abstract bool SupportsSni { get; }
-        
+
         public abstract bool SupportsWildcard { get; }
 
         public WorkingMode Mode { get; protected set; }
@@ -94,7 +94,7 @@ namespace Microsoft.Web.Administration
 
                 Initialized = true;
                 PreInitialize();
-              
+
                 var machine =
                     new Configuration(
                         new FileContext(

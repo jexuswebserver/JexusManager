@@ -16,7 +16,7 @@ namespace Microsoft.Web.Administration
 
         public Application Add(string path, string physicalPath)
         {
-            var result = new Application(this) {Path = path};
+            var result = new Application(this) { Path = path };
             result.Load(VirtualDirectory.RootPath, physicalPath);
             Add(result);
             return result;

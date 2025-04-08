@@ -34,7 +34,7 @@ namespace JexusManager
             OptionSet p =
                 new OptionSet()
                     .Add("h|help|?", "Display help", delegate (string v) { if (v != null) help = true; })
-                    .Add("j|jexus", "Enable Jexus web server support", delegate(string v) { if (v != null) jexus = true; });
+                    .Add("j|jexus", "Enable Jexus web server support", delegate (string v) { if (v != null) jexus = true; });
 
             List<string> extra;
             try

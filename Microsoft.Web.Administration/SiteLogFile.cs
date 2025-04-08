@@ -40,13 +40,13 @@ namespace Microsoft.Web.Administration
                         Guid guid;
                         Guid.TryParse(attribute.Value.ToString(), out guid);
                         return guid;
-                    }, 
+                    },
                     this);
             }
 
             set
             {
-                _processor.Set("customLogPluginClsid", 
+                _processor.Set("customLogPluginClsid",
                     value,
                     () => _processor.SiteDefault.CustomLogPluginClsid,
                     attribute => attribute.Value = value.ToString(),
@@ -60,7 +60,7 @@ namespace Microsoft.Web.Administration
             {
                 return _processor.Get("directory",
                     () => _processor.SiteDefault.Directory,
-                    attribute => (string) attribute.Value,
+                    attribute => (string)attribute.Value,
                     this);
             }
 
@@ -80,7 +80,7 @@ namespace Microsoft.Web.Administration
             {
                 return _processor.Get("enabled",
                     () => _processor.SiteDefault.Enabled,
-                    attribute => (bool) attribute.Value,
+                    attribute => (bool)attribute.Value,
                     this);
             }
 

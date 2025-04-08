@@ -38,7 +38,7 @@ namespace JexusManager.Dialogs
             {
                 throw new InvalidOperationException("null server for site collection");
             }
-            
+
             btnBrowse.Visible = collection.Parent.IsLocalhost;
             txtPool.Text = collection.Parent.ApplicationDefaults.ApplicationPoolName;
             btnChoose.Enabled = collection.Parent.Mode != WorkingMode.Jexus;
@@ -183,7 +183,7 @@ namespace JexusManager.Dialogs
 
                     if (collection.Parent.Mode == WorkingMode.IisExpress || collection.Parent.Mode == WorkingMode.Iis)
                     {
-                        var (state, message)  = binding.FixCertificateMapping(info?.Certificate);
+                        var (state, message) = binding.FixCertificateMapping(info?.Certificate);
                         if (state != CertificateMappingState.RegistrationSucceeded)
                         {
                             if (state == CertificateMappingState.HostNameNotMatched)

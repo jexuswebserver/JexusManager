@@ -102,10 +102,10 @@ namespace JexusManager.Features.Modules
         {
             get
             {
-                return IsManaged 
-                    ? Type 
-                    : GlobalModule == null 
-                        ? string.Empty 
+                return IsManaged
+                    ? Type
+                    : GlobalModule == null
+                        ? string.Empty
                         : GlobalModule.Image;
             }
         }

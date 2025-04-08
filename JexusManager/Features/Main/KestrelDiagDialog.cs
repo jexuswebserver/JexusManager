@@ -296,7 +296,7 @@ namespace JexusManager.Features.Main
                             Error($"To run ASP.NET Core on IIS, please refer to https://docs.microsoft.com/aspnet/core/host-and-deploy/iis/index for more details.");
                             return;
                         }
-                        
+
                         var pool = application.GetPool();
                         if (pool == null)
                         {
@@ -508,27 +508,27 @@ namespace JexusManager.Features.Main
                     }
                 }));
 
-           container.Add(
-                Observable.FromEventPattern<EventArgs>(btnSave, "Click")
-                .ObserveOn(System.Threading.SynchronizationContext.Current)
-                .Subscribe(evt =>
-                {
-                    var fileName = DialogHelper.ShowSaveFileDialog(null, "Text Files|*.txt|All Files|*.*", application.GetActualExecutable());
-                    if (string.IsNullOrEmpty(fileName))
-                    {
-                        return;
-                    }
-                    
-                    File.WriteAllText(fileName, txtResult.Text);
-                }));
+            container.Add(
+                 Observable.FromEventPattern<EventArgs>(btnSave, "Click")
+                 .ObserveOn(System.Threading.SynchronizationContext.Current)
+                 .Subscribe(evt =>
+                 {
+                     var fileName = DialogHelper.ShowSaveFileDialog(null, "Text Files|*.txt|All Files|*.*", application.GetActualExecutable());
+                     if (string.IsNullOrEmpty(fileName))
+                     {
+                         return;
+                     }
 
-           container.Add(
-                Observable.FromEventPattern<EventArgs>(btnVerify, "Click")
-                .ObserveOn(System.Threading.SynchronizationContext.Current)
-                .Subscribe(evt =>
-                {
-                    txtResult.Clear();
-                }));
+                     File.WriteAllText(fileName, txtResult.Text);
+                 }));
+
+            container.Add(
+                 Observable.FromEventPattern<EventArgs>(btnVerify, "Click")
+                 .ObserveOn(System.Threading.SynchronizationContext.Current)
+                 .Subscribe(evt =>
+                 {
+                     txtResult.Clear();
+                 }));
         }
 
         private void Debug(string text)

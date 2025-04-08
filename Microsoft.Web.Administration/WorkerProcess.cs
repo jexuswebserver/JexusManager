@@ -20,17 +20,20 @@ namespace Microsoft.Web.Administration
 
         public ApplicationDomainCollection ApplicationDomains { get; private set; }
 
-        public string AppPoolName {
+        public string AppPoolName
+        {
             get { return (string)this["appPoolName"]; }
             set { this["appPoolName"] = value; }
         }
 
-        public string ProcessGuid {
+        public string ProcessGuid
+        {
             get { return (string)this["guid"]; }
             set { this["guid"] = value; }
         }
 
-        public int ProcessId {
+        public int ProcessId
+        {
             get { return Convert.ToInt32(this["processId"]); }
             set { this["processId"] = Convert.ToUInt32(value); }
         }

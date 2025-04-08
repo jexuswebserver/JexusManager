@@ -73,7 +73,7 @@ namespace Microsoft.Web.Administration
                         address,
                         binding.CanBrowse ? string.Empty : binding.BindingInformation
                 })
-                { Tag = binding };
+            { Tag = binding };
         }
 #endif
     }

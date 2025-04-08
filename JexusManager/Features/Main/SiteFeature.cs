@@ -183,7 +183,7 @@ namespace JexusManager.Features.Main
                 _owner.Limits();
             }
 
-            [Obfuscation (Exclude = true)]
+            [Obfuscation(Exclude = true)]
             public void FixProject()
             {
                 _owner.FixProject();

@@ -434,13 +434,13 @@ namespace JexusManager.Features.Main
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var mainForm = (MainForm)service.Form;
-            
+
             // Create a new VirtualDirectoriesPage and initialize it with the application
             var application = SelectedItem.Applications[0];
-            
+
             var page = new VirtualDirectoriesPage();
             ((IModulePage)page).Initialize(Module, null, application);
-            
+
             // Load the page in the main form and synchronize tree selection
             mainForm.LoadPageAndSelectNode(page, application);
         }
@@ -450,11 +450,11 @@ namespace JexusManager.Features.Main
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var mainForm = (MainForm)service.Form;
-            
+
             // Create a new ApplicationsPage and initialize it with the site         
             var page = new ApplicationsPage();
             ((IModulePage)page).Initialize(Module, null, new Tuple<List<Application>, Site>(null, SelectedItem));
-            
+
             // Load the page in the main form and synchronize tree selection
             mainForm.LoadPageAndSelectNode(page, SelectedItem);
         }
@@ -503,7 +503,7 @@ namespace JexusManager.Features.Main
             {
                 case "Status":
                     return item.SubItems[2].Text;
-                    // TODO:
+                // TODO:
                 //case "IP Address":
                 //    return site.Bindings;
                 //case "Protocol":

@@ -298,10 +298,10 @@ namespace JexusManager.Features.Main
             {
                 return;
             }
-            
+
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var mainForm = (MainForm)service.Form;
-            
+
             // Find all applications using this pool
             var applications = new List<Application>();
             foreach (Site container in _serverManager.Sites)
@@ -314,18 +314,18 @@ namespace JexusManager.Features.Main
                     }
                 }
             }
-            
+
             if (applications.Count == 0)
             {
                 var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
-                dialog.ShowMessage("No applications are using this application pool.", "Applications", 
+                dialog.ShowMessage("No applications are using this application pool.", "Applications",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
-            }            
-           
+            }
+
             var page = new ApplicationsPage();
             ((IModulePage)page).Initialize(Module, null, new Tuple<List<Application>, Site>(applications, null));
-            
+
             mainForm.LoadPageAndSelectNode(page, service.Server);
         }
 

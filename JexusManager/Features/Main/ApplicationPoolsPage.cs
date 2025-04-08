@@ -198,6 +198,6 @@ namespace JexusManager.Features.Main
         {
             _feature.HandleSelectedIndexChanged(listView1);
             Refresh();
-        }        
+        }
     }
 }

@@ -1,7 +1,7 @@
 <Solution>
   <Folder Name="/.nuget/" />
   <Folder Name="/Controls/">
-    <Project Path="lib/CheckBoxComboBox/CheckBoxComboBox.csproj" />
+    <Project Path="lib/CheckBoxComboBox/CheckBoxComboBox.csproj" Id="70a25201-8ea4-48f8-a4a6-ed13adf8823c" />
   </Folder>
   <Folder Name="/Features/">
     <Project Path="JexusManager.Features.Access/JexusManager.Features.Access.csproj" />

@@ -141,9 +141,12 @@ namespace JexusManager.Features.Compression
 
         protected override bool CanApplyChanges
         {
-            get { return !gbStatic.Visible || (!string.IsNullOrWhiteSpace(txtFileSize.Text)
+            get
+            {
+                return !gbStatic.Visible || (!string.IsNullOrWhiteSpace(txtFileSize.Text)
                     && !string.IsNullOrWhiteSpace(txtPath.Text)
-                    && !string.IsNullOrWhiteSpace(txtDiskspaceLimit.Text)); }
+                    && !string.IsNullOrWhiteSpace(txtDiskspaceLimit.Text));
+            }
         }
 
         private void InformChanges()

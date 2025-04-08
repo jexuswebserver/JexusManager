@@ -42,7 +42,7 @@ namespace Microsoft.ApplicationHost
             return EncodingHelper.Encode(AesEncrypt(data, _keyContainerName, _cspProviderName, EncodingHelper.Decode(_sessionKey), _useOAEP, _userMachineContainer));
         }
 
-	    public unsafe static string AesDecrypt(byte[] encrypted, string keyContainer, string cspProvider, byte[] sessionKey, bool useOAEP, bool useMachineContainer)
+        public unsafe static string AesDecrypt(byte[] encrypted, string keyContainer, string cspProvider, byte[] sessionKey, bool useOAEP, bool useMachineContainer)
         {
             using NativeMethods.SafeCryptProvHandle safeCryptProvHandle = NativeMethods.SafeCryptProvHandle.AcquireMachineContext(keyContainer, cspProvider, 24u, useMachineContainer);
             nuint hKey = 0;

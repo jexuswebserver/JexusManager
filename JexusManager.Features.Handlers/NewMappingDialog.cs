@@ -58,13 +58,13 @@ namespace JexusManager.Features.Handlers
                     Item.Modules = txtModule.Text;
                     Item.Name = txtName.Text;
                     Item.Path = txtPath.Text;
-                    if ((txtModule.Text == "FastCgiModule" || txtModule.Text == "CgiModule") 
+                    if ((txtModule.Text == "FastCgiModule" || txtModule.Text == "CgiModule")
                         && !string.Equals(Path.GetExtension(Item.ScriptProcessor), ".exe", StringComparison.OrdinalIgnoreCase))
                     {
                         ShowMessage("The executable specified for the CgiModule or the FastCgiModule should be a .exe file.");
                         return;
                     }
-                        
+
                     if (!txtName.ReadOnly)
                     {
                         if (_feature.Items.Any(item => item.Match(Item)))

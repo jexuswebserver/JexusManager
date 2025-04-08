@@ -132,7 +132,7 @@ namespace JexusManager
                 LogLevel.Critical => ("crt", Color.Magenta),
                 _ => ("unk", Color.DarkGray)
             };
-            
+
             var message = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [{levelText}] {formatter(state, exception)}";
             if (exception != null)
                 message += Environment.NewLine + exception;

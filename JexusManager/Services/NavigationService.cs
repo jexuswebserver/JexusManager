@@ -38,9 +38,9 @@ namespace JexusManager.Services
 
         internal bool NavigateToItem(NavigationItem item, bool initializing)
         {
-            _logger.LogDebug("NavigateToItem - item: {PageType}, initializing: {IsInitializing}", 
+            _logger.LogDebug("NavigateToItem - item: {PageType}, initializing: {IsInitializing}",
                 item.PageType.Name, initializing);
-            
+
             var previousItem = this.CurrentItem;
             var previous = previousItem?.Page;
             if (previous != null && previous.HasChanges)
@@ -48,7 +48,7 @@ namespace JexusManager.Services
                 var basic = (ModulePage)previous;
                 string msg = "The changes you have made will be lost. Do you want to save changes?";
                 _logger.LogDebug("Page has unsaved changes: {PageName}", basic.Text);
-                
+
                 if (
                     _host.UIService.ShowMessage(
                         msg,
@@ -69,7 +69,7 @@ namespace JexusManager.Services
                         }
                     }
                 }
-                else if (_host.UIService.ShowMessage(msg, basic.Text, MessageBoxButtons.YesNoCancel, 
+                else if (_host.UIService.ShowMessage(msg, basic.Text, MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button3) == DialogResult.Cancel)
                 {
                     // User cancelled navigation, so don't continue
@@ -86,7 +86,7 @@ namespace JexusManager.Services
                 var current = _items.IndexOf(CurrentItem);
                 if (current >= 0) // Only truncate if we have a current item
                 {
-                    _logger.LogDebug("Removing forward history from index {CurrentIndex} (current size: {HistorySize})", 
+                    _logger.LogDebug("Removing forward history from index {CurrentIndex} (current size: {HistorySize})",
                         current + 1, _items.Count);
                     _items.RemoveRange(current + 1, _items.Count - 1 - current);
                 }
@@ -98,14 +98,14 @@ namespace JexusManager.Services
 
             CurrentItem = item;
             _logger.LogDebug("Current item set to: {PageType}", item.PageType.Name);
-            
+
             var page = CurrentItem.Page;
             if (typeof(IModuleChildPage).IsAssignableFrom(item.PageType))
             {
                 var pageInfo = previous?.PageInfo;
                 if (initializing)
                 {
-                    _logger.LogDebug("Initializing child page with parent: {ParentType}", 
+                    _logger.LogDebug("Initializing child page with parent: {ParentType}",
                         pageInfo?.GetType().Name ?? "null");
                     page.Initialize(pageInfo?.AssociatedModule, pageInfo, item.NavigationData);
                 }
@@ -116,10 +116,10 @@ namespace JexusManager.Services
 
             _host.LoadInner(page);
             OnNavigationPerformed(new NavigationEventArgs(this.CurrentItem, previousItem, initializing));
-            
+
             // Log the current navigation stack
             LogNavigationHistory();
-            
+
             return true;
         }
 
@@ -128,7 +128,7 @@ namespace JexusManager.Services
             var current = _items.IndexOf(CurrentItem);
             if (steps > current)
             {
-                _logger.LogWarning("Attempted to navigate back {Steps} steps but only {Available} available", 
+                _logger.LogWarning("Attempted to navigate back {Steps} steps but only {Available} available",
                     steps, current);
                 throw new ArgumentOutOfRangeException();
             }
@@ -147,7 +147,7 @@ namespace JexusManager.Services
                 return false;
             }
 
-            _logger.LogDebug("Navigating forward from index {CurrentIndex} to {NewIndex}", 
+            _logger.LogDebug("Navigating forward from index {CurrentIndex} to {NewIndex}",
                 current, current + 1);
             CurrentItem = _items[current + 1];
             return NavigateToItem(CurrentItem, false);
@@ -155,21 +155,21 @@ namespace JexusManager.Services
 
         public bool CanNavigateBack
         {
-            get 
-            { 
+            get
+            {
                 var canNavigate = _items.IndexOf(CurrentItem) > 0;
                 _logger.LogTrace("CanNavigateBack: {Result}", canNavigate);
-                return canNavigate; 
+                return canNavigate;
             }
         }
 
         public bool CanNavigateForward
         {
-            get 
-            { 
+            get
+            {
                 var canNavigate = _items.IndexOf(CurrentItem) < _items.Count - 1;
                 _logger.LogTrace("CanNavigateForward: {Result}", canNavigate);
-                return canNavigate; 
+                return canNavigate;
             }
         }
 
@@ -189,20 +189,20 @@ namespace JexusManager.Services
                 e.NewItem?.PageType.Name ?? "null",
                 e.OldItem?.PageType.Name ?? "null",
                 e.IsNew);
-                
+
             this.NavigationPerformed?.Invoke(this, e);
         }
-        
+
         private void LogNavigationHistory()
         {
             var currentIndex = _items.IndexOf(CurrentItem);
-            var history = string.Join(" -> ", 
-                _items.Select((item, index) => 
+            var history = string.Join(" -> ",
+                _items.Select((item, index) =>
                     $"{(index == currentIndex ? "[" : "")}" +
                     $"{item.PageType.Name}" +
                     $"{(index == currentIndex ? "]" : "")}"));
-                    
-            _logger.LogDebug("Navigation history (current index: {CurrentIndex}): {History}", 
+
+            _logger.LogDebug("Navigation history (current index: {CurrentIndex}): {History}",
                 currentIndex, history);
         }
     }

@@ -18,8 +18,8 @@ namespace JexusManager.Features.Rewrite
         /// <summary>
         /// Gets or sets the name of the provider.
         /// </summary>
-        public string Name 
-        { 
+        public string Name
+        {
             get { return (string)Element["name"]; }
             set { Element["name"] = value; }
         }
@@ -56,7 +56,7 @@ namespace JexusManager.Features.Rewrite
         {
             Element = element ?? throw new ArgumentNullException(nameof(element));
             Flag = element.IsLocallyStored ? "Local" : "Inherited";
-            
+
             // Load settings from the provider's settings collection
             var settingsCollection = Element.GetChildElement("settings")?.GetCollection();
             if (settingsCollection != null)
@@ -93,7 +93,7 @@ namespace JexusManager.Features.Rewrite
         {
             return Match(other) && Type == other.Type;
         }
-        
+
         /// <summary>
         /// Determines whether this provider item has the same key values as another provider item.
         /// </summary>
@@ -103,7 +103,7 @@ namespace JexusManager.Features.Rewrite
         {
             if (other is null)
                 return false;
-                
+
             return Name == other.Name;
         }
     }

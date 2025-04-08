@@ -25,7 +25,7 @@ namespace Microsoft.Web.Administration
             var doc = XDocument.Load(fileName);
             var virturalDirectories = doc.Descendants("virtualDirectory");
             var fixSection = false;
-            foreach (var vDir in virturalDirectories)                
+            foreach (var vDir in virturalDirectories)
             {
                 string[] projects;
                 try
@@ -55,7 +55,7 @@ namespace Microsoft.Web.Administration
                 var siteName = vDir.Ancestors("site").Select(s => s.Attribute("name").Value).FirstOrDefault();
                 FixSite(doc, siteName);
             }
-            
+
             if (fixSection)
             {
                 FixSection(doc);

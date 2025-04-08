@@ -212,7 +212,7 @@ namespace JexusManager.Features.Main
                 _site.Server.CommitChanges();
                 Items = _site.Applications.Where(app => app.Path != "/").ToList();
             }
-            
+
             OnApplicationsSettingsSaved();
         }
 
@@ -224,9 +224,9 @@ namespace JexusManager.Features.Main
             }
 
             var service = (IManagementUIService)GetService(typeof(IManagementUIService));
-            var result = service.ShowMessage("Are you sure that you want to remove the selected application?", 
+            var result = service.ShowMessage("Are you sure that you want to remove the selected application?",
                 "Confirm Remove",
-                MessageBoxButtons.YesNoCancel, 
+                MessageBoxButtons.YesNoCancel,
                 MessageBoxIcon.Question);
             if (result != DialogResult.Yes)
             {
@@ -235,15 +235,15 @@ namespace JexusManager.Features.Main
 
             var index = _site.Applications.IndexOf(SelectedItem);
             _site.Applications.Remove(SelectedItem);
-            
+
             if (_site.Applications.Count <= 1) // Count is 1 means only root application
             {
                 SelectedItem = null;
             }
             else
             {
-                SelectedItem = index > _site.Applications.Count - 1 
-                    ? _site.Applications[_site.Applications.Count - 1] 
+                SelectedItem = index > _site.Applications.Count - 1
+                    ? _site.Applications[_site.Applications.Count - 1]
                     : _site.Applications[index];
 
                 // Ensure we don't select the root application
@@ -288,14 +288,14 @@ namespace JexusManager.Features.Main
             {
                 return;
             }
-            
+
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var mainForm = (MainForm)service.Form;
-            
+
             // Create a new VirtualDirectoriesPage and initialize it with the application           
             var page = new VirtualDirectoriesPage();
             ((IModulePage)page).Initialize(Module, null, SelectedItem);
-            
+
             // Load the page in the main form
             mainForm.LoadPage(page);
         }
@@ -350,7 +350,7 @@ namespace JexusManager.Features.Main
             {
                 return;
             }
-            
+
             // Help users launch IIS Express instance if needed
             var site = _site;
             if (site.Server.Mode == WorkingMode.IisExpress && site.State != ObjectState.Started)

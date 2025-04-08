@@ -34,10 +34,10 @@ namespace JexusManager.Features.Rewrite
             {
                 var result = new ArrayList();
                 result.Add(new MethodTaskItem("Add", "Add Provider...", string.Empty).SetUsage());
-                
+
                 if (_owner.SelectedItem != null)
                 {
-                    result.Add(new MethodTaskItem("AddSetting", "Add Provider Setting...", string.Empty).SetUsage());
+                    result.Add(new MethodTaskItem("ViewSettings", "View Settings", string.Empty).SetUsage());
                     result.Add(MethodTaskItem.CreateSeparator().SetUsage());
                     result.Add(new MethodTaskItem("Edit", "Edit...", string.Empty).SetUsage());
                     result.Add(new MethodTaskItem("Rename", "Rename", string.Empty).SetUsage());
@@ -60,17 +60,17 @@ namespace JexusManager.Features.Rewrite
             }
 
             [Obfuscation(Exclude = true)]
-            public void AddSetting()
+            public void ViewSettings()
             {
-                _owner.AddSetting();
+                _owner.ViewSettings();
             }
-            
+
             [Obfuscation(Exclude = true)]
             public void Edit()
             {
                 _owner.Edit();
             }
-            
+
             [Obfuscation(Exclude = true)]
             public void Rename()
             {
@@ -114,7 +114,7 @@ namespace JexusManager.Features.Rewrite
         {
             Items = new List<ProviderItem>();
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            
+
             try
             {
                 var section = service.GetSection("system.webServer/rewrite/providers");
@@ -132,7 +132,7 @@ namespace JexusManager.Features.Rewrite
                 var managementUIService = (IManagementUIService)GetService(typeof(IManagementUIService));
                 managementUIService.ShowError(ex, "Error loading rewrite providers", Name, false);
             }
-            
+
             OnRewriteSettingsSaved();
         }
 
@@ -156,21 +156,12 @@ namespace JexusManager.Features.Rewrite
             }
         }
 
-        public void AddSetting()
+        public void ViewSettings()
         {
-            if (SelectedItem == null)
-            {
-                return;
-            }
-
-            // TODO:
-            //using var dialog = new AddSettingDialog(Module, this, SelectedItem);
-            //if (dialog.ShowDialog() == DialogResult.OK)
-            //{
-            //    OnRewriteSettingsSaved();
-            //}
+            var navigationService = (INavigationService)GetService(typeof(INavigationService));
+            navigationService.Navigate(null, null, typeof(SettingsPage), SelectedItem);
         }
-        
+
         public void Edit()
         {
             DoubleClick(SelectedItem);
@@ -194,14 +185,14 @@ namespace JexusManager.Features.Rewrite
         {
             RenameInline(SelectedItem);
         }
-        
+
         public void Remove()
         {
             if (SelectedItem == null)
             {
                 return;
             }
-            
+
             var service = (IManagementUIService)GetService(typeof(IManagementUIService));
             if (service.ShowMessage(
                     "Are you sure you want to remove this provider?",
@@ -216,7 +207,7 @@ namespace JexusManager.Features.Rewrite
             var configService = (IConfigurationService)GetService(typeof(IConfigurationService));
             var section = configService.GetSection("system.webServer/rewrite/providers");
             var collection = section.GetCollection();
-            
+
             // Find and remove the item from the configuration
             foreach (ConfigurationElement element in collection)
             {
@@ -226,13 +217,13 @@ namespace JexusManager.Features.Rewrite
                     break;
                 }
             }
-            
+
             configService.ServerManager.CommitChanges();
-            
+
             // Remove from the UI
             Items.Remove(SelectedItem);
             SelectedItem = null;
-            
+
             OnRewriteSettingsSaved();
         }
 
@@ -264,22 +255,22 @@ namespace JexusManager.Features.Rewrite
             {
                 return;
             }
-            
+
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var section = service.GetSection("system.webServer/rewrite/providers");
             var collection = section.GetCollection();
-            
+
             ConfigurationElement element = collection.CreateElement();
             provider.Element = element;
             provider.Apply();
             collection.Add(element);
-            
+
             service.ServerManager.CommitChanges();
-            
+
             Items.Add(provider);
             OnRewriteSettingsSaved();
         }
-        
+
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
         {
             var section = service.GetSection("system.webServer/rewrite/providers");
@@ -292,17 +283,17 @@ namespace JexusManager.Features.Rewrite
         }
 
         public RewriteSettingsSavedEventHandler RewriteSettingsUpdated { get; set; }
-        
+
         public string Name
         {
             get { return "URL Rewrite Providers"; }
         }
-        
+
         public virtual Version MinimumFrameworkVersion
         {
             get { return FxVersionNotRequired; }
         }
-        
+
         private static readonly Version FxVersionNotRequired = new Version();
     }
 }

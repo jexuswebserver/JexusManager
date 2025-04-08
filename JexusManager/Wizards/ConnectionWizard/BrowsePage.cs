@@ -68,7 +68,7 @@ namespace JexusManager.Wizards.ConnectionWizard
                 var iisExpressX86 = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "IIS Express", "AppServer", "applicationhost.config");
                 var iisExpress2 = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "IIS Express", "config", "templates", "PersonalWebServer", "applicationhost.config");
                 var iisExpress2X86 = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "IIS Express", "config", "templates", "PersonalWebServer", "applicationhost.config");
-                if (string.Equals(iisExpress, data.FileName, StringComparison.OrdinalIgnoreCase) 
+                if (string.Equals(iisExpress, data.FileName, StringComparison.OrdinalIgnoreCase)
                     || string.Equals(iisExpressX86, data.FileName, StringComparison.OrdinalIgnoreCase)
                     || string.Equals(iisExpress2, data.FileName, StringComparison.OrdinalIgnoreCase)
                     || string.Equals(iisExpress2X86, data.FileName, StringComparison.OrdinalIgnoreCase))

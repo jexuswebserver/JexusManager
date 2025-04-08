@@ -22,12 +22,12 @@ namespace Microsoft.Web.Administration
 
     public enum CertificateMappingState
     {
-        HostNameNotMatched, 
+        HostNameNotMatched,
         RegistrationFailed,
         RegistrationSucceeded,
         UacCancelled,
         Win32ErrorOccurred,
-        GenericErrorOccurred, 
+        GenericErrorOccurred,
         CertificateHashNotMatched,
         CertificateStoreNotMatched,
         IpEndPointInvalid,
@@ -81,7 +81,7 @@ namespace Microsoft.Web.Administration
                     // handle SNI
                     var sni = NativeMethods.QuerySslSniInfo(new Tuple<string, int>(binding.Host,
                         binding.EndPoint.Port));
-                    return AddMapping(binding, sni, true);                    
+                    return AddMapping(binding, sni, true);
                 }
             }
 
@@ -139,7 +139,7 @@ namespace Microsoft.Web.Administration
                 start.Verb = "runas";
                 start.UseShellExecute = true;
                 start.FileName = "cmd";
-                start.Arguments = arguments;                    
+                start.Arguments = arguments;
                 start.CreateNoWindow = true;
                 start.WindowStyle = ProcessWindowStyle.Hidden;
                 process.Start();
@@ -284,7 +284,7 @@ namespace Microsoft.Web.Administration
             }
             catch (NullReferenceException ex)
             {
-                _logger.LogError(ex, "Null reference during mapping removal. Binding: {Binding}, EndPoint null: {IsNull}", 
+                _logger.LogError(ex, "Null reference during mapping removal. Binding: {Binding}, EndPoint null: {IsNull}",
                     binding.ToString(), binding.EndPoint == null);
                 return $"Remove SNI certificate failed: unknown ({ex.Message})";
             }
@@ -375,7 +375,7 @@ namespace Microsoft.Web.Administration
 
         private static string ToAddMappingArguments(this Binding binding, bool sni)
         {
-            return sni 
+            return sni
                 ? $"/c \"\"{CertificateInstallerLocator.FileName}\" /h:\"{Hex.ToHexString(binding.CertificateHash)}\" /s:{binding.CertificateStoreName}\" /i:{AppIdIisExpress} /a:{binding.EndPoint.Address} /o:{binding.EndPoint.Port} /x:{binding.Host}"
                 : $"/c \"\"{CertificateInstallerLocator.FileName}\" /h:\"{Hex.ToHexString(binding.CertificateHash)}\" /s:{binding.CertificateStoreName}\" /i:{AppIdIisExpress} /a:{binding.EndPoint.Address} /o:{binding.EndPoint.Port}";
         }

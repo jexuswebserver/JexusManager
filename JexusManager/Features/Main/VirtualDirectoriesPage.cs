@@ -49,7 +49,7 @@ namespace JexusManager.Features.Main
             private readonly VirtualDirectoriesPage _page;
 
             public VirtualDirectoriesListViewItem(VirtualDirectory item, VirtualDirectoriesPage page)
-                : base(item.Application.IsRoot() ? "Root Application": item.Application.Path) // TODO: miss the icon in this column.
+                : base(item.Application.IsRoot() ? "Root Application" : item.Application.Path) // TODO: miss the icon in this column.
             {
                 Item = item;
                 _page = page;
@@ -94,7 +94,7 @@ namespace JexusManager.Features.Main
             {
                 listView1.Items.Add(new VirtualDirectoriesListViewItem(vdir, this));
             }
-            
+
             _feature.InitializeColumnClick(listView1);
 
             if (_feature.SelectedItem != null)

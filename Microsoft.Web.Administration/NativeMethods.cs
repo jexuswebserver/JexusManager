@@ -995,9 +995,9 @@ namespace Microsoft.Web.Administration
             {
                 if ((uint)WIN32_ERROR.NO_ERROR == retVal)
                 {
-                    var keyDesc = new HTTP_SERVICE_CONFIG_URLACL_KEY {pUrlPrefix = networkURL};
+                    var keyDesc = new HTTP_SERVICE_CONFIG_URLACL_KEY { pUrlPrefix = networkURL };
                     var paramDesc =
-                        new HTTP_SERVICE_CONFIG_URLACL_PARAM {pStringSecurityDescriptor = securityDescriptor};
+                        new HTTP_SERVICE_CONFIG_URLACL_PARAM { pStringSecurityDescriptor = securityDescriptor };
 
                     var inputConfigInfoSet = new HTTP_SERVICE_CONFIG_URLACL_SET();
                     inputConfigInfoSet.KeyDesc = keyDesc;
@@ -1056,9 +1056,9 @@ namespace Microsoft.Web.Administration
             {
                 if ((uint)WIN32_ERROR.NO_ERROR == retVal)
                 {
-                    var keyDesc = new HTTP_SERVICE_CONFIG_URLACL_KEY {pUrlPrefix = networkURL};
+                    var keyDesc = new HTTP_SERVICE_CONFIG_URLACL_KEY { pUrlPrefix = networkURL };
                     var paramDesc =
-                        new HTTP_SERVICE_CONFIG_URLACL_PARAM {pStringSecurityDescriptor = securityDescriptor};
+                        new HTTP_SERVICE_CONFIG_URLACL_PARAM { pStringSecurityDescriptor = securityDescriptor };
 
                     var inputConfigInfoSet = new HTTP_SERVICE_CONFIG_URLACL_SET();
                     inputConfigInfoSet.KeyDesc = keyDesc;
@@ -1140,7 +1140,7 @@ namespace Microsoft.Web.Administration
         private static SOCKADDR_STORAGE CreateSockAddrStorageStructure(int port)
         {
             var address = new SOCKADDR_IN
-            {                
+            {
                 sin_family = ADDRESS_FAMILY.AF_INET,
                 sin_port = PInvoke.ntohs((ushort)port)
             };
@@ -1155,7 +1155,7 @@ namespace Microsoft.Web.Administration
         private static IPEndPoint ReadSockaddrStructure(IntPtr pSockaddrStructure)
         {
             short sAddressFamily = Marshal.ReadInt16(pSockaddrStructure);
-            AddressFamily addressFamily = (AddressFamily) sAddressFamily;
+            AddressFamily addressFamily = (AddressFamily)sAddressFamily;
 
             int sockAddrSructureSize;
             IPEndPoint ipEndPointAny;
@@ -1187,7 +1187,7 @@ namespace Microsoft.Web.Administration
             }
 
             // create IPEndPoint from SocketAddress
-            IPEndPoint result = (IPEndPoint) ipEndPointAny.Create(socketAddress);
+            IPEndPoint result = (IPEndPoint)ipEndPointAny.Create(socketAddress);
             return result;
         }
 
@@ -1199,7 +1199,7 @@ namespace Microsoft.Web.Administration
         private static IPEndPoint ReadSockAddrStorageStructure(SOCKADDR_STORAGE sockAddrStorageStructure)
         {
             var sAddressFamily = sockAddrStorageStructure.ss_family;
-            AddressFamily addressFamily = (AddressFamily) sAddressFamily;
+            AddressFamily addressFamily = (AddressFamily)sAddressFamily;
             switch (addressFamily)
             {
                 case AddressFamily.InterNetwork:

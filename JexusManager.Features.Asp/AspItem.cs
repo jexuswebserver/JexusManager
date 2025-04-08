@@ -116,7 +116,7 @@ namespace JexusManager.Features.Asp
                 attribute.Delete();
             }
             else
-            { 
+            {
                 attribute.Value = ComPlusProperties.SxsName;
             }
 

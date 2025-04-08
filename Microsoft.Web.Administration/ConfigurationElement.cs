@@ -249,8 +249,8 @@ namespace Microsoft.Web.Administration
 
         public ConfigurationElementCollection GetCollection()
         {
-            return this is ConfigurationSection section 
-                ? section.Root.ForceLoad() 
+            return this is ConfigurationSection section
+                ? section.Root.ForceLoad()
                 : (this as ConfigurationElementCollection)?.ForceLoad();
         }
 
@@ -324,7 +324,7 @@ namespace Microsoft.Web.Administration
         }
 
         public ConfigurationMethodCollection Methods { get; }
-        public IDictionary<string, string> RawAttributes 
+        public IDictionary<string, string> RawAttributes
             => ConfigSource == null ? _rawAttributes : ConfigSource.RawAttributes;
         public ConfigurationElementSchema Schema { get; }
 

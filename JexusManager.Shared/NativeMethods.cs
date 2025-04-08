@@ -40,7 +40,7 @@ namespace JexusManager
             SendMessage(b.Handle, BCM_SETSHIELD, IntPtr.Zero, (IntPtr)0);
         }
 
-       
+
         // BOOL WINAPI CryptAcquireCertificatePrivateKey(
         //		PCCERT_CONTEXT pCert,
         //		DWORD dwFlags,
@@ -58,7 +58,7 @@ namespace JexusManager
             ref IntPtr phCryptProv,
             ref int pdwKeySpec,
             ref bool pfCallerFreeProv);
-        
+
         [System.Runtime.InteropServices.DllImport("Kernel32")]
         public static extern bool CloseHandle(IntPtr handle);
 

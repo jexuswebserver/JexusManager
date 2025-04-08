@@ -187,7 +187,7 @@ namespace Microsoft.Web.Administration
         }
 
         public void Apply()
-        {            
+        {
         }
 
         public bool Match(Site other)

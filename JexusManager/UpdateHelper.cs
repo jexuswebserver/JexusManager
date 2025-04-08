@@ -76,7 +76,7 @@ namespace JexusManager
 
             updateInfo.LatestVersion = latest;
             updateInfo.UpdateAvailable = updateInfo.CurrentVersion < latest;
-            
+
             return updateInfo;
         }
     }

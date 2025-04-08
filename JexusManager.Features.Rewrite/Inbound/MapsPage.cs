@@ -37,7 +37,7 @@ namespace JexusManager.Features.Rewrite.Inbound
             public override ICollection GetTaskItems()
             {
                 return new TaskItem[]
-                           {                               
+                           {
                                GetBackTaskItem("Back", "Back to Rules"),
                                MethodTaskItem.CreateSeparator().SetUsage(),
                                RevertTaskItem,

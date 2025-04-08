@@ -43,19 +43,19 @@ namespace JexusManager.Features.Main
                     AnalyzeBinding(site, (Module)provider);
                 }));
 
-           container.Add(
-                Observable.FromEventPattern<EventArgs>(btnSave, "Click")
-                .ObserveOn(System.Threading.SynchronizationContext.Current)
-                .Subscribe(evt =>
-                {
-                    var fileName = DialogHelper.ShowSaveFileDialog(null, "Text Files|*.txt|All Files|*.*", null);
-                    if (string.IsNullOrEmpty(fileName))
-                    {
-                        return;
-                    }
-                    
-                    File.WriteAllText(fileName, txtResult.Text);
-                }));
+            container.Add(
+                 Observable.FromEventPattern<EventArgs>(btnSave, "Click")
+                 .ObserveOn(System.Threading.SynchronizationContext.Current)
+                 .Subscribe(evt =>
+                 {
+                     var fileName = DialogHelper.ShowSaveFileDialog(null, "Text Files|*.txt|All Files|*.*", null);
+                     if (string.IsNullOrEmpty(fileName))
+                     {
+                         return;
+                     }
+
+                     File.WriteAllText(fileName, txtResult.Text);
+                 }));
         }
 
         private void Debug(string text)

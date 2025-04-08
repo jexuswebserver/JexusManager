@@ -42,7 +42,7 @@ namespace JexusManager.Tree
             {
                 _homePage = new HomePage();
             }
-            
+
             mainForm.LoadInner(_homePage);
         }
 

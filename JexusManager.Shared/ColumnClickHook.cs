@@ -39,7 +39,7 @@ namespace JexusManager
                 return _order == SortOrder.Descending ? -result : result;
             }
         }
-            
+
         private int _sortColumn = -1;
 
         public void HandleColumnClick(ListView listView1)

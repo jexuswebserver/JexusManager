@@ -31,7 +31,7 @@ namespace Microsoft.ApplicationHost
             {
                 uint dwFlags = useMachineContainer ? (uint)CRYPT_KEY_FLAGS.CRYPT_MACHINE_KEYSET : 0u;
                 SafeCryptProvHandle hCryptProv;
-                
+
                 unsafe
                 {
                     nuint phProv;
@@ -41,9 +41,9 @@ namespace Microsoft.ApplicationHost
                         providerName,
                         providerType,
                         dwFlags);
-                    
+
                     hCryptProv = new SafeCryptProvHandle(phProv);
-                    
+
                     if (!success)
                     {
                         int lastWin32Error = Marshal.GetLastWin32Error();
@@ -53,7 +53,7 @@ namespace Microsoft.ApplicationHost
                         }
                     }
                 }
-                
+
                 return hCryptProv;
             }
 

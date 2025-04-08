@@ -155,8 +155,8 @@ namespace Microsoft.Web.Administration
             get
             {
                 var attribute = GetAttribute("applicationPool");
-                return attribute.IsInheritedFromDefaultValue 
-                    ? Server.ApplicationDefaults.ApplicationPoolName 
+                return attribute.IsInheritedFromDefaultValue
+                    ? Server.ApplicationDefaults.ApplicationPoolName
                     : (string)attribute.Value;
             }
 

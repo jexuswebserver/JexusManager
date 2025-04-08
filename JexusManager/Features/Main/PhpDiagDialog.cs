@@ -73,27 +73,27 @@ namespace JexusManager.Features.Main
                     AnalyzePhpConfig(server, (Module)provider, knownPhpVersions);
                 }));
 
-           container.Add(
-                Observable.FromEventPattern<EventArgs>(btnSave, "Click")
-                .ObserveOn(System.Threading.SynchronizationContext.Current)
-                .Subscribe(evt =>
-                {
-                    var fileName = DialogHelper.ShowSaveFileDialog(null, "Text Files|*.txt|All Files|*.*", null);
-                    if (string.IsNullOrEmpty(fileName))
-                    {
-                        return;
-                    }
-                    
-                    File.WriteAllText(fileName, txtResult.Text);
-                }));
+            container.Add(
+                 Observable.FromEventPattern<EventArgs>(btnSave, "Click")
+                 .ObserveOn(System.Threading.SynchronizationContext.Current)
+                 .Subscribe(evt =>
+                 {
+                     var fileName = DialogHelper.ShowSaveFileDialog(null, "Text Files|*.txt|All Files|*.*", null);
+                     if (string.IsNullOrEmpty(fileName))
+                     {
+                         return;
+                     }
 
-           container.Add(
-                Observable.FromEventPattern<EventArgs>(btnVerify, "Click")
-                .ObserveOn(System.Threading.SynchronizationContext.Current)
-                .Subscribe(evt =>
-                {
-                    txtResult.Clear();
-                }));
+                     File.WriteAllText(fileName, txtResult.Text);
+                 }));
+
+            container.Add(
+                 Observable.FromEventPattern<EventArgs>(btnVerify, "Click")
+                 .ObserveOn(System.Threading.SynchronizationContext.Current)
+                 .Subscribe(evt =>
+                 {
+                     txtResult.Clear();
+                 }));
         }
 
         private void Debug(string text)
@@ -215,7 +215,7 @@ namespace JexusManager.Features.Main
                 {
                     Error($"No suitable FastCGI appilcation is registered on this server.");
                     Error($"To run PHP on IIS, please refer to https://learn.microsoft.com/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/hh994590(v=ws.11) for more details.");
-                   return;
+                    return;
                 }
 
                 Debug(Environment.NewLine);

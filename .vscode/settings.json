@@ -1,4 +1,3 @@
-{
-    "dotnet.preferCSharpExtension": true,
-    "dotnet.defaultSolution": "JexusManager.sln"
+{    
+    "dotnet.defaultSolution": "JexusManager.slnx"
 }

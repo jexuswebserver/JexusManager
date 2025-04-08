@@ -39,7 +39,7 @@ namespace JexusManager
             {
                 return true;
             }
-            
+
             var index = host.IndexOf('.');
             if (index != 1)
             {

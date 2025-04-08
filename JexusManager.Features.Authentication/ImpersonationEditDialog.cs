@@ -61,8 +61,8 @@ namespace JexusManager.Features.Authentication
                         if (rbPool.Checked)
                         {
                             existing.Name = string.Empty;
-                        // TODO: reset password.
-                        existing.Password = null;
+                            // TODO: reset password.
+                            existing.Password = null;
                         }
 
                         existing.Apply();

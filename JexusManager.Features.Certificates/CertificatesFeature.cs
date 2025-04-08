@@ -337,7 +337,7 @@ namespace JexusManager.Features.Certificates
             {
                 var message = Microsoft.Web.Administration.NativeMethods.KnownCases(ex.NativeErrorCode);
                 if (string.IsNullOrEmpty(message))
-                {                    
+                {
                     _logger.LogError(ex, "Win32 error deleting certificate. Native error code: {Code}", ex.NativeErrorCode);
                 }
                 else

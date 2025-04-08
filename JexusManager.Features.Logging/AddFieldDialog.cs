@@ -30,7 +30,7 @@ namespace JexusManager.Features.Logging
             container.Add(
                 Observable.FromEventPattern<EventArgs>(this, "Load")
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
-                .Subscribe(evt => 
+                .Subscribe(evt =>
                 {
                     if (custom != null)
                     {

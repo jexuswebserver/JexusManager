@@ -111,27 +111,27 @@ namespace JexusManager.Features.Main
                     }
                 }));
 
-           container.Add(
-                Observable.FromEventPattern<EventArgs>(btnSave, "Click")
-                .ObserveOn(System.Threading.SynchronizationContext.Current)
-                .Subscribe(evt =>
-                {
-                    var fileName = DialogHelper.ShowSaveFileDialog(null, "Text Files|*.txt|All Files|*.*", site.Applications[0].GetActualExecutable());
-                    if (string.IsNullOrEmpty(fileName))
-                    {
-                        return;
-                    }
-                    
-                    File.WriteAllText(fileName, txtResult.Text);
-                }));
+            container.Add(
+                 Observable.FromEventPattern<EventArgs>(btnSave, "Click")
+                 .ObserveOn(System.Threading.SynchronizationContext.Current)
+                 .Subscribe(evt =>
+                 {
+                     var fileName = DialogHelper.ShowSaveFileDialog(null, "Text Files|*.txt|All Files|*.*", site.Applications[0].GetActualExecutable());
+                     if (string.IsNullOrEmpty(fileName))
+                     {
+                         return;
+                     }
 
-           container.Add(
-                Observable.FromEventPattern<EventArgs>(btnVerify, "Click")
-                .ObserveOn(System.Threading.SynchronizationContext.Current)
-                .Subscribe(evt =>
-                {
-                    txtResult.Clear();
-                }));
+                     File.WriteAllText(fileName, txtResult.Text);
+                 }));
+
+            container.Add(
+                 Observable.FromEventPattern<EventArgs>(btnVerify, "Click")
+                 .ObserveOn(System.Threading.SynchronizationContext.Current)
+                 .Subscribe(evt =>
+                 {
+                     txtResult.Clear();
+                 }));
         }
 
         private void AnalyzeAspNetCoreProject(string project, Site site)

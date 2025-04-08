@@ -118,7 +118,7 @@ namespace Tests.Authentication
                     new XAttribute("path", "WebSite1"),
                     new XElement("system.webServer",
                         new XElement("security",
-                            new XElement("authentication", 
+                            new XElement("authentication",
                                 new XElement("digestAuthentication",
                                     new XAttribute("enabled", true)))))));
             document.Save(Expected);

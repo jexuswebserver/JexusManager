@@ -81,7 +81,7 @@ namespace JexusManager
 
             _logPanel.Controls.Add(textBox);
 
-            LogHelper.GetLogger<MainForm>().LogInformation("Jexus Manager starting up. Version: {Version}", 
+            LogHelper.GetLogger<MainForm>().LogInformation("Jexus Manager starting up. Version: {Version}",
                 Assembly.GetExecutingAssembly().GetName().Version);
 
             // Add toggle logging menu item
@@ -277,7 +277,7 @@ namespace JexusManager
                     this,
                     _serviceContainer,
                     name: parts[0],
-                    fileName: parts[1], 
+                    fileName: parts[1],
                     server: null,
                     ignoreInCache: false);
                 RegisterServer(data);
@@ -373,9 +373,9 @@ namespace JexusManager
             foreach (var item in lines)
             {
                 var parts = item.Split(',');
-                var data =  ServerTreeNode.CreateJexusNode(
+                var data = ServerTreeNode.CreateJexusNode(
                     this,
-                    _serviceContainer, 
+                    _serviceContainer,
                     name: parts[0],
                     hostName: parts[1],
                     credentials: parts[4],
@@ -416,14 +416,14 @@ namespace JexusManager
 
             if (data.ServerManager == null)
             {
-                LogHelper.GetLogger<MainForm>().LogWarning("Null server: {DisplayName} : {Mode} : {Text} : {Type}", 
+                LogHelper.GetLogger<MainForm>().LogWarning("Null server: {DisplayName} : {Mode} : {Text} : {Type}",
                     data.DisplayName, data.Mode, selected.Text, selected.GetType().FullName);
                 return;
             }
 
             if (data.ServerManager.Sites == null)
             {
-                LogHelper.GetLogger<MainForm>().LogWarning("Null sites collection: {DisplayName} : {Mode} : {Text} : {Type} : {FileName}", 
+                LogHelper.GetLogger<MainForm>().LogWarning("Null sites collection: {DisplayName} : {Mode} : {Text} : {Type} : {FileName}",
                     data.DisplayName, data.Mode, selected.Text, selected.GetType().FullName, data.ServerManager.FileName);
                 return;
             }
@@ -645,7 +645,7 @@ namespace JexusManager
             {
                 return;
             }
-                
+
             var data = GetCurrentData(selected);
             if (data.IsBusy)
             {
@@ -792,7 +792,7 @@ namespace JexusManager
             {
                 return;
             }
-            
+
             var data = GetCurrentData(selected);
             if (data.IsBusy)
             {
@@ -816,7 +816,7 @@ namespace JexusManager
             {
                 return;
             }
-            
+
             var data = GetCurrentData(selected);
             if (data.IsBusy)
             {
@@ -840,7 +840,7 @@ namespace JexusManager
             {
                 return;
             }
-            
+
             var server = GetCurrentData(selected);
             if (server.IsBusy)
             {
@@ -1323,7 +1323,7 @@ namespace JexusManager
             // Temporarily suspend the AfterSelect event to prevent duplicate loading
             bool wasHandlingEvents = _handleEvents;
             _handleEvents = false;
-            
+
             try
             {
                 // Find the appropriate node based on page type and navigation data
@@ -1332,7 +1332,7 @@ namespace JexusManager
                 {
                     // Expand parent nodes to make the target node visible
                     EnsureNodeVisible(targetNode);
-                    
+
                     // Select the node
                     treeView1.SelectedNode = targetNode;
                 }
@@ -1352,7 +1352,7 @@ namespace JexusManager
         {
             if (node == null)
                 return;
-                
+
             TreeNode parent = node.Parent;
             while (parent != null)
             {
@@ -1370,7 +1370,7 @@ namespace JexusManager
         {
             if (page == null || navigationData == null)
                 return null;
-                
+
             // Handle ApplicationsPage
             if (page is ApplicationsPage && navigationData is Site site)
             {
@@ -1404,7 +1404,7 @@ namespace JexusManager
             {
                 return FindSitesNode();
             }
-                
+
             return null;
         }
 
@@ -1462,7 +1462,7 @@ namespace JexusManager
         {
             if (site == null)
                 return null;
-                
+
             // Look through all server nodes
             foreach (TreeNode serverNode in treeView1.Nodes)
             {
@@ -1496,25 +1496,25 @@ namespace JexusManager
         {
             if (application == null)
                 return null;
-                
+
             // First find the site node
             TreeNode siteNode = FindSiteNode(application.Site);
             if (siteNode == null)
                 return null;
-                
+
             // Expand to make sure the application nodes are loaded
             siteNode.Expand();
-            
+
             // Look for the application node by path
             foreach (TreeNode node in siteNode.Nodes)
             {
-                if (node is ApplicationTreeNode applicationNode && 
+                if (node is ApplicationTreeNode applicationNode &&
                     applicationNode.Application.Path == application.Path)
                 {
                     return node;
                 }
             }
-            
+
             return null;
         }
 
@@ -1526,7 +1526,7 @@ namespace JexusManager
         {
             // First load the page
             LoadPage(page);
-            
+
             // Then select the corresponding node in the tree view
             SelectNodeForPage(page, navigationData);
         }

@@ -111,7 +111,7 @@ namespace JexusManager.Features.IsapiCgiRestriction
         private void ListView1MouseDoubleClick(object sender, MouseEventArgs e)
         {
             _feature.HandleMouseDoubleClick(listView1);
-        }        
+        }
 
         private void ListView1SelectedIndexChanged(object sender, EventArgs e)
         {

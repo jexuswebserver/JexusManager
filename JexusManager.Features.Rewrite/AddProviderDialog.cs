@@ -23,13 +23,13 @@ namespace JexusManager.Features.Rewrite
         {
             InitializeComponent();
             _feature = feature;
-            
+
             Text = existing == null ? "Add Provider" : "Edit Provider";
             if (existing != null)
             {
                 txtName.Text = existing.Name;
                 txtName.ReadOnly = true;
-                
+
                 // Find the matching managed type if possible
                 for (int i = 0; i < cbManagedType.Items.Count; i++)
                 {
@@ -39,7 +39,7 @@ namespace JexusManager.Features.Rewrite
                         break;
                     }
                 }
-                
+
                 if (cbManagedType.SelectedIndex < 0)
                 {
                     cbManagedType.SelectedIndex = 0;
@@ -49,12 +49,12 @@ namespace JexusManager.Features.Rewrite
             {
                 cbManagedType.SelectedIndex = 0;
             }
-            
+
             ProviderItem = existing;
-            
+
             var container = new CompositeDisposable();
             FormClosed += (sender, args) => container.Dispose();
-            
+
             container.Add(
                 Observable.FromEventPattern<EventArgs>(txtName, "TextChanged")
                 .Sample(TimeSpan.FromSeconds(0.5))
@@ -63,7 +63,7 @@ namespace JexusManager.Features.Rewrite
                 {
                     btnOK.Enabled = !string.IsNullOrWhiteSpace(txtName.Text);
                 }));
-                
+
             container.Add(
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
@@ -74,26 +74,26 @@ namespace JexusManager.Features.Rewrite
                         ShowMessage("Provider name cannot be empty.", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return;
                     }
-                    
+
                     // Check for duplicate provider names
                     if (ProviderItem == null && _feature.Items.Exists(item => item.Name == txtName.Text))
                     {
                         ShowMessage("A provider with this name already exists.", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return;
                     }
-                    
+
                     if (ProviderItem == null)
                     {
                         // Create a new provider
                         var service = (IConfigurationService)GetService(typeof(IConfigurationService));
                         var section = service.GetSection("system.webServer/rewrite/providers");
                         var collection = section.GetCollection();
-                        
+
                         var element = collection.CreateElement();
                         ProviderItem = new ProviderItem(element);
                         ProviderItem.Name = txtName.Text;
                         ProviderItem.Type = cbManagedType.Text;
-                        
+
                         _feature.AddProvider(ProviderItem);
                     }
                     else
@@ -101,14 +101,14 @@ namespace JexusManager.Features.Rewrite
                         // Update existing provider
                         ProviderItem.Type = cbManagedType.Text;
                         ProviderItem.Apply();
-                        
+
                         var service = (IConfigurationService)GetService(typeof(IConfigurationService));
                         service.ServerManager.CommitChanges();
                     }
-                    
+
                     DialogResult = DialogResult.OK;
                 }));
-                
+
             container.Add(
                 Observable.FromEventPattern<CancelEventArgs>(this, "HelpButtonClicked")
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
@@ -117,7 +117,7 @@ namespace JexusManager.Features.Rewrite
                     _feature.ShowHelp();
                 }));
         }
-        
+
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ProviderItem ProviderItem { get; private set; }
     }

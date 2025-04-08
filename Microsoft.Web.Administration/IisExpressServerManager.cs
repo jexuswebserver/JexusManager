@@ -1,4 +1,4 @@
-﻿﻿// Copyright (c) Lex Li. All rights reserved. 
+﻿// Copyright (c) Lex Li. All rights reserved. 
 //  
 // Licensed under the MIT license. See LICENSE file in the project root for full license information. 
 
@@ -23,10 +23,10 @@ namespace Microsoft.Web.Administration
 
         public string PrimaryExecutable { get; }
 
-        public override bool SupportsSni => Version >=  Version.Parse("8.0") && Environment.OSVersion.Version >= Version.Parse("6.2");
+        public override bool SupportsSni => Version >= Version.Parse("8.0") && Environment.OSVersion.Version >= Version.Parse("6.2");
 
-        public override bool SupportsWildcard => Version >=  Version.Parse("10.0") && Environment.OSVersion.Version >= Version.Parse("10.0");
-        
+        public override bool SupportsWildcard => Version >= Version.Parse("10.0") && Environment.OSVersion.Version >= Version.Parse("10.0");
+
         public static bool ServerInstalled
         {
             get
@@ -150,7 +150,7 @@ namespace Microsoft.Web.Administration
             var actualExecutable = application.GetActualExecutable();
             var pool = application.GetPool() ?? throw new InvalidOperationException($"The application pool {application.ApplicationPoolName} does not exist.");
             var x64Tool = CertificateInstallerLocator.AlternativeFileName;
-            var tool = x64Tool != null && !pool.Enable32BitAppOnWin64 && pool.EnableEmulationOnWinArm64 
+            var tool = x64Tool != null && !pool.Enable32BitAppOnWin64 && pool.EnableEmulationOnWinArm64
                 ? x64Tool
                 : CertificateInstallerLocator.FileName;
             var temp = Path.GetTempFileName();

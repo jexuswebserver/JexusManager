@@ -158,7 +158,7 @@ namespace JexusManager.Features.Rewrite.Inbound
                 }
             }
         }
-        
+
         private void ListView1KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Delete)
