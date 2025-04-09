@@ -87,11 +87,11 @@ namespace JexusManager.Features.Rewrite
             // 
             // panel2
             // 
-            this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel2.Controls.Add(this.toolStrip2);
             this.panel2.Controls.Add(this.listView1);
+            this.panel2.Controls.Add(this.toolStrip2);
             this.panel2.Controls.Add(this.label2);
             this.panel2.Location = new System.Drawing.Point(10, 50);
             this.panel2.Name = "panel2";
@@ -107,11 +107,11 @@ namespace JexusManager.Features.Rewrite
             this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listView1.FullRowSelect = true;
             this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(0, 45);
+            this.listView1.Location = new System.Drawing.Point(0, 38);
             this.listView1.Margin = new System.Windows.Forms.Padding(5);
             this.listView1.MultiSelect = false;
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(560, 495);
+            this.listView1.Size = new System.Drawing.Size(560, 502);
             this.listView1.TabIndex = 0;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -134,19 +134,9 @@ namespace JexusManager.Features.Rewrite
             this.chEncrypted.Text = "Encrypted";
             this.chEncrypted.Width = 100;
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.label2.Location = new System.Drawing.Point(0, 0);
-            this.label2.Margin = new System.Windows.Forms.Padding(5);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(324, 13);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "Configure settings for the selected provider.";
-            // 
             // toolStrip2
             // 
+            this.toolStrip2.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripLabel2,
             this.cbGroup});
@@ -159,15 +149,25 @@ namespace JexusManager.Features.Rewrite
             // toolStripLabel2
             // 
             this.toolStripLabel2.Name = "toolStripLabel2";
-            this.toolStripLabel2.Size = new System.Drawing.Size(55, 22);
+            this.toolStripLabel2.Size = new System.Drawing.Size(59, 22);
             this.toolStripLabel2.Text = "Group by:";
             // 
             // cbGroup
             // 
             this.cbGroup.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbGroup.Name = "cbGroup";
-            this.cbGroup.Size = new System.Drawing.Size(200, 25);
-            this.cbGroup.SelectedIndexChanged += new System.EventHandler(this.CbGroup_SelectedIndexChanged);
+            this.cbGroup.Size = new System.Drawing.Size(121, 25);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.label2.Location = new System.Drawing.Point(0, 0);
+            this.label2.Margin = new System.Windows.Forms.Padding(5);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(324, 13);
+            this.label2.TabIndex = 1;
+            this.label2.Text = "Configure settings for the selected provider.";
             // 
             // pictureBox1
             // 

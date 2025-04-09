@@ -97,7 +97,8 @@ namespace JexusManager.Features.Rewrite
             this.panel2.TabIndex = 8;
             // 
             // listView1
-            //            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            //
+            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.chName,
             this.chProviderType,
             this.chEntryType});
@@ -120,11 +121,6 @@ namespace JexusManager.Features.Rewrite
             // 
             this.chName.Text = "Name";
             this.chName.Width = 200;
-            // 
-            // chValue
-            // 
-            this.chValue.Text = "Value";
-            this.chValue.Width = 200;
             // 
             // chProviderType
             // 
@@ -236,7 +232,8 @@ namespace JexusManager.Features.Rewrite
 
         }
 
-        #endregion        private SplitContainer splitContainer1;
+        #endregion
+        private SplitContainer splitContainer1;
         private ListView listView1;
         private ColumnHeader chName;
         private ColumnHeader chProviderType;

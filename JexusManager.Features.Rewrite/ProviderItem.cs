@@ -7,6 +7,7 @@ namespace JexusManager.Features.Rewrite
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading;
     using Microsoft.Web.Administration;
 
     /// <summary>
@@ -20,8 +21,7 @@ namespace JexusManager.Features.Rewrite
         /// </summary>
         public string Name
         {
-            get { return (string)Element["name"]; }
-            set { Element["name"] = value; }
+            get; set;
         }
 
         /// <summary>
@@ -29,8 +29,7 @@ namespace JexusManager.Features.Rewrite
         /// </summary>
         public string Type
         {
-            get { return (string)Element["type"]; }
-            set { Element["type"] = value; }
+            get; set;
         }
 
         /// <summary>
@@ -54,9 +53,22 @@ namespace JexusManager.Features.Rewrite
         /// <param name="element">The provider configuration element.</param>
         public ProviderItem(ConfigurationElement element)
         {
-            Element = element ?? throw new ArgumentNullException(nameof(element));
-            Flag = element.IsLocallyStored ? "Local" : "Inherited";
+            Element = element;
+            Flag = element == null || element.IsLocallyStored ? "Local" : "Inhertied";
+            if (element == null)
+            {
+                Name = string.Empty;
+                Type = string.Empty;
+                return;
+            }
 
+            Reset();
+        }
+
+        private void Reset()
+        {
+            Name = (string)Element["name"];
+            Type = (string)Element["type"];
             // Load settings from the provider's settings collection
             var settingsCollection = Element.GetChildElement("settings")?.GetCollection();
             if (settingsCollection != null)
@@ -76,11 +88,11 @@ namespace JexusManager.Features.Rewrite
             Element["name"] = Name;
             Element["type"] = Type;
 
-            var conditions = Element.GetCollection();
-            conditions.Clear();
+            var settings = Element.GetCollection("settings");
+            settings.Clear();
             foreach (var item in Settings)
             {
-                item.AppendTo(conditions);
+                item.AppendTo(settings);
             }
         }
 

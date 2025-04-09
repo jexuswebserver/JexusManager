@@ -60,7 +60,6 @@ namespace JexusManager.Features.Rewrite
             {
                 Item = item;
                 _page = page;
-                SubItems.Add(new ListViewSubItem(this, string.Empty /*item.Value*/)); // TODO:
                 SubItems.Add(new ListViewSubItem(this, item.Type));
                 SubItems.Add(new ListViewSubItem(this, item.Flag));
             }
