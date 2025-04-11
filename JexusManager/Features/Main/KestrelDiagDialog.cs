@@ -195,7 +195,6 @@ namespace JexusManager.Features.Main
                         Debug($"Processor Architecture: {Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE")}");
                         Debug($"OS: {Environment.OSVersion}");
                         Debug($"Server Type: {application.Server.Mode.AsString(EnumFormat.Description)}");
-                        Debug(string.Empty);
 
                         var root = application.VirtualDirectories[0].PhysicalPath.ExpandIisExpressEnvironmentVariables(application.GetActualExecutable());
                         if (string.IsNullOrWhiteSpace(root))
@@ -343,6 +342,39 @@ namespace JexusManager.Features.Main
 
                         var config = application.GetWebConfiguration();
                         var section = config.GetSection("system.webServer/aspNetCore");
+                      
+                        // Check environment variables from ASP.NET Core configuration
+                        Debug(string.Empty);
+                        Debug("Checking ASP.NET Core environment variables from configuration:");
+                        var envVars = section.GetCollection("environmentVariables");
+                        if (envVars != null && envVars.Count > 0)
+                        {
+                            Debug($"Found {envVars.Count} environment variable(s):");
+                            Warn("If you experience 500.30 errors, please review the environment variables carefully as they might be a source.");
+                            var warnings = new[]
+                            {
+                                "DOTNET_ADDITIONAL_DEPS",
+                                "DOTNET_ROOT",
+                                "DOTNET_SHARED_STORE",
+                                "DOTNET_START_HOOKS",
+                                "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES"
+                            };
+
+                            foreach (ConfigurationElement envVar in envVars)
+                            {
+                                var name = envVar["name"] as string;
+                                var value = envVar["value"] as string;
+
+                                if (warnings.Contains(name))
+                                {
+                                    Info($"{name} is set in configuration to: {value}");
+                                    Warn("This setting often causes ASP.NET Core startup crash in production (500.30), so please be careful when using it.");
+                                }
+                            }
+                        }
+
+                        Debug(string.Empty);
+
                         var processPath = (string)section["processPath"];
                         var arguments = (string)section["arguments"];
                         var hostingModel = (string)section["hostingModel"];
