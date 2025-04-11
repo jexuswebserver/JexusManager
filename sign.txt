@@ -1,3 +1,5 @@
+arm64\CertificateInstaller.exe
+arm64\JexusManager.exe
 x64\CertificateInstaller.exe
 x64\JexusManager.exe
 x86\CertificateInstaller.exe
