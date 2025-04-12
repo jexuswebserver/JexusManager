@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\JexusManager\JexusManager.snk</AssemblyOriginatorKeyFile>
+    <RootNamespace>JexusManager.Breadcrumb</RootNamespace>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>$(DefineConstants)TRACE;DESIGN</DefineConstants>
+  </PropertyGroup>
+
+</Project>
