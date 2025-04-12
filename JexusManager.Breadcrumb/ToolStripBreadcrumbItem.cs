@@ -13,21 +13,29 @@ namespace JexusManager.Breadcrumb
         /// <summary>
         /// Gets the underlying BreadcrumbControl being hosted.
         /// </summary>
-        public BreadcrumbControl BreadcrumbControl => Control as BreadcrumbControl;
-
-        /// <summary>
-        /// Initializes a new instance of the ToolStripBreadcrumbItem class.
-        /// </summary>
+        public BreadcrumbControl BreadcrumbControl => Control as BreadcrumbControl;        /// <summary>
+                                                                                           /// Initializes a new instance of the ToolStripBreadcrumbItem class.
+                                                                                           /// </summary>
         public ToolStripBreadcrumbItem() : base(CreateControlInstance())
         {
             // Set default appearance
             AutoSize = false;
-        }        private static Control CreateControlInstance()
+
+            // Set a minimum width to ensure the breadcrumb is visible
+            Width = 200;
+
+            // Adjust layout
+            Padding = new Padding(2);
+            Margin = new Padding(0, 1, 0, 2);
+        }
+        private static Control CreateControlInstance()
         {
             return new BreadcrumbControl
             {
                 Margin = new Padding(0),
-                Padding = new Padding(0)
+                Padding = new Padding(0),
+                Dock = DockStyle.Fill,
+                Height = 22  // Set an explicit height to ensure visibility
             };
         }
 
@@ -50,17 +58,6 @@ namespace JexusManager.Breadcrumb
         public System.Collections.Generic.List<BreadcrumbItem> Items => BreadcrumbControl.Items;
 
         /// <summary>
-        /// Gets or sets the separator character between items.
-        /// </summary>
-        [Category("Appearance")]
-        [DefaultValue(">")]
-        public string Separator
-        {
-            get => BreadcrumbControl.Separator;
-            set => BreadcrumbControl.Separator = value;
-        }
-
-        /// <summary>
         /// Gets or sets the background color for highlighted items.
         /// </summary>
         [Category("Appearance")]
@@ -69,11 +66,9 @@ namespace JexusManager.Breadcrumb
         {
             get => BreadcrumbControl.HighlightColor;
             set => BreadcrumbControl.HighlightColor = value;
-        }
-
-        /// <summary>
-        /// Subscribes to events from the hosted control.
-        /// </summary>
+        }        /// <summary>
+                 /// Subscribes to events from the hosted control.
+                 /// </summary>
         protected override void OnSubscribeControlEvents(Control control)
         {
             base.OnSubscribeControlEvents(control);
@@ -99,7 +94,7 @@ namespace JexusManager.Breadcrumb
             }
         }
 
-        // Forward events from the BreadcrumbControl
+        // Forward events from the BreadcrumbControl        // Forward events from the BreadcrumbControl
         private void BreadcrumbControl_ItemClicked(object sender, BreadcrumbItemClickedEventArgs e)
         {
             ItemClicked?.Invoke(this, e);

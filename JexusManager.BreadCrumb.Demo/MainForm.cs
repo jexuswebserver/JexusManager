@@ -10,7 +10,7 @@ namespace JexusManager.BreadCrumb.Demo
         private readonly BreadcrumbControl _breadcrumb;
         private readonly ToolStripBreadcrumbItem _toolStripBreadcrumb;
         private readonly Panel _contentPanel;
-        private readonly ListBox _navigationHistoryListBox;        public MainForm()
+        private readonly ListBox _navigationHistoryListBox; public MainForm()
         {
             Text = "BreadCrumb Control Demo";
             Size = new Size(800, 600);
@@ -26,7 +26,7 @@ namespace JexusManager.BreadCrumb.Demo
                 HighlightColor = Color.FromArgb(0, 120, 215)
             };
             _breadcrumb.ItemClicked += Breadcrumb_ItemClicked;
-            
+
             // Create a ToolStrip with breadcrumb
             var toolStrip = new ToolStrip
             {
@@ -34,16 +34,16 @@ namespace JexusManager.BreadCrumb.Demo
                 GripStyle = ToolStripGripStyle.Hidden,
                 RenderMode = ToolStripRenderMode.System
             };
-            
+
             // Add some standard ToolStrip items
             toolStrip.Items.Add(new ToolStripButton("Home", null, (s, e) => InitializeNavigation())
             {
                 DisplayStyle = ToolStripItemDisplayStyle.Image,
                 Image = SystemIcons.Application.ToBitmap()
             });
-            
+
             toolStrip.Items.Add(new ToolStripSeparator());
-            
+
             // Create the ToolStripBreadcrumbItem
             _toolStripBreadcrumb = new ToolStripBreadcrumbItem
             {
@@ -52,7 +52,7 @@ namespace JexusManager.BreadCrumb.Demo
                 HighlightColor = Color.FromArgb(0, 120, 215)
             };
             _toolStripBreadcrumb.ItemClicked += ToolStripBreadcrumb_ItemClicked;
-            
+
             toolStrip.Items.Add(_toolStripBreadcrumb);
 
             // Create the content panel
@@ -115,7 +115,7 @@ namespace JexusManager.BreadCrumb.Demo
                 ForeColor = SystemColors.GrayText,
                 Padding = new Padding(10, 3, 0, 0)
             };
-            
+
             var toolstripLabel = new Label
             {
                 Text = "ToolStrip Breadcrumb Control:",
@@ -141,20 +141,21 @@ namespace JexusManager.BreadCrumb.Demo
 
             // Initialize with Home
             InitializeNavigation();
-        }        private void InitializeNavigation()
+        }
+        private void InitializeNavigation()
         {
             // Initialize standard breadcrumb
             _breadcrumb.Clear();
             _breadcrumb.AddItem("Home", "home");
-            
+
             // Initialize toolstrip breadcrumb
             _toolStripBreadcrumb.Clear();
             _toolStripBreadcrumb.AddItem("Home", "home");
-            
+
             UpdateContentPanel("Home Page");
             AddToNavigationHistory("Navigated to Home");
         }
-        
+
         private void ToolStripBreadcrumb_ItemClicked(object sender, BreadcrumbItemClickedEventArgs e)
         {
             // If we click on an item, remove all items after it
@@ -162,7 +163,7 @@ namespace JexusManager.BreadCrumb.Demo
             {
                 _toolStripBreadcrumb.RemoveLastItem();
             }
-            
+
             // Also sync the standard breadcrumb to match
             _breadcrumb.Clear();
             foreach (var item in _toolStripBreadcrumb.Items)
@@ -186,16 +187,17 @@ namespace JexusManager.BreadCrumb.Demo
             // Update the content panel based on the clicked item
             UpdateContentPanel($"{e.Item.Text} Page");
             AddToNavigationHistory($"Navigated to {e.Item.Text} via breadcrumb");
-        }        private void NavigateButton_Click(object sender, EventArgs e)
+        }
+        private void NavigateButton_Click(object sender, EventArgs e)
         {
             // Generate a new level based on the current path
             string[] sections = { "Settings", "Users", "Products", "Reports", "Services" };
             string[] subsections = { "List", "Details", "Edit", "Create", "Delete", "Properties" };
 
             Random random = new Random();
-            
+
             string newSection;
-            
+
             // If we're at the beginning, pick a main section
             if (_breadcrumb.Items.Count <= 1)
             {
@@ -211,10 +213,10 @@ namespace JexusManager.BreadCrumb.Demo
             string tagValue = $"level_{_breadcrumb.Items.Count}";
             _breadcrumb.AddItem(newSection, tagValue);
             _toolStripBreadcrumb.AddItem(newSection, tagValue);
-            
+
             // Update the content panel
             UpdateContentPanel($"{newSection} Page");
-            
+
             // Add to navigation history
             AddToNavigationHistory($"Navigated to {newSection}");
         }
@@ -266,17 +268,17 @@ namespace JexusManager.BreadCrumb.Demo
         private string GetFullPath()
         {
             string path = string.Empty;
-            
+
             for (int i = 0; i < _breadcrumb.Items.Count; i++)
             {
                 path += _breadcrumb.Items[i].Text;
-                
+
                 if (i < _breadcrumb.Items.Count - 1)
                 {
                     path += " > ";
                 }
             }
-            
+
             return path;
         }
 
