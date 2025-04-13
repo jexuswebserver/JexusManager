@@ -206,14 +206,12 @@ return -8;
 
 int AddCertificate(string p12File, string p12Pwd, string friendlyName, X509Store personal)
 {
-    // add certificate
-    // http://paulstovell.com/blog/x509certificate2
-    var x509 = new X509Certificate2(
+    var x509 = X509CertificateLoader.LoadPkcs12FromFile(
         p12File,
         p12Pwd,
-        X509KeyStorageFlags.Exportable | X509KeyStorageFlags.PersistKeySet
-        | X509KeyStorageFlags.MachineKeySet)
-    { FriendlyName = friendlyName };
+        X509KeyStorageFlags.Exportable | X509KeyStorageFlags.PersistKeySet | X509KeyStorageFlags.MachineKeySet
+    );
+    x509.FriendlyName = friendlyName;
     personal.Add(x509);
     return 0;
 }
@@ -312,6 +310,7 @@ int QuerySite(string config, string siteId)
         var command = item.GetCommandLine();
         return command != null && command.TrimEnd().EndsWith(toQuery, StringComparison.Ordinal);
     });
+    Log.Debug($"Tried to find {toQuery} with result {found?.Id}");
     return found == null ? 0 : found.Id;
 }
 

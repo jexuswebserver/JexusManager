@@ -60,6 +60,7 @@ namespace JexusManager
     using System.Diagnostics;
     using Microsoft.Extensions.Logging;
     using System.Drawing;
+    using JexusManager.Breadcrumb;
 
     public sealed partial class MainForm : Form
     {
@@ -68,6 +69,7 @@ namespace JexusManager
         private readonly List<ModuleProvider> _providers;
         private readonly ServiceContainer _serviceContainer;
         private readonly NavigationService _navigationService;
+        private bool _fromBreadcrumb;
         private TreeNode IisExpressRoot { get; }
         private TreeNode IisRoot { get; }
         private TreeNode JexusRoot { get; }
@@ -95,7 +97,6 @@ namespace JexusManager
 
             removeToolStripMenuItem.Image = DefaultTaskList.RemoveImage;
             removeToolStripMenuItem1.Image = DefaultTaskList.RemoveImage;
-            btnRemoveFarmServer.Image = DefaultTaskList.RemoveImage;
             toolStripMenuItem44.Image = DefaultTaskList.RemoveImage;
 
             Icon = Resources.iis;
@@ -662,18 +663,6 @@ namespace JexusManager
             }
         }
 
-        internal void RemoveFarmNode(string name)
-        {
-            //var data = GetCurrentData();
-            //foreach (TreeNode node in data.FarmNode.Nodes)
-            //{
-            //    if (node.Text == name)
-            //    {
-            //        node.Remove();
-            //    }
-            //}
-        }
-
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
             if (IsDisposed)
@@ -699,8 +688,13 @@ namespace JexusManager
                     LogHelper.GetLogger<MainForm>().LogWarning("Wrong node type: {Type} Name: {Text}", e.Node.GetType().FullName, e.Node.Text);
                 }
 
+                // Clear breadcrumb if node is not a ManagerTreeNode
+                tsbPath.Clear();
                 return;
             }
+
+            // Update the breadcrumb navigation
+            UpdateBreadcrumbPath(node);
 
             var serverNode = node as ServerTreeNode;
             actUp.Enabled = !(serverNode != null || node is PlaceholderTreeNode);
@@ -714,7 +708,7 @@ namespace JexusManager
                 actDisconnect.Enabled = !serverNode.IsBusy && !serverNode.IgnoreInCache;
                 EnableServerMenuItems(serverNode.ServerManager != null);
                 serverNode.LoadPanels(this, _serviceContainer, _providers);
-                ShowInfo($"Ready. {node.FullPath}");
+                ShowInfo($"Ready.");
                 return;
             }
 
@@ -724,7 +718,7 @@ namespace JexusManager
                 toolStripMenuItem12.Visible = canBrowse;
                 manageWebsiteToolStripMenuItem.Visible = canBrowse;
                 siteNode.LoadPanels(this, _serviceContainer, _providers);
-                ShowInfo($"Ready. {node.FullPath}");
+                ShowInfo($"Ready.");
                 return;
             }
 
@@ -734,7 +728,7 @@ namespace JexusManager
                 toolStripMenuItem15.Visible = canBrowse;
                 manageApplicationToolStripMenuItem.Visible = canBrowse;
                 appNode.LoadPanels(this, _serviceContainer, _providers);
-                ShowInfo($"Ready. {node.FullPath}");
+                ShowInfo($"Ready.");
                 return;
             }
 
@@ -744,7 +738,7 @@ namespace JexusManager
                 toolStripSeparator4.Visible = canBrowse;
                 manageVirtualDirectoryToolStripMenuItem.Visible = canBrowse;
                 vdirNode.LoadPanels(this, _serviceContainer, _providers);
-                ShowInfo($"Ready. {node.FullPath}");
+                ShowInfo($"Ready.");
                 return;
             }
 
@@ -754,12 +748,55 @@ namespace JexusManager
                 toolStripSeparator9.Visible = canBrowse;
                 manageFolderToolStripMenuItem.Visible = canBrowse;
                 physNode.LoadPanels(this, _serviceContainer, _providers);
-                ShowInfo($"Ready. {node.FullPath}");
+                ShowInfo($"Ready.");
                 return;
             }
 
             node.LoadPanels(this, _serviceContainer, _providers);
-            ShowInfo($"Ready. {node.FullPath}");
+            ShowInfo($"Ready.");
+        }
+
+        /// <summary>
+        /// Updates the breadcrumb path based on the selected node.
+        /// </summary>
+        /// <param name="node">The selected node</param>
+        private void UpdateBreadcrumbPath(ManagerTreeNode node)
+        {
+            if (_fromBreadcrumb)
+            {
+                _fromBreadcrumb = false;
+                return;
+            }
+
+            // Clear existing breadcrumb items
+            tsbPath.Clear();
+
+            // If no node selected, return
+            if (node == null)
+                return;
+
+            // Build a list of nodes from root to the current node
+            var nodePath = new List<ManagerTreeNode>();
+            ManagerTreeNode current = node;
+
+            // Traverse up the tree to the root
+            while (current != null)
+            {
+                nodePath.Insert(0, current);
+                current = current.Parent as ManagerTreeNode;
+            }
+
+            // Add each node to the breadcrumb
+            foreach (var pathNode in nodePath)
+            {
+                tsbPath.AddItem(pathNode.Text, pathNode);
+            }
+
+            // Set the selected index to the last item
+            if (tsbPath.Items.Count > 0)
+            {
+                tsbPath.SelectedIndex = tsbPath.Items.Count - 1;
+            }
         }
 
         internal void EnableServerMenuItems(bool enabled)
@@ -1136,64 +1173,6 @@ namespace JexusManager
             treeView1.SelectedNode = StartPage;
         }
 
-        private void btnRemoveFarmServer_Click(object sender, EventArgs e)
-        {
-            treeView1.SelectedNode.Remove();
-        }
-
-        private void btnAddFarmServer_Click(object sender, EventArgs e)
-        {
-            //var dialog = new NewFarmServerDialog();
-            //if (dialog.ShowDialog() == DialogResult.Cancel)
-            //{
-            //    return;
-            //}
-
-            //var node = treeView1.SelectedNode;
-            //if (node.ImageIndex == 8)
-            //{
-            //    node = node.Nodes[0];
-            //}
-
-            //if (node.ImageIndex == 9)
-            //{
-            //    var servers = (List<FarmServerAdvancedSettings>)node.Tag;
-            //    servers.AddRange(dialog.Servers);
-            //}
-        }
-
-        private void btnCreateFarm_Click(object sender, EventArgs e)
-        {
-            //var dialog = new FarmWizard();
-            //if (dialog.ShowDialog() == DialogResult.Cancel)
-            //{
-            //    return;
-            //}
-
-            //var config = _current.Server.GetApplicationHostConfiguration();
-            //ConfigurationSection webFarmsSection = config.GetSection("webFarms");
-            //ConfigurationElementCollection webFarmsCollection = webFarmsSection.GetCollection();
-            //ConfigurationElement webFarmElement = webFarmsCollection.CreateElement("webFarm");
-            //webFarmElement["name"] = dialog.FarmName;
-            //ConfigurationElementCollection webFarmCollection = webFarmElement.GetCollection();
-
-            //foreach (var server in dialog.Servers)
-            //{
-            //    ConfigurationElement serverElement = webFarmCollection.CreateElement("server");
-            //    serverElement["address"] = server.Name;
-            //    serverElement["enabled"] = true;
-
-            //    ConfigurationElement applicationRequestRoutingElement = serverElement.GetChildElement("applicationRequestRouting");
-            //    applicationRequestRoutingElement["weight"] = server.Weight;
-            //    applicationRequestRoutingElement["httpPort"] = server.HttpPort;
-            //    applicationRequestRoutingElement["httpsPort"] = server.HttpsPort;
-            //    webFarmCollection.Add(serverElement);
-            //}
-
-            //webFarmsCollection.Add(webFarmElement);
-            //AddFarmNode(dialog.FarmName, dialog.Servers);
-        }
-
         private void treeView1_BeforeExpand(object sender, TreeViewCancelEventArgs e)
         {
             ((ManagerTreeNode)e.Node).Expand(this);
@@ -1529,6 +1508,19 @@ namespace JexusManager
 
             // Then select the corresponding node in the tree view
             SelectNodeForPage(page, navigationData);
+        }
+
+        private void TsbPath_ItemClicked(object sender, BreadcrumbItemClickedEventArgs e)
+        {
+            var item = e.Item;
+            var node = item.Tag as ManagerTreeNode;
+            if (node == null)
+            {
+                return;
+            }
+
+            _fromBreadcrumb = true;
+            treeView1.SelectedNode = node;
         }
     }
 }

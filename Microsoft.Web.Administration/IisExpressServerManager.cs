@@ -126,7 +126,7 @@ namespace Microsoft.Web.Administration
                 _logger.LogError(ex, "Unexpected error getting site state");
             }
 
-            return true;
+            return false;
         }
 
         internal override bool GetPoolState(ApplicationPool pool)
