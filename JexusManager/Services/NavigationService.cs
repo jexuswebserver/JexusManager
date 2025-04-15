@@ -27,7 +27,7 @@ namespace JexusManager.Services
         #region INavigationService
 
         private readonly List<NavigationItem> _items = new List<NavigationItem>();
-        private readonly MainForm _host;
+        private readonly IMainForm _host;
 
         public bool Navigate(Connection connection, ManagementConfigurationPath configurationPath, Type pageType, object navigationData)
         {

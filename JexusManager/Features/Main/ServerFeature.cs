@@ -228,13 +228,13 @@ namespace JexusManager.Features.Main
         private void Sites()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            ((MainForm)service.Form).LoadSites();
+            service.Form.LoadSites();
         }
 
         private void ApplicationPools()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            ((MainForm)service.Form).LoadPools();
+            service.Form.LoadPools();
         }
 
         public bool IsStarted { get; set; }

@@ -59,10 +59,9 @@ namespace JexusManager
     using JexusManager.Features.TraceFailedRequests;
     using System.Diagnostics;
     using Microsoft.Extensions.Logging;
-    using System.Drawing;
     using JexusManager.Breadcrumb;
 
-    public sealed partial class MainForm : Form
+    public sealed partial class MainForm : Form, IMainForm
     {
         private bool _handleEvents = true;
         private const string expressGlobalInstanceName = "Global";
@@ -75,7 +74,7 @@ namespace JexusManager
         private TreeNode JexusRoot { get; }
         private TreeNode StartPage { get; set; }
 
-        public ManagementUIService UIService { get; }
+        public IManagementUIService UIService { get; }
 
         public MainForm(List<string> files, RichTextBox textBox)
         {
@@ -574,16 +573,24 @@ namespace JexusManager
                     continue;
                 }
 
-                foreach (Site site in serverManager.Sites)
+                try
                 {
-                    if (site.State == ObjectState.Started)
+                    BeginProgress();
+                    foreach (Site site in serverManager.Sites)
                     {
-                        var result = UIService.ShowMessage($"Site {site.Name} is still running. Do you want to stop it?", Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-                        if (result == DialogResult.Yes)
+                        if (site.State == ObjectState.Started)
                         {
-                            site.Stop();
+                            var result = UIService.ShowMessage($"Site {site.Name} is still running. Do you want to stop it?", Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                            if (result == DialogResult.Yes)
+                            {
+                                site.Stop();
+                            }
                         }
                     }
+                }
+                finally
+                {
+                    EndProgress();
                 }
             }
         }
@@ -639,7 +646,7 @@ namespace JexusManager
             }
         }
 
-        internal void RemoveSiteNode(Site site)
+        public void RemoveSiteNode(Site site)
         {
             var selected = treeView1.SelectedNode;
             if (selected == null)
@@ -870,7 +877,7 @@ namespace JexusManager
             }
         }
 
-        internal void AddSiteNode(Site site)
+        public void AddSiteNode(Site site)
         {
             var selected = treeView1.SelectedNode;
             if (selected == null)
@@ -892,7 +899,7 @@ namespace JexusManager
             ManagerTreeNode.AddToParent(server.SitesNode, new SiteTreeNode(_serviceContainer, site, server) { ContextMenuStrip = cmsSite });
         }
 
-        internal void LoadSites()
+        public void LoadSites()
         {
             var selected = treeView1.SelectedNode;
             if (selected == null)
@@ -909,7 +916,7 @@ namespace JexusManager
             treeView1.SelectedNode = server.SitesNode;
         }
 
-        internal void LoadPools()
+        public void LoadPools()
         {
             var selected = treeView1.SelectedNode;
             if (selected == null)
@@ -1151,14 +1158,18 @@ namespace JexusManager
             var node = (Site)treeView1.SelectedNode.Tag;
             try
             {
+                BeginProgress();
                 node.Restart();
             }
             catch (Exception ex)
             {
                 UIService.ShowError(ex, string.Empty, Name, false);
             }
-
-            btnRestartSite.Enabled = true;
+            finally
+            {
+                EndProgress();
+                btnRestartSite.Enabled = true;
+            }
         }
 
         private void treeView1_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
@@ -1521,6 +1532,16 @@ namespace JexusManager
 
             _fromBreadcrumb = true;
             treeView1.SelectedNode = node;
+        }
+
+        public void EndProgress()
+        {
+            pbStatus.Visible = false;
+        }
+
+        public void BeginProgress()
+        {
+            pbStatus.Visible = true;
         }
     }
 }

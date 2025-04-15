@@ -270,7 +270,7 @@ namespace JexusManager.Features.Main
             SelectedItem.Server.CommitChanges();
             Items = _serverManager.Sites.ToList();
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            ((MainForm)service.Form).AddSiteNode(dialog.NewSite);
+            service.Form.AddSiteNode(dialog.NewSite);
         }
 
         private void Set()
@@ -296,7 +296,7 @@ namespace JexusManager.Features.Main
             Items.Remove(SelectedItem);
             SelectedItem.Server.CommitChanges();
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            ((MainForm)service.Form).RemoveSiteNode(SelectedItem);
+            service.Form.RemoveSiteNode(SelectedItem);
             if (Items.Count == 0)
             {
                 SelectedItem = null;
@@ -364,10 +364,20 @@ namespace JexusManager.Features.Main
                 return;
             }
 
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             IsBusy = true;
             OnSitesSettingsSaved();
-            SelectedItem.Stop();
-            IsBusy = false;
+            try
+            {
+                service.Form.BeginProgress();
+                SelectedItem.Stop();
+            }
+            finally
+            {
+                service.Form.EndProgress();
+                IsBusy = false;
+            }
+
             OnSitesSettingsSaved();
         }
 
@@ -378,6 +388,7 @@ namespace JexusManager.Features.Main
                 return;
             }
 
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
             if (SelectedItem.Bindings.ElevationRequired && !PublicNativeMethods.IsProcessElevated)
             {
@@ -389,14 +400,19 @@ namespace JexusManager.Features.Main
             OnSitesSettingsSaved();
             try
             {
+                service.Form.BeginProgress();
                 DialogHelper.SiteStart(SelectedItem);
             }
             catch (Exception ex)
             {
                 dialog.ShowMessage(ex.Message, Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            finally
+            {
+                service.Form.EndProgress();
+                IsBusy = false;
+            }
 
-            IsBusy = false;
             OnSitesSettingsSaved();
         }
 
@@ -414,18 +430,24 @@ namespace JexusManager.Features.Main
                 return;
             }
 
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             IsBusy = true;
             OnSitesSettingsSaved();
             try
             {
+                service.Form.BeginProgress();
                 SelectedItem.Restart();
             }
             catch (Exception ex)
             {
                 dialog.ShowMessage(ex.Message, Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            finally
+            {
+                service.Form.EndProgress();
+                IsBusy = false;
+            }
 
-            IsBusy = false;
             OnSitesSettingsSaved();
         }
 
@@ -433,7 +455,7 @@ namespace JexusManager.Features.Main
         private void VirtualDirectories()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var mainForm = (MainForm)service.Form;
+            var mainForm = service.Form;
 
             // Create a new VirtualDirectoriesPage and initialize it with the application
             var application = SelectedItem.Applications[0];
@@ -449,7 +471,7 @@ namespace JexusManager.Features.Main
         private void Applications()
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var mainForm = (MainForm)service.Form;
+            var mainForm = service.Form;
 
             // Create a new ApplicationsPage and initialize it with the site         
             var page = new ApplicationsPage();

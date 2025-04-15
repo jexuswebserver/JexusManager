@@ -239,7 +239,16 @@ namespace JexusManager.Features.Main
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             var site = service.Site;
-            IsStarted = site.GetState();
+            try
+            {
+                service.Form.BeginProgress();
+                IsStarted = site.GetState();
+            }
+            finally
+            {
+                service.Form.EndProgress();
+            }
+
             OnSiteSettingsSaved();
         }
 
@@ -300,9 +309,18 @@ namespace JexusManager.Features.Main
             var site = service.Site;
             IsBusy = true;
             OnSiteSettingsSaved();
-            site.Stop();
-            IsStarted = false;
-            IsBusy = false;
+            try
+            {
+                service.Form.BeginProgress();
+                site.Stop();
+            }
+            finally
+            {
+                service.Form.EndProgress();
+                IsStarted = false;
+                IsBusy = false;
+            }
+
             OnSiteSettingsSaved();
         }
 
@@ -315,15 +333,20 @@ namespace JexusManager.Features.Main
             OnSiteSettingsSaved();
             try
             {
+                service.Form.BeginProgress();
                 DialogHelper.SiteStart(site);
             }
             catch (Exception ex)
             {
                 dialog.ShowMessage(ex.Message, Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            finally
+            {
+                service.Form.EndProgress();
+                IsStarted = site.State == ObjectState.Started;
+                IsBusy = false;
+            }
 
-            IsStarted = site.State == ObjectState.Started;
-            IsBusy = false;
             OnSiteSettingsSaved();
         }
 
@@ -336,15 +359,20 @@ namespace JexusManager.Features.Main
             OnSiteSettingsSaved();
             try
             {
+                service.Form.BeginProgress();
                 site.Restart();
             }
             catch (Exception ex)
             {
                 dialog.ShowMessage(ex.Message, Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            finally
+            {
+                IsStarted = site.State == ObjectState.Started;
+                service.Form.EndProgress();
+                IsBusy = false;
+            }
 
-            IsStarted = site.State == ObjectState.Started;
-            IsBusy = false;
             OnSiteSettingsSaved();
         }
 
@@ -355,7 +383,7 @@ namespace JexusManager.Features.Main
 
             IModulePage page = new VirtualDirectoriesPage();
             page.Initialize(Module, null, application);
-            ((MainForm)service.Form).LoadPage(page);
+            service.Form.LoadPage(page);
         }
 
         private void Applications()
@@ -365,7 +393,7 @@ namespace JexusManager.Features.Main
 
             IModulePage page = new ApplicationsPage();
             page.Initialize(Module, null, new Tuple<List<Application>, Site>(null, site));
-            ((MainForm)service.Form).LoadPage(page);
+            service.Form.LoadPage(page);
         }
 
         private void Basic()

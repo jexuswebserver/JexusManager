@@ -202,11 +202,16 @@ namespace JexusManager.Features.Main
 
                 try
                 {
+                    service.Form.BeginProgress();
                     DialogHelper.SiteStart(site);
                 }
                 catch (Exception ex)
                 {
                     message.ShowMessage(ex.Message, Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                finally
+                {
+                    service.Form.EndProgress();
                 }
             }
 
@@ -220,7 +225,7 @@ namespace JexusManager.Features.Main
 
             IModulePage page = new VirtualDirectoriesPage();
             page.Initialize(Module, null, application);
-            ((MainForm)service.Form).LoadPage(page);
+            service.Form.LoadPage(page);
         }
 
         private void Basic()

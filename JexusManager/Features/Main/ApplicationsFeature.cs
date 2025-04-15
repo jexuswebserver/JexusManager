@@ -290,7 +290,7 @@ namespace JexusManager.Features.Main
             }
 
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var mainForm = (MainForm)service.Form;
+            var mainForm = service.Form;
 
             // Create a new VirtualDirectoriesPage and initialize it with the application           
             var page = new VirtualDirectoriesPage();
@@ -351,11 +351,12 @@ namespace JexusManager.Features.Main
                 return;
             }
 
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+            var message = (IManagementUIService)GetService(typeof(IManagementUIService));
             // Help users launch IIS Express instance if needed
             var site = _site;
             if (site.Server.Mode == WorkingMode.IisExpress && site.State != ObjectState.Started)
             {
-                var message = (IManagementUIService)GetService(typeof(IManagementUIService));
                 var result = message.ShowMessage(
                     "This website is not yet running. Do you want to start it now?",
                     "Question",
@@ -369,12 +370,16 @@ namespace JexusManager.Features.Main
 
                 try
                 {
+                    service.Form.BeginProgress();
                     DialogHelper.SiteStart(site);
                 }
                 catch (Exception ex)
                 {
-                    var service = (IManagementUIService)GetService(typeof(IManagementUIService));
-                    service.ShowMessage(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    message.ShowMessage(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                finally
+                {
+                    service.Form.EndProgress();
                 }
             }
 

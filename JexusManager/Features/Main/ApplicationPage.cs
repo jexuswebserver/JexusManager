@@ -95,7 +95,7 @@ namespace JexusManager.Features.Main
 
             var item = (ModulePageInfoListViewItem)listView1.SelectedItems[0];
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            ((MainForm)service.Form).LoadPage(item.Page);
+            service.Form.LoadPage(item.Page);
         }
 
         private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)

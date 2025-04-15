@@ -300,7 +300,7 @@ namespace JexusManager.Features.Main
             }
 
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var mainForm = (MainForm)service.Form;
+            var mainForm = service.Form;
 
             // Find all applications using this pool
             var applications = new List<Application>();

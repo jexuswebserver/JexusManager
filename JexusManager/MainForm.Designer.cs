@@ -103,6 +103,7 @@
             switchToContentViewToolStripMenuItem2 = new ToolStripMenuItem();
             statusStrip1 = new StatusStrip();
             txtInfo = new ToolStripStatusLabel();
+            pbStatus = new ToolStripProgressBar();
             menuStrip1 = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
             connectToAServerToolStripMenuItem = new ToolStripMenuItem();
@@ -745,7 +746,7 @@
             // 
             // statusStrip1
             // 
-            statusStrip1.Items.AddRange(new ToolStripItem[] { txtInfo });
+            statusStrip1.Items.AddRange(new ToolStripItem[] { txtInfo, pbStatus });
             statusStrip1.Location = new System.Drawing.Point(0, 475);
             statusStrip1.Name = "statusStrip1";
             statusStrip1.Padding = new Padding(1, 0, 16, 0);
@@ -757,9 +758,15 @@
             // 
             txtInfo.Image = Main.Properties.Resources.info_16;
             txtInfo.Name = "txtInfo";
-            txtInfo.Size = new System.Drawing.Size(134, 17);
-            txtInfo.Text = "toolStripStatusLabel1";
+            txtInfo.Size = new System.Drawing.Size(16, 17);
             txtInfo.Visible = false;
+            // 
+            // pbStatus
+            // 
+            pbStatus.Name = "pbStatus";
+            pbStatus.Size = new System.Drawing.Size(100, 16);
+            pbStatus.Style = ProgressBarStyle.Marquee;
+            pbStatus.Visible = false;
             // 
             // menuStrip1
             // 
@@ -1826,5 +1833,6 @@
         private ToolStripButton toolStripButton1;
         private ToolStripButton toolStripButton2;
         private ToolStripBreadcrumbItem tsbPath;
+        private ToolStripProgressBar pbStatus;
     }
 }

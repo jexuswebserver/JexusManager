@@ -15,14 +15,14 @@ namespace JexusManager.Services
         public ServerManager Server { get; set; }
         public Microsoft.Web.Administration.Application Application { get; set; }
         public Site Site { get; set; }
-        public Form Form { get; set; }
+        public IMainForm Form { get; set; }
         public VirtualDirectory VirtualDirectory { get; set; }
         public PhysicalDirectory PhysicalDirectory { get; set; }
         private readonly Configuration _config;
 
         private readonly string _location;
 
-        public ConfigurationService(Form form, Configuration config, ManagementScope scope, ServerManager server, Site site, Microsoft.Web.Administration.Application application, VirtualDirectory virtualDirectory, PhysicalDirectory physicalDirectory, string location)
+        public ConfigurationService(IMainForm form, Configuration config, ManagementScope scope, ServerManager server, Site site, Microsoft.Web.Administration.Application application, VirtualDirectory virtualDirectory, PhysicalDirectory physicalDirectory, string location)
         {
             Scope = scope;
             Server = server;

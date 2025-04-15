@@ -10,7 +10,7 @@ namespace JexusManager.Features.Main
     using System.Windows.Forms;
 
     using JexusManager.Properties;
-
+    using JexusManager.Services;
     using Microsoft.Web.Administration;
     using Microsoft.Web.Management.Client;
     using Microsoft.Web.Management.Client.Win32;
@@ -100,7 +100,8 @@ namespace JexusManager.Features.Main
             }
 
             var item = (ModulePageInfoListViewItem)listView1.SelectedItems[0];
-            ((MainForm)ParentForm).LoadPage(item.Page);
+            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+            service.Form.LoadPage(item.Page);
         }
 
         protected override bool ShowHelp()

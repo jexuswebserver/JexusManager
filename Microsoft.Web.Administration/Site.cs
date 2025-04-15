@@ -157,7 +157,7 @@ namespace Microsoft.Web.Administration
                     return result;
                 }
 
-                return new DirectoryInfo[0];
+                return [];
             }
 
             return null;

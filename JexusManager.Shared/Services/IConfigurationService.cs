@@ -15,7 +15,7 @@ namespace JexusManager.Services
         Microsoft.Web.Administration.Application Application { get; set; }
         ServerManager Server { get; set; }
         Site Site { get; set; }
-        Form Form { get; set; }
+        IMainForm Form { get; set; }
         VirtualDirectory VirtualDirectory { get; set; }
         PhysicalDirectory PhysicalDirectory { get; }
 
