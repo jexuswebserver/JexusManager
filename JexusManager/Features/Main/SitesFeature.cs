@@ -401,7 +401,7 @@ namespace JexusManager.Features.Main
             try
             {
                 service.Form.BeginProgress();
-                DialogHelper.SiteStart(SelectedItem);
+                DialogHelper.SiteStart(SelectedItem, service.Form);
             }
             catch (Exception ex)
             {
@@ -436,7 +436,7 @@ namespace JexusManager.Features.Main
             try
             {
                 service.Form.BeginProgress();
-                SelectedItem.Restart();
+                DialogHelper.SiteRestart(SelectedItem, service.Form);
             }
             catch (Exception ex)
             {

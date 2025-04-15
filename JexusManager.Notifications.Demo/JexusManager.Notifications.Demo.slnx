@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="../JexusManager.Notifications/JexusManager.Notifications.csproj" />
+  <Project Path="JexusManager.Notifications.Demo.csproj" />
+</Solution>

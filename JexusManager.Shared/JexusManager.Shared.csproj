@@ -12,12 +12,12 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Diagnostics.Tracing.TraceEvent" Version="3.1.19" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
-    <PackageReference Include="Tulpep.NotificationWindow" Version="1.1.38" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.Web.Administration\Microsoft.Web.Administration.csproj" />
     <ProjectReference Include="..\Microsoft.Web.Management\Microsoft.Web.Management.csproj" />
+    <ProjectReference Include="..\JexusManager.Notifications\JexusManager.Notifications.csproj" />
   </ItemGroup>
 
 </Project>

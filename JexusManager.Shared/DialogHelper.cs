@@ -5,6 +5,7 @@
 namespace JexusManager
 {
     using JexusManager.Services;
+    using JexusManager.Notifications;
     using Microsoft.Web.Administration;
     using System;
     using System.ComponentModel;
@@ -16,10 +17,9 @@ namespace JexusManager
     using System.Security.Cryptography.X509Certificates;
     using System.Windows.Forms;
     using Microsoft.Extensions.Logging;
-    using Tulpep.NotificationWindow;
     using System.Net;
-    using System.Drawing;
     using System.Collections.Generic;
+    using Site = Microsoft.Web.Administration.Site;
 
     public static class DialogHelper
     {
@@ -400,31 +400,54 @@ namespace JexusManager
             _logger.LogWarning("Windows Explorer not found at {Path}", path);
         }
 
-        public static void SiteStart(Site site)
+        public static void SiteStart(Site site, IMainForm form)
         {
             site.Start();
             if (site.Server.Mode == WorkingMode.IisExpress)
             {
                 var pid = site.Applications[0].GetPool()?.WorkerProcesses[0]?.ProcessId;
-                MessageBoxShow($"Worker process {pid} has been started for {site.Name}.");
+                MessageBoxShow($"Worker process {pid} has been started for {site.Name}.", form);
             }
         }
 
-        public static void MessageBoxShow(string message, bool error = false)
+        internal static void SiteRestart(Site site, IMainForm form)
         {
-            var popupNotifier = new PopupNotifier
+            site.Restart();
+            if (site.Server.Mode == WorkingMode.IisExpress)
             {
-                TitleText = "Jexus Manager",
-                ContentText = message,
-                ContentPadding = new Padding(15),
-                Size = new Size(480, 180),
-                Image = error ? SystemIcons.Error.ToBitmap() : SystemIcons.Information.ToBitmap(),
-                ImageSize = new Size(24, 24),
-                ImagePadding = new Padding(5),
-                Delay = 15000, // 15 seconds
-                IsRightToLeft = false
-            };
-            popupNotifier.Popup();
+                var pid = site.Applications[0].GetPool()?.WorkerProcesses[0]?.ProcessId;
+                MessageBoxShow($"Worker process {pid} has been started for {site.Name}.", form);
+            }
+        }
+
+        public static void MessageBoxShow(string message, IMainForm form, bool error = false)
+        {
+            // Get the active form to show notification on
+            Form activeForm = (Form)form;
+            if (activeForm == null)
+            {
+                // Fall back to creating a simple message box if no active form
+                MessageBox.Show(message, "Jexus Manager", MessageBoxButtons.OK, 
+                    error ? MessageBoxIcon.Error : MessageBoxIcon.Information);
+                return;
+            }
+
+            // Create notification manager for the active form
+            var notificationManager = NotificationManager.GetInstance(activeForm, 
+                NotificationManager.NotificationPosition.BottomCenter);
+
+            // Determine notification type based on error flag
+            var notificationType = error 
+                ? NotificationControl.NotificationType.Error 
+                : NotificationControl.NotificationType.Info;
+
+            // Show the notification
+            notificationManager.Show(
+                title: "Jexus Manager",
+                message: message,
+                type: notificationType,
+                displayDuration: 10000, // 10 seconds, matching previous implementation
+                fadeDuration: 500);
         }
 
         public static void HandleGrouping(ListView listView1, string selectedGroup, Func<ListViewItem, string, string> GetGroupKey)

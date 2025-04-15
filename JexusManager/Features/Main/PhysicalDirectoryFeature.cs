@@ -161,7 +161,7 @@ namespace JexusManager.Features.Main
                 try
                 {
                     service.Form.BeginProgress();
-                    DialogHelper.SiteStart(site);
+                    DialogHelper.SiteStart(site, service.Form);
                 }
                 catch (Exception ex)
                 {
