@@ -63,8 +63,8 @@ Copy-Item ..\bin\temp\CertificateInstaller.exe ..\bin\arm64\CertificateInstaller
 Remove-Item ..\bin\temp -Recurse
 Set-Location ..
 
-.\lib\Paraffin.exe -regExExclude "JexusManager\.exe" -NoRootDirectory -dir .\bin\x64 -GroupName Files64 .\Setup\Files64.wxs
-.\lib\Paraffin.exe -regExExclude "JexusManager\.exe" -NoRootDirectory -dir .\bin\x86 -GroupName Files86 .\Setup\Files86.wxs
-.\lib\Paraffin.exe -regExExclude "JexusManager\.exe" -NoRootDirectory -dir .\bin\arm64 -GroupName FilesARM64 .\Setup\FilesARM64.wxs
+.\lib\Paraffin.exe -regExExclude "JexusManager\.exe" -norootdirectory -dirref CONTAINER -dir .\bin\x64 -GroupName Files64 .\Setup\Files64.wxs
+.\lib\Paraffin.exe -regExExclude "JexusManager\.exe" -norootdirectory -dirref CONTAINER -dir .\bin\x86 -GroupName Files86 .\Setup\Files86.wxs
+.\lib\Paraffin.exe -regExExclude "JexusManager\.exe" -norootdirectory -dirref CONTAINER -dir .\bin\arm64 -GroupName FilesARM64 .\Setup\FilesARM64.wxs
 
 Write-Host "Compilation finished."

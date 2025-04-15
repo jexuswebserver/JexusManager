@@ -59,9 +59,11 @@
         <Directory Id="TARGETDIR" Name="SourceDir">
             <Directory Id="$(var.PlatformProgramFilesFolder)">
                 <Directory Id="INSTALLDIR" Name="$(var.ProductName)">
-                    <Component Id="MainExecutable" Guid="{7D7AF5BF-E0D6-4997-9E98-C8BBBFD7A29D}">
-                        <File Id="$(var.MainExecutable)" Name="$(var.MainExecutable)" Vital="no" DiskId="1" Source="$(var.SourceDir)\$(var.MainExecutable)" />
-                    </Component>
+                    <Directory Id="CONTAINER" Name="$(var.ProductVersion)">
+                        <Component Id="MainExecutable" Guid="{7D7AF5BF-E0D6-4997-9E98-C8BBBFD7A29D}">
+                            <File Id="$(var.MainExecutable)" Name="$(var.MainExecutable)" Vital="no" DiskId="1" Source="$(var.SourceDir)\$(var.MainExecutable)" />
+                        </Component>
+                    </Directory>
                 </Directory>
             </Directory>
             <Directory Id="ProgramMenuFolder" Name="Programs">
