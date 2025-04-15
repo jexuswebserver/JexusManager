@@ -8,3 +8,10 @@ ADDRESS_FAMILY
 CreatePersistentTcpPortReservation
 DeletePersistentTcpPortReservation
 WIN32_ERROR
+OpenProcess
+QueryFullProcessImageName
+CloseHandle
+NtQueryInformationProcess
+PROCESS_ACCESS_RIGHTS
+PROCESSINFOCLASS
+UNICODE_STRING

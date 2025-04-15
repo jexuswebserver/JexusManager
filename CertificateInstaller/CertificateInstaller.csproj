@@ -26,11 +26,6 @@
     <PackageReference Include="Serilog.Enrichers.Process" Version="3.0.0" />
     <PackageReference Include="Serilog.Settings.Configuration" Version="9.0.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
-    <PackageReference Include="System.Management" Version="9.0.3" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="System.Management" />
   </ItemGroup>
 
 </Project>
