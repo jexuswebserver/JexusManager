@@ -73,7 +73,7 @@
 								http://msdn.microsoft.com/library/msi/setup/ice38.asp
 							-->
 					<RegistryValue Id="JexusManagerExeStartMenuShortcutRegistryKey" Root="HKCU" Type="string" KeyPath="yes" Key="Software\$(var.ManufacturerShort)\$(var.ProductNameShort)" Name="ProgramFilesShortcut" Value="1" />
-					<Shortcut Name="$(var.ProductName)" Target="[!$(var.MainExecutable)]" Id="MainExeStartMenuShortcut" WorkingDirectory="INSTALLDIR" Directory="ProgramMenuFolder" />
+					<Shortcut Name="$(var.ProductName)" Target="[!$(var.MainExecutable)]" Id="MainExeStartMenuShortcut" WorkingDirectory="CONTAINER" Directory="ProgramMenuFolder" />
                     <RemoveFolder Id="CleanUpShortCut" Directory="ProgramMenuFolder" On="uninstall"/>
 				</Component>
 			</Directory>
