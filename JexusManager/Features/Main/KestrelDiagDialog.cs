@@ -45,7 +45,7 @@ namespace JexusManager.Features.Main
                 var hasException = false;
                 try
                 {
-                    var entry = "https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json";
+                    var entry = "https://builds.dotnet.microsoft.com/dotnet/release-metadata/releases-index.json";
                     if (fileCaches.ContainsKey(entry))
                     {
                         latest = fileCaches[entry];

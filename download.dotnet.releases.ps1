@@ -1,5 +1,5 @@
 $file = "./JexusManager/Resources/releases-index.json"
-Invoke-WebRequest https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json -OutFile $file
+Invoke-WebRequest https://builds.dotnet.microsoft.com/dotnet/release-metadata/releases-index.json -OutFile $file
 
 if (-not (Test-Path $file)) {
     Write-Error "Couldn't find releases-index.json. Exit."
