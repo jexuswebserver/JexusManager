@@ -1575,7 +1575,7 @@
             _logSplitter.Panel2.Controls.Add(_logPanel);
             _logSplitter.Panel2Collapsed = true;
             _logSplitter.Panel2MinSize = 50;
-            _logSplitter.Size = new System.Drawing.Size(915, 426);
+            _logSplitter.Size = new System.Drawing.Size(915, 160);
             _logSplitter.SplitterDistance = 100;
             _logSplitter.SplitterWidth = 5;
             _logSplitter.TabIndex = 6;
