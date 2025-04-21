@@ -2,14 +2,10 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System.Collections.Generic;
-using System.Windows.Forms;
-
 namespace JexusManager.Features
 {
     using System;
     using System.Collections.Generic;
-    using System.Drawing;
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -25,18 +21,17 @@ namespace JexusManager.Features
     public abstract class FeatureBase<T>
         where T : class, IItem<T>
     {
-        private TextBox _editBox;
-        private ListView _listView;
+        private ListView? _listView;
         private ListViewItem? _lastSelectedItem = null;
 
         protected FeatureBase(Module module)
         {
             Module = module;
-            Items = new List<T>();
+            Items = [];
         }
 
         public List<T> Items { get; set; }
-        public T SelectedItem { get; set; }
+        public T? SelectedItem { get; set; }
 
         public virtual bool IsFeatureEnabled
         {
@@ -64,15 +59,15 @@ namespace JexusManager.Features
 
         protected abstract ConfigurationElementCollection GetCollection(IConfigurationService service);
 
-        protected object GetService(Type type)
+        protected object? GetService(Type type)
         {
-            return (Module as IServiceProvider).GetService(type);
+            return (Module as IServiceProvider)?.GetService(type);
         }
 
-        protected void DisplayErrorMessage(Exception ex, ResourceManager resourceManager)
+        protected void DisplayErrorMessage(Exception ex, ResourceManager? resourceManager)
         {
-            var service = (IManagementUIService)GetService(typeof(IManagementUIService));
-            service.ShowError(ex, resourceManager?.GetString("General"), "", false);
+            var service = GetService(typeof(IManagementUIService)) as IManagementUIService;
+            service?.ShowError(ex, resourceManager?.GetString("General"), "", false);
         }
 
         protected abstract void OnSettingsSaved();
@@ -80,7 +75,11 @@ namespace JexusManager.Features
         public virtual void LoadItems()
         {
             Items.Clear();
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+            if (GetService(typeof(IConfigurationService)) is not IConfigurationService service)
+            {
+                throw new InvalidOperationException("IConfigurationService is not available.");
+            }
+
             ConfigurationElementCollection collection = GetCollection(service);
             foreach (ConfigurationElement addElement in collection)
             {
@@ -121,14 +120,23 @@ namespace JexusManager.Features
         {
             Items.Add(item);
             SelectedItem = item;
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+            if (GetService(typeof(IConfigurationService)) is not IConfigurationService service)
+            {
+                throw new InvalidOperationException("IConfigurationService is not available.");
+            }
+
             var collection = GetCollection(service, item);
+            if (collection == null)
+            {
+                throw new InvalidOperationException("ConfigurationElementCollection is not available.");
+            }
+
             item.AppendTo(collection);
             service.ServerManager.CommitChanges();
             OnSettingsSaved();
         }
 
-        private ConfigurationElementCollection GetCollection(IConfigurationService service, T item)
+        private ConfigurationElementCollection? GetCollection(IConfigurationService service, T item)
         {
             var duo = item as IDuoItem<T>;
             if (duo == null || duo.Allowed)
@@ -143,7 +151,11 @@ namespace JexusManager.Features
         {
             Items.Insert(index, item);
             SelectedItem = item;
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+            if (GetService(typeof(IConfigurationService)) is not IConfigurationService service)
+            {
+                throw new InvalidOperationException("IConfigurationService is not available.");
+            }
+
             var collection = GetCollection(service);
             item.Element = collection.CreateElement();
             item.Apply();
@@ -154,7 +166,11 @@ namespace JexusManager.Features
 
         public virtual void EditItem(T newItem)
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+            if (GetService(typeof(IConfigurationService)) is not IConfigurationService service)
+            {
+                throw new InvalidOperationException("IConfigurationService is not available.");
+            }
+
             if (newItem.Flag != "Local")
             {
                 ConfigurationElementCollection collection = GetCollection(service);
@@ -173,9 +189,23 @@ namespace JexusManager.Features
 
         public virtual void RemoveItem()
         {
+            if (SelectedItem == null)
+            {
+                return;
+            }
+
             Items.Remove(SelectedItem);
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            ConfigurationElementCollection collection = GetCollection(service, SelectedItem);
+            if (GetService(typeof(IConfigurationService)) is not IConfigurationService service)
+            {
+                throw new InvalidOperationException("IConfigurationService is not available.");
+            }
+
+            var collection = GetCollection(service, SelectedItem);
+            if (collection == null)
+            {
+                throw new InvalidOperationException("ConfigurationElementCollection is not available.");
+            }
+
             try
             {
                 collection.Remove(SelectedItem.Element);
@@ -194,11 +224,20 @@ namespace JexusManager.Features
 
         public virtual void MoveUpItem()
         {
+            if (SelectedItem == null)
+            {
+                return;
+            }
+
             int index = Items.IndexOf(SelectedItem);
             Items.Remove(SelectedItem);
             Items.Insert(index - 1, SelectedItem);
 
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+            if (GetService(typeof(IConfigurationService)) is not IConfigurationService service)
+            {
+                throw new InvalidOperationException("IConfigurationService is not available.");
+            }
+
             var collection = GetCollection(service);
             var element = collection[index];
             collection.Remove(element);
@@ -210,11 +249,20 @@ namespace JexusManager.Features
 
         public virtual void MoveDownItem()
         {
+            if (SelectedItem == null)
+            {
+                return;
+            }
+
             int index = Items.IndexOf(SelectedItem);
             Items.Remove(SelectedItem);
             Items.Insert(index + 1, SelectedItem);
 
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+            if (GetService(typeof(IConfigurationService)) is not IConfigurationService service)
+            {
+                throw new InvalidOperationException("IConfigurationService is not available.");
+            }
+
             var collection = GetCollection(service);
             var element = collection[index];
             collection.Remove(element);
@@ -226,7 +274,11 @@ namespace JexusManager.Features
 
         public virtual void RevertItems()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+            if (GetService(typeof(IConfigurationService)) is not IConfigurationService service)
+            {
+                throw new InvalidOperationException("IConfigurationService is not available.");
+            }
+
             var collection = GetCollection(service);
             collection.Revert();
 
@@ -235,7 +287,7 @@ namespace JexusManager.Features
             LoadItems();
         }
 
-        protected virtual ConfigurationElementCollection GetSecondaryCollection(IConfigurationService service)
+        protected virtual ConfigurationElementCollection? GetSecondaryCollection(IConfigurationService service)
         {
             return null;
         }
@@ -314,6 +366,11 @@ namespace JexusManager.Features
         public void RenameInline(T item)
         {
             var index = Items.IndexOf(item);
+            if (_listView == null)
+            {
+                return;
+            }
+
             if (index >= 0 && index < _listView.Items.Count)
             {
                 _listView.Items[index].BeginEdit();

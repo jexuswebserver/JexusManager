@@ -77,7 +77,7 @@ namespace JexusManager.Features.Certificates
                     try
                     {
                         // TODO: check administrator permission.
-                        var x509 = new X509Certificate2(txtPath.Text);
+                        var x509 = X509CertificateLoader.LoadCertificateFromFile(txtPath.Text);
                         var filename = DialogHelper.GetPrivateKeyFile(x509.Subject);
                         if (!File.Exists(filename))
                         {

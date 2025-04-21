@@ -154,7 +154,8 @@ namespace JexusManager.Features.Certificates
                         store.Save(stream, p12pwd.ToCharArray(), random);
                         File.WriteAllBytes(p12File, stream.ToArray());
 
-                        Item = new X509Certificate2(p12File, p12pwd) { FriendlyName = friendlyName };
+                        Item = X509CertificateLoader.LoadPkcs12FromFile(p12File, p12pwd);
+                        Item.FriendlyName = friendlyName;
                         Store = cbStore.SelectedIndex == 0 ? "Personal" : "WebHosting";
 
                         try

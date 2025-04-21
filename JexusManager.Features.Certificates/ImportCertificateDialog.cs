@@ -76,10 +76,8 @@ namespace JexusManager.Features.Certificates
                     try
                     {
                         // Load your certificate from file
-                        Item = new X509Certificate2(txtFile.Text, txtPassword.Text, X509KeyStorageFlags.Exportable | X509KeyStorageFlags.PersistKeySet)
-                        {
-                            FriendlyName = txtName.Text
-                        };
+                        Item = X509CertificateLoader.LoadPkcs12FromFile(txtFile.Text, txtPassword.Text, X509KeyStorageFlags.Exportable | X509KeyStorageFlags.PersistKeySet);
+                        Item.FriendlyName = txtName.Text;
                         Store = cbStore.SelectedIndex == 0 ? "Personal" : "WebHosting";
                         var service = (IConfigurationService)GetService(typeof(IConfigurationService));
                         if (service.ServerManager.Mode == WorkingMode.Jexus)
