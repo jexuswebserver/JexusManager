@@ -54,9 +54,9 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="ini-parser" Version="2.5.2" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.5" />
     <PackageReference Include="Mono.Options" Version="6.12.0.148" />
-    <PackageReference Include="NuGet.Versioning" Version="6.13.2" />
+    <PackageReference Include="NuGet.Versioning" Version="6.14.0" />
     <PackageReference Include="Octokit" Version="14.0.0" />
   </ItemGroup>
 

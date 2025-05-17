@@ -223,7 +223,7 @@ namespace Microsoft.Web.Administration
 
         public ConfigurationAttribute GetAttribute(string attributeName)
         {
-            if (!ContainsAttribute(attributeName))
+            if (!ContainsAttribute(attributeName) && attributeName != "configBuilders")
             {
                 throw new COMException(
                     $"Filename: \\\\?\\{FileContext.FileName}\r\nLine number: {(Entity as IXmlLineInfo).LineNumber}\r\nError: Unrecognized attribute '{attributeName}'\r\n\r\n");
@@ -529,7 +529,11 @@ namespace Microsoft.Web.Administration
             if (child == null && !Schema.AllowUnrecognizedAttributes && FileContext.Parent != null)
             {
                 // IMPORTANT: ignore missing attributes in machine.config.
-                throw new ArgumentException($"Unrecognized attribute '{name}'");
+                if (name != "configBuilders")
+                {
+                    // IMPORTANT: configBuilder is not in schema but is valid.
+                    throw new ArgumentException($"Unrecognized attribute '{name}'");
+                }
             }
 
             var item = new ConfigurationAttribute(name, child, attribute.Value, this);

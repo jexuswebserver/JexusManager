@@ -76,7 +76,11 @@ namespace Microsoft.Web.Administration
             {
                 // web.config
                 var parentElementInFile = _element.GetParentElement();
-                defaultValue = parentElementInFile == null ? Schema?.DefaultValue : parentElementInFile.Attributes[Name].Value;
+                defaultValue = parentElementInFile == null 
+                    ? Schema?.DefaultValue
+                    : parentElementInFile.ContainsAttribute(Name)
+                        ? parentElementInFile.Attributes[Name].Value
+                        : null;
             }
             else if (_element.Section?.Location == null)
             {

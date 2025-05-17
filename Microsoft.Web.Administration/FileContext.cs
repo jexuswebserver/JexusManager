@@ -342,6 +342,25 @@ namespace Microsoft.Web.Administration
                 var schemaDoc = XDocument.Load(file);
                 LoadSchema(schemaDoc, file);
             }
+
+            // IMPORTANT: insert schema for configBuilders.
+            var doc = XDocument.Parse("""
+            <configSchema>
+              <sectionSchema name="configBuilders">
+                <element name="builders">
+                  <collection addElement="add" removeElement="remove" clearElement="clear" allowUnrecognizedAttributes="true">
+                    <attribute name="name" required="true" isUniqueKey="true" type="string" />
+                    <attribute name="type" required="true" type="string" />
+                    <attribute name="prefix" type="string" />
+                    <attribute name="mode" type="string" defaultValue="Strict" />
+                    <attribute name="stripPrefix" type="bool" />
+                    <attribute name="tokenPattern" type="string" />
+                  </collection>
+                </element>
+              </sectionSchema>
+            </configSchema>
+            """);
+            LoadSchema(doc, string.Empty);
         }
 
         private void LoadSchema(XDocument document, string fileName)
@@ -694,6 +713,14 @@ namespace Microsoft.Web.Administration
             if (Location == null || Location == locationPath || locationPath.StartsWith(Location + '/'))
             {
                 var definition = DefinitionCache.FirstOrDefault(item => item.Path == sectionPath);
+                //if (definition?.Name == "configBuilders" && definition.Type.StartsWith("System.Configuration.ConfigurationBuildersSection,"))
+                //{
+                //    // IMPORTANT: insert schema for configBuilders.
+                //    var element = XDocument.Parse("<sectionSchema name=\"configBuilders\">\r\n        <element name=\"builders\">\r\n            <collection addElement=\"add\" removeElement=\"remove\" clearElement=\"clear\" allowUnrecognizedAttributes=\"true\">\r\n                <attribute name=\"name\" required=\"true\" isUniqueKey=\"true\" type=\"string\" />\r\n                <attribute name=\"type\" required=\"true\" type=\"string\" />\r\n            </collection>\r\n        </element>\r\n    </sectionSchema>").Root;
+                //    definition.Schema = new SectionSchema("configBuilders", element, "");
+                //    definition.Schema.ParseSectionSchema(element, null, "");
+                //}
+
                 if (definition == null)
                 {
                 }
@@ -720,7 +747,10 @@ namespace Microsoft.Web.Administration
                     else
                     {
                         var parent = FindSection(sectionPath, locationPath.GetParentLocation(), core);
-                        section.OverrideModeEffective = parent.OverrideModeEffective;
+                        // if (parent != null)
+                        {
+                            section.OverrideModeEffective = parent.OverrideModeEffective;
+                        }
                     }
 
                     section.IsLocked = section.FileContext.FileName != definition.FileContext.FileName && section.OverrideModeEffective != OverrideMode.Allow;
