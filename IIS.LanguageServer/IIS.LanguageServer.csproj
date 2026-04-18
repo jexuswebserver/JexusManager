@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0-windows10.0.17763.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <SelfContained>true</SelfContained>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LanguageServer.Framework\LanguageServer.Framework\LanguageServer.Framework.csproj" />
+    <ProjectReference Include="..\Microsoft.Web.Administration\Microsoft.Web.Administration.csproj" />
+    <ProjectReference Include="..\Microsoft.Web.Configuration.AppHostFileProvider\Microsoft.Web.Configuration.AppHostFileProvider.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,3 @@
+[submodule "LanguageServer.Framework"]
+	path = LanguageServer.Framework
+	url = https://github.com/CppCXY/LanguageServer.Framework.git
