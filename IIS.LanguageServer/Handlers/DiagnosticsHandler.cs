@@ -90,6 +90,9 @@ public class DiagnosticsHandler
         if (knownAttributes.Count == 0)
             return; // No schema for this element path — skip
 
+        // If the schema declares allowUnrecognizedAttributes, skip unknown-attribute checks
+        var allowUnrecognized = _schemaCache.GetAllowUnrecognizedAttributes(elementPath);
+
         var lineInfo = (IXmlLineInfo)element;
         var line = lineInfo.HasLineInfo() ? lineInfo.LineNumber - 1 : 0;
         var col = lineInfo.HasLineInfo() ? lineInfo.LinePosition - 1 : 0;
@@ -103,6 +106,9 @@ public class DiagnosticsHandler
 
             if (!knownAttributes.Contains(attrName, StringComparer.OrdinalIgnoreCase))
             {
+                if (allowUnrecognized)
+                    continue; // Schema says extra attributes are allowed here
+
                 var attrLineInfo = (IXmlLineInfo)attr;
                 var attrLine = attrLineInfo.HasLineInfo() ? attrLineInfo.LineNumber - 1 : line;
                 var attrCol = attrLineInfo.HasLineInfo() ? attrLineInfo.LinePosition - 1 : col;

@@ -45,6 +45,11 @@ public class SchemaCache
         return [.. _schemaService.GetAttributeValues(elementPath, attributeName)];
     }
 
+    internal bool GetAllowUnrecognizedAttributes(string elementPath)
+    {
+        return _schemaService.GetAllowUnrecognizedAttributes(elementPath);
+    }
+
     internal LanguageServerSymbol? GetElementSymbol(string elementPath)
     {
         return _schemaService.ResolveElement(elementPath);

@@ -148,6 +148,13 @@ namespace Microsoft.Web.Administration
             return ResolveAttribute(elementPath, attributeName)?.EnumValues ?? [];
         }
 
+        internal bool GetAllowUnrecognizedAttributes(string elementPath)
+        {
+            var node = ResolveNode(NormalizePath(elementPath));
+            // If no schema found, be lenient and allow all attributes
+            return node?.Schema.AllowUnrecognizedAttributes ?? true;
+        }
+
         internal LanguageServerSymbol? ResolveElement(string elementPath)
         {
             var normalizedPath = NormalizePath(elementPath);
