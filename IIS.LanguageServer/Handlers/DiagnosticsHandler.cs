@@ -33,15 +33,18 @@ public class DiagnosticsHandler
         if (_server == null)
             return;
 
+        var diagnostics = CollectDiagnostics(documentText);
+        Publish(uri, diagnostics);
+    }
+
+    internal List<Diagnostic> CollectDiagnostics(string documentText)
+    {
         var diagnostics = new List<Diagnostic>();
 
         try
         {
             if (string.IsNullOrWhiteSpace(documentText))
-            {
-                Publish(uri, diagnostics);
-                return;
-            }
+                return diagnostics;
 
             XDocument doc;
             try
@@ -53,25 +56,21 @@ public class DiagnosticsHandler
                 diagnostics.Add(CreateDiagnostic(
                     ex.LineNumber - 1, ex.LinePosition - 1, ex.LinePosition,
                     DiagnosticSeverity.Error, $"XML parse error: {ex.Message}", "xml"));
-                Publish(uri, diagnostics);
-                return;
+                return diagnostics;
             }
 
             var root = doc.Root;
             if (root == null || root.Name.LocalName != "configuration")
-            {
-                Publish(uri, diagnostics);
-                return;
-            }
+                return diagnostics;
 
             ValidateElement(root, "configuration", diagnostics);
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"[IIS LS] Diagnostics error for {uri}: {ex.Message}");
+            Console.Error.WriteLine($"[IIS LS] Diagnostics error: {ex.Message}");
         }
 
-        Publish(uri, diagnostics);
+        return diagnostics;
     }
 
     private void ValidateElement(XElement element, string elementPath, List<Diagnostic> diagnostics)
@@ -102,6 +101,8 @@ public class DiagnosticsHandler
         {
             var attrName = attr.Name.LocalName;
             if (attrName.StartsWith("xmlns", StringComparison.Ordinal))
+                continue;
+            if (IsLockAttribute(attrName))
                 continue;
 
             if (!knownAttributes.Contains(attrName, StringComparer.OrdinalIgnoreCase))
@@ -170,6 +171,13 @@ public class DiagnosticsHandler
 
         return required;
     }
+
+    private static bool IsLockAttribute(string attrName) =>
+        attrName.Equals("lockAttributes", StringComparison.OrdinalIgnoreCase) ||
+        attrName.Equals("lockAllAttributesExcept", StringComparison.OrdinalIgnoreCase) ||
+        attrName.Equals("lockElements", StringComparison.OrdinalIgnoreCase) ||
+        attrName.Equals("lockAllElementsExcept", StringComparison.OrdinalIgnoreCase) ||
+        attrName.Equals("lockItem", StringComparison.OrdinalIgnoreCase);
 
     private static Diagnostic CreateDiagnostic(int line, int startCol, int endCol,
         DiagnosticSeverity severity, string message, string source)
