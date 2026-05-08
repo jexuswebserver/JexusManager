@@ -2,8 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml.Linq;
-using Microsoft.Web.Administration;
+using Microsoft.Web.Administration.Properties;
 
 namespace IIS.LanguageServer.Schema;
 
@@ -60,14 +59,29 @@ public class SchemaLoader
         return files;
     }
 
-    // Returns embedded schema XML strings from Microsoft.Web.Administration resources.
-    // Used when no IIS installation is found on disk.
-    public static IEnumerable<(string Name, string Content)> GetEmbeddedSchemas()
+    // Writes embedded schemas from Microsoft.Web.Administration resources to temp files
+    // and returns their paths. Used when no IIS installation is found on disk.
+    public static List<string> GetEmbeddedSchemaFiles()
     {
-        yield return ("IIS_schema.xml", Resources.IIS_schema);
-        yield return ("FX_schema.xml", Resources.FX_schema);
-        yield return ("rewrite_schema.xml", Resources.rewrite_schema);
-    }
+        var tempDir = Path.Combine(Path.GetTempPath(), "iis-language-server-schemas");
+        Directory.CreateDirectory(tempDir);
 
-    public static bool HasDiskSchemas() => FindSchemaFiles().Count > 0;
+        var files = new List<string>();
+        var embedded = new[]
+        {
+            ("IIS_schema.xml", Resources.IIS_schema),
+            ("FX_schema.xml", Resources.FX_schema),
+            ("rewrite_schema.xml", Resources.rewrite_schema)
+        };
+
+        foreach (var (name, content) in embedded)
+        {
+            var path = Path.Combine(tempDir, name);
+            File.WriteAllText(path, content);
+            files.Add(path);
+        }
+
+        Console.Error.WriteLine($"[IIS LS] Using {files.Count} embedded schemas from resources");
+        return files;
+    }
 }

@@ -1,6 +1,6 @@
-using EmmyLua.LanguageServer.Framework.Server;
 using IIS.LanguageServer.Handlers;
 using IIS.LanguageServer.Schema;
+using LspServer = EmmyLua.LanguageServer.Framework.Server.LanguageServer;
 
 try
 {
@@ -16,7 +16,7 @@ try
     var definitionHandler = new IISDefinitionHandler(schemaCache, textSyncHandler);
 
     // Create language server
-    var server = LanguageServer.From(Console.OpenStandardInput(), Console.OpenStandardOutput());
+    var server = LspServer.From(Console.OpenStandardInput(), Console.OpenStandardOutput());
 
     // Wire diagnostics handler to the server for pushing notifications
     textSyncHandler.SetServer(server);

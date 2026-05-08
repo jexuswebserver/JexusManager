@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Linq;
 using System.Xml.Linq;
 using Microsoft.Extensions.Logging;
 using JexusManager;
@@ -203,6 +204,32 @@ namespace Microsoft.Web.Administration
         internal void SetDefaultValue(string value)
         {
             DefaultValue = Parse(value);
+        }
+
+        internal string Format(object value)
+        {
+            if (value == null)
+                return null;
+
+            if (Type == "enum" || Type == "flags")
+            {
+                var longVal = Convert.ToInt64(value);
+                var match = GetEnumValues().Cast<ConfigurationEnumValue>()
+                    .FirstOrDefault(e => e.Value == longVal);
+                return match?.Name ?? value.ToString();
+            }
+
+            if (Type == "timeSpan" && value is TimeSpan ts)
+            {
+                return TimeSpanFormat switch
+                {
+                    "minutes" => ((int)ts.TotalMinutes).ToString(),
+                    "seconds" => ((int)ts.TotalSeconds).ToString(),
+                    _ => ts.ToString()
+                };
+            }
+
+            return value.ToString();
         }
 
         public void CreateValidator()

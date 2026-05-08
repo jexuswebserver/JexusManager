@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Microsoft.Web.Administration;
 
@@ -13,7 +12,7 @@ public class SchemaCache
         var diskFiles = SchemaLoader.FindSchemaFiles();
         _schemaService = diskFiles.Count > 0
             ? new LanguageServerSchemaService(diskFiles)
-            : new LanguageServerSchemaService(SchemaLoader.GetEmbeddedSchemas());
+            : new LanguageServerSchemaService(SchemaLoader.GetEmbeddedSchemaFiles());
     }
 
     public SchemaCache(IEnumerable<string> schemaFiles)

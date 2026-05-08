@@ -9,20 +9,21 @@ using EmmyLua.LanguageServer.Framework.Protocol.Model;
 using EmmyLua.LanguageServer.Framework.Protocol.Model.Diagnostic;
 using EmmyLua.LanguageServer.Framework.Server;
 using IIS.LanguageServer.Schema;
+using LspServer = EmmyLua.LanguageServer.Framework.Server.LanguageServer;
 
 namespace IIS.LanguageServer.Handlers;
 
 public class DiagnosticsHandler
 {
     private readonly SchemaCache _schemaCache;
-    private LanguageServer? _server;
+    private LspServer? _server;
 
     public DiagnosticsHandler(SchemaCache schemaCache)
     {
         _schemaCache = schemaCache;
     }
 
-    public void SetServer(LanguageServer server)
+    public void SetServer(LspServer server)
     {
         _server = server;
     }

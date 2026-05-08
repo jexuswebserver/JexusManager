@@ -13,6 +13,7 @@ using EmmyLua.LanguageServer.Framework.Protocol.Model.Kind;
 using EmmyLua.LanguageServer.Framework.Protocol.Model.TextEdit;
 using EmmyLua.LanguageServer.Framework.Server;
 using EmmyLua.LanguageServer.Framework.Server.Handler;
+using LspServer = EmmyLua.LanguageServer.Framework.Server.LanguageServer;
 using IIS.LanguageServer.Schema;
 
 namespace IIS.LanguageServer.Handlers;
@@ -91,7 +92,7 @@ public class TextDocumentSyncHandler : TextDocumentHandlerBase
         return content;
     }
 
-    public void SetServer(LanguageServer server)
+    public void SetServer(LspServer server)
     {
         _diagnosticsHandler.SetServer(server);
     }
