@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <sectionSchema name="system.webServer">
+    <element name="security">
+      <attribute name="requireClientCertificate" type="bool" defaultValue="false" />
+    </element>
+    <element name="defaultDocument">
+      <attribute name="enabled" type="bool" defaultValue="true" />
+    </element>
+    <element name="requestFiltering">
+      <attribute name="enabled" type="bool" defaultValue="true" />
+    </element>
+  </sectionSchema>
+  <sectionSchema name="system.applicationHost">
+    <element name="applicationPools">
+      <element name="add">
+        <attribute name="name" type="string" defaultValue="" />
+        <attribute name="managedRuntimeVersion" type="string" defaultValue="v4.0" />
+        <attribute name="managedPipelineMode" type="enum" defaultValue="Integrated">
+          <enum name="Integrated" value="0" />
+          <enum name="Classic" value="1" />
+        </attribute>
+      </element>
+    </element>
+    <element name="webSites">
+      <element name="site">
+        <attribute name="name" type="string" defaultValue="" />
+        <attribute name="id" type="int" defaultValue="1" />
+        <element name="bindings">
+          <element name="binding">
+            <attribute name="protocol" type="enum" defaultValue="http">
+              <enum name="http" value="http" />
+              <enum name="https" value="https" />
+              <enum name="ftp" value="ftp" />
+            </attribute>
+            <attribute name="bindingInformation" type="string" defaultValue="*:80:" />
+          </element>
+        </element>
+      </element>
+    </element>
+  </sectionSchema>
+</configuration>

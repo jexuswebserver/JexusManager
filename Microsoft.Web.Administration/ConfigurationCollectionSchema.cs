@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace Microsoft.Web.Administration
 {
@@ -111,6 +112,7 @@ namespace Microsoft.Web.Administration
         private string _removeElementName;
 
         internal string Path { get; }
+        internal XElement SourceElement { get; set; }
 
         internal ConfigurationElementSchema FindSchema(string path)
         {

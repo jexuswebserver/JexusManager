@@ -24,6 +24,8 @@ public enum ContextType
 
 public class XmlPositionAnalyzer
 {
+    private const string XmlNamePattern = @"[\w.-]+(?::[\w.-]+)?";
+
     public static XmlContext GetContext(string documentText, int position)
     {
         if (position < 0 || position > documentText.Length)
@@ -46,13 +48,14 @@ public class XmlPositionAnalyzer
     private static string ExtractElementPath(string text)
     {
         var tags = new List<string>();
-        var pattern = @"<(/?)(\w+(?::\w+)?)";
+        var pattern = $@"<(/?)({XmlNamePattern})([^>]*)>";
         var matches = Regex.Matches(text, pattern);
 
         foreach (Match match in matches)
         {
             var isClosing = !string.IsNullOrEmpty(match.Groups[1].Value);
             var tagName = match.Groups[2].Value;
+            var isSelfClosing = match.Groups[3].Value.TrimEnd().EndsWith("/");
 
             if (isClosing)
             {
@@ -61,9 +64,21 @@ public class XmlPositionAnalyzer
                     tags.RemoveAt(tags.Count - 1);
                 }
             }
-            else
+            else if (!isSelfClosing)
             {
                 tags.Add(tagName);
+            }
+        }
+
+        var lastOpenTag = text.LastIndexOf('<');
+        var lastCloseTag = text.LastIndexOf('>');
+        if (lastOpenTag > lastCloseTag)
+        {
+            var openTagText = text[lastOpenTag..];
+            var currentTag = Regex.Match(openTagText, $@"^<({XmlNamePattern})");
+            if (currentTag.Success)
+            {
+                tags.Add(currentTag.Groups[1].Value);
             }
         }
 
@@ -72,8 +87,22 @@ public class XmlPositionAnalyzer
 
     private static string? ExtractCurrentElementName(string text)
     {
-        var match = Regex.Match(text, @"<(\w+(?::\w+)?)(?:\s|>|/)");
-        return match.Success ? match.Groups[1].Value : null;
+        var lastOpenTag = text.LastIndexOf('<');
+        if (lastOpenTag == -1)
+        {
+            return null;
+        }
+
+        var openTagText = text[lastOpenTag..];
+        var currentTag = Regex.Match(openTagText, $@"^<({XmlNamePattern})");
+        if (currentTag.Success)
+        {
+            return currentTag.Groups[1].Value;
+        }
+
+        var matches = Regex.Matches(text, $@"<({XmlNamePattern})(?:\s|>|/)");
+        var match = matches.Count > 0 ? matches[^1] : null;
+        return match?.Success == true ? match.Groups[1].Value : null;
     }
 
     private static string? ExtractCurrentAttributeName(string text)
@@ -85,20 +114,31 @@ public class XmlPositionAnalyzer
         }
 
         var tagContent = text[lastOpenTag..];
+        var currentElement = ExtractCurrentElementName(text);
+        var attributesText = Regex.Replace(tagContent, $@"^<{XmlNamePattern}\s*", string.Empty);
 
-        // Check if we're inside an attribute
-        if (tagContent.Contains('"') || tagContent.Contains('\''))
+        var valueMatch = Regex.Match(
+            attributesText,
+            $@"({XmlNamePattern})=([""'])([^""']*)\2?$");
+        if (valueMatch.Success)
         {
-            var match = Regex.Match(tagContent, @"(\w+)=""[^""]*$|(\w+)='[^']*$");
-            if (match.Success)
-            {
-                return match.Groups[1].Value ?? match.Groups[2].Value;
-            }
+            return valueMatch.Groups[1].Value;
         }
 
         // Look for attribute name before cursor
-        var attrMatch = Regex.Match(tagContent, @"(\w+)\s*=$");
-        return attrMatch.Success ? attrMatch.Groups[1].Value : null;
+        var attrMatch = Regex.Match(attributesText, $@"({XmlNamePattern})\s*=$");
+        if (attrMatch.Success)
+        {
+            return attrMatch.Groups[1].Value;
+        }
+
+        var partialMatch = Regex.Match(attributesText, $@"(?:^|\s)({XmlNamePattern})$");
+        if (partialMatch.Success && partialMatch.Groups[1].Value != currentElement)
+        {
+            return partialMatch.Groups[1].Value;
+        }
+
+        return null;
     }
 
     private static string? ExtractCurrentAttributeValue(string text)
@@ -111,10 +151,11 @@ public class XmlPositionAnalyzer
 
         var tagContent = text[lastOpenTag..];
 
-        var match = Regex.Match(tagContent, @"""([^""]*)$|'([^']*)$");
+        var attributesText = Regex.Replace(tagContent, $@"^<{XmlNamePattern}\s*", string.Empty);
+        var match = Regex.Match(attributesText, $@"({XmlNamePattern})=([""'])([^""']*)\2?$");
         if (match.Success)
         {
-            return match.Groups[1].Value ?? match.Groups[2].Value;
+            return match.Groups[3].Value;
         }
 
         return null;
@@ -133,18 +174,24 @@ public class XmlPositionAnalyzer
         {
             // We're inside a tag
             var tagContent = text[lastOpenTag..];
+            var insideTagName = Regex.IsMatch(tagContent, $@"^</?{XmlNamePattern}$");
+
+            if (insideTagName)
+            {
+                return ContextType.ElementTag;
+            }
 
             if (tagContent.Contains('"') || tagContent.Contains('\''))
             {
                 return ContextType.AttributeValue;
             }
 
-            if (tagContent.Contains('='))
+            if (Regex.IsMatch(tagContent, $@"^<{XmlNamePattern}\s") || tagContent.Contains('='))
             {
                 return ContextType.AttributeName;
             }
 
-            return ContextType.AttributeName;
+            return ContextType.ElementTag;
         }
 
         return ContextType.ElementContent;

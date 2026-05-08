@@ -9,13 +9,23 @@ try
     // Initialize schema cache
     var schemaCache = new SchemaCache();
 
-    // Create handlers (for future use)
-    var completionHandler = new CompletionHandler(schemaCache);
-    var hoverHandler = new HoverHandler(schemaCache);
+    // Create handlers
     var textSyncHandler = new TextDocumentSyncHandler(schemaCache);
+    var completionHandler = new IISCompletionHandler(schemaCache, textSyncHandler);
+    var hoverHandler = new IISHoverHandler(schemaCache, textSyncHandler);
+    var definitionHandler = new IISDefinitionHandler(schemaCache, textSyncHandler);
 
     // Create language server
     var server = LanguageServer.From(Console.OpenStandardInput(), Console.OpenStandardOutput());
+
+    // Wire diagnostics handler to the server for pushing notifications
+    textSyncHandler.SetServer(server);
+
+    // Register handlers with the server
+    server.AddHandler(textSyncHandler);
+    server.AddHandler(completionHandler);
+    server.AddHandler(hoverHandler);
+    server.AddHandler(definitionHandler);
 
     // Register initialization callbacks
     server.OnInitialize((request, info) =>

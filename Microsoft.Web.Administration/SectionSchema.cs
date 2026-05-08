@@ -13,16 +13,21 @@ namespace Microsoft.Web.Administration
     {
         public string Name { get; }
         internal ConfigurationElementSchema Root;
+        internal XElement SourceElement { get; }
+        internal string FileName { get; }
 
         public SectionSchema(string name, XElement element, string fileName)
         {
             Name = name;
+            SourceElement = element;
+            FileName = fileName;
             Root = new ConfigurationElementSchema(fileName)
             {
                 Path = name,
                 AllowUnrecognizedAttributes =
                                element.Attribute("allowUnrecognizedAttributes")
-                               .LoadBoolean(false)
+                               .LoadBoolean(false),
+                SourceElement = element
             };
         }
 
@@ -51,7 +56,8 @@ namespace Microsoft.Web.Administration
                         TimeSpanFormat = item.Attribute("timeSpanFormat").LoadString("string"),
                         IsExpanded = item.Attribute("expanded").LoadBoolean(false),
                         ValidationType = item.Attribute("validationType").LoadString(null),
-                        ValidationParameter = item.Attribute("validationParameter").LoadString(null)
+                        ValidationParameter = item.Attribute("validationParameter").LoadString(null),
+                        SourceElement = item
                     };
 
                     if (attribute.Type == "enum" || attribute.Type == "flags")
@@ -90,7 +96,8 @@ namespace Microsoft.Web.Administration
                         {
                             Name = name,
                             IsCollectionDefault = item.Attribute("isCollectionDefault").LoadBoolean(false),
-                            AllowUnrecognizedAttributes = top.AllowUnrecognizedAttributes
+                            AllowUnrecognizedAttributes = top.AllowUnrecognizedAttributes,
+                            SourceElement = item
                         };
                         top.ChildElementSchemas.Add(child);
                         child.Path = string.Format("{0}/{1}", schema == null ? Name : schema.Path, child.Name);
@@ -122,6 +129,7 @@ namespace Microsoft.Web.Administration
                     var allowUnrecognizedAttributes = item.Attribute("allowUnrecognizedAttributes").LoadBoolean(false);
                     var child = new ConfigurationCollectionSchema(path, addElementNames, removeElementName,
                         clearElementName, isMergeAppend, allowDuplicates, allowUnrecognizedAttributes, fileName);
+                    child.SourceElement = item;
 
                     var top = schema ?? Root;
                     if (top.CollectionSchema == null)

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configSchema>
+  <sectionSchema name="system.applicationHost/applicationPools">
+    <collection addElement="add" removeElement="remove" clearElement="clear">
+      <attribute name="name" type="string" required="true" isUniqueKey="true" />
+      <attribute name="managedRuntimeVersion" type="string" defaultValue="v4.0" />
+      <attribute name="managedPipelineMode" type="enum" defaultValue="Integrated">
+        <enum name="Integrated" value="0" />
+        <enum name="Classic" value="1" />
+      </attribute>
+      <attribute name="autoStart" type="bool" defaultValue="true" />
+      <element name="recycling">
+        <element name="periodicRestart">
+          <attribute name="time" type="timeSpan" defaultValue="29.00:00:00" />
+        </element>
+      </element>
+    </collection>
+  </sectionSchema>
+  <sectionSchema name="system.applicationHost/sites">
+    <collection addElement="site" removeElement="remove" clearElement="clear">
+      <attribute name="name" type="string" required="true" isUniqueKey="true" />
+      <attribute name="id" type="uint" required="true" />
+      <element name="bindings">
+        <collection addElement="binding" clearElement="clear" removeElement="remove">
+          <attribute name="protocol" type="string" required="true" />
+          <attribute name="bindingInformation" type="string" required="true" />
+        </collection>
+      </element>
+    </collection>
+  </sectionSchema>
+  <sectionSchema name="system.webServer/security">
+    <attribute name="accessPolicy" type="flags" defaultValue="Read, Script">
+      <enum name="Read" value="1" />
+      <enum name="Script" value="2" />
+    </attribute>
+    <attribute name="requireClientCertificate" type="bool" defaultValue="false" />
+  </sectionSchema>
+  <sectionSchema name="system.webServer/defaultDocument">
+    <attribute name="enabled" type="bool" defaultValue="true" />
+    <element name="files">
+      <collection addElement="add" removeElement="remove" clearElement="clear">
+        <attribute name="value" type="string" required="true" isUniqueKey="true" />
+      </collection>
+    </element>
+  </sectionSchema>
+  <sectionSchema name="system.webServer/requestFiltering">
+    <attribute name="allowDoubleEscaping" type="bool" defaultValue="false" />
+  </sectionSchema>
+</configSchema>

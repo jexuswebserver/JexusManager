@@ -47,6 +47,7 @@ namespace Microsoft.Web.Administration
         public string Name { get; internal set; }
         public string TimeSpanFormat { get; internal set; }
         public string Type { get; internal set; }
+        internal XElement SourceElement { get; set; }
 
         internal object Parse(string value)
         {
