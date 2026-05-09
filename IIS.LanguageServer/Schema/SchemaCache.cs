@@ -45,6 +45,11 @@ public class SchemaCache
         return [.. _schemaService.GetAttributeValues(elementPath, attributeName)];
     }
 
+    internal string? TryValidateAttributeValue(string elementPath, string attributeName, string value)
+    {
+        return _schemaService.TryValidateAttributeValue(elementPath, attributeName, value);
+    }
+
     internal bool GetAllowUnrecognizedAttributes(string elementPath)
     {
         return _schemaService.GetAllowUnrecognizedAttributes(elementPath);

@@ -161,4 +161,70 @@ public class DiagnosticsHandlerTests
             d.Message.StringValue != null &&
             d.Message.StringValue.Contains("managedPipelineMode"));
     }
+
+    [Fact]
+    public void CollectDiagnostics_EmptyBoolAttribute_ReportsError()
+    {
+        var handler = CreateHandler();
+        var xml = """
+            <configuration>
+              <system.applicationHost>
+                <applicationPools>
+                  <add name="TestPool" autoStart="" />
+                </applicationPools>
+              </system.applicationHost>
+            </configuration>
+            """;
+
+        var result = handler.CollectDiagnostics(xml);
+
+        result.Should().Contain(d =>
+            d.Severity == DiagnosticSeverity.Error &&
+            d.Message.StringValue != null &&
+            d.Message.StringValue.Contains("autoStart"));
+    }
+
+    [Fact]
+    public void CollectDiagnostics_InvalidBoolAttribute_ReportsError()
+    {
+        var handler = CreateHandler();
+        var xml = """
+            <configuration>
+              <system.applicationHost>
+                <applicationPools>
+                  <add name="TestPool" autoStart="yes" />
+                </applicationPools>
+              </system.applicationHost>
+            </configuration>
+            """;
+
+        var result = handler.CollectDiagnostics(xml);
+
+        result.Should().Contain(d =>
+            d.Severity == DiagnosticSeverity.Error &&
+            d.Message.StringValue != null &&
+            d.Message.StringValue.Contains("autoStart"));
+    }
+
+    [Fact]
+    public void CollectDiagnostics_ValidBoolAttribute_NoError()
+    {
+        var handler = CreateHandler();
+        var xml = """
+            <configuration>
+              <system.applicationHost>
+                <applicationPools>
+                  <add name="TestPool" autoStart="true" />
+                </applicationPools>
+              </system.applicationHost>
+            </configuration>
+            """;
+
+        var result = handler.CollectDiagnostics(xml);
+
+        result.Should().NotContain(d =>
+            d.Severity == DiagnosticSeverity.Error &&
+            d.Message.StringValue != null &&
+            d.Message.StringValue.Contains("autoStart"));
+    }
 }

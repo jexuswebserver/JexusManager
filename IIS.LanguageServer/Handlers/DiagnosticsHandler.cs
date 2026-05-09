@@ -122,23 +122,18 @@ public class DiagnosticsHandler
             }
             else
             {
-                // Validate enum/flags values
-                var values = _schemaCache.GetAttributeValues(elementPath, attrName);
-                if (values.Count > 0 && !string.IsNullOrEmpty(attr.Value))
-                {
-                    var attrType = _schemaCache.GetAttributeType(elementPath, attrName);
-                    if (attrType == "enum" && !values.Contains(attr.Value, StringComparer.OrdinalIgnoreCase))
-                    {
-                        var attrLineInfo = (IXmlLineInfo)attr;
-                        var attrLine = attrLineInfo.HasLineInfo() ? attrLineInfo.LineNumber - 1 : line;
-                        var attrCol = attrLineInfo.HasLineInfo() ? attrLineInfo.LinePosition - 1 : col;
+                var attrLineInfo = (IXmlLineInfo)attr;
+                var attrLine = attrLineInfo.HasLineInfo() ? attrLineInfo.LineNumber - 1 : line;
+                var attrCol = attrLineInfo.HasLineInfo() ? attrLineInfo.LinePosition - 1 : col;
 
-                        diagnostics.Add(CreateDiagnostic(
-                            attrLine, attrCol, attrCol + attr.Value.Length,
-                            DiagnosticSeverity.Error,
-                            $"Invalid value '{attr.Value}' for attribute '{attrName}'. Allowed: {string.Join(", ", values)}.",
-                            "iis-schema"));
-                    }
+                var error = _schemaCache.TryValidateAttributeValue(elementPath, attrName, attr.Value);
+                if (error != null)
+                {
+                    diagnostics.Add(CreateDiagnostic(
+                        attrLine, attrCol, attrCol + Math.Max(attr.Value.Length, attrName.Length),
+                        DiagnosticSeverity.Error,
+                        $"Invalid value '{attr.Value}' for attribute '{attrName}': {error}",
+                        "iis-schema"));
                 }
             }
         }

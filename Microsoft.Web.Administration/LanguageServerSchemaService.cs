@@ -148,6 +148,43 @@ namespace Microsoft.Web.Administration
             return ResolveAttribute(elementPath, attributeName)?.EnumValues ?? [];
         }
 
+        internal string? TryValidateAttributeValue(string elementPath, string attributeName, string value)
+        {
+            var node = ResolveNode(NormalizePath(elementPath));
+            if (node == null)
+                return null;
+
+            var attribute = node.Schema.AttributeSchemas[attributeName];
+            if (attribute == null)
+                return null;
+
+            // bool.TryParse silently coerces bad values — validate explicitly
+            if (attribute.Type == "bool")
+            {
+                if (!bool.TryParse(value, out _))
+                    return $"Expected 'true' or 'false'.";
+                return null;
+            }
+
+            // uint/int/int64 TryParse silently coerces — validate explicitly
+            if (attribute.Type == "uint" && !uint.TryParse(value, out _))
+                return "Expected an unsigned integer.";
+            if (attribute.Type == "int" && !int.TryParse(value, out _))
+                return "Expected an integer.";
+            if (attribute.Type == "int64" && !long.TryParse(value, out _))
+                return "Expected a 64-bit integer.";
+
+            try
+            {
+                attribute.Parse(value);
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return ex.Message.TrimEnd();
+            }
+        }
+
         internal bool GetAllowUnrecognizedAttributes(string elementPath)
         {
             var node = ResolveNode(NormalizePath(elementPath));
