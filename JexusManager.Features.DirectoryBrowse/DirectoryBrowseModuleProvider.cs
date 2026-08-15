@@ -12,7 +12,7 @@ namespace JexusManager.Features.DirectoryBrowse
     {
         public override Type ServiceType
         {
-            get { return null; }
+            get { return typeof(DirectoryBrowseService); }
         }
 
         public override ModuleDefinition GetModuleDefinition(IManagementContext context)

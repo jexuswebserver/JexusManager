@@ -12,7 +12,6 @@ namespace JexusManager.Features.DirectoryBrowse
 
     using JexusManager.Services;
 
-    using Microsoft.Web.Administration;
     using Microsoft.Web.Management.Client;
     using Microsoft.Web.Management.Client.Win32;
 
@@ -88,31 +87,25 @@ namespace JexusManager.Features.DirectoryBrowse
 
         public void Load()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.webServer/directoryBrowse");
-            var enabled = (bool)section["enabled"];
-            var flags = (long)section["showFlags"];
-            TimeEnabled = (flags & 4) == 4;
-            SizeEnabled = (flags & 8) == 8;
-            ExtensionEnabled = (flags & 16) == 16;
-            DateEnabled = (flags & 2) == 2;
-            LongDateEnabled = (flags & 32) == 32;
-            SetEnabled(enabled);
+            var settings = Proxy.GetSettings();
+            IsEnabled = settings.Enabled;
+            TimeEnabled = settings.TimeEnabled;
+            SizeEnabled = settings.SizeEnabled;
+            ExtensionEnabled = settings.ExtensionEnabled;
+            DateEnabled = settings.DateEnabled;
+            LongDateEnabled = settings.LongDateEnabled;
+            OnDirectoryBrowseSettingsSaved();
         }
 
         private void Enable()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            ConfigurationSection section = service.GetSection("system.webServer/directoryBrowse");
-            section["enabled"] = true;
+            Proxy.SetEnabled(true);
             SetEnabled(true);
         }
 
         private void Disable()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            ConfigurationSection section = service.GetSection("system.webServer/directoryBrowse");
-            section["enabled"] = false;
+            Proxy.SetEnabled(false);
             SetEnabled(false);
         }
 
@@ -162,39 +155,19 @@ namespace JexusManager.Features.DirectoryBrowse
 
         public bool ApplyChanges()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.webServer/directoryBrowse");
-            section["enabled"] = IsEnabled;
-            long flags = 0;
-            if (DateEnabled)
+            Proxy.Apply(new DirectoryBrowseSnapshot
             {
-                flags |= 2;
-            }
-
-            if (TimeEnabled)
-            {
-                flags |= 4;
-            }
-
-            if (SizeEnabled)
-            {
-                flags |= 8;
-            }
-
-            if (ExtensionEnabled)
-            {
-                flags |= 16;
-            }
-
-            if (LongDateEnabled)
-            {
-                flags |= 32;
-            }
-
-            section["showFlags"] = flags;
-            service.ServerManager.CommitChanges();
+                Enabled = IsEnabled,
+                DateEnabled = DateEnabled,
+                TimeEnabled = TimeEnabled,
+                SizeEnabled = SizeEnabled,
+                ExtensionEnabled = ExtensionEnabled,
+                LongDateEnabled = LongDateEnabled
+            });
             return true;
         }
+
+        private DirectoryBrowseModuleProxy Proxy => ((DirectoryBrowseModule)Module).Proxy;
 
         public bool LongDateEnabled { get; set; }
 

@@ -82,8 +82,12 @@ namespace Tests.DirectoryBrowse
 
             serviceContainer.AddService(typeof(IManagementUIService), substitute);
 
+            var provider = new DirectoryBrowseModuleProvider();
+            var configurationService = (IConfigurationService)serviceContainer.GetService(typeof(IConfigurationService));
+            var connection = InProcessConnectionFactory.Configure(serviceContainer, configurationService, new[] { provider });
+            var definition = provider.GetModuleDefinition(null);
             var module = new DirectoryBrowseModule();
-            module.TestInitialize(serviceContainer, null);
+            module.TestInitialize(serviceContainer, (ModuleInfo)connection.Modules[definition.Name]);
 
             _feature = new DirectoryBrowseFeature(module);
             _feature.Load();
@@ -107,7 +111,7 @@ namespace Tests.DirectoryBrowse
             var node = document.Root.XPathSelectElement("/configuration/system.webServer");
             node?.Add(
                 new XElement("directoryBrowse",
-                    new XAttribute("enabled", "true"),
+                    new XAttribute("enabled", "True"),
                     new XAttribute("showFlags", "LongDate")));
             document.Save(expected);
 
