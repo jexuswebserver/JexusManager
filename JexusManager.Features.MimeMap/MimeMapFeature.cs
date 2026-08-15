@@ -92,16 +92,15 @@ namespace JexusManager.Features.MimeMap
 
         public void Load()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            ConfigurationSection section = service.GetSection("system.webServer/staticContent");
-            CanRevert = section.CanRevert();
-            LoadItems();
+            Items.Clear();
+            Items.AddRange(((MimeMapModule)Module).Proxy.GetItems());
+            CanRevert = false;
+            OnSettingsSaved();
         }
 
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
         {
-            ConfigurationSection section = service.GetSection("system.webServer/staticContent");
-            return section.GetCollection();
+            throw new NotSupportedException("MIME maps are accessed through the module service.");
         }
 
         public void Add()
@@ -166,6 +165,29 @@ namespace JexusManager.Features.MimeMap
         protected override void OnSettingsSaved()
         {
             MimeMapSettingsUpdated?.Invoke();
+        }
+
+        public override void AddItem(MimeMapItem item)
+        {
+            ((MimeMapModule)Module).Proxy.Add(item);
+            Load();
+            SelectedItem = Items.Find(map => map.Equals(item));
+        }
+
+        public override void EditItem(MimeMapItem item)
+        {
+            var original = SelectedItem ?? throw new InvalidOperationException("No MIME map is selected.");
+            ((MimeMapModule)Module).Proxy.Update(original, item);
+            Load();
+            SelectedItem = Items.Find(map => map.Equals(item));
+        }
+
+        public override void RemoveItem()
+        {
+            var item = SelectedItem ?? throw new InvalidOperationException("No MIME map is selected.");
+            ((MimeMapModule)Module).Proxy.Remove(item);
+            SelectedItem = null;
+            Load();
         }
 
         public virtual bool ShowHelp()

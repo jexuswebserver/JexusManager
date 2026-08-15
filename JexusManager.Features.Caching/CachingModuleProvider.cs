@@ -12,7 +12,7 @@ namespace JexusManager.Features.Caching
     {
         public override Type ServiceType
         {
-            get { return null; }
+            get { return typeof(CachingService); }
         }
 
         public override ModuleDefinition GetModuleDefinition(IManagementContext context)

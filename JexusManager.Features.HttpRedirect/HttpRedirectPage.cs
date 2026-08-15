@@ -66,7 +66,7 @@ namespace JexusManager.Features.HttpRedirect
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             pictureBox1.Image = service.Scope.GetImage();
 
-            _feature = new HttpRedirectFeature(Module, null, null);
+            _feature = new HttpRedirectFeature(Module);
             _feature.HttpRedirectSettingsUpdated = Refresh;
             _feature.Load();
 

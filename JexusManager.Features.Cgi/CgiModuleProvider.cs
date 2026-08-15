@@ -12,7 +12,7 @@ namespace JexusManager.Features.Cgi
     {
         public override Type ServiceType
         {
-            get { return null; }
+            get { return typeof(CgiService); }
         }
 
         public override ModuleDefinition GetModuleDefinition(IManagementContext context)

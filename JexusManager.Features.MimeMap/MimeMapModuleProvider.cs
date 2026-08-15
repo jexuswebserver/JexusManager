@@ -12,7 +12,7 @@ namespace JexusManager.Features.MimeMap
     {
         public override Type ServiceType
         {
-            get { return null; }
+            get { return typeof(MimeMapService); }
         }
 
         public override ModuleDefinition GetModuleDefinition(IManagementContext context)

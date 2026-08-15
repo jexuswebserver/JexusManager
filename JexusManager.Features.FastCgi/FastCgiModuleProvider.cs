@@ -12,7 +12,7 @@ namespace JexusManager.Features.FastCgi
     {
         public override Type ServiceType
         {
-            get { return null; }
+            get { return typeof(FastCgiService); }
         }
 
         public override ModuleDefinition GetModuleDefinition(IManagementContext context)

@@ -8,8 +8,15 @@ namespace JexusManager.Features.Caching
 
     using Microsoft.Web.Administration;
 
+    [Serializable]
     internal class CachingItem : IItem<CachingItem>
     {
+        public CachingItem()
+        {
+            Extension = VaryByQueryString = VaryByHeaders = string.Empty;
+            Flag = "Local";
+        }
+
         public CachingItem(ConfigurationElement element)
         {
             Element = element;
@@ -52,12 +59,6 @@ namespace JexusManager.Features.Caching
 
         public void Apply()
         {
-            Element["extension"] = Extension;
-            Element["policy"] = Policy;
-            Element["kernelCachePolicy"] = KernelCachePolicy;
-            Element["duration"] = Duration;
-            Element["varyByQueryString"] = VaryByQueryString;
-            Element["varyByHeaders"] = VaryByHeaders;
         }
 
         public bool Match(CachingItem other)

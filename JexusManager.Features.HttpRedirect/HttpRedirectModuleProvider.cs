@@ -12,7 +12,7 @@ namespace JexusManager.Features.HttpRedirect
     {
         public override Type ServiceType
         {
-            get { return null; }
+            get { return typeof(HttpRedirectService); }
         }
 
         public override ModuleDefinition GetModuleDefinition(IManagementContext context)

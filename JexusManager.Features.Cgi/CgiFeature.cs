@@ -11,7 +11,6 @@ namespace JexusManager.Features.Cgi
 
     using JexusManager.Services;
 
-    using Microsoft.Web.Administration;
     using Microsoft.Web.Management.Client;
     using Microsoft.Web.Management.Client.Win32;
 
@@ -62,9 +61,7 @@ namespace JexusManager.Features.Cgi
 
         public void Load()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.webServer/cgi", null, false);
-            PropertyGridObject = new CgiItem(section);
+            PropertyGridObject = Proxy.GetSettings();
             OnCgiSettingsSaved();
         }
 
@@ -95,8 +92,6 @@ namespace JexusManager.Features.Cgi
         }
 
         public Module Module { get; }
-        public ServerManager Server { get; set; }
-        public Application Application { get; set; }
 
         public string Name
         {
@@ -112,11 +107,11 @@ namespace JexusManager.Features.Cgi
 
         public bool ApplyChanges()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            PropertyGridObject.Apply();
-            service.ServerManager.CommitChanges();
+            Proxy.Apply(PropertyGridObject);
             return true;
         }
+
+        private CgiModuleProxy Proxy => ((CgiModule)Module).Proxy;
 
         public bool LongDateEnabled { get; set; }
 

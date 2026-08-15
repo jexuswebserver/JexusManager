@@ -10,19 +10,18 @@ namespace JexusManager.Features.Caching
     using System.Reactive.Linq;
     using System.Windows.Forms;
 
-    using Microsoft.Web.Administration;
     using Microsoft.Web.Management.Client.Win32;
 
     internal partial class CachingSettingsDialog : DialogForm
     {
-        public CachingSettingsDialog(IServiceProvider serviceProvider, ConfigurationElement element, CachingFeature feature)
+        public CachingSettingsDialog(IServiceProvider serviceProvider, CachingSettings settings, CachingFeature feature)
             : base(serviceProvider)
         {
             InitializeComponent();
-            cbUser.Checked = (bool)element["enabled"];
-            cbKernel.Checked = (bool)element["enableKernelCache"];
-            txtSize.Text = element["maxResponseSize"].ToString();
-            var limit = (uint)element["maxCacheSize"];
+            cbUser.Checked = settings.Enabled;
+            cbKernel.Checked = settings.EnableKernelCache;
+            txtSize.Text = settings.MaxResponseSize.ToString();
+            var limit = settings.MaxCacheSize;
             cbLimit.Checked = limit != 0;
             if (cbLimit.Checked)
             {
@@ -36,17 +35,10 @@ namespace JexusManager.Features.Caching
                 Observable.FromEventPattern<EventArgs>(btnOK, "Click")
                 .Subscribe(evt =>
                 {
-                    element["enableKernelCache"] = cbKernel.Checked;
-                    element["enabled"] = cbUser.Checked;
-                    element["maxResponseSize"] = uint.Parse(txtSize.Text);
-                    if (!cbLimit.Checked)
-                    {
-                        element["maxCacheSize"] = 0U;
-                    }
-                    else
-                    {
-                        element["maxCacheSize"] = uint.Parse(txtLimit.Text);
-                    }
+                    settings.EnableKernelCache = cbKernel.Checked;
+                    settings.Enabled = cbUser.Checked;
+                    settings.MaxResponseSize = uint.Parse(txtSize.Text);
+                    settings.MaxCacheSize = cbLimit.Checked ? uint.Parse(txtLimit.Text) : 0U;
 
                     DialogResult = DialogResult.OK;
                 }));

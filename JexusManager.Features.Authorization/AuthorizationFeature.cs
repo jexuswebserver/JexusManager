@@ -99,13 +99,14 @@ namespace JexusManager.Features.Authorization
 
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
         {
-            var section = service.GetSection("system.webServer/security/authorization");
-            return section.GetCollection();
+            throw new NotSupportedException("Authorization rules are accessed through the module service.");
         }
 
         public void Load()
         {
-            LoadItems();
+            Items.Clear();
+            Items.AddRange(Proxy.GetRules());
+            OnSettingsSaved();
         }
 
         public void AddAllow()
@@ -159,6 +160,36 @@ namespace JexusManager.Features.Authorization
         {
             AuthorizationSettingsUpdated?.Invoke();
         }
+
+        public override void AddItem(AuthorizationRule item)
+        {
+            Proxy.Add(item);
+            LoadAndSelect(item);
+        }
+
+        public override void EditItem(AuthorizationRule item)
+        {
+            var original = SelectedItem ?? throw new InvalidOperationException("No authorization rule is selected.");
+            Proxy.Update(original, item);
+            LoadAndSelect(item);
+        }
+
+        public override void RemoveItem()
+        {
+            var item = SelectedItem ?? throw new InvalidOperationException("No authorization rule is selected.");
+            Proxy.Remove(item);
+            SelectedItem = null;
+            Load();
+        }
+
+        private void LoadAndSelect(AuthorizationRule item)
+        {
+            Load();
+            SelectedItem = Items.Find(candidate => candidate.Equals(item));
+            OnSettingsSaved();
+        }
+
+        private AuthorizationModuleProxy Proxy => ((AuthorizationModule)Module).Proxy;
 
         public virtual bool ShowHelp()
         {

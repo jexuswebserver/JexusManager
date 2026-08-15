@@ -100,7 +100,9 @@ namespace JexusManager.Features.Caching
 
         public void Load()
         {
-            LoadItems();
+            Items.Clear();
+            Items.AddRange(((CachingModule)Module).Proxy.GetProfiles());
+            OnSettingsSaved();
         }
 
         public void Add()
@@ -116,9 +118,8 @@ namespace JexusManager.Features.Caching
 
         public void Set()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.webServer/caching");
-            using (var dialog = new CachingSettingsDialog(Module, section, this))
+            var settings = ((CachingModule)Module).Proxy.GetSettings();
+            using (var dialog = new CachingSettingsDialog(Module, settings, this))
             {
                 if (dialog.ShowDialog() != DialogResult.OK)
                 {
@@ -126,7 +127,7 @@ namespace JexusManager.Features.Caching
                 }
             }
 
-            service.ServerManager.CommitChanges();
+            ((CachingModule)Module).Proxy.ApplySettings(settings);
             OnSettingsSaved();
         }
 
@@ -185,6 +186,29 @@ namespace JexusManager.Features.Caching
         protected override void OnSettingsSaved()
         {
             CachingSettingsUpdated?.Invoke();
+        }
+
+        public override void AddItem(CachingItem item)
+        {
+            ((CachingModule)Module).Proxy.Add(item);
+            Load();
+            SelectedItem = Items.Find(profile => profile.Equals(item));
+        }
+
+        public override void EditItem(CachingItem item)
+        {
+            var original = SelectedItem ?? throw new InvalidOperationException("No cache profile is selected.");
+            ((CachingModule)Module).Proxy.Update(original, item);
+            Load();
+            SelectedItem = Items.Find(profile => profile.Equals(item));
+        }
+
+        public override void RemoveItem()
+        {
+            var item = SelectedItem ?? throw new InvalidOperationException("No cache profile is selected.");
+            ((CachingModule)Module).Proxy.Remove(item);
+            SelectedItem = null;
+            Load();
         }
 
         public virtual bool ShowHelp()

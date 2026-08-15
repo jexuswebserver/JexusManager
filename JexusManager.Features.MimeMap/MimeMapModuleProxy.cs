@@ -1,0 +1,2 @@
+using Microsoft.Web.Management.Client;
+namespace JexusManager.Features.MimeMap { internal sealed class MimeMapModuleProxy : ModuleServiceProxy { internal MimeMapItem[] GetItems() => (MimeMapItem[])Invoke(nameof(GetItems)); internal void Add(MimeMapItem item) => Invoke(nameof(Add), item); internal void Update(MimeMapItem oldItem, MimeMapItem item) => Invoke(nameof(Update), oldItem, item); internal void Remove(MimeMapItem item) => Invoke(nameof(Remove), item); } }

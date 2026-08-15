@@ -11,6 +11,8 @@ namespace JexusManager.Features.Caching
 
     internal class CachingModule : Module
     {
+        private CachingModuleProxy _proxy;
+        internal CachingModuleProxy Proxy => _proxy ??= (CachingModuleProxy)((Connection)GetService(typeof(Connection))).CreateProxy(this, typeof(CachingModuleProxy));
         protected override void Initialize(IServiceProvider serviceProvider, ModuleInfo moduleInfo)
         {
             base.Initialize(serviceProvider, moduleInfo);

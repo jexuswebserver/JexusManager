@@ -10,7 +10,6 @@ namespace JexusManager.Features.Compression
 
     using JexusManager.Services;
 
-    using Microsoft.Web.Administration;
     using Microsoft.Web.Management.Client;
     using Microsoft.Web.Management.Client.Win32;
     using System.Windows.Forms;
@@ -40,17 +39,15 @@ namespace JexusManager.Features.Compression
 
         public void Load()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var urlCompressionSection = service.GetSection("system.webServer/urlCompression");
-            StaticEnabled = (bool)urlCompressionSection["doStaticCompression"];
-            DynamicEnabled = (bool)urlCompressionSection["doDynamicCompression"];
-            if (service.Server != null)
+            var settings = Proxy.GetSettings();
+            StaticEnabled = settings.StaticEnabled;
+            DynamicEnabled = settings.DynamicEnabled;
+            if (settings.HasServerSettings)
             {
-                var httpCompressionSection = service.GetSection("system.webServer/httpCompression");
-                DoDiskSpaceLimiting = (bool)httpCompressionSection["doDiskSpaceLimiting"];
-                MaxDiskSpaceUsage = httpCompressionSection["maxDiskSpaceUsage"].ToString();
-                Directory = httpCompressionSection["directory"].ToString();
-                MinFileSizeForComp = httpCompressionSection["minFileSizeForComp"].ToString();
+                DoDiskSpaceLimiting = settings.DoDiskSpaceLimiting;
+                MaxDiskSpaceUsage = settings.MaxDiskSpaceUsage;
+                Directory = settings.Directory;
+                MinFileSizeForComp = settings.MinFileSizeForComp;
                 DoFileSize = MinFileSizeForComp != "0";
             }
 
@@ -112,38 +109,10 @@ namespace JexusManager.Features.Compression
 
         public bool ApplyChanges()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var urlCompressionSection = service.GetSection("system.webServer/urlCompression");
-            urlCompressionSection["doStaticCompression"] = StaticEnabled;
-            urlCompressionSection["doDynamicCompression"] = DynamicEnabled;
-
-            if (service.Server != null)
-            {
-                uint fileSize;
-                if (!uint.TryParse(MinFileSizeForComp, out fileSize) || fileSize > 4294967295)
-                {
-                    var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
-                    dialog.ShowMessage($"'{MinFileSizeForComp}' is an invalid value for file size. The value must be between 0 and 4294967295.", Name, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return false;
-                }
-
-                uint diskspace;
-                if (!uint.TryParse(MaxDiskSpaceUsage, out diskspace) || diskspace > 2147483647)
-                {
-                    var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
-                    dialog.ShowMessage($"'{MaxDiskSpaceUsage}' is an invalid value for maximum disk space usage. The value must be between 0 and 2147483647.", Name, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return false;
-                }
-
-                var httpCompressionSection = service.GetSection("system.webServer/httpCompression");
-                httpCompressionSection["doDiskSpaceLimiting"] = DoDiskSpaceLimiting;
-                httpCompressionSection["maxDiskSpaceUsage"] = diskspace;
-                httpCompressionSection["directory"] = Directory;
-                httpCompressionSection["minFileSizeForComp"] = fileSize;
-            }
-
-            service.ServerManager.CommitChanges();
+            Proxy.Apply(new CompressionSnapshot { StaticEnabled = StaticEnabled, DynamicEnabled = DynamicEnabled, DoDiskSpaceLimiting = DoDiskSpaceLimiting, MaxDiskSpaceUsage = MaxDiskSpaceUsage, Directory = Directory, MinFileSizeForComp = FileSize });
             return true;
         }
+
+        private CompressionModuleProxy Proxy => ((CompressionModule)Module).Proxy;
     }
 }

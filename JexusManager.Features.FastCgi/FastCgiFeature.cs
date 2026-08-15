@@ -97,7 +97,9 @@ namespace JexusManager.Features.FastCgi
 
         public void Load()
         {
-            LoadItems();
+            Items.Clear();
+            Items.AddRange(((FastCgiModule)Module).Proxy.GetApplications());
+            OnSettingsSaved();
         }
 
         public void AddAllow()

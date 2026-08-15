@@ -4,25 +4,13 @@
 
 namespace JexusManager.Features.Authorization
 {
+    using System;
     using Microsoft.Web.Administration;
 
+    [Serializable]
     internal class AuthorizationRule : IItem<AuthorizationRule>
     {
-        public AuthorizationRule(ConfigurationElement element)
-        {
-            this.Element = element;
-            this.Flag = element == null || element.IsLocallyStored ? "Local" : "Inhertied";
-            if (element == null)
-            {
-                Users = Roles = Verbs = string.Empty;
-                return;
-            }
-
-            this.AccessType = (long)element["accessType"];
-            this.Users = (string)element["users"];
-            this.Roles = (string)element["roles"];
-            this.Verbs = (string)element["verbs"];
-        }
+        public AuthorizationRule(ConfigurationElement element = null) { Users = Roles = Verbs = string.Empty; Flag = "Local"; }
 
         public string Verbs { get; set; }
 
@@ -52,10 +40,6 @@ namespace JexusManager.Features.Authorization
 
         public void Apply()
         {
-            Element["accessType"] = AccessType;
-            Element["users"] = Users;
-            Element["roles"] = Roles;
-            Element["verbs"] = Verbs;
         }
 
         public bool Match(AuthorizationRule other)

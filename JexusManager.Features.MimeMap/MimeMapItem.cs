@@ -6,8 +6,15 @@ namespace JexusManager.Features.MimeMap
 {
     using Microsoft.Web.Administration;
 
+    [System.Serializable]
     internal class MimeMapItem : IItem<MimeMapItem>
     {
+        public MimeMapItem()
+        {
+            FileExtension = MimeType = string.Empty;
+            Flag = "Local";
+        }
+
         public MimeMapItem(ConfigurationElement element)
         {
             this.Element = element;
@@ -37,8 +44,6 @@ namespace JexusManager.Features.MimeMap
 
         public void Apply()
         {
-            this.Element["fileExtension"] = this.FileExtension;
-            this.Element["mimeType"] = this.MimeType;
         }
 
         public bool Match(MimeMapItem other)

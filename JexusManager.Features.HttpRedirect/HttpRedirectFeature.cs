@@ -17,11 +17,9 @@ namespace JexusManager.Features.HttpRedirect
 
     internal class HttpRedirectFeature
     {
-        public HttpRedirectFeature(Module module, ServerManager server, Application application)
+        public HttpRedirectFeature(Module module)
         {
             this.Module = module;
-            this.Server = server;
-            this.Application = application;
         }
 
         protected static readonly Version FxVersion10 = new Version("1.0");
@@ -42,19 +40,10 @@ namespace JexusManager.Features.HttpRedirect
 
         public void Load()
         {
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.webServer/httpRedirect");
-            this.Enabled = (bool)section["enabled"];
-            this.Link = (string)section["destination"];
-            this.Exact = (bool)section["exactDestination"];
-            this.OnlyRoot = !(bool)section["childOnly"];
-            this.Mode = (long)section["httpResponseStatus"];
-
-            SupportedModes = new List<long>();
-            foreach (ConfigurationEnumValue item in section.Schema.AttributeSchemas["httpResponseStatus"].GetEnumValues())
-            {
-                SupportedModes.Add(item.Value);
-            }
+            var settings = Proxy.GetSettings();
+            this.Enabled = settings.Enabled; this.Link = settings.Destination; this.Exact = settings.ExactDestination;
+            this.OnlyRoot = !settings.ChildOnly; this.Mode = settings.ResponseStatus;
+            SupportedModes = new List<long>(settings.SupportedStatuses);
 
             this.OnHttpRedirectSettingsSaved();
         }
@@ -88,8 +77,6 @@ namespace JexusManager.Features.HttpRedirect
         }
 
         public Module Module { get; }
-        public ServerManager Server { get; set; }
-        public Application Application { get; set; }
 
         public string Name
         {
@@ -110,23 +97,10 @@ namespace JexusManager.Features.HttpRedirect
 
         public bool ApplyChanges()
         {
-            var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.webServer/httpRedirect");
-            section["enabled"] = this.Enabled;
-            section["destination"] = this.Link;
-            section["exactDestination"] = this.Exact;
-            section["childOnly"] = !this.OnlyRoot;
-            if (section.Schema.AttributeSchemas["httpResponseStatus"].GetEnumValues().GetName(this.Mode) == null)
-            {
-                section["httpResponseStatus"] = 301;
-            }
-            else
-            {
-                section["httpResponseStatus"] = this.Mode;
-            }
-
-            service.ServerManager.CommitChanges();
+            Proxy.Apply(new HttpRedirectSnapshot { Enabled = Enabled, Destination = Link, ExactDestination = Exact, ChildOnly = !OnlyRoot, ResponseStatus = Mode, SupportedStatuses = SupportedModes.ToArray() });
             return true;
         }
+
+        private HttpRedirectModuleProxy Proxy => ((HttpRedirectModule)Module).Proxy;
     }
 }

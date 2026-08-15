@@ -12,6 +12,8 @@ namespace JexusManager.Features.Cgi
 
     internal class CgiModule : Module
     {
+        private CgiModuleProxy _proxy;
+        internal CgiModuleProxy Proxy => _proxy ??= (CgiModuleProxy)((Connection)GetService(typeof(Connection))).CreateProxy(this, typeof(CgiModuleProxy));
         protected override void Initialize(IServiceProvider serviceProvider, ModuleInfo moduleInfo)
         {
             base.Initialize(serviceProvider, moduleInfo);

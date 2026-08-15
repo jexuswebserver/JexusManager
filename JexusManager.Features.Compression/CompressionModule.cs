@@ -12,6 +12,8 @@ namespace JexusManager.Features.Compression
 
     internal class CompressionModule : Module
     {
+        private CompressionModuleProxy _proxy;
+        internal CompressionModuleProxy Proxy => _proxy ??= (CompressionModuleProxy)((Connection)GetService(typeof(Connection))).CreateProxy(this, typeof(CompressionModuleProxy));
         protected override void Initialize(IServiceProvider serviceProvider, ModuleInfo moduleInfo)
         {
             base.Initialize(serviceProvider, moduleInfo);

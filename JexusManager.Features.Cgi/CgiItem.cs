@@ -7,28 +7,9 @@ namespace JexusManager.Features.Cgi
     using System;
     using System.ComponentModel;
 
-    using Microsoft.Web.Administration;
-
-    internal class CgiItem
+    [Serializable]
+    public class CgiItem
     {
-        [Browsable(false)]
-        public ConfigurationElement Element { get; set; }
-
-        public CgiItem(ConfigurationElement element)
-        {
-            this.Element = element;
-            CreateCgiWithNewConsole = (bool)element["createCGIWithNewConsole"];
-            CreateProcessAsUser = (bool)element["createProcessAsUser"];
-            Timeout = (TimeSpan)element["timeout"];
-        }
-
-        public void Apply()
-        {
-            Element["createCGIWithNewConsole"] = CreateCgiWithNewConsole;
-            Element["createProcessAsUser"] = CreateProcessAsUser;
-            Element["timeout"] = Timeout;
-        }
-
         [Browsable(true)]
         [Category("Behavior")]
         [Description("Indicates whether a CGI application runs in its own console. If the value is set to true, each CGI application creates a new console when started. A value of false indicaes that CGI applications should run without a console.")]

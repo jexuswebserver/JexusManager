@@ -12,7 +12,7 @@ namespace JexusManager.Features.Compression
     {
         public override Type ServiceType
         {
-            get { return null; }
+            get { return typeof(CompressionService); }
         }
 
         public override ModuleDefinition GetModuleDefinition(IManagementContext context)

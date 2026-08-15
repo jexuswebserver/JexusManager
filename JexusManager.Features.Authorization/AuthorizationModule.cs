@@ -11,6 +11,8 @@ namespace JexusManager.Features.Authorization
 
     internal class AuthorizationModule : Module
     {
+        private AuthorizationModuleProxy _proxy;
+        internal AuthorizationModuleProxy Proxy => _proxy ??= (AuthorizationModuleProxy)((Connection)GetService(typeof(Connection))).CreateProxy(this, typeof(AuthorizationModuleProxy));
         protected override void Initialize(IServiceProvider serviceProvider, ModuleInfo moduleInfo)
         {
             base.Initialize(serviceProvider, moduleInfo);

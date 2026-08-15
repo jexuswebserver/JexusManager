@@ -13,6 +13,8 @@ namespace JexusManager.Features.HttpRedirect
 
     internal class HttpRedirectModule : Module
     {
+        private HttpRedirectModuleProxy _proxy;
+        internal HttpRedirectModuleProxy Proxy => _proxy ??= (HttpRedirectModuleProxy)((Connection)GetService(typeof(Connection))).CreateProxy(this, typeof(HttpRedirectModuleProxy));
         protected override void Initialize(IServiceProvider serviceProvider, ModuleInfo moduleInfo)
         {
             base.Initialize(serviceProvider, moduleInfo);

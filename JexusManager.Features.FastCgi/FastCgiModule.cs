@@ -12,6 +12,8 @@ namespace JexusManager.Features.FastCgi
 
     internal class FastCgiModule : Module
     {
+        private FastCgiModuleProxy _proxy;
+        internal FastCgiModuleProxy Proxy => _proxy ??= (FastCgiModuleProxy)((Connection)GetService(typeof(Connection))).CreateProxy(this, typeof(FastCgiModuleProxy));
         protected override void Initialize(IServiceProvider serviceProvider, ModuleInfo moduleInfo)
         {
             base.Initialize(serviceProvider, moduleInfo);

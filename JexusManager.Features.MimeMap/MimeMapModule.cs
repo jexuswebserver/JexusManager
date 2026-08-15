@@ -13,6 +13,8 @@ namespace JexusManager.Features.MimeMap
 
     internal class MimeMapModule : Module
     {
+        private MimeMapModuleProxy _proxy;
+        internal MimeMapModuleProxy Proxy => _proxy ??= (MimeMapModuleProxy)((Connection)GetService(typeof(Connection))).CreateProxy(this, typeof(MimeMapModuleProxy));
         protected override void Initialize(IServiceProvider serviceProvider, ModuleInfo moduleInfo)
         {
             base.Initialize(serviceProvider, moduleInfo);
