@@ -4,39 +4,15 @@
 
 namespace JexusManager.Features.RequestFiltering
 {
-    using Microsoft.Web.Administration;
+    using System;
 
+    [Serializable]
     internal class DenyStringsItem
     {
-        public ConfigurationElement Child { get; set; }
-
-        public DenyStringsItem(ConfigurationElement child)
+        public DenyStringsItem()
         {
-            this.Child = child;
-            if (child == null)
-            {
-                return;
-            }
-
-            this.DenyString = (string)child["string"];
         }
 
         public string DenyString { get; set; }
-
-        public void Apply()
-        {
-            Child["string"] = DenyString;
-        }
-
-        public void AppendTo(ConfigurationElementCollection denyStringsCollection)
-        {
-            if (Child == null)
-            {
-                Child = denyStringsCollection.CreateElement();
-                denyStringsCollection.Add(Child);
-            }
-
-            Apply();
-        }
     }
 }

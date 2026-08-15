@@ -72,15 +72,30 @@ namespace Microsoft.Web.Management.Client
                 throw new ArgumentNullException(nameof(proxyType));
             }
 
-            if (!typeof(ModuleServiceProxy).IsAssignableFrom(proxyType) || proxyType.IsAbstract)
-            {
-                throw new ArgumentException("The proxy type must be a concrete ModuleServiceProxy.", nameof(proxyType));
-            }
-
             var serviceName = module.ModuleInfo?.Name;
             if (string.IsNullOrWhiteSpace(serviceName))
             {
                 throw new InvalidOperationException("The module has not been initialized with module information.");
+            }
+
+            return CreateProxy(serviceName, proxyType);
+        }
+
+        public ModuleServiceProxy CreateProxy(string serviceName, Type proxyType)
+        {
+            if (string.IsNullOrWhiteSpace(serviceName))
+            {
+                throw new ArgumentException("A module service name is required.", nameof(serviceName));
+            }
+
+            if (proxyType == null)
+            {
+                throw new ArgumentNullException(nameof(proxyType));
+            }
+
+            if (!typeof(ModuleServiceProxy).IsAssignableFrom(proxyType) || proxyType.IsAbstract)
+            {
+                throw new ArgumentException("The proxy type must be a concrete ModuleServiceProxy.", nameof(proxyType));
             }
 
             var proxy = (ModuleServiceProxy)Activator.CreateInstance(proxyType, nonPublic: true);

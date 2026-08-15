@@ -4,28 +4,23 @@
 
 namespace JexusManager.Features.RequestFiltering
 {
+    using System;
+
     using Microsoft.Web.Administration;
 
+    [Serializable]
     internal class FileExtensionsItem : IItem<FileExtensionsItem>
     {
+        public FileExtensionsItem()
+        {
+            Flag = "Local";
+        }
+
         public ConfigurationElement Element { get; set; }
 
         public bool Match(FileExtensionsItem other)
         {
             return other != null && other.Extension == Extension;
-        }
-
-        public FileExtensionsItem(ConfigurationElement element)
-        {
-            this.Element = element;
-            Flag = element == null || element.IsLocallyStored ? "Local" : "Inherited";
-            if (element == null)
-            {
-                return;
-            }
-
-            Extension = (string)element["fileExtension"];
-            Allowed = (bool)element["allowed"];
         }
 
         public string Flag { get; set; }
@@ -36,8 +31,6 @@ namespace JexusManager.Features.RequestFiltering
 
         public void Apply()
         {
-            Element["fileExtension"] = Extension;
-            Element["allowed"] = Allowed;
         }
 
         public bool Equals(FileExtensionsItem other)

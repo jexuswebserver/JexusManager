@@ -21,6 +21,7 @@ namespace JexusManager.Features.Rewrite.Inbound
         }
 
         private readonly MapsFeature _feature;
+        private readonly string _originalName;
 
         public string Name { get; internal set; }
 
@@ -30,31 +31,25 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         public MapSettingsUpdatedEventHandler MapSettingsUpdated { get; set; }
 
-        public MapItem(ConfigurationElement element, MapsFeature feature)
-            : base(feature.Module)
+        public MapItem()
+            : this(null)
         {
-            this.Element = element;
+        }
+
+        public MapItem(MapsFeature feature, string originalName = null)
+            : base(feature?.Module)
+        {
             _feature = feature;
-            this.Flag = element == null || element.IsLocallyStored ? "Local" : "Inherited";
-            this.Name = element == null ? string.Empty : (string)element["name"];
-            IgnoreCase = element == null ? true : (bool)element["ignoreCase"];
-            DefaultValue = element == null ? string.Empty : (string)element["defaultValue"];
+            _originalName = originalName ?? string.Empty;
+            this.Flag = "Local";
+            this.Name = string.Empty;
+            IgnoreCase = true;
+            DefaultValue = string.Empty;
             this.Items = new List<MapRule>();
-            if (element != null)
-            {
-                var collection = element.GetCollection();
-                foreach (ConfigurationElement rule in collection)
-                {
-                    this.Items.Add(new MapRule(rule, _feature));
-                }
-            }
         }
 
         public void Apply()
         {
-            Element["name"] = Name;
-            Element["defaultValue"] = DefaultValue;
-            Element["ignoreCase"] = IgnoreCase;
         }
 
         internal protected void OnRewriteSettingsSaved()
@@ -72,7 +67,7 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
         {
-            return Element.GetCollection();
+            throw new NotSupportedException("Rewrite map entries are accessed through the module service.");
         }
 
         protected override void OnSettingsSaved()
@@ -90,22 +85,9 @@ namespace JexusManager.Features.Rewrite.Inbound
                 }
 
                 var newItem = dialog.Item;
-                var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-                ConfigurationElementCollection rulesCollection = SelectedItem.Element.GetCollection();
-
-                if (SelectedItem != newItem)
-                {
-                    Items.Add(newItem);
-                    SelectedItem = newItem;
-                }
-                else if (newItem.Flag != "Local")
-                {
-                    rulesCollection.Remove(newItem.Element);
-                    newItem.Flag = "Local";
-                }
-
-                newItem.AppendTo(rulesCollection);
-                service.ServerManager.CommitChanges();
+                _feature.Proxy.AddMapRule(Name, newItem);
+                Items.Add(newItem);
+                SelectedItem = newItem;
             }
 
             OnRewriteSettingsSaved();
@@ -121,22 +103,14 @@ namespace JexusManager.Features.Rewrite.Inbound
                 }
 
                 var newItem = dialog.Item;
-                var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-                ConfigurationElementCollection rulesCollection = SelectedItem.Element.GetCollection();
-
-                if (SelectedItem != newItem)
+                var original = SelectedItem;
+                _feature.Proxy.UpdateMapRule(Name, original, newItem);
+                var index = Items.IndexOf(original);
+                if (index >= 0)
                 {
-                    Items.Add(newItem);
+                    Items[index] = newItem;
                     SelectedItem = newItem;
                 }
-                else if (newItem.Flag != "Local")
-                {
-                    rulesCollection.Remove(newItem.Element);
-                    newItem.Flag = "Local";
-                }
-
-                newItem.AppendTo(rulesCollection);
-                service.ServerManager.CommitChanges();
             }
 
             OnRewriteSettingsSaved();
@@ -152,6 +126,8 @@ namespace JexusManager.Features.Rewrite.Inbound
                 }
             }
 
+            var original = new MapItem(_feature, _originalName) { Name = _originalName };
+            _feature.Proxy.UpdateMap(original, this);
             OnRewriteSettingsSaved();
         }
 
@@ -171,13 +147,45 @@ namespace JexusManager.Features.Rewrite.Inbound
                 return;
             }
 
-            Items.Remove(SelectedItem);
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            ConfigurationElementCollection collection = Element.GetCollection();
-            collection.Remove(SelectedItem.Element);
-            service.ServerManager.CommitChanges();
-
+            var item = SelectedItem;
+            _feature.Proxy.RemoveMapRule(Name, item);
+            Items.Remove(item);
             SelectedItem = null;
+            OnRewriteSettingsSaved();
+        }
+
+        internal void MoveUp()
+        {
+            var item = SelectedItem;
+            _feature.Proxy.MoveMapRuleUp(Name, item);
+            var index = Items.IndexOf(item);
+            Items.Remove(item);
+            Items.Insert(index - 1, item);
+            OnRewriteSettingsSaved();
+        }
+
+        internal void MoveDown()
+        {
+            var item = SelectedItem;
+            _feature.Proxy.MoveMapRuleDown(Name, item);
+            var index = Items.IndexOf(item);
+            Items.Remove(item);
+            Items.Insert(index + 1, item);
+            OnRewriteSettingsSaved();
+        }
+
+        internal void Revert()
+        {
+            Items.Clear();
+            Items.AddRange(_feature.Proxy.GetMapRules(Name));
+            SelectedItem = null;
+            OnRewriteSettingsSaved();
+        }
+
+        internal void LoadRules()
+        {
+            Items.Clear();
+            Items.AddRange(_feature.Proxy.GetMapRules(Name));
             OnRewriteSettingsSaved();
         }
     }

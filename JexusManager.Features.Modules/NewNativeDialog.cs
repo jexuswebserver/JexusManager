@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 // Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
@@ -56,7 +56,7 @@ namespace JexusManager.Features.Modules
                 {
                     if (Item == null)
                     {
-                        Item = new GlobalModule(null);
+                        Item = new GlobalModule();
                     }
 
                     Item.Name = txtName.Text;

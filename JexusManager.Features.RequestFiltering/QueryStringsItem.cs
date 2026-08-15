@@ -4,10 +4,18 @@
 
 namespace JexusManager.Features.RequestFiltering
 {
+    using System;
+
     using Microsoft.Web.Administration;
 
+    [Serializable]
     internal class QueryStringsItem : IDuoItem<QueryStringsItem>
     {
+        public QueryStringsItem(bool allowed)
+        {
+            Allowed = allowed;
+        }
+
         public bool Allowed { get; }
 
         public ConfigurationElement Element { get; set; }
@@ -17,37 +25,10 @@ namespace JexusManager.Features.RequestFiltering
             return other != null && other.QueryString == QueryString;
         }
 
-        public QueryStringsItem(ConfigurationElement element, bool allowed)
-        {
-            this.Allowed = allowed;
-            this.Element = element;
-            if (element == null)
-            {
-                return;
-            }
-
-            if (allowed)
-            {
-                QueryString = (string)element["queryString"];
-            }
-            else
-            {
-                QueryString = (string)element["sequence"];
-            }
-        }
-
         public string QueryString { get; set; }
 
         public void Apply()
         {
-            if (Allowed)
-            {
-                Element["queryString"] = QueryString;
-            }
-            else
-            {
-                Element["sequence"] = QueryString;
-            }
         }
 
         public string Flag { get; set; }

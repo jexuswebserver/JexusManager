@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -29,11 +29,11 @@ namespace JexusManager.Features.Handlers
             Text = existing == null ? "Add Module Mapping" : "Edit Module Mapping";
             txtName.ReadOnly = existing != null;
             _feature = feature;
-            Item = existing ?? new HandlersItem(null);
+            Item = existing ?? new HandlersItem();
 
-            var modules = new ModulesFeature((Module)serviceProvider);
-            modules.Load();
-            foreach (var module in modules.Items.Where(module => !module.IsManaged).OrderBy(module => module.Name))
+            var connection = (Connection)serviceProvider.GetService(typeof(Connection));
+            var modulesProxy = (ModulesModuleProxy)connection.CreateProxy("Modules", typeof(ModulesModuleProxy));
+            foreach (var module in modulesProxy.GetItems().Where(module => !module.IsManaged).OrderBy(module => module.Name))
             {
                 txtModule.Items.Add(module.Name);
             }
@@ -121,11 +121,12 @@ namespace JexusManager.Features.Handlers
                                 MessageBoxDefaultButton.Button1);
                             if (result == DialogResult.Yes)
                             {
-                                var fastCgi = new FastCgiFeature((Module)ServiceProvider);
-                                fastCgi.Load();
-                                if (fastCgi.Items.All(item => item.Path != path && item.Arguments != arguments))
+                                var fastCgiConnection = (Connection)ServiceProvider.GetService(typeof(Connection));
+                                var fastCgiProxy = (FastCgiModuleProxy)fastCgiConnection.CreateProxy("FastCgi", typeof(FastCgiModuleProxy));
+                                var applications = fastCgiProxy.GetApplications();
+                                if (applications.All(item => item.Path != path && item.Arguments != arguments))
                                 {
-                                    fastCgi.AddItem(new FastCgiItem(null) { Path = path, Arguments = arguments });
+                                    fastCgiProxy.Add(new FastCgiItem { Path = path, Arguments = arguments });
                                 }
                             }
                         }

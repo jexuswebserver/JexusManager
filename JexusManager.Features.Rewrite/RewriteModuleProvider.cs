@@ -12,7 +12,7 @@ namespace JexusManager.Features.Rewrite
     {
         public override Type ServiceType
         {
-            get { return null; }
+            get { return typeof(RewriteService); }
         }
 
         public override ModuleDefinition GetModuleDefinition(IManagementContext context)

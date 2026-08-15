@@ -4,25 +4,19 @@
 
 namespace JexusManager.Features.Rewrite.Inbound
 {
+    using System;
+
     using Microsoft.Web.Administration;
 
+    [Serializable]
     public class ServerVariableItem : IItem<ServerVariableItem>
     {
-        public ConfigurationElement Element { get; set; }
-
-        public ServerVariableItem(ConfigurationElement element)
+        public ServerVariableItem()
         {
-            Element = element;
-            if (element == null)
-            {
-                Replace = true;
-                return;
-            }
-
-            Name = (string)element["name"];
-            Value = (string)element["value"];
-            Replace = (bool)element["replace"];
+            Replace = true;
         }
+
+        public ConfigurationElement Element { get; set; }
 
         public bool Replace { get; set; }
 
@@ -34,9 +28,6 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         public void Apply()
         {
-            Element["name"] = Name;
-            Element["value"] = Value;
-            Element["replace"] = Replace;
         }
 
         public bool Match(ServerVariableItem other)

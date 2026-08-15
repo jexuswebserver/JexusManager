@@ -1,0 +1,2 @@
+using Microsoft.Web.Management.Client;
+namespace JexusManager.Features.IsapiFilters { internal sealed class IsapiFiltersModuleProxy : ModuleServiceProxy { internal IsapiFiltersItem[] GetItems() => (IsapiFiltersItem[])Invoke(nameof(GetItems)); internal void Add(IsapiFiltersItem item) => Invoke(nameof(Add), item); internal void Update(IsapiFiltersItem oldItem, IsapiFiltersItem item) => Invoke(nameof(Update), oldItem, item); internal void Remove(IsapiFiltersItem item) => Invoke(nameof(Remove), item); } }

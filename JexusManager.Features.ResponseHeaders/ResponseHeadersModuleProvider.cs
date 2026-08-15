@@ -12,7 +12,7 @@ namespace JexusManager.Features.ResponseHeaders
     {
         public override Type ServiceType
         {
-            get { return null; }
+            get { return typeof(ResponseHeadersService); }
         }
 
         public override ModuleDefinition GetModuleDefinition(IManagementContext context)

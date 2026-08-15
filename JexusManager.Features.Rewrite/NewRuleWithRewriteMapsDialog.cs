@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -66,7 +66,7 @@ namespace JexusManager.Features.Rewrite
                         name = string.Format("{0} rule{1} for {2}", action, index, map);
                     }
                     while (feature.Items.All(item => item.Name != name));
-                    var rule = new InboundRule(null);
+                    var rule = new InboundRule();
                     rule.Name = name;
                     rule.Input = "URL Path";
                     rule.PatternSyntax = 0L;
@@ -75,7 +75,7 @@ namespace JexusManager.Features.Rewrite
                     rule.ActionUrl = "{C:1}";
                     rule.RedirectType = 301;
                     rule.Conditions.Add(
-                        new ConditionItem(null)
+                        new ConditionItem()
                         {
                             Input = string.Format("{{{0}:{{REQUEST_URI}}}}", map),
                             MatchType = 4,

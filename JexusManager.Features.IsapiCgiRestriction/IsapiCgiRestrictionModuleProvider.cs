@@ -12,7 +12,7 @@ namespace JexusManager.Features.IsapiCgiRestriction
     {
         public override Type ServiceType
         {
-            get { return null; }
+            get { return typeof(IsapiCgiRestrictionService); }
         }
 
         public override ModuleDefinition GetModuleDefinition(IManagementContext context)

@@ -9,25 +9,14 @@ namespace JexusManager.Features.TraceFailedRequests
     using System;
     using System.Collections.Generic;
 
+    [Serializable]
     internal class TraceFailedRequestsItem : IItem<TraceFailedRequestsItem>
     {
-        private IList<Provider> _providers;
-
-        public TraceFailedRequestsItem(ConfigurationElement element)
+        public TraceFailedRequestsItem()
         {
-            Element = element;
-            Flag = element == null || element.IsLocallyStored ? "Local" : "Inherited";
-            if (element == null)
-            {
-                Path = string.Empty;
-                return;
-            }
-
-            Path = (string)element["path"];
-            var failureDefinitions = element.GetChildElement("failureDefinitions");
-            Verbosity = (long)failureDefinitions["verbosity"];
-            Codes = failureDefinitions["statusCodes"].ToString();
-            TimeTaken = (TimeSpan)failureDefinitions["timeTaken"];
+            Path = string.Empty;
+            Flag = "Local";
+            Providers = new List<Provider>();
         }
 
         public string Path { get; set; }
@@ -46,61 +35,6 @@ namespace JexusManager.Features.TraceFailedRequests
 
         public void Apply()
         {
-            Element["path"] = Path;
-            var collection = Element.GetCollection("traceAreas");
-            collection.Clear();
-            if (_providers == null)
-            {
-                _providers = new List<Provider>();
-                _providers.Add(new Provider
-                {
-                    Name = "ASP"
-                });
-                _providers.Add(new Provider
-                {
-                    Name = "ASPNET",
-                    SelectedAreas = new List<string>
-                    {
-                        "Infrastructure",
-                        "Module",
-                        "Page",
-                        "AppServices"
-                    }
-                });
-                _providers.Add(new Provider
-                {
-                    Name = "ISAPI Extension"
-                });
-                _providers.Add(new Provider
-                {
-                    Name = "WWW Server",
-                    SelectedAreas = new List<string>
-                    {
-                        "Authentication",
-                        "Security",
-                        "Filter",
-                        "StaticFile",
-                        "CGI",
-                        "Compression",
-                        "Cache",
-                        "RequestNotifications",
-                        "Module",
-                        "Rewrite",
-                        "WebSocket"
-                    }
-                });
-            }
-
-            foreach (Provider provider in _providers)
-            {
-                var add = collection.CreateElement("add");
-                add["provider"] = provider.Name;
-                add["verbosity"] = provider.Verbosity;
-                add["areas"] = provider.SelectedAreas.Combine(",");
-                collection.Add(add);
-            }
-
-            Element.ChildElements["failureDefinitions"]["statusCodes"] = Codes;
         }
 
         public bool Match(TraceFailedRequestsItem other)
@@ -109,22 +43,7 @@ namespace JexusManager.Features.TraceFailedRequests
             return other != null && other.Path == Path;
         }
 
-        internal string GetProviders()
-        {
-            var collection = Element.ChildElements["traceAreas"].GetCollection();
-            var providers = new List<string>(collection.Count);
-            foreach (ConfigurationElement item in collection)
-            {
-                providers.Add(item.GetAttribute("provider").Value.ToString());
-            }
-
-            return providers.Combine(",");
-        }
-
-        internal void SetProviders(IList<Provider> providers)
-        {
-            _providers = providers;
-        }
+        public List<Provider> Providers { get; set; }
 
         public string Codes { get; set; }
 

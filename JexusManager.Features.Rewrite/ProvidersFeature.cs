@@ -112,7 +112,10 @@ namespace JexusManager.Features.Rewrite
 
         public void Load()
         {
-            LoadItems();
+            Items.Clear();
+            Items.AddRange(((RewriteModule)Module).Proxy.GetProviders());
+            CanRevert = GetService(typeof(IConfigurationService)) is IConfigurationService service && service.GetSection("system.webServer/rewrite/providers").CanRevert();
+            OnSettingsSaved();
         }
 
         internal protected void OnRewriteSettingsSaved()
@@ -196,15 +199,63 @@ namespace JexusManager.Features.Rewrite
             this.RevertItems();
         }
 
+        public void Rename(ProviderItem item, string name)
+        {
+            if (item == null)
+            {
+                return;
+            }
+
+            var updated = new ProviderItem { Name = name, Type = item.Type };
+            foreach (var setting in item.Settings)
+            {
+                updated.Settings.Add(setting);
+            }
+
+            ((RewriteModule)Module).Proxy.UpdateProvider(item, updated);
+            Load();
+        }
+
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
         {
-            var section = service.GetSection("system.webServer/rewrite/providers");
-            return section.GetCollection();
+            throw new NotSupportedException("Rewrite providers are accessed through the module service.");
         }
 
         protected override void OnSettingsSaved()
         {
             OnRewriteSettingsSaved();
+        }
+
+        public override void AddItem(ProviderItem item)
+        {
+            ((RewriteModule)Module).Proxy.AddProvider(item);
+            Load();
+            SelectedItem = Items.Find(candidate => candidate.Equals(item));
+            OnSettingsSaved();
+        }
+
+        public override void EditItem(ProviderItem item)
+        {
+            var original = SelectedItem ?? throw new InvalidOperationException("No provider is selected.");
+            ((RewriteModule)Module).Proxy.UpdateProvider(original, item);
+            Load();
+            SelectedItem = Items.Find(candidate => candidate.Equals(item));
+            OnSettingsSaved();
+        }
+
+        public override void RemoveItem()
+        {
+            var item = SelectedItem ?? throw new InvalidOperationException("No provider is selected.");
+            ((RewriteModule)Module).Proxy.RemoveProvider(item);
+            SelectedItem = null;
+            Load();
+        }
+
+        public override void RevertItems()
+        {
+            ((RewriteModule)Module).Proxy.RevertProviders();
+            SelectedItem = null;
+            Load();
         }
 
         public RewriteSettingsSavedEventHandler RewriteSettingsUpdated { get; set; }

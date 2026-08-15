@@ -42,7 +42,7 @@ namespace JexusManager.Features.TraceFailedRequests
             {
                 Item = item;
                 _page = page;
-                SubItems.Add(new ListViewSubItem(this, item.GetProviders()));
+                SubItems.Add(new ListViewSubItem(this, item.Providers.Combine(",")));
                 SubItems.Add(new ListViewSubItem(this, item.Codes));
                 SubItems.Add(new ListViewSubItem(this, item.TimeTaken.ToString()));
                 SubItems.Add(new ListViewSubItem(this, item.Flag));

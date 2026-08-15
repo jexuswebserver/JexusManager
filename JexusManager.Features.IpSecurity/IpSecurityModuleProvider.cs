@@ -12,7 +12,7 @@ namespace JexusManager.Features.IpSecurity
     {
         public override Type ServiceType
         {
-            get { return null; }
+            get { return typeof(IpSecurityService); }
         }
 
         public override ModuleDefinition GetModuleDefinition(IManagementContext context)

@@ -2,6 +2,8 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+    using System;
+    using System;
 namespace JexusManager.Features.RequestFiltering
 {
     using System.Collections;
@@ -118,14 +120,42 @@ namespace JexusManager.Features.RequestFiltering
 
         public override void Load()
         {
-            LoadItems();
+            Items.Clear();
+            Items.AddRange(((RequestFilteringModule)Module).Proxy.GetFilteringRules());
+            OnSettingsSaved();
         }
 
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
         {
-            ConfigurationSection requestFilteringSection =
-                service.GetSection("system.webServer/security/requestFiltering");
-            return requestFilteringSection.GetCollection("filteringRules");
+            throw new NotSupportedException("Filtering rules are accessed through the module service.");
+        }
+
+        public override void AddItem(FilteringRulesItem item)
+        {
+            ((RequestFilteringModule)Module).Proxy.AddFilteringRule(item);
+            LoadAndSelect(item);
+        }
+
+        public override void EditItem(FilteringRulesItem item)
+        {
+            var original = SelectedItem ?? throw new InvalidOperationException("No filtering rule is selected.");
+            ((RequestFilteringModule)Module).Proxy.UpdateFilteringRule(original, item);
+            LoadAndSelect(item);
+        }
+
+        public override void RemoveItem()
+        {
+            var item = SelectedItem ?? throw new InvalidOperationException("No filtering rule is selected.");
+            ((RequestFilteringModule)Module).Proxy.RemoveFilteringRule(item);
+            SelectedItem = null;
+            Load();
+        }
+
+        private void LoadAndSelect(FilteringRulesItem item)
+        {
+            Load();
+            SelectedItem = Items.Find(candidate => candidate.Equals(item));
+            OnSettingsSaved();
         }
 
         public override bool ShowHelp()

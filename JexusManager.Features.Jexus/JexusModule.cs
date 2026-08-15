@@ -13,6 +13,15 @@ namespace JexusManager.Features.Jexus
 
     internal class JexusModule : Module
     {
+        private JexusModuleProxy _proxy;
+
+        internal JexusModuleProxy Proxy
+        {
+            get
+            {
+                return _proxy ??= (JexusModuleProxy)((Connection)GetService(typeof(Connection))).CreateProxy(this, typeof(JexusModuleProxy));
+            }
+        }
         protected override void Initialize(IServiceProvider serviceProvider, ModuleInfo moduleInfo)
         {
             base.Initialize(serviceProvider, moduleInfo);

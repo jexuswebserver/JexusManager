@@ -147,10 +147,11 @@ namespace JexusManager.Features.IsapiFilters
 
         public void Load()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            CanRevert = service.Scope != ManagementScope.Server;
+            CanRevert = false;
             IsInOrder = false;
-            LoadItems();
+            Items.Clear();
+            Items.AddRange(((IsapiFiltersModule)Module).Proxy.GetItems());
+            OnSettingsSaved();
         }
 
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
@@ -295,6 +296,29 @@ namespace JexusManager.Features.IsapiFilters
         protected override void OnSettingsSaved()
         {
             IsapiFiltersSettingsUpdated?.Invoke();
+        }
+
+        public override void AddItem(IsapiFiltersItem item)
+        {
+            ((IsapiFiltersModule)Module).Proxy.Add(item);
+            Load();
+            SelectedItem = Items.Find(filter => filter.Equals(item));
+        }
+
+        public override void EditItem(IsapiFiltersItem item)
+        {
+            var original = SelectedItem ?? throw new InvalidOperationException("No ISAPI filter is selected.");
+            ((IsapiFiltersModule)Module).Proxy.Update(original, item);
+            Load();
+            SelectedItem = Items.Find(filter => filter.Equals(item));
+        }
+
+        public override void RemoveItem()
+        {
+            var item = SelectedItem ?? throw new InvalidOperationException("No ISAPI filter is selected.");
+            ((IsapiFiltersModule)Module).Proxy.Remove(item);
+            SelectedItem = null;
+            Load();
         }
 
         public virtual bool ShowHelp()

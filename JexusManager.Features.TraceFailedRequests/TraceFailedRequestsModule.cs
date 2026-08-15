@@ -13,6 +13,16 @@ namespace JexusManager.Features.TraceFailedRequests
 
     internal class TraceFailedRequestsModule : Module
     {
+        private TraceFailedRequestsModuleProxy _proxy;
+
+        internal TraceFailedRequestsModuleProxy Proxy
+        {
+            get
+            {
+                return _proxy ??= (TraceFailedRequestsModuleProxy)((Connection)GetService(typeof(Connection))).CreateProxy(this, typeof(TraceFailedRequestsModuleProxy));
+            }
+        }
+
         protected override void Initialize(IServiceProvider serviceProvider, ModuleInfo moduleInfo)
         {
             base.Initialize(serviceProvider, moduleInfo);

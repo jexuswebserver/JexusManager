@@ -13,6 +13,8 @@ namespace JexusManager.Features.IsapiCgiRestriction
 
     internal class IsapiCgiRestrictionModule : Module
     {
+        private IsapiCgiRestrictionModuleProxy _proxy;
+        internal IsapiCgiRestrictionModuleProxy Proxy => _proxy ??= (IsapiCgiRestrictionModuleProxy)((Connection)GetService(typeof(Connection))).CreateProxy(this, typeof(IsapiCgiRestrictionModuleProxy));
         protected override void Initialize(IServiceProvider serviceProvider, ModuleInfo moduleInfo)
         {
             base.Initialize(serviceProvider, moduleInfo);

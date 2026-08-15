@@ -132,7 +132,9 @@ namespace JexusManager.Features.IpSecurity
         {
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
             CanRevert = service.Scope != ManagementScope.Server;
-            LoadItems();
+            Items.Clear();
+            Items.AddRange(Proxy.GetItems());
+            OnSettingsSaved();
         }
 
         public void AddAllow()
@@ -194,9 +196,8 @@ namespace JexusManager.Features.IpSecurity
 
         public void Set()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.webServer/security/ipSecurity", null, false);
-            using (var dialog = new SetRestrictionsDialog(Module, section, this))
+            var settings = Proxy.GetSettings();
+            using (var dialog = new SetRestrictionsDialog(Module, settings, this))
             {
                 if (dialog.ShowDialog() != DialogResult.OK)
                 {
@@ -204,7 +205,7 @@ namespace JexusManager.Features.IpSecurity
                 }
             }
 
-            service.ServerManager.CommitChanges();
+            Proxy.ApplySettings(settings);
         }
 
         public void View()
@@ -213,9 +214,8 @@ namespace JexusManager.Features.IpSecurity
 
         public void Dynamic()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.webServer/security/dynamicIpSecurity", null, false);
-            using (var dialog = new DynamicDialog(Module, section, this))
+            var settings = Proxy.GetDynamicSettings();
+            using (var dialog = new DynamicDialog(Module, settings, this))
             {
                 if (dialog.ShowDialog() != DialogResult.OK)
                 {
@@ -223,7 +223,7 @@ namespace JexusManager.Features.IpSecurity
                 }
             }
 
-            service.ServerManager.CommitChanges();
+            Proxy.ApplyDynamicSettings(settings);
         }
 
         public override void InitializeGrouping(ToolStripComboBox cbGroup)
@@ -246,14 +246,43 @@ namespace JexusManager.Features.IpSecurity
 
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
         {
-            ConfigurationSection section = service.GetSection("system.webServer/security/ipSecurity", null, false);
-            return section.GetCollection();
+            throw new NotSupportedException("IP restrictions are accessed through the module service.");
         }
 
         protected override void OnSettingsSaved()
         {
             IpSecuritySettingsUpdated?.Invoke();
         }
+
+        public override void AddItem(IpSecurityItem item)
+        {
+            Proxy.Add(item);
+            LoadAndSelect(item);
+        }
+
+        public override void RemoveItem()
+        {
+            var item = SelectedItem ?? throw new InvalidOperationException("No IP restriction is selected.");
+            Proxy.Remove(item);
+            SelectedItem = null;
+            Load();
+        }
+
+        public override void RevertItems()
+        {
+            Proxy.Revert();
+            SelectedItem = null;
+            Load();
+        }
+
+        private void LoadAndSelect(IpSecurityItem item)
+        {
+            Load();
+            SelectedItem = Items.Find(candidate => candidate.Equals(item));
+            OnSettingsSaved();
+        }
+
+        private IpSecurityModuleProxy Proxy => ((IpSecurityModule)Module).Proxy;
 
         public virtual bool ShowHelp()
         {
@@ -274,9 +303,7 @@ namespace JexusManager.Features.IpSecurity
         {
             get
             {
-                var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-                var section = service.GetSection("system.webServer/security/dynamicIpSecurity", null, false);
-                return section != null;
+                return Proxy.IsDynamicIpSecurityAvailable();
             }
         }
     }

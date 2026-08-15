@@ -15,18 +15,16 @@ namespace JexusManager.Features.IpSecurity
 
     internal partial class DynamicDialog : DialogForm
     {
-        public DynamicDialog(IServiceProvider serviceProvider, ConfigurationSection section, IpSecurityFeature feature)
+        public DynamicDialog(IServiceProvider serviceProvider, DynamicIpSecuritySettings settings, IpSecurityFeature feature)
             : base(serviceProvider)
         {
             InitializeComponent();
-            var concurrent = section.ChildElements["denyByConcurrentRequests"];
-            cbConcurrent.Checked = (bool)concurrent["enabled"];
-            txtConcurrent.Text = concurrent["maxConcurrentRequests"].ToString();
-            var rate = section.ChildElements["denyByRequestRate"];
-            cbInterval.Checked = (bool)rate["enabled"];
-            txtNumer.Text = rate["maxRequests"].ToString();
-            txtPeriod.Text = rate["requestIntervalInMilliseconds"].ToString();
-            cbLogging.Checked = (bool)section["enableLoggingOnlyMode"];
+            cbConcurrent.Checked = settings.EnableConcurrentDenial;
+            txtConcurrent.Text = settings.MaxConcurrentRequests.ToString();
+            cbInterval.Checked = settings.EnableRateDenial;
+            txtNumer.Text = settings.MaxRequests.ToString();
+            txtPeriod.Text = settings.RequestIntervalInMilliseconds.ToString();
+            cbLogging.Checked = settings.EnableLoggingOnlyMode;
 
             var container = new CompositeDisposable();
             FormClosed += (sender, args) => container.Dispose();
@@ -69,9 +67,9 @@ namespace JexusManager.Features.IpSecurity
                         return;
                     }
 
-                    concurrent["enabled"] = cbConcurrent.Checked;
-                    concurrent["maxConcurrentRequests"] = result;
-                    rate["enabled"] = cbInterval.Checked;
+                    settings.EnableConcurrentDenial = cbConcurrent.Checked;
+                    settings.MaxConcurrentRequests = result;
+                    settings.EnableRateDenial = cbInterval.Checked;
                     if (!uint.TryParse(txtNumer.Text, out result))
                     {
                         // TODO: show validator error.
@@ -83,7 +81,7 @@ namespace JexusManager.Features.IpSecurity
                         return;
                     }
 
-                    rate["maxRequests"] = result;
+                    settings.MaxRequests = result;
                     if (!uint.TryParse(txtNumer.Text, out result))
                     {
                         // TODO: show validator error.
@@ -95,8 +93,8 @@ namespace JexusManager.Features.IpSecurity
                         return;
                     }
 
-                    rate["requestIntervalInMilliseconds"] = result;
-                    section["enableLoggingOnlyMode"] = cbLogging.Checked;
+                    settings.RequestIntervalInMilliseconds = result;
+                    settings.EnableLoggingOnlyMode = cbLogging.Checked;
                     DialogResult = DialogResult.OK;
                 }));
 

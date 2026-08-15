@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -22,7 +22,7 @@ namespace JexusManager.Features.Modules
             InitializeComponent();
             Text = existing == null ? "Add Managed Module" : "Edit Managed Module";
             txtName.ReadOnly = existing != null;
-            Item = existing ?? new ModulesItem(null);
+            Item = existing ?? new ModulesItem();
             if (existing != null)
             {
                 txtPath.Text = Item.Type;

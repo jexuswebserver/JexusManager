@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -39,7 +39,7 @@ namespace JexusManager.Features.RequestFiltering
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    Item = new HeadersItem(null) { Header = txtName.Text, SizeLimit = uint.Parse(txtLimit.Text) };
+                    Item = new HeadersItem() { Header = txtName.Text, SizeLimit = uint.Parse(txtLimit.Text) };
                     DialogResult = DialogResult.OK;
                 }));
         }

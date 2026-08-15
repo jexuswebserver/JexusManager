@@ -91,12 +91,18 @@ namespace JexusManager.Features.Rewrite.Inbound
             return _taskList ??= new FeatureTaskList(this);
         }
 
+        internal RewriteModuleProxy Proxy => ((RewriteModule)Module).Proxy;
+
         public void Load()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var rulesSection = service.GetSection("system.webServer/rewrite/rewriteMaps");
-            CanRevert = rulesSection.CanRevert();
-            LoadItems();
+            Items.Clear();
+            foreach (var map in ((RewriteModule)Module).Proxy.GetMaps())
+            {
+                Items.Add(map);
+            }
+
+            CanRevert = GetService(typeof(IConfigurationService)) is IConfigurationService service && service.GetSection("system.webServer/rewrite/rewriteMaps").CanRevert();
+            OnSettingsSaved();
         }
 
         public void Add()
@@ -163,6 +169,29 @@ namespace JexusManager.Features.Rewrite.Inbound
             RevertItems();
         }
 
+        public override void AddItem(MapItem item)
+        {
+            ((RewriteModule)Module).Proxy.AddMap(item);
+            Load();
+            SelectedItem = Items.Find(candidate => candidate.Equals(item));
+            OnSettingsSaved();
+        }
+
+        public override void RemoveItem()
+        {
+            var item = SelectedItem ?? throw new InvalidOperationException("No rewrite map is selected.");
+            ((RewriteModule)Module).Proxy.RemoveMap(item);
+            SelectedItem = null;
+            Load();
+        }
+
+        public override void RevertItems()
+        {
+            ((RewriteModule)Module).Proxy.RevertMaps();
+            SelectedItem = null;
+            Load();
+        }
+
         public bool CanRevert { get; private set; } = true;
 
         public RewriteSettingsSavedEventHandler RewriteSettingsUpdated { get; set; }
@@ -178,8 +207,7 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
         {
-            var section = service.GetSection("system.webServer/rewrite/rewriteMaps");
-            return section.GetCollection();
+            throw new NotSupportedException("Rewrite maps are accessed through the module service.");
         }
 
         protected override void OnSettingsSaved()

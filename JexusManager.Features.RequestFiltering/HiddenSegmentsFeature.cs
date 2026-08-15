@@ -2,6 +2,8 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+    using System;
+    using System;
 namespace JexusManager.Features.RequestFiltering
 {
     using System.Collections;
@@ -95,14 +97,35 @@ namespace JexusManager.Features.RequestFiltering
 
         public override void Load()
         {
-            LoadItems();
+            Items.Clear();
+            Items.AddRange(((RequestFilteringModule)Module).Proxy.GetHiddenSegments());
+            OnSettingsSaved();
         }
 
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
         {
-            ConfigurationSection requestFilteringSection =
-                service.GetSection("system.webServer/security/requestFiltering");
-            return requestFilteringSection.GetCollection("hiddenSegments");
+            throw new NotSupportedException("Hidden segments are accessed through the module service.");
+        }
+
+        public override void AddItem(HiddenSegmentsItem item)
+        {
+            ((RequestFilteringModule)Module).Proxy.AddHiddenSegment(item);
+            LoadAndSelect(item);
+        }
+
+        public override void RemoveItem()
+        {
+            var item = SelectedItem ?? throw new InvalidOperationException("No hidden segment is selected.");
+            ((RequestFilteringModule)Module).Proxy.RemoveHiddenSegment(item);
+            SelectedItem = null;
+            Load();
+        }
+
+        private void LoadAndSelect(HiddenSegmentsItem item)
+        {
+            Load();
+            SelectedItem = Items.Find(candidate => candidate.Equals(item));
+            OnSettingsSaved();
         }
 
         public override bool ShowHelp()

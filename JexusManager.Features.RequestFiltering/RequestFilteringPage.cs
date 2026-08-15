@@ -635,9 +635,9 @@ namespace JexusManager.Features.RequestFiltering
 
         public void Set()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.webServer/security/requestFiltering");
-            using (var dialog = new SegmentSettingsDialog(Module, section))
+            var proxy = ((RequestFilteringModule)Module).Proxy;
+            var settings = proxy.GetSettings();
+            using (var dialog = new SegmentSettingsDialog(Module, settings))
             {
                 if (dialog.ShowDialog() != DialogResult.OK)
                 {
@@ -645,7 +645,7 @@ namespace JexusManager.Features.RequestFiltering
                 }
             }
 
-            service.ServerManager.CommitChanges();
+            proxy.ApplySettings(settings);
         }
     }
 }

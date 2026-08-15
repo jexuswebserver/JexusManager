@@ -291,6 +291,18 @@ During migration, an adapter may keep legacy pages working, but a connection mus
 - Remove client-side Jexus configuration reconstruction and broad post-commit uploads.
 - Delete or narrow compatibility stubs once real behavior and tests cover their supported surface.
 
+## Lessons learned from the migration
+
+The migration work also clarified a few practical rules that should guide the redesign:
+
+- The client UI should not own configuration writes directly. Once a page or feature starts mutating configuration sections or committing changes in the desktop process, it has already crossed the trust boundary that the redesign is meant to preserve.
+- The service boundary must be scope-aware. Site-scoped updates are different from server-scoped updates, and the correct path is to resolve the effective configuration location in the server-side service rather than relying on the client-side object graph.
+- A thin DTO or snapshot contract is preferable to passing live administration objects across layers. It keeps the UI process decoupled from server-specific configuration details and makes regressions easier to test.
+- Regression tests are part of the architecture, not an afterthought. A small proxy/service pipeline test often catches the exact class of mistakes that would otherwise surface later as hard-to-debug scope or locking issues.
+- The safest migration strategy is to move one feature at a time, keep the UI layer thin, and verify end-to-end behavior before expanding the pattern to the next module.
+
+These lessons reinforce the design direction: the desktop app should remain a presentation and orchestration client, while the management host should own validation, authorization, and authoritative writes.
+
 ## Compatibility goal
 
 The initial goal should be **source and conceptual compatibility** with the IIS Manager extension pattern, not binary compatibility with every .NET Framework IIS Manager extension.

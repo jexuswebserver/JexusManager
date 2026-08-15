@@ -13,6 +13,16 @@ namespace JexusManager.Features.Rewrite
 
     internal class RewriteModule : Module
     {
+        private RewriteModuleProxy _proxy;
+
+        internal RewriteModuleProxy Proxy
+        {
+            get
+            {
+                return _proxy ??= (RewriteModuleProxy)((Connection)GetService(typeof(Connection))).CreateProxy(this, typeof(RewriteModuleProxy));
+            }
+        }
+
         protected override void Initialize(IServiceProvider serviceProvider, ModuleInfo moduleInfo)
         {
             base.Initialize(serviceProvider, moduleInfo);

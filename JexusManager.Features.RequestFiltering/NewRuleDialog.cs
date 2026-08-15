@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -39,7 +39,7 @@ namespace JexusManager.Features.RequestFiltering
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    Item = new FilteringRulesItem(null) { Name = txtName.Text };
+                    Item = new FilteringRulesItem() { Name = txtName.Text };
                     Item.ScanQueryString = cbQuery.Checked;
                     Item.ScanUrl = cbUrl.Checked;
                     Item.Headers.Clear();
@@ -51,7 +51,7 @@ namespace JexusManager.Features.RequestFiltering
                         }
 
                         var header = row.Cells[0].Value.ToString();
-                        Item.Headers.Add(new ScanHeadersItem(null) { RequestHeader = header });
+                        Item.Headers.Add(new ScanHeadersItem() { RequestHeader = header });
                     }
 
                     Item.Extensions.Clear();
@@ -63,7 +63,7 @@ namespace JexusManager.Features.RequestFiltering
                         }
 
                         var header = row.Cells[0].Value.ToString();
-                        Item.Extensions.Add(new AppliesToItem(null) { FileExtension = header });
+                        Item.Extensions.Add(new AppliesToItem() { FileExtension = header });
                     }
 
                     Item.DenyStrings.Clear();
@@ -75,7 +75,7 @@ namespace JexusManager.Features.RequestFiltering
                         }
 
                         var header = row.Cells[0].Value.ToString();
-                        Item.DenyStrings.Add(new DenyStringsItem(null) { DenyString = header });
+                        Item.DenyStrings.Add(new DenyStringsItem() { DenyString = header });
                     }
 
                     DialogResult = DialogResult.OK;

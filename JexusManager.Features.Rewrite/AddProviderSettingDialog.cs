@@ -71,7 +71,7 @@ namespace JexusManager.Features.Rewrite
                         return;
                     }
 
-                    Item ??= new SettingItem(null);
+                    Item ??= new SettingItem();
                     Item.Key = cbName.Text;
                     Item.Value = txtValue.Text;
                     Item.Encrypted = cbEncrypt.Checked;

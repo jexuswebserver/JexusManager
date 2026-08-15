@@ -165,19 +165,19 @@ namespace JexusManager.Features.TraceFailedRequests
             CanRevert = service.Scope != ManagementScope.Server;
             IsInOrder = false;
             IsSite = service.Scope == ManagementScope.Site;
-            LoadItems();
+            Items.Clear();
+            Items.AddRange(Proxy.GetItems());
+            OnSettingsSaved();
         }
 
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
         {
-            ConfigurationSection section = service.GetSection("system.webServer/tracing/traceFailedRequests");
-            return section.GetCollection();
+            throw new NotSupportedException("Failed request tracing rules are accessed through the module service.");
         }
 
         public void Add()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            using var dialog = new AddTraceWizard(Module, null, service.GetSection("system.webServer/tracing/traceProviderDefinitions"), this);
+            using var dialog = new AddTraceWizard(Module, null, Proxy.GetProviderDefinitions(), this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
@@ -202,8 +202,7 @@ namespace JexusManager.Features.TraceFailedRequests
 
         protected override void DoubleClick(TraceFailedRequestsItem item)
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            using var dialog = new AddTraceWizard(Module, item, service.GetSection("system.webServer/tracing/traceProviderDefinitions"), this);
+            using var dialog = new AddTraceWizard(Module, item, Proxy.GetProviderDefinitions(), this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 return;
@@ -233,7 +232,8 @@ namespace JexusManager.Features.TraceFailedRequests
                 }
             }
 
-            MoveUpItem();
+            Proxy.MoveUp(SelectedItem);
+            Load();
         }
 
         public void MoveDown()
@@ -252,7 +252,8 @@ namespace JexusManager.Features.TraceFailedRequests
                 }
             }
 
-            MoveDownItem();
+            Proxy.MoveDown(SelectedItem);
+            Load();
         }
 
         public void InOrder()
@@ -306,9 +307,8 @@ namespace JexusManager.Features.TraceFailedRequests
 
         public void Set()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.Site.TraceFailedRequestsLogging;
-            using (var dialog = new SettingsDialog(Module, section, this))
+            var settings = Proxy.GetSettings();
+            using (var dialog = new SettingsDialog(Module, settings, this))
             {
                 if (dialog.ShowDialog() != DialogResult.OK)
                 {
@@ -316,7 +316,7 @@ namespace JexusManager.Features.TraceFailedRequests
                 }
             }
 
-            service.ServerManager.CommitChanges();
+            Proxy.ApplySettings(settings);
             OnSettingsSaved();
         }
 
@@ -324,6 +324,43 @@ namespace JexusManager.Features.TraceFailedRequests
         {
             TraceFailedRequestsSettingsUpdated?.Invoke();
         }
+
+        public override void AddItem(TraceFailedRequestsItem item)
+        {
+            Proxy.Add(item);
+            LoadAndSelect(item);
+        }
+
+        public override void EditItem(TraceFailedRequestsItem item)
+        {
+            var original = SelectedItem ?? throw new InvalidOperationException("No failed request tracing rule is selected.");
+            Proxy.Update(original, item);
+            LoadAndSelect(item);
+        }
+
+        public override void RemoveItem()
+        {
+            var item = SelectedItem ?? throw new InvalidOperationException("No failed request tracing rule is selected.");
+            Proxy.Remove(item);
+            SelectedItem = null;
+            Load();
+        }
+
+        public override void RevertItems()
+        {
+            Proxy.Revert();
+            SelectedItem = null;
+            Load();
+        }
+
+        private void LoadAndSelect(TraceFailedRequestsItem item)
+        {
+            Load();
+            SelectedItem = Items.Find(candidate => candidate.Equals(item));
+            OnSettingsSaved();
+        }
+
+        private TraceFailedRequestsModuleProxy Proxy => ((TraceFailedRequestsModule)Module).Proxy;
 
         public virtual bool ShowHelp()
         {

@@ -39,7 +39,7 @@ namespace JexusManager.Features.RequestFiltering
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    Item = new UrlsItem(null, allowed) { Url = txtName.Text };
+                    Item = new UrlsItem(allowed) { Url = txtName.Text };
                     DialogResult = DialogResult.OK;
                 }));
         }

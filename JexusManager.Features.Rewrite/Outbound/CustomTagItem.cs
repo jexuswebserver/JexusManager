@@ -4,27 +4,22 @@
 
 namespace JexusManager.Features.Rewrite.Outbound
 {
+    using System;
+
     using Microsoft.Web.Administration;
 
+    [Serializable]
     public class CustomTagItem : IItem<CustomTagItem>
     {
+        public CustomTagItem()
+        {
+        }
+
         public ConfigurationElement Element { get; set; }
 
         public bool Match(CustomTagItem other)
         {
             return other != null && other.Name == Name;
-        }
-
-        public CustomTagItem(ConfigurationElement element)
-        {
-            this.Element = element;
-            if (element == null)
-            {
-                return;
-            }
-
-            this.Name = (string)element["name"];
-            this.Attribute = (string)element["attribute"];
         }
 
         public string Attribute { get; set; }
@@ -35,8 +30,6 @@ namespace JexusManager.Features.Rewrite.Outbound
 
         public void Apply()
         {
-            Element["name"] = Name;
-            Element["attribute"] = Attribute;
         }
 
         public bool Equals(CustomTagItem other)

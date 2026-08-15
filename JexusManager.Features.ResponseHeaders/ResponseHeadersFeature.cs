@@ -99,13 +99,14 @@ namespace JexusManager.Features.ResponseHeaders
 
         public void Load()
         {
-            LoadItems();
+            Items.Clear();
+            Items.AddRange(((ResponseHeadersModule)Module).Proxy.GetItems());
+            OnSettingsSaved();
         }
 
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
         {
-            var section = service.GetSection("system.webServer/httpProtocol");
-            return section.GetCollection("customHeaders");
+            throw new NotSupportedException("Response headers are accessed through the module service.");
         }
 
         public void Add()
@@ -183,6 +184,29 @@ namespace JexusManager.Features.ResponseHeaders
         protected override void OnSettingsSaved()
         {
             ResponseHeadersSettingsUpdated?.Invoke();
+        }
+
+        public override void AddItem(ResponseHeadersItem item)
+        {
+            ((ResponseHeadersModule)Module).Proxy.Add(item);
+            Load();
+            SelectedItem = Items.Find(header => header.Equals(item));
+        }
+
+        public override void EditItem(ResponseHeadersItem item)
+        {
+            var original = SelectedItem ?? throw new InvalidOperationException("No response header is selected.");
+            ((ResponseHeadersModule)Module).Proxy.Update(original, item);
+            Load();
+            SelectedItem = Items.Find(header => header.Equals(item));
+        }
+
+        public override void RemoveItem()
+        {
+            var item = SelectedItem ?? throw new InvalidOperationException("No response header is selected.");
+            ((ResponseHeadersModule)Module).Proxy.Remove(item);
+            SelectedItem = null;
+            Load();
         }
 
         public virtual bool ShowHelp()

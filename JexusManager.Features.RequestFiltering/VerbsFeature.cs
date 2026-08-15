@@ -2,6 +2,8 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+    using System;
+    using System;
 namespace JexusManager.Features.RequestFiltering
 {
     using System.Collections;
@@ -112,14 +114,35 @@ namespace JexusManager.Features.RequestFiltering
 
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
         {
-            ConfigurationSection requestFilteringSection =
-                service.GetSection("system.webServer/security/requestFiltering");
-            return requestFilteringSection.GetCollection("verbs");
+            throw new NotSupportedException("HTTP verbs are accessed through the module service.");
         }
 
         public override void Load()
         {
-            LoadItems();
+            Items.Clear();
+            Items.AddRange(((RequestFilteringModule)Module).Proxy.GetVerbs());
+            OnSettingsSaved();
+        }
+
+        public override void AddItem(VerbsItem item)
+        {
+            ((RequestFilteringModule)Module).Proxy.AddVerb(item);
+            LoadAndSelect(item);
+        }
+
+        public override void RemoveItem()
+        {
+            var item = SelectedItem ?? throw new InvalidOperationException("No verb is selected.");
+            ((RequestFilteringModule)Module).Proxy.RemoveVerb(item);
+            SelectedItem = null;
+            Load();
+        }
+
+        private void LoadAndSelect(VerbsItem item)
+        {
+            Load();
+            SelectedItem = Items.Find(candidate => candidate.Equals(item));
+            OnSettingsSaved();
         }
 
         public override bool ShowHelp()

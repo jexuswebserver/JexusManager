@@ -2,6 +2,8 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+    using System;
+    using System;
 namespace JexusManager.Features.RequestFiltering
 {
     using System.Collections;
@@ -114,13 +116,35 @@ namespace JexusManager.Features.RequestFiltering
 
         public override void Load()
         {
-            LoadItems();
+            Items.Clear();
+            Items.AddRange(((RequestFilteringModule)Module).Proxy.GetFileExtensions());
+            OnSettingsSaved();
         }
 
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
         {
-            ConfigurationSection requestFilteringSection = service.GetSection("system.webServer/security/requestFiltering");
-            return requestFilteringSection.GetCollection("fileExtensions");
+            throw new NotSupportedException("File name extensions are accessed through the module service.");
+        }
+
+        public override void AddItem(FileExtensionsItem item)
+        {
+            ((RequestFilteringModule)Module).Proxy.AddFileExtension(item);
+            LoadAndSelect(item);
+        }
+
+        public override void RemoveItem()
+        {
+            var item = SelectedItem ?? throw new InvalidOperationException("No file name extension is selected.");
+            ((RequestFilteringModule)Module).Proxy.RemoveFileExtension(item);
+            SelectedItem = null;
+            Load();
+        }
+
+        private void LoadAndSelect(FileExtensionsItem item)
+        {
+            Load();
+            SelectedItem = Items.Find(candidate => candidate.Equals(item));
+            OnSettingsSaved();
         }
 
         public override bool ShowHelp()

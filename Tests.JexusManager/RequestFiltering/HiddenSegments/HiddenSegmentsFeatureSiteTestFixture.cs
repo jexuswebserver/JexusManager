@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -81,8 +81,12 @@ namespace Tests.RequestFiltering.HiddenSegments
 
             serviceContainer.AddService(typeof(IManagementUIService), substitute);
 
+            var provider = new RequestFilteringModuleProvider();
+            var configurationService = (IConfigurationService)serviceContainer.GetService(typeof(IConfigurationService));
+            var connection = InProcessConnectionFactory.Configure(serviceContainer, configurationService, new[] { provider });
+            var definition = provider.GetModuleDefinition(null);
             var module = new RequestFilteringModule();
-            module.TestInitialize(serviceContainer, null);
+            module.TestInitialize(serviceContainer, (ModuleInfo)connection.Modules[definition.Name]);
 
             _feature = new HiddenSegmentsFeature(module);
             _feature.Load();
@@ -135,7 +139,7 @@ namespace Tests.RequestFiltering.HiddenSegments
             var document = XDocument.Load(site);
             document.Save(expected);
 
-            var item = new HiddenSegmentsItem(null);
+            var item = new HiddenSegmentsItem();
             item.Segment = "test";
             _feature.AddItem(item);
 
@@ -169,7 +173,7 @@ namespace Tests.RequestFiltering.HiddenSegments
                                 new XAttribute("segment", "test"))))));
             document.Save(expected);
 
-            var item = new HiddenSegmentsItem(null);
+            var item = new HiddenSegmentsItem();
             item.Segment = "test";
             _feature.AddItem(item);
             Assert.NotNull(_feature.SelectedItem);

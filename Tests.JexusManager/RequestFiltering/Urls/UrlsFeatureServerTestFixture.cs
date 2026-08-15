@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -74,8 +74,12 @@ namespace Tests.RequestFiltering.Urls
 
             _serviceContainer.AddService(typeof(IManagementUIService), substitute);
 
+            var provider = new RequestFilteringModuleProvider();
+            var configurationService = (IConfigurationService)_serviceContainer.GetService(typeof(IConfigurationService));
+            var connection = InProcessConnectionFactory.Configure(_serviceContainer, configurationService, new[] { provider });
+            var definition = provider.GetModuleDefinition(null);
             var module = new RequestFilteringModule();
-            module.TestInitialize(_serviceContainer, null);
+            module.TestInitialize(_serviceContainer, (ModuleInfo)connection.Modules[definition.Name]);
 
             _feature = new UrlsFeature(module);
             _feature.Load();
@@ -135,7 +139,7 @@ namespace Tests.RequestFiltering.Urls
                     new XAttribute("url", "test1")));
             document.Save(Expected);
 
-            var item = new UrlsItem(null, true);
+            var item = new UrlsItem(true);
             item.Url = "test1";
             _feature.AddItem(item);
             Assert.NotNull(_feature.SelectedItem);
@@ -156,7 +160,7 @@ namespace Tests.RequestFiltering.Urls
                     new XAttribute("sequence", "test1")));
             document.Save(Expected);
 
-            var item = new UrlsItem(null, false);
+            var item = new UrlsItem(false);
             item.Url = "test1";
             _feature.AddItem(item);
             Assert.NotNull(_feature.SelectedItem);

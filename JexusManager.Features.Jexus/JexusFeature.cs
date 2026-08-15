@@ -5,11 +5,8 @@
 namespace JexusManager.Features.Jexus
 {
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics;
-    using System.IO;
     using System.Resources;
-    using System.Text;
 
     using JexusManager.Services;
 
@@ -42,25 +39,9 @@ namespace JexusManager.Features.Jexus
 
         public void Load()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            if (service.ServerManager.Mode != WorkingMode.Jexus)
-            {
-                IsFeatureEnabled = false;
-                return;
-            }
-
-            IsFeatureEnabled = true;
-            var settings = service.Server == null ? service.Application.GetExtra() : service.Server.GetExtra();
-            var text = new StringBuilder();
-            foreach (var key in settings.Keys)
-            {
-                foreach (var item in settings[key])
-                {
-                    text.AppendFormat("{0}={1}", key, item).AppendLine();
-                }
-            }
-
-            Contents = text.ToString();
+            var settings = ((JexusModule)Module).Proxy.GetSettings();
+            IsFeatureEnabled = settings.IsAvailable;
+            Contents = settings.Contents;
             OnJexusSettingsSaved();
         }
 
@@ -104,60 +85,7 @@ namespace JexusManager.Features.Jexus
 
         public bool ApplyChanges()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            if (service.Server == null)
-            {
-                service.Application.GetExtra().Clear();
-            }
-            else
-            {
-                service.Server.GetExtra().Clear();
-            }
-
-            var reader = new StringReader(Contents);
-            string line;
-            while ((line = reader.ReadLine()) != null)
-            {
-                var index = line.IndexOf('=');
-                if (index == -1)
-                {
-                    continue;
-                }
-
-                var key = line.Substring(0, index).Trim();
-                if (key.Length == 0)
-                {
-                    continue;
-                }
-
-                var value = line.Substring(index + 1).Trim();
-                if (service.Server == null)
-                {
-                    var extra = service.Application.GetExtra();
-                    if (extra.ContainsKey(key))
-                    {
-                        extra[key].Add(value);
-                    }
-                    else
-                    {
-                        extra.Add(key, new List<string> { value });
-                    }
-                }
-                else
-                {
-                    var extra = service.Server.GetExtra();
-                    if (extra.ContainsKey(key))
-                    {
-                        extra[key].Add(value);
-                    }
-                    else
-                    {
-                        extra.Add(key, new List<string> { value });
-                    }
-                }
-            }
-
-            service.ServerManager.CommitChanges();
+            ((JexusModule)Module).Proxy.Apply(Contents);
             return true;
         }
     }

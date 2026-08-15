@@ -427,18 +427,18 @@ namespace JexusManager
             if (activeForm == null)
             {
                 // Fall back to creating a simple message box if no active form
-                MessageBox.Show(message, "Jexus Manager", MessageBoxButtons.OK, 
+                MessageBox.Show(message, "Jexus Manager", MessageBoxButtons.OK,
                     error ? MessageBoxIcon.Error : MessageBoxIcon.Information);
                 return;
             }
 
             // Create notification manager for the active form
-            var notificationManager = NotificationManager.GetInstance(activeForm, 
+            var notificationManager = NotificationManager.GetInstance(activeForm,
                 NotificationManager.NotificationPosition.BottomCenter);
 
             // Determine notification type based on error flag
-            var notificationType = error 
-                ? NotificationControl.NotificationType.Error 
+            var notificationType = error
+                ? NotificationControl.NotificationType.Error
                 : NotificationControl.NotificationType.Info;
 
             // Show the notification

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -43,7 +43,7 @@ namespace JexusManager.Features.Rewrite.Outbound
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    Item = new CustomTagItem(null);
+                    Item = new CustomTagItem();
                     Item.Name = txtName.Text;
                     Item.Attribute = txtAttribute.Text;
                     DialogResult = DialogResult.OK;

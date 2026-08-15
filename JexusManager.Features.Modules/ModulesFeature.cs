@@ -153,29 +153,25 @@ namespace JexusManager.Features.Modules
 
         public void Load()
         {
-            GlobalModules = new List<GlobalModule>();
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
+            GlobalModules = new List<GlobalModule>(Proxy.GetGlobalModules());
 
-            ConfigurationSection globalSection = service.GetSection("system.webServer/globalModules", null, false);
-            ConfigurationElementCollection globalCollection = globalSection.GetCollection();
-            foreach (ConfigurationElement addElement in globalCollection)
+            CanRevert = GetService(typeof(IConfigurationService)) is IConfigurationService service && service.Scope != ManagementScope.Server;
+            IsInOrder = false;
+            Items = new List<ModulesItem>();
+            foreach (var item in Proxy.GetItems())
             {
-                GlobalModules.Add(new GlobalModule(addElement));
+                item.Load(this);
+                Items.Add(item);
             }
 
-            CanRevert = service.Scope != ManagementScope.Server;
-            IsInOrder = false;
-            LoadItems();
+            OnSettingsSaved();
         }
 
         public override void LoadItems()
         {
             Items.Clear();
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            ConfigurationElementCollection collection = GetCollection(service);
-            foreach (ConfigurationElement addElement in collection)
+            foreach (var item in Proxy.GetItems())
             {
-                var item = new ModulesItem(addElement);
                 item.Load(this);
                 Items.Add(item);
             }
@@ -185,9 +181,7 @@ namespace JexusManager.Features.Modules
 
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
         {
-            // server level modules are in "" location.
-            ConfigurationSection section = service.Scope == ManagementScope.Server ? service.GetSection("system.webServer/modules", string.Empty) : service.GetSection("system.webServer/modules", null, false);
-            return section.GetCollection();
+            throw new NotSupportedException("Modules are accessed through the module service.");
         }
 
         public List<GlobalModule> GlobalModules { get; set; }
@@ -201,18 +195,12 @@ namespace JexusManager.Features.Modules
                     return;
                 }
 
-                var service = (IConfigurationService)GetService(typeof(IConfigurationService));
                 foreach (var item in dialog.Items)
                 {
+                    Proxy.Add(item);
                     Items.Add(item);
                     SelectedItem = item;
-                    // server level modules are in "" location.
-                    ConfigurationElementCollection collection = GetCollection(service);
-                    item.AppendTo(collection);
                 }
-
-                // TODO: how to add item?
-                service.ServerManager.CommitChanges();
             }
             OnSettingsSaved();
         }
@@ -230,22 +218,24 @@ namespace JexusManager.Features.Modules
 
         public void AddGlobal(GlobalModule item)
         {
+            Proxy.AddGlobal(item);
             GlobalModules.Add(item);
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            ConfigurationSection globalSection = service.GetSection("system.webServer/globalModules", null, false);
-            ConfigurationElementCollection globalCollection = globalSection.GetCollection();
-            item.AppendTo(globalCollection);
-            service.ServerManager.CommitChanges();
         }
 
         public void RemoveGlobal(GlobalModule item)
         {
+            Proxy.RemoveGlobal(item);
             GlobalModules.Remove(item);
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            ConfigurationSection globalSection = service.GetSection("system.webServer/globalModules", null, false);
-            ConfigurationElementCollection globalCollection = globalSection.GetCollection();
-            globalCollection.Remove(item.Element);
-            service.ServerManager.CommitChanges();
+        }
+
+        public void UpdateGlobal(GlobalModule original, GlobalModule item)
+        {
+            Proxy.UpdateGlobal(original, item);
+            var index = GlobalModules.FindIndex(candidate => candidate.Equals(original));
+            if (index >= 0)
+            {
+                GlobalModules[index] = item;
+            }
         }
 
         public void Remove()
@@ -317,7 +307,8 @@ namespace JexusManager.Features.Modules
                 }
             }
 
-            MoveUpItem();
+            Proxy.MoveUp(SelectedItem);
+            Load();
         }
 
         public void MoveDown()
@@ -336,7 +327,8 @@ namespace JexusManager.Features.Modules
                 }
             }
 
-            MoveDownItem();
+            Proxy.MoveDown(SelectedItem);
+            Load();
         }
 
         public void InOrder()
@@ -376,6 +368,43 @@ namespace JexusManager.Features.Modules
         {
             ModulesSettingsUpdated?.Invoke();
         }
+
+        public override void AddItem(ModulesItem item)
+        {
+            Proxy.Add(item);
+            LoadAndSelect(item);
+        }
+
+        public override void EditItem(ModulesItem item)
+        {
+            var original = SelectedItem ?? throw new InvalidOperationException("No module is selected.");
+            Proxy.Update(original, item);
+            LoadAndSelect(item);
+        }
+
+        public override void RemoveItem()
+        {
+            var item = SelectedItem ?? throw new InvalidOperationException("No module is selected.");
+            Proxy.Remove(item);
+            SelectedItem = null;
+            Load();
+        }
+
+        public override void RevertItems()
+        {
+            Proxy.Revert();
+            SelectedItem = null;
+            Load();
+        }
+
+        private void LoadAndSelect(ModulesItem item)
+        {
+            Load();
+            SelectedItem = Items.Find(candidate => candidate.Equals(item));
+            OnSettingsSaved();
+        }
+
+        private ModulesModuleProxy Proxy => ((ModulesModule)Module).Proxy;
 
         public virtual bool ShowHelp()
         {

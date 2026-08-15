@@ -12,6 +12,16 @@ namespace JexusManager.Features.Handlers
 
     internal class HandlersModule : Module
     {
+        private HandlersModuleProxy _proxy;
+
+        internal HandlersModuleProxy Proxy
+        {
+            get
+            {
+                return _proxy ??= (HandlersModuleProxy)((Connection)GetService(typeof(Connection))).CreateProxy(this, typeof(HandlersModuleProxy));
+            }
+        }
+
         protected override void Initialize(IServiceProvider serviceProvider, ModuleInfo moduleInfo)
         {
             base.Initialize(serviceProvider, moduleInfo);

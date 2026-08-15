@@ -97,8 +97,9 @@ namespace JexusManager.Features.Rewrite.Outbound
 
             _feature.InitializeMouseClick(listView1, (item, text) =>
             {
-                item.Name = text;
-                item.Apply();
+                var original = item;
+                var updated = new CustomTagsItem { Name = text, Tags = original.Tags };
+                _feature.EditItemWith(original, updated);
             },
             text =>
             {

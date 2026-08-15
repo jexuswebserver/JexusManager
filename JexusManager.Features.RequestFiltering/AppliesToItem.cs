@@ -4,39 +4,15 @@
 
 namespace JexusManager.Features.RequestFiltering
 {
-    using Microsoft.Web.Administration;
+    using System;
 
+    [Serializable]
     internal class AppliesToItem
     {
-        public ConfigurationElement Child { get; set; }
-
-        public AppliesToItem(ConfigurationElement child)
+        public AppliesToItem()
         {
-            this.Child = child;
-            if (child == null)
-            {
-                return;
-            }
-
-            this.FileExtension = (string)child["fileExtension"];
         }
 
         public string FileExtension { get; set; }
-
-        public void Apply()
-        {
-            Child["fileExtension"] = FileExtension;
-        }
-
-        public void AppendTo(ConfigurationElementCollection appliesToCollection)
-        {
-            if (Child == null)
-            {
-                Child = appliesToCollection.CreateElement();
-                appliesToCollection.Add(Child);
-            }
-
-            Apply();
-        }
     }
 }

@@ -76,7 +76,7 @@ namespace Microsoft.Web.Administration
             {
                 // web.config
                 var parentElementInFile = _element.GetParentElement();
-                defaultValue = parentElementInFile == null 
+                defaultValue = parentElementInFile == null
                     ? Schema?.DefaultValue
                     : parentElementInFile.ContainsAttribute(Name)
                         ? parentElementInFile.Attributes[Name].Value

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -25,7 +25,7 @@ namespace JexusManager.Features.Handlers
             Text = existing == null ? "Add Managed Handler" : "Edit Managed Handler";
             txtName.ReadOnly = existing != null;
             _feature = feature;
-            Item = existing ?? new HandlersItem(null);
+            Item = existing ?? new HandlersItem();
             if (existing != null)
             {
                 txtType.Text = Item.Type;

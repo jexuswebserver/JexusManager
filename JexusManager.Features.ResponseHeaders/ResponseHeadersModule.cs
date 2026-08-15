@@ -13,6 +13,15 @@ namespace JexusManager.Features.ResponseHeaders
 
     internal class ResponseHeadersModule : Module
     {
+        private ResponseHeadersModuleProxy _proxy;
+
+        internal ResponseHeadersModuleProxy Proxy
+        {
+            get
+            {
+                return _proxy ??= (ResponseHeadersModuleProxy)((Connection)GetService(typeof(Connection))).CreateProxy(this, typeof(ResponseHeadersModuleProxy));
+            }
+        }
         protected override void Initialize(IServiceProvider serviceProvider, ModuleInfo moduleInfo)
         {
             base.Initialize(serviceProvider, moduleInfo);

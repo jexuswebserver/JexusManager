@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -81,8 +81,12 @@ namespace Tests.Modules
 
             serviceContainer.AddService(typeof(IManagementUIService), substitute);
 
+            var provider = new ModulesModuleProvider();
+            var configurationService = (IConfigurationService)serviceContainer.GetService(typeof(IConfigurationService));
+            var connection = InProcessConnectionFactory.Configure(serviceContainer, configurationService, new[] { provider });
+            var definition = provider.GetModuleDefinition(null);
             var module = new ModulesModule();
-            module.TestInitialize(serviceContainer, null);
+            module.TestInitialize(serviceContainer, (ModuleInfo)connection.Modules[definition.Name]);
 
             _feature = new ModulesFeature(module);
             _feature.Load();
@@ -134,7 +138,7 @@ namespace Tests.Modules
                     new XAttribute("path", "WebSite1")));
             document.Save(Expected);
 
-            var item = new ModulesItem(null);
+            var item = new ModulesItem();
             item.Name = "test";
             _feature.AddItem(item);
 
@@ -197,7 +201,7 @@ namespace Tests.Modules
                             new XAttribute("type", "test"))))));
             document.Save(Expected);
 
-            var item = new ModulesItem(null);
+            var item = new ModulesItem();
             item.Name = "test";
             item.Type = "test2";
             item.IsManaged = true;
@@ -232,7 +236,7 @@ namespace Tests.Modules
                             new XAttribute("type", "test1"))))));
             document.Save(Expected);
 
-            var item = new ModulesItem(null);
+            var item = new ModulesItem();
             item.Name = "test";
             item.Type = "test1";
             item.IsManaged = true;
@@ -257,7 +261,7 @@ namespace Tests.Modules
                     new XElement("system.webServer")));
             document.Save(Expected);
 
-            var item = new ModulesItem(null);
+            var item = new ModulesItem();
             item.Name = "test";
             item.Type = "test1";
             item.IsManaged = true;
@@ -306,7 +310,7 @@ namespace Tests.Modules
             content.Add(one);
             document.Save(Expected);
 
-            var item = new ModulesItem(null);
+            var item = new ModulesItem();
             item.Name = "test";
             item.Type = "test1";
             item.IsManaged = true;
@@ -352,7 +356,7 @@ namespace Tests.Modules
                                 new XAttribute("type", "System.Web.Handlers.ScriptModule, System.Web.Extensions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"))))));
             document.Save(Expected);
 
-            var item = new ModulesItem(null);
+            var item = new ModulesItem();
             item.Name = "test";
             item.Type = "test1";
             item.IsManaged = true;

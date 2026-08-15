@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -39,7 +39,7 @@ namespace JexusManager.Features.RequestFiltering
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    Item = new FileExtensionsItem(null) { Extension = txtName.Text };
+                    Item = new FileExtensionsItem() { Extension = txtName.Text };
                     if (feature.Items.Any(item => item.Match(Item)))
                     {
                         var service = (IManagementUIService)GetService(typeof(IManagementUIService));

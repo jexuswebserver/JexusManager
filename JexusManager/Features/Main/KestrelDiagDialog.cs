@@ -342,7 +342,7 @@ namespace JexusManager.Features.Main
 
                         var config = application.GetWebConfiguration();
                         var section = config.GetSection("system.webServer/aspNetCore");
-                      
+
                         // Check environment variables from ASP.NET Core configuration
                         Debug(string.Empty);
                         Debug("Checking ASP.NET Core environment variables from configuration:");

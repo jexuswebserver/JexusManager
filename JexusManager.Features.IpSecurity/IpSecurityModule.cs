@@ -13,6 +13,16 @@ namespace JexusManager.Features.IpSecurity
 
     internal class IpSecurityModule : Module
     {
+        private IpSecurityModuleProxy _proxy;
+
+        internal IpSecurityModuleProxy Proxy
+        {
+            get
+            {
+                return _proxy ??= (IpSecurityModuleProxy)((Connection)GetService(typeof(Connection))).CreateProxy(this, typeof(IpSecurityModuleProxy));
+            }
+        }
+
         protected override void Initialize(IServiceProvider serviceProvider, ModuleInfo moduleInfo)
         {
             base.Initialize(serviceProvider, moduleInfo);

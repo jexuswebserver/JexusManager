@@ -4,30 +4,23 @@
 
 namespace JexusManager.Features.Rewrite.Inbound
 {
+    using System;
+
     using Microsoft.Web.Administration;
 
+    [Serializable]
     internal class MapRule : IItem<MapRule>
     {
+        public MapRule()
+        {
+            Flag = "Local";
+        }
+
         public ConfigurationElement Element { get; set; }
 
         public bool Match(MapRule other)
         {
             return other != null && other.Original == Original;
-        }
-
-        private MapsFeature _feature;
-
-        public MapRule(ConfigurationElement element, MapsFeature feature)
-        {
-            this.Element = element;
-            _feature = feature;
-            if (element != null)
-            {
-                this.Original = (string)element["key"];
-                this.New = (string)element["value"];
-            }
-
-            this.Flag = element == null || element.IsLocallyStored ? "Local" : "Inherited";
         }
 
         public string Original { get; set; }
@@ -38,8 +31,6 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         public void Apply()
         {
-            Element["key"] = Original;
-            Element["value"] = New;
         }
 
         public bool Equals(MapRule other)

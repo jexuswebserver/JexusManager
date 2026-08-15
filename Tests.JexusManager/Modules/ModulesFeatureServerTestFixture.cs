@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -74,8 +74,12 @@ namespace Tests.Modules
 
             _serviceContainer.AddService(typeof(IManagementUIService), substitute);
 
+            var provider = new ModulesModuleProvider();
+            var configurationService = (IConfigurationService)_serviceContainer.GetService(typeof(IConfigurationService));
+            var connection = InProcessConnectionFactory.Configure(_serviceContainer, configurationService, new[] { provider });
+            var definition = provider.GetModuleDefinition(null);
             var module = new ModulesModule();
-            module.TestInitialize(_serviceContainer, null);
+            module.TestInitialize(_serviceContainer, (ModuleInfo)connection.Modules[definition.Name]);
 
             _feature = new ModulesFeature(module);
             _feature.Load();
@@ -145,7 +149,7 @@ namespace Tests.Modules
                     new XAttribute("type", "test")));
             document.Save(Expected);
 
-            var item = new ModulesItem(null);
+            var item = new ModulesItem();
             item.Name = "test";
             item.Type = "test";
             item.IsManaged = true;
@@ -171,7 +175,7 @@ namespace Tests.Modules
 
             Assert.Equal(37, _feature.GlobalModules.Count);
 
-            var item = new GlobalModule(null);
+            var item = new GlobalModule();
             item.Name = "test";
             item.Image = "test";
             _feature.AddGlobal(item);
@@ -190,7 +194,7 @@ namespace Tests.Modules
 
             Assert.Equal(37, _feature.GlobalModules.Count);
 
-            var item = new GlobalModule(null);
+            var item = new GlobalModule();
             item.Name = "test";
             item.Image = "test";
             _feature.AddGlobal(item);

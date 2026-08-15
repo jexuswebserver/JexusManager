@@ -5,13 +5,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Web.Administration;
 
 namespace JexusManager.Features.TraceFailedRequests.Wizards.AddTraceWizard
 {
     internal class AddTraceWizardData
     {
-        public AddTraceWizardData(ConfigurationElement config, TraceFailedRequestsItem existing)
+        public AddTraceWizardData(Provider[] providerDefinitions, TraceFailedRequestsItem existing)
         {
             Editing = existing != null;
             if (existing == null)
@@ -26,36 +25,22 @@ namespace JexusManager.Features.TraceFailedRequests.Wizards.AddTraceWizard
                 Verbosity = existing.Verbosity;
             }
 
-            var collection = config.GetCollection();
-            foreach (ConfigurationElement item in collection)
+            foreach (var provider in providerDefinitions ?? Array.Empty<Provider>())
             {
-                var name = item.GetAttribute("name").Value.ToString();
-                var areas = item.ChildElements["areas"].GetCollection();
-                var provider = new Provider { Name = name, Areas = new List<string>(areas.Count) };
-                foreach (ConfigurationElement area in areas)
-                {
-                    provider.Areas.Add(area["name"].ToString());
-                }
-
-                Providers.Add(provider);
+                Providers.Add(new Provider { Name = provider.Name, Areas = new List<string>(provider.Areas) });
             }
 
             if (existing != null)
             {
-                var selection = existing.Element.GetCollection("traceAreas");
-                foreach (ConfigurationElement item in selection)
+                foreach (var selection in existing.Providers)
                 {
-                    var name = item["provider"].ToString();
-                    var areas = item["areas"].ToString();
                     foreach (var provider in Providers)
                     {
-                        if (provider.Name == name)
+                        if (provider.Name == selection.Name)
                         {
                             provider.Selected = true;
-                            foreach (var area in areas.Split(','))
-                            {
-                                provider.SelectedAreas.Add(area);
-                            }
+                            provider.SelectedAreas.AddRange(selection.SelectedAreas);
+                            provider.Verbosity = selection.Verbosity;
                         }
                     }
                 }
@@ -68,7 +53,17 @@ namespace JexusManager.Features.TraceFailedRequests.Wizards.AddTraceWizard
             item.Path = FileName;
             item.TimeTaken = TimeSpan.FromSeconds(Time);
             item.Verbosity = Verbosity;
-            item.SetProviders(Providers);
+            item.Providers = new List<Provider>();
+            foreach (var provider in Providers)
+            {
+                item.Providers.Add(new Provider
+                {
+                    Name = provider.Name,
+                    Selected = provider.Selected,
+                    Verbosity = provider.Verbosity,
+                    SelectedAreas = new List<string>(provider.SelectedAreas)
+                });
+            }
         }
 
         public string FileName { get; set; }

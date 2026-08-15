@@ -4,34 +4,19 @@
 
 namespace JexusManager.Features.Modules
 {
+    using System;
     using System.Collections.Generic;
-    using System.Linq;
 
     using Microsoft.Web.Administration;
 
+    [Serializable]
     internal class ModulesItem : IItem<ModulesItem>
     {
-        public ModulesItem(ConfigurationElement element)
+        public ModulesItem()
         {
-            Element = element;
-            Flag = element == null || element.IsLocallyStored ? "Local" : "Inhertied";
-            if (element == null)
-            {
-                PreConditions = new List<string>();
-                Type = string.Empty;
-                return;
-            }
-
-            Name = (string)element["name"];
-            Type = (string)element["type"];
-            var content = (string)element["preCondition"];
-            PreConditions = content.Split(',').ToList();
-
-            IsLocked = element.GetIsLocked();
-            if (!string.IsNullOrWhiteSpace(Type))
-            {
-                IsManaged = true;
-            }
+            PreConditions = new List<string>();
+            Type = string.Empty;
+            Flag = "Local";
         }
 
         public ModulesItem Load(ModulesFeature feature)
@@ -118,14 +103,6 @@ namespace JexusManager.Features.Modules
 
         public void Apply()
         {
-            Element["name"] = Name;
-            if (IsManaged)
-            {
-                Element["type"] = Type;
-            }
-
-            Element["preCondition"] = PreConditions.Combine(",");
-            Element.SetIsLocked(IsLocked);
         }
 
         public bool Match(ModulesItem other)

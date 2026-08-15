@@ -85,7 +85,7 @@ namespace Microsoft.Web.Administration
         internal override bool GetSiteState(Site site)
         {
             _logger.LogInformation("Getting state for site {SiteName} (ID: {SiteId})", site.Name, site.Id);
-            
+
             try
             {
                 using var process = new Process
@@ -103,10 +103,10 @@ namespace Microsoft.Web.Administration
                         WindowStyle = ProcessWindowStyle.Hidden
                     }
                 };
-                
-                _logger.LogInformation("Executing command to get site state: {Command} {Arguments}", 
+
+                _logger.LogInformation("Executing command to get site state: {Command} {Arguments}",
                     process.StartInfo.FileName, process.StartInfo.Arguments);
-                
+
                 process.Start();
                 _logger.LogInformation("State check process started with ID: {ProcessId}", process.Id);
                 process.WaitForExit();
@@ -121,7 +121,7 @@ namespace Microsoft.Web.Administration
                 // elevation is cancelled.
                 if (ex.NativeErrorCode != (int)Windows.Win32.Foundation.WIN32_ERROR.ERROR_CANCELLED)
                 {
-                    _logger.LogWarning(ex, "Win32 error getting site state for {SiteName}. Native error code: {Code}", 
+                    _logger.LogWarning(ex, "Win32 error getting site state for {SiteName}. Native error code: {Code}",
                         site.Name, ex.NativeErrorCode);
                 }
                 else
@@ -163,7 +163,7 @@ namespace Microsoft.Web.Administration
         private void StartInner(Site site, bool restart)
         {
             _logger.LogInformation("{Action} site {SiteName} (ID: {SiteId})", restart ? "Restarting" : "Starting", site.Name, site.Id);
-            
+
             if (site.Bindings.ElevationRequired && !PublicNativeMethods.IsProcessElevated)
             {
                 _logger.LogWarning("Site {SiteName} requires elevation but process is not elevated", site.Name);
@@ -173,23 +173,23 @@ namespace Microsoft.Web.Administration
             Application application = site.Applications[0];
             var actualExecutable = application.GetActualExecutable();
             _logger.LogInformation("Using executable: {Executable}", actualExecutable);
-            
+
             var pool = application.GetPool();
             if (pool == null)
             {
                 _logger.LogError("Application pool {PoolName} not found for site {SiteName}", application.ApplicationPoolName, site.Name);
                 throw new InvalidOperationException($"The application pool {application.ApplicationPoolName} does not exist.");
             }
-            
+
             var x64Tool = CertificateInstallerLocator.AlternativeFileName;
             var tool = x64Tool != null && !pool.Enable32BitAppOnWin64 && pool.EnableEmulationOnWinArm64
                 ? x64Tool
                 : CertificateInstallerLocator.FileName;
             _logger.LogInformation("Using tool: {Tool}", tool);
-            
+
             var temp = Path.GetTempFileName();
             _logger.LogInformation("Using temp file for results: {TempFile}", temp);
-            
+
             using var process = new Process();
             var start = process.StartInfo;
             start.FileName = "cmd";
@@ -198,9 +198,9 @@ namespace Microsoft.Web.Administration
             start.Arguments = arguments;
             start.CreateNoWindow = true;
             start.WindowStyle = ProcessWindowStyle.Hidden;
-            
+
             _logger.LogInformation("Executing command: {FileName} {Arguments}", start.FileName, arguments);
-            
+
             AspNetCoreHelper.InjectEnvironmentVariables(site, start, actualExecutable);
 
             try
@@ -209,7 +209,7 @@ namespace Microsoft.Web.Administration
                 _logger.LogInformation("Process started with ID: {ProcessId}", process.Id);
                 process.WaitForExit();
                 _logger.LogInformation("Process exited with code: {ExitCode}", process.ExitCode);
-                
+
                 if (process.ExitCode > 0)
                 {
                     site.State = ObjectState.Started;
@@ -237,14 +237,14 @@ namespace Microsoft.Web.Administration
                 if (ex.NativeErrorCode != (int)Windows.Win32.Foundation.WIN32_ERROR.ERROR_CANCELLED)
                 {
                     string resultContent = File.Exists(temp) ? File.ReadAllText(temp) : "no result file available";
-                    _logger.LogError(ex, "Win32 exception starting site {SiteName}: {Message}. Result file: {ResultContent}", 
+                    _logger.LogError(ex, "Win32 exception starting site {SiteName}: {Message}. Result file: {ResultContent}",
                         site.Name, ex.Message, resultContent);
                     throw new COMException(
                         $"cannot start site: {ex.Message}, {resultContent}");
                 }
 
                 string cancelContent = File.Exists(temp) ? File.ReadAllText(temp) : "no result file available";
-                _logger.LogWarning(ex, "Site start cancelled by user for {SiteName}: {Message}. Result file: {CancelContent}", 
+                _logger.LogWarning(ex, "Site start cancelled by user for {SiteName}: {Message}. Result file: {CancelContent}",
                     site.Name, ex.Message, cancelContent);
                 throw new COMException(
                     $"site start cancelled: {ex.Message}, {cancelContent}");
@@ -252,7 +252,7 @@ namespace Microsoft.Web.Administration
             catch (Exception ex)
             {
                 string exContent = File.Exists(temp) ? File.ReadAllText(temp) : "no result file available";
-                _logger.LogError(ex, "Exception starting site {SiteName}: {Message}. Result file: {ExContent}", 
+                _logger.LogError(ex, "Exception starting site {SiteName}: {Message}. Result file: {ExContent}",
                     site.Name, ex.Message, exContent);
                 throw new COMException(
                     $"cannot start site: {ex.Message}, {exContent}");
@@ -261,7 +261,7 @@ namespace Microsoft.Web.Administration
             {
                 site.State = process.ExitCode > 0 ? ObjectState.Started : ObjectState.Stopped;
                 _logger.LogInformation("Set site {SiteName} state to {State}", site.Name, site.State);
-                
+
                 if (File.Exists(temp))
                 {
                     try
@@ -280,29 +280,29 @@ namespace Microsoft.Web.Administration
         internal override void Stop(Site site)
         {
             _logger.LogInformation("Stopping site {SiteName} (ID: {SiteId})", site.Name, site.Id);
-            
+
             try
             {
                 using var process = new Process();
                 var start = process.StartInfo;
-                
+
                 bool needsElevation = site.Bindings.ElevationRequired && !PublicNativeMethods.IsProcessElevated;
                 start.Verb = needsElevation ? "runas" : null;
-                
+
                 if (needsElevation)
                 {
                     _logger.LogInformation("Site {SiteName} requires elevation, launching with runas", site.Name);
                 }
-                
+
                 start.UseShellExecute = true;
                 start.FileName = "cmd";
                 var arguments = $"/c \"\"{CertificateInstallerLocator.FileName}\" /k /config:\"{site.FileContext.FileName}\" /siteId:{site.Id}\"";
                 start.Arguments = arguments;
                 start.CreateNoWindow = true;
                 start.WindowStyle = ProcessWindowStyle.Hidden;
-                
+
                 _logger.LogInformation("Executing command to stop site: {FileName} {Arguments}", start.FileName, arguments);
-                
+
                 process.Start();
                 _logger.LogInformation("Stop process started with ID: {ProcessId}", process.Id);
                 process.WaitForExit();
@@ -315,7 +315,7 @@ namespace Microsoft.Web.Administration
                 }
                 else
                 {
-                    _logger.LogWarning("Stop operation for site {SiteName} returned non-zero exit code: {ExitCode}", 
+                    _logger.LogWarning("Stop operation for site {SiteName} returned non-zero exit code: {ExitCode}",
                         site.Name, process.ExitCode);
                 }
             }

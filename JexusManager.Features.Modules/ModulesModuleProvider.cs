@@ -12,7 +12,7 @@ namespace JexusManager.Features.Modules
     {
         public override Type ServiceType
         {
-            get { return null; }
+            get { return typeof(ModulesService); }
         }
 
         public override ModuleDefinition GetModuleDefinition(IManagementContext context)

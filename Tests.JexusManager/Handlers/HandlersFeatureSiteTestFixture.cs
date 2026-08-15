@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -81,8 +81,12 @@ namespace Tests.Handlers
 
             serviceContainer.AddService(typeof(IManagementUIService), substitute);
 
+            var provider = new HandlersModuleProvider();
+            var configurationService = (IConfigurationService)serviceContainer.GetService(typeof(IConfigurationService));
+            var connection = InProcessConnectionFactory.Configure(serviceContainer, configurationService, new[] { provider });
+            var definition = provider.GetModuleDefinition(null);
             var module = new HandlersModule();
-            module.TestInitialize(serviceContainer, null);
+            module.TestInitialize(serviceContainer, (ModuleInfo)connection.Modules[definition.Name]);
 
             _feature = new HandlersFeature(module);
             _feature.Load();
@@ -134,7 +138,7 @@ namespace Tests.Handlers
                     new XAttribute("path", "WebSite1")));
             document.Save(Expected);
 
-            var item = new HandlersItem(null);
+            var item = new HandlersItem();
             item.Name = "test";
             item.Path = "*";
             _feature.AddItem(item);
@@ -207,7 +211,7 @@ namespace Tests.Handlers
                                 new XAttribute("verb", "*"))))));
             document.Save(Expected);
 
-            var item = new HandlersItem(null);
+            var item = new HandlersItem();
             item.Name = "test";
             item.Path = "*";
 
@@ -245,7 +249,7 @@ namespace Tests.Handlers
                                 new XAttribute("verb", "*"))))));
             document.Save(Expected);
 
-            var item = new HandlersItem(null);
+            var item = new HandlersItem();
             item.Name = "test";
             item.Path = "*";
             _feature.AddItem(item);
@@ -269,7 +273,7 @@ namespace Tests.Handlers
                     new XElement("system.webServer")));
             document.Save(Expected);
 
-            var item = new HandlersItem(null);
+            var item = new HandlersItem();
             item.Name = "test";
             item.Path = "*";
             _feature.AddItem(item);
@@ -325,7 +329,7 @@ namespace Tests.Handlers
             content.Add(one);
             document.Save(Expected);
 
-            var item = new HandlersItem(null);
+            var item = new HandlersItem();
             item.Name = "test";
             item.Path = "*";
             _feature.AddItem(item);
@@ -376,7 +380,7 @@ namespace Tests.Handlers
                                 new XAttribute("verb", "*"))))));
             document.Save(Expected);
 
-            var item = new HandlersItem(null);
+            var item = new HandlersItem();
             item.Name = "test";
             item.Path = "*";
             _feature.AddItem(item);

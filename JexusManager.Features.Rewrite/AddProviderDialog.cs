@@ -77,7 +77,7 @@ namespace JexusManager.Features.Rewrite
                         return;
                     }
 
-                    Item ??= new ProviderItem(null);
+                    Item ??= new ProviderItem();
                     Item.Name = txtName.Text;
                     Item.Type = cbManagedType.Text;
 

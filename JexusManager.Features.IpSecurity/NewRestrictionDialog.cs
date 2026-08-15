@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -56,7 +56,7 @@ namespace JexusManager.Features.IpSecurity
                             return;
                         }
 
-                        Item = new IpSecurityItem(null);
+                        Item = new IpSecurityItem();
                         Item.Address = txtAddress.Text;
                         Item.Mask = string.Empty;
                         Item.Allowed = allowed;
@@ -108,7 +108,7 @@ namespace JexusManager.Features.IpSecurity
                         }
                     }
 
-                    Item = new IpSecurityItem(null);
+                    Item = new IpSecurityItem();
                     Item.Address = txtRange.Text;
                     Item.Mask = txtMask.Text;
                     Item.Allowed = allowed;

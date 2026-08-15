@@ -77,7 +77,13 @@ namespace JexusManager.Features.Rewrite
 
         public void Load()
         {
-            LoadItems();
+            Items.Clear();
+            foreach (var setting in _provider.Settings)
+            {
+                Items.Add(setting);
+            }
+
+            OnSettingsSaved();
         }
 
         public void Add()
@@ -125,12 +131,45 @@ namespace JexusManager.Features.Rewrite
 
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
         {
-            return _provider.Element.GetCollection("settings");
+            throw new NotSupportedException("Provider settings are accessed through the module service.");
         }
 
         protected override void OnSettingsSaved()
         {
             OnSettingsUpdated();
+        }
+
+        public override void AddItem(SettingItem item)
+        {
+            ((RewriteModule)Module).Proxy.AddProviderSetting(_provider.Name, item);
+            _provider.Settings.Add(item);
+            Load();
+            SelectedItem = Items.Find(candidate => candidate.Equals(item));
+            OnSettingsSaved();
+        }
+
+        public override void EditItem(SettingItem item)
+        {
+            var original = SelectedItem ?? throw new InvalidOperationException("No setting is selected.");
+            ((RewriteModule)Module).Proxy.UpdateProviderSetting(_provider.Name, original, item);
+            var index = _provider.Settings.IndexOf(original);
+            if (index >= 0)
+            {
+                _provider.Settings[index] = item;
+            }
+
+            Load();
+            SelectedItem = Items.Find(candidate => candidate.Equals(item));
+            OnSettingsSaved();
+        }
+
+        public override void RemoveItem()
+        {
+            var item = SelectedItem ?? throw new InvalidOperationException("No setting is selected.");
+            ((RewriteModule)Module).Proxy.RemoveProviderSetting(_provider.Name, item);
+            _provider.Settings.Remove(item);
+            SelectedItem = null;
+            Load();
         }
 
         public bool ShowHelp()

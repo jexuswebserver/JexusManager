@@ -12,7 +12,7 @@ namespace JexusManager.Features.IsapiFilters
     {
         public override Type ServiceType
         {
-            get { return null; }
+            get { return typeof(IsapiFiltersService); }
         }
 
         public override ModuleDefinition GetModuleDefinition(IManagementContext context)

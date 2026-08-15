@@ -96,59 +96,23 @@ namespace JexusManager.Features.Logging
 
         public void Load()
         {
+            var settings = ((LoggingModule)Module).Proxy.GetSettings();
+            Mode = settings.Mode;
+            Encoding = settings.Encoding;
+            LogFormat = settings.LogFormat;
+            Directory = settings.Directory;
+            LogTargetW3C = settings.LogTargetW3C;
+            LocalTimeRollover = settings.LocalTimeRollover;
+            TruncateSizeString = settings.TruncateSizeString;
+            Period = settings.Period;
+            SetEnabled(settings.Enabled);
+
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.applicationHost/log", null, false);
-            Mode = (long)section.Attributes["centralLogFileMode"].Value;
-            Encoding = (bool)section.Attributes["logInUTF8"].Value ? 0 : 1;
-
-            if (service.Server != null)
+            if (service != null)
             {
-                var section2 = service.GetSection("system.applicationHost/sites");
-                var element = section2.ChildElements["siteDefaults"].ChildElements["logFile"];
-                var parent = section2.ChildElements["siteDefaults"];
-                Fields = new Fields(new SiteLogFile(element, parent));
-                LogFormat = (long)element.Attributes["logFormat"].Value;
-                Directory = element.Attributes["directory"].Value.ToString();
-                if (element.Schema.AttributeSchemas["logTargetW3C"] != null)
-                {
-                    LogTargetW3C = (long)element.Attributes["logTargetW3C"].Value;
-                }
-                else
-                {
-                    LogTargetW3C = -1;
-                }
-
-                LocalTimeRollover = (bool)element.Attributes["localTimeRollover"].Value;
-                TruncateSizeString = element.Attributes["truncateSize"].Value.ToString();
-                Period = (long)element.Attributes["period"].Value;
+                CanBrowse = service.Application == null || service.Application.IsRoot();
+                CanEncoding = service.Server != null;
             }
-            else
-            {
-                Site site = service.Application.GetSite();
-                var logFile = site.LogFile;
-                Fields = new Fields(logFile);
-                LogFormat = (long)logFile.LogFormat;
-                Directory = Path.Combine(logFile.Directory, $"W3SVC{site.Id}");
-                if (logFile.Schema.AttributeSchemas["logTargetW3C"] != null)
-                {
-                    LogTargetW3C = (long)logFile.LogTargetW3C;
-                }
-                else
-                {
-                    LogTargetW3C = -1;
-                }
-
-                LocalTimeRollover = logFile.LocalTimeRollover;
-                TruncateSizeString = logFile.TruncateSize.ToString();
-                Period = (long)logFile.Period;
-            }
-
-            CanBrowse = service.Application == null || service.Application.IsRoot();
-            CanEncoding = service.Server != null;
-
-            ConfigurationSection httpLoggingSection1 = service.GetSection("system.webServer/httpLogging", null, false);
-            var dontLog = (bool)httpLoggingSection1["dontLog"];
-            SetEnabled(!dontLog);
         }
 
         public long Period { get; set; }
@@ -173,17 +137,13 @@ namespace JexusManager.Features.Logging
 
         private void Enable()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            ConfigurationSection httpLoggingSection1 = service.GetSection("system.webServer/httpLogging", null, false);
-            httpLoggingSection1["dontLog"] = false;
+            ((LoggingModule)Module).Proxy.SetEnabled(true);
             SetEnabled(true);
         }
 
         private void Disable()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            ConfigurationSection httpLoggingSection1 = service.GetSection("system.webServer/httpLogging", null, false);
-            httpLoggingSection1["dontLog"] = true;
+            ((LoggingModule)Module).Proxy.SetEnabled(false);
             SetEnabled(false);
         }
 
@@ -251,49 +211,29 @@ namespace JexusManager.Features.Logging
 
         public bool ApplyChanges()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            if (service.Server != null)
+            if (GetService(typeof(IConfigurationService)) is not IConfigurationService service)
             {
-                var section = service.GetSection("system.applicationHost/log");
-                section.Attributes["centralLogFileMode"].Value = Mode;
-                section.Attributes["logInUTF8"].Value = Encoding == 0;
-
-                var section2 = service.GetSection("system.applicationHost/sites");
-                var element = section2.ChildElements["siteDefaults"].ChildElements["logFile"];
-                element.Attributes["logFormat"].Value = LogFormat;
-                element.Attributes["directory"].Value = Directory;
-                if (element.Schema.AttributeSchemas["logTargetW3C"] != null)
-                {
-                    element.Attributes["logTargetW3C"].Value = LogTargetW3C;
-                }
-
-                element.Attributes["localTimeRollover"].Value = LocalTimeRollover;
-                element.Attributes["truncateSize"].Value = Int64.Parse(TruncateSizeString);
-                element.Attributes["period"].Value = Period;
-
-                var collection = element.GetCollection("customFields");
-                collection.Clear();
-                foreach (var item in Fields.CustomLogFields)
-                {
-                    collection.Add(item);
-                }
-
-                element.Attributes["logExtFileFlags"].Value = (long)Fields.LogExtFileFlags;
+                return false;
             }
-            else
-            {
-                var logFile = service.Application.GetSite().LogFile;
-                logFile.LogFormat = (LogFormat)LogFormat;
-                logFile.Directory = Directory;
-                if (logFile.Schema.AttributeSchemas["logTargetW3C"] != null)
-                {
-                    logFile.LogTargetW3C = (LogTargetW3C)LogTargetW3C;
-                }
 
-                logFile.LocalTimeRollover = LocalTimeRollover;
+            var settings = new LoggingSettings
+            {
+                Enabled = IsEnabled,
+                Mode = Mode,
+                Encoding = Encoding,
+                LogFormat = LogFormat,
+                Directory = Directory,
+                LogTargetW3C = LogTargetW3C,
+                LocalTimeRollover = LocalTimeRollover,
+                TruncateSizeString = TruncateSizeString,
+                Period = Period
+            };
+
+            ((LoggingModule)Module).Proxy.Apply(settings);
+            if (service.Server == null && Fields != null)
+            {
                 var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
-                long size;
-                if (!long.TryParse(TruncateSizeString, out size))
+                if (!long.TryParse(TruncateSizeString, out var size))
                 {
                     dialog.ShowMessage("The maximum file size must be a valid, positive integer.", Name, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return false;
@@ -305,18 +245,9 @@ namespace JexusManager.Features.Logging
                     return false;
                 }
 
-                logFile.TruncateSize = size;
-                logFile.Period = (LoggingRolloverPeriod)Period;
-                logFile.CustomLogFields.Clear();
-                foreach (var item in Fields.CustomLogFields)
-                {
-                    logFile.CustomLogFields.Add(item);
-                }
-
-                logFile.LogExtFileFlags = Fields.LogExtFileFlags;
+                service.ServerManager.CommitChanges();
             }
 
-            service.ServerManager.CommitChanges();
             return true;
         }
     }

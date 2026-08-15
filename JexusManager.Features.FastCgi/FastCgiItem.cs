@@ -10,6 +10,11 @@ namespace JexusManager.Features.FastCgi
 
     internal class FastCgiItem : IItem<FastCgiItem>
     {
+        public FastCgiItem()
+            : this(null)
+        {
+        }
+
         public FastCgiItem(ConfigurationElement element)
         {
             Element = element;

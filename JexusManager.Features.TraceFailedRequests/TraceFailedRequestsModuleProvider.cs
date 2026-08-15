@@ -12,7 +12,7 @@ namespace JexusManager.Features.TraceFailedRequests
     {
         public override Type ServiceType
         {
-            get { return null; }
+            get { return typeof(TraceFailedRequestsService); }
         }
 
         public override ModuleDefinition GetModuleDefinition(IManagementContext context)

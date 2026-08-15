@@ -15,22 +15,22 @@ namespace JexusManager.Features.IpSecurity
 
     internal partial class SetRestrictionsDialog : DialogForm
     {
-        public SetRestrictionsDialog(IServiceProvider serviceProvider, ConfigurationSection section, IpSecurityFeature feature)
+        public SetRestrictionsDialog(IServiceProvider serviceProvider, IpSecuritySettings settings, IpSecurityFeature feature)
             : base(serviceProvider)
         {
             InitializeComponent();
-            cbDomain.Checked = (bool)section["enableReverseDns"];
-            cbAccess.SelectedIndex = (bool)section["allowUnlisted"] ? 0 : 1;
-            cbProxy.Enabled = section.Schema.AttributeSchemas["enabled"] != null;
+            cbDomain.Checked = settings.EnableReverseDns;
+            cbAccess.SelectedIndex = settings.AllowUnlisted ? 0 : 1;
+            cbProxy.Enabled = settings.EnableProxyMode != null;
             if (cbProxy.Enabled)
             {
-                cbProxy.Checked = (bool)section["enableProxyMode"];
+                cbProxy.Checked = settings.EnableProxyMode.Value;
             }
 
-            cbAction.Enabled = section.Schema.AttributeSchemas["denyAction"] != null;
+            cbAction.Enabled = settings.DenyAction != null;
             if (cbAction.Enabled)
             {
-                var action = (long)section["denyAction"];
+                var action = settings.DenyAction.Value;
                 if (action == 0L)
                 {
                     cbAction.SelectedIndex = 0;
@@ -57,30 +57,30 @@ namespace JexusManager.Features.IpSecurity
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    section["enableReverseDns"] = cbDomain.Checked;
-                    section["allowUnlisted"] = cbAccess.SelectedIndex == 0;
+                    settings.EnableReverseDns = cbDomain.Checked;
+                    settings.AllowUnlisted = cbAccess.SelectedIndex == 0;
                     if (cbProxy.Enabled)
                     {
-                        section["enableProxyMode"] = cbProxy.Checked;
+                        settings.EnableProxyMode = cbProxy.Checked;
                     }
 
                     if (cbAction.Enabled)
                     {
                         if (cbAction.SelectedIndex == 0)
                         {
-                            section["denyAction"] = 0L;
+                            settings.DenyAction = 0L;
                         }
                         else if (cbAction.SelectedIndex == 1)
                         {
-                            section["denyAction"] = 401L;
+                            settings.DenyAction = 401L;
                         }
                         else if (cbAction.SelectedIndex == 2)
                         {
-                            section["denyAction"] = 403L;
+                            settings.DenyAction = 403L;
                         }
                         else
                         {
-                            section["denyAction"] = 404L;
+                            settings.DenyAction = 404L;
                         }
                     }
 

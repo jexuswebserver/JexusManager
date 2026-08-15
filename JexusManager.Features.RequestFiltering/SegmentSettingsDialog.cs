@@ -16,18 +16,17 @@ namespace JexusManager.Features.RequestFiltering
 
     public partial class SegmentSettingsDialog : DialogForm
     {
-        public SegmentSettingsDialog(IServiceProvider serviceProvider, ConfigurationSection section)
+        public SegmentSettingsDialog(IServiceProvider serviceProvider, RequestFilteringSettings settings)
             : base(serviceProvider)
         {
             InitializeComponent();
-            cbExtension.Checked = (bool)section.ChildElements["fileExtensions"]["allowUnlisted"];
-            cbVerb.Checked = (bool)section.ChildElements["verbs"]["allowUnlisted"];
-            cbHigh.Checked = (bool)section["allowHighBitCharacters"];
-            cbDouble.Checked = (bool)section["allowDoubleEscaping"];
-            var limits = section.ChildElements["requestLimits"];
-            txtContent.Text = limits["maxAllowedContentLength"].ToString();
-            txtURL.Text = limits["maxUrl"].ToString();
-            txtQuery.Text = limits["maxQueryString"].ToString();
+            cbExtension.Checked = settings.FileExtensionsAllowUnlisted;
+            cbVerb.Checked = settings.VerbsAllowUnlisted;
+            cbHigh.Checked = settings.AllowHighBitCharacters;
+            cbDouble.Checked = settings.AllowDoubleEscaping;
+            txtContent.Text = settings.MaxAllowedContentLength.ToString();
+            txtURL.Text = settings.MaxUrl.ToString();
+            txtQuery.Text = settings.MaxQueryString.ToString();
 
             var container = new CompositeDisposable();
             FormClosed += (sender, args) => container.Dispose();
@@ -37,10 +36,10 @@ namespace JexusManager.Features.RequestFiltering
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    section.ChildElements["fileExtensions"]["allowUnlisted"] = cbExtension.Checked;
-                    section.ChildElements["verbs"]["allowUnlisted"] = cbVerb.Checked;
-                    section["allowHighBitCharacters"] = cbHigh.Checked;
-                    section["allowDoubleEscaping"] = cbDouble.Checked;
+                    settings.FileExtensionsAllowUnlisted = cbExtension.Checked;
+                    settings.VerbsAllowUnlisted = cbVerb.Checked;
+                    settings.AllowHighBitCharacters = cbHigh.Checked;
+                    settings.AllowDoubleEscaping = cbDouble.Checked;
 
                     uint result;
                     if (!uint.TryParse(txtContent.Text, out result))
@@ -57,7 +56,7 @@ namespace JexusManager.Features.RequestFiltering
                         return;
                     }
 
-                    limits["maxAllowedContentLength"] = result;
+                    settings.MaxAllowedContentLength = result;
 
                     if (!uint.TryParse(txtURL.Text, out result))
                     {
@@ -73,7 +72,7 @@ namespace JexusManager.Features.RequestFiltering
                         return;
                     }
 
-                    limits["maxUrl"] = result;
+                    settings.MaxUrl = result;
 
                     if (!uint.TryParse(txtQuery.Text, out result))
                     {
@@ -89,7 +88,7 @@ namespace JexusManager.Features.RequestFiltering
                         return;
                     }
 
-                    limits["maxQueryString"] = result;
+                    settings.MaxQueryString = result;
                     DialogResult = DialogResult.OK;
                 }));
 

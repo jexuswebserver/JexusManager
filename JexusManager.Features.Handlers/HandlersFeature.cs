@@ -178,15 +178,12 @@ namespace JexusManager.Features.Handlers
 
         public void Load()
         {
-            Items = new List<HandlersItem>();
             var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-
-            // server level modules are in "" location.
-            ConfigurationSection section = service.Scope == ManagementScope.Server ? service.GetSection("system.webServer/handlers", string.Empty) : service.GetSection("system.webServer/handlers", null, false);
-            AccessPolicy = (long)section["accessPolicy"];
+            AccessPolicy = Proxy.GetSettings().AccessPolicy;
             CanRevert = service.Scope != ManagementScope.Server;
             IsInOrder = false;
-            LoadItems();
+            Items = new List<HandlersItem>(Proxy.GetItems());
+            OnSettingsSaved();
         }
 
         public long AccessPolicy { get; set; }
@@ -237,6 +234,7 @@ namespace JexusManager.Features.Handlers
 
         public void Set()
         {
+            var settings = new HandlersSettings { AccessPolicy = AccessPolicy };
             using (var dialog = new PermissionsDialog(Module, this))
             {
                 if (dialog.ShowDialog() != DialogResult.OK)
@@ -245,8 +243,7 @@ namespace JexusManager.Features.Handlers
                 }
             }
 
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            service.ServerManager.CommitChanges();
+            Proxy.ApplySettings(new HandlersSettings { AccessPolicy = AccessPolicy });
             OnSettingsSaved();
         }
 
@@ -348,7 +345,8 @@ namespace JexusManager.Features.Handlers
                 }
             }
 
-            MoveUpItem();
+            Proxy.MoveUp(SelectedItem);
+            Load();
         }
 
         public void MoveDown()
@@ -367,14 +365,13 @@ namespace JexusManager.Features.Handlers
                 }
             }
 
-            MoveDownItem();
+            Proxy.MoveDown(SelectedItem);
+            Load();
         }
 
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
         {
-            // server level modules are in "" location.
-            ConfigurationSection section = service.Scope == ManagementScope.Server ? service.GetSection("system.webServer/handlers", string.Empty) : service.GetSection("system.webServer/handlers", null, false);
-            return section.GetCollection();
+            throw new NotSupportedException("Handlers are accessed through the module service.");
         }
 
         public void InOrder()
@@ -414,6 +411,54 @@ namespace JexusManager.Features.Handlers
         {
             HandlersSettingsUpdated?.Invoke();
         }
+
+        public override void AddItem(HandlersItem item)
+        {
+            Proxy.Add(item);
+            LoadAndSelect(item);
+        }
+
+        public override void EditItem(HandlersItem item)
+        {
+            var original = SelectedItem ?? throw new InvalidOperationException("No handler is selected.");
+            Proxy.Update(original, item);
+            LoadAndSelect(item);
+        }
+
+        public override void RemoveItem()
+        {
+            var item = SelectedItem ?? throw new InvalidOperationException("No handler is selected.");
+            Proxy.Remove(item);
+            SelectedItem = null;
+            Load();
+        }
+
+        public override void RevertItems()
+        {
+            Proxy.Revert();
+            SelectedItem = null;
+            Load();
+        }
+
+        public void Rename(HandlersItem item, string name)
+        {
+            if (item == null)
+            {
+                return;
+            }
+
+            Proxy.Rename(item, name);
+            Load();
+        }
+
+        private void LoadAndSelect(HandlersItem item)
+        {
+            Load();
+            SelectedItem = Items.Find(candidate => candidate.Equals(item));
+            OnSettingsSaved();
+        }
+
+        private HandlersModuleProxy Proxy => ((HandlersModule)Module).Proxy;
 
         public virtual bool ShowHelp()
         {

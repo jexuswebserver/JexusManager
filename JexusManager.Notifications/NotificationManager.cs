@@ -15,7 +15,7 @@ namespace JexusManager.Notifications
         private readonly List<NotificationControl> _activeNotifications = new List<NotificationControl>();
         private readonly int _spacing = 10;
         private readonly NotificationPosition _position;
-        
+
         /// <summary>
         /// Position for notifications on screen
         /// </summary>
@@ -25,22 +25,22 @@ namespace JexusManager.Notifications
             /// Bottom right corner
             /// </summary>
             BottomRight,
-            
+
             /// <summary>
             /// Bottom left corner
             /// </summary>
             BottomLeft,
-            
+
             /// <summary>
             /// Top right corner
             /// </summary>
             TopRight,
-            
+
             /// <summary>
             /// Top left corner
             /// </summary>
             TopLeft,
-            
+
             /// <summary>
             /// Bottom center
             /// </summary>
@@ -69,7 +69,7 @@ namespace JexusManager.Notifications
                     }
                 };
             }
-            
+
             return manager;
         }
 
@@ -89,8 +89,8 @@ namespace JexusManager.Notifications
         /// <param name="fadeDuration">How long to fade out in milliseconds</param>
         /// <param name="clickAction">Optional action to perform when notification is clicked</param>
         /// <returns>The created notification control</returns>
-        public NotificationControl Show(string title, string message, 
-            NotificationControl.NotificationType type = NotificationControl.NotificationType.Info, 
+        public NotificationControl Show(string title, string message,
+            NotificationControl.NotificationType type = NotificationControl.NotificationType.Info,
             int displayDuration = 5000, int fadeDuration = 500, Action clickAction = null)
         {
             // Create the notification control
@@ -98,16 +98,16 @@ namespace JexusManager.Notifications
             {
                 Visible = false // Will be shown after positioning
             };
-            
+
             _parentForm.BeginInvoke(new Action(() =>
             {
                 // Add to parent form
                 _parentForm.Controls.Add(notification);
                 notification.BringToFront();
-                
+
                 // Add to active notifications and position
                 _activeNotifications.Add(notification);
-                
+
                 // Register for removal
                 notification.Disposed += (sender, args) =>
                 {
@@ -117,11 +117,11 @@ namespace JexusManager.Notifications
                         RepositionNotifications();
                     }
                 };
-                
+
                 RepositionNotifications();
                 notification.Show();
             }));
-            
+
             return notification;
         }
 
@@ -135,12 +135,12 @@ namespace JexusManager.Notifications
             {
                 return;
             }
-            
+
             int x = _spacing;
             int y = _spacing;
             int notificationWidth = _activeNotifications[0].Width;
             int notificationHeight = _activeNotifications[0].Height;
-            
+
             // Set starting position based on parent form and notification position setting
             switch (_position)
             {
@@ -148,22 +148,22 @@ namespace JexusManager.Notifications
                     x = _parentForm.ClientSize.Width - notificationWidth - _spacing;
                     y = _parentForm.ClientSize.Height - notificationHeight - _spacing;
                     break;
-                    
+
                 case NotificationPosition.BottomLeft:
                     x = _spacing;
                     y = _parentForm.ClientSize.Height - notificationHeight - _spacing;
                     break;
-                    
+
                 case NotificationPosition.BottomCenter:
                     x = (_parentForm.ClientSize.Width - notificationWidth) / 2;
                     y = _parentForm.ClientSize.Height - notificationHeight - _spacing;
                     break;
-                    
+
                 case NotificationPosition.TopRight:
                     x = _parentForm.ClientSize.Width - notificationWidth - _spacing;
                     y = _spacing;
                     break;
-                    
+
                 case NotificationPosition.TopLeft:
                     x = _spacing;
                     y = _spacing;
@@ -174,7 +174,7 @@ namespace JexusManager.Notifications
             for (int i = 0; i < _activeNotifications.Count; i++)
             {
                 var notification = _activeNotifications[i];
-                
+
                 switch (_position)
                 {
                     case NotificationPosition.BottomRight:
@@ -183,7 +183,7 @@ namespace JexusManager.Notifications
                         // Stack upwards from bottom
                         notification.Location = new Point(x, y - (i * (notification.Height + _spacing)));
                         break;
-                        
+
                     case NotificationPosition.TopRight:
                     case NotificationPosition.TopLeft:
                         // Stack downwards from top

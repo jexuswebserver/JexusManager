@@ -4,33 +4,21 @@
 
 namespace JexusManager.Features.Rewrite
 {
+    using System;
+
     using Microsoft.Web.Administration;
 
+    [Serializable]
     public class SettingItem : IItem<SettingItem>
     {
-        public ConfigurationElement Element { get; set; }
-
-        public SettingItem(ConfigurationElement element)
+        public SettingItem()
         {
-            Flag = element == null || element.IsLocallyStored ? "Local" : "Inherited";
-            Element = element;
-            if (element == null)
-            {
-                Key = string.Empty;
-                Value = string.Empty;
-                return;
-            }
-
-            Key = (string)element["key"];
-            Value = (string)element["value"];
-            // TODO:
-            //var temp = (string)element["encryptedValue"];
-            //if (temp != null)
-            //{
-            //    Encrypted = true;
-            //    Value = temp;
-            //}
+            Flag = "Local";
+            Key = string.Empty;
+            Value = string.Empty;
         }
+
+        public ConfigurationElement Element { get; set; }
 
         public string Key { get; set; }
 
@@ -38,31 +26,20 @@ namespace JexusManager.Features.Rewrite
 
         public bool Encrypted { get; set; }
 
-        public string Flag { get; set; }
-
         public void Apply()
         {
-            Element["key"] = Key;
-            if (Encrypted)
-            {
-                Element["encryptedValue"] = Value;
-                Element["value"] = null;
-            }
-            else
-            {
-                //Element["encryptedValue"] = null;
-                Element["value"] = Value;
-            }
         }
 
         public bool Match(SettingItem other)
         {
-            return other != null && Key == other.Key;
+            return other != null && other.Key == Key;
         }
 
         public bool Equals(SettingItem other)
         {
-            return Match(other) && Value == other.Value;
+            return Match(other);
         }
+
+        public string Flag { get; set; }
     }
 }

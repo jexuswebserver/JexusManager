@@ -105,23 +105,21 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         public void Load()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.webServer/rewrite/allowedServerVariables");
-            CanRevert = section.CanRevert();
-            LoadItems();
+            Items.Clear();
+            Items.AddRange(((RewriteModule)Module).Proxy.GetAllowedVariables());
+            CanRevert = GetService(typeof(IConfigurationService)) is IConfigurationService service && service.GetSection("system.webServer/rewrite/allowedServerVariables").CanRevert();
+            OnSettingsSaved();
         }
 
         public void Add()
         {
-            using (var dialog = new AddAllowedVariableDialog(Module, this))
+            using var dialog = new AddAllowedVariableDialog(Module, this);
+            if (dialog.ShowDialog() != DialogResult.OK)
             {
-                if (dialog.ShowDialog() != DialogResult.OK)
-                {
-                    return;
-                }
-
-                AddItem(dialog.Item);
+                return;
             }
+
+            AddItem(dialog.Item);
         }
 
         public void Remove()
@@ -165,6 +163,13 @@ namespace JexusManager.Features.Rewrite.Inbound
             RevertItems();
         }
 
+        public override void RevertItems()
+        {
+            ((RewriteModule)Module).Proxy.RevertAllowedVariables();
+            SelectedItem = null;
+            Load();
+        }
+
         private void Edit()
         {
             DoubleClick(SelectedItem);
@@ -174,7 +179,6 @@ namespace JexusManager.Features.Rewrite.Inbound
         {
             RenameInline(item);
         }
-
         public override void InitializeGrouping(ToolStripComboBox cbGroup)
         {
             cbGroup.Items.AddRange(["No Grouping", "Entry Type"]);
@@ -193,13 +197,41 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
         {
-            var section = service.GetSection("system.webServer/rewrite/allowedServerVariables");
-            return section.GetCollection();
+            throw new NotSupportedException("Allowed server variables are accessed through the module service.");
         }
 
         protected override void OnSettingsSaved()
         {
             OnRewriteSettingsSaved();
+        }
+
+        public override void AddItem(AllowedVariableItem item)
+        {
+            ((RewriteModule)Module).Proxy.AddAllowedVariable(item);
+            Load();
+            SelectedItem = Items.Find(candidate => candidate.Equals(item));
+            OnSettingsSaved();
+        }
+
+        public override void RemoveItem()
+        {
+            var item = SelectedItem ?? throw new InvalidOperationException("No entry is selected.");
+            ((RewriteModule)Module).Proxy.RemoveAllowedVariable(item);
+            SelectedItem = null;
+            Load();
+        }
+
+        public void Rename(AllowedVariableItem item, string name)
+        {
+            if (item == null)
+            {
+                return;
+            }
+
+            var updated = new AllowedVariableItem { Name = name };
+            ((RewriteModule)Module).Proxy.AddAllowedVariable(updated);
+            ((RewriteModule)Module).Proxy.RemoveAllowedVariable(item);
+            Load();
         }
 
         public bool CanRevert { get; private set; }

@@ -6,8 +6,10 @@ namespace JexusManager.Features.IsapiCgiRestriction
 {
     using Microsoft.Web.Administration;
 
+    [System.Serializable]
     internal class IsapiCgiRestrictionItem : IItem<IsapiCgiRestrictionItem>
     {
+        public IsapiCgiRestrictionItem() { Path = Description = string.Empty; Flag = "Local"; }
         public IsapiCgiRestrictionItem(ConfigurationElement element)
         {
             Element = element;
@@ -40,9 +42,6 @@ namespace JexusManager.Features.IsapiCgiRestriction
 
         public void Apply()
         {
-            Element["description"] = Description;
-            Element["path"] = Path;
-            Element["allowed"] = Allowed;
         }
 
         public bool Match(IsapiCgiRestrictionItem other)

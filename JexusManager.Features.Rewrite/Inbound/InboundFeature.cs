@@ -23,8 +23,7 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
         {
-            var outSection = service.GetSection("system.webServer/rewrite/rules");
-            return outSection.GetCollection();
+            throw new NotSupportedException("Inbound rules are accessed through the module service.");
         }
 
         protected override void OnSettingsSaved()
@@ -46,10 +45,10 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         public void Load()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.webServer/rewrite/rules");
-            CanRevert = section.CanRevert();
-            LoadItems();
+            Items.Clear();
+            Items.AddRange(((RewriteModule)Module).Proxy.GetInboundRules());
+            CanRevert = GetService(typeof(IConfigurationService)) is IConfigurationService service && service.GetSection("system.webServer/rewrite/rules").CanRevert();
+            OnSettingsSaved();
         }
 
         public bool CanRevert { get; set; }
@@ -64,7 +63,7 @@ namespace JexusManager.Features.Rewrite.Inbound
                 name = string.Format("LowerCaseRule{0}", index);
             }
             while (Items.All(item => item.Name != name));
-            var newRule = new InboundRule(null);
+            var newRule = new InboundRule();
             newRule.Name = name;
             newRule.Input = "URL Path";
             newRule.PatternSyntax = 0L;
@@ -119,7 +118,8 @@ namespace JexusManager.Features.Rewrite.Inbound
                 }
             }
 
-            MoveUpItem();
+            ((RewriteModule)Module).Proxy.MoveInboundRuleUp(SelectedItem);
+            Load();
         }
 
         public void MoveDown()
@@ -138,24 +138,23 @@ namespace JexusManager.Features.Rewrite.Inbound
                 }
             }
 
-            MoveDownItem();
+            ((RewriteModule)Module).Proxy.MoveInboundRuleDown(SelectedItem);
+            Load();
         }
 
         public void Disable()
         {
-            SelectedItem.Enabled = false;
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            SelectedItem.Element["enabled"] = false;
-            service.ServerManager.CommitChanges();
+            var item = SelectedItem;
+            item.Enabled = false;
+            ((RewriteModule)Module).Proxy.SetInboundRuleEnabled(item, false);
             OnSettingsSaved();
         }
 
         public void Enable()
         {
-            SelectedItem.Enabled = true;
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            SelectedItem.Element["enabled"] = true;
-            service.ServerManager.CommitChanges();
+            var item = SelectedItem;
+            item.Enabled = true;
+            ((RewriteModule)Module).Proxy.SetInboundRuleEnabled(item, true);
             OnSettingsSaved();
         }
 
@@ -172,7 +171,33 @@ namespace JexusManager.Features.Rewrite.Inbound
                 return;
             }
 
-            RevertItems();
+            ((RewriteModule)Module).Proxy.RevertInboundRules();
+            Load();
+        }
+
+        public override void AddItem(InboundRule item)
+        {
+            ((RewriteModule)Module).Proxy.AddInboundRule(item);
+            Load();
+            SelectedItem = Items.Find(candidate => candidate.Equals(item));
+            OnSettingsSaved();
+        }
+
+        public override void EditItem(InboundRule item)
+        {
+            var original = SelectedItem ?? throw new InvalidOperationException("No rule is selected.");
+            ((RewriteModule)Module).Proxy.UpdateInboundRule(original, item);
+            Load();
+            SelectedItem = Items.Find(candidate => candidate.Equals(item));
+            OnSettingsSaved();
+        }
+
+        public override void RemoveItem()
+        {
+            var item = SelectedItem ?? throw new InvalidOperationException("No rule is selected.");
+            ((RewriteModule)Module).Proxy.RemoveInboundRule(item);
+            SelectedItem = null;
+            Load();
         }
 
         public void Edit()

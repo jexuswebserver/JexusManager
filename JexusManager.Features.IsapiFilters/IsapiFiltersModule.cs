@@ -13,6 +13,8 @@ namespace JexusManager.Features.IsapiFilters
 
     internal class IsapiFiltersModule : Module
     {
+        private IsapiFiltersModuleProxy _proxy;
+        internal IsapiFiltersModuleProxy Proxy => _proxy ??= (IsapiFiltersModuleProxy)((Connection)GetService(typeof(Connection))).CreateProxy(this, typeof(IsapiFiltersModuleProxy));
         protected override void Initialize(IServiceProvider serviceProvider, ModuleInfo moduleInfo)
         {
             base.Initialize(serviceProvider, moduleInfo);

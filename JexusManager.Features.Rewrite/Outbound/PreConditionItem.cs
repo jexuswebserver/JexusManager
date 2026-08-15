@@ -4,34 +4,21 @@
 
 namespace JexusManager.Features.Rewrite.Outbound
 {
+    using System;
     using System.Collections.Generic;
 
     using Microsoft.Web.Administration;
 
+    [Serializable]
     public class PreConditionItem : IItem<PreConditionItem>
     {
-        public ConfigurationElement Element { get; set; }
-
-        public PreConditionItem(ConfigurationElement element)
+        public PreConditionItem()
         {
-            Element = element;
             Conditions = new List<ConditionItem>();
-            Flag = element == null || element.IsLocallyStored ? "Local" : "Inherited";
-            if (element == null)
-            {
-                return;
-            }
-
-            Name = (string)element["name"];
-            LogicalGrouping = (long)element["logicalGrouping"];
-            PatternSyntax = (long)element["patternSyntax"];
-            var items = element.GetCollection();
-            foreach (ConfigurationElement item in items)
-            {
-                var subElement = new ConditionItem(item);
-                Conditions.Add(subElement);
-            }
+            Flag = "Local";
         }
+
+        public ConfigurationElement Element { get; set; }
 
         public List<ConditionItem> Conditions { get; set; }
 
@@ -45,16 +32,6 @@ namespace JexusManager.Features.Rewrite.Outbound
 
         public void Apply()
         {
-            Element["name"] = Name;
-            Element["logicalGrouping"] = LogicalGrouping;
-            Element["patternSyntax"] = PatternSyntax;
-
-            var conditions = Element.GetCollection();
-            conditions.Clear();
-            foreach (var item in Conditions)
-            {
-                item.AppendTo(conditions);
-            }
         }
 
         public bool Match(PreConditionItem other)

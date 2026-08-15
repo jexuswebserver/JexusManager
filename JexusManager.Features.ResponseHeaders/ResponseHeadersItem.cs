@@ -6,8 +6,14 @@ namespace JexusManager.Features.ResponseHeaders
 {
     using Microsoft.Web.Administration;
 
+    [System.Serializable]
     internal class ResponseHeadersItem : IItem<ResponseHeadersItem>
     {
+        public ResponseHeadersItem()
+        {
+            Name = Value = string.Empty;
+            Flag = "Local";
+        }
         public string Name { get; internal set; }
         public string Value { get; internal set; }
         public string Flag { get; set; }
@@ -39,8 +45,6 @@ namespace JexusManager.Features.ResponseHeaders
 
         public void Apply()
         {
-            Element["name"] = Name;
-            Element["value"] = Value;
         }
     }
 }

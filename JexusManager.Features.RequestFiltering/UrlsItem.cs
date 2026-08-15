@@ -4,10 +4,18 @@
 
 namespace JexusManager.Features.RequestFiltering
 {
+    using System;
+
     using Microsoft.Web.Administration;
 
+    [Serializable]
     internal class UrlsItem : IDuoItem<UrlsItem>
     {
+        public UrlsItem(bool allowed)
+        {
+            Allowed = allowed;
+        }
+
         public bool Allowed { get; }
 
         public ConfigurationElement Element { get; set; }
@@ -17,37 +25,10 @@ namespace JexusManager.Features.RequestFiltering
             return other != null && other.Url == Url;
         }
 
-        public UrlsItem(ConfigurationElement element, bool allowed)
-        {
-            this.Allowed = allowed;
-            this.Element = element;
-            if (element == null)
-            {
-                return;
-            }
-
-            if (allowed)
-            {
-                Url = (string)element["url"];
-            }
-            else
-            {
-                Url = (string)element["sequence"];
-            }
-        }
-
         public string Url { get; set; }
 
         public void Apply()
         {
-            if (Allowed)
-            {
-                Element["url"] = Url;
-            }
-            else
-            {
-                Element["sequence"] = Url;
-            }
         }
 
         public string Flag { get; set; }

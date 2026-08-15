@@ -15,17 +15,15 @@ namespace JexusManager.Features.TraceFailedRequests.Wizards.AddTraceWizard
     internal partial class AddTraceWizard : WizardForm
     {
         private readonly TraceFailedRequestsItem _existing;
-        private readonly ConfigurationElement _config;
         private readonly AddTraceWizardData _wizardData;
         private readonly TraceFailedRequestsFeature _feature;
 
-        public AddTraceWizard(IServiceProvider serviceProvider, TraceFailedRequestsItem existing, ConfigurationElement config, TraceFailedRequestsFeature feature)
+        public AddTraceWizard(IServiceProvider serviceProvider, TraceFailedRequestsItem existing, Provider[] providerDefinitions, TraceFailedRequestsFeature feature)
             : base(serviceProvider)
         {
             _existing = existing;
-            _config = config;
             _feature = feature;
-            _wizardData = new AddTraceWizardData(config, existing);
+            _wizardData = new AddTraceWizardData(providerDefinitions, existing);
             InitializeComponent();
             TaskGlyph = Resources.trace_failed_requests_48;
             Text = existing == null ? "Add Failed Request Tracing Rule" : "Edit Failed Request Tracing Rule";
@@ -41,7 +39,7 @@ namespace JexusManager.Features.TraceFailedRequests.Wizards.AddTraceWizard
 
         protected override void CompleteWizard()
         {
-            Item = _existing == null ? new TraceFailedRequestsItem(null) : _existing;
+            Item = _existing == null ? new TraceFailedRequestsItem() : _existing;
             _wizardData.Apply(Item);
             if (_existing == null && _feature.Items.Any(item => item.Match(Item)))
             {

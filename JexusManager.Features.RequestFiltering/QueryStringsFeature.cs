@@ -2,6 +2,8 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+    using System;
+    using System;
 namespace JexusManager.Features.RequestFiltering
 {
     using System.Collections;
@@ -112,21 +114,35 @@ namespace JexusManager.Features.RequestFiltering
 
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
         {
-            var section = service.GetSection("system.webServer/security/requestFiltering");
-            ConfigurationElement hiddenSegmentsElement = section.ChildElements["alwaysAllowedQueryStrings"];
-            return hiddenSegmentsElement.GetCollection();
-        }
-
-        protected override ConfigurationElementCollection GetSecondaryCollection(IConfigurationService service)
-        {
-            var section = service.GetSection("system.webServer/security/requestFiltering");
-            ConfigurationElement hiddenSegmentsElement = section.ChildElements["denyQueryStringSequences"];
-            return hiddenSegmentsElement.GetCollection();
+            throw new NotSupportedException("Query string restrictions are accessed through the module service.");
         }
 
         public override void Load()
         {
-            LoadItems();
+            Items.Clear();
+            Items.AddRange(((RequestFilteringModule)Module).Proxy.GetQueryStrings());
+            OnSettingsSaved();
+        }
+
+        public override void AddItem(QueryStringsItem item)
+        {
+            ((RequestFilteringModule)Module).Proxy.AddQueryString(item);
+            LoadAndSelect(item);
+        }
+
+        public override void RemoveItem()
+        {
+            var item = SelectedItem ?? throw new InvalidOperationException("No query string entry is selected.");
+            ((RequestFilteringModule)Module).Proxy.RemoveQueryString(item);
+            SelectedItem = null;
+            Load();
+        }
+
+        private void LoadAndSelect(QueryStringsItem item)
+        {
+            Load();
+            SelectedItem = Items.Find(candidate => candidate.Equals(item));
+            OnSettingsSaved();
         }
 
         public override bool ShowHelp()

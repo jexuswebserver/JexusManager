@@ -4,23 +4,17 @@
 
 namespace JexusManager.Features.IpSecurity
 {
+    using System;
+
     using Microsoft.Web.Administration;
 
+    [Serializable]
     internal class IpSecurityItem : IItem<IpSecurityItem>
     {
-        public IpSecurityItem(ConfigurationElement element)
+        public IpSecurityItem()
         {
-            Element = element;
-            Flag = element == null || element.IsLocallyStored ? "Local" : "Inherited";
-            if (element == null)
-            {
-                Mask = "255.255.255.255";
-                return;
-            }
-
-            Address = (string)element["ipAddress"];
-            Mask = (string)element["subnetMask"];
-            Allowed = (bool)element["allowed"];
+            Mask = "255.255.255.255";
+            Flag = "Local";
         }
 
         public ConfigurationElement Element { get; set; }
@@ -31,9 +25,6 @@ namespace JexusManager.Features.IpSecurity
 
         public void Apply()
         {
-            Element["ipAddress"] = Address;
-            Element["subnetMask"] = Mask;
-            Element["allowed"] = Allowed;
         }
 
         public bool Equals(IpSecurityItem other)

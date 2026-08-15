@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -74,8 +74,12 @@ namespace Tests.ResponseHeaders
 
             _serviceContainer.AddService(typeof(IManagementUIService), substitute);
 
+            var provider = new ResponseHeadersModuleProvider();
+            var configurationService = (IConfigurationService)_serviceContainer.GetService(typeof(IConfigurationService));
+            var connection = InProcessConnectionFactory.Configure(_serviceContainer, configurationService, new[] { provider });
+            var definition = provider.GetModuleDefinition(null);
             var module = new ResponseHeadersModule();
-            module.TestInitialize(_serviceContainer, null);
+            module.TestInitialize(_serviceContainer, (ModuleInfo)connection.Modules[definition.Name]);
 
             _feature = new ResponseHeadersFeature(module);
             _feature.Load();

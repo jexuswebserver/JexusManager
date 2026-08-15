@@ -13,19 +13,19 @@ namespace JexusManager.Features.HttpErrors
 
     internal partial class EditDialog : DialogForm
     {
-        public EditDialog(IServiceProvider serviceProvider, ConfigurationElement element, HttpErrorsFeature feature)
+        public EditDialog(IServiceProvider serviceProvider, HttpErrorsSettings settings, HttpErrorsFeature feature)
             : base(serviceProvider)
         {
             InitializeComponent();
-            var mode = (long)element["errorMode"];
+            var mode = settings.ErrorMode;
             rbCustom.Checked = mode == 1;
             rbDetailed.Checked = mode == 2;
             rbRemote.Checked = mode == 0;
 
-            var defaultMode = (long)element["defaultResponseMode"];
+            var defaultMode = settings.DefaultResponseMode;
             cbType.SelectedIndex = (int)defaultMode;
 
-            txtPath.Text = (string)element["defaultPath"];
+            txtPath.Text = settings.DefaultPath;
 
             var container = new CompositeDisposable();
             FormClosed += (sender, args) => container.Dispose();
@@ -45,19 +45,19 @@ namespace JexusManager.Features.HttpErrors
                 {
                     if (rbCustom.Checked)
                     {
-                        element["errorMode"] = 1L;
+                        settings.ErrorMode = 1L;
                     }
                     else if (rbDetailed.Checked)
                     {
-                        element["errorMode"] = 2L;
+                        settings.ErrorMode = 2L;
                     }
                     else
                     {
-                        element["errorMode"] = 0L;
+                        settings.ErrorMode = 0L;
                     }
 
-                    element["defaultResponseMode"] = (long)cbType.SelectedIndex;
-                    element["defaultPath"] = txtPath.Text;
+                    settings.DefaultResponseMode = cbType.SelectedIndex;
+                    settings.DefaultPath = txtPath.Text;
                 }));
 
             container.Add(

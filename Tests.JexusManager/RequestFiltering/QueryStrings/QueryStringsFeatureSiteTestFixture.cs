@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -81,8 +81,12 @@ namespace Tests.RequestFiltering.QueryStrings
 
             serviceContainer.AddService(typeof(IManagementUIService), substitute);
 
+            var provider = new RequestFilteringModuleProvider();
+            var configurationService = (IConfigurationService)serviceContainer.GetService(typeof(IConfigurationService));
+            var connection = InProcessConnectionFactory.Configure(serviceContainer, configurationService, new[] { provider });
+            var definition = provider.GetModuleDefinition(null);
             var module = new RequestFilteringModule();
-            module.TestInitialize(serviceContainer, null);
+            module.TestInitialize(serviceContainer, (ModuleInfo)connection.Modules[definition.Name]);
 
             _feature = new QueryStringsFeature(module);
             _feature.Load();
@@ -165,7 +169,7 @@ namespace Tests.RequestFiltering.QueryStrings
             var document = XDocument.Load(site);
             document.Save(expected);
 
-            var item = new QueryStringsItem(null, true);
+            var item = new QueryStringsItem(true);
             item.QueryString = "test1";
             _feature.AddItem(item);
 
@@ -192,7 +196,7 @@ namespace Tests.RequestFiltering.QueryStrings
             var document = XDocument.Load(site);
             document.Save(expected);
 
-            var item = new QueryStringsItem(null, false);
+            var item = new QueryStringsItem(false);
             item.QueryString = "test1";
             _feature.AddItem(item);
 
@@ -226,7 +230,7 @@ namespace Tests.RequestFiltering.QueryStrings
                                 new XAttribute("queryString", "test1"))))));
             document.Save(expected);
 
-            var item = new QueryStringsItem(null, true);
+            var item = new QueryStringsItem(true);
             item.QueryString = "test1";
             _feature.AddItem(item);
             Assert.NotNull(_feature.SelectedItem);
@@ -256,7 +260,7 @@ namespace Tests.RequestFiltering.QueryStrings
                                 new XAttribute("sequence", "test1"))))));
             document.Save(expected);
 
-            var item = new QueryStringsItem(null, false);
+            var item = new QueryStringsItem(false);
             item.QueryString = "test1";
             _feature.AddItem(item);
             Assert.NotNull(_feature.SelectedItem);

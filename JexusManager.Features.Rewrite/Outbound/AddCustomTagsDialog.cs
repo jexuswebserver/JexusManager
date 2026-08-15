@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -56,11 +56,11 @@ namespace JexusManager.Features.Rewrite.Outbound
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    Item = new CustomTagsItem(null);
+                    Item = new CustomTagsItem();
                     Item.Name = txtName.Text;
                     foreach (DataGridViewRow row in dgvTags.Rows)
                     {
-                        var tag = new CustomTagItem(null);
+                        var tag = new CustomTagItem();
                         tag.Name = row.Cells[0].Value.ToString();
                         tag.Attribute = row.Cells[1].Value.ToString();
                         Item.Add(tag);

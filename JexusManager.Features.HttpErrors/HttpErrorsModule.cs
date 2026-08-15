@@ -13,6 +13,16 @@ namespace JexusManager.Features.HttpErrors
 
     internal class HttpErrorsModule : Module
     {
+        private HttpErrorsModuleProxy _proxy;
+
+        internal HttpErrorsModuleProxy Proxy
+        {
+            get
+            {
+                return _proxy ??= (HttpErrorsModuleProxy)((Connection)GetService(typeof(Connection))).CreateProxy(this, typeof(HttpErrorsModuleProxy));
+            }
+        }
+
         protected override void Initialize(IServiceProvider serviceProvider, ModuleInfo moduleInfo)
         {
             base.Initialize(serviceProvider, moduleInfo);

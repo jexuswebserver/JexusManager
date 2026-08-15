@@ -13,6 +13,16 @@ namespace JexusManager.Features.RequestFiltering
 
     internal class RequestFilteringModule : Module
     {
+        private RequestFilteringModuleProxy _proxy;
+
+        internal RequestFilteringModuleProxy Proxy
+        {
+            get
+            {
+                return _proxy ??= (RequestFilteringModuleProxy)((Connection)GetService(typeof(Connection))).CreateProxy(this, typeof(RequestFilteringModuleProxy));
+            }
+        }
+
         protected override void Initialize(IServiceProvider serviceProvider, ModuleInfo moduleInfo)
         {
             base.Initialize(serviceProvider, moduleInfo);

@@ -4,32 +4,21 @@
 
 namespace JexusManager.Features.Rewrite
 {
+    using System;
+
     using Microsoft.Web.Administration;
 
+    [Serializable]
     public class ConditionItem : IItem<ConditionItem>
     {
-        public ConfigurationElement Element { get; set; }
-
-        public ConditionItem(ConfigurationElement element)
+        public ConditionItem()
         {
-            Element = element;
-            if (element == null)
-            {
-                Input = "{QUERY_STRING}";
-                MatchType = 4;
-                IgnoreCase = true;
-                return;
-            }
-
-            Input = (string)element["input"];
-            Pattern = (string)element["pattern"];
-            IgnoreCase = (bool)element["ignoreCase"];
-
-            var root = (long)element["matchType"];
-            var negate = (bool)element["negate"];
-            var value = root == 0 ? 2 : root - 1;
-            MatchType = (int)value * 2 + (negate ? 1 : 0);
+            Input = "{QUERY_STRING}";
+            MatchType = 4;
+            IgnoreCase = true;
         }
+
+        public ConfigurationElement Element { get; set; }
 
         public bool IgnoreCase { get; set; }
 
@@ -43,12 +32,6 @@ namespace JexusManager.Features.Rewrite
 
         public void Apply()
         {
-            Element["input"] = Input;
-            Element["pattern"] = Pattern;
-            Element["ignoreCase"] = IgnoreCase;
-            Element["negate"] = MatchType % 2 == 1;
-            var value = MatchType / 2;
-            Element["matchType"] = value == 2 ? 0 : value + 1;
         }
 
         public bool Match(ConditionItem other)

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -21,7 +21,7 @@ namespace JexusManager.Features.FastCgi
             InitializeComponent();
             Text = string.Format("{0} FastCGI Application", existing == null ? "Add" : "Edit");
             txtPath.ReadOnly = txtArguments.ReadOnly = existing != null;
-            Item = existing ?? new FastCgiItem(null);
+            Item = existing ?? new FastCgiItem();
             txtPath.Text = Item.Path;
             txtArguments.Text = Item.Arguments;
             pgProperties.SelectedObject = Item;

@@ -12,7 +12,7 @@ namespace JexusManager.Features.HttpErrors
     {
         public override Type ServiceType
         {
-            get { return null; }
+            get { return typeof(HttpErrorsService); }
         }
 
         public override ModuleDefinition GetModuleDefinition(IManagementContext context)

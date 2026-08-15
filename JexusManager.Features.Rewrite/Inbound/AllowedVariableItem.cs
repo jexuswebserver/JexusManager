@@ -4,10 +4,18 @@
 
 namespace JexusManager.Features.Rewrite.Inbound
 {
+    using System;
+
     using Microsoft.Web.Administration;
 
+    [Serializable]
     internal class AllowedVariableItem : IItem<AllowedVariableItem>
     {
+        public AllowedVariableItem()
+        {
+            Flag = "Local";
+        }
+
         public ConfigurationElement Element { get; set; }
 
         public bool Match(AllowedVariableItem other)
@@ -15,28 +23,12 @@ namespace JexusManager.Features.Rewrite.Inbound
             return other != null && other.Name == Name;
         }
 
-        private readonly AllowedVariablesFeature _feature;
-
         public string Name { get; internal set; }
 
         public string Flag { get; set; }
 
-        public AllowedVariableItem(ConfigurationElement element, AllowedVariablesFeature feature)
-        {
-            this.Element = element;
-            _feature = feature;
-            this.Flag = element == null || element.IsLocallyStored ? "Local" : "Inherited";
-            if (element == null)
-            {
-                return;
-            }
-
-            this.Name = (string)element["name"];
-        }
-
         public void Apply()
         {
-            Element["name"] = Name;
         }
 
         public bool Equals(AllowedVariableItem other)

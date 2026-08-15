@@ -38,7 +38,7 @@ namespace JexusManager.Features.RequestFiltering
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    Item = new QueryStringsItem(null, allowed) { QueryString = txtName.Text };
+                    Item = new QueryStringsItem(allowed) { QueryString = txtName.Text };
                     DialogResult = DialogResult.OK;
                 }));
         }

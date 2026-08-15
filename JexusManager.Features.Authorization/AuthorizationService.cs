@@ -30,8 +30,17 @@ namespace JexusManager.Features.Authorization
             if (original == null || rule == null) throw new ArgumentNullException(original == null ? nameof(original) : nameof(rule));
             var collection = GetCollection();
             var existing = Find(collection, original);
-            if (existing != null) collection.Remove(existing);
-            AddRule(collection, rule);
+            if (existing == null) throw new InvalidOperationException("Authorization rule was not found.");
+            if (existing.IsLocallyStored)
+            {
+                ApplyRule(existing, rule);
+            }
+            else
+            {
+                collection.Remove(existing);
+                AddRule(collection, rule);
+            }
+
             ManagementUnit.Update();
         }
 
@@ -56,7 +65,14 @@ namespace JexusManager.Features.Authorization
         private static void AddRule(ConfigurationElementCollection collection, AuthorizationRule rule)
         {
             if (rule == null) throw new ArgumentNullException(nameof(rule));
-            var e = collection.CreateElement(); e["accessType"] = rule.AccessType; e["users"] = rule.Users; e["roles"] = rule.Roles; e["verbs"] = rule.Verbs; collection.Add(e);
+            var e = collection.CreateElement();
+            ApplyRule(e, rule);
+            collection.Add(e);
+        }
+
+        private static void ApplyRule(ConfigurationElement e, AuthorizationRule rule)
+        {
+            e["accessType"] = rule.AccessType; e["users"] = rule.Users; e["roles"] = rule.Roles; e["verbs"] = rule.Verbs;
         }
     }
 }

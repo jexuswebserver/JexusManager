@@ -4,27 +4,22 @@
 
 namespace JexusManager.Features.RequestFiltering
 {
+    using System;
+
     using Microsoft.Web.Administration;
 
+    [Serializable]
     internal class HeadersItem : IItem<HeadersItem>
     {
+        public HeadersItem()
+        {
+        }
+
         public ConfigurationElement Element { get; set; }
 
         public bool Match(HeadersItem other)
         {
             return other != null && other.Header == Header;
-        }
-
-        public HeadersItem(ConfigurationElement element)
-        {
-            this.Element = element;
-            if (element == null)
-            {
-                return;
-            }
-
-            Header = (string)element["header"];
-            SizeLimit = (uint)element["sizeLimit"];
         }
 
         public uint SizeLimit { get; set; }
@@ -33,8 +28,6 @@ namespace JexusManager.Features.RequestFiltering
 
         public void Apply()
         {
-            Element["header"] = Header;
-            Element["sizeLimit"] = SizeLimit;
         }
 
         public string Flag { get; set; }

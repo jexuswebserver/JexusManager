@@ -13,6 +13,15 @@ namespace JexusManager.Features.Logging
 
     internal class LoggingModule : Module
     {
+        private LoggingModuleProxy _proxy;
+
+        internal LoggingModuleProxy Proxy
+        {
+            get
+            {
+                return _proxy ??= (LoggingModuleProxy)((Connection)GetService(typeof(Connection))).CreateProxy(this, typeof(LoggingModuleProxy));
+            }
+        }
         protected override void Initialize(IServiceProvider serviceProvider, ModuleInfo moduleInfo)
         {
             base.Initialize(serviceProvider, moduleInfo);

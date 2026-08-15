@@ -4,20 +4,16 @@
 
 namespace JexusManager.Features.RequestFiltering
 {
+    using System;
+
     using Microsoft.Web.Administration;
 
+    [Serializable]
     internal class HiddenSegmentsItem : IItem<HiddenSegmentsItem>
     {
-        public HiddenSegmentsItem(ConfigurationElement element)
+        public HiddenSegmentsItem()
         {
-            Flag = element == null || element.IsLocallyStored ? "Local" : "Inherited";
-            Element = element;
-            if (element == null)
-            {
-                return;
-            }
-
-            Segment = (string)element["segment"];
+            Flag = "Local";
         }
 
         public string Segment { get; set; }
@@ -36,7 +32,6 @@ namespace JexusManager.Features.RequestFiltering
 
         public void Apply()
         {
-            Element["segment"] = Segment;
         }
     }
 }

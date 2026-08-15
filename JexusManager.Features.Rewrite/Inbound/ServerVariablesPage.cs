@@ -91,8 +91,7 @@ namespace JexusManager.Features.Rewrite.Inbound
 
             _feature.InitializeMouseClick(listView1, (item, text) =>
             {
-                item.Name = text;
-                item.Apply();
+                _feature.Rename(item, text);
             },
             text =>
             {

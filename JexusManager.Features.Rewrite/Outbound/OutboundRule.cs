@@ -9,25 +9,19 @@
 
 namespace JexusManager.Features.Rewrite.Outbound
 {
+    using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
 
     using Microsoft.Web.Administration;
 
+    [Serializable]
     public class OutboundRule : IItem<OutboundRule>
     {
-        public OutboundRule(ConfigurationElement element)
+        public OutboundRule()
         {
-            Flag = element == null || element.IsLocallyStored ? "Local" : "Inherited";
-            Element = element;
+            Flag = "Local";
             Conditions = new List<ConditionItem>();
-            if (element == null)
-            {
-                Input = "URL path after '/'";
-                return;
-            }
-
-            CancelChanges();
+            Input = "URL path after '/'";
         }
 
         public string Name { get; set; }
@@ -74,32 +68,6 @@ namespace JexusManager.Features.Rewrite.Outbound
 
         public void CancelChanges()
         {
-            Name = (string)Element["name"];
-            PreCondition = (string)Element["preCondition"];
-            Enabled = (bool)Element["enabled"];
-            Syntax = (long)Element["patternSyntax"];
-            Stopping = (bool)Element["stopProcessing"];
-            ConfigurationElement matchElement = Element.ChildElements["match"];
-            Filter = (long)matchElement["filterByTags"];
-            CustomTags = (string)matchElement["customTags"];
-            ServerVariable = (string)matchElement["serverVariable"];
-            Pattern = (string)matchElement["pattern"];
-            IgnoreCase = (bool)matchElement["ignoreCase"];
-            Negate = (bool)matchElement["negate"];
-
-            var conditions = Element.ChildElements["conditions"];
-            TrackAllCaptures = (bool)conditions["trackAllCaptures"];
-            LogicalGrouping = (long)conditions["logicalGrouping"];
-            foreach (ConfigurationElement condition in conditions.GetCollection())
-            {
-                var item = new ConditionItem(condition);
-                Conditions.Add(item);
-            }
-
-            ConfigurationElement actionElement = Element.ChildElements["action"];
-            Action = (long)actionElement["type"];
-            Value = (string)actionElement["value"];
-            Replace = (bool)actionElement["replace"];
         }
 
         public bool Negate { get; set; }
@@ -122,38 +90,11 @@ namespace JexusManager.Features.Rewrite.Outbound
 
         public bool ApplyChanges()
         {
-            Apply();
             return true;
         }
 
         public void Apply()
         {
-            Element["name"] = Name;
-            Element["preCondition"] = PreCondition;
-            Element["enabled"] = Enabled;
-            Element["patternSyntax"] = Syntax;
-            Element["stopProcessing"] = Stopping;
-            ConfigurationElement matchElement = Element.ChildElements["match"];
-            matchElement["filterByTags"] = Filter;
-            matchElement["customTags"] = CustomTags;
-            matchElement["serverVariable"] = ServerVariable;
-            matchElement["ignoreCase"] = IgnoreCase;
-            matchElement["pattern"] = Pattern;
-            matchElement["negate"] = Negate;
-            ConfigurationElement actionElement = Element.ChildElements["action"];
-            actionElement["type"] = Action;
-            actionElement["value"] = Value;
-            actionElement["replace"] = Replace;
-
-            var conditions = Element.ChildElements["conditions"];
-            conditions["trackAllCaptures"] = TrackAllCaptures;
-            conditions["logicalGrouping"] = LogicalGrouping;
-            var conditionsCollection = conditions.GetCollection();
-            conditionsCollection.Clear();
-            foreach (var condition in Conditions)
-            {
-                condition.AppendTo(conditionsCollection);
-            }
         }
     }
 }

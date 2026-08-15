@@ -4,26 +4,22 @@
 
 namespace JexusManager.Features.RequestFiltering
 {
+    using System;
+
     using Microsoft.Web.Administration;
 
+    [Serializable]
     internal class ScanHeadersItem : IItem<ScanHeadersItem>
     {
+        public ScanHeadersItem()
+        {
+        }
+
         public ConfigurationElement Element { get; set; }
 
         public bool Match(ScanHeadersItem other)
         {
             return other != null && other.RequestHeader == RequestHeader;
-        }
-
-        public ScanHeadersItem(ConfigurationElement element)
-        {
-            this.Element = element;
-            if (element == null)
-            {
-                return;
-            }
-
-            this.RequestHeader = (string)element["requestHeader"];
         }
 
         public string RequestHeader { get; set; }
@@ -32,7 +28,6 @@ namespace JexusManager.Features.RequestFiltering
 
         public void Apply()
         {
-            this.Element["requestHeader"] = RequestHeader;
         }
 
         public bool Equals(ScanHeadersItem other)

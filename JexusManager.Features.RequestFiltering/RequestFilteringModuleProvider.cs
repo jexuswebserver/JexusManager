@@ -12,7 +12,7 @@ namespace JexusManager.Features.RequestFiltering
     {
         public override Type ServiceType
         {
-            get { return null; }
+            get { return typeof(RequestFilteringService); }
         }
 
         public override ModuleDefinition GetModuleDefinition(IManagementContext context)

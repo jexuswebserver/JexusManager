@@ -111,10 +111,10 @@ namespace JexusManager.Features.Rewrite.Outbound
 
         public void Load()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.webServer/rewrite/outboundRules"); 
-            CanRevert = section.CanRevert();
-            LoadItems();
+            Items.Clear();
+            Items.AddRange(((RewriteModule)Module).Proxy.GetPreConditions());
+            CanRevert = GetService(typeof(IConfigurationService)) is IConfigurationService service && service.GetSection("system.webServer/rewrite/outboundRules").CanRevert();
+            OnSettingsSaved();
         }
 
         public void Add()
@@ -193,13 +193,44 @@ namespace JexusManager.Features.Rewrite.Outbound
 
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
         {
-            var section = service.GetSection("system.webServer/rewrite/outboundRules");
-            return section.GetCollection("preConditions");
+            throw new NotSupportedException("Preconditions are accessed through the module service.");
         }
 
         protected override void OnSettingsSaved()
         {
             OnRewriteSettingsSaved();
+        }
+
+        public override void AddItem(PreConditionItem item)
+        {
+            ((RewriteModule)Module).Proxy.AddPreCondition(item);
+            Load();
+            SelectedItem = Items.Find(candidate => candidate.Equals(item));
+            OnSettingsSaved();
+        }
+
+        public override void EditItem(PreConditionItem item)
+        {
+            var original = SelectedItem ?? throw new InvalidOperationException("No precondition is selected.");
+            ((RewriteModule)Module).Proxy.UpdatePreCondition(original, item);
+            Load();
+            SelectedItem = Items.Find(candidate => candidate.Equals(item));
+            OnSettingsSaved();
+        }
+
+        public override void RemoveItem()
+        {
+            var item = SelectedItem ?? throw new InvalidOperationException("No precondition is selected.");
+            ((RewriteModule)Module).Proxy.RemovePreCondition(item);
+            SelectedItem = null;
+            Load();
+        }
+
+        public override void RevertItems()
+        {
+            ((RewriteModule)Module).Proxy.RevertPreConditions();
+            SelectedItem = null;
+            Load();
         }
 
         public bool CanRevert { get; private set; }

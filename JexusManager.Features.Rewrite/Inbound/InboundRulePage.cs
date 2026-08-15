@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 // Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
@@ -109,7 +109,7 @@ namespace JexusManager.Features.Rewrite.Inbound
 
             if (Rule == null)
             {
-                Rule = new InboundRule(null);
+                Rule = new InboundRule();
                 Rule.Enabled = true;
             }
 

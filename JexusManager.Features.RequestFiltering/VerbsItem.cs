@@ -4,27 +4,22 @@
 
 namespace JexusManager.Features.RequestFiltering
 {
+    using System;
+
     using Microsoft.Web.Administration;
 
+    [Serializable]
     internal class VerbsItem : IItem<VerbsItem>
     {
+        public VerbsItem()
+        {
+        }
+
         public ConfigurationElement Element { get; set; }
 
         public bool Match(VerbsItem other)
         {
             return other != null && other.Verb == Verb;
-        }
-
-        public VerbsItem(ConfigurationElement element)
-        {
-            this.Element = element;
-            if (element == null)
-            {
-                return;
-            }
-
-            Verb = (string)element["verb"];
-            Allowed = (bool)element["allowed"];
         }
 
         public bool Allowed { get; set; }
@@ -33,8 +28,6 @@ namespace JexusManager.Features.RequestFiltering
 
         public void Apply()
         {
-            Element["verb"] = Verb;
-            Element["allowed"] = Allowed;
         }
 
         public string Flag { get; set; }

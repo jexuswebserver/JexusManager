@@ -80,8 +80,12 @@ namespace Tests.IpSecurity
 
             serviceContainer.AddService(typeof(IManagementUIService), substitute);
 
+            var provider = new IpSecurityModuleProvider();
+            var configurationService = (IConfigurationService)serviceContainer.GetService(typeof(IConfigurationService));
+            var connection = InProcessConnectionFactory.Configure(serviceContainer, configurationService, new[] { provider });
+            var definition = provider.GetModuleDefinition(null);
             var module = new IpSecurityModule();
-            module.TestInitialize(serviceContainer, null);
+            module.TestInitialize(serviceContainer, (ModuleInfo)connection.Modules[definition.Name]);
 
             _feature = new IpSecurityFeature(module);
             _feature.Load();
@@ -133,7 +137,7 @@ namespace Tests.IpSecurity
                     new XAttribute("path", "WebSite1")));
             document.Save(Expected);
 
-            var item = new IpSecurityItem(null);
+            var item = new IpSecurityItem();
             item.Address = "12.0.0.0";
             _feature.AddItem(item);
 
@@ -164,7 +168,7 @@ namespace Tests.IpSecurity
                                     new XAttribute("ipAddress", "12.0.0.0")))))));
             document.Save(Expected);
 
-            var item = new IpSecurityItem(null);
+            var item = new IpSecurityItem();
             item.Address = "12.0.0.0";
             _feature.AddItem(item);
             Assert.NotNull(_feature.SelectedItem);
@@ -188,7 +192,7 @@ namespace Tests.IpSecurity
                         new XElement("security"))));
             document.Save(Expected);
 
-            var item = new IpSecurityItem(null);
+            var item = new IpSecurityItem();
             item.Address = "12.0.0.0";
             _feature.AddItem(item);
             Assert.NotNull(_feature.SelectedItem);

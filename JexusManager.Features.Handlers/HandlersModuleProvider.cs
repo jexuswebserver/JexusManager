@@ -12,7 +12,7 @@ namespace JexusManager.Features.Handlers
     {
         public override Type ServiceType
         {
-            get { return null; }
+            get { return typeof(HandlersService); }
         }
 
         public override ModuleDefinition GetModuleDefinition(IManagementContext context)

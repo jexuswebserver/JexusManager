@@ -169,9 +169,8 @@ namespace JexusManager.Features.HttpErrors
 
         public void Set()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.webServer/httpErrors");
-            using (var dialog = new EditDialog(Module, section, this))
+            var settings = ((HttpErrorsModule)Module).Proxy.GetSettings();
+            using (var dialog = new EditDialog(Module, settings, this))
             {
                 if (dialog.ShowDialog() != DialogResult.OK)
                 {
@@ -179,7 +178,8 @@ namespace JexusManager.Features.HttpErrors
                 }
             }
 
-            service.ServerManager.CommitChanges();
+            ((HttpErrorsModule)Module).Proxy.ApplySettings(settings);
+            OnSettingsSaved();
         }
 
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)

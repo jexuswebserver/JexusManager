@@ -122,7 +122,9 @@ namespace JexusManager.Features.IsapiCgiRestriction
 
         public void Load()
         {
-            LoadItems();
+            Items.Clear();
+            Items.AddRange(((IsapiCgiRestrictionModule)Module).Proxy.GetItems());
+            OnSettingsSaved();
         }
 
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
@@ -154,18 +156,16 @@ namespace JexusManager.Features.IsapiCgiRestriction
 
         private void SetAllowed(bool allowed)
         {
-            SelectedItem.Allowed = allowed;
-            SelectedItem.Apply();
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            service.ServerManager.CommitChanges();
+            var item = SelectedItem ?? throw new InvalidOperationException("No restriction is selected.");
+            ((IsapiCgiRestrictionModule)Module).Proxy.SetAllowed(item, allowed);
+            item.Allowed = allowed;
             OnSettingsSaved();
         }
 
         public void Set()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.webServer/security/isapiCgiRestriction");
-            using (var dialog = new SettingsDialog(Module, section, this))
+            var settings = ((IsapiCgiRestrictionModule)Module).Proxy.GetSettings();
+            using (var dialog = new SettingsDialog(Module, settings, this))
             {
                 if (dialog.ShowDialog() != DialogResult.OK)
                 {
@@ -173,7 +173,7 @@ namespace JexusManager.Features.IsapiCgiRestriction
                 }
             }
 
-            service.ServerManager.CommitChanges();
+            ((IsapiCgiRestrictionModule)Module).Proxy.ApplySettings(settings);
             OnSettingsSaved();
         }
 
@@ -205,6 +205,29 @@ namespace JexusManager.Features.IsapiCgiRestriction
             }
 
             EditItem(dialog.Item);
+        }
+
+        public override void AddItem(IsapiCgiRestrictionItem item)
+        {
+            ((IsapiCgiRestrictionModule)Module).Proxy.Add(item);
+            Load();
+            SelectedItem = Items.Find(restriction => restriction.Equals(item));
+        }
+
+        public override void EditItem(IsapiCgiRestrictionItem item)
+        {
+            var original = SelectedItem ?? throw new InvalidOperationException("No restriction is selected.");
+            ((IsapiCgiRestrictionModule)Module).Proxy.Update(original, item);
+            Load();
+            SelectedItem = Items.Find(restriction => restriction.Equals(item));
+        }
+
+        public override void RemoveItem()
+        {
+            var item = SelectedItem ?? throw new InvalidOperationException("No restriction is selected.");
+            ((IsapiCgiRestrictionModule)Module).Proxy.Remove(item);
+            SelectedItem = null;
+            Load();
         }
 
         public override void InitializeGrouping(ToolStripComboBox cbGroup)

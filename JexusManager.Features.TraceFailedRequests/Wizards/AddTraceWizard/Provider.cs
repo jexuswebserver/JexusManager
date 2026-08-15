@@ -4,8 +4,10 @@
 
 namespace JexusManager.Features.TraceFailedRequests.Wizards.AddTraceWizard
 {
+    using System;
     using System.Collections.Generic;
 
+    [Serializable]
     internal class Provider
     {
         public string Name { get; set; }

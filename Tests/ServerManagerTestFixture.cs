@@ -76,7 +76,7 @@ namespace Tests
                 var appSettings = root.Element("appSettings");
                 if (appSettings == null)
                 {
-                    appSettings = new XElement("appSettings", 
+                    appSettings = new XElement("appSettings",
                         new XAttribute("configBuilders", "Environment"));
                     root.Add(appSettings);
                 }
@@ -94,7 +94,7 @@ namespace Tests
                 var connectionStrings = root.Element("connectionStrings");
                 if (connectionStrings == null)
                 {
-                    connectionStrings = new XElement("connectionStrings", 
+                    connectionStrings = new XElement("connectionStrings",
                         new XAttribute("configBuilders", "Environment"));
                     root.Add(connectionStrings);
                 }
@@ -135,7 +135,7 @@ namespace Tests
             // Verify appSettings with configBuilders attribute
             var appSettingsSection = config.GetSection("appSettings");
             Assert.Equal("Environment", appSettingsSection.GetAttributeValue("configBuilders"));
-            
+
             // Verify the appSettings values
             var appSettingsCollection = appSettingsSection.GetCollection();
             Assert.Single(appSettingsCollection);

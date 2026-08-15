@@ -74,8 +74,12 @@ namespace Tests.IpSecurity
 
             _serviceContainer.AddService(typeof(IManagementUIService), substitute);
 
+            var provider = new IpSecurityModuleProvider();
+            var configurationService = (IConfigurationService)_serviceContainer.GetService(typeof(IConfigurationService));
+            var connection = InProcessConnectionFactory.Configure(_serviceContainer, configurationService, new[] { provider });
+            var definition = provider.GetModuleDefinition(null);
             var module = new IpSecurityModule();
-            module.TestInitialize(_serviceContainer, null);
+            module.TestInitialize(_serviceContainer, (ModuleInfo)connection.Modules[definition.Name]);
 
             _feature = new IpSecurityFeature(module);
             _feature.Load();
@@ -119,7 +123,7 @@ namespace Tests.IpSecurity
                     new XAttribute("allowed", "true")));
             document.Save(Expected);
 
-            var item = new IpSecurityItem(null);
+            var item = new IpSecurityItem();
             item.Address = "12.0.0.0";
             item.Allowed = true;
             _feature.AddItem(item);

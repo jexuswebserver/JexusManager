@@ -4,27 +4,19 @@
 
 namespace JexusManager.Features.Modules
 {
-    using Microsoft.Web.Administration;
+    using System;
     using System.Collections.Generic;
-    using System.Linq;
 
+    using Microsoft.Web.Administration;
+
+    [Serializable]
     internal class GlobalModule : IItem<GlobalModule>
     {
-        public GlobalModule(ConfigurationElement element)
+        public GlobalModule()
         {
-            if (element == null)
-            {
-                Name = string.Empty;
-                Image = string.Empty;
-                PreConditions = new List<string>(0);
-                return;
-            }
-
-            Name = (string)element["name"];
-            Image = (string)element["image"];
-            var content = (string)element["preCondition"];
-            PreConditions = content.Split(',').ToList();
-            Element = element;
+            Name = string.Empty;
+            Image = string.Empty;
+            PreConditions = new List<string>(0);
         }
 
         public List<string> PreConditions { get; set; }
@@ -44,9 +36,6 @@ namespace JexusManager.Features.Modules
 
         public void Apply()
         {
-            Element["name"] = Name;
-            Element["image"] = Image;
-            Element["preCondition"] = PreConditions.Combine(",");
         }
 
         public ConfigurationElement Element { get; set; }

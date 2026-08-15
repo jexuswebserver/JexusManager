@@ -56,7 +56,7 @@ namespace JexusManager.Features.Modules
 
                         var module = (GlobalModule)item.Tag;
                         module.Loaded = true;
-                        Items.Add(new ModulesItem(null) { Name = module.Name }.Load(feature));
+                        Items.Add(new ModulesItem { Name = module.Name }.Load(feature));
                     }
 
                     DialogResult = DialogResult.OK;
@@ -98,7 +98,7 @@ namespace JexusManager.Features.Modules
                         return;
                     }
 
-                    dialog.Item.Apply();
+                    feature.UpdateGlobal(item, dialog.Item);
                     lvModules.SelectedItems[0].Text = dialog.Item.Name;
                 }));
 

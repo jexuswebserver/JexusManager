@@ -9,8 +9,10 @@ namespace JexusManager.Features.IsapiFilters
 
     using Microsoft.Web.Administration;
 
+    [System.Serializable]
     internal class IsapiFiltersItem : IItem<IsapiFiltersItem>
     {
+        public IsapiFiltersItem() { Name = Path = string.Empty; PreConditions = new List<string>(); Flag = "Local"; }
         public IsapiFiltersItem(ConfigurationElement element)
         {
             Element = element;
@@ -49,10 +51,6 @@ namespace JexusManager.Features.IsapiFilters
 
         public void Apply()
         {
-            Element["name"] = Name;
-            Element["path"] = Path;
-            Element["preCondition"] = PreConditions.Combine(",");
-            Element["enableCache"] = EnableCache;
         }
 
         public bool Match(IsapiFiltersItem other)

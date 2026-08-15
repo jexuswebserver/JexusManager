@@ -4,39 +4,22 @@
 
 namespace JexusManager.Features.Handlers
 {
+    using System;
     using System.Collections.Generic;
-    using System.Linq;
 
     using Microsoft.Web.Administration;
 
+    [Serializable]
     internal class HandlersItem : IItem<HandlersItem>
     {
-        public HandlersItem(ConfigurationElement element)
+        public HandlersItem()
         {
-            this.Element = element;
-            this.Flag = element == null || element.IsLocallyStored ? "Local" : "Inhertied";
-            if (element == null)
-            {
-                this.PreConditions = new List<string>(0);
-                Verb = "*";
-                Path = Modules = ScriptProcessor = Type = string.Empty;
-                ResponseBufferLimit = 4194304;
-                RequireAccess = 3;
-                return;
-            }
-
-            this.Name = (string)element["name"];
-            this.Path = (string)element["path"];
-            this.ResourceType = (long)element["resourceType"];
-            this.Verb = (string)element["verb"];
-            this.RequireAccess = (long)element["requireAccess"];
-            this.Modules = (string)element["modules"];
-            this.ScriptProcessor = (string)element["scriptProcessor"];
-            this.Type = (string)element["type"];
-            var content = (string)element["preCondition"];
-            this.PreConditions = content.Split(',').ToList();
-            ResponseBufferLimit = (uint)element["responseBufferLimit"];
-            AllowPathInfo = (bool)element["allowPathInfo"];
+            PreConditions = new List<string>(0);
+            Verb = "*";
+            Path = Modules = ScriptProcessor = Type = string.Empty;
+            ResponseBufferLimit = 4194304;
+            RequireAccess = 3;
+            Flag = "Local";
         }
 
         public bool AllowPathInfo { get; set; }
@@ -131,17 +114,6 @@ namespace JexusManager.Features.Handlers
 
         public void Apply()
         {
-            Element["name"] = Name;
-            Element["path"] = Path;
-            Element["resourceType"] = ResourceType;
-            Element["verb"] = Verb;
-            Element["requireAccess"] = RequireAccess;
-            Element["modules"] = Modules;
-            Element["scriptProcessor"] = ScriptProcessor;
-            Element["type"] = Type;
-            Element["preCondition"] = PreConditions.Combine(",");
-            Element["responseBufferLimit"] = ResponseBufferLimit;
-            Element["allowPathInfo"] = AllowPathInfo;
         }
 
         public bool Match(HandlersItem other)

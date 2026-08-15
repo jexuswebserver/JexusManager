@@ -99,23 +99,21 @@ namespace JexusManager.Features.Rewrite.Outbound
 
         public void Load()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.webServer/rewrite/outboundRules");
-            CanRevert = section.CanRevert();
-            LoadItems();
+            Items.Clear();
+            Items.AddRange(((RewriteModule)Module).Proxy.GetCustomTags());
+            CanRevert = GetService(typeof(IConfigurationService)) is IConfigurationService service && service.GetSection("system.webServer/rewrite/outboundRules").CanRevert();
+            OnSettingsSaved();
         }
 
         public void AddGroup()
         {
-            using (var dialog = new AddCustomTagsDialog(Module))
+            using var dialog = new AddCustomTagsDialog(Module);
+            if (dialog.ShowDialog() != DialogResult.OK)
             {
-                if (dialog.ShowDialog() != DialogResult.OK)
-                {
-                    return;
-                }
-
-                AddItem(dialog.Item);
+                return;
             }
+
+            AddItem(dialog.Item);
         }
 
         public void Add()
@@ -128,9 +126,9 @@ namespace JexusManager.Features.Rewrite.Outbound
                 }
 
                 var newItem = dialog.Item;
-                var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-                SelectedItem.Add(newItem);
-                service.ServerManager.CommitChanges();
+                var tag = SelectedItem ?? throw new InvalidOperationException("No custom tags group is selected.");
+                tag.Tags.Add(newItem);
+                ((RewriteModule)Module).Proxy.UpdateCustomTag(tag, tag);
             }
             OnRewriteSettingsSaved();
         }
@@ -167,13 +165,44 @@ namespace JexusManager.Features.Rewrite.Outbound
 
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
         {
-            var section = service.GetSection("system.webServer/rewrite/outboundRules");
-            return section.GetCollection("customTags");
+            throw new NotSupportedException("Custom tags are accessed through the module service.");
         }
 
         protected override void OnSettingsSaved()
         {
             OnRewriteSettingsSaved();
+        }
+
+        public override void AddItem(CustomTagsItem item)
+        {
+            ((RewriteModule)Module).Proxy.AddCustomTag(item);
+            Load();
+            SelectedItem = Items.Find(candidate => candidate.Equals(item));
+            OnSettingsSaved();
+        }
+
+        public override void EditItem(CustomTagsItem item)
+        {
+            var original = SelectedItem ?? throw new InvalidOperationException("No custom tags group is selected.");
+            ((RewriteModule)Module).Proxy.UpdateCustomTag(original, item);
+            Load();
+            SelectedItem = Items.Find(candidate => candidate.Equals(item));
+            OnSettingsSaved();
+        }
+
+        public void EditItemWith(CustomTagsItem original, CustomTagsItem item)
+        {
+            ((RewriteModule)Module).Proxy.UpdateCustomTag(original, item);
+            Load();
+            OnSettingsSaved();
+        }
+
+        public override void RemoveItem()
+        {
+            var item = SelectedItem ?? throw new InvalidOperationException("No custom tags group is selected.");
+            ((RewriteModule)Module).Proxy.RemoveCustomTag(item);
+            SelectedItem = null;
+            Load();
         }
 
         public bool CanRevert { get; private set; }

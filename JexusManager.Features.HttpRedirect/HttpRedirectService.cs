@@ -15,8 +15,10 @@ namespace JexusManager.Features.HttpRedirect
             var section = GetSection();
             return new HttpRedirectSnapshot
             {
-                Enabled = (bool)section["enabled"], Destination = (string)section["destination"],
-                ExactDestination = (bool)section["exactDestination"], ChildOnly = (bool)section["childOnly"],
+                Enabled = (bool)section["enabled"],
+                Destination = (string)section["destination"],
+                ExactDestination = (bool)section["exactDestination"],
+                ChildOnly = (bool)section["childOnly"],
                 ResponseStatus = (long)section["httpResponseStatus"],
                 SupportedStatuses = section.Schema.AttributeSchemas["httpResponseStatus"].GetEnumValues().Select(item => item.Value).ToArray()
             };

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -26,7 +26,7 @@ namespace JexusManager.Features.Rewrite.Outbound
             : base(serviceProvider)
         {
             InitializeComponent();
-            Item = existing ?? new PreConditionItem(null);
+            Item = existing ?? new PreConditionItem();
             if (existing != null)
             {
                 txtName.Text = Item.Name;

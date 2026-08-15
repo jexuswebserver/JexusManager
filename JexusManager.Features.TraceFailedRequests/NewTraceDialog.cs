@@ -21,7 +21,7 @@ namespace JexusManager.Features.TraceFailedRequests
             InitializeComponent();
             Text = existing == null ? "Add ISAPI Filter" : "Edit ISAPI Filter";
             txtName.ReadOnly = existing != null;
-            Item = existing ?? new TraceFailedRequestsItem(null);
+            Item = existing ?? new TraceFailedRequestsItem();
             if (existing != null)
             {
                 txtPath.Text = Item.Path;

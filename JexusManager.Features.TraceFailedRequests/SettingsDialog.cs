@@ -15,13 +15,13 @@ namespace JexusManager.Features.TraceFailedRequests
 
     internal partial class SettingsDialog : DialogForm
     {
-        public SettingsDialog(IServiceProvider serviceProvider, SiteTraceFailedRequestsLogging element, TraceFailedRequestsFeature feature)
+        public SettingsDialog(IServiceProvider serviceProvider, TraceFailedRequestsSettings settings, TraceFailedRequestsFeature feature)
             : base(serviceProvider)
         {
             InitializeComponent();
-            cbEnabled.Checked = element.Enabled;
-            txtDirectory.Text = element.Directory;
-            txtNumber.Text = element.MaxLogFiles.ToString();
+            cbEnabled.Checked = settings.Enabled;
+            txtDirectory.Text = settings.Directory;
+            txtNumber.Text = settings.MaxLogFiles.ToString();
 
             var container = new CompositeDisposable();
             FormClosed += (sender, args) => container.Dispose();
@@ -46,9 +46,9 @@ namespace JexusManager.Features.TraceFailedRequests
                 {
                     if (uint.TryParse(txtNumber.Text, out uint number) && number > 0 && number <= 10000)
                     {
-                        element.MaxLogFiles = number;
-                        element.Enabled = cbEnabled.Checked;
-                        element.Directory = txtDirectory.Text;
+                        settings.MaxLogFiles = number;
+                        settings.Enabled = cbEnabled.Checked;
+                        settings.Directory = txtDirectory.Text;
                         DialogResult = DialogResult.OK;
                         return;
                     }

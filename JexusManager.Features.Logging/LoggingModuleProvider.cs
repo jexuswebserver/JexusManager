@@ -12,7 +12,7 @@ namespace JexusManager.Features.Logging
     {
         public override Type ServiceType
         {
-            get { return null; }
+            get { return typeof(LoggingService); }
         }
 
         public override ModuleDefinition GetModuleDefinition(IManagementContext context)

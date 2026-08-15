@@ -10,17 +10,16 @@ namespace JexusManager.Features.IsapiCgiRestriction
     using System.Reactive.Linq;
     using System.Windows.Forms;
 
-    using Microsoft.Web.Administration;
     using Microsoft.Web.Management.Client.Win32;
 
     internal partial class SettingsDialog : DialogForm
     {
-        public SettingsDialog(IServiceProvider serviceProvider, ConfigurationElement element, IsapiCgiRestrictionFeature feature)
+        public SettingsDialog(IServiceProvider serviceProvider, IsapiCgiRestrictionSettings settings, IsapiCgiRestrictionFeature feature)
             : base(serviceProvider)
         {
             InitializeComponent();
-            cbCgi.Checked = (bool)element["notListedCgisAllowed"];
-            cbIsapi.Checked = (bool)element["notListedIsapisAllowed"];
+            cbCgi.Checked = settings.NotListedCgisAllowed;
+            cbIsapi.Checked = settings.NotListedIsapisAllowed;
 
             var container = new CompositeDisposable();
             FormClosed += (sender, args) => container.Dispose();
@@ -30,8 +29,8 @@ namespace JexusManager.Features.IsapiCgiRestriction
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    element["notListedIsapisAllowed"] = cbIsapi.Checked;
-                    element["notListedCgisAllowed"] = cbCgi.Checked;
+                    settings.NotListedIsapisAllowed = cbIsapi.Checked;
+                    settings.NotListedCgisAllowed = cbCgi.Checked;
                     DialogResult = DialogResult.OK;
                 }));
 

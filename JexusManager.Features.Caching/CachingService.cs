@@ -29,8 +29,23 @@ namespace JexusManager.Features.Caching
         {
             var profiles = GetProfileCollection();
             var existing = Find(profiles, original);
-            if (existing != null) profiles.Remove(existing);
-            AddProfile(profiles, item);
+            if (existing != null)
+            {
+                if (existing.IsLocallyStored)
+                {
+                    ApplyProfile(existing, item);
+                }
+                else
+                {
+                    profiles.Remove(existing);
+                    AddProfile(profiles, item);
+                }
+            }
+            else
+            {
+                AddProfile(profiles, item);
+            }
+
             ManagementUnit.Update();
         }
 
@@ -70,8 +85,13 @@ namespace JexusManager.Features.Caching
         {
             if (item == null || string.IsNullOrWhiteSpace(item.Extension)) throw new System.ArgumentException("A cache profile extension is required.");
             var element = profiles.CreateElement();
-            element["extension"] = item.Extension; element["policy"] = item.Policy; element["kernelCachePolicy"] = item.KernelCachePolicy; element["duration"] = item.Duration; element["varyByQueryString"] = item.VaryByQueryString; element["varyByHeaders"] = item.VaryByHeaders;
+            ApplyProfile(element, item);
             profiles.Add(element);
+        }
+
+        private static void ApplyProfile(ConfigurationElement element, CachingItem item)
+        {
+            element["extension"] = item.Extension; element["policy"] = item.Policy; element["kernelCachePolicy"] = item.KernelCachePolicy; element["duration"] = item.Duration; element["varyByQueryString"] = item.VaryByQueryString; element["varyByHeaders"] = item.VaryByHeaders;
         }
     }
 }

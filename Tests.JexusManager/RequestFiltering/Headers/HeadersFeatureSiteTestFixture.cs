@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -81,8 +81,12 @@ namespace Tests.RequestFiltering.Headers
 
             serviceContainer.AddService(typeof(IManagementUIService), substitute);
 
+            var provider = new RequestFilteringModuleProvider();
+            var configurationService = (IConfigurationService)serviceContainer.GetService(typeof(IConfigurationService));
+            var connection = InProcessConnectionFactory.Configure(serviceContainer, configurationService, new[] { provider });
+            var definition = provider.GetModuleDefinition(null);
             var module = new RequestFilteringModule();
-            module.TestInitialize(serviceContainer, null);
+            module.TestInitialize(serviceContainer, (ModuleInfo)connection.Modules[definition.Name]);
 
             _feature = new HeadersFeature(module);
             _feature.Load();
@@ -136,7 +140,7 @@ namespace Tests.RequestFiltering.Headers
             var document = XDocument.Load(site);
             document.Save(expected);
 
-            var item = new HeadersItem(null);
+            var item = new HeadersItem();
             item.Header = "test1";
             _feature.AddItem(item);
 
@@ -172,7 +176,7 @@ namespace Tests.RequestFiltering.Headers
                                     new XAttribute("sizeLimit", "200")))))));
             document.Save(expected);
 
-            var item = new HeadersItem(null);
+            var item = new HeadersItem();
             item.Header = "test1";
             item.SizeLimit = 200;
             _feature.AddItem(item);

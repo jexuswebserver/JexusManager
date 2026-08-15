@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -81,8 +81,12 @@ namespace Tests.RequestFiltering.FilteringRules
 
             serviceContainer.AddService(typeof(IManagementUIService), substitute);
 
+            var provider = new RequestFilteringModuleProvider();
+            var configurationService = (IConfigurationService)serviceContainer.GetService(typeof(IConfigurationService));
+            var connection = InProcessConnectionFactory.Configure(serviceContainer, configurationService, new[] { provider });
+            var definition = provider.GetModuleDefinition(null);
             var module = new RequestFilteringModule();
-            module.Initialize(serviceContainer, null);
+            module.Initialize(serviceContainer, (ModuleInfo)connection.Modules[definition.Name]);
 
             _feature = new FilteringRulesFeature(module);
             _feature.Load();
@@ -135,7 +139,7 @@ namespace Tests.RequestFiltering.FilteringRules
             var document = XDocument.Load(site);
             document.Save(expected);
 
-            var item = new FilteringRulesItem(null);
+            var item = new FilteringRulesItem();
             item.Name = "test1";
             _feature.AddItem(item);
 
@@ -205,7 +209,7 @@ namespace Tests.RequestFiltering.FilteringRules
                                 new XAttribute("scanQueryString", "true"))))));
             document.Save(expected);
 
-            var item = new FilteringRulesItem(null);
+            var item = new FilteringRulesItem();
             item.Name = "test1";
             _feature.AddItem(item);
 
@@ -241,7 +245,7 @@ namespace Tests.RequestFiltering.FilteringRules
                                 new XAttribute("name", "test1"))))));
             document.Save(expected);
 
-            var item = new FilteringRulesItem(null);
+            var item = new FilteringRulesItem();
             item.Name = "test1";
             _feature.AddItem(item);
             Assert.NotNull(_feature.SelectedItem);

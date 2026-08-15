@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -45,7 +45,7 @@ namespace JexusManager.Features.Rewrite.Inbound
                         return;
                     }
 
-                    Item = new AllowedVariableItem(null, feature) { Name = txtName.Text };
+                    Item = new AllowedVariableItem() { Name = txtName.Text };
                     DialogResult = DialogResult.OK;
                 }));
 

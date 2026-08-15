@@ -9,28 +9,23 @@
 
 namespace JexusManager.Features.Rewrite.Inbound
 {
+    using System;
     using System.Collections.Generic;
 
     using Microsoft.Web.Administration;
 
+    [Serializable]
     public class InboundRule : IItem<InboundRule>
     {
-        public InboundRule(ConfigurationElement element)
+        public InboundRule()
         {
-            Flag = element == null || element.IsLocallyStored ? "Local" : "Inherited";
-            Element = element;
+            Flag = "Local";
             ServerVariables = new List<ServerVariableItem>();
             Conditions = new List<ConditionItem>();
-            if (element == null)
-            {
-                Type = 1;
-                IgnoreCase = true;
-                AppendQueryString = true;
-                Enabled = true;
-                return;
-            }
-
-            CancelChanges();
+            Type = 1;
+            IgnoreCase = true;
+            AppendQueryString = true;
+            Enabled = true;
         }
 
         public string Name { get; set; }
@@ -95,64 +90,6 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         public void CancelChanges()
         {
-            if (Element == null)
-            {
-                return;
-            }
-
-            Name = (string)Element["name"];
-            Enabled = (bool)Element["enabled"];
-            PatternSyntax = (long)Element["patternSyntax"];
-            StopProcessing = (bool)Element["stopProcessing"];
-            ConfigurationElement matchElement = Element.ChildElements["match"];
-            PatternUrl = (string)matchElement["url"];
-            Negate = (bool)matchElement["negate"];
-            IgnoreCase = (bool)matchElement["ignoreCase"];
-            ConfigurationElement actionElement = Element.ChildElements["action"];
-            Type = (long)actionElement["type"];
-            ActionUrl = (string)actionElement["url"];
-            AppendQueryString = (bool)actionElement["appendQueryString"];
-            LogRewrittenUrl = (bool)actionElement["logRewrittenUrl"];
-            var redirect = (long)actionElement["redirectType"];
-            switch (redirect)
-            {
-                case 301:
-                    RedirectType = 0;
-                    break;
-                case 302:
-                    RedirectType = 1;
-                    break;
-                case 303:
-                    RedirectType = 2;
-                    break;
-                case 307:
-                    RedirectType = 3;
-                    break;
-            }
-
-            StatusCode = (uint)actionElement["statusCode"];
-            SubStatusCode = (uint)actionElement["subStatusCode"];
-            StatusReason = (string)actionElement["statusReason"];
-            StatusDescription = (string)actionElement["statusDescription"];
-
-            var conditions = Element.ChildElements["conditions"];
-            TrackAllCaptures = (bool)conditions["trackAllCaptures"];
-            LogicalGrouping = (long)conditions["logicalGrouping"];
-
-            Conditions.Clear();
-            foreach (ConfigurationElement condition in conditions.GetCollection())
-            {
-                var item = new ConditionItem(condition);
-                Conditions.Add(item);
-            }
-
-            ServerVariables.Clear();
-            var variables = Element.ChildElements["serverVariables"];
-            foreach (ConfigurationElement variable in variables.GetCollection())
-            {
-                var item = new ServerVariableItem(variable);
-                ServerVariables.Add(item);
-            }
         }
 
         public long LogicalGrouping { get; set; }
@@ -161,63 +98,11 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         public bool ApplyChanges()
         {
-            Apply();
             return true;
         }
 
         public void Apply()
         {
-            Element["name"] = Name;
-            Element["enabled"] = Enabled;
-            Element["patternSyntax"] = PatternSyntax;
-            Element["stopProcessing"] = StopProcessing;
-            ConfigurationElement matchElement = Element.ChildElements["match"];
-            matchElement["url"] = PatternUrl;
-            matchElement["negate"] = Negate;
-            matchElement["ignoreCase"] = IgnoreCase;
-            ConfigurationElement actionElement = Element.ChildElements["action"];
-            actionElement["type"] = Type;
-            actionElement["url"] = ActionUrl;
-            actionElement["appendQueryString"] = AppendQueryString;
-            actionElement["logRewrittenUrl"] = LogRewrittenUrl;
-
-            switch (RedirectType)
-            {
-                case 0:
-                    actionElement["redirectType"] = 301L;
-                    break;
-                case 1:
-                    actionElement["redirectType"] = 302L;
-                    break;
-                case 2:
-                    actionElement["redirectType"] = 303L;
-                    break;
-                case 3:
-                    actionElement["redirectType"] = 307L;
-                    break;
-            }
-
-            actionElement["statusCode"] = StatusCode;
-            actionElement["subStatusCode"] = SubStatusCode;
-            actionElement["statusReason"] = StatusReason;
-            actionElement["statusDescription"] = StatusDescription;
-
-            var conditions = Element.ChildElements["conditions"];
-            conditions["trackAllCaptures"] = TrackAllCaptures;
-            conditions["logicalGrouping"] = LogicalGrouping;
-            var conditionsCollection = conditions.GetCollection();
-            conditionsCollection.Clear();
-            foreach (var condition in Conditions)
-            {
-                condition.AppendTo(conditionsCollection);
-            }
-
-            var variableCollection = Element.ChildElements["serverVariables"].GetCollection();
-            variableCollection.Clear();
-            foreach (var variable in ServerVariables)
-            {
-                variable.AppendTo(variableCollection);
-            }
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -98,7 +98,7 @@ namespace JexusManager.Features.Rewrite
                         name = string.Format("RequestBlockingRule{0}", index);
                     }
                     while (rewriteFeature.Items.All(item => item.Name != name));
-                    var newRule = new InboundRule(null);
+                    var newRule = new InboundRule();
                     newRule.Name = name;
                     newRule.Input = "URL Path";
                     newRule.Enabled = true;
@@ -112,7 +112,7 @@ namespace JexusManager.Features.Rewrite
                     newRule.StatusReason = GetReason(response);
                     newRule.StatusDescription = GetMessage(response);
                     newRule.Conditions.Add(
-                        new ConditionItem(null)
+                        new ConditionItem()
                         {
                             Input = GetInput(inputType),
                             MatchType = match == 0 ? 4 : 5,

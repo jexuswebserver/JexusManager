@@ -2,6 +2,8 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+    using System;
+    using System;
 namespace JexusManager.Features.RequestFiltering
 {
     using System.Collections;
@@ -96,17 +98,35 @@ namespace JexusManager.Features.RequestFiltering
 
         public override void Load()
         {
-            LoadItems();
+            Items.Clear();
+            Items.AddRange(((RequestFilteringModule)Module).Proxy.GetHeaders());
+            OnSettingsSaved();
         }
 
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
         {
-            ConfigurationSection requestFilteringSection =
-                service.GetSection("system.webServer/security/requestFiltering");
+            throw new NotSupportedException("Header limits are accessed through the module service.");
+        }
 
+        public override void AddItem(HeadersItem item)
+        {
+            ((RequestFilteringModule)Module).Proxy.AddHeader(item);
+            LoadAndSelect(item);
+        }
 
-            ConfigurationElement childElement = requestFilteringSection.ChildElements["requestLimits"];
-            return childElement.GetCollection("headerLimits");
+        public override void RemoveItem()
+        {
+            var item = SelectedItem ?? throw new InvalidOperationException("No header is selected.");
+            ((RequestFilteringModule)Module).Proxy.RemoveHeader(item);
+            SelectedItem = null;
+            Load();
+        }
+
+        private void LoadAndSelect(HeadersItem item)
+        {
+            Load();
+            SelectedItem = Items.Find(candidate => candidate.Equals(item));
+            OnSettingsSaved();
         }
 
         public override bool ShowHelp()
