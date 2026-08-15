@@ -12,7 +12,7 @@ namespace JexusManager.Features.DefaultDocument
     {
         public override Type ServiceType
         {
-            get { return null; }
+            get { return typeof(DefaultDocumentService); }
         }
 
         public override ModuleDefinition GetModuleDefinition(IManagementContext context)

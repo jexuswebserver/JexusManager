@@ -6,6 +6,7 @@ using System;
 
 namespace Microsoft.Web.Management.Server
 {
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
     public sealed class ModuleServiceMethodAttribute : Attribute
     {
         public bool PassThrough { get; set; }

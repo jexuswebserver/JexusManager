@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Microsoft.ApplicationHost;
 using Microsoft.Web.Administration;
 
@@ -12,6 +13,41 @@ namespace Microsoft.Web.Management.Server
 {
     public abstract class ManagementUnit
     {
+        private readonly List<ModuleProvider> _moduleProviders = new List<ModuleProvider>();
+
+        // Retained for the legacy IIS Manager-compatible derived types. Concrete
+        // runtime units should use the fully scoped constructor below.
+        protected ManagementUnit()
+        {
+        }
+
+        protected ManagementUnit(
+            IManagementContext context,
+            ServerManager serverManager,
+            Configuration configuration,
+            ManagementConfigurationPath configurationPath,
+            IEnumerable<ModuleProvider> moduleProviders)
+        {
+            Context = context ?? throw new ArgumentNullException(nameof(context));
+            ServerManager = serverManager ?? throw new ArgumentNullException(nameof(serverManager));
+            Configuration = new ManagementConfiguration(configuration ?? throw new ArgumentNullException(nameof(configuration)));
+            ConfigurationPath = configurationPath ?? throw new ArgumentNullException(nameof(configurationPath));
+
+            foreach (var provider in moduleProviders ?? Array.Empty<ModuleProvider>())
+            {
+                if (string.IsNullOrWhiteSpace(provider.Name))
+                {
+                    var name = provider.GetType().Name;
+                    provider.Initialize(name.EndsWith("ModuleProvider", StringComparison.Ordinal)
+                        ? name.Substring(0, name.Length - "ModuleProvider".Length)
+                        : name);
+                }
+
+                provider.SetManagementUnit(this);
+                _moduleProviders.Add(provider);
+            }
+        }
+
         protected virtual WebConfigurationMap CreateConfigurationMap(
             bool addFrameworkConfiguration
             )
@@ -26,12 +62,38 @@ namespace Microsoft.Web.Management.Server
         public ICollection<ModuleProvider> GetModuleProviders(
             Type moduleProviderType
             )
-        { throw new NotImplementedException(); }
+        {
+            if (moduleProviderType == null)
+            {
+                throw new ArgumentNullException(nameof(moduleProviderType));
+            }
+
+            return _moduleProviders.Where(moduleProviderType.IsInstanceOfType).ToList();
+        }
 
         public ModuleService GetModuleService(
             string moduleName
             )
-        { throw new NotImplementedException(); }
+        {
+            var provider = _moduleProviders.FirstOrDefault(item =>
+                string.Equals(item.Name, moduleName, StringComparison.OrdinalIgnoreCase));
+            if (provider == null || !provider.SupportsScope(Scope))
+            {
+                throw new ModuleServiceException($"Module '{moduleName}' is not available at {Scope} scope.", "ModuleNotAvailable");
+            }
+
+            var serviceType = provider.ServiceType;
+            if (serviceType == null || !typeof(ModuleService).IsAssignableFrom(serviceType) || serviceType.IsAbstract)
+            {
+                throw new ModuleServiceException($"Module '{moduleName}' does not expose a valid service.", "ServiceNotAvailable");
+            }
+
+            var service = (ModuleService)Activator.CreateInstance(serviceType, nonPublic: true);
+            service.Initialize(this, provider.Name);
+            return service;
+        }
+
+        public ICollection<ModuleProvider> ModuleProviders => _moduleProviders.AsReadOnly();
 
         public Object[] GetTypeInformation(
             string baseTypeName
@@ -50,7 +112,9 @@ namespace Microsoft.Web.Management.Server
             );
 
         public void Update()
-        { throw new NotImplementedException(); }
+        {
+            ServerManager.CommitChanges();
+        }
 
         public ManagementAdministrationConfiguration Administration { get; }
         public static AppHostFileProvider AppHostProvider { get; }
@@ -61,9 +125,9 @@ namespace Microsoft.Web.Management.Server
         public static string CustomAppHostConfigPath { get; set; }
         public static bool DynamicRegistrationEnabled { get; }
         public ManagementFrameworkVersion FrameworkVersion { get; }
-        public bool IsUserServerAdministrator { get; }
+        public bool IsUserServerAdministrator => Context.User?.Identity?.IsAuthenticated == true || Context.IsLocalConnection;
         public static List<IApplicationPool> ReadOnlyAppPools { get; }
-        public static ServerManager ReadOnlyServerManager { get; }
+        public ServerManager ReadOnlyServerManager => ServerManager;
         public static List<SiteInfo> ReadOnlySites { get; }
         public abstract ManagementScope Scope { get; }
         public ServerManager ServerManager { get; }

@@ -9,44 +9,52 @@ namespace Microsoft.Web.Management.Server
 {
     public sealed class ManagementConfigurationPath
     {
+        private ManagementConfigurationPath(ConfigurationPathType pathType, string siteName, string applicationPath, string folderPath)
+        {
+            PathType = pathType;
+            SiteName = siteName;
+            ApplicationPath = applicationPath;
+            FolderPath = folderPath;
+        }
+
         public static ManagementConfigurationPath CreateApplicationConfigurationPath(string applicationPath)
         {
-            return null;
+            return CreateApplicationConfigurationPath(null, applicationPath);
         }
 
         public static ManagementConfigurationPath CreateApplicationConfigurationPath(string siteName, string applicationPath)
         {
-            return null;
+            return new ManagementConfigurationPath(ConfigurationPathType.Application, siteName, applicationPath, null);
         }
 
         public static ManagementConfigurationPath CreateFileConfigurationPath(string applicationPath, string filePath)
         {
-            return null;
+            return CreateFileConfigurationPath(null, applicationPath, filePath);
         }
 
         public static ManagementConfigurationPath CreateFileConfigurationPath(string siteName, string applicationPath, string filePath)
         {
-            return null;
+            return new ManagementConfigurationPath(ConfigurationPathType.File, siteName, applicationPath, filePath);
         }
 
         public static ManagementConfigurationPath CreateFolderConfigurationPath(string applicationPath, string folderPath)
         {
-            return null;
+            return CreateFolderConfigurationPath(null, applicationPath, folderPath);
         }
 
         public static ManagementConfigurationPath CreateFolderConfigurationPath(string siteName, string applicationPath, string folderPath)
         {
-            return null;
+            return new ManagementConfigurationPath(ConfigurationPathType.Folder, siteName, applicationPath, folderPath);
         }
 
         public static ManagementConfigurationPath CreateServerConfigurationPath()
         {
-            return null;
+            return new ManagementConfigurationPath(ConfigurationPathType.Server, null, null, null);
         }
 
         public static ManagementConfigurationPath CreateSiteConfigurationPath(string siteName)
         {
-            return null;
+            return new ManagementConfigurationPath(ConfigurationPathType.Site, siteName, null, null);
         }
 
         public ICollection<string> GetBindingProtocols(IServiceProvider serviceProvider)
@@ -56,7 +64,18 @@ namespace Microsoft.Web.Management.Server
 
         public string GetEffectiveConfigurationPath(ManagementScope scope)
         {
-            return null;
+            if (scope == ManagementScope.Server)
+            {
+                return string.Empty;
+            }
+
+            if (scope == ManagementScope.Site)
+            {
+                return SiteName ?? string.Empty;
+            }
+
+            var applicationPath = string.IsNullOrEmpty(ApplicationPath) ? "/" : ApplicationPath;
+            return string.IsNullOrEmpty(SiteName) ? applicationPath : SiteName + applicationPath;
         }
 
         public ManagementFrameworkVersion GetFrameworkVersion(IServiceProvider serviceProvider)
@@ -66,12 +85,20 @@ namespace Microsoft.Web.Management.Server
 
         public string GetState()
         {
-            return null;
+            return $"{(int)PathType}|{SiteName}|{ApplicationPath}|{FolderPath}";
         }
 
         public bool IsEquivalentScope(ManagementScope scope)
         {
-            return false;
+            return scope switch
+            {
+                ManagementScope.Server => PathType == ConfigurationPathType.Server,
+                ManagementScope.Site => PathType == ConfigurationPathType.Site,
+                ManagementScope.Application => PathType == ConfigurationPathType.Application
+                    || PathType == ConfigurationPathType.Folder
+                    || PathType == ConfigurationPathType.File,
+                _ => false
+            };
         }
 
         public string ApplicationPath { get; }

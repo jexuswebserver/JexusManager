@@ -18,7 +18,7 @@ namespace Microsoft.Web.Management.Client
             UseBasicAuthentication = useBasicAuthentication;
         }
 
-        public static readonly ConnectionCredential CurrentUserAccount;
+        public static readonly ConnectionCredential CurrentUserAccount = new ConnectionCredential(null, null);
 
         public override bool Equals(object obj)
         {

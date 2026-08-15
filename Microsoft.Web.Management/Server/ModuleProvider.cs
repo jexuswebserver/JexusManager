@@ -8,6 +8,11 @@ namespace Microsoft.Web.Management.Server
 {
     public abstract class ModuleProvider
     {
+        internal void SetManagementUnit(ManagementUnit managementUnit)
+        {
+            ManagementUnit = managementUnit ?? throw new ArgumentNullException(nameof(managementUnit));
+        }
+
         public virtual DelegationState GetChildDelegationState(string path)
         {
             throw new NotImplementedException();
@@ -30,7 +35,7 @@ namespace Microsoft.Web.Management.Server
         public abstract bool SupportsScope(ManagementScope scope);
 
         public virtual string FriendlyName { get; }
-        protected ManagementUnit ManagementUnit { get; }
+        protected ManagementUnit ManagementUnit { get; private set; }
         public string Name { get; set; }
         public abstract Type ServiceType { get; }
         public virtual bool SupportsDelegation { get; }

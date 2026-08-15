@@ -24,6 +24,17 @@ namespace JexusManager.Features.DefaultDocument
             Name = (string)element["value"];
         }
 
+        private DocumentItem(DefaultDocumentEntry entry)
+        {
+            Name = entry.Name;
+            Flag = entry.IsLocal ? "Local" : "Inherited";
+        }
+
+        internal static DocumentItem FromEntry(DefaultDocumentEntry entry)
+        {
+            return new DocumentItem(entry);
+        }
+
         public bool Equals(DocumentItem other)
         {
             return Match(other);

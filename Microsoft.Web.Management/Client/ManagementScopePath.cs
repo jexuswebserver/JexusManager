@@ -47,7 +47,7 @@ namespace Microsoft.Web.Management.Client
 
         public override int GetHashCode()
         {
-            return ServerName.GetHashCode() + Port + SiteName.GetHashCode() + ApplicationPath.GetHashCode();
+            return System.HashCode.Combine(ServerName, Port, SiteName, ApplicationPath);
         }
 
         public void SetFrameworkVersion(ManagementFrameworkVersion frameworkVersion)

@@ -39,7 +39,7 @@ namespace Microsoft.Web.Administration
 
         internal string Name { get; set; }
 
-        internal string Title => string.IsNullOrEmpty(HostName)
+        public string Title => string.IsNullOrEmpty(HostName)
             ? (string.IsNullOrEmpty(Name) ? "UNKNOWN" : Name)
             : HostName.ExtractName();
 

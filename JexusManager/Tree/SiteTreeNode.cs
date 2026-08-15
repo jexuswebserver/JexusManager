@@ -74,31 +74,10 @@ namespace JexusManager.Tree
 
             var scope = ManagementScope.Site;
             serviceContainer.AddService(typeof(IControlPanel), new ControlPanel());
-            serviceContainer.AddService(typeof(IConfigurationService),
-                new ConfigurationService(mainForm, Site.GetWebConfiguration(), scope, null, Site, Site.Applications[0],
-                    null, null, Site.Name));
-            foreach (var provider in moduleProviders)
-            {
-                if (!provider.SupportsScope(scope))
-                {
-                    continue;
-                }
-
-                var definition = provider.GetModuleDefinition(null);
-                var type = Type.GetType(definition.ClientModuleTypeName);
-                if (type == null)
-                {
-                    continue;
-                }
-
-                if (!typeof(Module).IsAssignableFrom(type))
-                {
-                    continue;
-                }
-
-                var module = (Module)Activator.CreateInstance(type);
-                module.Initialize(serviceContainer, null);
-            }
+            var configurationService = new ConfigurationService(mainForm, Site.GetWebConfiguration(), scope, null, Site, Site.Applications[0],
+                null, null, Site.Name);
+            serviceContainer.AddService(typeof(IConfigurationService), configurationService);
+            InProcessConnectionFactory.InitializeModules(serviceContainer, configurationService, moduleProviders);
 
             IModulePage page = panel;
             var mainModule = new MainModule();

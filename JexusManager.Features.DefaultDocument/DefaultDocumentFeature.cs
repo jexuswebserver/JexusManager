@@ -133,13 +133,21 @@ namespace JexusManager.Features.DefaultDocument
 
         public void Load()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.webServer/defaultDocument");
-            var enabled = (bool)section["enabled"];
-            CanRevert = section.CanRevert();
-            SetEnabled(enabled);
-
             LoadItems();
+        }
+
+        public override void LoadItems()
+        {
+            var snapshot = Proxy.GetSettings();
+            Items.Clear();
+            foreach (var entry in snapshot.Entries)
+            {
+                Items.Add(DocumentItem.FromEntry(entry));
+            }
+
+            IsEnabled = snapshot.Enabled;
+            CanRevert = snapshot.CanRevert;
+            OnSettingsSaved();
         }
 
         public void Add()
@@ -210,20 +218,14 @@ namespace JexusManager.Features.DefaultDocument
 
         public void Enable()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.webServer/defaultDocument");
-            section["enabled"] = true;
+            Proxy.SetEnabled(true);
             SetEnabled(true);
-            service.ServerManager.CommitChanges();
         }
 
         public void Disable()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.webServer/defaultDocument");
-            section["enabled"] = false;
+            Proxy.SetEnabled(false);
             SetEnabled(false);
-            service.ServerManager.CommitChanges();
         }
 
         public void Revert()
@@ -249,9 +251,55 @@ namespace JexusManager.Features.DefaultDocument
 
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
         {
-            var section = service.GetSection("system.webServer/defaultDocument");
-            return section.GetCollection("files");
+            throw new NotSupportedException("Default Document configuration is accessed through its module service.");
         }
+
+        public override void InsertItem(int index, DocumentItem item)
+        {
+            Proxy.Insert(item.Name, index);
+            LoadAndSelect(item.Name);
+        }
+
+        public override void RemoveItem()
+        {
+            var name = SelectedItem?.Name ?? throw new InvalidOperationException("No default document is selected.");
+            Proxy.Remove(name);
+            SelectedItem = null;
+            LoadItems();
+        }
+
+        public override void MoveUpItem()
+        {
+            MoveSelected(-1);
+        }
+
+        public override void MoveDownItem()
+        {
+            MoveSelected(1);
+        }
+
+        public override void RevertItems()
+        {
+            Proxy.Revert();
+            SelectedItem = null;
+            LoadItems();
+        }
+
+        private void MoveSelected(int offset)
+        {
+            var name = SelectedItem?.Name ?? throw new InvalidOperationException("No default document is selected.");
+            Proxy.Move(name, offset);
+            LoadAndSelect(name);
+        }
+
+        private void LoadAndSelect(string name)
+        {
+            LoadItems();
+            SelectedItem = Items.FirstOrDefault(item => string.Equals(item.Name, name, StringComparison.OrdinalIgnoreCase));
+            OnSettingsSaved();
+        }
+
+        private DefaultDocumentModuleProxy Proxy => ((DefaultDocumentModule)Module).Proxy;
 
         protected override void OnSettingsSaved()
         {

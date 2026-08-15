@@ -45,7 +45,8 @@ namespace JexusManager.Features
             get
             {
                 return SelectedItem != null && Items.IndexOf(SelectedItem) > 0
-                       && Items.All(item => item.Element.IsLocked == "false" && item.Element.LockAttributes.Count == 0);
+                       && Items.All(item => item.Element == null ||
+                           (item.Element.IsLocked == "false" && item.Element.LockAttributes.Count == 0));
             }
         }
         public bool CanMoveDown
@@ -53,7 +54,8 @@ namespace JexusManager.Features
             get
             {
                 return SelectedItem != null && Items.IndexOf(SelectedItem) < Items.Count - 1
-                       && Items.All(item => item.Element.IsLocked == "false" && item.Element.LockAttributes.Count == 0);
+                       && Items.All(item => item.Element == null ||
+                           (item.Element.IsLocked == "false" && item.Element.LockAttributes.Count == 0));
             }
         }
 

@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Microsoft.Web.Management.Server
 {
@@ -12,6 +13,7 @@ namespace Microsoft.Web.Management.Server
         {
             Name = name;
             ClientModuleTypeName = clientModuleTypeName;
+            Arguments = new Dictionary<string, object>();
         }
 
         public IDictionary Arguments { get; }

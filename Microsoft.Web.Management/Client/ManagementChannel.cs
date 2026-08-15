@@ -27,6 +27,24 @@ namespace Microsoft.Web.Management.Client
             string methodName,
             params Object[] parameters
             );
+
+        internal object InvokeService(
+            string serviceName,
+            string methodName,
+            params object[] parameters)
+        {
+            if (string.IsNullOrWhiteSpace(serviceName))
+            {
+                throw new ArgumentException("A module service name is required.", nameof(serviceName));
+            }
+
+            if (string.IsNullOrWhiteSpace(methodName))
+            {
+                throw new ArgumentException("A module service method is required.", nameof(methodName));
+            }
+
+            return Invoke(serviceName, methodName, parameters ?? Array.Empty<object>());
+        }
         protected void SetLastRequestConfigurationInfo(
             bool configurationUsed,
             string configurationPath,

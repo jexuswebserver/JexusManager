@@ -28,7 +28,13 @@ namespace Microsoft.Web.Management.Client.Win32
 
         protected ModuleServiceProxy CreateProxy(Type proxyType)
         {
-            return null;
+            var connection = (Connection)GetService(typeof(Connection));
+            if (connection == null)
+            {
+                throw new InvalidOperationException("There is no active management connection.");
+            }
+
+            return connection.CreateProxy(Module, proxyType);
         }
 
         protected void DisplayErrorMessage(Exception ex, ResourceManager resourceManager)
@@ -293,7 +299,7 @@ namespace Microsoft.Web.Management.Client.Win32
             get { return false; }
         }
 
-        protected Connection Connection { get; }
+        protected Connection Connection => (Connection)GetService(typeof(Connection));
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public override ContextMenuStrip ContextMenuStrip { get; set; }
         protected override CreateParams CreateParams

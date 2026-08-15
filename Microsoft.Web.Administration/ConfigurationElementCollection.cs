@@ -140,7 +140,7 @@ namespace Microsoft.Web.Administration
             return this;
         }
 
-        internal void Revert()
+        public void Revert()
         {
             FileContext.SetDirty();
             _initialized = false;

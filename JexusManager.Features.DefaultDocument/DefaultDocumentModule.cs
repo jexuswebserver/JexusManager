@@ -12,6 +12,27 @@ namespace JexusManager.Features.DefaultDocument
 
     public class DefaultDocumentModule : Module
     {
+        private DefaultDocumentModuleProxy _proxy;
+
+        internal DefaultDocumentModuleProxy Proxy
+        {
+            get
+            {
+                if (_proxy == null)
+                {
+                    var connection = (Connection)GetService(typeof(Connection));
+                    if (connection == null)
+                    {
+                        throw new InvalidOperationException("Default Document requires an active management connection.");
+                    }
+
+                    _proxy = (DefaultDocumentModuleProxy)connection.CreateProxy(this, typeof(DefaultDocumentModuleProxy));
+                }
+
+                return _proxy;
+            }
+        }
+
         protected override void Initialize(IServiceProvider serviceProvider, ModuleInfo moduleInfo)
         {
             base.Initialize(serviceProvider, moduleInfo);

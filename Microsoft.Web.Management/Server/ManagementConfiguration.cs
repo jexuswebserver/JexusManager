@@ -9,11 +9,18 @@ namespace Microsoft.Web.Management.Server
 {
     public sealed class ManagementConfiguration
     {
+        private readonly Configuration _configuration;
+
+        internal ManagementConfiguration(Configuration configuration)
+        {
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+        }
+
         public ConfigurationSection GetSection(
             string sectionPath
             )
         {
-            return null;
+            return _configuration.GetSection(sectionPath);
         }
 
         public ConfigurationSection GetSection(
@@ -21,7 +28,7 @@ namespace Microsoft.Web.Management.Server
             Type sectionType
             )
         {
-            return null;
+            return _configuration.GetSection(sectionPath, sectionType);
         }
 
         public ConfigurationSection GetSection(
@@ -30,7 +37,7 @@ namespace Microsoft.Web.Management.Server
             bool respectDelegation
             )
         {
-            return null;
+            return _configuration.GetSection(sectionPath);
         }
 
         public ConfigurationSection GetSection(
@@ -40,7 +47,7 @@ namespace Microsoft.Web.Management.Server
             bool respectDelegation
             )
         {
-            return null;
+            return _configuration.GetSection(sectionPath, sectionType);
         }
     }
 }
