@@ -158,6 +158,7 @@ namespace Microsoft.Web.Administration
 
         public string ValidationParameter { get; internal set; }
         public string ValidationType { get; internal set; }
+        internal int LineNumber { get; set; }
 
         public string DefaultValueByType
         {

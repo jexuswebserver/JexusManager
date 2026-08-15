@@ -339,7 +339,7 @@ namespace Microsoft.Web.Administration
         {
             foreach (var file in _server.GetSchemaFiles())
             {
-                var schemaDoc = XDocument.Load(file);
+                var schemaDoc = XDocument.Load(file, LoadOptions.SetLineInfo);
                 LoadSchema(schemaDoc, file);
             }
 
