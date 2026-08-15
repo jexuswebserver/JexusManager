@@ -10,17 +10,14 @@ namespace JexusManager.Features.Access
 
     using Services;
 
-    using Microsoft.Web.Administration;
     using Microsoft.Web.Management.Client;
     using Microsoft.Web.Management.Client.Win32;
 
     internal class AccessFeature
     {
-        public AccessFeature(Module module, ServerManager server, Application application)
+        public AccessFeature(Module module)
         {
             Module = module;
-            Server = server;
-            Application = application;
         }
 
         protected static readonly Version FxVersion10 = new Version("1.0");
@@ -41,9 +38,7 @@ namespace JexusManager.Features.Access
 
         public void Load()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.webServer/security/access", null, false);
-            SslFlags = (long)section["sslFlags"];
+            SslFlags = Proxy.GetSettings().SslFlags;
 
             OnAccessSettingsSaved();
         }
@@ -69,8 +64,6 @@ namespace JexusManager.Features.Access
         public virtual Version MinimumFrameworkVersion => FxVersionNotRequired;
 
         public Module Module { get; }
-        public ServerManager Server { get; set; }
-        public Application Application { get; set; }
 
         public string Name => "SSL Settings";
 
@@ -84,11 +77,10 @@ namespace JexusManager.Features.Access
 
         public bool ApplyChanges()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.webServer/security/access", null, false);
-            section["sslFlags"] = SslFlags;
-            service.ServerManager.CommitChanges();
+            Proxy.Apply(new AccessSnapshot { SslFlags = SslFlags });
             return true;
         }
+
+        private AccessModuleProxy Proxy => ((AccessModule)Module).Proxy;
     }
 }

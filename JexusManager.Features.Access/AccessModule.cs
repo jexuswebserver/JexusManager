@@ -11,6 +11,27 @@ namespace JexusManager.Features.Access
 
     internal class AccessModule : Module
     {
+        private AccessModuleProxy _proxy;
+
+        internal AccessModuleProxy Proxy
+        {
+            get
+            {
+                if (_proxy == null)
+                {
+                    var connection = (Connection)GetService(typeof(Connection));
+                    if (connection == null)
+                    {
+                        throw new InvalidOperationException("SSL Settings requires an active management connection.");
+                    }
+
+                    _proxy = (AccessModuleProxy)connection.CreateProxy(this, typeof(AccessModuleProxy));
+                }
+
+                return _proxy;
+            }
+        }
+
         protected override void Initialize(IServiceProvider serviceProvider, ModuleInfo moduleInfo)
         {
             base.Initialize(serviceProvider, moduleInfo);

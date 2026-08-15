@@ -78,35 +78,25 @@ namespace JexusManager.Features.Authentication
 
         public override void Load()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.web/identity");
-            var enabled = (bool)section["impersonate"];
-            SetEnabled(enabled);
+            SetEnabled(Proxy.GetImpersonationEnabled());
         }
 
         private void Enable()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.web/identity");
-            section["impersonate"] = true;
-            service.ServerManager.CommitChanges();
+            Proxy.SetImpersonationEnabled(true);
             SetEnabled(true);
         }
 
         private void Disable()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.web/identity");
-            section["impersonate"] = false;
-            service.ServerManager.CommitChanges();
+            Proxy.SetImpersonationEnabled(false);
             SetEnabled(false);
         }
 
         private void Edit()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.web/identity");
-            using (var dialog = new ImpersonationEditDialog(Module, new ImpersonationItem(section), this))
+            var settings = Proxy.GetImpersonationSettings();
+            using (var dialog = new ImpersonationEditDialog(Module, settings, this))
             {
                 if (dialog.ShowDialog() != DialogResult.OK)
                 {
@@ -114,7 +104,7 @@ namespace JexusManager.Features.Authentication
                 }
             }
 
-            service.ServerManager.CommitChanges();
+            Proxy.ApplyImpersonation(settings);
             OnAuthenticationSettingsSaved();
         }
 
@@ -138,5 +128,7 @@ namespace JexusManager.Features.Authentication
         public override AuthenticationType AuthenticationType => AuthenticationType.Other;
 
         public override string Name => "ASP.NET Impersonation";
+
+        private AuthenticationModuleProxy Proxy => ((AuthenticationModule)Module).Proxy;
     }
 }

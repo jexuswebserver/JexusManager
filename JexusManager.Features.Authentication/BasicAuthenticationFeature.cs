@@ -78,35 +78,25 @@ namespace JexusManager.Features.Authentication
 
         public override void Load()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.webServer/security/authentication/basicAuthentication", null, false);
-            var basicEnabled = (bool)section["enabled"];
-            SetEnabled(basicEnabled);
+            SetEnabled(Proxy.GetBasicEnabled());
         }
 
         public void Enable()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var basicSection = service.GetSection("system.webServer/security/authentication/basicAuthentication", null, false);
-            basicSection["enabled"] = true;
-            service.ServerManager.CommitChanges();
+            Proxy.SetBasicEnabled(true);
             SetEnabled(true);
         }
 
         public void Disable()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var basicSection = service.GetSection("system.webServer/security/authentication/basicAuthentication", null, false);
-            basicSection["enabled"] = false;
-            service.ServerManager.CommitChanges();
+            Proxy.SetBasicEnabled(false);
             SetEnabled(false);
         }
 
         private void Edit()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var basicSection = service.GetSection("system.webServer/security/authentication/basicAuthentication", null, false);
-            using (var dialog = new BasicEditDialog(Module, new BasicItem(basicSection), this))
+            var settings = Proxy.GetBasicSettings();
+            using (var dialog = new BasicEditDialog(Module, settings, this))
             {
                 if (dialog.ShowDialog() != DialogResult.OK)
                 {
@@ -114,7 +104,7 @@ namespace JexusManager.Features.Authentication
                 }
             }
 
-            service.ServerManager.CommitChanges();
+            Proxy.ApplyBasic(settings);
             OnAuthenticationSettingsSaved();
         }
 
@@ -163,5 +153,7 @@ namespace JexusManager.Features.Authentication
         {
             get { return "Basic Authentication"; }
         }
+
+        private AuthenticationModuleProxy Proxy => ((AuthenticationModule)Module).Proxy;
     }
 }

@@ -78,35 +78,25 @@ namespace JexusManager.Features.Authentication
 
         public override void Load()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var digestSection = service.GetSection("system.webServer/security/authentication/digestAuthentication", null, false);
-            var digestEnabled = (bool)digestSection["enabled"];
-            SetEnabled(digestEnabled);
+            SetEnabled(Proxy.GetDigestEnabled());
         }
 
         public void Enable()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var digestSection = service.GetSection("system.webServer/security/authentication/digestAuthentication", null, false);
-            digestSection["enabled"] = true;
-            service.ServerManager.CommitChanges();
+            Proxy.SetDigestEnabled(true);
             SetEnabled(true);
         }
 
         public void Disable()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var digestSection = service.GetSection("system.webServer/security/authentication/digestAuthentication", null, false);
-            digestSection["enabled"] = false;
-            service.ServerManager.CommitChanges();
+            Proxy.SetDigestEnabled(false);
             SetEnabled(false);
         }
 
         private void Edit()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var digestSection = service.GetSection("system.webServer/security/authentication/digestAuthentication", null, false);
-            using (var dialog = new DigestEditDialog(Module, new DigestItem(digestSection), this))
+            var settings = Proxy.GetDigestSettings();
+            using (var dialog = new DigestEditDialog(Module, settings, this))
             {
                 if (dialog.ShowDialog() != DialogResult.OK)
                 {
@@ -114,7 +104,7 @@ namespace JexusManager.Features.Authentication
                 }
             }
 
-            service.ServerManager.CommitChanges();
+            Proxy.ApplyDigest(settings);
             OnAuthenticationSettingsSaved();
         }
 
@@ -163,5 +153,7 @@ namespace JexusManager.Features.Authentication
         {
             get { return "Digest Authentication"; }
         }
+
+        private AuthenticationModuleProxy Proxy => ((AuthenticationModule)Module).Proxy;
     }
 }

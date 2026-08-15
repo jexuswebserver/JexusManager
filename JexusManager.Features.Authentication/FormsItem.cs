@@ -6,25 +6,9 @@ namespace JexusManager.Features.Authentication
 {
     using System;
 
-    using Microsoft.Web.Administration;
-
-
+    [Serializable]
     public class FormsItem
     {
-        public ConfigurationElement Element { get; set; }
-
-        public FormsItem(ConfigurationElement element)
-        {
-            Element = element;
-            LoginUrl = (string)element["loginUrl"];
-            Timeout = (TimeSpan)element["timeout"];
-            Mode = (long)element["cookieless"];
-            Name = (string)element["name"];
-            ProtectedMode = (long)element["protection"];
-            RequireSsl = (bool)element["requireSSL"];
-            SlidinngExpiration = (bool)element["slidingExpiration"];
-        }
-
         public long Mode { get; set; }
 
         public long ProtectedMode { get; set; }
@@ -39,15 +23,5 @@ namespace JexusManager.Features.Authentication
 
         public string LoginUrl { get; set; }
 
-        public void Apply()
-        {
-            Element["loginUrl"] = LoginUrl;
-            Element["timeout"] = Timeout;
-            Element["cookieless"] = Mode;
-            Element["name"] = Name;
-            Element["protection"] = ProtectedMode;
-            Element["requireSSL"] = RequireSsl;
-            Element["slidingExpiration"] = SlidinngExpiration;
-        }
     }
 }

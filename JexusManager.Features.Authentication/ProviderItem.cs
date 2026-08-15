@@ -4,28 +4,11 @@
 
 namespace JexusManager.Features.Authentication
 {
-    using Microsoft.Web.Administration;
+    using System;
 
+    [Serializable]
     public class ProviderItem
     {
-        public ConfigurationElement Element { get; set; }
-
-        public ProviderItem(ConfigurationElement element)
-        {
-            Element = element;
-            if (element == null)
-            {
-                return;
-            }
-
-            Value = (string)element["value"];
-        }
-
         public string Value { get; set; }
-
-        public void Apply()
-        {
-            Element["value"] = Value;
-        }
     }
 }

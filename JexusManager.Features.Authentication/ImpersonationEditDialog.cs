@@ -65,7 +65,6 @@ namespace JexusManager.Features.Authentication
                             existing.Password = null;
                         }
 
-                        existing.Apply();
                     }));
 
                 container.Add(

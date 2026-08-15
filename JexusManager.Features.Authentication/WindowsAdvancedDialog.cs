@@ -48,7 +48,6 @@ namespace JexusManager.Features.Authentication
                 {
                     item.TokenChecking = cbExtended.SelectedIndex;
                     item.UseKernelMode = cbKernelMode.Checked;
-                    item.Apply();
                     DialogResult = DialogResult.OK;
                 }));
 

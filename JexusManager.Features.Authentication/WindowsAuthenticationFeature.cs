@@ -85,35 +85,25 @@ namespace JexusManager.Features.Authentication
 
         public override void Load()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var windowsSection = service.GetSection("system.webServer/security/authentication/windowsAuthentication", null, false);
-            var windowsEnabled = (bool)windowsSection["enabled"];
-            SetEnabled(windowsEnabled);
+            SetEnabled(Proxy.GetWindowsEnabled());
         }
 
         public void Enable()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var windowsSection = service.GetSection("system.webServer/security/authentication/windowsAuthentication", null, false);
-            windowsSection["enabled"] = true;
-            service.ServerManager.CommitChanges();
+            Proxy.SetWindowsEnabled(true);
             SetEnabled(true);
         }
 
         public void Disable()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var windowsSection = service.GetSection("system.webServer/security/authentication/windowsAuthentication", null, false);
-            windowsSection["enabled"] = false;
-            service.ServerManager.CommitChanges();
+            Proxy.SetWindowsEnabled(false);
             SetEnabled(false);
         }
 
         private void Edit()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var windowsSection = service.GetSection("system.webServer/security/authentication/windowsAuthentication", null, false);
-            using (var dialog = new WindowsAdvancedDialog(Module, new WindowsItem(windowsSection), this))
+            var settings = Proxy.GetWindowsSettings();
+            using (var dialog = new WindowsAdvancedDialog(Module, settings, this))
             {
                 if (dialog.ShowDialog() != DialogResult.OK)
                 {
@@ -121,15 +111,14 @@ namespace JexusManager.Features.Authentication
                 }
             }
 
-            service.ServerManager.CommitChanges();
+            Proxy.ApplyWindows(settings);
             OnAuthenticationSettingsSaved();
         }
 
         private void Providers()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var windowsSection = service.GetSection("system.webServer/security/authentication/windowsAuthentication", null, false);
-            using (var dialog = new ProvidersDialog(Module, new WindowsItem(windowsSection), this))
+            var settings = Proxy.GetWindowsSettings();
+            using (var dialog = new ProvidersDialog(Module, settings, this))
             {
                 if (dialog.ShowDialog() != DialogResult.OK)
                 {
@@ -137,7 +126,7 @@ namespace JexusManager.Features.Authentication
                 }
             }
 
-            service.ServerManager.CommitChanges();
+            Proxy.ApplyWindows(settings);
             OnAuthenticationSettingsSaved();
         }
 
@@ -186,5 +175,7 @@ namespace JexusManager.Features.Authentication
         {
             get { return "Windows Authentication"; }
         }
+
+        private AuthenticationModuleProxy Proxy => ((AuthenticationModule)Module).Proxy;
     }
 }

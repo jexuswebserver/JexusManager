@@ -31,7 +31,6 @@ namespace JexusManager.Features.Authentication
                 .Subscribe(evt =>
                 {
                     item.Realm = txtRealm.Text;
-                    item.Apply();
                     DialogResult = DialogResult.OK;
                 }));
 

@@ -4,26 +4,12 @@
 
 namespace JexusManager.Features.Authentication
 {
-    using Microsoft.Web.Administration;
+    using System;
 
+    [Serializable]
     public class BasicItem
     {
-        public ConfigurationElement Element { get; set; }
-
-        public BasicItem(ConfigurationElement element)
-        {
-            Element = element;
-            Domain = (string)element["defaultLogonDomain"];
-            Realm = (string)element["realm"];
-        }
-
         public string Domain { get; set; }
         public string Realm { get; set; }
-
-        public void Apply()
-        {
-            Element["defaultLogonDomain"] = Domain;
-            Element["realm"] = Realm;
-        }
     }
 }

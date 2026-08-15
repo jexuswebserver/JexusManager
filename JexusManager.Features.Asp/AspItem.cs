@@ -6,151 +6,11 @@ namespace JexusManager.Features.Asp
 {
     using System.ComponentModel;
 
-    using Microsoft.Web.Administration;
     using System;
 
-    internal class AspItem
+    [Serializable]
+    public class AspItem
     {
-        [Browsable(false)]
-        public ConfigurationElement Element { get; set; }
-
-        public AspItem(ConfigurationElement element)
-        {
-            Element = element;
-            CodePage = (uint)element["codePage"];
-            BufferingOn = (bool)element["bufferingOn"];
-            EnableChunkedEncoding = (bool)element["enableChunkedEncoding"];
-            EnableAspHtmlFallback = (bool)element["enableAspHtmlFallback"];
-            EnableParentPaths = (bool)element["enableParentPaths"];
-            Lcid = (uint)element["lcid"];
-            EnableApplicationRestart = (bool)element["enableApplicationRestart"];
-            ScriptLanguage = (string)element["scriptLanguage"];
-
-            SessionProperties = new SessionProperties();
-            var session = element.ChildElements["session"];
-            SessionProperties.AllowSessionState = (bool)session["allowSessionState"];
-            SessionProperties.KeepSessionIdSecure = (bool)session["keepSessionIdSecure"];
-            SessionProperties.Max = (uint)session["max"];
-            SessionProperties.Timeout = (TimeSpan)session["timeout"];
-
-            ComPlusProperties = new ComPlusProperties();
-            var comPlus = element.ChildElements["comPlus"];
-            var flags = (long)comPlus["appServiceFlags"];
-            ComPlusProperties.EnableSxS = (flags & 2L) == 2L;
-            ComPlusProperties.EnableTracker = (flags & 1L) == 1L;
-            ComPlusProperties.UsePartition = (flags & 4L) == 4L;
-            ComPlusProperties.SxsName = (string)comPlus["sxsName"];
-            ComPlusProperties.PartitionId = (string)comPlus["partitionId"];
-            ComPlusProperties.TrackThreadingModel = (bool)comPlus["trackThreadingModel"];
-            ComPlusProperties.ExecuteInMta = (bool)comPlus["executeInMta"];
-
-            CachingProperties = new CachingProperties();
-            var cache = element.ChildElements["cache"];
-            CachingProperties.DiskTemplateCacheDirectory = (string)cache["diskTemplateCacheDirectory"];
-            CachingProperties.EnableTypelibCache = (bool)cache["enableTypelibCache"];
-            CachingProperties.MaxDiskTemplateCacheFiles = (uint)cache["maxDiskTemplateCacheFiles"];
-            CachingProperties.ScriptFileCacheSize = (uint)cache["scriptFileCacheSize"];
-            CachingProperties.ScriptEngineCacheMax = (uint)cache["scriptEngineCacheMax"];
-
-            DebuggingProperties = new DebuggingProperties();
-            DebuggingProperties.CalcLineNumber = (bool)element["calcLineNumber"];
-            DebuggingProperties.ExceptionCatchEnable = (bool)element["exceptionCatchEnable"];
-            DebuggingProperties.AppAllowClientDebug = (bool)element["appAllowClientDebug"];
-            DebuggingProperties.LogErrorRequests = (bool)element["logErrorRequests"];
-            DebuggingProperties.AppAllowDebugging = (bool)element["appAllowDebugging"];
-            DebuggingProperties.ErrorsToNTLog = (bool)element["errorsToNTLog"];
-            DebuggingProperties.RunOnEndAnonymously = (bool)element["runOnEndAnonymously"];
-            DebuggingProperties.ScriptErrorMessage = (string)element["scriptErrorMessage"];
-            DebuggingProperties.ScriptErrorSentToBrowser = (bool)element["scriptErrorSentToBrowser"];
-
-            LimitsProperties = new LimitsProperties();
-            var limits = element.ChildElements["limits"];
-            LimitsProperties.QueueConnectionTestTime = (TimeSpan)limits["queueConnectionTestTime"];
-            LimitsProperties.MaxRequestEntityAllowed = (uint)limits["maxRequestEntityAllowed"];
-            LimitsProperties.RequestQueueMax = (uint)limits["requestQueueMax"];
-            LimitsProperties.QueueTimeout = (TimeSpan)limits["queueTimeout"];
-            LimitsProperties.BufferingLimit = (uint)limits["bufferingLimit"];
-            LimitsProperties.ScriptTimeout = (TimeSpan)limits["scriptTimeout"];
-            LimitsProperties.ProcessorThreadMax = (uint)limits["processorThreadMax"];
-        }
-
-        public void Apply()
-        {
-            Element["codePage"] = CodePage;
-            Element["bufferingOn"] = BufferingOn;
-            Element["enableChunkedEncoding"] = EnableChunkedEncoding;
-            Element["enableAspHtmlFallback"] = EnableAspHtmlFallback;
-            Element["enableParentPaths"] = EnableParentPaths;
-            Element["lcid"] = Lcid;
-            Element["enableApplicationRestart"] = EnableApplicationRestart;
-            Element["scriptLanguage"] = ScriptLanguage;
-
-            var session = Element.ChildElements["session"];
-            session["allowSessionState"] = SessionProperties.AllowSessionState;
-            session["keepSessionIdSecure"] = SessionProperties.KeepSessionIdSecure;
-            session["max"] = SessionProperties.Max;
-            session["timeout"] = SessionProperties.Timeout;
-
-            var comPlus = Element.ChildElements["comPlus"];
-            var flags = 0L;
-            if (ComPlusProperties.EnableSxS)
-            {
-                flags &= 2L;
-            }
-
-            if (ComPlusProperties.EnableTracker)
-            {
-                flags &= 1L;
-            }
-
-            if (ComPlusProperties.UsePartition)
-            {
-                flags &= 4L;
-            }
-
-            comPlus["appServiceFlags"] = flags;
-
-            var attribute = comPlus.GetAttribute("sxsName");
-            if (string.IsNullOrWhiteSpace(ComPlusProperties.SxsName))
-            {
-                attribute.Delete();
-            }
-            else
-            {
-                attribute.Value = ComPlusProperties.SxsName;
-            }
-
-            comPlus["partitionId"] = ComPlusProperties.PartitionId;
-            comPlus["trackThreadingModel"] = ComPlusProperties.TrackThreadingModel;
-            comPlus["executeInMta"] = ComPlusProperties.ExecuteInMta;
-
-            var cache = Element.ChildElements["cache"];
-            cache["diskTemplateCacheDirectory"] = CachingProperties.DiskTemplateCacheDirectory;
-            cache["enableTypelibCache"] = CachingProperties.EnableTypelibCache;
-            cache["maxDiskTemplateCacheFiles"] = CachingProperties.MaxDiskTemplateCacheFiles;
-            cache["scriptFileCacheSize"] = CachingProperties.ScriptFileCacheSize;
-            cache["scriptEngineCacheMax"] = CachingProperties.ScriptEngineCacheMax;
-
-            Element["calcLineNumber"] = DebuggingProperties.CalcLineNumber;
-            Element["exceptionCatchEnable"] = DebuggingProperties.ExceptionCatchEnable;
-            Element["appAllowClientDebug"] = DebuggingProperties.AppAllowClientDebug;
-            Element["logErrorRequests"] = DebuggingProperties.LogErrorRequests;
-            Element["appAllowDebugging"] = DebuggingProperties.AppAllowDebugging;
-            Element["errorsToNTLog"] = DebuggingProperties.ErrorsToNTLog;
-            Element["runOnEndAnonymously"] = DebuggingProperties.RunOnEndAnonymously;
-            Element["scriptErrorMessage"] = DebuggingProperties.ScriptErrorMessage;
-            Element["scriptErrorSentToBrowser"] = DebuggingProperties.ScriptErrorSentToBrowser;
-
-            var limits = Element.ChildElements["limits"];
-            limits["queueConnectionTestTime"] = LimitsProperties.QueueConnectionTestTime;
-            limits["maxRequestEntityAllowed"] = LimitsProperties.MaxRequestEntityAllowed;
-            limits["requestQueueMax"] = LimitsProperties.RequestQueueMax;
-            limits["queueTimeout"] = LimitsProperties.QueueTimeout;
-            limits["bufferingLimit"] = LimitsProperties.BufferingLimit;
-            limits["scriptTimeout"] = LimitsProperties.ScriptTimeout;
-            limits["processorThreadMax"] = LimitsProperties.ProcessorThreadMax;
-        }
-
         [Browsable(true)]
         [Category("Behavior")]
         [Description("Specifies the default character set for an application. For example, code page 1252 supports a Latin character set used in American English and many European alphabets.")]
@@ -239,6 +99,7 @@ namespace JexusManager.Features.Asp
     }
 
     [TypeConverter(typeof(ExpandableObjectConverter))]
+    [Serializable]
     public class SessionProperties
     {
         [Browsable(true)]
@@ -272,6 +133,7 @@ namespace JexusManager.Features.Asp
     }
 
     [TypeConverter(typeof(ExpandableObjectConverter))]
+    [Serializable]
     public class ComPlusProperties
     {
         [Browsable(true)]
@@ -323,6 +185,7 @@ namespace JexusManager.Features.Asp
     }
 
     [TypeConverter(typeof(ExpandableObjectConverter))]
+    [Serializable]
     public class CachingProperties
     {
         [Browsable(true)]
@@ -362,6 +225,7 @@ namespace JexusManager.Features.Asp
     }
 
     [TypeConverter(typeof(ExpandableObjectConverter))]
+    [Serializable]
     public class DebuggingProperties
     {
         [Browsable(true)]
@@ -425,6 +289,7 @@ namespace JexusManager.Features.Asp
     }
 
     [TypeConverter(typeof(ExpandableObjectConverter))]
+    [Serializable]
     public class LimitsProperties
     {
         [Browsable(true)]

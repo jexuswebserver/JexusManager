@@ -12,7 +12,7 @@ namespace JexusManager.Features.Access
     {
         public override Type ServiceType
         {
-            get { return null; }
+            get { return typeof(AccessService); }
         }
 
         public override ModuleDefinition GetModuleDefinition(IManagementContext context)

@@ -80,7 +80,6 @@ namespace JexusManager.Features.Authentication
                     existing.ProtectedMode = cbProtectedMode.SelectedIndex;
                     existing.RequireSsl = cbSSL.Checked;
                     existing.SlidinngExpiration = cbExpire.Checked;
-                    existing.Apply();
                     DialogResult = DialogResult.OK;
                 }));
 

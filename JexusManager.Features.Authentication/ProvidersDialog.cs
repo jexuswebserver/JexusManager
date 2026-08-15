@@ -85,10 +85,9 @@ namespace JexusManager.Features.Authentication
                     item.Providers.Clear();
                     foreach (string provider in lbProviders.Items)
                     {
-                        item.Providers.Add(new ProviderItem(null) { Value = provider });
+                        item.Providers.Add(new ProviderItem { Value = provider });
                     }
 
-                    item.Apply();
                     DialogResult = DialogResult.OK;
                 }));
 

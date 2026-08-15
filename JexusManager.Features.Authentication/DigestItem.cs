@@ -4,23 +4,11 @@
 
 namespace JexusManager.Features.Authentication
 {
-    using Microsoft.Web.Administration;
+    using System;
 
+    [Serializable]
     public class DigestItem
     {
-        public ConfigurationElement Element { get; set; }
-
-        public DigestItem(ConfigurationElement element)
-        {
-            Element = element;
-            Realm = (string)element["realm"];
-        }
-
         public string Realm { get; set; }
-
-        public void Apply()
-        {
-            Element["realm"] = Realm;
-        }
     }
 }

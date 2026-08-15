@@ -86,36 +86,26 @@ namespace JexusManager.Features.Authentication
 
         public override void Load()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.web/authentication");
-            var enabled = 3L == (long)section["mode"];
-            SetEnabled(enabled);
-            Scope = service.Scope;
+            SetEnabled(Proxy.GetFormsEnabled());
+            Scope = ((Connection)GetService(typeof(Connection))).Scope;
         }
 
         public void Enable()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.web/authentication");
-            section["mode"] = "Forms";
-            service.ServerManager.CommitChanges();
+            Proxy.SetFormsEnabled(true);
             SetEnabled(true);
         }
 
         public void Disable()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.web/authentication");
-            section["mode"] = "Windows";
-            service.ServerManager.CommitChanges();
+            Proxy.SetFormsEnabled(false);
             SetEnabled(false);
         }
 
         private void Edit()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.web/authentication");
-            using (var dialog = new FormsEditDialog(Module, new FormsItem(section.GetChildElement("forms")), Scope == ManagementScope.Server && !PublicNativeMethods.IsProcessElevated, this))
+            var settings = Proxy.GetFormsSettings();
+            using (var dialog = new FormsEditDialog(Module, settings, Scope == ManagementScope.Server && !PublicNativeMethods.IsProcessElevated, this))
             {
                 if (dialog.ShowDialog() != DialogResult.OK)
                 {
@@ -123,7 +113,7 @@ namespace JexusManager.Features.Authentication
                 }
             }
 
-            service.ServerManager.CommitChanges();
+            Proxy.ApplyForms(settings);
             OnAuthenticationSettingsSaved();
         }
 
@@ -142,5 +132,7 @@ namespace JexusManager.Features.Authentication
         public override AuthenticationType AuthenticationType => AuthenticationType.LoginRedirectBased;
 
         public override string Name => "Forms Authentication";
+
+        private AuthenticationModuleProxy Proxy => ((AuthenticationModule)Module).Proxy;
     }
 }

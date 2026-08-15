@@ -73,8 +73,12 @@ namespace Tests.Authentication
 
             _serviceContainer.AddService(typeof(IManagementUIService), substitute);
 
+            var provider = new AuthenticationModuleProvider();
+            var configurationService = (IConfigurationService)_serviceContainer.GetService(typeof(IConfigurationService));
+            var connection = InProcessConnectionFactory.Configure(_serviceContainer, configurationService, new[] { provider });
+            var definition = provider.GetModuleDefinition(null);
             var module = new AuthenticationModule();
-            module.TestInitialize(_serviceContainer, null);
+            module.TestInitialize(_serviceContainer, (ModuleInfo)connection.Modules[definition.Name]);
 
             _feature = new AnonymousAuthenticationFeature(module);
             _feature.Load();
@@ -101,7 +105,7 @@ namespace Tests.Authentication
                         new XElement("security",
                             new XElement("authentication",
                                 new XElement("anonymousAuthentication",
-                                    new XAttribute("enabled", false)))))));
+                                    new XAttribute("enabled", "False")))))));
             document.Save(Expected);
 
             _feature.Disable();

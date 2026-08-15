@@ -11,7 +11,6 @@ namespace JexusManager.Features.Asp
 
     using JexusManager.Services;
 
-    using Microsoft.Web.Administration;
     using Microsoft.Web.Management.Client;
     using Microsoft.Web.Management.Client.Win32;
 
@@ -62,9 +61,7 @@ namespace JexusManager.Features.Asp
 
         public void Load()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.webServer/asp", null, false);
-            PropertyGridObject = new AspItem(section);
+            PropertyGridObject = Proxy.GetSettings();
             OnAspSettingsSaved();
         }
 
@@ -95,9 +92,6 @@ namespace JexusManager.Features.Asp
         }
 
         public Module Module { get; }
-        public ServerManager Server { get; set; }
-        public Application Application { get; set; }
-
         public string Name
         {
             get { return "Asp"; }
@@ -112,11 +106,11 @@ namespace JexusManager.Features.Asp
 
         public bool ApplyChanges()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            PropertyGridObject.Apply();
-            service.ServerManager.CommitChanges();
+            Proxy.Apply(PropertyGridObject);
             return true;
         }
+
+        private AspModuleProxy Proxy => ((AspModule)Module).Proxy;
 
         public bool LongDateEnabled { get; set; }
 

@@ -12,7 +12,7 @@ namespace JexusManager.Features.Authentication
     {
         public override Type ServiceType
         {
-            get { return null; }
+            get { return typeof(AuthenticationService); }
         }
 
         public override ModuleDefinition GetModuleDefinition(IManagementContext context)

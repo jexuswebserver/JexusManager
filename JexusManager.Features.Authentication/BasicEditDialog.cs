@@ -32,7 +32,6 @@ namespace JexusManager.Features.Authentication
                 {
                     existing.Domain = txtDomain.Text;
                     existing.Realm = txtRealm.Text;
-                    existing.Apply();
                     DialogResult = DialogResult.OK;
                 }));
 

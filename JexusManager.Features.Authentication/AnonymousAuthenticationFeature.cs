@@ -78,35 +78,25 @@ namespace JexusManager.Features.Authentication
 
         public override void Load()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var section = service.GetSection("system.webServer/security/authentication/anonymousAuthentication", null, false);
-            var anonymousEnabled = (bool)section["enabled"];
-            SetEnabled(anonymousEnabled);
+            SetEnabled(Proxy.GetAnonymousEnabled());
         }
 
         public void Enable()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var anonymousSection = service.GetSection("system.webServer/security/authentication/anonymousAuthentication", null, false);
-            anonymousSection["enabled"] = true;
-            service.ServerManager.CommitChanges();
+            Proxy.SetAnonymousEnabled(true);
             SetEnabled(true);
         }
 
         public void Disable()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var anonymousSection = service.GetSection("system.webServer/security/authentication/anonymousAuthentication", null, false);
-            anonymousSection["enabled"] = false;
-            service.ServerManager.CommitChanges();
+            Proxy.SetAnonymousEnabled(false);
             SetEnabled(false);
         }
 
         private void Edit()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var anonymousSection = service.GetSection("system.webServer/security/authentication/anonymousAuthentication", null, false);
-            using (var dialog = new AnonymousEditDialog(Module, new AnonymousItem(anonymousSection), this))
+            var settings = Proxy.GetAnonymousSettings();
+            using (var dialog = new AnonymousEditDialog(Module, settings, this))
             {
                 if (dialog.ShowDialog() != DialogResult.OK)
                 {
@@ -114,7 +104,7 @@ namespace JexusManager.Features.Authentication
                 }
             }
 
-            service.ServerManager.CommitChanges();
+            Proxy.ApplyAnonymous(settings);
             OnAuthenticationSettingsSaved();
         }
 
@@ -163,5 +153,7 @@ namespace JexusManager.Features.Authentication
         {
             get { return "Anonymous Authentication"; }
         }
+
+        private AuthenticationModuleProxy Proxy => ((AuthenticationModule)Module).Proxy;
     }
 }

@@ -11,6 +11,27 @@ namespace JexusManager.Features.Authentication
 
     internal class AuthenticationModule : Module
     {
+        private AuthenticationModuleProxy _proxy;
+
+        internal AuthenticationModuleProxy Proxy
+        {
+            get
+            {
+                if (_proxy == null)
+                {
+                    var connection = (Connection)GetService(typeof(Connection));
+                    if (connection == null)
+                    {
+                        throw new InvalidOperationException("Authentication requires an active management connection.");
+                    }
+
+                    _proxy = (AuthenticationModuleProxy)connection.CreateProxy(this, typeof(AuthenticationModuleProxy));
+                }
+
+                return _proxy;
+            }
+        }
+
         protected override void Initialize(IServiceProvider serviceProvider, ModuleInfo moduleInfo)
         {
             base.Initialize(serviceProvider, moduleInfo);

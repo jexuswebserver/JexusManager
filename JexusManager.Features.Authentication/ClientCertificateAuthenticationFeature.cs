@@ -70,27 +70,18 @@ namespace JexusManager.Features.Authentication
 
         public override void Load()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var anonymousSection = service.GetSection("system.webServer/security/authentication/clientCertificateMappingAuthentication", null, false);
-            var anonymousEnabled = (bool)anonymousSection["enabled"];
-            SetEnabled(anonymousEnabled);
+            SetEnabled(Proxy.GetClientCertificateEnabled());
         }
 
         public void Enable()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var anonymousSection = service.GetSection("system.webServer/security/authentication/clientCertificateMappingAuthentication", null, false);
-            anonymousSection["enabled"] = true;
-            service.ServerManager.CommitChanges();
+            Proxy.SetClientCertificateEnabled(true);
             SetEnabled(true);
         }
 
         public void Disable()
         {
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            var anonymousSection = service.GetSection("system.webServer/security/authentication/clientCertificateMappingAuthentication", null, false);
-            anonymousSection["enabled"] = false;
-            service.ServerManager.CommitChanges();
+            Proxy.SetClientCertificateEnabled(false);
             SetEnabled(false);
         }
 
@@ -139,5 +130,7 @@ namespace JexusManager.Features.Authentication
         {
             get { return "Active Directory Client Certificate Authentication"; }
         }
+
+        private AuthenticationModuleProxy Proxy => ((AuthenticationModule)Module).Proxy;
     }
 }

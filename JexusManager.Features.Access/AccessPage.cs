@@ -51,7 +51,7 @@ namespace JexusManager.Features.Access
             var service = (IConfigurationService)this.GetService(typeof(IConfigurationService));
             pictureBox1.Image = service.Scope.GetImage();
 
-            _feature = new AccessFeature(this.Module, null, null);
+            _feature = new AccessFeature(this.Module);
             _feature.AccessSettingsUpdated = this.Refresh;
             _feature.Load();
             base.Initialize(navigationData);
