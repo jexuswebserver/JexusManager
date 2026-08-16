@@ -22,7 +22,7 @@ namespace JexusManager.Features.IsapiCgiRestriction
 
         public override bool SupportsScope(ManagementScope scope)
         {
-            return scope == ManagementScope.Server;
+            return true;
         }
     }
 }

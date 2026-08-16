@@ -37,7 +37,7 @@ namespace JexusManager.Features.HttpApi
                 .ObserveOn(System.Threading.SynchronizationContext.Current)
                 .Subscribe(evt =>
                 {
-                    Item = new ReservedUrlsItem(txtAddress.Text, "D:(A;;GX;;;WD)", feature);
+                    Item = new ReservedUrlsItem { UrlPrefix = txtAddress.Text, SecurityDescriptor = "D:(A;;GX;;;WD)" };
                     if (feature.Items.Any(item => item.Match(Item)))
                     {
                         ShowMessage(

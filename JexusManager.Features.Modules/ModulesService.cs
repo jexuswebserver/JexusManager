@@ -192,18 +192,24 @@ namespace JexusManager.Features.Modules
 
         private ConfigurationSection GetSection()
         {
-            return ManagementUnit.Configuration.GetSection(SectionPath);
+            if (ManagementUnit.Scope == ManagementScope.Server)
+            {
+                return ManagementUnit.ServerManager.GetApplicationHostConfiguration().GetSection(SectionPath, string.Empty);
+            }
+
+            var section = ManagementUnit.Configuration.GetSection(SectionPath);
+            if (!section.IsLocallyStored)
+            {
+                var locationPath = ManagementUnit.ConfigurationPath.GetEffectiveConfigurationPath(ManagementScope.Site);
+                section = ManagementUnit.ServerManager.GetApplicationHostConfiguration().GetSection(SectionPath, locationPath);
+            }
+
+            return section;
         }
 
         private ConfigurationSection GetGlobalSection()
         {
-            if (ManagementUnit.Scope == ManagementScope.Server)
-            {
-                return ManagementUnit.Configuration.GetSection(GlobalSectionPath);
-            }
-
-            var locationPath = ManagementUnit.ConfigurationPath.GetEffectiveConfigurationPath(ManagementScope.Site);
-            return ManagementUnit.ServerManager.GetApplicationHostConfiguration().GetSection(GlobalSectionPath, locationPath);
+            return ManagementUnit.Configuration.GetSection(GlobalSectionPath);
         }
 
         private static List<string> CreatePreConditions(string content)
@@ -216,6 +222,7 @@ namespace JexusManager.Features.Modules
             var type = (string)element["type"];
             var item = new ModulesItem
             {
+                OriginalKey = (string)element["name"],
                 Name = (string)element["name"],
                 Type = type,
                 PreConditions = CreatePreConditions((string)element["preCondition"]),
@@ -232,9 +239,10 @@ namespace JexusManager.Features.Modules
 
         private static ConfigurationElement Find(ConfigurationElementCollection collection, ModulesItem item)
         {
+            var key = string.IsNullOrEmpty(item.OriginalKey) ? item.Name : item.OriginalKey;
             foreach (ConfigurationElement element in collection)
             {
-                if ((string)element["name"] == item.Name)
+                if ((string)element["name"] == key)
                 {
                     return element;
                 }

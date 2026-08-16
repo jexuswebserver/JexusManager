@@ -12,6 +12,16 @@ namespace JexusManager.Features.HttpApi
 
     internal class HttpApiModule : Module
     {
+        private HttpApiModuleProxy _proxy;
+
+        internal HttpApiModuleProxy Proxy
+        {
+            get
+            {
+                return _proxy ??= (HttpApiModuleProxy)((Connection)GetService(typeof(Connection))).CreateProxy(this, typeof(HttpApiModuleProxy));
+            }
+        }
+
         protected override void Initialize(IServiceProvider serviceProvider, ModuleInfo moduleInfo)
         {
             base.Initialize(serviceProvider, moduleInfo);

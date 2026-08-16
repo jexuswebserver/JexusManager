@@ -24,6 +24,7 @@ namespace JexusManager.Features.TraceFailedRequests
                 var failureDefinitions = element.GetChildElement("failureDefinitions");
                 var item = new TraceFailedRequestsItem
                 {
+                    OriginalKey = (string)element["path"],
                     Path = (string)element["path"],
                     Verbosity = (long)failureDefinitions["verbosity"],
                     Codes = failureDefinitions["statusCodes"].ToString(),
@@ -238,9 +239,10 @@ namespace JexusManager.Features.TraceFailedRequests
 
         private static ConfigurationElement Find(ConfigurationElementCollection collection, TraceFailedRequestsItem item)
         {
+            var key = string.IsNullOrEmpty(item.OriginalKey) ? item.Path : item.OriginalKey;
             foreach (ConfigurationElement element in collection)
             {
-                if ((string)element["path"] == item.Path)
+                if ((string)element["path"] == key)
                 {
                     return element;
                 }

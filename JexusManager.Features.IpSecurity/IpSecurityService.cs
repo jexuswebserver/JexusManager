@@ -167,12 +167,36 @@ namespace JexusManager.Features.IpSecurity
 
         private ConfigurationSection GetSection()
         {
-            return ManagementUnit.Configuration.GetSection(SectionPath);
+            if (ManagementUnit.Scope == ManagementScope.Server)
+            {
+                return ManagementUnit.Configuration.GetSection(SectionPath);
+            }
+
+            var section = ManagementUnit.Configuration.GetSection(SectionPath);
+            if (!section.IsLocallyStored)
+            {
+                var locationPath = ManagementUnit.ConfigurationPath.GetEffectiveConfigurationPath(ManagementScope.Site);
+                section = ManagementUnit.ServerManager.GetApplicationHostConfiguration().GetSection(SectionPath, locationPath);
+            }
+
+            return section;
         }
 
         private ConfigurationSection GetDynamicSection()
         {
-            return ManagementUnit.Configuration.GetSection(DynamicSectionPath);
+            if (ManagementUnit.Scope == ManagementScope.Server)
+            {
+                return ManagementUnit.Configuration.GetSection(DynamicSectionPath);
+            }
+
+            var section = ManagementUnit.Configuration.GetSection(DynamicSectionPath);
+            if (section != null && !section.IsLocallyStored)
+            {
+                var locationPath = ManagementUnit.ConfigurationPath.GetEffectiveConfigurationPath(ManagementScope.Site);
+                section = ManagementUnit.ServerManager.GetApplicationHostConfiguration().GetSection(DynamicSectionPath, locationPath);
+            }
+
+            return section;
         }
 
         private static ConfigurationElement Find(ConfigurationElementCollection collection, IpSecurityItem item)

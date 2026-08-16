@@ -79,37 +79,9 @@ namespace JexusManager.Features.Certificates
                         Item = X509CertificateLoader.LoadPkcs12FromFile(txtFile.Text, txtPassword.Text, X509KeyStorageFlags.Exportable | X509KeyStorageFlags.PersistKeySet);
                         Item.FriendlyName = txtName.Text;
                         Store = cbStore.SelectedIndex == 0 ? "Personal" : "WebHosting";
-                        var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-                        if (service.ServerManager.Mode == WorkingMode.Jexus)
+                        if (((CertificatesModule)ServiceProvider).Proxy.InstallFromFile(txtFile.Text, txtPassword.Text, txtName.Text, Store))
                         {
-                            var server = (JexusServerManager)service.Server;
-                            // Public Key;
-                            StringBuilder publicBuilder = new StringBuilder();
-                            publicBuilder.AppendLine("-----BEGIN CERTIFICATE-----");
-                            publicBuilder.AppendLine(Convert.ToBase64String(Item.Export(X509ContentType.Cert), Base64FormattingOptions.InsertLineBreaks));
-                            publicBuilder.AppendLine("-----END CERTIFICATE-----");
-                            var file = AsyncHelper.RunSync(() => server.SaveCertificateAsync(publicBuilder.ToString()));
-                            server.SetCertificate(file);
-                            // Private Key
-                            var rsa = Item.GetRSAPrivateKey();
-                            MemoryStream memoryStream = new MemoryStream();
-                            TextWriter streamWriter = new StreamWriter(memoryStream);
-                            PemWriter pemWriter = new PemWriter(streamWriter);
-                            AsymmetricCipherKeyPair keyPair = DotNetUtilities.GetRsaKeyPair(rsa);
-                            pemWriter.WriteObject(keyPair.Private);
-                            streamWriter.Flush();
-                            string output = Encoding.ASCII.GetString(memoryStream.GetBuffer()).Trim();
-                            int indexOfFooter = output.IndexOf("-----END RSA PRIVATE KEY-----", StringComparison.Ordinal);
-                            memoryStream.Close();
-                            streamWriter.Close();
-                            string key = output.Substring(0, indexOfFooter + 29);
-                            var keyFile = AsyncHelper.RunSync(() => server.SaveKeyAsync(key));
-                            server.SetKeyFile(keyFile);
-                            service.ServerManager.CommitChanges();
-                        }
-                        else
-                        {
-                            Install(txtFile.Text, txtPassword.Text);
+                            DialogResult = DialogResult.OK;
                         }
                     }
                     catch (Exception ex)
@@ -132,40 +104,5 @@ namespace JexusManager.Features.Certificates
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public X509Certificate2 Item { get; set; }
-
-        private void Install(string fileName, string password)
-        {
-            try
-            {
-                // install certificate
-                using var process = new Process();
-                var start = process.StartInfo;
-                start.Verb = "runas";
-                start.UseShellExecute = true;
-                start.FileName = "cmd";
-                start.Arguments = $"/c \"\"{CertificateInstallerLocator.FileName}\" /f:\"{fileName}\" /p:\"{password}\" /n:\"{txtName.Text}\" /s:{(cbStore.SelectedIndex == 0 ? "MY" : "WebHosting")}\"";
-                start.CreateNoWindow = true;
-                start.WindowStyle = ProcessWindowStyle.Hidden;
-                process.Start();
-                process.WaitForExit();
-
-                if (process.ExitCode == 0)
-                {
-                    DialogResult = DialogResult.OK;
-                }
-            }
-            catch (Win32Exception ex)
-            {
-                // elevation is cancelled.
-                if (ex.NativeErrorCode != (int)Windows.Win32.Foundation.WIN32_ERROR.ERROR_CANCELLED)
-                {
-                    _logger.LogError(ex, "Win32 error during certificate installation. Native error code: {Code}", ex.NativeErrorCode);
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error during certificate installation");
-            }
-        }
     }
 }

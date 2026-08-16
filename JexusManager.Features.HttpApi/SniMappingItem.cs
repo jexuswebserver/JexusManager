@@ -2,20 +2,17 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
+
 namespace JexusManager.Features.HttpApi
 {
     using Microsoft.Web.Administration;
 
+    [Serializable]
     internal class SniMappingItem : IItem<SniMappingItem>
     {
-        public SniMappingItem(string host, string port, string appId, string hash, string store, SniMappingFeature feature)
+        public SniMappingItem()
         {
-            Host = host;
-            Port = port;
-            AppId = appId;
-            Hash = hash;
-            Store = store;
-            Feature = feature;
         }
 
         public string Hash { get; set; }
@@ -23,7 +20,6 @@ namespace JexusManager.Features.HttpApi
         public string Port { get; set; }
         public string AppId { get; set; }
         public string Store { get; set; }
-        public SniMappingFeature Feature { get; private set; }
 
         public string Flag { get; set; }
         public ConfigurationElement Element { get; set; }

@@ -24,6 +24,8 @@ namespace JexusManager.Features.Rewrite
 
         public string Name { get; set; }
 
+        internal string OriginalKey { get; set; }
+
         public string Type { get; set; }
 
         public IList<SettingItem> Settings { get; } = new List<SettingItem>();

@@ -56,10 +56,11 @@ namespace JexusManager.Features.Authorization
         }
 
         private ConfigurationElementCollection GetCollection() => ManagementUnit.Configuration.GetSection(SectionPath).GetCollection();
-        private static AuthorizationRule CreateRule(ConfigurationElement e) => new AuthorizationRule { AccessType = (long)e["accessType"], Users = (string)e["users"], Roles = (string)e["roles"], Verbs = (string)e["verbs"], Flag = e.IsLocallyStored ? "Local" : "Inhertied" };
+        private static AuthorizationRule CreateRule(ConfigurationElement e) => new AuthorizationRule { OriginalKey = (string)e["users"] + "|" + (string)e["roles"] + "|" + (string)e["verbs"], AccessType = (long)e["accessType"], Users = (string)e["users"], Roles = (string)e["roles"], Verbs = (string)e["verbs"], Flag = e.IsLocallyStored ? "Local" : "Inhertied" };
         private static ConfigurationElement Find(ConfigurationElementCollection collection, AuthorizationRule rule)
         {
-            foreach (ConfigurationElement e in collection) if ((string)e["users"] == rule.Users && (string)e["roles"] == rule.Roles && (string)e["verbs"] == rule.Verbs) return e;
+            var key = string.IsNullOrEmpty(rule.OriginalKey) ? rule.Users + "|" + rule.Roles + "|" + rule.Verbs : rule.OriginalKey;
+            foreach (ConfigurationElement e in collection) if ((string)e["users"] + "|" + (string)e["roles"] + "|" + (string)e["verbs"] == key) return e;
             return null;
         }
         private static void AddRule(ConfigurationElementCollection collection, AuthorizationRule rule)

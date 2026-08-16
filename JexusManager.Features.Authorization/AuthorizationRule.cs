@@ -18,6 +18,8 @@ namespace JexusManager.Features.Authorization
 
         public string Users { get; set; }
 
+        internal string OriginalKey { get; set; }
+
         public long AccessType { get; set; }
 
         public ConfigurationElement Element { get; set; }

@@ -212,6 +212,11 @@ namespace Microsoft.Web.Administration
             if (value == null)
                 return null;
 
+            if (Type == "bool")
+            {
+                return (bool)value ? "true" : "false";
+            }
+
             if (Type == "enum" || Type == "flags")
             {
                 var longVal = Convert.ToInt64(value);

@@ -30,6 +30,8 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         public string Name { get; set; }
 
+        internal string OriginalKey { get; set; }
+
         public string Input { get; set; }
 
         public bool Negate { get; set; }

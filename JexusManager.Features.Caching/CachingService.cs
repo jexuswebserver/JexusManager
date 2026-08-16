@@ -12,7 +12,7 @@ namespace JexusManager.Features.Caching
             var result = new List<CachingItem>();
             foreach (ConfigurationElement element in ManagementUnit.Configuration.GetSection("system.webServer/caching").GetCollection("profiles"))
             {
-                result.Add(new CachingItem { Extension = (string)element["extension"], Policy = (long)element["policy"], KernelCachePolicy = (long)element["kernelCachePolicy"], Duration = (System.TimeSpan)element["duration"], VaryByQueryString = (string)element["varyByQueryString"], VaryByHeaders = (string)element["varyByHeaders"], Flag = element.IsLocallyStored ? "Local" : "Inhertied" });
+                result.Add(new CachingItem { OriginalKey = (string)element["extension"], Extension = (string)element["extension"], Policy = (long)element["policy"], KernelCachePolicy = (long)element["kernelCachePolicy"], Duration = (System.TimeSpan)element["duration"], VaryByQueryString = (string)element["varyByQueryString"], VaryByHeaders = (string)element["varyByHeaders"], Flag = element.IsLocallyStored ? "Local" : "Inhertied" });
             }
             return result.ToArray();
         }
@@ -78,7 +78,8 @@ namespace JexusManager.Features.Caching
         private ConfigurationElementCollection GetProfileCollection() => ManagementUnit.Configuration.GetSection("system.webServer/caching").GetCollection("profiles");
         private static ConfigurationElement Find(ConfigurationElementCollection profiles, CachingItem item)
         {
-            foreach (ConfigurationElement element in profiles) if ((string)element["extension"] == item.Extension) return element;
+            var key = string.IsNullOrEmpty(item.OriginalKey) ? item.Extension : item.OriginalKey;
+            foreach (ConfigurationElement element in profiles) if ((string)element["extension"] == key) return element;
             return null;
         }
         private static void AddProfile(ConfigurationElementCollection profiles, CachingItem item)

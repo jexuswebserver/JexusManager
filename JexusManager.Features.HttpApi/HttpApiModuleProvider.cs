@@ -13,7 +13,7 @@ namespace JexusManager.Features.HttpApi
     {
         public override Type ServiceType
         {
-            get { return null; }
+            get { return typeof(HttpApiService); }
         }
 
         public override ModuleDefinition GetModuleDefinition(IManagementContext context)

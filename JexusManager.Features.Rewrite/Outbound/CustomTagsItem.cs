@@ -24,6 +24,8 @@ namespace JexusManager.Features.Rewrite.Outbound
 
         public string Name { get; set; }
 
+        internal string OriginalKey { get; set; }
+
         public string Flag { get; set; }
 
         public string TagString { get; private set; }

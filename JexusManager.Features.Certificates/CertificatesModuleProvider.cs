@@ -12,7 +12,7 @@ namespace JexusManager.Features.Certificates
     {
         public override Type ServiceType
         {
-            get { return null; }
+            get { return typeof(CertificatesService); }
         }
 
         public override ModuleDefinition GetModuleDefinition(IManagementContext context)

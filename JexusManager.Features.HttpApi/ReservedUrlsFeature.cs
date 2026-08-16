@@ -75,13 +75,7 @@ namespace JexusManager.Features.HttpApi
 
         public override void Load()
         {
-            Items = new List<ReservedUrlsItem>();
-            var httpNamespaceAcls = Microsoft.Web.Administration.NativeMethods.QueryHttpNamespaceAcls();
-            foreach (var mapping in httpNamespaceAcls)
-            {
-                Items.Add(new ReservedUrlsItem(mapping.UrlPrefix, mapping.SecurityDescriptor, this));
-            }
-
+            Items = new List<ReservedUrlsItem>(((HttpApiModule)Module).Proxy.GetReservedUrls());
             OnHttpApiSettingsSaved();
         }
 
@@ -101,38 +95,12 @@ namespace JexusManager.Features.HttpApi
 
         private void DeleteReservedUrl()
         {
-            try
+            var item = SelectedItem;
+            if (((HttpApiModule)Module).Proxy.DeleteReservedUrl(item.UrlPrefix, item.SecurityDescriptor))
             {
-                // remove reserved URL
-                using var process = new Process();
-                var start = process.StartInfo;
-                start.Verb = "runas";
-                start.UseShellExecute = true;
-                start.FileName = "cmd";
-                start.Arguments = $"/c \"\"{CertificateInstallerLocator.FileName}\" /u:\"{SelectedItem.UrlPrefix}\" /d:\"{SelectedItem.SecurityDescriptor}\"";
-                start.CreateNoWindow = true;
-                start.WindowStyle = ProcessWindowStyle.Hidden;
-                process.Start();
-                process.WaitForExit();
-
-                if (process.ExitCode == 0)
-                {
-                    Items.Remove(SelectedItem);
-                    SelectedItem = null;
-                    OnHttpApiSettingsSaved();
-                }
-            }
-            catch (Win32Exception ex)
-            {
-                // elevation is cancelled.
-                if (ex.NativeErrorCode != (int)Windows.Win32.Foundation.WIN32_ERROR.ERROR_CANCELLED)
-                {
-                    _logger.LogError(ex, "Win32 error deleting reserved URL. Native error code: {Code}", ex.NativeErrorCode);
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error deleting reserved URL");
+                Items.Remove(item);
+                SelectedItem = null;
+                OnHttpApiSettingsSaved();
             }
         }
 
@@ -155,7 +123,7 @@ namespace JexusManager.Features.HttpApi
                 return;
             }
 
-            var message = BindingUtility.AddReservedUrl(dialog.Item.UrlPrefix);
+            var message = ((HttpApiModule)Module).Proxy.AddReservedUrl(dialog.Item.UrlPrefix);
             if (string.IsNullOrEmpty(message))
             {
                 Items.Add(dialog.Item);

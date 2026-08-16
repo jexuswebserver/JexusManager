@@ -21,6 +21,7 @@ namespace JexusManager.Features.Handlers
             {
                 result.Add(new HandlersItem
                 {
+                    OriginalKey = (string)element["name"],
                     Name = (string)element["name"],
                     Path = (string)element["path"],
                     ResourceType = (long)element["resourceType"],
@@ -187,7 +188,19 @@ namespace JexusManager.Features.Handlers
 
         private ConfigurationSection GetSection()
         {
-            return ManagementUnit.Configuration.GetSection(SectionPath);
+            if (ManagementUnit.Scope == ManagementScope.Server)
+            {
+                return ManagementUnit.ServerManager.GetApplicationHostConfiguration().GetSection(SectionPath, string.Empty);
+            }
+
+            var section = ManagementUnit.Configuration.GetSection(SectionPath);
+            if (!section.IsLocallyStored)
+            {
+                var locationPath = ManagementUnit.ConfigurationPath.GetEffectiveConfigurationPath(ManagementScope.Site);
+                section = ManagementUnit.ServerManager.GetApplicationHostConfiguration().GetSection(SectionPath, locationPath);
+            }
+
+            return section;
         }
 
         private static List<string> CreatePreConditions(string content)
@@ -197,9 +210,10 @@ namespace JexusManager.Features.Handlers
 
         private static ConfigurationElement Find(ConfigurationElementCollection collection, HandlersItem item)
         {
+            var key = string.IsNullOrEmpty(item.OriginalKey) ? item.Name : item.OriginalKey;
             foreach (ConfigurationElement element in collection)
             {
-                if ((string)element["name"] == item.Name)
+                if ((string)element["name"] == key)
                 {
                     return element;
                 }

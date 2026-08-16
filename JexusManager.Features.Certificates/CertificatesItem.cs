@@ -4,11 +4,17 @@
 
 namespace JexusManager.Features.Certificates
 {
+    using System;
     using System.Security.Cryptography.X509Certificates;
     using Microsoft.Web.Administration;
 
+    [Serializable]
     public class CertificatesItem : IItem<CertificatesItem>
     {
+        public CertificatesItem()
+        {
+        }
+
         public CertificatesItem(X509Certificate2 certificate, string store, CertificatesFeature feature)
         {
             Item = certificate;
@@ -21,6 +27,11 @@ namespace JexusManager.Features.Certificates
         public CertificatesFeature Feature { get; private set; }
         public string Flag { get; set; }
         public ConfigurationElement Element { get; set; }
+
+        public string Thumbprint
+        {
+            get { return Item?.GetCertHashString(); }
+        }
 
         public void Apply()
         {

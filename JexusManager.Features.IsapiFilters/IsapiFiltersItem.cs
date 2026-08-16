@@ -39,6 +39,8 @@ namespace JexusManager.Features.IsapiFilters
 
         public string Name { get; set; }
 
+        internal string OriginalKey { get; set; }
+
         public ConfigurationElement Element { get; set; }
 
         public string Flag { get; set; }

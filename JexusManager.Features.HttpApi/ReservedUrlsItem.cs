@@ -2,23 +2,21 @@
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using Microsoft.Web.Administration;
+using System;
 
 namespace JexusManager.Features.HttpApi
 {
+    using Microsoft.Web.Administration;
+
+    [Serializable]
     public class ReservedUrlsItem : IItem<ReservedUrlsItem>
     {
-        public string UrlPrefix { get; set; }
-        public string SecurityDescriptor { get; set; }
-
-        public ReservedUrlsItem(string urlPrefix, string securityDescriptor, ReservedUrlsFeature feature)
+        public ReservedUrlsItem()
         {
-            SecurityDescriptor = securityDescriptor;
-            UrlPrefix = urlPrefix;
-            Feature = feature;
         }
 
-        public ReservedUrlsFeature Feature { get; private set; }
+        public string UrlPrefix { get; set; }
+        public string SecurityDescriptor { get; set; }
 
         public string Flag { get; set; }
         public ConfigurationElement Element { get; set; }

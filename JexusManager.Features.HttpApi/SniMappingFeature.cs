@@ -94,13 +94,7 @@ namespace JexusManager.Features.HttpApi
 
         public override void Load()
         {
-            Items = new List<SniMappingItem>();
-            var sniMappings = NativeMethods.QuerySslSniInfo();
-            foreach (var mapping in sniMappings)
-            {
-                Items.Add(new SniMappingItem(mapping.Host, mapping.Port.ToString(), mapping.AppId.ToString(), Hex.ToHexString(mapping.Hash), mapping.StoreName, this));
-            }
-
+            Items = new List<SniMappingItem>(((HttpApiModule)Module).Proxy.GetSniMappings());
             OnHttpApiSettingsSaved();
         }
 
@@ -120,68 +114,26 @@ namespace JexusManager.Features.HttpApi
 
         private void DeleteMapping()
         {
-            try
+            var item = SelectedItem;
+            if (((HttpApiModule)Module).Proxy.DeleteSniMapping(item.Host, item.Port))
             {
-                // remove certificate and mapping
-                using var process = new Process();
-                var start = process.StartInfo;
-                start.Verb = "runas";
-                start.UseShellExecute = true;
-                start.FileName = "cmd";
-                start.Arguments =
-                    $"/c \"\"{CertificateInstallerLocator.FileName}\" /x:\"{SelectedItem.Host}\" /o:{SelectedItem.Port}\"";
-                start.CreateNoWindow = true;
-                start.WindowStyle = ProcessWindowStyle.Hidden;
-                process.Start();
-                process.WaitForExit();
-
-                if (process.ExitCode == 0)
-                {
-                    Items.Remove(SelectedItem);
-                    SelectedItem = null;
-                    this.OnHttpApiSettingsSaved();
-                }
-            }
-            catch (Win32Exception ex)
-            {
-                // elevation is cancelled.
-                if (ex.NativeErrorCode != (int)Windows.Win32.Foundation.WIN32_ERROR.ERROR_CANCELLED)
-                {
-                    _logger.LogError(ex, "Win32 error deleting SNI mapping. Native error code: {Code}", ex.NativeErrorCode);
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error deleting SNI mapping");
+                Items.Remove(item);
+                SelectedItem = null;
+                this.OnHttpApiSettingsSaved();
             }
         }
 
         private void View()
         {
-            X509Certificate2 cert = null;
-            X509Store personal = new X509Store(SelectedItem.Store, StoreLocation.LocalMachine);
-            try
-            {
-                personal.Open(OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
-                var found = personal.Certificates.Find(X509FindType.FindByThumbprint, SelectedItem.Hash, false);
-                if (found.Count > 0)
-                {
-                    cert = found[0];
-                }
-
-                personal.Close();
-            }
-            catch (CryptographicException ex)
+            var cert = ((HttpApiModule)Module).Proxy.GetCertificate(SelectedItem.Hash, SelectedItem.Store);
+            if (cert == null)
             {
                 var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
-                dialog.ShowError(ex, $"This mapping might point to an invalid certificate. Thumbprint {SelectedItem.Hash}, Store {SelectedItem.Store}.", Name, false);
+                dialog.ShowError(new CryptographicException(), $"This mapping might point to an invalid certificate. Thumbprint {SelectedItem.Hash}, Store {SelectedItem.Store}.", Name, false);
                 return;
             }
 
-            if (cert != null)
-            {
-                DialogHelper.DisplayCertificate(cert, IntPtr.Zero);
-            }
+            DialogHelper.DisplayCertificate(cert, IntPtr.Zero);
         }
 
         protected void OnHttpApiSettingsSaved()

@@ -74,13 +74,7 @@ namespace JexusManager.Features.HttpApi
 
         public override void Load()
         {
-            Items = new List<IpMappingItem>();
-            var ipMappings = Microsoft.Web.Administration.NativeMethods.QuerySslCertificateInfo();
-            foreach (var mapping in ipMappings)
-            {
-                Items.Add(new IpMappingItem(mapping.IpPort.Address.ToString(), mapping.IpPort.Port.ToString(), mapping.AppId.ToString(), Hex.ToHexString(mapping.Hash), mapping.StoreName, this));
-            }
-
+            Items = new List<IpMappingItem>(((HttpApiModule)Module).Proxy.GetIpMappings());
             OnHttpApiSettingsSaved();
         }
 
@@ -100,70 +94,26 @@ namespace JexusManager.Features.HttpApi
 
         private void DeleteMapping()
         {
-            try
+            var item = SelectedItem;
+            if (((HttpApiModule)Module).Proxy.DeleteIpMapping(item.Address, item.Port))
             {
-                // remove IP mapping
-                using var process = new Process();
-                var start = process.StartInfo;
-                start.Verb = "runas";
-                start.UseShellExecute = true;
-                start.FileName = "cmd";
-                start.Arguments =
-                    $"/c \"\"{CertificateInstallerLocator.FileName}\" /a:\"{SelectedItem.Address}\" /o:{SelectedItem.Port}\"";
-                start.CreateNoWindow = true;
-                start.WindowStyle = ProcessWindowStyle.Hidden;
-                process.Start();
-                process.WaitForExit();
-
-                if (process.ExitCode == 0)
-                {
-                    Items.Remove(SelectedItem);
-                    SelectedItem = null;
-                    OnHttpApiSettingsSaved();
-                }
-            }
-            catch (Win32Exception ex)
-            {
-                // elevation is cancelled.
-                if (ex.NativeErrorCode != (int)Windows.Win32.Foundation.WIN32_ERROR.ERROR_CANCELLED)
-                {
-                    _logger.LogError(ex, "Win32 error deleting IP mapping. Native error code: {Code}", ex.NativeErrorCode);
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error deleting IP mapping");
+                Items.Remove(item);
+                SelectedItem = null;
+                OnHttpApiSettingsSaved();
             }
         }
 
         private void View()
         {
-            X509Certificate2 cert = null;
-            using (X509Store personal = new X509Store(SelectedItem.Store, StoreLocation.LocalMachine))
+            var cert = ((HttpApiModule)Module).Proxy.GetCertificate(SelectedItem.Hash, SelectedItem.Store);
+            if (cert == null)
             {
-                try
-                {
-                    personal.Open(OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
-                    var found = personal.Certificates.Find(X509FindType.FindByThumbprint, SelectedItem.Hash, false);
-                    if (found.Count > 0)
-                    {
-                        cert = found[0];
-                    }
-
-                    personal.Close();
-                }
-                catch (CryptographicException ex)
-                {
-                    var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
-                    dialog.ShowError(ex, $"This mapping might point to an invalid certificate. Thumbprint {SelectedItem.Hash}, Store {SelectedItem.Store}.", Name, false);
-                    return;
-                }
+                var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
+                dialog.ShowError(new CryptographicException(), $"This mapping might point to an invalid certificate. Thumbprint {SelectedItem.Hash}, Store {SelectedItem.Store}.", Name, false);
+                return;
             }
 
-            if (cert != null)
-            {
-                DialogHelper.DisplayCertificate(cert, IntPtr.Zero);
-            }
+            DialogHelper.DisplayCertificate(cert, IntPtr.Zero);
         }
 
         protected void OnHttpApiSettingsSaved()

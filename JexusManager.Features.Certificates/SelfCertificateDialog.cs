@@ -160,24 +160,13 @@ namespace JexusManager.Features.Certificates
 
                         try
                         {
-                            using var process = new Process();
-                            // add certificate
-                            var start = process.StartInfo;
-                            start.Verb = "runas";
-                            start.UseShellExecute = true;
-                            start.FileName = "cmd";
-                            start.Arguments = $"/c \"\"{CertificateInstallerLocator.FileName}\" /f:\"{p12File}\" /p:{p12pwd} /n:\"{txtName.Text}\" /s:{(cbStore.SelectedIndex == 0 ? "MY" : "WebHosting")}\"";
-                            start.CreateNoWindow = true;
-                            start.WindowStyle = ProcessWindowStyle.Hidden;
-                            process.Start();
-                            process.WaitForExit();
-                            if (process.ExitCode == 0)
+                            if (((CertificatesModule)ServiceProvider).Proxy.InstallFromFile(p12File, p12pwd, txtName.Text, Store))
                             {
                                 DialogResult = DialogResult.OK;
                             }
                             else
                             {
-                                ShowMessage(process.ExitCode.ToString(), MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                                ShowMessage("The certificate could not be installed.", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                             }
                         }
                         catch (Win32Exception ex)

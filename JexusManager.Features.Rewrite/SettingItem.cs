@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -21,6 +21,8 @@ namespace JexusManager.Features.Rewrite
         public ConfigurationElement Element { get; set; }
 
         public string Key { get; set; }
+
+        internal string OriginalKey { get; set; }
 
         public string Value { get; set; }
 

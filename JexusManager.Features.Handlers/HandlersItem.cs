@@ -48,6 +48,8 @@ namespace JexusManager.Features.Handlers
 
         public string Flag { get; set; }
 
+        internal string OriginalKey { get; set; }
+
         public string GetState(long accessPolicy)
         {
             if (this.RequireAccess == 0L)

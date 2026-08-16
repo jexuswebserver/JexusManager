@@ -28,6 +28,8 @@ namespace JexusManager.Features.IsapiCgiRestriction
 
         public string Path { get; set; }
 
+        internal string OriginalKey { get; set; }
+
         public string Description { get; set; }
 
         public ConfigurationElement Element { get; set; }

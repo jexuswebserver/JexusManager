@@ -297,8 +297,14 @@ namespace JexusManager.Features.Authentication
                 return ManagementUnit.Configuration.GetSection(sectionPath);
             }
 
-            var locationPath = ManagementUnit.ConfigurationPath.GetEffectiveConfigurationPath(ManagementUnit.Scope);
-            return ManagementUnit.ServerManager.GetApplicationHostConfiguration().GetSection(sectionPath, locationPath);
+            var section = ManagementUnit.Configuration.GetSection(sectionPath);
+            if (sectionPath.StartsWith("system.webServer", StringComparison.Ordinal) && !section.IsLocallyStored)
+            {
+                var locationPath = ManagementUnit.ConfigurationPath.GetEffectiveConfigurationPath(ManagementScope.Site);
+                section = ManagementUnit.ServerManager.GetApplicationHostConfiguration().GetSection(sectionPath, locationPath);
+            }
+
+            return section;
         }
     }
 }

@@ -231,53 +231,7 @@ namespace JexusManager.Features.Certificates
 
         public void Load()
         {
-            Items = new List<CertificatesItem>();
-            var service = (IConfigurationService)GetService(typeof(IConfigurationService));
-            if (service.ServerManager.Mode == WorkingMode.Jexus)
-            {
-                var server = (JexusServerManager)service.Server;
-                var certificate = AsyncHelper.RunSync(() => server.GetCertificateAsync());
-                if (certificate != null)
-                {
-                    Items.Add(new CertificatesItem(certificate, "Jexus", this));
-                }
-            }
-            else
-            {
-                X509Store personal = new X509Store("MY", StoreLocation.LocalMachine);
-                personal.Open(OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
-                foreach (var certificate in personal.Certificates)
-                {
-                    Items.Add(new CertificatesItem(certificate, "Personal", this));
-                }
-
-                personal.Close();
-
-                if (Environment.OSVersion.Version >= Version.Parse("6.2"))
-                {
-                    // IMPORTANT: WebHosting store is available since Windows 8.
-                    X509Store hosting = new X509Store("WebHosting", StoreLocation.LocalMachine);
-                    try
-                    {
-                        hosting.Open(OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
-                        foreach (var certificate in hosting.Certificates)
-                        {
-                            Items.Add(new CertificatesItem(certificate, "WebHosting", this));
-                        }
-
-                        hosting.Close();
-                    }
-                    catch (CryptographicException ex)
-                    {
-                        if (ex.HResult != Microsoft.Web.Administration.NativeMethods.NonExistingStore)
-                        {
-                            _logger.LogError(ex, "CryptographicException {HResult} from CertificatesFeature.", ex.HResult);
-                            throw;
-                        }
-                    }
-                }
-            }
-
+            Items = new List<CertificatesItem>(((CertificatesModule)Module).Proxy.GetCertificates());
             OnCertificatesSettingsSaved();
         }
 
@@ -311,44 +265,12 @@ namespace JexusManager.Features.Certificates
 
         private void DeleteCertificate()
         {
-            try
+            var item = SelectedItem;
+            if (((CertificatesModule)Module).Proxy.Delete(item.Thumbprint, item.Store))
             {
-                // remove certificate and mapping
-                using var process = new Process();
-                var start = process.StartInfo;
-                start.Verb = "runas";
-                start.UseShellExecute = true;
-                start.FileName = "cmd";
-                start.Arguments =
-                    $"/c \"\"{CertificateInstallerLocator.FileName}\" /h:\"{SelectedItem.Item.Thumbprint}\" /s:{(SelectedItem.Store == "Personal" ? "MY" : "WebHosting")}\"";
-                start.CreateNoWindow = true;
-                start.WindowStyle = ProcessWindowStyle.Hidden;
-                process.Start();
-                process.WaitForExit();
-
-                if (process.ExitCode == 0)
-                {
-                    Items.Remove(SelectedItem);
-                    SelectedItem = null;
-                    OnCertificatesSettingsSaved();
-                }
-            }
-            catch (Win32Exception ex)
-            {
-                var message = Microsoft.Web.Administration.NativeMethods.KnownCases(ex.NativeErrorCode);
-                if (string.IsNullOrEmpty(message))
-                {
-                    _logger.LogError(ex, "Win32 error deleting certificate. Native error code: {Code}", ex.NativeErrorCode);
-                }
-                else
-                {
-                    var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
-                    dialog.ShowError(ex, message, Name, false);
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error deleting certificate");
+                Items.Remove(item);
+                SelectedItem = null;
+                OnCertificatesSettingsSaved();
             }
         }
 
@@ -454,30 +376,23 @@ namespace JexusManager.Features.Certificates
         private void Trust()
         {
             var cert = SelectedItem.Item;
-            var store = new X509Store(StoreName.Root, StoreLocation.CurrentUser);
-            store.Open(OpenFlags.ReadWrite);
-            if (store.Certificates.Find(X509FindType.FindByThumbprint, cert.Thumbprint, false).Count == 0)
+            try
             {
-                try
-                {
-                    store.Add(cert);
-                    var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
-                    dialog.ShowMessage("This certificate is now trusted by the logon user.", Name);
-                }
-                catch (CryptographicException ex)
-                {
-                    if (ex.HResult != Microsoft.Web.Administration.NativeMethods.UserCancelled)
-                    {
-                        var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
-                        dialog.ShowMessage($"An unexpected error happened. HResult is {ex.HResult}. Contact your system administrator.", Name,
-                            MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-
-                    // add operation cancelled.
-                }
+                ((CertificatesModule)Module).Proxy.Trust(cert.Thumbprint, SelectedItem.Store);
+                var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
+                dialog.ShowMessage("This certificate is now trusted by the logon user.", Name);
             }
+            catch (CryptographicException ex)
+            {
+                if (ex.HResult != Microsoft.Web.Administration.NativeMethods.UserCancelled)
+                {
+                    var dialog = (IManagementUIService)GetService(typeof(IManagementUIService));
+                    dialog.ShowMessage($"An unexpected error happened. HResult is {ex.HResult}. Contact your system administrator.", Name,
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
 
-            store.Close();
+                // add operation cancelled.
+            }
         }
 
         protected override ConfigurationElementCollection GetCollection(IConfigurationService service)

@@ -62,7 +62,7 @@ namespace JexusManager.Features.Rewrite
         [ModuleServiceMethod]
         public void UpdateInboundRule(InboundRule original, InboundRule item)
         {
-            UpdateRule(GetSection(RulesSectionPath).GetCollection(), original?.Name, item, ApplyInboundRule);
+            UpdateRule(GetSection(RulesSectionPath).GetCollection(), GetKey(original), item, ApplyInboundRule);
         }
 
         [ModuleServiceMethod]
@@ -130,7 +130,7 @@ namespace JexusManager.Features.Rewrite
         [ModuleServiceMethod]
         public void UpdateOutboundRule(OutboundRule original, OutboundRule item)
         {
-            UpdateRule(GetSection(OutboundRulesSectionPath).GetCollection("rules"), original?.Name, item, ApplyOutboundRule);
+            UpdateRule(GetSection(OutboundRulesSectionPath).GetCollection("rules"), GetKey(original), item, ApplyOutboundRule);
         }
 
         [ModuleServiceMethod]
@@ -184,6 +184,7 @@ namespace JexusManager.Features.Rewrite
             foreach (ConfigurationElement element in GetSection(MapsSectionPath).GetCollection())
             {
                 var item = new MapItem();
+                item.OriginalKey = (string)element["name"];
                 item.Name = (string)element["name"];
                 item.DefaultValue = (string)element["defaultValue"];
                 item.IgnoreCase = (bool)element["ignoreCase"];
@@ -219,7 +220,7 @@ namespace JexusManager.Features.Rewrite
             }
 
             var collection = GetSection(MapsSectionPath).GetCollection();
-            var existing = Find(collection, "name", original.Name);
+            var existing = Find(collection, "name", string.IsNullOrEmpty(original.OriginalKey) ? original.Name : original.OriginalKey);
             if (existing == null)
             {
                 throw new InvalidOperationException("Rewrite map was not found.");
@@ -289,7 +290,7 @@ namespace JexusManager.Features.Rewrite
         [ModuleServiceMethod]
         public void UpdateMapRule(string mapName, MapRule original, MapRule item)
         {
-            UpdateRule(GetMapRulesCollection(mapName), original?.Original, item, (element, rule) =>
+            UpdateRule(GetMapRulesCollection(mapName), string.IsNullOrEmpty(original?.OriginalKey) ? original?.Original : original.OriginalKey, item, (element, rule) =>
             {
                 element["key"] = rule.Original;
                 element["value"] = rule.New;
@@ -322,6 +323,7 @@ namespace JexusManager.Features.Rewrite
             {
                 var item = new ProviderItem
                 {
+                    OriginalKey = (string)element["name"],
                     Name = (string)element["name"],
                     Type = (string)element["type"],
                     Flag = element.IsLocallyStored ? "Local" : "Inhertied"
@@ -360,7 +362,7 @@ namespace JexusManager.Features.Rewrite
             }
 
             var collection = GetSection(ProvidersSectionPath).GetCollection();
-            var existing = Find(collection, "name", original.Name);
+            var existing = Find(collection, "name", string.IsNullOrEmpty(original.OriginalKey) ? original.Name : original.OriginalKey);
             if (existing == null)
             {
                 throw new InvalidOperationException("Rewrite provider was not found.");
@@ -407,7 +409,7 @@ namespace JexusManager.Features.Rewrite
         [ModuleServiceMethod]
         public void UpdateProviderSetting(string providerName, SettingItem original, SettingItem item)
         {
-            UpdateRule(GetProviderSettingsCollection(providerName), original?.Key, item, (element, setting) =>
+            UpdateRule(GetProviderSettingsCollection(providerName), string.IsNullOrEmpty(original?.OriginalKey) ? original?.Key : original.OriginalKey, item, (element, setting) =>
             {
                 element["key"] = setting.Key;
                 element["value"] = setting.Value;
@@ -463,6 +465,7 @@ namespace JexusManager.Features.Rewrite
             {
                 var item = new CustomTagsItem
                 {
+                    OriginalKey = (string)element["name"],
                     Name = (string)element["name"],
                     Flag = element.IsLocallyStored ? "Local" : "Inherited"
                 };
@@ -490,7 +493,7 @@ namespace JexusManager.Features.Rewrite
         [ModuleServiceMethod]
         public void UpdateCustomTag(CustomTagsItem original, CustomTagsItem item)
         {
-            UpdateRule(GetSection(OutboundRulesSectionPath).GetCollection("customTags"), original?.Name, item, ApplyCustomTag);
+            UpdateRule(GetSection(OutboundRulesSectionPath).GetCollection("customTags"), GetKey(original), item, ApplyCustomTag);
         }
 
         [ModuleServiceMethod]
@@ -507,6 +510,7 @@ namespace JexusManager.Features.Rewrite
             {
                 var item = new PreConditionItem
                 {
+                    OriginalKey = (string)element["name"],
                     Name = (string)element["name"],
                     LogicalGrouping = (long)element["logicalGrouping"],
                     PatternSyntax = (long)element["patternSyntax"],
@@ -532,7 +536,7 @@ namespace JexusManager.Features.Rewrite
         [ModuleServiceMethod]
         public void UpdatePreCondition(PreConditionItem original, PreConditionItem item)
         {
-            UpdateRule(GetSection(OutboundRulesSectionPath).GetCollection("preConditions"), original?.Name, item, ApplyPreCondition);
+            UpdateRule(GetSection(OutboundRulesSectionPath).GetCollection("preConditions"), GetKey(original), item, ApplyPreCondition);
         }
 
         [ModuleServiceMethod]
@@ -579,6 +583,7 @@ namespace JexusManager.Features.Rewrite
         {
             var rule = new InboundRule
             {
+                OriginalKey = (string)element["name"],
                 Name = (string)element["name"],
                 Enabled = (bool)element["enabled"],
                 PatternSyntax = (long)element["patternSyntax"],
@@ -647,6 +652,7 @@ namespace JexusManager.Features.Rewrite
         {
             var rule = new OutboundRule
             {
+                OriginalKey = (string)element["name"],
                 Name = (string)element["name"],
                 PreCondition = (string)element["preCondition"],
                 Enabled = (bool)element["enabled"],
@@ -840,6 +846,19 @@ namespace JexusManager.Features.Rewrite
             apply(element, item);
             collection.Add(element);
             ManagementUnit.Update();
+        }
+
+        private static string GetKey<T>(T item) where T : class
+        {
+            var property = item?.GetType().GetProperty("OriginalKey");
+            var key = property?.GetValue(item) as string;
+            if (!string.IsNullOrEmpty(key))
+            {
+                return key;
+            }
+
+            var name = item?.GetType().GetProperty("Name");
+            return name?.GetValue(item) as string;
         }
 
         private void UpdateRule<T>(ConfigurationElementCollection collection, string key, T item, Action<ConfigurationElement, T> apply)

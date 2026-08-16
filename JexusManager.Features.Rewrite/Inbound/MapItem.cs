@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -24,6 +24,8 @@ namespace JexusManager.Features.Rewrite.Inbound
         private readonly string _originalName;
 
         public string Name { get; internal set; }
+
+        internal string OriginalKey { get; set; }
 
         public string Flag { get; set; }
 

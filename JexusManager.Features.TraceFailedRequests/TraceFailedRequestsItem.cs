@@ -21,6 +21,8 @@ namespace JexusManager.Features.TraceFailedRequests
 
         public string Path { get; set; }
 
+        internal string OriginalKey { get; set; }
+
         public long Verbosity { get; set; }
 
         public ConfigurationElement Element { get; set; }

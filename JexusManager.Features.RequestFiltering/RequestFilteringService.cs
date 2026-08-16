@@ -143,7 +143,7 @@ namespace JexusManager.Features.RequestFiltering
         [ModuleServiceMethod]
         public HeadersItem[] GetHeaders()
         {
-            return GetItems(GetSection().GetCollection("headerLimits"), element => new HeadersItem
+            return GetItems(GetHeaderLimits(), element => new HeadersItem
             {
                 Header = (string)element["header"],
                 SizeLimit = (uint)element["sizeLimit"],
@@ -154,7 +154,7 @@ namespace JexusManager.Features.RequestFiltering
         [ModuleServiceMethod]
         public void AddHeader(HeadersItem item)
         {
-            AddItem(GetSection().GetCollection("headerLimits"), item.Header, element =>
+            AddItem(GetHeaderLimits(), item.Header, element =>
             {
                 element["header"] = item.Header;
                 element["sizeLimit"] = item.SizeLimit;
@@ -164,7 +164,7 @@ namespace JexusManager.Features.RequestFiltering
         [ModuleServiceMethod]
         public void RemoveHeader(HeadersItem item)
         {
-            RemoveItem(GetSection().GetCollection("headerLimits"), item.Header, "header");
+            RemoveItem(GetHeaderLimits(), item.Header, "header");
         }
 
         [ModuleServiceMethod]
@@ -202,6 +202,7 @@ namespace JexusManager.Features.RequestFiltering
             {
                 var item = new FilteringRulesItem
                 {
+                    OriginalKey = (string)element["name"],
                     Name = (string)element["name"],
                     ScanQueryString = (bool)element["scanQueryString"],
                     ScanUrl = (bool)element["scanUrl"],
@@ -243,7 +244,8 @@ namespace JexusManager.Features.RequestFiltering
             }
 
             var collection = GetSection().GetCollection("filteringRules");
-            var existing = Find(collection, "name", original.Name);
+            var key = string.IsNullOrEmpty(original.OriginalKey) ? original.Name : original.OriginalKey;
+            var existing = Find(collection, "name", key);
             if (existing == null)
             {
                 throw new InvalidOperationException("Filtering rule was not found.");
@@ -318,6 +320,11 @@ namespace JexusManager.Features.RequestFiltering
             limits["maxUrl"] = settings.MaxUrl;
             limits["maxQueryString"] = settings.MaxQueryString;
             ManagementUnit.Update();
+        }
+
+        private ConfigurationElementCollection GetHeaderLimits()
+        {
+            return GetSection().ChildElements["requestLimits"].GetCollection("headerLimits");
         }
 
         private ConfigurationElementCollection GetUrlCollection(UrlsItem item)

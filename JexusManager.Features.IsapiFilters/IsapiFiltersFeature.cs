@@ -14,6 +14,7 @@ namespace JexusManager.Features.IsapiFilters
 {
     using System;
     using System.Collections;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
     using System.Windows.Forms;
@@ -147,7 +148,7 @@ namespace JexusManager.Features.IsapiFilters
 
         public void Load()
         {
-            CanRevert = false;
+            CanRevert = GetService(typeof(IConfigurationService)) is IConfigurationService service && service.Scope != ManagementScope.Server;
             IsInOrder = false;
             Items.Clear();
             Items.AddRange(((IsapiFiltersModule)Module).Proxy.GetItems());
@@ -222,6 +223,24 @@ namespace JexusManager.Features.IsapiFilters
             RenameInline(SelectedItem);
         }
 
+        public void Rename(IsapiFiltersItem item, string name)
+        {
+            if (item == null)
+            {
+                return;
+            }
+
+            var updated = new IsapiFiltersItem
+            {
+                Name = name,
+                Path = item.Path,
+                PreConditions = new List<string>(item.PreConditions),
+                EnableCache = item.EnableCache
+            };
+            ((IsapiFiltersModule)Module).Proxy.Update(item, updated);
+            Load();
+        }
+
         public void MoveUp()
         {
             if (Items.Any(item => item.Flag != "Local"))
@@ -238,7 +257,7 @@ namespace JexusManager.Features.IsapiFilters
                 }
             }
 
-            MoveUpItem();
+            MoveUpItemProxy();
         }
 
         public void MoveDown()
@@ -257,7 +276,19 @@ namespace JexusManager.Features.IsapiFilters
                 }
             }
 
-            MoveDownItem();
+            MoveDownItemProxy();
+        }
+
+        private void MoveUpItemProxy()
+        {
+            ((IsapiFiltersModule)Module).Proxy.MoveUp(SelectedItem);
+            Load();
+        }
+
+        private void MoveDownItemProxy()
+        {
+            ((IsapiFiltersModule)Module).Proxy.MoveDown(SelectedItem);
+            Load();
         }
 
         public void InOrder()
@@ -290,7 +321,9 @@ namespace JexusManager.Features.IsapiFilters
                 return;
             }
 
-            RevertItems();
+            ((IsapiFiltersModule)Module).Proxy.Revert();
+            SelectedItem = null;
+            Load();
         }
 
         protected override void OnSettingsSaved()

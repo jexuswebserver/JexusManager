@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -105,7 +105,7 @@ namespace Tests.Authentication
                         new XElement("security",
                             new XElement("authentication",
                                 new XElement("anonymousAuthentication",
-                                    new XAttribute("enabled", "False")))))));
+                                    new XAttribute("enabled", "false")))))));
             document.Save(Expected);
 
             _feature.Disable();

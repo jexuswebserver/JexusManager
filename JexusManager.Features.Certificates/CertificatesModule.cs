@@ -12,6 +12,16 @@ namespace JexusManager.Features.Certificates
 
     internal class CertificatesModule : Module
     {
+        private CertificatesModuleProxy _proxy;
+
+        internal CertificatesModuleProxy Proxy
+        {
+            get
+            {
+                return _proxy ??= (CertificatesModuleProxy)((Connection)GetService(typeof(Connection))).CreateProxy(this, typeof(CertificatesModuleProxy));
+            }
+        }
+
         protected override void Initialize(IServiceProvider serviceProvider, ModuleInfo moduleInfo)
         {
             base.Initialize(serviceProvider, moduleInfo);

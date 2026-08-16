@@ -31,6 +31,8 @@ namespace JexusManager.Features.RequestFiltering
 
         public string Name { get; set; }
 
+        internal string OriginalKey { get; set; }
+
         public string ScanString
         {
             get
