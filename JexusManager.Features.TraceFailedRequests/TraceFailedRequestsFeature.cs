@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -170,10 +170,7 @@ namespace JexusManager.Features.TraceFailedRequests
             OnSettingsSaved();
         }
 
-        protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
-        {
-            throw new NotSupportedException("Failed request tracing rules are accessed through the module service.");
-        }
+
 
         public void Add()
         {
@@ -325,20 +322,20 @@ namespace JexusManager.Features.TraceFailedRequests
             TraceFailedRequestsSettingsUpdated?.Invoke();
         }
 
-        public override void AddItem(TraceFailedRequestsItem item)
+        public void AddItem(TraceFailedRequestsItem item)
         {
             Proxy.Add(item);
             LoadAndSelect(item);
         }
 
-        public override void EditItem(TraceFailedRequestsItem item)
+        public void EditItem(TraceFailedRequestsItem item)
         {
             var original = SelectedItem ?? throw new InvalidOperationException("No failed request tracing rule is selected.");
             Proxy.Update(original, item);
             LoadAndSelect(item);
         }
 
-        public override void RemoveItem()
+        public void RemoveItem()
         {
             var item = SelectedItem ?? throw new InvalidOperationException("No failed request tracing rule is selected.");
             Proxy.Remove(item);
@@ -346,7 +343,7 @@ namespace JexusManager.Features.TraceFailedRequests
             Load();
         }
 
-        public override void RevertItems()
+        public void RevertItems()
         {
             Proxy.Revert();
             SelectedItem = null;

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -127,11 +127,7 @@ namespace JexusManager.Features.IsapiCgiRestriction
             OnSettingsSaved();
         }
 
-        protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
-        {
-            ConfigurationSection section = service.GetSection("system.webServer/security/isapiCgiRestriction", null, false);
-            return section.GetCollection();
-        }
+
 
         public void Add()
         {
@@ -207,14 +203,14 @@ namespace JexusManager.Features.IsapiCgiRestriction
             EditItem(dialog.Item);
         }
 
-        public override void AddItem(IsapiCgiRestrictionItem item)
+        public void AddItem(IsapiCgiRestrictionItem item)
         {
             ((IsapiCgiRestrictionModule)Module).Proxy.Add(item);
             Load();
             SelectedItem = Items.Find(restriction => restriction.Equals(item));
         }
 
-        public override void EditItem(IsapiCgiRestrictionItem item)
+        public void EditItem(IsapiCgiRestrictionItem item)
         {
             var original = SelectedItem ?? throw new InvalidOperationException("No restriction is selected.");
             ((IsapiCgiRestrictionModule)Module).Proxy.Update(original, item);
@@ -222,7 +218,7 @@ namespace JexusManager.Features.IsapiCgiRestriction
             SelectedItem = Items.Find(restriction => restriction.Equals(item));
         }
 
-        public override void RemoveItem()
+        public void RemoveItem()
         {
             var item = SelectedItem ?? throw new InvalidOperationException("No restriction is selected.");
             ((IsapiCgiRestrictionModule)Module).Proxy.Remove(item);

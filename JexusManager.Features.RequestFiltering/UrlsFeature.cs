@@ -113,10 +113,7 @@ namespace JexusManager.Features.RequestFiltering
             RemoveItem();
         }
 
-        protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
-        {
-            throw new NotSupportedException("URL restrictions are accessed through the module service.");
-        }
+
 
         public override void Load()
         {
@@ -125,13 +122,13 @@ namespace JexusManager.Features.RequestFiltering
             OnSettingsSaved();
         }
 
-        public override void AddItem(UrlsItem item)
+        public void AddItem(UrlsItem item)
         {
             ((RequestFilteringModule)Module).Proxy.AddUrl(item);
             LoadAndSelect(item);
         }
 
-        public override void RemoveItem()
+        public void RemoveItem()
         {
             var item = SelectedItem ?? throw new InvalidOperationException("No URL entry is selected.");
             ((RequestFilteringModule)Module).Proxy.RemoveUrl(item);

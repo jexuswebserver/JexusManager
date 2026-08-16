@@ -22,7 +22,6 @@ namespace JexusManager.Features.HttpApi
         public string Store { get; set; }
 
         public string Flag { get; set; }
-        public ConfigurationElement Element { get; set; }
 
         public void Apply()
         { }

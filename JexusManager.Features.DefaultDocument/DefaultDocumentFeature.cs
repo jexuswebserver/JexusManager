@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -133,11 +133,6 @@ namespace JexusManager.Features.DefaultDocument
 
         public void Load()
         {
-            LoadItems();
-        }
-
-        public override void LoadItems()
-        {
             var snapshot = Proxy.GetSettings();
             Items.Clear();
             foreach (var entry in snapshot.Entries)
@@ -249,40 +244,37 @@ namespace JexusManager.Features.DefaultDocument
             this.RevertItems();
         }
 
-        protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
-        {
-            throw new NotSupportedException("Default Document configuration is accessed through its module service.");
-        }
 
-        public override void InsertItem(int index, DocumentItem item)
+
+        public void InsertItem(int index, DocumentItem item)
         {
             Proxy.Insert(item.Name, index);
             LoadAndSelect(item.Name);
         }
 
-        public override void RemoveItem()
+        public void RemoveItem()
         {
             var name = SelectedItem?.Name ?? throw new InvalidOperationException("No default document is selected.");
             Proxy.Remove(name);
             SelectedItem = null;
-            LoadItems();
+            Load();
         }
 
-        public override void MoveUpItem()
+        public void MoveUpItem()
         {
             MoveSelected(-1);
         }
 
-        public override void MoveDownItem()
+        public void MoveDownItem()
         {
             MoveSelected(1);
         }
 
-        public override void RevertItems()
+        public void RevertItems()
         {
             Proxy.Revert();
             SelectedItem = null;
-            LoadItems();
+            Load();
         }
 
         private void MoveSelected(int offset)
@@ -294,7 +286,7 @@ namespace JexusManager.Features.DefaultDocument
 
         private void LoadAndSelect(string name)
         {
-            LoadItems();
+            Load();
             SelectedItem = Items.FirstOrDefault(item => string.Equals(item.Name, name, StringComparison.OrdinalIgnoreCase));
             OnSettingsSaved();
         }

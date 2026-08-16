@@ -145,7 +145,7 @@ namespace Tests.MimeMap
                     new XAttribute("mimeType", "text/test")));
             document.Save(Expected);
 
-            var item = new MimeMapItem(null);
+            var item = new MimeMapItem();
             item.FileExtension = ".tx1";
             item.MimeType = "text/test";
             _feature.AddItem(item);

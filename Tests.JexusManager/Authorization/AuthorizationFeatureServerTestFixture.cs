@@ -143,7 +143,7 @@ namespace Tests.Authorization
             node?.AddAfterSelf(newNode);
             document.Save(Expected);
 
-            var item = new AuthorizationRule(null);
+            var item = new AuthorizationRule();
             item.Roles = "Administration";
             _feature.AddItem(item);
             Assert.NotNull(_feature.SelectedItem);

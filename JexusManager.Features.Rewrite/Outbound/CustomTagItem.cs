@@ -15,8 +15,6 @@ namespace JexusManager.Features.Rewrite.Outbound
         {
         }
 
-        public ConfigurationElement Element { get; set; }
-
         public bool Match(CustomTagItem other)
         {
             return other != null && other.Name == Name;
@@ -27,10 +25,6 @@ namespace JexusManager.Features.Rewrite.Outbound
         public string Name { get; set; }
 
         public string Flag { get; set; }
-
-        public void Apply()
-        {
-        }
 
         public bool Equals(CustomTagItem other)
         {

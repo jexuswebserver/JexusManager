@@ -112,10 +112,7 @@ namespace JexusManager.Features.RequestFiltering
             RemoveItem();
         }
 
-        protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
-        {
-            throw new NotSupportedException("Query string restrictions are accessed through the module service.");
-        }
+
 
         public override void Load()
         {
@@ -124,13 +121,13 @@ namespace JexusManager.Features.RequestFiltering
             OnSettingsSaved();
         }
 
-        public override void AddItem(QueryStringsItem item)
+        public void AddItem(QueryStringsItem item)
         {
             ((RequestFilteringModule)Module).Proxy.AddQueryString(item);
             LoadAndSelect(item);
         }
 
-        public override void RemoveItem()
+        public void RemoveItem()
         {
             var item = SelectedItem ?? throw new InvalidOperationException("No query string entry is selected.");
             ((RequestFilteringModule)Module).Proxy.RemoveQueryString(item);

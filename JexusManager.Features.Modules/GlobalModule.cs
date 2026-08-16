@@ -34,12 +34,6 @@ namespace JexusManager.Features.Modules
 
         public string Flag { get; set; }
 
-        public void Apply()
-        {
-        }
-
-        public ConfigurationElement Element { get; set; }
-
         public bool Match(GlobalModule other)
         {
             return other != null && other.Name == Name;

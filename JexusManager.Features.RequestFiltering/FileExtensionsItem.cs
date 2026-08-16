@@ -16,8 +16,6 @@ namespace JexusManager.Features.RequestFiltering
             Flag = "Local";
         }
 
-        public ConfigurationElement Element { get; set; }
-
         public bool Match(FileExtensionsItem other)
         {
             return other != null && other.Extension == Extension;
@@ -28,10 +26,6 @@ namespace JexusManager.Features.RequestFiltering
         public bool Allowed { get; set; }
 
         public string Extension { get; set; }
-
-        public void Apply()
-        {
-        }
 
         public bool Equals(FileExtensionsItem other)
         {

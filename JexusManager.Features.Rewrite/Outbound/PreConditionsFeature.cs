@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -133,6 +133,18 @@ namespace JexusManager.Features.Rewrite.Outbound
             DoubleClick(SelectedItem);
         }
 
+        public void Rename(PreConditionItem item, string name)
+        {
+            if (item == null)
+            {
+                return;
+            }
+
+            item.Name = name;
+            ((RewriteModule)Module).Proxy.UpdatePreCondition(item, item);
+            Load();
+        }
+
         protected override void DoubleClick(PreConditionItem item)
         {
             // TODO: how to edit.
@@ -191,17 +203,14 @@ namespace JexusManager.Features.Rewrite.Outbound
             RenameInline(SelectedItem);
         }
 
-        protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
-        {
-            throw new NotSupportedException("Preconditions are accessed through the module service.");
-        }
+
 
         protected override void OnSettingsSaved()
         {
             OnRewriteSettingsSaved();
         }
 
-        public override void AddItem(PreConditionItem item)
+        public void AddItem(PreConditionItem item)
         {
             ((RewriteModule)Module).Proxy.AddPreCondition(item);
             Load();
@@ -209,7 +218,7 @@ namespace JexusManager.Features.Rewrite.Outbound
             OnSettingsSaved();
         }
 
-        public override void EditItem(PreConditionItem item)
+        public void EditItem(PreConditionItem item)
         {
             var original = SelectedItem ?? throw new InvalidOperationException("No precondition is selected.");
             ((RewriteModule)Module).Proxy.UpdatePreCondition(original, item);
@@ -218,7 +227,7 @@ namespace JexusManager.Features.Rewrite.Outbound
             OnSettingsSaved();
         }
 
-        public override void RemoveItem()
+        public void RemoveItem()
         {
             var item = SelectedItem ?? throw new InvalidOperationException("No precondition is selected.");
             ((RewriteModule)Module).Proxy.RemovePreCondition(item);
@@ -226,7 +235,7 @@ namespace JexusManager.Features.Rewrite.Outbound
             Load();
         }
 
-        public override void RevertItems()
+        public void RevertItems()
         {
             ((RewriteModule)Module).Proxy.RevertPreConditions();
             SelectedItem = null;

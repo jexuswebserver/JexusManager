@@ -17,21 +17,8 @@ namespace JexusManager.Features.ResponseHeaders
         public string Name { get; internal set; }
         public string Value { get; internal set; }
         public string Flag { get; set; }
-        public ConfigurationElement Element { get; set; }
 
-        public ResponseHeadersItem(ConfigurationElement element)
-        {
-            Flag = element == null || element.IsLocallyStored ? "Local" : "Inherited";
-            Element = element;
-            if (element == null)
-            {
-                Value = string.Empty;
-                return;
-            }
 
-            Name = (string)element["name"];
-            Value = (string)element["value"];
-        }
 
         public bool Equals(ResponseHeadersItem other)
         {
@@ -41,10 +28,6 @@ namespace JexusManager.Features.ResponseHeaders
         public bool Match(ResponseHeadersItem other)
         {
             return other != null && other.Name == Name;
-        }
-
-        public void Apply()
-        {
         }
     }
 }

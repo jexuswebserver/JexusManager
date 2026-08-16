@@ -10,19 +10,7 @@ namespace JexusManager.Features.IsapiCgiRestriction
     internal class IsapiCgiRestrictionItem : IItem<IsapiCgiRestrictionItem>
     {
         public IsapiCgiRestrictionItem() { Path = Description = string.Empty; Flag = "Local"; }
-        public IsapiCgiRestrictionItem(ConfigurationElement element)
-        {
-            Element = element;
-            Flag = element == null || element.IsLocallyStored ? "Local" : "Inhertied";
-            if (element == null)
-            {
-                return;
-            }
 
-            Description = (string)element["description"];
-            Path = (string)element["path"];
-            Allowed = (bool)element["allowed"];
-        }
 
         public bool Allowed { get; set; }
 
@@ -32,18 +20,12 @@ namespace JexusManager.Features.IsapiCgiRestriction
 
         public string Description { get; set; }
 
-        public ConfigurationElement Element { get; set; }
-
         public string Flag { get; set; }
 
         public bool Equals(IsapiCgiRestrictionItem other)
         {
             // all properties
             return Match(other) && other.Description == Description;
-        }
-
-        public void Apply()
-        {
         }
 
         public bool Match(IsapiCgiRestrictionItem other)

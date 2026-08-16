@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -163,17 +163,14 @@ namespace JexusManager.Features.Rewrite.Outbound
             return false;
         }
 
-        protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
-        {
-            throw new NotSupportedException("Custom tags are accessed through the module service.");
-        }
+
 
         protected override void OnSettingsSaved()
         {
             OnRewriteSettingsSaved();
         }
 
-        public override void AddItem(CustomTagsItem item)
+        public void AddItem(CustomTagsItem item)
         {
             ((RewriteModule)Module).Proxy.AddCustomTag(item);
             Load();
@@ -181,7 +178,7 @@ namespace JexusManager.Features.Rewrite.Outbound
             OnSettingsSaved();
         }
 
-        public override void EditItem(CustomTagsItem item)
+        public void EditItem(CustomTagsItem item)
         {
             var original = SelectedItem ?? throw new InvalidOperationException("No custom tags group is selected.");
             ((RewriteModule)Module).Proxy.UpdateCustomTag(original, item);
@@ -197,7 +194,7 @@ namespace JexusManager.Features.Rewrite.Outbound
             OnSettingsSaved();
         }
 
-        public override void RemoveItem()
+        public void RemoveItem()
         {
             var item = SelectedItem ?? throw new InvalidOperationException("No custom tags group is selected.");
             ((RewriteModule)Module).Proxy.RemoveCustomTag(item);

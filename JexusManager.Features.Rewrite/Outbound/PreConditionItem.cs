@@ -18,8 +18,6 @@ namespace JexusManager.Features.Rewrite.Outbound
             Flag = "Local";
         }
 
-        public ConfigurationElement Element { get; set; }
-
         public List<ConditionItem> Conditions { get; set; }
 
         public long PatternSyntax { get; set; }
@@ -31,10 +29,6 @@ namespace JexusManager.Features.Rewrite.Outbound
         internal string OriginalKey { get; set; }
 
         public string Flag { get; set; }
-
-        public void Apply()
-        {
-        }
 
         public bool Match(PreConditionItem other)
         {

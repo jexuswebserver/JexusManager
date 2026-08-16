@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -163,7 +163,7 @@ namespace JexusManager.Features.Rewrite.Inbound
             RevertItems();
         }
 
-        public override void RevertItems()
+        public void RevertItems()
         {
             ((RewriteModule)Module).Proxy.RevertAllowedVariables();
             SelectedItem = null;
@@ -195,17 +195,14 @@ namespace JexusManager.Features.Rewrite.Inbound
             }
         }
 
-        protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
-        {
-            throw new NotSupportedException("Allowed server variables are accessed through the module service.");
-        }
+
 
         protected override void OnSettingsSaved()
         {
             OnRewriteSettingsSaved();
         }
 
-        public override void AddItem(AllowedVariableItem item)
+        public void AddItem(AllowedVariableItem item)
         {
             ((RewriteModule)Module).Proxy.AddAllowedVariable(item);
             Load();
@@ -213,7 +210,7 @@ namespace JexusManager.Features.Rewrite.Inbound
             OnSettingsSaved();
         }
 
-        public override void RemoveItem()
+        public void RemoveItem()
         {
             var item = SelectedItem ?? throw new InvalidOperationException("No entry is selected.");
             ((RewriteModule)Module).Proxy.RemoveAllowedVariable(item);

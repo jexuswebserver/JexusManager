@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -88,12 +88,7 @@ namespace JexusManager.Features.FastCgi
             return _taskList ?? (_taskList = new FeatureTaskList(this));
         }
 
-        protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
-        {
-            // IMPORTANT: force to be server only.
-            var section = service.ServerManager.GetApplicationHostConfiguration().GetSection("system.webServer/fastCgi");
-            return section.GetCollection();
-        }
+
 
         public void Load()
         {
@@ -137,11 +132,35 @@ namespace JexusManager.Features.FastCgi
             using var dialog = new NewApplicationDialog(Module, SelectedItem, this);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
-                SelectedItem.Reset();
                 return;
             }
 
             EditItem(dialog.Item);
+        }
+
+        public void AddItem(FastCgiItem item)
+        {
+            ((FastCgiModule)Module).Proxy.Add(item);
+            Load();
+            SelectedItem = Items.Find(candidate => candidate.Equals(item));
+            OnSettingsSaved();
+        }
+
+        public void EditItem(FastCgiItem item)
+        {
+            var original = SelectedItem ?? throw new InvalidOperationException("No FastCGI application is selected.");
+            ((FastCgiModule)Module).Proxy.Update(original, item);
+            Load();
+            SelectedItem = Items.Find(candidate => candidate.Equals(item));
+            OnSettingsSaved();
+        }
+
+        public void RemoveItem()
+        {
+            var item = SelectedItem ?? throw new InvalidOperationException("No FastCGI application is selected.");
+            ((FastCgiModule)Module).Proxy.Remove(item);
+            SelectedItem = null;
+            Load();
         }
 
         protected override void OnSettingsSaved()

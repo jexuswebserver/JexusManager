@@ -6,12 +6,9 @@ namespace JexusManager.Features
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
-    using System.Reflection;
     using System.Resources;
     using System.Windows.Forms;
-    using JexusManager.Services;
 
     using Microsoft.Web.Administration;
     using Microsoft.Web.Management.Client.Win32;
@@ -44,22 +41,16 @@ namespace JexusManager.Features
         {
             get
             {
-                return SelectedItem != null && Items.IndexOf(SelectedItem) > 0
-                       && Items.All(item => item.Element == null ||
-                           (item.Element.IsLocked == "false" && item.Element.LockAttributes.Count == 0));
+                return SelectedItem != null && Items.IndexOf(SelectedItem) > 0;
             }
         }
         public bool CanMoveDown
         {
             get
             {
-                return SelectedItem != null && Items.IndexOf(SelectedItem) < Items.Count - 1
-                       && Items.All(item => item.Element == null ||
-                           (item.Element.IsLocked == "false" && item.Element.LockAttributes.Count == 0));
+                return SelectedItem != null && Items.IndexOf(SelectedItem) < Items.Count - 1;
             }
         }
-
-        protected abstract ConfigurationElementCollection GetCollection(IConfigurationService service);
 
         protected object? GetService(Type type)
         {
@@ -73,226 +64,6 @@ namespace JexusManager.Features
         }
 
         protected abstract void OnSettingsSaved();
-
-        public virtual void LoadItems()
-        {
-            Items.Clear();
-            if (GetService(typeof(IConfigurationService)) is not IConfigurationService service)
-            {
-                throw new InvalidOperationException("IConfigurationService is not available.");
-            }
-
-            ConfigurationElementCollection collection = GetCollection(service);
-            foreach (ConfigurationElement addElement in collection)
-            {
-                var type = typeof(T);
-                var constructors = type.GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-                var constructorInfo = constructors[0];
-                var item =
-                    (T)
-                    constructorInfo.Invoke(
-                        constructorInfo.GetParameters().Length == 1
-                            ? new object[] { addElement }
-                            : [addElement, true]);
-                Items.Add(item);
-            }
-
-            var secondary = GetSecondaryCollection(service);
-            if (secondary != null)
-            {
-                foreach (ConfigurationElement addElement in secondary)
-                {
-                    var type = typeof(T);
-                    var constructors = type.GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-                    var constructorInfo = constructors[0];
-                    var item =
-                        (T)
-                        constructorInfo.Invoke(
-                            constructorInfo.GetParameters().Length == 1
-                                ? new object[] { addElement }
-                                : [addElement, false]);
-                    Items.Add(item);
-                }
-            }
-
-            OnSettingsSaved();
-        }
-
-        public virtual void AddItem(T item)
-        {
-            Items.Add(item);
-            SelectedItem = item;
-            if (GetService(typeof(IConfigurationService)) is not IConfigurationService service)
-            {
-                throw new InvalidOperationException("IConfigurationService is not available.");
-            }
-
-            var collection = GetCollection(service, item);
-            if (collection == null)
-            {
-                throw new InvalidOperationException("ConfigurationElementCollection is not available.");
-            }
-
-            item.AppendTo(collection);
-            service.ServerManager.CommitChanges();
-            OnSettingsSaved();
-        }
-
-        private ConfigurationElementCollection? GetCollection(IConfigurationService service, T item)
-        {
-            var duo = item as IDuoItem<T>;
-            if (duo == null || duo.Allowed)
-            {
-                return GetCollection(service);
-            }
-
-            return GetSecondaryCollection(service);
-        }
-
-        public virtual void InsertItem(int index, T item)
-        {
-            Items.Insert(index, item);
-            SelectedItem = item;
-            if (GetService(typeof(IConfigurationService)) is not IConfigurationService service)
-            {
-                throw new InvalidOperationException("IConfigurationService is not available.");
-            }
-
-            var collection = GetCollection(service);
-            item.Element = collection.CreateElement();
-            item.Apply();
-            collection.AddAt(index, item.Element);
-            service.ServerManager.CommitChanges();
-            OnSettingsSaved();
-        }
-
-        public virtual void EditItem(T newItem)
-        {
-            if (GetService(typeof(IConfigurationService)) is not IConfigurationService service)
-            {
-                throw new InvalidOperationException("IConfigurationService is not available.");
-            }
-
-            if (newItem.Flag != "Local")
-            {
-                ConfigurationElementCollection collection = GetCollection(service);
-                collection.Remove(newItem.Element);
-                newItem.AppendTo(collection);
-                newItem.Flag = "Local";
-            }
-            else
-            {
-                newItem.Apply();
-            }
-
-            service.ServerManager.CommitChanges();
-            OnSettingsSaved();
-        }
-
-        public virtual void RemoveItem()
-        {
-            if (SelectedItem == null)
-            {
-                return;
-            }
-
-            Items.Remove(SelectedItem);
-            if (GetService(typeof(IConfigurationService)) is not IConfigurationService service)
-            {
-                throw new InvalidOperationException("IConfigurationService is not available.");
-            }
-
-            var collection = GetCollection(service, SelectedItem);
-            if (collection == null)
-            {
-                throw new InvalidOperationException("ConfigurationElementCollection is not available.");
-            }
-
-            try
-            {
-                collection.Remove(SelectedItem.Element);
-            }
-            catch (FileLoadException ex)
-            {
-                DisplayErrorMessage(ex, null);
-                return;
-            }
-
-            service.ServerManager.CommitChanges();
-
-            SelectedItem = default;
-            OnSettingsSaved();
-        }
-
-        public virtual void MoveUpItem()
-        {
-            if (SelectedItem == null)
-            {
-                return;
-            }
-
-            int index = Items.IndexOf(SelectedItem);
-            Items.Remove(SelectedItem);
-            Items.Insert(index - 1, SelectedItem);
-
-            if (GetService(typeof(IConfigurationService)) is not IConfigurationService service)
-            {
-                throw new InvalidOperationException("IConfigurationService is not available.");
-            }
-
-            var collection = GetCollection(service);
-            var element = collection[index];
-            collection.Remove(element);
-            collection.AddAt(index - 1, element);
-
-            service.ServerManager.CommitChanges();
-            OnSettingsSaved();
-        }
-
-        public virtual void MoveDownItem()
-        {
-            if (SelectedItem == null)
-            {
-                return;
-            }
-
-            int index = Items.IndexOf(SelectedItem);
-            Items.Remove(SelectedItem);
-            Items.Insert(index + 1, SelectedItem);
-
-            if (GetService(typeof(IConfigurationService)) is not IConfigurationService service)
-            {
-                throw new InvalidOperationException("IConfigurationService is not available.");
-            }
-
-            var collection = GetCollection(service);
-            var element = collection[index];
-            collection.Remove(element);
-            collection.AddAt(index + 1, element);
-
-            service.ServerManager.CommitChanges();
-            OnSettingsSaved();
-        }
-
-        public virtual void RevertItems()
-        {
-            if (GetService(typeof(IConfigurationService)) is not IConfigurationService service)
-            {
-                throw new InvalidOperationException("IConfigurationService is not available.");
-            }
-
-            var collection = GetCollection(service);
-            collection.Revert();
-
-            service.ServerManager.CommitChanges();
-            SelectedItem = null;
-            LoadItems();
-        }
-
-        protected virtual ConfigurationElementCollection? GetSecondaryCollection(IConfigurationService service)
-        {
-            return null;
-        }
 
         #region Event handlers
         protected virtual void DoubleClick(T item)
@@ -381,7 +152,6 @@ namespace JexusManager.Features
 
         public bool FindDuplicate(Func<T, string> value, string text)
         {
-            // TODO: seem to be duplicate to the Match pattern. 
             return Items.Where(item => item != SelectedItem)
                 .Any(item => string.Equals(value(item), text, StringComparison.Ordinal));
         }

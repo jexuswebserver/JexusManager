@@ -16,8 +16,6 @@ namespace JexusManager.Features.Rewrite.Inbound
             Replace = true;
         }
 
-        public ConfigurationElement Element { get; set; }
-
         public bool Replace { get; set; }
 
         public string Value { get; set; }
@@ -25,10 +23,6 @@ namespace JexusManager.Features.Rewrite.Inbound
         public string Name { get; set; }
 
         public string Flag { get; set; }
-
-        public void Apply()
-        {
-        }
 
         public bool Match(ServerVariableItem other)
         {

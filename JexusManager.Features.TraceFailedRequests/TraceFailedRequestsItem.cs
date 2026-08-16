@@ -25,18 +25,12 @@ namespace JexusManager.Features.TraceFailedRequests
 
         public long Verbosity { get; set; }
 
-        public ConfigurationElement Element { get; set; }
-
         public string Flag { get; set; }
 
         public bool Equals(TraceFailedRequestsItem other)
         {
             // all properties
             return Match(other);
-        }
-
-        public void Apply()
-        {
         }
 
         public bool Match(TraceFailedRequestsItem other)

@@ -43,7 +43,6 @@ namespace JexusManager.Features.Rewrite.Inbound
                     item.Name = txtName.Text;
                     item.DefaultValue = txtDefaultValue.Text;
                     item.IgnoreCase = cbIgnore.Checked;
-                    item.Apply();
                     DialogResult = DialogResult.OK;
                 }));
         }

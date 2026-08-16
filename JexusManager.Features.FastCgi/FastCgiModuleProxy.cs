@@ -10,5 +10,15 @@ namespace JexusManager.Features.FastCgi
         {
             Invoke(nameof(Add), item);
         }
+
+        internal void Update(FastCgiItem original, FastCgiItem item)
+        {
+            Invoke(nameof(Update), original, item);
+        }
+
+        internal void Remove(FastCgiItem item)
+        {
+            Invoke(nameof(Remove), item);
+        }
     }
 }

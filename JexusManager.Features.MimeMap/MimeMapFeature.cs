@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -98,10 +98,7 @@ namespace JexusManager.Features.MimeMap
             OnSettingsSaved();
         }
 
-        protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
-        {
-            throw new NotSupportedException("MIME maps are accessed through the module service.");
-        }
+
 
         public void Add()
         {
@@ -167,14 +164,14 @@ namespace JexusManager.Features.MimeMap
             MimeMapSettingsUpdated?.Invoke();
         }
 
-        public override void AddItem(MimeMapItem item)
+        public void AddItem(MimeMapItem item)
         {
             ((MimeMapModule)Module).Proxy.Add(item);
             Load();
             SelectedItem = Items.Find(map => map.Equals(item));
         }
 
-        public override void EditItem(MimeMapItem item)
+        public void EditItem(MimeMapItem item)
         {
             var original = SelectedItem ?? throw new InvalidOperationException("No MIME map is selected.");
             ((MimeMapModule)Module).Proxy.Update(original, item);
@@ -182,7 +179,7 @@ namespace JexusManager.Features.MimeMap
             SelectedItem = Items.Find(map => map.Equals(item));
         }
 
-        public override void RemoveItem()
+        public void RemoveItem()
         {
             var item = SelectedItem ?? throw new InvalidOperationException("No MIME map is selected.");
             ((MimeMapModule)Module).Proxy.Remove(item);

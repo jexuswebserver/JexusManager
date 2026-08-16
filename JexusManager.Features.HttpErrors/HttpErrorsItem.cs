@@ -4,27 +4,19 @@
 
 namespace JexusManager.Features.HttpErrors
 {
+    using System;
+
     using Microsoft.Web.Administration;
 
+    [Serializable]
     internal class HttpErrorsItem : IItem<HttpErrorsItem>
     {
-        public HttpErrorsItem(ConfigurationElement element)
+        public HttpErrorsItem()
         {
-            Flag = element == null || element.IsLocallyStored ? "Local" : "Inherited";
-            Element = element;
-            if (element == null)
-            {
-                Prefix = Path = string.Empty;
-                Response = "File";
-                Substatus = -1;
-                return;
-            }
-
-            Status = (uint)element["statusCode"];
-            Substatus = (int)element["subStatusCode"];
-            Path = (string)element["path"];
-            Prefix = (string)element["prefixLanguageFilePath"];
-            Response = element.Schema.AttributeSchemas["responseMode"].Format(element["responseMode"]);
+            Prefix = Path = string.Empty;
+            Response = "File";
+            Substatus = -1;
+            Flag = "Local";
         }
 
         public string Prefix { get; set; }
@@ -34,7 +26,8 @@ namespace JexusManager.Features.HttpErrors
         public string Path { get; set; }
         public string Response { get; set; }
         public string Flag { get; set; }
-        public ConfigurationElement Element { get; set; }
+
+        internal string OriginalKey { get; set; }
 
         public string FullPath
         {
@@ -54,15 +47,6 @@ namespace JexusManager.Features.HttpErrors
         public bool Match(HttpErrorsItem other)
         {
             return other != null && other.Status == Status && other.Substatus == Substatus;
-        }
-
-        public void Apply()
-        {
-            Element["statusCode"] = Status;
-            Element["subStatusCode"] = Substatus;
-            Element["prefixLanguageFilePath"] = Prefix;
-            Element["path"] = Path;
-            Element["responseMode"] = Response;
         }
     }
 }

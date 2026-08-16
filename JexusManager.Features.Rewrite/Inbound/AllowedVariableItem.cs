@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -16,8 +16,6 @@ namespace JexusManager.Features.Rewrite.Inbound
             Flag = "Local";
         }
 
-        public ConfigurationElement Element { get; set; }
-
         public bool Match(AllowedVariableItem other)
         {
             return other != null && other.Name == Name;
@@ -26,10 +24,6 @@ namespace JexusManager.Features.Rewrite.Inbound
         public string Name { get; internal set; }
 
         public string Flag { get; set; }
-
-        public void Apply()
-        {
-        }
 
         public bool Equals(AllowedVariableItem other)
         {

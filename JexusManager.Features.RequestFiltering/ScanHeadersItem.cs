@@ -15,8 +15,6 @@ namespace JexusManager.Features.RequestFiltering
         {
         }
 
-        public ConfigurationElement Element { get; set; }
-
         public bool Match(ScanHeadersItem other)
         {
             return other != null && other.RequestHeader == RequestHeader;
@@ -25,10 +23,6 @@ namespace JexusManager.Features.RequestFiltering
         public string RequestHeader { get; set; }
 
         public string Flag { get; set; }
-
-        public void Apply()
-        {
-        }
 
         public bool Equals(ScanHeadersItem other)
         {

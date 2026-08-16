@@ -137,7 +137,7 @@ namespace Tests.MimeMap
             var document = XDocument.Load(site);
             document.Save(expected);
 
-            var item = new MimeMapItem(null);
+            var item = new MimeMapItem();
             item.FileExtension = ".xl1";
             item.MimeType = "text/test";
             _feature.AddItem(item);
@@ -204,7 +204,7 @@ namespace Tests.MimeMap
                         new XAttribute("mimeType", "text/test2"))));
             document.Save(expected);
 
-            var item = new MimeMapItem(null);
+            var item = new MimeMapItem();
             item.FileExtension = ".xl1";
             item.MimeType = "text/test";
             _feature.AddItem(item);
@@ -240,7 +240,7 @@ namespace Tests.MimeMap
                         new XAttribute("mimeType", "text/test"))));
             document.Save(expected);
 
-            var item = new MimeMapItem(null);
+            var item = new MimeMapItem();
             item.FileExtension = ".pp1";
             item.MimeType = "text/test";
             _feature.AddItem(item);

@@ -131,7 +131,7 @@ namespace Tests.Authorization
             var document = XDocument.Load(site);
             document.Save(expected);
 
-            var item = new AuthorizationRule(null);
+            var item = new AuthorizationRule();
             item.Roles = "test";
             _feature.AddItem(item);
 
@@ -202,7 +202,7 @@ namespace Tests.Authorization
                             new XAttribute("roles", "defenders")))));
             document.Save(expected);
 
-            var item = new AuthorizationRule(null);
+            var item = new AuthorizationRule();
             var original = "testers";
             item.Roles = original;
             _feature.AddItem(item);
@@ -241,7 +241,7 @@ namespace Tests.Authorization
                             new XAttribute("accessType", "Allow")))));
             document.Save(expected);
 
-            var item = new AuthorizationRule(null);
+            var item = new AuthorizationRule();
             item.Roles = "test";
             _feature.AddItem(item);
             Assert.NotNull(_feature.SelectedItem);

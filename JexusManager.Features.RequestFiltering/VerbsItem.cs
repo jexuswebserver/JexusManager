@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -15,8 +15,6 @@ namespace JexusManager.Features.RequestFiltering
         {
         }
 
-        public ConfigurationElement Element { get; set; }
-
         public bool Match(VerbsItem other)
         {
             return other != null && other.Verb == Verb;
@@ -25,10 +23,6 @@ namespace JexusManager.Features.RequestFiltering
         public bool Allowed { get; set; }
 
         public string Verb { get; set; }
-
-        public void Apply()
-        {
-        }
 
         public string Flag { get; set; }
 

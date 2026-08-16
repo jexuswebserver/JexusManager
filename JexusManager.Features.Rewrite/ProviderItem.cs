@@ -32,12 +32,6 @@ namespace JexusManager.Features.Rewrite
 
         public string Flag { get; set; }
 
-        public ConfigurationElement Element { get; set; }
-
-        public void Apply()
-        {
-        }
-
         public bool Equals(ProviderItem other)
         {
             return Match(other) && Type == other.Type;

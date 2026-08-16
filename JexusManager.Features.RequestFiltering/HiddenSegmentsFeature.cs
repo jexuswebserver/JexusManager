@@ -102,18 +102,15 @@ namespace JexusManager.Features.RequestFiltering
             OnSettingsSaved();
         }
 
-        protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
-        {
-            throw new NotSupportedException("Hidden segments are accessed through the module service.");
-        }
 
-        public override void AddItem(HiddenSegmentsItem item)
+
+        public void AddItem(HiddenSegmentsItem item)
         {
             ((RequestFilteringModule)Module).Proxy.AddHiddenSegment(item);
             LoadAndSelect(item);
         }
 
-        public override void RemoveItem()
+        public void RemoveItem()
         {
             var item = SelectedItem ?? throw new InvalidOperationException("No hidden segment is selected.");
             ((RequestFilteringModule)Module).Proxy.RemoveHiddenSegment(item);

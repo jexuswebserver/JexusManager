@@ -13,23 +13,7 @@ namespace JexusManager.Features.IsapiFilters
     internal class IsapiFiltersItem : IItem<IsapiFiltersItem>
     {
         public IsapiFiltersItem() { Name = Path = string.Empty; PreConditions = new List<string>(); Flag = "Local"; }
-        public IsapiFiltersItem(ConfigurationElement element)
-        {
-            Element = element;
-            Flag = element == null || element.IsLocallyStored ? "Local" : "Inherited";
-            if (element == null)
-            {
-                Path = string.Empty;
-                PreConditions = new List<string>(0);
-                return;
-            }
 
-            Name = (string)element["name"];
-            Path = (string)element["path"];
-            var content = (string)element["preCondition"];
-            PreConditions = content.Split(',').ToList();
-            EnableCache = (bool)element["enableCache"];
-        }
 
         public List<string> PreConditions { get; set; }
 
@@ -41,18 +25,12 @@ namespace JexusManager.Features.IsapiFilters
 
         internal string OriginalKey { get; set; }
 
-        public ConfigurationElement Element { get; set; }
-
         public string Flag { get; set; }
 
         public bool Equals(IsapiFiltersItem other)
         {
             // all properties
             return Match(other) && other.Path == Path;
-        }
-
-        public void Apply()
-        {
         }
 
         public bool Match(IsapiFiltersItem other)

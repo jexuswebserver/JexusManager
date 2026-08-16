@@ -137,7 +137,7 @@ namespace Tests.IsapiFilters
                     new XAttribute("path", "WebSite1")));
             document.Save(Expected);
 
-            var item = new IsapiFiltersItem(null);
+            var item = new IsapiFiltersItem();
             item.Name = "test";
             item.Path = "c:\\test.dll";
             _feature.AddItem(item);
@@ -202,7 +202,7 @@ namespace Tests.IsapiFilters
                                 new XAttribute("path", "c:\\test.exe"))))));
             document.Save(Expected);
 
-            var item = new IsapiFiltersItem(null);
+            var item = new IsapiFiltersItem();
             item.Name = "test";
             item.Path = "c:\\test.dll";
             _feature.AddItem(item);
@@ -236,7 +236,7 @@ namespace Tests.IsapiFilters
                                 new XAttribute("path", "c:\\test.dll"))))));
             document.Save(Expected);
 
-            var item = new IsapiFiltersItem(null);
+            var item = new IsapiFiltersItem();
             item.Name = "test";
             item.Path = "c:\\test.dll";
             _feature.AddItem(item);
@@ -260,7 +260,7 @@ namespace Tests.IsapiFilters
                     new XElement("system.webServer")));
             document.Save(Expected);
 
-            var item = new IsapiFiltersItem(null);
+            var item = new IsapiFiltersItem();
             item.Name = "test";
             item.Path = "c:\\test.dll";
             _feature.AddItem(item);
@@ -318,7 +318,7 @@ namespace Tests.IsapiFilters
                                 new XAttribute("preCondition", "bitness64,runtimeVersionv4.0"))))));
             document.Save(Expected);
 
-            var item = new IsapiFiltersItem(null);
+            var item = new IsapiFiltersItem();
             item.Name = "test";
             item.Path = "c:\\test.dll";
             _feature.AddItem(item);
@@ -364,7 +364,7 @@ namespace Tests.IsapiFilters
                             new XAttribute("preCondition", "bitness64,runtimeVersionv4.0"))))));
             document.Save(Expected);
 
-            var item = new IsapiFiltersItem(null);
+            var item = new IsapiFiltersItem();
             item.Name = "test";
             item.Path = "c:\\test.dll";
             _feature.AddItem(item);

@@ -138,7 +138,7 @@ namespace Tests.Caching
             var document = XDocument.Load(site);
             document.Save(expected);
 
-            var item = new CachingItem(null);
+            var item = new CachingItem();
             item.Extension = ".xls";
             _feature.AddItem(item);
 
@@ -206,7 +206,7 @@ namespace Tests.Caching
                             new XAttribute("extension", ".xslt")))));
             document.Save(expected);
 
-            var item = new CachingItem(null);
+            var item = new CachingItem();
             item.Extension = ".xls";
             _feature.AddItem(item);
 
@@ -242,7 +242,7 @@ namespace Tests.Caching
                             new XAttribute("duration", "00:00:00")))));
             document.Save(expected);
 
-            var item = new CachingItem(null);
+            var item = new CachingItem();
             item.Extension = ".ppt";
             _feature.AddItem(item);
             Assert.NotNull(_feature.SelectedItem);

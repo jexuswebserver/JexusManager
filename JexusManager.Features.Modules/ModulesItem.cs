@@ -41,7 +41,6 @@ namespace JexusManager.Features.Modules
             return this;
         }
 
-        public string IsLocked { get; set; }
 
         public GlobalModule GlobalModule { get; set; }
 
@@ -52,8 +51,6 @@ namespace JexusManager.Features.Modules
         public string Name { get; set; }
 
         internal string OriginalKey { get; set; }
-
-        public ConfigurationElement Element { get; set; }
 
         public string Flag { get; set; }
 
@@ -101,10 +98,6 @@ namespace JexusManager.Features.Modules
         {
             // all properties
             return Match(other) && other.Type == Type;
-        }
-
-        public void Apply()
-        {
         }
 
         public bool Match(ModulesItem other)

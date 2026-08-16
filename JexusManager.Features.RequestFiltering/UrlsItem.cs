@@ -9,7 +9,7 @@ namespace JexusManager.Features.RequestFiltering
     using Microsoft.Web.Administration;
 
     [Serializable]
-    internal class UrlsItem : IDuoItem<UrlsItem>
+    internal class UrlsItem : IItem<UrlsItem>
     {
         public UrlsItem(bool allowed)
         {

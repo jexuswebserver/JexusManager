@@ -145,7 +145,7 @@ namespace Tests.IsapiFilters
                     new XAttribute("path", "c:\\test.dll")));
             document.Save(Expected);
 
-            var item = new IsapiFiltersItem(null);
+            var item = new IsapiFiltersItem();
             item.Name = "my cgi";
             item.Path = "c:\\test.dll";
             _feature.AddItem(item);

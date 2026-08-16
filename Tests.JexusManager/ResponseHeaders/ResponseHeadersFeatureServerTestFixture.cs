@@ -144,7 +144,7 @@ namespace Tests.ResponseHeaders
             node?.AddAfterSelf(add);
             document.Save(Expected);
 
-            var item = new ResponseHeadersItem(null);
+            var item = new ResponseHeadersItem();
             item.Name = "Server";
             item.Value = "Jexus";
             _feature.AddItem(item);

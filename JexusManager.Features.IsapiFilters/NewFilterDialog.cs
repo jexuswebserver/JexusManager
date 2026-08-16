@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -22,7 +22,7 @@ namespace JexusManager.Features.IsapiFilters
             InitializeComponent();
             Text = existing == null ? "Add ISAPI Filter" : "Edit ISAPI Filter";
             txtName.ReadOnly = existing != null;
-            Item = existing ?? new IsapiFiltersItem(null);
+            Item = existing ?? new IsapiFiltersItem();
             if (existing != null)
             {
                 txtPath.Text = Item.Path;

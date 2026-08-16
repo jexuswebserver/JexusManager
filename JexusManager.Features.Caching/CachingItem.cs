@@ -17,23 +17,7 @@ namespace JexusManager.Features.Caching
             Flag = "Local";
         }
 
-        public CachingItem(ConfigurationElement element)
-        {
-            Element = element;
-            Flag = element == null || element.IsLocallyStored ? "Local" : "Inhertied";
-            if (element == null)
-            {
-                Extension = VaryByQueryString = VaryByHeaders = string.Empty;
-                return;
-            }
 
-            Extension = (string)element["extension"];
-            Policy = (long)element["policy"];
-            KernelCachePolicy = (long)element["kernelCachePolicy"];
-            Duration = (TimeSpan)element["duration"];
-            VaryByQueryString = (string)element["varyByQueryString"];
-            VaryByHeaders = (string)element["varyByHeaders"];
-        }
 
         public string VaryByHeaders { get; set; }
 
@@ -49,18 +33,12 @@ namespace JexusManager.Features.Caching
 
         internal string OriginalKey { get; set; }
 
-        public ConfigurationElement Element { get; set; }
-
         public string Flag { get; set; }
 
         public bool Equals(CachingItem other)
         {
             // all properties
             return Match(other);
-        }
-
-        public void Apply()
-        {
         }
 
         public bool Match(CachingItem other)

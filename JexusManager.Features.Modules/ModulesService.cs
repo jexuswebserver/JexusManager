@@ -226,7 +226,6 @@ namespace JexusManager.Features.Modules
                 Name = (string)element["name"],
                 Type = type,
                 PreConditions = CreatePreConditions((string)element["preCondition"]),
-                IsLocked = element.GetIsLocked(),
                 Flag = element.IsLocallyStored ? "Local" : "Inhertied"
             };
             if (!string.IsNullOrWhiteSpace(type))

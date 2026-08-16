@@ -18,8 +18,6 @@ namespace JexusManager.Features.Rewrite
             Value = string.Empty;
         }
 
-        public ConfigurationElement Element { get; set; }
-
         public string Key { get; set; }
 
         internal string OriginalKey { get; set; }
@@ -27,10 +25,6 @@ namespace JexusManager.Features.Rewrite
         public string Value { get; set; }
 
         public bool Encrypted { get; set; }
-
-        public void Apply()
-        {
-        }
 
         public bool Match(SettingItem other)
         {

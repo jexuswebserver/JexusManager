@@ -22,8 +22,6 @@ namespace JexusManager.Features.Authorization
 
         public long AccessType { get; set; }
 
-        public ConfigurationElement Element { get; set; }
-
         public string Flag { get; set; }
 
         public string UsersString
@@ -38,10 +36,6 @@ namespace JexusManager.Features.Authorization
         {
             // all properties
             return Match(other) && other.AccessType == AccessType;
-        }
-
-        public void Apply()
-        {
         }
 
         public bool Match(AuthorizationRule other)

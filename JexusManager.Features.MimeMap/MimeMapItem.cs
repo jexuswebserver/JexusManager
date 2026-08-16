@@ -15,18 +15,7 @@ namespace JexusManager.Features.MimeMap
             Flag = "Local";
         }
 
-        public MimeMapItem(ConfigurationElement element)
-        {
-            this.Element = element;
-            this.Flag = element == null || element.IsLocallyStored ? "Local" : "Inhertied";
-            if (element == null)
-            {
-                return;
-            }
 
-            this.FileExtension = (string)element["fileExtension"];
-            this.MimeType = (string)element["mimeType"];
-        }
 
         public string MimeType { get; set; }
 
@@ -34,18 +23,12 @@ namespace JexusManager.Features.MimeMap
 
         internal string OriginalKey { get; set; }
 
-        public ConfigurationElement Element { get; set; }
-
         public string Flag { get; set; }
 
         public bool Equals(MimeMapItem other)
         {
             // all properties
             return this.Match(other) && other.MimeType == this.MimeType;
-        }
-
-        public void Apply()
-        {
         }
 
         public bool Match(MimeMapItem other)

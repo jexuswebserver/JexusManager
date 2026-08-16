@@ -125,25 +125,22 @@ namespace JexusManager.Features.RequestFiltering
             OnSettingsSaved();
         }
 
-        protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
-        {
-            throw new NotSupportedException("Filtering rules are accessed through the module service.");
-        }
 
-        public override void AddItem(FilteringRulesItem item)
+
+        public void AddItem(FilteringRulesItem item)
         {
             ((RequestFilteringModule)Module).Proxy.AddFilteringRule(item);
             LoadAndSelect(item);
         }
 
-        public override void EditItem(FilteringRulesItem item)
+        public void EditItem(FilteringRulesItem item)
         {
             var original = SelectedItem ?? throw new InvalidOperationException("No filtering rule is selected.");
             ((RequestFilteringModule)Module).Proxy.UpdateFilteringRule(original, item);
             LoadAndSelect(item);
         }
 
-        public override void RemoveItem()
+        public void RemoveItem()
         {
             var item = SelectedItem ?? throw new InvalidOperationException("No filtering rule is selected.");
             ((RequestFilteringModule)Module).Proxy.RemoveFilteringRule(item);

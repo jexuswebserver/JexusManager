@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -369,10 +369,7 @@ namespace JexusManager.Features.Handlers
             Load();
         }
 
-        protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
-        {
-            throw new NotSupportedException("Handlers are accessed through the module service.");
-        }
+
 
         public void InOrder()
         {
@@ -412,20 +409,20 @@ namespace JexusManager.Features.Handlers
             HandlersSettingsUpdated?.Invoke();
         }
 
-        public override void AddItem(HandlersItem item)
+        public void AddItem(HandlersItem item)
         {
             Proxy.Add(item);
             LoadAndSelect(item);
         }
 
-        public override void EditItem(HandlersItem item)
+        public void EditItem(HandlersItem item)
         {
             var original = SelectedItem ?? throw new InvalidOperationException("No handler is selected.");
             Proxy.Update(original, item);
             LoadAndSelect(item);
         }
 
-        public override void RemoveItem()
+        public void RemoveItem()
         {
             var item = SelectedItem ?? throw new InvalidOperationException("No handler is selected.");
             Proxy.Remove(item);
@@ -433,7 +430,7 @@ namespace JexusManager.Features.Handlers
             Load();
         }
 
-        public override void RevertItems()
+        public void RevertItems()
         {
             Proxy.Revert();
             SelectedItem = null;

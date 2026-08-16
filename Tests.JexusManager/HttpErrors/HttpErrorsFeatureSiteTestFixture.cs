@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -81,8 +81,12 @@ namespace Tests.HttpErrors
 
             serviceContainer.AddService(typeof(IManagementUIService), substitute);
 
+            var provider = new HttpErrorsModuleProvider();
+            var configurationService = (IConfigurationService)serviceContainer.GetService(typeof(IConfigurationService));
+            var connection = InProcessConnectionFactory.Configure(serviceContainer, configurationService, new[] { provider });
+            var definition = provider.GetModuleDefinition(null);
             var module = new HttpErrorsModule();
-            module.TestInitialize(serviceContainer, null);
+            module.TestInitialize(serviceContainer, (ModuleInfo)connection.Modules[definition.Name]);
 
             _feature = new HttpErrorsFeature(module);
             _feature.Load();
@@ -133,7 +137,7 @@ namespace Tests.HttpErrors
             var document = XDocument.Load(site);
             document.Save(expected);
 
-            var item = new HttpErrorsItem(null);
+            var item = new HttpErrorsItem();
             item.Status = 455;
             item.Path = "c:\\test.htm";
             _feature.AddItem(item);
@@ -202,7 +206,7 @@ namespace Tests.HttpErrors
                         new XAttribute("path", "c:\\test1.htm"))));
             document.Save(expected);
 
-            var item = new HttpErrorsItem(null);
+            var item = new HttpErrorsItem();
             item.Status = 455;
             var original = "c:\\test.htm";
             item.Path = original;
@@ -240,7 +244,7 @@ namespace Tests.HttpErrors
                         new XAttribute("path", "c:\\test.htm"))));
             document.Save(expected);
 
-            var item = new HttpErrorsItem(null);
+            var item = new HttpErrorsItem();
             item.Status = 455;
             item.Path = "c:\\test.htm";
             _feature.AddItem(item);

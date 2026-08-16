@@ -13,7 +13,6 @@ namespace JexusManager.Features.Rewrite.Inbound
 
     internal class MapItem : FeatureBase<MapRule>, IItem<MapItem>
     {
-        public ConfigurationElement Element { get; set; }
 
         public bool Match(MapItem other)
         {
@@ -50,10 +49,6 @@ namespace JexusManager.Features.Rewrite.Inbound
             this.Items = new List<MapRule>();
         }
 
-        public void Apply()
-        {
-        }
-
         internal protected void OnRewriteSettingsSaved()
         {
             MapSettingsUpdated?.Invoke();
@@ -67,10 +62,7 @@ namespace JexusManager.Features.Rewrite.Inbound
             return Match(other) && other.DefaultValue == DefaultValue && other.IgnoreCase == IgnoreCase;
         }
 
-        protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
-        {
-            throw new NotSupportedException("Rewrite map entries are accessed through the module service.");
-        }
+
 
         protected override void OnSettingsSaved()
         {

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -185,7 +185,7 @@ namespace Tests.DefaultDocument
             node?.AddFirst(add);
             document.Save(expected);
 
-            var item = new DocumentItem(null);
+            var item = new DocumentItem();
             item.Name = "default.my";
             _feature.InsertItem(_feature.Items.FindIndex(i => i.Flag == "Local"), item);
             Assert.NotNull(_feature.SelectedItem);

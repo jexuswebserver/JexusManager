@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -129,17 +129,14 @@ namespace JexusManager.Features.Rewrite
             RemoveItem();
         }
 
-        protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
-        {
-            throw new NotSupportedException("Provider settings are accessed through the module service.");
-        }
+
 
         protected override void OnSettingsSaved()
         {
             OnSettingsUpdated();
         }
 
-        public override void AddItem(SettingItem item)
+        public void AddItem(SettingItem item)
         {
             ((RewriteModule)Module).Proxy.AddProviderSetting(_provider.Name, item);
             _provider.Settings.Add(item);
@@ -148,7 +145,7 @@ namespace JexusManager.Features.Rewrite
             OnSettingsSaved();
         }
 
-        public override void EditItem(SettingItem item)
+        public void EditItem(SettingItem item)
         {
             var original = SelectedItem ?? throw new InvalidOperationException("No setting is selected.");
             ((RewriteModule)Module).Proxy.UpdateProviderSetting(_provider.Name, original, item);
@@ -163,7 +160,7 @@ namespace JexusManager.Features.Rewrite
             OnSettingsSaved();
         }
 
-        public override void RemoveItem()
+        public void RemoveItem()
         {
             var item = SelectedItem ?? throw new InvalidOperationException("No setting is selected.");
             ((RewriteModule)Module).Proxy.RemoveProviderSetting(_provider.Name, item);

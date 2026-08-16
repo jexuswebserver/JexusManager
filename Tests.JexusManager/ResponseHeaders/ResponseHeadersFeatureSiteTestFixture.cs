@@ -139,7 +139,7 @@ namespace Tests.ResponseHeaders
             var node = document.Root.XPathSelectElement("/configuration/system.webServer");
             document.Save(expected);
 
-            var item = new ResponseHeadersItem(null);
+            var item = new ResponseHeadersItem();
             item.Name = "Server";
             item.Value = "Jexus";
             _feature.AddItem(item);
@@ -208,7 +208,7 @@ namespace Tests.ResponseHeaders
                             new XAttribute("value", "Jexus2")))));
             document.Save(expected);
 
-            var item = new ResponseHeadersItem(null);
+            var item = new ResponseHeadersItem();
             item.Name = "Server";
             item.Value = "Jexus";
             _feature.AddItem(item);
@@ -245,7 +245,7 @@ namespace Tests.ResponseHeaders
                             new XAttribute("value", "Jexus")))));
             document.Save(expected);
 
-            var item = new ResponseHeadersItem(null);
+            var item = new ResponseHeadersItem();
             item.Name = "Server";
             item.Value = "Jexus";
             _feature.AddItem(item);

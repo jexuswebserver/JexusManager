@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -105,7 +105,9 @@ namespace JexusManager.Features.HttpErrors
 
         public void Load()
         {
-            LoadItems();
+            Items.Clear();
+            Items.AddRange(((HttpErrorsModule)Module).Proxy.GetItems());
+            OnSettingsSaved();
         }
 
         public void Add()
@@ -182,15 +184,55 @@ namespace JexusManager.Features.HttpErrors
             OnSettingsSaved();
         }
 
-        protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
-        {
-            ConfigurationSection section = service.GetSection("system.webServer/httpErrors");
-            return section.GetCollection();
-        }
+
 
         protected override void OnSettingsSaved()
         {
             HttpErrorsSettingsUpdated?.Invoke();
+        }
+
+        public void AddItem(HttpErrorsItem item)
+        {
+            ((HttpErrorsModule)Module).Proxy.Add(item);
+            Load();
+            SelectedItem = Items.Find(candidate => candidate.Equals(item));
+            OnSettingsSaved();
+        }
+
+        public void EditItem(HttpErrorsItem item)
+        {
+            var original = SelectedItem ?? throw new InvalidOperationException("No custom error page is selected.");
+            ((HttpErrorsModule)Module).Proxy.Update(original, item);
+            Load();
+            SelectedItem = Items.Find(candidate => candidate.Equals(item));
+            OnSettingsSaved();
+        }
+
+        public void RemoveItem()
+        {
+            var item = SelectedItem ?? throw new InvalidOperationException("No custom error page is selected.");
+            ((HttpErrorsModule)Module).Proxy.Remove(item);
+            SelectedItem = null;
+            Load();
+        }
+
+        public void MoveUpItem()
+        {
+            ((HttpErrorsModule)Module).Proxy.MoveUp(SelectedItem);
+            Load();
+        }
+
+        public void MoveDownItem()
+        {
+            ((HttpErrorsModule)Module).Proxy.MoveDown(SelectedItem);
+            Load();
+        }
+
+        public void RevertItems()
+        {
+            ((HttpErrorsModule)Module).Proxy.Revert();
+            SelectedItem = null;
+            Load();
         }
 
         public virtual bool ShowHelp()

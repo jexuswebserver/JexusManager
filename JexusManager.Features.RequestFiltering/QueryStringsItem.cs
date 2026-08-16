@@ -9,7 +9,7 @@ namespace JexusManager.Features.RequestFiltering
     using Microsoft.Web.Administration;
 
     [Serializable]
-    internal class QueryStringsItem : IDuoItem<QueryStringsItem>
+    internal class QueryStringsItem : IItem<QueryStringsItem>
     {
         public QueryStringsItem(bool allowed)
         {

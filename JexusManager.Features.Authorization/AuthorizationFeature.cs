@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -97,10 +97,7 @@ namespace JexusManager.Features.Authorization
             return _taskList ?? (_taskList = new FeatureTaskList(this));
         }
 
-        protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
-        {
-            throw new NotSupportedException("Authorization rules are accessed through the module service.");
-        }
+
 
         public void Load()
         {
@@ -161,20 +158,20 @@ namespace JexusManager.Features.Authorization
             AuthorizationSettingsUpdated?.Invoke();
         }
 
-        public override void AddItem(AuthorizationRule item)
+        public void AddItem(AuthorizationRule item)
         {
             Proxy.Add(item);
             LoadAndSelect(item);
         }
 
-        public override void EditItem(AuthorizationRule item)
+        public void EditItem(AuthorizationRule item)
         {
             var original = SelectedItem ?? throw new InvalidOperationException("No authorization rule is selected.");
             Proxy.Update(original, item);
             LoadAndSelect(item);
         }
 
-        public override void RemoveItem()
+        public void RemoveItem()
         {
             var item = SelectedItem ?? throw new InvalidOperationException("No authorization rule is selected.");
             Proxy.Remove(item);

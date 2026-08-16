@@ -143,7 +143,7 @@ namespace Tests.Caching
             node?.AddAfterSelf(newNode);
             document.Save(Expected);
 
-            var item = new CachingItem(null);
+            var item = new CachingItem();
             item.Extension = ".txt";
             _feature.AddItem(item);
             Assert.NotNull(_feature.SelectedItem);

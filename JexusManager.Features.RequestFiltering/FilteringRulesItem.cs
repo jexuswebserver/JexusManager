@@ -22,8 +22,6 @@ namespace JexusManager.Features.RequestFiltering
             Flag = "Local";
         }
 
-        public ConfigurationElement Element { get; set; }
-
         public bool Match(FilteringRulesItem other)
         {
             return other != null && other.Name == Name;
@@ -74,10 +72,6 @@ namespace JexusManager.Features.RequestFiltering
         public List<AppliesToItem> Extensions { get; set; }
         public List<DenyStringsItem> DenyStrings { get; set; }
         public string Flag { get; set; }
-
-        public void Apply()
-        {
-        }
 
         public bool Equals(FilteringRulesItem other)
         {

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -169,7 +169,7 @@ namespace JexusManager.Features.Rewrite.Inbound
             RevertItems();
         }
 
-        public override void AddItem(MapItem item)
+        public void AddItem(MapItem item)
         {
             ((RewriteModule)Module).Proxy.AddMap(item);
             Load();
@@ -177,7 +177,7 @@ namespace JexusManager.Features.Rewrite.Inbound
             OnSettingsSaved();
         }
 
-        public override void RemoveItem()
+        public void RemoveItem()
         {
             var item = SelectedItem ?? throw new InvalidOperationException("No rewrite map is selected.");
             ((RewriteModule)Module).Proxy.RemoveMap(item);
@@ -185,7 +185,7 @@ namespace JexusManager.Features.Rewrite.Inbound
             Load();
         }
 
-        public override void RevertItems()
+        public void RevertItems()
         {
             ((RewriteModule)Module).Proxy.RevertMaps();
             SelectedItem = null;
@@ -205,10 +205,7 @@ namespace JexusManager.Features.Rewrite.Inbound
 
         public string Name { get; }
 
-        protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
-        {
-            throw new NotSupportedException("Rewrite maps are accessed through the module service.");
-        }
+
 
         protected override void OnSettingsSaved()
         {

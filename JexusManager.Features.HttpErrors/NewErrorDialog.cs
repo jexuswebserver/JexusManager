@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -25,7 +25,7 @@ namespace JexusManager.Features.HttpErrors
             }
 
             Text = item == null ? "Add Custom Error Page" : "Edit Custom Error Page";
-            Item = item ?? new HttpErrorsItem(null);
+            Item = item ?? new HttpErrorsItem();
             var mode = Item.Response;
             rbStatic.Checked = mode == "File";
             rbExecute.Checked = mode == "ExecuteURL";

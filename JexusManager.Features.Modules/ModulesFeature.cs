@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -167,22 +167,7 @@ namespace JexusManager.Features.Modules
             OnSettingsSaved();
         }
 
-        public override void LoadItems()
-        {
-            Items.Clear();
-            foreach (var item in Proxy.GetItems())
-            {
-                item.Load(this);
-                Items.Add(item);
-            }
 
-            OnSettingsSaved();
-        }
-
-        protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
-        {
-            throw new NotSupportedException("Modules are accessed through the module service.");
-        }
 
         public List<GlobalModule> GlobalModules { get; set; }
 
@@ -369,20 +354,20 @@ namespace JexusManager.Features.Modules
             ModulesSettingsUpdated?.Invoke();
         }
 
-        public override void AddItem(ModulesItem item)
+        public void AddItem(ModulesItem item)
         {
             Proxy.Add(item);
             LoadAndSelect(item);
         }
 
-        public override void EditItem(ModulesItem item)
+        public void EditItem(ModulesItem item)
         {
             var original = SelectedItem ?? throw new InvalidOperationException("No module is selected.");
             Proxy.Update(original, item);
             LoadAndSelect(item);
         }
 
-        public override void RemoveItem()
+        public void RemoveItem()
         {
             var item = SelectedItem ?? throw new InvalidOperationException("No module is selected.");
             Proxy.Remove(item);
@@ -390,7 +375,7 @@ namespace JexusManager.Features.Modules
             Load();
         }
 
-        public override void RevertItems()
+        public void RevertItems()
         {
             Proxy.Revert();
             SelectedItem = null;

@@ -18,8 +18,6 @@ namespace JexusManager.Features.Rewrite
             IgnoreCase = true;
         }
 
-        public ConfigurationElement Element { get; set; }
-
         public bool IgnoreCase { get; set; }
 
         public string Pattern { get; set; }
@@ -29,10 +27,6 @@ namespace JexusManager.Features.Rewrite
         public int MatchType { get; set; }
 
         public string Flag { get; set; }
-
-        public void Apply()
-        {
-        }
 
         public bool Match(ConditionItem other)
         {

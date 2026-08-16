@@ -4,62 +4,31 @@
 
 namespace JexusManager.Features.FastCgi
 {
+    using System;
     using System.ComponentModel;
 
     using Microsoft.Web.Administration;
 
+    [Serializable]
     internal class FastCgiItem : IItem<FastCgiItem>
     {
         public FastCgiItem()
-            : this(null)
         {
-        }
-
-        public FastCgiItem(ConfigurationElement element)
-        {
-            Element = element;
-            Flag = element == null || element.IsLocallyStored ? "Local" : "Inhertied";
+            Flag = "Local";
             EnvironmentVariables = new EnvironmentVariablesCollection();
             AdvancedSettings = new AdvancedSettings();
-            if (element == null)
-            {
-                Path = Arguments = MonitorChangesTo = string.Empty;
-                MaxInstances = 4U;
-                InstanceMaxRequests = 200U;
-                ActivityTimeout = 30U;
-                IdleTimeout = 300U;
-                QueueLength = 1000U;
-                RapidFailsPerMinute = 10U;
-                RequestTimeout = 90U;
-                return;
-            }
-
-            Reset();
+            Path = Arguments = MonitorChangesTo = string.Empty;
+            MaxInstances = 4U;
+            InstanceMaxRequests = 200U;
+            ActivityTimeout = 30U;
+            IdleTimeout = 300U;
+            QueueLength = 1000U;
+            RapidFailsPerMinute = 10U;
+            RequestTimeout = 90U;
         }
 
         public void Reset()
         {
-            Path = (string)Element["fullPath"];
-            Arguments = (string)Element["arguments"];
-
-            MonitorChangesTo = (string)Element["monitorChangesTo"];
-            ErrorMode = (ErrorMode)Element["stderrMode"];
-            MaxInstances = (uint)Element["maxInstances"];
-            IdleTimeout = (uint)Element["idleTimeout"];
-            ActivityTimeout = (uint)Element["activityTimeout"];
-            RequestTimeout = (uint)Element["requestTimeout"];
-            InstanceMaxRequests = (uint)Element["instanceMaxRequests"];
-            SignalBeforeTerminateSeconds = (uint)Element["signalBeforeTerminateSeconds"];
-            AdvancedSettings.Protocol = (Protocol)Element["protocol"];
-            QueueLength = (uint)Element["queueLength"];
-            AdvancedSettings.FlushNamedPipe = (bool)Element["flushNamedPipe"];
-            RapidFailsPerMinute = (uint)Element["rapidFailsPerMinute"];
-
-            foreach (ConfigurationElement child in Element.GetCollection("environmentVariables"))
-            {
-                EnvironmentVariables.Add(
-                    new EnvironmentVariables { Name = (string)child["name"], Value = (string)child["value"] });
-            }
         }
 
         [Browsable(false)]
@@ -69,44 +38,14 @@ namespace JexusManager.Features.FastCgi
         public string Path { get; set; }
 
         [Browsable(false)]
-        public ConfigurationElement Element { get; set; }
-
-        [Browsable(false)]
         public string Flag { get; set; }
+
+        internal string OriginalKey { get; set; }
 
         public bool Equals(FastCgiItem other)
         {
             // all properties
             return Match(other);
-        }
-
-        public void Apply()
-        {
-            Element["fullPath"] = Path;
-            Element["arguments"] = Arguments;
-
-            Element["monitorChangesTo"] = MonitorChangesTo;
-            Element["stderrMode"] = ErrorMode;
-            Element["maxInstances"] = MaxInstances;
-            Element["idleTimeout"] = IdleTimeout;
-            Element["activityTimeout"] = ActivityTimeout;
-            Element["requestTimeout"] = RequestTimeout;
-            Element["instanceMaxRequests"] = InstanceMaxRequests;
-            Element["signalBeforeTerminateSeconds"] = SignalBeforeTerminateSeconds;
-            Element["protocol"] = AdvancedSettings.Protocol;
-            Element["queueLength"] = QueueLength;
-            Element["flushNamedPipe"] = AdvancedSettings.FlushNamedPipe;
-            Element["rapidFailsPerMinute"] = RapidFailsPerMinute;
-
-            var collection = Element.GetCollection("environmentVariables");
-            collection.Clear();
-            foreach (EnvironmentVariables item in EnvironmentVariables)
-            {
-                var newElement = collection.CreateElement();
-                newElement["name"] = item.Name;
-                newElement["value"] = item.Value;
-                collection.Add(newElement);
-            }
         }
 
         public bool Match(FastCgiItem other)

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -19,7 +19,6 @@ namespace JexusManager.Features.HttpApi
         public string SecurityDescriptor { get; set; }
 
         public string Flag { get; set; }
-        public ConfigurationElement Element { get; set; }
 
         public void Apply()
         { }

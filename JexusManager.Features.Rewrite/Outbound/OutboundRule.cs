@@ -40,8 +40,6 @@ namespace JexusManager.Features.Rewrite.Outbound
 
         public string Flag { get; set; }
 
-        public ConfigurationElement Element { get; set; }
-
         public bool Enabled { get; set; }
 
         public RuleSettingsUpdatedEventHandler RuleSettingsUpdated { get; set; }
@@ -93,10 +91,6 @@ namespace JexusManager.Features.Rewrite.Outbound
         public bool ApplyChanges()
         {
             return true;
-        }
-
-        public void Apply()
-        {
         }
     }
 }

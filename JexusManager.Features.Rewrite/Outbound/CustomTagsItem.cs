@@ -18,8 +18,6 @@ namespace JexusManager.Features.Rewrite.Outbound
             Flag = "Local";
         }
 
-        public ConfigurationElement Element { get; set; }
-
         public List<CustomTagItem> Tags { get; set; }
 
         public string Name { get; set; }
@@ -29,10 +27,6 @@ namespace JexusManager.Features.Rewrite.Outbound
         public string Flag { get; set; }
 
         public string TagString { get; private set; }
-
-        public void Apply()
-        {
-        }
 
         public void Add(CustomTagItem newItem)
         {

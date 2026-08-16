@@ -121,18 +121,15 @@ namespace JexusManager.Features.RequestFiltering
             OnSettingsSaved();
         }
 
-        protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
-        {
-            throw new NotSupportedException("File name extensions are accessed through the module service.");
-        }
 
-        public override void AddItem(FileExtensionsItem item)
+
+        public void AddItem(FileExtensionsItem item)
         {
             ((RequestFilteringModule)Module).Proxy.AddFileExtension(item);
             LoadAndSelect(item);
         }
 
-        public override void RemoveItem()
+        public void RemoveItem()
         {
             var item = SelectedItem ?? throw new InvalidOperationException("No file name extension is selected.");
             ((RequestFilteringModule)Module).Proxy.RemoveFileExtension(item);

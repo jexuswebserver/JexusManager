@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -104,10 +104,7 @@ namespace JexusManager.Features.ResponseHeaders
             OnSettingsSaved();
         }
 
-        protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
-        {
-            throw new NotSupportedException("Response headers are accessed through the module service.");
-        }
+
 
         public void Add()
         {
@@ -186,14 +183,14 @@ namespace JexusManager.Features.ResponseHeaders
             ResponseHeadersSettingsUpdated?.Invoke();
         }
 
-        public override void AddItem(ResponseHeadersItem item)
+        public void AddItem(ResponseHeadersItem item)
         {
             ((ResponseHeadersModule)Module).Proxy.Add(item);
             Load();
             SelectedItem = Items.Find(header => header.Equals(item));
         }
 
-        public override void EditItem(ResponseHeadersItem item)
+        public void EditItem(ResponseHeadersItem item)
         {
             var original = SelectedItem ?? throw new InvalidOperationException("No response header is selected.");
             ((ResponseHeadersModule)Module).Proxy.Update(original, item);
@@ -201,7 +198,7 @@ namespace JexusManager.Features.ResponseHeaders
             SelectedItem = Items.Find(header => header.Equals(item));
         }
 
-        public override void RemoveItem()
+        public void RemoveItem()
         {
             var item = SelectedItem ?? throw new InvalidOperationException("No response header is selected.");
             ((ResponseHeadersModule)Module).Proxy.Remove(item);

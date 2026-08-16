@@ -18,7 +18,6 @@ namespace JexusManager.Features.RequestFiltering
 
         public string Segment { get; set; }
         public string Flag { get; set; }
-        public ConfigurationElement Element { get; set; }
 
         public bool Equals(HiddenSegmentsItem other)
         {
@@ -28,10 +27,6 @@ namespace JexusManager.Features.RequestFiltering
         public bool Match(HiddenSegmentsItem other)
         {
             return other != null && other.Segment == Segment;
-        }
-
-        public void Apply()
-        {
         }
     }
 }

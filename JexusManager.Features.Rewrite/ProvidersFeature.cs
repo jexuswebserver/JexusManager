@@ -216,17 +216,14 @@ namespace JexusManager.Features.Rewrite
             Load();
         }
 
-        protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
-        {
-            throw new NotSupportedException("Rewrite providers are accessed through the module service.");
-        }
+
 
         protected override void OnSettingsSaved()
         {
             OnRewriteSettingsSaved();
         }
 
-        public override void AddItem(ProviderItem item)
+        public void AddItem(ProviderItem item)
         {
             ((RewriteModule)Module).Proxy.AddProvider(item);
             Load();
@@ -234,7 +231,7 @@ namespace JexusManager.Features.Rewrite
             OnSettingsSaved();
         }
 
-        public override void EditItem(ProviderItem item)
+        public void EditItem(ProviderItem item)
         {
             var original = SelectedItem ?? throw new InvalidOperationException("No provider is selected.");
             ((RewriteModule)Module).Proxy.UpdateProvider(original, item);
@@ -243,7 +240,7 @@ namespace JexusManager.Features.Rewrite
             OnSettingsSaved();
         }
 
-        public override void RemoveItem()
+        public void RemoveItem()
         {
             var item = SelectedItem ?? throw new InvalidOperationException("No provider is selected.");
             ((RewriteModule)Module).Proxy.RemoveProvider(item);
@@ -251,7 +248,7 @@ namespace JexusManager.Features.Rewrite
             Load();
         }
 
-        public override void RevertItems()
+        public void RevertItems()
         {
             ((RewriteModule)Module).Proxy.RevertProviders();
             SelectedItem = null;

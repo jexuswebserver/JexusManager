@@ -48,7 +48,7 @@ namespace JexusManager.Features.DefaultDocument
                         }
                     }
 
-                    Item = new DocumentItem((Microsoft.Web.Administration.ConfigurationElement)null);
+                    Item = new DocumentItem();
                     Item.Name = name;
                     DialogResult = DialogResult.OK;
                 }));

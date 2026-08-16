@@ -21,10 +21,7 @@ namespace JexusManager.Features.Rewrite.Inbound
         {
         }
 
-        protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
-        {
-            throw new NotSupportedException("Inbound rules are accessed through the module service.");
-        }
+
 
         protected override void OnSettingsSaved()
         {
@@ -175,7 +172,7 @@ namespace JexusManager.Features.Rewrite.Inbound
             Load();
         }
 
-        public override void AddItem(InboundRule item)
+        public void AddItem(InboundRule item)
         {
             ((RewriteModule)Module).Proxy.AddInboundRule(item);
             Load();
@@ -183,7 +180,7 @@ namespace JexusManager.Features.Rewrite.Inbound
             OnSettingsSaved();
         }
 
-        public override void EditItem(InboundRule item)
+        public void EditItem(InboundRule item)
         {
             var original = SelectedItem ?? throw new InvalidOperationException("No rule is selected.");
             ((RewriteModule)Module).Proxy.UpdateInboundRule(original, item);
@@ -192,7 +189,7 @@ namespace JexusManager.Features.Rewrite.Inbound
             OnSettingsSaved();
         }
 
-        public override void RemoveItem()
+        public void RemoveItem()
         {
             var item = SelectedItem ?? throw new InvalidOperationException("No rule is selected.");
             ((RewriteModule)Module).Proxy.RemoveInboundRule(item);
@@ -203,6 +200,18 @@ namespace JexusManager.Features.Rewrite.Inbound
         public void Edit()
         {
             DoubleClick(SelectedItem);
+        }
+
+        public void Rename(InboundRule item, string name)
+        {
+            if (item == null)
+            {
+                return;
+            }
+
+            item.Name = name;
+            ((RewriteModule)Module).Proxy.UpdateInboundRule(item, item);
+            Load();
         }
 
         protected override void DoubleClick(InboundRule item)

@@ -145,7 +145,7 @@ namespace Tests.IsapiCgiRestriction
                     new XAttribute("allowed", "true")));
             document.Save(Expected);
 
-            var item = new IsapiCgiRestrictionItem(null);
+            var item = new IsapiCgiRestrictionItem();
             item.Description = "my cgi";
             item.Path = "c:\\test.dll";
             item.Allowed = true;

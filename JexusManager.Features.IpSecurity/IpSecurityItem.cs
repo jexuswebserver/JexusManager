@@ -16,16 +16,10 @@ namespace JexusManager.Features.IpSecurity
             Mask = "255.255.255.255";
             Flag = "Local";
         }
-
-        public ConfigurationElement Element { get; set; }
         public string Address { get; set; }
         public string Mask { get; set; }
         public bool Allowed { get; set; }
         public string Flag { get; set; }
-
-        public void Apply()
-        {
-        }
 
         public bool Equals(IpSecurityItem other)
         {

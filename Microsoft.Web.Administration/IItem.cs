@@ -10,10 +10,6 @@ namespace Microsoft.Web.Administration
     {
         string Flag { get; set; }
 
-        void Apply();
-
-        ConfigurationElement Element { get; set; }
-
         bool Match(T other);
     }
 }

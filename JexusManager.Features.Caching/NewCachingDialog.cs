@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -21,7 +21,7 @@ namespace JexusManager.Features.Caching
         {
             InitializeComponent();
             Text = existing == null ? "Add Cache Rule" : "Edit Cache Rule";
-            Item = existing ?? new CachingItem(null);
+            Item = existing ?? new CachingItem();
             if (existing == null)
             {
                 return;

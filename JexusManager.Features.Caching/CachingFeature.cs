@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -177,25 +177,21 @@ namespace JexusManager.Features.Caching
             }
         }
 
-        protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
-        {
-            var section = service.GetSection("system.webServer/caching");
-            return section.GetCollection("profiles");
-        }
+
 
         protected override void OnSettingsSaved()
         {
             CachingSettingsUpdated?.Invoke();
         }
 
-        public override void AddItem(CachingItem item)
+        public void AddItem(CachingItem item)
         {
             ((CachingModule)Module).Proxy.Add(item);
             Load();
             SelectedItem = Items.Find(profile => profile.Equals(item));
         }
 
-        public override void EditItem(CachingItem item)
+        public void EditItem(CachingItem item)
         {
             var original = SelectedItem ?? throw new InvalidOperationException("No cache profile is selected.");
             ((CachingModule)Module).Proxy.Update(original, item);
@@ -203,7 +199,7 @@ namespace JexusManager.Features.Caching
             SelectedItem = Items.Find(profile => profile.Equals(item));
         }
 
-        public override void RemoveItem()
+        public void RemoveItem()
         {
             var item = SelectedItem ?? throw new InvalidOperationException("No cache profile is selected.");
             ((CachingModule)Module).Proxy.Remove(item);

@@ -8,21 +8,16 @@ namespace JexusManager.Features.DefaultDocument
 
     public class DocumentItem : IItem<DocumentItem>
     {
-        public ConfigurationElement Element { get; set; }
+        public DocumentItem()
+        {
+            Name = string.Empty;
+            Flag = "Local";
+        }
+
         public string Name { get; set; }
         public string Flag { get; set; }
 
-        public DocumentItem(ConfigurationElement element)
-        {
-            Flag = element == null || element.IsLocallyStored ? "Local" : "Inherited";
-            Element = element;
-            if (element == null)
-            {
-                return;
-            }
 
-            Name = (string)element["value"];
-        }
 
         private DocumentItem(DefaultDocumentEntry entry)
         {
@@ -38,11 +33,6 @@ namespace JexusManager.Features.DefaultDocument
         public bool Equals(DocumentItem other)
         {
             return Match(other);
-        }
-
-        public void Apply()
-        {
-            Element["value"] = Name;
         }
 
         public bool Match(DocumentItem other)

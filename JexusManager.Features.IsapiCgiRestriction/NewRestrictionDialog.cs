@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -20,7 +20,7 @@ namespace JexusManager.Features.IsapiCgiRestriction
         {
             InitializeComponent();
             Text = existing == null ? "Add ISAPI or CGI Restriction" : "Edit ISAPI or CGI Restriction";
-            Item = existing ?? new IsapiCgiRestrictionItem(null);
+            Item = existing ?? new IsapiCgiRestrictionItem();
             if (existing != null)
             {
                 txtPath.Text = Item.Path;

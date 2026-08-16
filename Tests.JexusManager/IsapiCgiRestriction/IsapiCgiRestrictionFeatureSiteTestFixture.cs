@@ -137,7 +137,7 @@ namespace Tests.IsapiCgiRestriction
                     new XAttribute("path", "WebSite1")));
             document.Save(Expected);
 
-            var item = new IsapiCgiRestrictionItem(null);
+            var item = new IsapiCgiRestrictionItem();
             item.Description = "test";
             item.Path = "c:\\test.dll";
             _feature.AddItem(item);
@@ -204,7 +204,7 @@ namespace Tests.IsapiCgiRestriction
                                     new XAttribute("description", "test")))))));
             document.Save(Expected);
 
-            var item = new IsapiCgiRestrictionItem(null);
+            var item = new IsapiCgiRestrictionItem();
             item.Description = "test";
             item.Path = "c:\\test.dll";
             _feature.AddItem(item);
@@ -240,7 +240,7 @@ namespace Tests.IsapiCgiRestriction
                                     new XAttribute("description", "test")))))));
             document.Save(Expected);
 
-            var item = new IsapiCgiRestrictionItem(null);
+            var item = new IsapiCgiRestrictionItem();
             item.Description = "test";
             item.Path = "c:\\test.dll";
             _feature.AddItem(item);

@@ -131,8 +131,7 @@ namespace JexusManager.Features.Rewrite
 
             _feature.Inbound.InitializeMouseClick(lvIn, (item, text) =>
             {
-                item.Name = text;
-                item.Apply();
+                _feature.Inbound.Rename(item, text);
             },
             text =>
             {
@@ -148,8 +147,7 @@ namespace JexusManager.Features.Rewrite
 
             _feature.Outbound.InitializeMouseClick(lvOut, (item, text) =>
             {
-                item.Name = text;
-                item.Apply();
+                _feature.Outbound.Rename(item, text);
             },
             text =>
             {

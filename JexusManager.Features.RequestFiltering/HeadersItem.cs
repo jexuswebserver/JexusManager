@@ -15,8 +15,6 @@ namespace JexusManager.Features.RequestFiltering
         {
         }
 
-        public ConfigurationElement Element { get; set; }
-
         public bool Match(HeadersItem other)
         {
             return other != null && other.Header == Header;
@@ -25,10 +23,6 @@ namespace JexusManager.Features.RequestFiltering
         public uint SizeLimit { get; set; }
 
         public string Header { get; set; }
-
-        public void Apply()
-        {
-        }
 
         public string Flag { get; set; }
 

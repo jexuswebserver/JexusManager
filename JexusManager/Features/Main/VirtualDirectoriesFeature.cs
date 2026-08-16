@@ -312,10 +312,7 @@ namespace JexusManager.Features.Main
             // This would be implemented similar to the other features
         }
 
-        protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
-        {
-            return null;
-        }
+
 
         protected override void OnSettingsSaved()
         {

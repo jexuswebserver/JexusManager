@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -20,7 +20,7 @@ namespace JexusManager.Features.MimeMap
         {
             InitializeComponent();
             Text = string.Format("{0} MIME Type", existing == null ? "Add" : "Edit");
-            Item = existing ?? new MimeMapItem(null);
+            Item = existing ?? new MimeMapItem();
             if (existing != null)
             {
                 txtExtension.Text = Item.FileExtension;

@@ -16,8 +16,6 @@ namespace JexusManager.Features.Rewrite.Inbound
             Flag = "Local";
         }
 
-        public ConfigurationElement Element { get; set; }
-
         public bool Match(MapRule other)
         {
             return other != null && other.Original == Original;
@@ -30,10 +28,6 @@ namespace JexusManager.Features.Rewrite.Inbound
         public string New { get; set; }
 
         public string Flag { get; set; }
-
-        public void Apply()
-        {
-        }
 
         public bool Equals(MapRule other)
         {

@@ -26,15 +26,10 @@ namespace JexusManager.Features.Certificates
         public string Store { get; set; }
         public CertificatesFeature Feature { get; private set; }
         public string Flag { get; set; }
-        public ConfigurationElement Element { get; set; }
 
         public string Thumbprint
         {
             get { return Item?.GetCertHashString(); }
-        }
-
-        public void Apply()
-        {
         }
 
         public bool Equals(CertificatesItem other)

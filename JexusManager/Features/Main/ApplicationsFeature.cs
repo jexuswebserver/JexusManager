@@ -386,10 +386,7 @@ namespace JexusManager.Features.Main
             DialogHelper.ProcessStart(uri + SelectedItem.Path);
         }
 
-        protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
-        {
-            return null;
-        }
+
 
         protected override void OnSettingsSaved()
         {

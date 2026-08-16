@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -155,11 +155,7 @@ namespace JexusManager.Features.IsapiFilters
             OnSettingsSaved();
         }
 
-        protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
-        {
-            ConfigurationSection section = service.GetSection("system.webServer/isapiFilters", null, false);
-            return section.GetCollection();
-        }
+
 
         public void Add()
         {
@@ -331,14 +327,14 @@ namespace JexusManager.Features.IsapiFilters
             IsapiFiltersSettingsUpdated?.Invoke();
         }
 
-        public override void AddItem(IsapiFiltersItem item)
+        public void AddItem(IsapiFiltersItem item)
         {
             ((IsapiFiltersModule)Module).Proxy.Add(item);
             Load();
             SelectedItem = Items.Find(filter => filter.Equals(item));
         }
 
-        public override void EditItem(IsapiFiltersItem item)
+        public void EditItem(IsapiFiltersItem item)
         {
             var original = SelectedItem ?? throw new InvalidOperationException("No ISAPI filter is selected.");
             ((IsapiFiltersModule)Module).Proxy.Update(original, item);
@@ -346,7 +342,7 @@ namespace JexusManager.Features.IsapiFilters
             SelectedItem = Items.Find(filter => filter.Equals(item));
         }
 
-        public override void RemoveItem()
+        public void RemoveItem()
         {
             var item = SelectedItem ?? throw new InvalidOperationException("No ISAPI filter is selected.");
             ((IsapiFiltersModule)Module).Proxy.Remove(item);

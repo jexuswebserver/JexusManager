@@ -112,10 +112,7 @@ namespace JexusManager.Features.RequestFiltering
             RemoveItem();
         }
 
-        protected override ConfigurationElementCollection GetCollection(IConfigurationService service)
-        {
-            throw new NotSupportedException("HTTP verbs are accessed through the module service.");
-        }
+
 
         public override void Load()
         {
@@ -124,13 +121,13 @@ namespace JexusManager.Features.RequestFiltering
             OnSettingsSaved();
         }
 
-        public override void AddItem(VerbsItem item)
+        public void AddItem(VerbsItem item)
         {
             ((RequestFilteringModule)Module).Proxy.AddVerb(item);
             LoadAndSelect(item);
         }
 
-        public override void RemoveItem()
+        public void RemoveItem()
         {
             var item = SelectedItem ?? throw new InvalidOperationException("No verb is selected.");
             ((RequestFilteringModule)Module).Proxy.RemoveVerb(item);

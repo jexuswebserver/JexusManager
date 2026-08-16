@@ -44,8 +44,6 @@ namespace JexusManager.Features.Handlers
 
         public string Name { get; set; }
 
-        public ConfigurationElement Element { get; set; }
-
         public string Flag { get; set; }
 
         internal string OriginalKey { get; set; }
@@ -112,10 +110,6 @@ namespace JexusManager.Features.Handlers
         {
             // all properties
             return this.Match(other) && other.Type == this.Type;
-        }
-
-        public void Apply()
-        {
         }
 
         public bool Match(HandlersItem other)
