@@ -66,6 +66,8 @@ namespace JexusManager
         private bool _handleEvents = true;
         private const string expressGlobalInstanceName = "Global";
         private readonly List<ModuleProvider> _providers;
+        private readonly HashSet<IModulePage> _activatedPages = new HashSet<IModulePage>();
+        private readonly Microsoft.Extensions.Logging.ILogger _logger = LogHelper.GetLogger("MainForm");
         private readonly ServiceContainer _serviceContainer;
         private readonly NavigationService _navigationService;
         private bool _fromBreadcrumb;
@@ -464,6 +466,22 @@ namespace JexusManager
             panel.Dock = DockStyle.Fill;
             scMain.Panel2.Controls.Clear();
             scMain.Panel2.Controls.Add(panel);
+            try
+            {
+                if (_activatedPages.Add(page))
+                {
+                    page.OnActivated(true);
+                }
+                else
+                {
+                    page.OnActivated(false);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error activating page {PageType}", page.GetType().FullName);
+                UIService.ShowError(ex, "There was an error while performing this operation.", page.PageInfo?.Title ?? Text, false);
+            }
         }
 
         private void scMain_SplitterMoved(object sender, SplitterEventArgs e)

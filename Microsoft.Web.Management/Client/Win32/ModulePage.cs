@@ -229,6 +229,7 @@ namespace Microsoft.Web.Management.Client.Win32
             DoWorkEventHandler doWorkHandler,
             RunWorkerCompletedEventHandler workCompletedHandler)
         {
+            StartAsyncTask(progressText, doWorkHandler, workCompletedHandler, null, null);
         }
 
         protected void StartAsyncTask(
@@ -237,6 +238,7 @@ namespace Microsoft.Web.Management.Client.Win32
             RunWorkerCompletedEventHandler workCompletedHandler,
             MethodInvoker cancelTaskHandler)
         {
+            StartAsyncTask(progressText, doWorkHandler, workCompletedHandler, cancelTaskHandler, null);
         }
 
         protected void StartAsyncTask(string progressText,
@@ -245,6 +247,10 @@ namespace Microsoft.Web.Management.Client.Win32
             MethodInvoker cancelTaskHandler,
             Object argument)
         {
+            var worker = new BackgroundWorker();
+            worker.DoWork += doWorkHandler;
+            worker.RunWorkerCompleted += workCompletedHandler;
+            worker.RunWorkerAsync(argument);
         }
 
         protected void StartProgress(string text, MethodInvoker cancelMethod)

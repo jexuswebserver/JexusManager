@@ -6,6 +6,7 @@ namespace JexusManager.Services
 {
     using System;
     using System.Collections;
+    using System.Collections.Generic;
     using System.Drawing;
     using System.Windows.Forms;
 
@@ -14,9 +15,18 @@ namespace JexusManager.Services
 
     public sealed class ManagementUIService : IManagementUIService
     {
+        private readonly IDictionary _styles;
+
         public ManagementUIService(IWin32Window dialogOwner)
         {
             DialogOwner = dialogOwner;
+            _styles = new Hashtable
+            {
+                { "PageHeaderTitleFont", new Font("Segoe UI", 16f, FontStyle.Bold) },
+                { "PageDescriptionFont", new Font("Segoe UI", 9f) },
+                { "PageTitleFont", new Font("Segoe UI", 9f, FontStyle.Bold) },
+                { "BottomDescriptionFont", new Font("Segoe UI", 8.25f) }
+            };
         }
 
         public void ShowContextMenu(Point location)
@@ -90,7 +100,7 @@ namespace JexusManager.Services
 
         public IDictionary Styles
         {
-            get { return null; }
+            get { return _styles; }
         }
     }
 }

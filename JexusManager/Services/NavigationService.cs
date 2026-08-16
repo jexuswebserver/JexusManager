@@ -100,18 +100,23 @@ namespace JexusManager.Services
             _logger.LogDebug("Current item set to: {PageType}", item.PageType.Name);
 
             var page = CurrentItem.Page;
-            if (typeof(IModuleChildPage).IsAssignableFrom(item.PageType))
+            if (initializing)
             {
                 var pageInfo = previous?.PageInfo;
-                if (initializing)
+                var module = pageInfo?.AssociatedModule;
+                if (module != null)
                 {
-                    _logger.LogDebug("Initializing child page with parent: {ParentType}",
-                        pageInfo?.GetType().Name ?? "null");
-                    page.Initialize(pageInfo?.AssociatedModule, pageInfo, item.NavigationData);
+                    var controlPanel = ((IServiceProvider)module).GetService(typeof(IControlPanel)) as IControlPanel;
+                    var targetInfo = controlPanel?.GetPages(module).FirstOrDefault(candidate => candidate.PageType == item.PageType)
+                                     ?? pageInfo;
+                    page.Initialize(module, targetInfo, item.NavigationData);
                 }
 
-                var child = (IModuleChildPage)page;
-                child.ParentPage = previous;
+                if (typeof(IModuleChildPage).IsAssignableFrom(item.PageType))
+                {
+                    var child = (IModuleChildPage)page;
+                    child.ParentPage = previous;
+                }
             }
 
             _host.LoadInner(page);

@@ -53,6 +53,17 @@ namespace Tests.PHP
             Assert.Contains("WebSite1", sites.Cast<string>());
         }
 
+        [Fact]
+        public void PHPModuleRegistersOneControlPanelPage()
+        {
+            var (module, connection) = Create(ManagementScope.Server);
+            var controlPanel = (IControlPanel)((IServiceProvider)module).GetService(typeof(IControlPanel));
+            var pages = controlPanel.GetPages(module);
+            Assert.Equal(7, pages.Count);
+            Assert.Single(controlPanel.Pages);
+            Assert.Equal(typeof(PHPPage), controlPanel.Pages[0].PageType);
+        }
+
         private static (Module Module, Connection Connection) Create(ManagementScope scope)
         {
             File.Copy("original.config", "applicationHost.config", true);
