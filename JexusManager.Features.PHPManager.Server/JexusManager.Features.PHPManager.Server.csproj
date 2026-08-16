@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0-windows10.0.17763.0</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>false</UseWPF>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>JexusManager.snk</AssemblyOriginatorKeyFile>
+    <RootNamespace>Web.Management.PHP</RootNamespace>
+    <AssemblyName>Web.Management.PHP</AssemblyName>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Properties\InternalsVisibleTo.cs" />
+    <Compile Include="..\phpmanager\Server\**\*.cs"
+             Exclude="..\phpmanager\Server\obj\**;..\phpmanager\Server\Properties\AssemblyInfo.cs"
+             LinkBase="PHP" />
+    <Compile Include="..\phpmanager\Client\Config\*.cs"
+             LinkBase="PHP\Client\Config" />
+    <Compile Include="..\phpmanager\Client\RemoteObject.cs"
+             LinkBase="PHP\Client" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="..\phpmanager\Server\Resources.resx"
+                      LogicalName="Web.Management.PHP.Resources.resources" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft.Web.Management\Microsoft.Web.Management.csproj" />
+    <ProjectReference Include="..\Microsoft.Web.Administration\Microsoft.Web.Administration.csproj" />
+  </ItemGroup>
+
+</Project>

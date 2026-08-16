@@ -253,12 +253,28 @@ namespace Microsoft.Web.Administration
 
         public ConfigurationSection GetSection(string sectionPath, Type type)
         {
-            throw new NotImplementedException();
+            var section = GetSection(sectionPath);
+            if (section == null || type == null || type == typeof(ConfigurationSection))
+            {
+                return section;
+            }
+
+            var custom = (ConfigurationSection)Activator.CreateInstance(type, nonPublic: true);
+            custom.Bind(section);
+            return custom;
         }
 
         public ConfigurationSection GetSection(string sectionPath, Type type, string locationPath)
         {
-            throw new NotImplementedException();
+            var section = GetSection(sectionPath, locationPath);
+            if (section == null || type == null || type == typeof(ConfigurationSection))
+            {
+                return section;
+            }
+
+            var custom = (ConfigurationSection)Activator.CreateInstance(type, nonPublic: true);
+            custom.Bind(section);
+            return custom;
         }
 
         public void RemoveLocationPath(string locationPath)

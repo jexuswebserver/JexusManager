@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lex Li. All rights reserved.
+// Copyright (c) Lex Li. All rights reserved.
 // 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -17,6 +17,15 @@ namespace Microsoft.Web.Administration
     public class ConfigurationElement
     {
         private string _overriddenFileName;
+
+        protected ConfigurationElement()
+        {
+            Methods = new ConfigurationMethodCollection();
+            _attributes = new ConfigurationAttributeCollection(this);
+            ChildElements = new ConfigurationChildElementCollection(this);
+            Collections = new List<ConfigurationElementCollection>();
+            _rawAttributes = new Dictionary<string, string>();
+        }
 
         internal ConfigurationElement(ConfigurationElement element, string name, ConfigurationElementSchema schema, ConfigurationElement parent, XElement entity, FileContext core, string fileName = null, bool isSection = false, string location = null)
         {
@@ -86,6 +95,34 @@ namespace Microsoft.Web.Administration
         }
 
         internal bool HasSiteDefaults => _defaults != null;
+
+        internal void BindFrom(ConfigurationElement source)
+        {
+            FileContext = source.FileContext;
+            InnerEntity = source.InnerEntity;
+            IsLocallyStored = source.IsLocallyStored;
+            ElementTagName = source.ElementTagName;
+            _attributes = source.Attributes;
+            ChildElements = source.ChildElements;
+            Collections = source.Collections;
+            _rawAttributes = source.RawAttributes;
+            Schema = source.Schema;
+            ParentElement = source.ParentElement;
+            _defaults = source._defaults;
+            Section = source.Section;
+            _overriddenFileName = source._overriddenFileName;
+        }
+
+        internal void BindFromElement(string name, ConfigurationElementSchema schema, ConfigurationElement parent)
+        {
+            ElementTagName = name;
+            ParentElement = parent;
+            Section = parent?.Section;
+            Schema = schema;
+            IsLocallyStored = parent == null || !parent.Section.IsLocked;
+            FileContext = parent?.FileContext;
+            ParseAttributes(_overriddenFileName ?? FileContext?.FileName);
+        }
 
         private ConfigurationElement _defaults;
 
@@ -275,7 +312,15 @@ namespace Microsoft.Web.Administration
 
         public ConfigurationElement GetCollection(Type collectionType)
         {
-            throw new NotImplementedException();
+            var collection = GetCollection();
+            if (collection == null || collectionType == null || collectionType == typeof(ConfigurationElementCollection))
+            {
+                return collection;
+            }
+
+            var custom = Activator.CreateInstance(collectionType, nonPublic: true);
+            ((IBindableConfigurationElementCollection)custom).BindCollectionFrom(collection);
+            return (ConfigurationElement)custom;
         }
 
         public ConfigurationElement GetCollection(string collectionName, Type collectionType)
@@ -315,7 +360,7 @@ namespace Microsoft.Web.Administration
             }
         }
 
-        public string ElementTagName { get; }
+        public string ElementTagName { get; internal set; }
         public bool IsLocallyStored { get; internal set; }
         public object this[string attributeName]
         {
@@ -326,11 +371,11 @@ namespace Microsoft.Web.Administration
         public ConfigurationMethodCollection Methods { get; }
         public IDictionary<string, string> RawAttributes
             => ConfigSource == null ? _rawAttributes : ConfigSource.RawAttributes;
-        public ConfigurationElementSchema Schema { get; }
+        public ConfigurationElementSchema Schema { get; internal set; }
 
-        private List<ConfigurationElementCollection> Collections { get; }
+        private List<ConfigurationElementCollection> Collections { get; set; }
 
-        internal ConfigurationElement ParentElement { get; }
+        internal ConfigurationElement ParentElement { get; set; }
 
         private ConfigurationLockCollection _lockAllAttributesExcept;
 
@@ -359,8 +404,8 @@ namespace Microsoft.Web.Administration
 
         private string _isLocked;
         private ConfigurationChildElementCollection _childElements;
-        private readonly ConfigurationAttributeCollection _attributes;
-        private readonly IDictionary<string, string> _rawAttributes;
+        private ConfigurationAttributeCollection _attributes;
+        private IDictionary<string, string> _rawAttributes;
 
         public ConfigurationLockCollection LockElements
             => _lockElements ??

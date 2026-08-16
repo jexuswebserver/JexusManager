@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net9.0-windows10.0.17763.0</TargetFramework>
@@ -35,6 +35,8 @@
     <ProjectReference Include="..\JexusManager.Features.FastCgi\JexusManager.Features.FastCgi.csproj" />
     <ProjectReference Include="..\JexusManager.Features.Handlers\JexusManager.Features.Handlers.csproj" />
     <ProjectReference Include="..\JexusManager.Features.HttpApi\JexusManager.Features.HttpApi.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.PHPManager\JexusManager.Features.PHPManager.csproj" />
+    <ProjectReference Include="..\JexusManager.Features.PHPManager.Server\JexusManager.Features.PHPManager.Server.csproj" />
     <ProjectReference Include="..\JexusManager.Features.HttpErrors\JexusManager.Features.HttpErrors.csproj" />
     <ProjectReference Include="..\JexusManager.Features.HttpRedirect\JexusManager.Features.HttpRedirect.csproj" />
     <ProjectReference Include="..\JexusManager.Features.IpSecurity\JexusManager.Features.IpSecurity.csproj" />

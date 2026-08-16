@@ -13,9 +13,24 @@ namespace Microsoft.Web.Administration
     {
         private ConfigurationElementCollection _root;
 
+        protected ConfigurationSection()
+        {
+        }
+
         internal ConfigurationSection(string path, ConfigurationElementSchema schema, string location, FileContext core, XElement entity)
             : base(null, path, schema, null, entity, core, null, true, location)
         {
+        }
+
+        internal void Bind(ConfigurationSection source)
+        {
+            BindFrom(source);
+            Section = this;
+            Location = source.Location;
+            IsLocked = source.IsLocked;
+            OverrideMode = source.OverrideMode;
+            OverrideModeEffective = source.OverrideModeEffective;
+            _root = source._root;
         }
 
         public void RevertToParent()

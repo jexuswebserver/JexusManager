@@ -155,7 +155,8 @@ namespace JexusManager
                 new CertificatesModuleProvider(),
                 new RewriteModuleProvider(),
                 new HttpApiModuleProvider(),
-                new JexusModuleProvider()
+                new JexusModuleProvider(),
+                new Web.Management.PHP.PHPProvider()
             };
 
             _navigationService = new NavigationService(this);

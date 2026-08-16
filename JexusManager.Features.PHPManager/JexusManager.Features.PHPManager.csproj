@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0-windows10.0.17763.0</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>false</UseWPF>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>JexusManager.snk</AssemblyOriginatorKeyFile>
+    <RootNamespace>Web.Management.PHP</RootNamespace>
+    <AssemblyName>Web.Management.PHP.Client</AssemblyName>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <NoWarn>$(NoWarn);WFO1000;WFO1001;WFO1002;WFO1003;WFO1004;WFO1005;WFO1006;WFO1007;WFO1008;WFO1009;WFO1010;WFO1011;WFO1012;WFO1013;WFO1014;WFO1015;WFO1016;WFO2001;WFO5001;CS1591</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Properties\InternalsVisibleTo.cs" />
+    <Compile Include="..\phpmanager\Client\**\*.cs"
+             Exclude="..\phpmanager\Client\obj\**;..\phpmanager\Client\Properties\AssemblyInfo.cs"
+             LinkBase="PHP" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="..\phpmanager\Client\Resources.resx"
+                      LogicalName="Web.Management.PHP.Resources.resources" />
+    <EmbeddedResource Include="..\phpmanager\Client\NoticeForm.resx"
+                      LogicalName="Web.Management.PHP.NoticeForm.resources" />
+    <EmbeddedResource Include="..\phpmanager\Client\Languages\*.resx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft.Web.Management\Microsoft.Web.Management.csproj" />
+    <ProjectReference Include="..\Microsoft.Web.Administration\Microsoft.Web.Administration.csproj" />
+  </ItemGroup>
+
+</Project>

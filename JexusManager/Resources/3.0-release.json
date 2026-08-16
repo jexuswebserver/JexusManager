@@ -5583,5 +5583,9 @@
         "hash": "53b84bcf2faf1ebd091a46c2825971b41d8a15bea79779efefc01f7ef415b8d96a380cf76829f0096d35539aee5605e9ebf2a3cc35227df719aff66cacbc05ba"
       }
     ]
+  },
+  "signature": {
+    "expiration": "2026-11-09T22:12:48.3221052+00:00",
+    "file": "releases.json.20260811221248.p7s"
   }
 }

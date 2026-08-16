@@ -1,3 +1,6 @@
 [submodule "LanguageServer.Framework"]
 	path = LanguageServer.Framework
 	url = https://github.com/CppCXY/LanguageServer.Framework.git
+[submodule "phpmanager"]
+	path = phpmanager
+	url = https://github.com/phpmanager/phpmanager.git

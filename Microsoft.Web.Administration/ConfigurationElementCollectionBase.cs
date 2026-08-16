@@ -15,7 +15,12 @@ using System.Xml;
 
 namespace Microsoft.Web.Administration
 {
-    public class ConfigurationElementCollectionBase<T> : ConfigurationElement, ICollection, IEnumerable<T>
+    internal interface IBindableConfigurationElementCollection
+    {
+        void BindCollectionFrom(ConfigurationElementCollection source);
+    }
+
+    public class ConfigurationElementCollectionBase<T> : ConfigurationElement, ICollection, IEnumerable<T>, IBindableConfigurationElementCollection
         where T : ConfigurationElement
     {
         internal readonly Collection<T> Exposed = new Collection<T>();
@@ -27,8 +32,35 @@ namespace Microsoft.Web.Administration
         protected bool HasParent;
 
         protected ConfigurationElementCollectionBase()
-            : this(null, null, null, null, null, null)
         { }
+
+        void IBindableConfigurationElementCollection.BindCollectionFrom(ConfigurationElementCollection source)
+        {
+            BindFrom(source);
+            HasParent = source.HasParent;
+            AllowsAdd = source.AllowsAdd;
+            AllowsClear = source.AllowsClear;
+            AllowsRemove = source.AllowsRemove;
+            foreach (var item in source.Exposed)
+            {
+                var element = CreateNewElement(item.ElementTagName);
+                if (element != null)
+                {
+                    element.BindFrom(item);
+                    Exposed.Add(element);
+                }
+            }
+
+            foreach (var item in source.Real)
+            {
+                var element = CreateNewElement(item.ElementTagName);
+                if (element != null)
+                {
+                    element.BindFrom(item);
+                    Real.Add(element);
+                }
+            }
+        }
 
         internal ConfigurationElementCollectionBase(ConfigurationElement element, string name, ConfigurationElementSchema schema, ConfigurationElement parent, XElement entity, FileContext core)
             : base(element, name, schema, parent, entity, core)
@@ -38,14 +70,14 @@ namespace Microsoft.Web.Administration
             AllowsRemove = Schema.CollectionSchema.RemoveSchema != null;
         }
 
-        IEnumerator<T> IEnumerable<T>.GetEnumerator()
+        public IEnumerator<T> GetEnumerator()
         {
             return Exposed.GetEnumerator();
         }
 
-        public IEnumerator GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
-            return Exposed.GetEnumerator();
+            return GetEnumerator();
         }
 
         public void CopyTo(Array array, int index)
@@ -85,7 +117,9 @@ namespace Microsoft.Web.Administration
                 return null;
             }
 
-            return (T)Activator.CreateInstance(typeof(T), null, elementTagName, schema, this, null);
+            var result = (T)Activator.CreateInstance(typeof(T), nonPublic: true);
+            result.BindFromElement(elementTagName, schema, this);
+            return result;
         }
 
         internal void InternalAdd(T element)

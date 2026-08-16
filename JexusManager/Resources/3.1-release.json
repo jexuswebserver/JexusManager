@@ -15497,5 +15497,9 @@
         "hash": "4d7b1b2d04828d4c5abc5228c7e1f630bdad8283f5d7a615203663316288fc40e978679ed5cec280c7e3daea72caa6cfd2f1f6f6421b0603225506b58e41afbf"
       }
     ]
+  },
+  "signature": {
+    "expiration": "2026-11-09T22:12:48.3221052+00:00",
+    "file": "releases.json.20260811221248.p7s"
   }
 }
