@@ -47,44 +47,80 @@ namespace Microsoft.Web.Administration
 
         internal override bool GetSiteState(Site site)
         {
-            var appcmd = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "inetsrv", "appcmd.exe");
-            if (!File.Exists(appcmd))
-            {
-                return false;
-            }
-
-            using var process = new Process
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = appcmd,
-                    Arguments = $"list site /state:Started",
-                    CreateNoWindow = true,
-                    WindowStyle = ProcessWindowStyle.Hidden,
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true
-                }
-            };
-            process.Start();
-            var output = process.StandardOutput.ReadToEnd();
-            process.WaitForExit();
-            return output.Contains($"SITE \"{site.Name}\"");
+            var output = RunAppCmd("list site /state:Started");
+            return output != null && output.Contains($"SITE \"{site.Name}\"");
         }
 
         internal override bool GetPoolState(ApplicationPool pool)
         {
+            var output = RunAppCmd("list apppool /state:Started");
+            return output != null && output.Contains($"APPPOOL \"{pool.Name}\"");
+        }
+
+        internal override void Start(Site site)
+        {
+            RunAppCmd("start site \"" + site.Name + "\"");
+        }
+
+        internal override void Stop(Site site)
+        {
+            RunAppCmd("stop site \"" + site.Name + "\"");
+        }
+
+        internal override void Start(ApplicationPool pool)
+        {
+            RunAppCmd("start apppool \"" + pool.Name + "\"");
+        }
+
+        internal override void Stop(ApplicationPool pool)
+        {
+            RunAppCmd("stop apppool \"" + pool.Name + "\"");
+        }
+
+        internal override void Recycle(ApplicationPool pool)
+        {
+            RunAppCmd("recycle apppool \"" + pool.Name + "\"");
+        }
+
+        /// <summary>
+        /// Runs an appcmd-style command. Read operations (list) never elevate.
+        /// Write operations (start/stop/recycle) are elevated only when the current
+        /// process is not running as administrator. The dedicated command line tool
+        /// (<c>JexusManager.AppCmd.exe</c>) is used when present, because an elevated
+        /// copy can still redirect its output through /resultFile (the real appcmd
+        /// cannot), and it falls back to the real appcmd.exe.
+        /// </summary>
+        private static string RunAppCmd(string arguments)
+        {
+            var tool = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "JexusManager.AppCmd.exe");
+            if (File.Exists(tool))
+            {
+                return PublicNativeMethods.IsProcessElevated
+                    ? RunRedirected(tool, arguments)
+                    : arguments.StartsWith("list", StringComparison.OrdinalIgnoreCase)
+                        ? RunRedirected(tool, arguments)
+                        : RunElevated(tool, arguments);
+            }
+
             var appcmd = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "inetsrv", "appcmd.exe");
             if (!File.Exists(appcmd))
             {
-                return false;
+                return null;
             }
 
+            return PublicNativeMethods.IsProcessElevated || arguments.StartsWith("list", StringComparison.OrdinalIgnoreCase)
+                ? RunRedirected(appcmd, arguments)
+                : RunElevated(appcmd, arguments);
+        }
+
+        private static string RunRedirected(string fileName, string arguments)
+        {
             using var process = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
-                    FileName = appcmd,
-                    Arguments = $"list apppool /state:Started",
+                    FileName = fileName,
+                    Arguments = arguments,
                     CreateNoWindow = true,
                     WindowStyle = ProcessWindowStyle.Hidden,
                     UseShellExecute = false,
@@ -94,20 +130,20 @@ namespace Microsoft.Web.Administration
             process.Start();
             var output = process.StandardOutput.ReadToEnd();
             process.WaitForExit();
-            return output.Contains($"APPPOOL \"{pool.Name}\"");
+            return output;
         }
 
-        internal override void Start(Site site)
+        private static string RunElevated(string fileName, string arguments)
         {
-            var appcmd = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "inetsrv", "appcmd.exe");
-            if (File.Exists(appcmd))
+            var resultFile = Path.GetTempFileName();
+            try
             {
                 using var process = new Process
                 {
                     StartInfo = new ProcessStartInfo
                     {
-                        FileName = appcmd,
-                        Arguments = $"start site \"{site.Name}\"",
+                        FileName = fileName,
+                        Arguments = $"{arguments} /resultFile:\"{resultFile}\"",
                         CreateNoWindow = true,
                         WindowStyle = ProcessWindowStyle.Hidden,
                         Verb = "runas",
@@ -116,94 +152,24 @@ namespace Microsoft.Web.Administration
                 };
                 process.Start();
                 process.WaitForExit();
+                return File.Exists(resultFile) ? File.ReadAllText(resultFile) : null;
             }
-        }
-
-        internal override void Stop(Site site)
-        {
-            var appcmd = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "inetsrv", "appcmd.exe");
-            if (File.Exists(appcmd))
+            catch (Win32Exception ex)
             {
-                using var process = new Process
+                // elevation is cancelled.
+                if (ex.NativeErrorCode != (int)Windows.Win32.Foundation.WIN32_ERROR.ERROR_CANCELLED)
                 {
-                    StartInfo = new ProcessStartInfo
-                    {
-                        FileName = appcmd,
-                        Arguments = $"stop site \"{site.Name}\"",
-                        CreateNoWindow = true,
-                        WindowStyle = ProcessWindowStyle.Hidden,
-                        Verb = "runas",
-                        UseShellExecute = true
-                    }
-                };
-                process.Start();
-                process.WaitForExit();
+                    throw;
+                }
+
+                return null;
             }
-        }
-
-        internal override void Start(ApplicationPool pool)
-        {
-            var appcmd = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "inetsrv", "appcmd.exe");
-            if (File.Exists(appcmd))
+            finally
             {
-                using var process = new Process
+                if (File.Exists(resultFile))
                 {
-                    StartInfo = new ProcessStartInfo
-                    {
-                        FileName = appcmd,
-                        Arguments = $"start apppool \"{pool.Name}\"",
-                        CreateNoWindow = true,
-                        WindowStyle = ProcessWindowStyle.Hidden,
-                        Verb = "runas",
-                        UseShellExecute = true
-                    }
-                };
-                process.Start();
-                process.WaitForExit();
-            }
-        }
-
-        internal override void Stop(ApplicationPool pool)
-        {
-            var appcmd = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "inetsrv", "appcmd.exe");
-            if (File.Exists(appcmd))
-            {
-                using var process = new Process
-                {
-                    StartInfo = new ProcessStartInfo
-                    {
-                        FileName = appcmd,
-                        Arguments = $"stop apppool \"{pool.Name}\"",
-                        CreateNoWindow = true,
-                        WindowStyle = ProcessWindowStyle.Hidden,
-                        Verb = "runas",
-                        UseShellExecute = true
-                    }
-                };
-                process.Start();
-                process.WaitForExit();
-            }
-        }
-
-        internal override void Recycle(ApplicationPool pool)
-        {
-            var appcmd = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "inetsrv", "appcmd.exe");
-            if (File.Exists(appcmd))
-            {
-                using var process = new Process
-                {
-                    StartInfo = new ProcessStartInfo
-                    {
-                        FileName = appcmd,
-                        Arguments = $"recycle apppool \"{pool.Name}\"",
-                        CreateNoWindow = true,
-                        WindowStyle = ProcessWindowStyle.Hidden,
-                        Verb = "runas",
-                        UseShellExecute = true
-                    }
-                };
-                process.Start();
-                process.WaitForExit();
+                    File.Delete(resultFile);
+                }
             }
         }
 

@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Web.Configuration
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JexusManager.Features.PHPManager.Server", "..\JexusManager.Features.PHPManager.Server\JexusManager.Features.PHPManager.Server.csproj", "{952C7912-A98B-4F6F-9644-2ADF36E5FE84}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JexusManager.CLI", "..\JexusManager.CLI\JexusManager.CLI.csproj", "{878003E1-DBBB-4CA6-BEDB-5DA73A24C565}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -95,6 +97,18 @@ Global
 		{952C7912-A98B-4F6F-9644-2ADF36E5FE84}.Release|x64.Build.0 = Release|Any CPU
 		{952C7912-A98B-4F6F-9644-2ADF36E5FE84}.Release|x86.ActiveCfg = Release|Any CPU
 		{952C7912-A98B-4F6F-9644-2ADF36E5FE84}.Release|x86.Build.0 = Release|Any CPU
+		{878003E1-DBBB-4CA6-BEDB-5DA73A24C565}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{878003E1-DBBB-4CA6-BEDB-5DA73A24C565}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{878003E1-DBBB-4CA6-BEDB-5DA73A24C565}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{878003E1-DBBB-4CA6-BEDB-5DA73A24C565}.Debug|x64.Build.0 = Debug|Any CPU
+		{878003E1-DBBB-4CA6-BEDB-5DA73A24C565}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{878003E1-DBBB-4CA6-BEDB-5DA73A24C565}.Debug|x86.Build.0 = Debug|Any CPU
+		{878003E1-DBBB-4CA6-BEDB-5DA73A24C565}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{878003E1-DBBB-4CA6-BEDB-5DA73A24C565}.Release|Any CPU.Build.0 = Release|Any CPU
+		{878003E1-DBBB-4CA6-BEDB-5DA73A24C565}.Release|x64.ActiveCfg = Release|Any CPU
+		{878003E1-DBBB-4CA6-BEDB-5DA73A24C565}.Release|x64.Build.0 = Release|Any CPU
+		{878003E1-DBBB-4CA6-BEDB-5DA73A24C565}.Release|x86.ActiveCfg = Release|Any CPU
+		{878003E1-DBBB-4CA6-BEDB-5DA73A24C565}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
