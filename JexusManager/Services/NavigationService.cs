@@ -36,6 +36,58 @@ namespace JexusManager.Services
             return NavigateToItem(item, true);
         }
 
+        /// <summary>
+        /// Prompts to save any pending changes on the current page and applies them.
+        /// </summary>
+        /// <remarks>
+        /// IMPORTANT: this must run while the services the current page was built against are
+        /// still registered. Tree nodes replace <see cref="IConfigurationService"/> in the shared
+        /// service container before they load their own page, so applying changes any later makes
+        /// the outgoing page write through the incoming node's configuration (or a null one).
+        /// </remarks>
+        /// <returns><c>false</c> when the user cancelled or the changes could not be applied.</returns>
+        internal bool FlushPendingChanges()
+        {
+            var previous = CurrentItem?.Page;
+            if (previous == null || !previous.HasChanges)
+            {
+                return true;
+            }
+
+            var basic = (ModulePage)previous;
+            string msg = "The changes you have made will be lost. Do you want to save changes?";
+            _logger.LogDebug("Page has unsaved changes: {PageName}", basic.Text);
+
+            if (
+                _host.UIService.ShowMessage(
+                    msg,
+                    basic.Text,
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Exclamation,
+                    MessageBoxDefaultButton.Button3)
+                    == DialogResult.Yes)
+            {
+                _logger.LogDebug("User chose to save changes");
+                if (previous is ModuleDialogPage dialog)
+                {
+                    if (!dialog.ApplyChanges())
+                    {
+                        _logger.LogDebug("Failed to apply changes, cancelling navigation");
+                        return false;
+                    }
+                }
+            }
+            else if (_host.UIService.ShowMessage(msg, basic.Text, MessageBoxButtons.YesNoCancel,
+                MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button3) == DialogResult.Cancel)
+            {
+                // User cancelled navigation, so don't continue
+                _logger.LogDebug("User cancelled navigation");
+                return false;
+            }
+
+            return true;
+        }
+
         internal bool NavigateToItem(NavigationItem item, bool initializing)
         {
             _logger.LogDebug("NavigateToItem - item: {PageType}, initializing: {IsInitializing}",
@@ -43,39 +95,9 @@ namespace JexusManager.Services
 
             var previousItem = this.CurrentItem;
             var previous = previousItem?.Page;
-            if (previous != null && previous.HasChanges)
+            if (!FlushPendingChanges())
             {
-                var basic = (ModulePage)previous;
-                string msg = "The changes you have made will be lost. Do you want to save changes?";
-                _logger.LogDebug("Page has unsaved changes: {PageName}", basic.Text);
-
-                if (
-                    _host.UIService.ShowMessage(
-                        msg,
-                        basic.Text,
-                        MessageBoxButtons.YesNoCancel,
-                        MessageBoxIcon.Exclamation,
-                        MessageBoxDefaultButton.Button3)
-                        == DialogResult.Yes)
-                {
-                    _logger.LogDebug("User chose to save changes");
-                    var dialog = previous as ModuleDialogPage;
-                    if (dialog != null)
-                    {
-                        if (!dialog.ApplyChanges())
-                        {
-                            _logger.LogDebug("Failed to apply changes, cancelling navigation");
-                            return false;
-                        }
-                    }
-                }
-                else if (_host.UIService.ShowMessage(msg, basic.Text, MessageBoxButtons.YesNoCancel,
-                    MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button3) == DialogResult.Cancel)
-                {
-                    // User cancelled navigation, so don't continue
-                    _logger.LogDebug("User cancelled navigation");
-                    return false;
-                }
+                return false;
             }
 
             // The critical bug is here - we're manipulating the navigation history incorrectly

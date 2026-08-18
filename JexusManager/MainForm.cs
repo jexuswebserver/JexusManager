@@ -719,6 +719,13 @@ namespace JexusManager
                 return;
             }
 
+            // IMPORTANT: apply the outgoing page's pending changes now, while the services it was
+            // built against are still registered. LoadPanels below replaces IConfigurationService.
+            if (!_navigationService.FlushPendingChanges())
+            {
+                return;
+            }
+
             // Update the breadcrumb navigation
             UpdateBreadcrumbPath(node);
 

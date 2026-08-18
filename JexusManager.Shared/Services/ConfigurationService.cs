@@ -59,6 +59,13 @@ namespace JexusManager.Services
         public ConfigurationSection GetSection(string sectionPath, string locationPath = null, bool acceptNonLocallyStored = true)
         {
             var config = GetConfiguration();
+            if (config == null)
+            {
+                // IMPORTANT: some scopes (such as the Sites node) register this service without a
+                // configuration, so callers must not assume a section is always available.
+                throw new InvalidOperationException("no configuration is available in this scope");
+            }
+
             ConfigurationSection section;
             if (PhysicalDirectory != null)
             {
