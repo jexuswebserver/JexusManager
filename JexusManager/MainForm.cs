@@ -1112,8 +1112,23 @@ namespace JexusManager
                 }
             }
 
-            File.WriteAllLines(DialogHelper.ListIisExpress, iisExpressFiles);
-            File.WriteAllLines(DialogHelper.ListJexus, jexusServers);
+            try
+            {
+                File.WriteAllLines(DialogHelper.ListIisExpress, iisExpressFiles);
+                File.WriteAllLines(DialogHelper.ListJexus, jexusServers);
+            }
+            catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException)
+            {
+                // IMPORTANT: the list folder might not exist when no writable user folder was found.
+                LogHelper.GetLogger<MainForm>().LogError(ex, "Error saving the server lists");
+                UIService.ShowMessage(
+                    $"The server list could not be saved. {ex.Message}",
+                    Text,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                return;
+            }
+
             actSave.Enabled = false;
         }
 
