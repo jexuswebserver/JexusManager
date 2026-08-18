@@ -338,20 +338,52 @@ namespace JexusManager
 
         private static string GetSpecialFolder(string name, string file)
         {
-            var result = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Jexus Manager", name);
+            var result = Path.Combine(GetRootFolder(), "Jexus Manager", name);
             if (!Directory.Exists(result))
             {
                 try
                 {
                     Directory.CreateDirectory(result);
                 }
-                catch (IOException ex)
+                catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException)
                 {
                     _logger.LogError(ex, "Error creating directory {Path}", result);
                 }
             }
 
             return Path.Combine(result, file);
+        }
+
+        /// <summary>
+        /// Locates the folder under which Jexus Manager keeps its lists, keys and temporary files.
+        /// </summary>
+        /// <remarks>
+        /// IMPORTANT: <see cref="Environment.GetFolderPath(Environment.SpecialFolder)"/> returns an
+        /// empty string when a known folder is redirected to a location that cannot be resolved
+        /// (a drive that no longer exists, an offline network share, and so on). Combining that
+        /// with a relative path makes the caller write to the working directory, which is normally
+        /// the install folder and denies access, so fall back to other user specific folders.
+        /// </remarks>
+        private static string GetRootFolder()
+        {
+            var candidates = new[]
+            {
+                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+                Environment.GetEnvironmentVariable("USERPROFILE")
+            };
+
+            foreach (var candidate in candidates)
+            {
+                if (!string.IsNullOrWhiteSpace(candidate) && Path.IsPathRooted(candidate))
+                {
+                    return candidate;
+                }
+            }
+
+            _logger.LogWarning("No user folder could be resolved, so the temporary folder is used");
+            return Path.GetTempPath();
         }
 
         public static string GetPrivateKeyFile(string file)
