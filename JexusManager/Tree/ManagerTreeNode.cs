@@ -75,6 +75,13 @@ namespace JexusManager.Tree
                     // IMPORTANT: only create level+1 physical nodes.
                     foreach (var folder in new DirectoryInfo(rootFolder).GetDirectories())
                     {
+                        // IMPORTANT: legacy profile junctions (such as "My Videos" under Documents)
+                        // deny enumeration, so skip them instead of adding nodes that cannot expand.
+                        if ((folder.Attributes & FileAttributes.ReparsePoint) == FileAttributes.ReparsePoint)
+                        {
+                            continue;
+                        }
+
                         var path = folder.Name;
                         var isApp = false;
                         foreach (Application app in rootApp.Site.Applications)
@@ -148,7 +155,7 @@ namespace JexusManager.Tree
                 treeNodes.Sort(s_comparer);
                 Nodes.AddRange(treeNodes.ToArray());
             }
-            catch (IOException ex)
+            catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException)
             {
                 _logger.LogError(ex, "Error loading children");
             }
