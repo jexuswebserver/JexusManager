@@ -251,7 +251,7 @@ namespace JexusManager.Features.HttpApi
 
         protected override void Refresh()
         {
-            var feature = (IHttpApiFeature)tabControl1.SelectedTab.Tag;
+            var feature = (IHttpApiFeature)tabControl1.SelectedTab?.Tag;
             var extra = feature?.GetTaskList();
             Tasks.Fill(tsActionPanel, cmsActionPanel, extra);
             base.Refresh();
@@ -325,14 +325,21 @@ namespace JexusManager.Features.HttpApi
 
         protected override bool ShowHelp()
         {
-            var feature = (IHttpApiFeature)tabControl1.SelectedTab.Tag;
-            feature.ShowHelp();
+            var feature = (IHttpApiFeature)tabControl1.SelectedTab?.Tag;
+            feature?.ShowHelp();
             return true;
         }
 
         private void TabControl1SelectedIndexChanged(object sender, EventArgs e)
         {
-            var feature = (IHttpApiFeature)tabControl1.SelectedTab.Tag;
+            // IMPORTANT: this can fire while the tab control handle is being created,
+            // which is before Initialize sets the tab page tags.
+            var feature = (IHttpApiFeature)tabControl1.SelectedTab?.Tag;
+            if (feature == null)
+            {
+                return;
+            }
+
             feature.HttpApiSettingsUpdate.Invoke();
             Refresh();
         }
